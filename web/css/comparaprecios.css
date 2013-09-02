@@ -1,0 +1,363 @@
+/* Contenido */
+
+#centro {
+	width:960px;
+	text-align:left;
+	margin: 15px auto 0px auto;
+    background-image: url('../images/img_ui/fondoBody.png');
+    background-color: #FDFDFD;
+	border: 1px solid #D7D7D7;
+	border-radius: 6px 6px 6px 6px;
+	box-shadow: 0 0 8px #D7D7D7;
+}
+
+#centrocentro {
+background-color:blue;
+}
+
+/* Cómo usar */
+
+
+#comoUsar {
+width:960px;
+height:300px;
+margin:0px auto 0px auto;
+
+}
+
+#tabla .titulos, .titulos {
+padding:10px;
+font-family:arial, sans-serif;
+font-size:21px;
+border-bottom:dotted 2px;
+color:#00aeef;
+border-color:black;
+}
+
+
+#instrucciones_1 {
+padding-top:10px;
+}
+
+.img_instrucciones_1{
+	width: 968px;
+	margin-top: 20px;
+}
+
+#sliderComoUsar {
+width:960px;
+text-align: center;
+}
+
+#sliderComoUsarImg {
+margin-left:480px;
+}
+
+#sliderComoUsarImg1 {
+padding-top:5px;
+}
+
+/* Preguntas frecuentes */
+
+#seguro {
+height:336px;
+width:450px;
+padding-right:0px;
+float:right;
+margin-right: 15px;
+}
+
+/*#seguroContenidos {
+height:300px;
+width:515px;
+background-color:blue;
+}
+*/
+
+#seguroContenido {
+padding-left:12px;
+margin-top:15px;
+width:440px;
+background:white;
+box-shadow: 4px 4px 30px rgba(50, 50, 50, 0.4);
+overflow:hidden;
+}
+
+#preguntasContenedor {
+}
+
+#preguntasContenedor2 {
+}
+
+
+.preguntas {
+	border-bottom: 1px solid #D1D1D1;
+    color: #EC00B8;
+    height: 29px;
+    margin-top: 20px !important;
+    width: 430px;
+}
+
+.preguntas a {
+color:#ec00b8;
+font-size:15px;
+}
+
+.preguntas:nth-child(1){
+margin-top:-1px;
+}
+
+.preguntas:nth-child(5) {
+    border: none;
+}
+
+
+/* Elementos tabla */
+
+#tabla {
+float:left;
+width: 465px;
+margin-left: 10px;
+}
+
+#tabla #contenedorTabla { 
+background-color:white;
+box-shadow: 4px 4px 30px rgba(50, 50, 50, 0.4);
+margin-top: 15px;
+}
+
+#tabla table {
+/*border:solid 2px #575757;
+border-bottom:solid 2px #575757;*/
+margin-top:15px;
+border-collapse: collapse;
+padding-bottom:0px;
+border-top:0px;
+
+}
+
+#tabla td  {
+font-family:helvetica;
+font-size:14px;
+color: #575757;
+padding: -5px;
+height:25px;
+text-align:center;
+border-collapse: collapse;
+font-style:italic;
+letter-spacing:0px;
+background-color:white;
+
+}
+
+#hertz {
+font-size:12px;
+margin:auto;
+height:55px;
+/*margin:-5px;*/
+background-color:#fbdd03;
+border:white 2px;
+}
+
+#avis {
+font-size:12px;
+height:55px;
+margin:auto;
+/* margin:-5px;*/
+background-color:#fb0218;
+border:white 2px;
+}
+
+#europcar {
+font-size:12px;
+margin:auto;
+height:55px;
+/*margin:-5px;*/
+background-color:#016502;
+border:white 2px;
+
+}
+
+#arriendascar {
+font-size:12px;
+height:55px;
+margin:auto;
+background-color:#00adef;
+border:white 2px;
+/*margin:-4px;
+margin-right:-1px;
+margin-left:-2px;
+*/}
+
+#tabla div {
+font-size:12px;
+font-style:normal;
+color:black;
+}
+
+
+#tabla .precio {
+padding:5px;
+padding-bottom:2px;
+font-size:18px;
+font-weight:bold;
+color:#00aeef;
+}
+
+#tabla #precioArriendas {
+padding:1px;
+font-size:22px;
+font-weight:bold;
+font-style:normal;
+color:#00aeef;
+
+}
+
+#ahorro {
+font-size:20px;
+color:#00aeef;
+}
+
+#tabla #footerTable {
+    border: 1px solid;
+    border-radius: 5px 5px 5px 5px;
+    margin-top: 4px;
+    padding: 6px 2px 6px 2px;
+    background-color: white;
+    color: #999999;
+}
+
+/* Colores tabla */
+
+
+#tabla td:nth-child(3) {
+border-left:1px solid;
+}
+
+#tabla td:nth-child(2) {
+border-left:1px solid;
+}
+
+#tabla td:nth-child(3) {
+border-right:1px solid;
+}
+
+
+#tabla td:nth-child(4) {
+font-family:arial;
+font-size:16px;
+border-left: solid 1px;
+border-right: solid 1px;
+display:none;
+
+}
+
+#tabla td:nth-child(5) {
+font-family:arial;
+font-size:16px;
+border-left: solid 1px;
+background-color:white; /*#fffbcc;*/
+font-weight:bold;
+color:#fffbcc;
+border-right:0px;
+width:150px;
+background-color:white;
+}
+
+/* background-color:#fffbcc;*/
+
+
+#tabla tr:nth-child(1) {
+font-family:arial;
+font-size:16px;
+padding:none;
+margin:0px;
+border-bottom: 1px dashed;
+}
+
+#tabla tr:nth-child(2) {
+font-family:arial;
+font-size:16px;
+background-color:white;
+color:white;
+}
+
+#tabla tr:nth-child(4) {
+font-family:arial;
+font-size:16px;
+background-color:#white;
+color:white;
+}
+
+
+#tabla tr:nth-child(6) {
+font-family:arial;
+font-size:16px;
+background-color:white;
+color:white;
+display:none;
+}
+
+/* Video */
+
+#video {
+width:940px;
+margin-left:auto;
+margin-right:auto;
+}
+
+iframe {
+padding-top:0px;
+background-color:none;
+box-shadow: 4px 4px 30px rgba(50, 50, 50, 0.4);
+margin-top:15px;
+}
+
+.tituloEspecial {
+    border-bottom: 2px dotted black;
+    border-color: black;
+    color: #00AEEF;
+    float: left;
+    font-family: sylfaen,arial,sans-serif;
+    font-size: 21px;
+    margin-left: 10px;
+    margin-top: 5px;
+    padding: 10px 0;
+    width: 940px;
+}
+
+/* Elementos medios */
+
+#medios {
+width:960px;
+height:100px;
+background-color:#d1d1d1;
+margin:60px auto 0;
+}
+
+#emol {
+float:left;
+padding-top:28px;
+padding-left:52px;
+
+}
+
+#LUN {
+float:left;
+padding-top:40px;
+padding-left:55px;
+}
+
+#publimetro {
+float:left;
+padding-top:40px;
+padding-left:55px;
+}
+
+#latercera {
+float:left;
+padding-top:43px;
+padding-left:55px;
+}
+
+

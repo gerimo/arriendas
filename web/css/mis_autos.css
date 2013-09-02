@@ -1,0 +1,166 @@
+
+h1.misautos_titulo_seccion {
+	float: left;
+	font-family: 'MuseoSlab500';
+	font-size: 25px;
+	letter-spacing: -1px;
+	font-weight: normal;
+	margin-top: 20px;
+	margin-left: 20px;
+	margin-bottom: 20px;
+}
+
+/* box principal */
+.misautos_box {
+	float: left;
+	width: 480px;
+	margin: 0px 10px;
+	padding: 10px;
+}
+.misautos_box_header {
+	margin-bottom: 20px;
+}
+
+.botonSubeTuAuto{
+	float: right;
+}
+
+/* msg user items */
+.misautos_user_item {
+	margin-bottom: 40px;
+	height:116px;
+	border-bottom:1px dashed #D1D1D1;
+}
+.misautos_user_frame {
+	/*background-image: url('../images/img_mensajes/msg_user_frame_bg.png');*/
+	border:1px solid #d5d5d5;
+	width: 92px;
+	height: 92px;
+}
+.misautos_user_frame img {
+	margin-top: 4px;
+	margin-left: 4px;
+}
+
+.misautos_user_post {
+	position: relative;
+	float: right;
+	width: 360px;
+	font-size: 13px;
+	height: 106px;
+	color: #FFFFFF;
+}
+.misautos_user_post span {
+	display: block;
+	margin-left: 10px;
+}
+.misautos_user_post a {
+	text-decoration: none;
+}	
+.misautos_user_post a:hover {
+	text-decoration: underline;
+}	
+p.misautos_info {
+	font-size: 12px;
+	color: #1d1d1d;
+	margin:-12px 0 0 10px;
+}
+.misautos_marca {
+	margin-bottom: 6px;
+	left: 6px;
+	width:auto;
+	height: 25px;
+	font-weight: bold;
+}
+.misautos_user_item_flecha {
+	position: absolute;
+	top: 2px;
+	left: -6px;
+	width: 6px;
+	height: 11px;
+	background-image: url('../images/img_mensajes/msg_user_post_flecha.png');
+}
+.misautos_btn_sector {
+	position: absolute;
+ 	left: 10px; 	
+}
+.misautos_btn_sector a {
+	display: block;
+	float: left;
+	margin-right: 10px;
+	height: 32px;
+}
+.misautos_btn_sector a.misautos_btn_disp {
+	width: 112px; 
+	background-image: url('../images/img_mis_autos/misautos_btn_disp.png');
+}
+.misautos_btn_sector a.misautos_btn_alqui  {
+    display: block;
+    width: 100px;
+    height: 26px;
+    background-image: url('../images/bt_blue_on_v2.png');
+	float:right;
+	border: 1px solid #36cced;
+	border-radius:1px 1px 1px 1px;
+	color:#FFFFFF;
+	text-shadow: 1px 1px 1px #758386;
+	font-size: 12px;
+	line-height:23px;
+	text-align:center;
+	clear:right;
+	text-decoration:none;
+}
+
+.misautos_btn_sector a.misautos_btn_alqui:hover  {
+    background-image: url('../images/bt_blue_hover_v2.png');
+	text-decoration:underline;
+}
+.misautos_btn_sector a.misautos_btn_denun {
+	width: 92px; 
+	background-image: url('../images/img_mis_autos/misautos_btn_denun.png');
+}
+
+
+.misautos_btn_sector a.mis_autos_verificado  {
+    display: block;
+    width: 100px;
+    height: 26px;
+    background-image: url('../images/bt_blue_on_v2.png');
+	float:right;
+	border: 1px solid #36cced;
+	border-radius:1px 1px 1px 1px;
+	color:#FFFFFF;
+	text-shadow: 1px 1px 1px #758386;
+	font-size: 12px;
+	line-height:23px;
+	text-align:center;
+	clear:right;
+	text-decoration:none;
+}
+
+.divBotonVerificar a.misautos_btn_alqui{
+	margin-top: 4px;
+}
+.divBotonVerificar a.mis_autos_verificado{
+	margin-top: 4px;
+	background-image: url('../images/bt_blue_hover_v2.png');
+}
+.divBotonVerificar a.mis_autos_verificado:hover{
+	text-decoration:underline;
+}
+
+.textoEliminar{
+    font-size: 11px;
+    margin-top: 5px;
+    text-align: center;
+}
+
+.cargando{
+	float: right;
+	display: none;
+}
+
+.img_cargando{
+	width: 60px;
+	height: 60px;
+}

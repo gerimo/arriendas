@@ -1,0 +1,493 @@
+
+
+.main_col_izq {
+    background-color: white;
+    float: left;
+    margin-bottom: 20px;
+    width: 200px;
+    
+    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.49);
+    -moz-box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.49);
+    -webkit-box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.49);
+    behavior: url(ie-css3.htc);
+}
+
+.barraSuperior{
+	background-image: url("../images/Barra.png");
+    background-repeat: repeat-x;
+    height: 32px;
+    margin-bottom: 20px;
+
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 0 2px 7px rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: 0 2px 7px rgba(0, 0, 0, 0.4);
+    behavior: url(ie-css3.htc);
+}
+
+.barraSuperior p{
+	font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 10px;
+}
+.barraSuperior h2{
+	font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 10px;
+    margin-top: 0px;
+}
+
+.usuario_foto_frame {
+	float: left;
+	margin-left: 22px;
+	width: 146px;
+	height: 146px;
+	padding: 5px;
+	border: 1px solid #d6d6d6;
+	background-color: #fff;
+
+	box-shadow: 0 2px 7px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 0 2px 7px rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: 0 2px 7px rgba(0, 0, 0, 0.4);
+    behavior: url(ie-css3.htc);
+}
+
+
+span.usuario_lugar {
+	font-size: 12px;
+	display: block;
+}
+
+a.usuario_btn_verperfil {
+	float: left;
+	margin-top: 8px;
+	margin-left: 30px;
+	display: block;
+	background-image: url('../images/img_comunes/usuario_btn_ver_perfil.png');
+	width: 142px;
+	height: 32px;
+        margin-bottom: 20px;
+}
+
+/* Nuevos estilos R&C*/
+h1{
+	float: left;
+	font-family:Arial, Helvetica, sans-serif; 
+	color:#2d2d2d; 
+	font-size: 28px;
+	font-weight: normal;
+	margin: 20px 0 20px 20px;
+	display: block;
+	width: 94%; height:38px;
+	border-bottom: dashed 1px #d1d1d1;
+}
+.calen_titulo_seccion {
+	float: left; 
+	font-family:Arial, Helvetica, sans-serif;
+	color:#00AEFF; 
+	font-size: 24px;
+	font-weight: normal;
+	margin: 20px 0 20px 20px;
+	display: block;
+	width: 94%; 
+	height:38px;
+	border-bottom: dashed 1px #d1d1d1;
+	vertical-align: middle;
+}
+
+.calen_textos_publica {
+	color: #00AEFF; 
+	font-size: 14px; 
+	text-align: center;
+}
+
+.calen_titulo_nombreAuto {
+	font-size: 25px; 
+	color: #00AEEF;
+}
+
+h2 {
+	margin-top: 20px;
+	padding: 6px;
+	background-color:#ededed;
+	color:#575757;
+	font-size:13px;
+	font-weight:bold;
+	text-align:center;
+}
+
+.perfil_titulos_campos {
+	width:100%;
+	border-bottom: dashed;
+	border-width: 1px;
+	font-size: 12px;
+	font-color: #00AEEF;
+}
+
+ul.list_left {
+	float:left; 
+	width:180px;
+}
+
+ul.list_right {
+	float:right; 
+	width:180px;
+	margin-left:20px;
+}
+
+li.regis_validar {
+	background-image: url("http://wwww.arriendas.cl/images/img_registro/regis_ico_sinverif.png");
+	background-position: right center;
+	background-repeat: no-repeat;
+	height: 16px;
+	line-height: 16px;
+	margin-bottom: 4px;
+	padding-right: 22px;
+	text-align: left;
+	font-size:13px;
+}
+
+li.regis_validado {
+	background-image: url("../images/img_registro/regis_ico_list_validar.png");
+	background-position: right center;
+	background-repeat: no-repeat;
+	height: 16px; 
+	line-height: 16px;
+	margin-bottom: 4px;
+	padding-right: 22px;
+	text-align: left;
+	font-size:13px;
+}
+
+.usuario_info {
+	float: left;
+	width: auto;
+	margin-top: 10px;
+	margin-left: 20px;
+	text-align: left;
+}
+
+.usuario_lugar {
+	width: auto;
+	margin-top: 10px;
+	margin-right: 20px;
+	text-align: left;
+}
+
+span.usuario_nombre {
+	color: #1d95cb;
+	font-size: 14px;
+	display: block;
+	margin-bottom:12px;
+	text-align: left;
+}
+
+.calen_box_1 {
+	float: left;
+	width: 500px;
+	height: 460px;
+	padding:10px;
+	margin-top:20px;
+}
+
+.main_contenido{
+	background-color: white;
+    float: left;
+    margin-left: 20px;
+    min-height: 500px;
+    width: 520px;
+
+    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.49);
+    -moz-box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.49);
+    -webkit-box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.49);
+    behavior: url(ie-css3.htc);
+}
+
+.main_contenido_interno{
+	background: none repeat scroll 0 0 transparent;
+    width: 500px;
+}
+
+.btnAmarillo{
+	float: right;
+	margin-right: 20px;
+	margin-top: 39px;
+	padding: 8px 0 0;
+	text-align: center;
+	width: 110px;
+    display: block;
+    height: 26px;
+    background: url('../images/bt_orange_on_v2.png');
+	border: 1px solid #ef8609;
+	border-radius:1px 1px 1px 1px;
+	color:#FFFFFF;
+	text-shadow: 1px 1px 1px #758386;
+	font-size: 12px;
+	line-height:23px;
+	text-align:center;
+	text-decoration:none;
+}
+
+.btnAmarillo:hover {
+    background: url('../images/bt_orange_hover_v2.png');
+	text-decoration:underline;
+}
+
+
+#colDer{
+	float: right;
+	height: 100%;
+    width: 200px;
+}
+
+.main_col_right {
+	background-color: white;
+    float: right;
+    font-family: Arial,Helvetica,sans-serif;
+    width: 200px;
+    margin-bottom: 30px;
+
+    box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.49);
+    -moz-box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.49);
+    -webkit-box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.49);
+    behavior: url(ie-css3.htc);
+}
+
+.main_col_right .marcoFoto{
+	background: url('../images/img_autos/Marco.png');
+	background-repeat: no-repeat;
+	margin-left: 8px;
+	margin-top: -10px;
+}
+
+.main_col_right .foto{
+	width: 140px;
+	height: 140px;
+	margin-left: 20px;
+	margin-top: 20px;
+	margin-bottom: 35px;
+}
+
+.main_col_right .pregunta {
+    border-bottom: 1px solid #A4A4A4;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 17px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-bottom: 15px;
+    padding-top: 15px;
+    text-align: left;
+    text-decoration: underline;
+    margin-top: 0;
+}
+
+.main_col_right .primera {
+    margin-top: -15px;
+}
+
+
+.main_col_right .ultima {
+    border-bottom: medium none;
+}
+
+.main_col_right .pregunta a{
+	color: black;
+}
+
+.box_menu_izq {
+	display:table;
+}
+
+ul.menu_izq {
+	display:block;
+	margin: 30px 0 30px 21px;
+}
+
+ul.menu_izq li {
+	border-left: 5px solid #05a4e7;
+	margin-bottom: 12px;
+}
+
+ul.menu_izq li.selected {
+	border-left: 5px solid #ec008c;
+}
+
+ul.menu_izq li a.bt_menu_izq {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	width: 150px;
+	display: inline;
+	text-decoration: none;
+	text-align:left;
+	color: #575757;
+	padding-top: 2px;
+	padding-left: 5px;
+}
+
+ul.menu_izq li a.bt_menu_izq:hover {
+	text-decoration: underline;
+}
+
+ul.list_der {
+	font-size: 12px;
+	width: 200px;
+	margin-top: 12px;
+	margin-left:12px;
+}
+
+ul.list_der li {
+	height: 16px;
+	line-height: 16px;
+	margin-bottom: 8px;
+	color:#575757;
+}
+
+ul.list_der li a {
+	color:#575757;
+	text-decoraction:underline;
+}
+
+ul.list_der li a:hover {
+	color:#05a4e7;
+	text-decoraction:underline
+}
+
+ul.list_der li a:active {
+	color:#575757;
+	text-decoraction:underline
+}
+
+ul.list_der li a:visited {
+	color:#575757;
+	text-decoraction:underline
+}
+
+.grupo_nf {
+	margin-top:12px;
+	font-size:12px;
+	color:#05a4e7; 
+}
+
+.list_der {
+	margin-top:12px; 
+}
+
+.subtitulos {
+	color: #00AEEF;
+	font-size: 12px;
+	font-family: Arial, sans-serif;
+}
+
+.texto_normal {
+	font-family: Arial, sans-serif;
+	font-size: 11px;
+}
+
+#verificaciones .subtitulo{
+	background-color: silver;
+    font-size: 13px;
+    font-weight: bold;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 2px;
+	display: block;
+	text-align: left;
+	color: #2a2a2a;
+	width: 180px;
+}
+
+#verificaciones a{
+	color: black;
+}
+
+#verificaciones ul li{
+	border-bottom: 1px solid silver;
+    height: 45px;
+    margin: 0 10px;
+    padding-top: 25px;
+}
+
+#verificaciones ul li img{
+	vertical-align: middle;
+}
+
+#verificaciones p{
+	display: inline;
+	margin-left: 10px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+#verificaciones .sinBorde{
+	border: none;
+}
+
+#verificaciones .confirmado{
+	display: block;
+	color: black;
+	margin-left: 30px;
+	margin-top: 5px;
+}
+
+#verificaciones .noConfirmado{
+	color: black;
+	text-decoration: underline;
+}
+
+.box_menu_izq .textoResaltado{
+	color: #ec008c;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+#verificaciones .valorCampoVerificado{
+	text-align: left;
+	width: 160px;
+}
+
+#verificaciones .imgConfirmado{
+	position: absolute;
+}
+
+#verificaciones .dosLineas{
+	margin-top: 0;
+}
+
+#verificaciones .noVinculo{
+	text-decoration: none;
+}
+
+/* Barra en caso de reserva, en profile*/
+#barraAlerta{
+	background-color: black;
+	width: 1260px;
+	margin: 0 auto;
+	height: 18px;
+	padding: 2px;
+}
+#barraAlerta p {
+	color: white;
+	font-size: 12px;
+	width: 1125px;
+	text-align: right;
+	font-style: italic;
+}
+#barraAlerta a{
+	color: white;
+	text-decoration: underline;
+}
+#barraAlerta .img_cerrar{
+	vertical-align: bottom;
+	cursor: pointer;
+}
+#barraAlerta p.textVersionMovil{
+	display: none;
+}
+.link_opciones_moviles{
+	display: none;
+}
+.subMenu_moviles{
+    display: none;
+}

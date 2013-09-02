@@ -1,0 +1,787 @@
+.search_container {
+	margin: 0 auto;
+	width: 960px;
+        clear: both;
+}
+.search_slogan_area {
+	width: 960;
+	text-align: center;
+	margin-bottom: 36px;
+	margin-top: -32px
+}
+.search_slogan_area h2 {
+	font-family: 'MuseoSlab500';
+	font-size: 34px;
+	letter-spacing: -1px;
+	font-weight: normal;
+	text-shadow: 2px 2px 0px #d2d2d2;
+}
+
+
+
+/* sectores de contenido */
+
+.search_sector1 {
+ 
+	width: 960px;
+}
+
+.search_sector2 {
+	float: left;
+	width: 960px;	
+	margin-bottom: 30px;
+}
+
+
+/* diseño caja 'autos mas cercanos' 'busqueda' */
+.search_box_3 {
+	float: left;	
+	background-color: #fff;
+	border: 1px solid #c3c3c3;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	width: 960px;
+	height: auto;
+	background-image: url('../images/img_landing/land_box_bottom_bg.png');
+	background-repeat: repeat-x;
+	background-position: bottom;
+	margin-bottom: 27px;
+	box-shadow: 3px 3px 3px #dedede;
+}
+.search_box_3_header {
+	background-image: url('../images/img_search/search_box_3_header_bg.png');
+	background-repeat: repeat-x;
+	width: 960px;
+	height: 40px;
+	border-bottom: 1px solid #c3c3c3;
+	-webkit-border-top-left-radius: 10px;
+	-webkit-border-top-right-radius: 10px;
+	-moz-border-radius-topleft: 10px;
+	-moz-border-radius-topright: 10px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #fff;
+	font-size: 16px;
+	font-weight: bold;
+	margin-top: 0px;
+	position: relative;
+}
+.search_box_3_header h2 {
+	margin-left: 20px;
+	padding-top: 11px;
+	text-shadow: -1px -1px 0px #43abda;
+}
+
+
+/* coches cercanos */
+.nearcar_area {
+	float: left;
+	margin-left: 16px;
+	margin-top: 20px;
+	width: 950px;
+}
+
+.nearcar_box {
+	float: left;
+	width: 174px;
+	height: 231px;
+	background-image: url('../images/img_search/nearcar_box.png');
+	margin-right: 15px;
+	position: relative;
+	margin-bottom: 10px;
+}
+.nearcar_frame {
+	background-color: #FFFFFF;
+	border: 1px solid #9E9E9E;
+	height: 100px;
+	margin-left: 16px;
+	margin-top: 15px;
+	width: 140px;
+}
+.nearcar_frame img {
+	margin-top: 4px;
+	margin-left: 4px;
+}
+.nearcar_info {
+	float: left;
+	margin-left: 20px;
+	margin-top: 8px;
+	width: 140px;
+}
+.nearcar_info a {
+	color: #562a84;
+	text-decoration: none;
+	font-size: 12px;
+	font-weight: bold;
+}
+.nearcar_info span {
+	display: block;
+	font-size: 11px;
+	line-height: 15px;
+	color: #777777;
+	margin-top: 3px;
+}
+a.nearcar_btn_detalle {
+	background-image: url("../images/img_search/nearcar_btn_detalle.png");
+	height: 31px;
+	position: absolute;
+	right: 10px;
+	top: 186px;
+	width: 96px;
+}
+a.nearcar_btn_detalle span {
+	display: none;
+}
+
+
+/* coches resultado busqueda */
+.search_box_3 {
+	height: auto;
+}
+.returncar_area {
+	float: left;
+	margin-left: 3px;
+	margin-top: 20px;
+	width: 950px;
+}
+.returncar_box {
+	background-image: url("../images/img_search/returncar_box.png");
+	float: left;
+	font-family: Tahoma;
+	height: 182px;
+	margin-bottom: 22px;
+	margin-left: 14px;
+	position: relative;
+	width: 301px;
+}
+
+.returncar_frame {
+	background-image: url("../images/img_search/returncar_frame.png");
+	height: 98px;
+	left: 0;
+	position: absolute;
+	top: -7px;
+	width: 125px;
+}
+.returncar_frame img {
+	margin-left: 5px;
+	margin-top: 5px;
+}
+.returncar_titulo {
+	font-size: 12px;
+	font-weight: bold;
+	left: 140px;
+	position: absolute;
+	top: 15px;
+	width: 141px;
+}
+.returncar_titulo a {
+	color: #d11978;
+	text-decoration: none;
+}
+.returncar_info {
+	background-image: url("../images/img_search/returncar_info.png");
+	height: 70px;
+	left: 140px;
+	position: absolute;
+	top: 44px;
+	width: 160px;
+}
+.returncar_info p {
+	color: #FFFFFF;
+	font-size: 11px;
+	line-height: 15px;
+	margin-left: 10px;
+	margin-top: 6px;
+	text-shadow: 1px 1px 0px #0a7070;
+}
+p.returncar_user {
+	left: 26px;
+	position: absolute;
+	top: 115px;
+}
+p.returncar_user a {
+	color: #2691db;
+	font-size: 13px;
+	font-weight: bold;
+	text-decoration: none;
+	width: 140px;
+}
+p.returncar_user span {
+	background-image: url("../images/img_search/returncar_ico_msg.png");
+	background-position: 0 1px;
+	background-repeat: no-repeat;
+	display: block;
+	font-size: 12px;
+	height: 15px;
+	margin-top: 6px;
+	padding-left: 20px;
+}
+p.returncar_user span a {
+	text-decoration: none;
+	color: #282828;
+	font-weight: normal;
+}
+a.returncar_btn_detalle {
+	background-image: url("../images/img_search/returncar_btn_detalle.png");
+	background-repeat: no-repeat;
+	bottom: 30px;
+	display: block;
+	height: 20px;
+	position: absolute;
+	right: 20px;
+	width: 100px;
+}
+a.returncar_btn_detalle span {
+	display: none;
+}
+
+
+
+
+/* autos en oferta */
+.search_box_2 {
+	float: left;
+	background-color: #fff;
+	width: 283px;
+	height: 610px;
+	padding:0 10px;
+	border-radius: 0 6px 0 0;
+}
+.search_box_2_header {
+	margin-top: 8px;
+	background-image: url('../images/Home/Barra.png');
+    background-repeat: repeat-x;
+    margin-left: 30px;
+	width: 249px;
+	height: 28px;
+	font-family: Arial, Helvetica, sans-serif;
+	position: relative;
+	margin-bottom: 10px;
+	-webkit-box-shadow: 1px 1px 10px rgba(50, 50, 50, 0.4);
+	-moz-box-shadow:    1px 1px 10px rgba(50, 50, 50, 0.4);
+	box-shadow:         1px 1px 10px rgba(50, 50, 50, 0.4);
+}
+.search_box_header_flecha {
+	bottom: -17px;
+	left: 21px;
+	position: relative;
+}
+.search_box_2_header h2 {
+	color: #575757;
+	font-size: 13px;
+	font-weight: bold;
+	text-align: center;
+	padding-top: 8px;
+}
+
+input.buton_more_options{
+	margin: 0px;
+	border: 0px;
+	cursor: pointer;
+	float: right;
+	background-image: url('../images/Home/AgregarFiltros.png');
+	background-repeat: repeat-x;
+	width: 20px;
+	height: 20px;
+	z-index: 20;
+	margin-right: 15px;
+	margin-top: 10px;
+}
+
+
+/* box autos recomendados  items */
+.search_arecomend_window {
+	float: left;
+	width: 280px;
+	height: 580px;
+	overflow-y: visible;
+    overflow-x: hidden;
+}
+.search_arecomend_item {
+	border-bottom: 1px dotted #D1D1D1;
+	float: left;
+	min-height: 78px;
+	padding-top: 7px;
+	width: 265px;
+}
+.search_arecomend_item:hover{
+	background-color: #FFFBCC;
+}
+.search_arecomend_frame {
+	float: left;
+	width: 70px;
+	height: 70px;
+	border: 1px solid #cecece;
+	box-shadow: 2px 2px 2px #eeeeee;
+}
+.search_arecomend_frame img {
+	margin-left: 3px;
+	margin-top: 3px;
+}
+ul.search_arecomend_info {
+	float: left;
+	width: 150px;
+	margin-left: 10px;
+}
+ul.search_arecomend_info li {
+	font-size: 12px;
+	color: #393939;
+	margin-bottom: 3px;
+}
+ul.search_arecomend_info li.search_arecomend_marca {
+	margin-bottom: 7px;
+	font-size: 12px;
+}
+ul.search_arecomend_info li.search_arecomend_marca a {
+	color: #05a4e7;
+	font-weight: bold;
+	text-decoration: none;
+	font-size: 15px;
+}
+
+
+
+/* sector busqueda avanzada */
+.search_box_1 {
+	float: left;
+	width: 656px;
+	height:auto;
+	background:url(../images/degr_buscador_v2.png) top left repeat-x ;
+	border-radius:6px 0 0 0;
+}
+.search_ext_box { z-index: 15;}
+
+.txt_buscador {
+	font-size:14px;font-weight:bold;color:#575757; text-align:left;height:20px;margin:20px 0 0 10px ;
+}
+.txt_buscador span {
+	font-weight:normal;font-size:12px;font-style:italic;
+}
+.search_box_1_title{
+	width: 610px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #fff;
+	font-size: 13px;
+	margin-top: 1px;
+	position: relative;
+}
+.search_box_1_header {
+	width: 650px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #fff;
+	font-size: 13px;
+	margin-top: 1px;
+	position: relative;
+}
+.search_box_1_header h2, .search_box_1_title h2 {
+	margin-left: 20px;
+	padding-top: 8px;
+}
+.search_box1_form {
+	float: left;
+	margin:10px;
+}
+.search_box1_form .input_f1 {
+	width:128px;
+	margin-right:23px;
+}
+.search_box1_form .input_f1b {
+	width:128px;
+	margin:0 0 0 1px;
+}
+.search_box_ubica {
+	float: left;
+	margin:10px;
+	display:block;
+	width: 100%;
+	margin:10px;
+	height:30px;
+}
+.search_box_ubica input {
+	background-image: url("../images/img_search/land_form_input_bg.png");
+	background-repeat: repeat-x;
+	background-color: #FFFFFF;
+	border: 1px solid #9A9A9A;
+	float: left;
+	height: 26px;
+	padding-left: 10px;
+	width: 618px;
+	color: #909090;
+	font-family: 'MakoRegular', Arial, "MS Trebuchet", sans-serif;
+}
+.search_box1_form input {
+	background-image: url("../images/img_search/land_form_input_bg.png");
+	background-repeat: repeat-x;
+	background-color: #FFFFFF;
+	border: 1px solid #9A9A9A;
+	float: left;
+	height: 26px;
+	margin-right: 50px;
+	padding-left: 10px;
+	width: 160px;
+	color: #909090;
+	font-family: 'MakoRegular', Arial, "MS Trebuchet", sans-serif;
+}
+.search_box1_form button {
+	width: 133px;
+	height: 37px;
+	background-image: url("../images/img_landing/land_box1_btn_buscar.png");
+	background-color: transparent;
+	border: 0;
+}
+.search_form_calendar_1 {
+	left: 200px;
+	position: absolute;
+	top: 22px;
+}
+.search_form_calendar_2 {
+	left: 423px;
+	position: absolute;
+	top: 22px;
+}
+.search_box_1_maparea {
+	float: left;
+	width: 630px;
+	height: 520px;
+	margin: 15px 10px 10px 10px;
+	border: 1px solid #e3e0e0;
+}
+/* buscador avanzado */
+.search_ext_box {
+	height: 55px;
+	left: 0;
+	width: 650px;
+}
+.search_ext_box select {
+border: 1px solid #9A9A9A;
+font-family: 'MakoRegular', Arial, "MS Trebuchet", sans-serif;
+font-size: 13px;
+color: #909090;
+padding: 4px;
+width: 132px;
+margin-right: 18px;
+
+} 
+
+.search_ext_wrapper {
+	float: left;
+	margin-left: 10px;
+}
+
+.group_desde {font-size:11px; font-weight:bold;text-align:left;display:inline-block;height:16px;margin:0;color:#000000;float:left;width:326px;}
+.group_hasta {font-size:11px; font-weight:bold;text-align:left;display:inline-block;height:16px;margin:0;color:#000000;float:left;width:293px;}
+.group_filtar {font-size:11px; font-weight:bold;text-align:left;display:inline-block;height:16px;margin:0 0 0 10px;color:#000000;float:left;width:293px;}
+
+.mapcar_area {
+	float: left;
+	margin-left: 3px;
+	margin-top: 20px;
+	width: 950px;
+}
+.mapcar_box {
+	background:url("../images/img_mensajes/msg_user_post_flecha.png") no-repeat;
+	float: left;
+	font-family: Tahoma;
+	height: 140px;
+	margin-top: 12px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	position: relative;
+	width: 301px;
+}
+
+.mapcar_frame {
+	background-image: url("../images/img_search/returncar_frame.png");
+	height: 98px;
+	left: 0;
+	position: absolute;
+	top: 0px;
+	width: 125px;
+}
+.mapcar_frame img {
+	margin-left: 5px;
+	margin-top: 5px;
+}
+.mapcar_titulo {
+	font-size: 14px;
+	font-weight: bold;
+	left: 140px;
+	position: absolute;
+	width: 158px;
+}
+.mapcar_titulo a {
+	color: #05a4e7;
+	text-decoration: none;
+}
+.mapcar_titulo a:hover {
+	text-decoration: underline;
+}
+.mapcar_info {
+	height: 54px;
+	left: 135px;
+	position: absolute;
+	top: 30px;
+	width: 200px
+}
+.mapcar_info p {
+	color: #575757;
+	font-size: 12px;
+	line-height: 15px;
+	margin-left: 10px;
+	margin-top: 6px;
+}
+p.mapcar_info_trans{
+	top: 33px;
+	position: absolute;
+}
+.detalle_user{
+	right: 2px;
+	position: absolute;
+	top: 94px;
+	width: 200px;
+	height: 48px;
+	font-size: 12px;
+}
+p.detalle_mapcar_user{
+	top: 18px;
+	position: absolute;
+}
+p.mapcar_user a {
+	color: #2691db;
+	font-size: 13px;
+	font-weight: bold;
+	text-decoration: none;
+	width: 140px;
+}
+p.mapcar_user a:hover{
+	text-decoration: underline;
+}
+p.mapcar_user span {
+	background-image: url("../images/img_search/returncar_ico_msg.png");
+	background-position: 0 1px;
+	background-repeat: no-repeat;
+	display: block;
+	font-size: 12px;
+	height: 15px;
+	margin-top: 6px;
+	padding-left: 20px;
+}
+p.mapcar_user .txt_user {
+	background:none;
+	padding-left:0px;
+	margin-top: 0px;
+	margin-bottom:-10px;
+}
+
+p.mapcar_user span a {
+	text-decoration: none;
+	color: #282828;
+	font-weight: normal;
+}
+img.img_verificado{
+	width: 14px;
+	height: 14px;
+	margin-left: 5px;
+}
+a.mapcar_btn_detalle {
+	bottom: 12px;
+	display: block;
+	position: absolute;
+	left: 4px;
+	width: 111px;
+	height: 38px;
+	background-image: url('../images/Home/BotonReservarHome.png');
+	text-decoration: none;
+}
+a.mapcar_btn_detalle span {
+	display: block;
+}
+
+.detalles_car{
+	float: left;
+	margin-left: 136px;
+	width: 225px;
+	height: 156px;
+	font-size: 13px;
+}
+
+.info_car_asegurado{
+	float: left;
+	height: 50px;
+	margin-top: 15px;
+	width: 225px;
+}
+.info_car_asegurado p{
+	float: left;
+	color: #EC008C;
+	font-weight: bold;
+}
+.info_car_asegurado p.sepa{
+	float: left;
+	color: black;
+	margin-top: 4px;
+}
+.imagenesSeguro{
+	float: left;
+	width: 220px;
+	margin-top: 5px;
+	margin-left: 5px;
+}
+.img_s1_home{
+	background-image: url("../images/img_autos/SeguroContraDaños_Icono.png");
+	float: left;
+	width: 30px;
+	height: 14px;
+	margin-right: 7px;
+	margin-top: 5px;
+}
+.img_s2_home{
+	background-image: url("../images/img_autos/SeguroPerdidaCompleta_Icono.png");
+	float: left;
+	width: 19px;
+	height: 17px;
+	margin-left: 8px;
+	margin-right: 8px;
+	margin-top: 2px;
+}
+.img_s3_home{
+	background-image: url("../images/img_autos/Terceros_Icono.png");
+	float: left;
+	width: 8px;
+	height: 18px;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 2px;
+}
+.img_s4_home{
+	background-image: url("../images/img_autos/SeguroAcompañantes_Icono.png");
+	float: left;
+	width: 27px;
+	height: 19px;
+	margin-left: 7px;
+	margin-right: 7px;
+}
+.img_s5_home{
+	background-image: url("../images/img_autos/5UF_Icono.png");
+	float: left;
+	width: 19px;
+	height: 17px;
+	margin-left: 7px;
+	margin-top: 2px;
+}
+.titulo{
+	float: left;
+	width: 200px;
+	font-size: 15px;
+	font-weight: bold;
+	padding-bottom: 4px;
+}
+.titulo a{
+	color: #05a4e7;
+	text-decoration: none;
+}
+.titulo a:hover{
+	text-decoration: underline;
+}
+.datos_car{
+	float: left;
+	width: 200px;
+	height: 48px;
+	margin-left: 10px;
+	margin-top: 5px;
+}
+.detalles_user{
+	float: left;
+	width: 200px;
+	height: 20px;
+	margin-top: 10px;
+	font-size: 14px;
+}
+.detalles_user a{
+	color: #05a4e7;
+	text-decoration: none;
+}
+.detalles_user a:hover{
+	text-decoration: underline;
+}
+.datos_user{
+	float: left;
+	width: 200px;
+	height: 28px;
+	margin-left: 10px;
+	margin-top: 5px;
+}
+
+a.mapcar_user_message{
+	float: left;
+	width: 24px;
+	height: 22px;
+	background-image: url('../images/img_msj/EnviarMsjSinSombraChico.png');
+	margin-left: 10px;
+	margin-top: -3px;
+}
+a.mapcar_user_titulo{
+	float: left;
+	border-bottom: 1px solid #05a4e7;
+}
+.detalles_car p{
+	padding-bottom: 4px;
+}
+.img_vel_resp{
+	float: left;
+	background-image: url('../images/Home/IconoPuntualidad.png');
+	width: 15px;
+	height: 15px;
+	margin-right: 6px;
+	margin-top: -1px;
+}
+.img_reservas_resp{
+	float: left;
+	background-image: url('../images/Home/IconoNumeroTransacciones.png');
+	width: 23px;
+	height: 13px;
+	margin-right: 6px;
+	margin-top: -1px;
+	margin-left: -4px;
+}
+img.medallita{
+	width: 15px;
+	height: 15px;
+	margin-left: 2px;
+}
+
+/* Barra en caso de reserva, en profile*/
+#barraAlerta{
+	background-color: black;
+	width: 1260px;
+	margin: 0 auto;
+	height: 18px;
+	padding: 2px;
+}
+#barraAlerta p {
+	color: white;
+	font-size: 12px;
+	width: 1125px;
+	text-align: right;
+	font-style: italic;
+}
+#barraAlerta a{
+	color: white;
+	text-decoration: underline;
+}
+#barraAlerta .img_cerrar{
+	vertical-align: bottom;
+	cursor: pointer;
+}
+#barraAlerta p.textVersionMovil{
+	display: none;
+}
+.link_opciones_moviles{
+	display: none;
+}
+.subMenu_moviles{
+    display: none;
+}

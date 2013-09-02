@@ -1,0 +1,5 @@
+Auto-merging apps/frontend/modules/main/templates/registerSuccess.php
+CONFLICT (content): Merge conflict in apps/frontend/modules/main/templates/registerSuccess.php
+Auto-merging apps/frontend/modules/main/actions/actions.class.php
+CONFLICT (content): Merge conflict in apps/frontend/modules/main/actions/actions.class.php
+Automatic merge failed; fix conflicts and then commit the result.

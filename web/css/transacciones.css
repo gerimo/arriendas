@@ -1,0 +1,325 @@
+/*@import url("comunes.css");
+
+h1.trans_titulo_seccion span {
+	color: #757575;
+	font-size: 20px;
+}
+.trans_box_1 {
+	float: left;
+	margin-left: 20px;
+	background-color: #fff;
+	border: 1px solid #c3c3c3;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	width: 520px;
+	background-image: url('../images/img_mensajes/msg_box_bg.png');
+	background-repeat: repeat-x;
+	background-position: bottom;
+	padding-bottom: 30px;
+	margin-bottom: 20px;
+}
+.trans_box_1_header {
+	background-image: url('../images/img_calendario/calen_box_2_header_bg.png');
+	background-repeat: repeat-x;
+	width: 520px;
+	height: 30px;
+	border-bottom: 1px solid #c3c3c3;
+	-webkit-border-top-left-radius: 10px;
+	-webkit-border-top-right-radius: 10px;
+	-moz-border-radius-topleft: 10px;
+	-moz-border-radius-topright: 10px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	font-family: Tahoma;
+	color: #fff;
+	font-size: 14px;
+	margin-bottom: 20px;
+	margin-top: -1px;
+	position: relative;
+}
+.trans_box_1_header h2 {
+	margin-left: 20px;
+	padding-top: 8px;
+}
+*/
+/* items 'tus transacciones ' */
+/*
+.trans_item1 {
+	width: 500px;
+	float: left;
+	margin-left: 10px;
+	border: 1px solid #c0c0c0;
+	position: relative;
+	height: 90px;
+	margin-bottom: 15px;
+	background-image: url('../images/img_transacciones/trans_item1_bg.png');
+	background-repeat: repeat-x;
+	background-position: bottom;
+}
+.trans_item1_frame {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	background-image: url('../images/img_transacciones/trans_box1_frame.png');
+	width: 87px;
+	height: 75px;
+}
+.trans_item1_frame img {
+	margin-top: 4px;
+	margin-left: 4px;
+}
+ul.trans_item1_info {
+	float: left;
+	margin-left: 110px;
+	margin-top: 10px;
+}
+ul.trans_item1_info li {
+	color: #444444;
+	font-size: 11px;
+	margin-bottom: 4px;
+}
+ul.trans_item1_info li.trans_item1_nombre {
+	color: #1d95cb;
+	font-size: 13px;
+	font-weight: bold;
+	margin-bottom: 10px;
+	font-family: Tahoma;
+}
+.trans_item1_calif {
+	width: 84px;
+	height: 78px;
+	background-image: url('../images/img_transacciones/trans_box1_calif.png');
+	position: absolute;
+	top: -5px;
+	left: 290px;
+}
+.trans_item1_calif span {
+	display: block;
+	width: 72px;
+	text-align: center;
+	font-family: Tahoma;
+	font-weight: bold;
+	font-size: 12px;
+	line-height: 14px;
+	position: absolute;
+	top: 29px;
+	left: 4px;
+}
+.trans_item1_pago {
+	width: 84px;
+	height: 78px;
+	background-image: url('../images/img_transacciones/trans_box1_pago.png');
+	position: absolute;
+	top: -5px;
+	left: 397px;
+}
+.trans_item1_pago span {
+	display: block;
+	width: 72px;
+	text-align: center;
+	font-family: Tahoma;
+	font-weight: bold;
+	font-size: 12px;
+	line-height: 14px;
+	position: absolute;
+	top: 29px;
+	left: 4px;
+}
+*/
+/* items Casos problemáticos y multas en curso */
+/*
+.trans_item2 {
+	float: left;
+	margin-left: 10px;
+	width: 500px;
+	height: 70px;
+	border: 1px solid #c0c0c0;
+	font-family: Tahoma;
+	margin-bottom: 10px;
+	position: relative;
+	padding-bottom: 20px;
+	background-image: url('../images/img_transacciones/trans_item1_bg.png');
+	background-repeat: repeat-x;
+	background-position: bottom;
+}
+.trans_item2_info {
+	float: left;
+	width: 500px;
+	height: 40px;
+	position: relative;
+}
+a.trans_item2_nombre {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	font-size: 13px;
+	font-weight: bold;
+	color: #1d95cb;
+}
+p.trans_item2_calif {
+	font-size: 14px;
+	font-weight: bold;
+	color: #383838;
+	position: absolute;
+	top: 10px;
+	left: 220px;
+}
+p.trans_item2_pago {
+	font-size: 14px;
+	font-weight: bold;
+	color: #383838;
+	position: absolute;
+	top: 10px;
+	left: 360px;
+}
+.trans_item2_form {
+	float: left;
+	margin-left: 10px;
+}
+.trans_item2_form select {
+	width: 140px;
+	border: 1px solid #c0c0c0;
+	font-size: 11px;
+	padding: 3px;
+}
+.trans_item2_form input {
+	width: 160px;
+	height: 20px;
+	border: 1px solid #c0c0c0;
+	font-size: 11px;
+	padding-left: 10px;
+}
+a.trans_item2_extdesc {
+	font-size: 11px;
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+}
+*/
+/* items Casos problemáticos y multas  */
+/*
+.trans_item3 {
+	float: left;
+	margin-left: 10px;
+	width: 500px;
+	border: 1px solid #c0c0c0;
+	font-family: Tahoma;
+	margin-bottom: 10px;
+	position: relative;
+	padding-bottom: 10px;
+	background-image: url('../images/img_transacciones/trans_item1_bg.png');
+	background-repeat: repeat-x;
+	background-position: bottom;
+}
+.trans_item3_info {
+	float: left;
+	width: 500px;
+	height: 58px;
+	position: relative;
+}
+a.trans_item3_nombre {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	font-size: 13px;
+	font-weight: bold;
+	color: #1d95cb;
+}
+p.trans_item3_fecha {
+	position: absolute;
+	top: 33px;
+	left: 10px;
+	font-size: 11px;
+	color: #383838;
+}
+p.trans_item3_calif {
+	font-size: 14px;
+	font-weight: bold;
+	color: #383838;
+	position: absolute;
+	top: 10px;
+	left: 220px;
+}
+p.trans_item3_pago {
+	font-size: 14px;
+	font-weight: bold;
+	color: #383838;
+	position: absolute;
+	top: 10px;
+	left: 360px;
+}
+.trans_item3_form {
+	float: left;
+	margin-left: 10px;
+	position: relative;
+	margin-bottom: 10px;
+}
+.trans_item3_form select {
+	width: 140px;
+	border: 1px solid #c0c0c0;
+	font-size: 11px;
+	padding: 3px;
+	float: left;
+}
+.trans_item3_form .trans_item3_textarea {
+	width: 220px;
+	border: 1px solid #c0c0c0;
+	font-size: 11px;
+	padding-left: 10px;
+	float: left;
+	margin-left: 10px;
+	background-color: #ffffff;
+	padding-top: 5px;
+	padding-left: 5px;
+	padding-bottom: 5px;
+	line-height: 15px;
+}
+a.trans_item3_extdesc {
+	font-size: 11px;
+	position: absolute;
+	bottom: 3px;
+	right: -74px;
+}
+*/
+
+.main_contenido table{
+	border-collapse: collapse;
+	margin: 10px;
+	width: 500px;
+}
+
+.main_contenido td{
+	border: 1px solid #bcbec0;
+	padding: 5px;
+	font-size: 13px;
+	text-align: center;
+	color:black;
+	vertical-align: middle;
+	width: 83px;
+}
+
+.titulo {
+    background-color: #BCBEC0;
+    font-size: 12px !important;
+    font-weight: bold;
+}
+
+.destacado{
+	color: #ec008c;
+}
+
+.textoChico{
+	font-size: 10px;
+}
+
+.error {
+    color: #EC008C;
+    font-size: 15px;
+    margin-left: 30px;
+}
+.titulo_tabla {
+    font-weight: bold;
+    font-size: 15px;
+    margin-left: 30px;
+}

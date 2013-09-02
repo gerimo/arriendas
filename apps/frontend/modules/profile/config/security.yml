@@ -1,0 +1,7 @@
+myReserves:
+  is_secure: false
+confirmReserve:
+  is_secure: false
+cancelReserveConfirmation:
+  is_secure: false
+

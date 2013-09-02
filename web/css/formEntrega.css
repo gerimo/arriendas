@@ -1,0 +1,357 @@
+
+body{
+	background-color: #E6E6E6;
+	font-family: arial;
+}
+
+#contorno{
+	width: 1020px;
+	min-height: 1320px;
+	margin: auto;
+	border: 1px solid #585858;
+	margin: auto;
+	background-color: white;
+}
+
+h1{
+	background-color: black;
+	color: white;
+	margin: 0;
+	text-align: center;
+	font-size: 26px;
+	padding: 8px;
+	width: 1005px;
+}
+
+h2{
+	background-color: #D8D8D8;
+	float: left;
+	margin-left: 10px;
+	width: 1000px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	font-size: 20px;
+	font-style: italic;
+}
+
+p{
+	font-size: 15px;
+}
+
+#datosPersonales{
+	/*background-color: blue;*/
+	width: 730px;
+	float: left;
+	padding: 15px;
+}
+
+#contactoEmergencia{
+	/*background-color: red;*/
+	float: right;
+	width: 220px;
+	border-left: 1px solid black;
+	margin-top: 5px;
+	padding: 5px;
+}
+
+.kilometros{
+	/*background-color: green;*/
+	float: left;
+	font-weight: bold;
+	width: 300px;
+	padding: 20px;
+	text-align: center;
+}
+
+.fecha{
+	/*background-color: yellow;*/
+	float: left;
+	font-weight: bold;
+	width: 300px;
+	padding: 25px 20px 20px;
+	text-align: center;
+}
+
+.horaEntrega, .horaEntregaDevolucion{
+	/*background-color: white;*/
+	float: left;
+	font-weight: bold;
+	width: 300px;
+	padding: 25px 20px 20px;
+	text-align: center;
+}
+
+.horaEntregaDevolucion{
+	padding-left: 55px;
+    text-align: left;
+    width: 180px;
+}
+
+#imgIzq{
+	/*background-color: green;*/
+	float: left;
+	padding: 20px;
+	width: 480px;
+}
+
+#descripcionDanioDer{
+	float: right;
+    padding: 10px 10px 0;
+    width: 990px;
+}
+
+#descripcionDanio{
+	background-color: silver;
+	float: left;
+	height: 75px;
+	width: 980px;
+	padding: 20px;
+}
+
+#declaracion1, #declaracion2{
+	background-color: #D8D8D8;
+    border: 1px solid #D8D8D8;
+    float: left;
+    margin-bottom: 10px;
+    padding: 10px;
+    width: 998px;
+}
+
+#horaLlegada, #horaLlegadaDevolucion{
+	width: 100px;
+}
+
+.horaLlegada, .horaLlegadaDevolucion{
+	float: right;
+    font-weight: bold;
+    height: 30px;
+    padding: 20px;
+    text-align: center;
+    width: 260px;
+}
+
+#contacto{
+	float: left;
+	padding: 10px;
+	width: 970px;
+	border: 3px solid black;
+	text-align: center;
+	margin-left: 12px;
+}
+
+#contacto p{
+	font-size: 22px;
+}
+
+.tituloEmergencia{
+	font-style: italic;
+}
+
+.textoEmergencia{
+	font-weight: bold;
+	margin-top: 5px;
+}
+
+.textoSinEstilo{
+	font-family: arial;
+	font-style: normal;
+	font-weight: normal;
+	color: black;
+	font-size: 15px;
+}
+
+#kmEntrega{
+	width: 150px;
+}
+
+#contorno input[type="text"]{
+	width: 100px;
+	text-align: center;
+}
+
+.textoH2{
+	font-weight: normal;
+}
+
+.inputFecha{
+	width: 50px;
+}
+
+#declaracion1 p, #declaracion2 p{
+	font-size: 20px;
+	font-style: italic;
+}
+
+.firma{
+    float: left;
+    height: 30px;
+    margin-left: 100px;
+    margin-top: 25px;
+    text-align: center;
+    width: 210px;
+    padding-top: 5px;
+}
+
+.firmaBotones{
+	float: right;
+	height: 30px;
+	margin-top: 15px;
+	text-align: center;
+}
+
+.firmaBotones input{
+	width: 120px;
+}
+
+.firmaCheckbox {
+    float: left;
+    margin-top: 3px;
+}
+
+.imgAuto{
+	float: left;
+	margin-bottom: 10px;
+	margin-right: 10px;
+}
+
+#fecha, #horaEntrega, #fechaDevolucion, #horaEntregaDevolucion{
+	font-weight: normal;
+	margin-left: 10px;
+}
+
+.tituloDanios {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 7px;
+    text-align: center;
+}
+
+.numeroDanio{
+	font-weight: bold;
+}
+
+.kilometrosDevolucion{
+	/*background-color: green;*/
+	float: left;
+	font-weight: bold;
+	width: 240px;
+	padding: 20px;
+	text-align: center;
+}
+
+.fechaDevolucion{
+	/*background-color: yellow;*/
+	float: left;
+	font-weight: bold;
+	width: 140px;
+	padding: 25px 20px 20px;
+	text-align: center;
+}
+
+
+.documentosPropietario {
+    border: 1px solid #A4A4A4;
+    float: left;
+    height: 170px;
+    margin: 10px;
+    width: 472px;
+    padding: 10px;
+}
+
+.documentosArrendatario {
+    border: 1px solid #A4A4A4;
+    float: right;
+    height: 170px;
+    margin: 10px 10px 10px 0;
+    width: 472px;
+    padding: 10px;
+}
+
+.documentosPropietario p, .documentosArrendatario p{
+    font-size: 20px;
+    font-style: italic;
+    text-indent: 10px;
+    color: #A4A4A4;
+}
+
+.documentosPropietario .firma, .documentosArrendatario .firma{
+    margin-left: 40px;
+}
+
+.documentosPropietario .firmaBotones, .documentosArrendatario .firmaBotones{
+    margin-right: 20px;
+}
+
+.lineaFirma{
+	border-top: 1px solid #A4A4A4;
+	padding-top: 5px;
+}
+
+.textoFirma{
+	height: 20px;
+	color: #A4A4A4;
+}
+
+.declaracion{
+	height: 95px;
+}
+
+#declaracion1{
+	height: 120px;
+}
+
+#declaracion2{
+	height: 100px;
+}
+
+#declaracion1 p, #declaracion2 p{
+	color: #A4A4A4;
+}
+/*
+#nombrePropietarioDocumentos, #nombreArrendatarioDocumentos, #nombreArrendatarioDanios, #nombrePropietarioDevolucion{
+	display: none;
+}
+*/
+
+.gris{
+	color: #A4A4A4;
+}
+
+.remarcado{
+	border-color: red !important;
+}
+
+.remarcado p{
+	color: black !important;
+}
+
+.remarcado .lineaFirma{
+	border-color: black !important;
+}
+
+.textoRemarcado{
+	color: red;
+}
+
+.textoDanios {
+    float: right;
+    min-height: 310px;
+    width: 540px;
+    background-image: url('../images/lineaTexto.png');
+}
+
+.bordeNegro{
+	border-color: black !important;
+}
+
+.bordeGris{
+	border-color: #D8D8D8 !important;
+}
+
+.bordeNegro .textoRemarcado, .bordeGris .textoRemarcado{
+	color: black;
+}
+
+.textoNegro{
+	color: black;
+}

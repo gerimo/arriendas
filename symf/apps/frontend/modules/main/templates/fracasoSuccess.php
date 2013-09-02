@@ -1,0 +1,1 @@
+FRACASO PAGO

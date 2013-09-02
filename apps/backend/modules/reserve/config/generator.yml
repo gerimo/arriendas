@@ -1,0 +1,51 @@
+generator:
+  class: sfDoctrineGenerator
+  param:
+    model_class:           Reserve
+    theme:                 jroller
+    non_verbose_templates: true
+    with_show:             false
+    singular:              ~
+    plural:                ~
+    route_prefix:          reserve
+    with_doctrine_route:   true
+    actions_base_class:    sfActions
+    # extra: [show, print, export]
+
+    config:
+      actions: ~
+      fields:
+        Date: { label: Fecha de la Reserva, is_real: true }
+        auto: { label: Auto, is_real: true }
+        usuario: { label: Arrendatario, is_real:true }
+        usuario_email: { label: Email Arrendatario, is_real: false }
+        dueno: { label: Dueño, is_real:true }
+        status: { label: Estado, is_real:true }  
+      list:
+        title: Listado de Reservas
+        display: [=Id, status, Date,duration,auto,usuario,usuario_email,usuario_telefono,dueno,dueno_email,dueno_telefono]
+        sort: [Date]
+        table_method: getReserves
+        object_actions:
+          _edit: ~ 
+          confirmar: {label: Confirmar }
+          cancelar: { label: Cancelar }
+      filter:
+        display: [estado,fecha,usuario,dueno]
+        fields:
+          estado:
+            label: Estado
+            help: Estado Actual de la Reserva
+          fecha:
+            label: Fecha
+            help: Rango de Fecha de la Reserva
+          usuario:
+            label: Usuario
+            help: Usuario que solicita el arriendo
+          dueno:
+            label: dueno
+            help: Propietario del Auto
+      form:    ~
+      edit:    ~
+      new:     ~
+      show:    ~

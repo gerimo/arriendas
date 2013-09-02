@@ -1,0 +1,146 @@
+
+h1.calif_titulo_seccion span {
+	color: #757575;
+	font-size: 20px;
+}
+
+.calif_user_sector {
+	float: left;
+} 
+
+.calif_user_box {
+	float: left;
+	width: 520px;
+	margin-left: 20px;	
+	margin-bottom: 20px;
+}
+.calif_user_frame {
+	background-image: url('../images/img_calificaciones/calif_user_frame_bg.png');
+	width: 92px;
+	height: 102px;
+}
+.calif_user_frame img {
+	margin-top: 4px;
+	margin-left: 4px;
+}
+.calif_user_nombre {
+	float: left;
+	width: 92px;
+	font-size: 11px;
+	color: #1d95cb;
+	text-align: center;
+	line-height: 13px;
+	margin-bottom: 10px;
+	font-weight: bold;
+	font-family: Tahoma;
+}
+.calif_user_info {
+	float: right;
+	width: 410px;
+	background-color: #fff;
+	border: 1px solid #c3c3c3;
+	background-image: url('../images/img_calificaciones/calif_user_info_bg.png');
+	background-repeat: repeat-x;
+	background-position: bottom;
+	margin-bottom: 10px;
+	padding-bottom: 20px;
+}
+.calif_user_info p {
+	float: left;
+	margin-left: 10px;
+	font-size: 12px;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+ul.calif_general {
+	float: left;
+	margin-top: 20px;
+	margin-left: 10px;
+	width: 390px;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #dbdbdb;
+}
+
+ul.calif_general li.calif_auto {
+	font-size: 15px;
+	font-weight: bold;
+	margin-bottom: 15px;
+}
+ul.calif_general li.calif_auto span {
+	color: #1d95cb;
+}
+ul.calif_general li {
+	margin-bottom: 10px;
+	font-size: 12px;
+}
+
+ul.calif_general li input {
+	vertical-align: middle; margin:0; padding: 0;
+}
+
+textarea.calif_experiencia {
+	width: 370px;
+	margin-left: 10px;
+	height: 60px;
+	border: 1px solid #d2d2d2;
+	background-color: #fff;
+	color: #979797;
+	font-size: 11px;
+	line-height: 14px;
+	font-family: Arial, Helvetica, sans-serif;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 10px;
+	resize: none;
+}
+.calif_preguntas {
+	width: 390px;
+	padding-bottom: 10px;
+	padding-top: 10px;
+	background-color: #f5f4ce;
+	margin-top: 10px;
+	margin-left: 10px;
+	font-size: 11px;
+	color: #434040;
+	margin-bottom: 10px;
+}
+.calif_preguntas a {
+	color: #1d95cb;
+}
+.calif_preguntas ul {
+	margin-top: 10px;
+	margin-left: 10px;
+	width: 370px;
+}
+.calif_preguntas ul li {
+	margin-bottom: 10px;
+	line-height: 14px;
+}
+.calif_contraparte {
+	float: left;
+	margin-left: 10px;
+	margin-bottom: 20px;
+	width: 370px;
+	padding: 10px;
+	background-color: #e2f1fc;
+	border: 1px solid #b8d7ee;
+	color: #979797;
+	font-size: 11px;
+	line-height: 14px;
+}
+
+a.calif_btn_calificar {
+	float: left;
+	display: block;
+	width: 142px;
+	height: 32px;
+	background-image: url('../images/img_calificaciones/msg_btn_calificar.png');
+	margin-left: 260px;
+}
+
+
+
+
+
+

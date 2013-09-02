@@ -1,0 +1,302 @@
+/************************************* payReserve *********************************/
+#contenidoPayReserva{
+	float: left;
+	width: 500px;
+	height: 430px;
+	margin-left: 10px;
+	padding-top: 10px;
+	margin-bottom: 10px;
+}
+.numReserva{
+	float: right;
+	width: 440px;
+	height: 20px;
+	margin-right: 30px;
+	text-align: right;
+	font-size: 13px;
+}
+.detalles{
+	float: left;
+	width: 440px;
+	height: 100px;
+	margin-top: 10px;
+	margin-left: 30px;
+}
+.valorTotal{
+	float: left;
+	width: 440px;
+	height: 55px;
+	margin-left: 30px;
+	margin-top: 10px;
+	border-top: 2px solid #E2E3E4;
+	border-bottom: 2px solid #E2E3E4;
+}
+.valorSubTotal{
+	float: left;
+	width: 440px;
+	height: 55px;
+	margin-left: 30px;
+	margin-top: 10px;
+	border-top: 1px solid #E2E3E4;
+	border-bottom: 1px solid #E2E3E4;
+}
+.valorTotal .fondoRosa{
+	float: left;
+	background-color: #F0D7E6;
+	width: 100%;
+	height: 28px;
+	margin-top: 10px;
+	text-align: center;
+	padding-top: 7px;
+}
+.valorSubTotal .fondoRosa{
+	float: left;
+	background-color: #F0D7E6;
+	width: 100%;
+	height: 28px;
+	margin-top: 10px;
+	text-align: center;
+	padding-top: 7px;
+}
+.valorTotal .fondoRosa span{
+	font-weight: bold;
+	font-size: 15px;
+}
+.valorSubTotal .fondoRosa span{
+	font-weight: normal;
+	font-size: 15px;
+}
+.botones{
+	float: left;
+	width: 440px;
+	height: 70px;
+	margin-left: 30px;
+	margin-top: 10px;
+}
+.botonVolver{
+	float: left;
+	background-image: url('../images/puntopagos/BotonVolver.png');
+	width: 173px;
+	height: 69px;
+	margin-left: -14px;
+}
+.botonSiguiente{
+	float: right;
+	background-image: url('../images/puntopagos/BotonSiguiente.png');
+	width: 173px;
+	height: 69px;
+	margin-right: -20px;
+}
+.detalles .titulo{
+	float: left;
+	width: 100%;
+	border-bottom: 1px solid #E2E3E4;
+	padding-bottom: 3px;
+	font-size: 14px;
+}
+.detallesTabla{
+	margin-top: 10px;
+	float: left;
+	border-collapse: collapse;
+	border-spacing: 0;
+	font-size: 14px;
+}
+.detallesTabla th, .detallesTabla td{
+	width: 145px;
+	text-align: left;
+	padding: 3px;
+}
+.detallesTabla thead{
+	font-style: italic;
+	font-size: 12px;
+}
+.detallesTabla thead th{
+	font-weight: normal;
+}
+.detallesTabla tfoot{
+	font-style: italic;
+	font-size: 12px;
+}
+.detallesTabla tfoot th{
+	font-weight: normal;
+}
+.detallesTabla tbody{
+	background: #E2E3E4;
+}
+.detallesTabla tbody td{
+	font-weight: bold;
+}
+
+#eleccionDeposito{
+	float: left;
+	width: 440px;
+	height: 130px;
+	margin-left: 30px;
+	margin-top: 30px;
+	font-size: 13px;
+}
+#eleccionDeposito .titulo{
+	float: left;
+	width: 100%;
+	border-bottom: 1px solid #E2E3E4;
+	padding-bottom: 3px;
+	font-size: 14px;
+}
+#eleccionDeposito .selector{
+	float: left;
+	margin-right: 10px;
+	height: 30px;
+}
+.main_contenido{
+	height: 700px;
+}
+#eleccion1, #eleccion2{
+	float: left;
+	margin-left: 10px;
+	margin-top: 10px;
+
+}
+#eleccion1 p span, #eleccion2 p span{
+	font-weight: bold;
+}
+
+
+/********************************* bcpuntopagos *******************************/
+
+
+#fondoPP{
+	float: left;
+	background-color: white;
+	margin: 0 auto;
+	width: 920px;
+	padding: 20px;
+	height: auto ! important;
+	min-height: 200px;
+	-webkit-border-radius: 15px;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	-webkit-box-shadow: 1px 1px 10px rgba(50, 50, 50, 0.4);
+	-moz-box-shadow: 1px 1px 10px rgba(50, 50, 50, 0.4);
+	box-shadow: 1px 1px 10px rgba(50, 50, 50, 0.4);
+}
+#detallesPP{
+	float: left;
+	background-color: #F0D7E6;
+	width: 820px;
+	height: 180px;
+	margin-left: 50px;
+	margin-top: 20px;
+	margin-bottom: 30px;
+}
+table#tableDetallesPP{
+	border-collapse: collapse;
+	border-spacing: 0;
+	float: left;
+	width: 780px;
+	text-align: left;
+	margin-left: 20px;
+	margin-top: 22px;
+}
+table#tableDetallesPP thead tr th{
+	padding: 4px;
+	font-size: 13px;
+	font-style: italic;
+	font-weight: normal;
+	background-color: #EE8DC7;
+	border-top: 1px solid #BCBEB0;
+}
+table#tableDetallesPP tfoot tr th{
+	padding: 10px 4px 10px 4px;
+	font-size: 14px;
+	font-weight: bold;
+	border-top: 2px solid #EE8BF8;
+}
+table#tableDetallesPP tbody tr td{
+	padding: 4px;
+	font-size: 14px;
+	font-weight: bold;
+	padding-bottom: 12px;
+	padding-top: 10px;
+	border-bottom: 1px solid #BCBEB0;
+}
+table#tableDetallesPP thead tr th.bordeDerGris, table#tableDetallesPP tfoot tr th.bordeDerGris, table#tableDetallesPP tbody tr td.bordeDerGris{
+	border-right: 1px solid #E2E3E4;
+}
+table#tableDetallesPP thead tr th.bordeIzqGris, table#tableDetallesPP tfoot tr th.bordeIzqGris, table#tableDetallesPP tbody tr td.bordeIzqGris{
+	border-left: 1px solid #E2E3E4;
+}
+#contenedorMedios{
+	float: left;
+}
+#tablePP{
+	margin-top: 10px;
+	float: left;
+	border-collapse: collapse;
+	border-spacing: 0;
+	font-size: 14px;
+	width: 670px;
+	margin-left: 115px;
+}
+#tablePP tr td input{
+	float:left;
+	margin-top:20px;
+	margin-right:5px;
+}
+#tablePP tr td{
+	width: 134px;
+}
+#tablePP2{
+	margin-top: 10px;
+	float: left;
+	border-collapse: collapse;
+	border-spacing: 0;
+	font-size: 14px;
+	width: 670px;
+	margin-left: 135px;
+}
+#tablePP2 tr td input{
+	float:left;
+	margin-top:20px;
+	margin-right:5px;
+}
+.contenedorBotonPagar{
+	float: right;
+	width: 200px;
+	height: 70px;
+	margin-top: 30px;
+	margin-right: 170px;
+}
+input.botonPagar{
+	padding: 0px;
+	border: 0px;
+	margin: 0px;
+	cursor: pointer;
+}
+.contenedorBotonPagar .botonPagar{
+	float: right;
+	background-color: white;
+	background-image: url('../images/puntopagos/BotonPagar.png');
+	width: 161px;
+	height: 66px;
+}
+.recordatorio{
+	float: left;
+	width: 820px;
+	margin-top: 10px;
+	margin-left: 50px;
+	font-size: 14px;
+}
+.recordatorio span{
+	font-weight: bold;
+	color: #00AEEF;
+}
+.notice, .error{
+	padding: 20px;
+	width: 780px;
+	float: left;
+	font-size: 14px;
+	font-style: italic;
+	margin-left: 50px;
+	margin-bottom: 20px;
+	background-color: #F0D7E6;
+}

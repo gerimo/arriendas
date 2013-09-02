@@ -1,0 +1,28 @@
+generator:
+  class: sfDoctrineGenerator
+  param:
+    model_class:           Model
+    theme:                 jroller
+    non_verbose_templates: true
+    with_show:             false
+    singular:              ~
+    plural:                ~
+    route_prefix:          model
+    with_doctrine_route:   true
+    actions_base_class:    sfActions
+    # extra: [show, print, export]
+
+    config:
+      actions: ~
+      fields:  
+        name: { label: Modelo }
+        brand_id: { label: Marca }
+        rendimiento: { label: Rendimiento (km/lt) }
+      list:
+        title: Listado de Modelos
+        display: [=Id,Name,Brand,rendimiento,foto_defecto]
+      filter:  ~
+      form:    ~
+      edit:    ~
+      new:     ~
+      show:    ~

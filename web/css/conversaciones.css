@@ -1,0 +1,310 @@
+.encabezadoConversacion{
+	float: left;
+	margin-left: 15px;
+	margin-top: 10px;
+	width: 480px;
+	height: 56px;
+	padding: 5px;
+	background-color: #E2E3E4;
+	border-bottom: 1px solid #BCBEB0;
+}
+.encabezadoConversacionAmarillo{
+	float: left;
+	margin-left: 15px;
+	margin-top: 10px;
+	width: 480px;
+	height: 56px;
+	padding: 5px;
+	background-color: #FFFBCC;
+	border-bottom: 1px solid #BCBEB0;
+}
+
+.msg_user_frame{
+	float: left;
+}
+.msg_user_nombre{
+	float: left;
+	width: 320px;
+	margin-left: 40px;
+	font-size: 13px;
+	text-align: left;
+	margin-top: 5px;
+	height: 10px;
+	color: #A4A4A4;
+}
+.msg_user_nombre a{
+	color: #05a4e7;
+	text-decoration: none;
+}
+.msg_user_nombre a:hover{
+	text-decoration: underline;
+}
+.body_msg{
+	float: left;
+	width: 220px;
+	margin-left: 5px;
+	font-size: 14px;
+	color: #A4A4A4;
+	padding: 5px;
+	border: 1px solid #A4A4A4;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+.body_msgInbox{
+	float: left;
+	font-size: 14px;
+	width: 320px;
+	margin-left: 5px;
+	height: 14px;
+	color: black;
+}
+.body_msgInbox p{
+	text-decoration: underline;
+}
+.eliminar_msgInbox{
+	float: left;
+	margin-left: 6px;
+	margin-top: 22px;
+}
+input{
+	padding: 0px;
+	margin: 0px;
+	border: 0px;
+	cursor: pointer;
+}
+input.botonEliminarConversacion{
+	color: #A4A4A4;
+	font-size: 12px;
+	text-decoration: none;
+}
+.encabezadoConversacion input.botonEliminarConversacion{
+	background-color: #E2E3E4;
+}
+.encabezadoConversacionAmarillo input.botonEliminarConversacion{
+	background-color: #FFFBCC;
+}
+input.botonEliminarConversacion:hover{
+	text-decoration: underline;
+}
+.body_msg{
+	height: auto ! important;
+	min-height: 45px;
+	height: 45px;
+}
+.newMensaje .body_msg{
+	width: 252px;
+}
+.fecha_msg{
+	float: left;
+	font-size: 10px;
+	margin-left: 40px;
+	color: #A4A4A4;
+	margin-top: 5px;
+}
+.costado_izquierdo{
+	float: left;
+	width: 360px;
+	height: 55px;
+}
+.newMensaje .costado_izquierdo{
+	width: 150px;
+}
+.indicador{
+	float: left;
+	font-size: 14px;
+	margin-left: 20px;
+	width: 15px;
+	height: 14px;
+	text-align: right;
+}
+
+.newMensaje{
+	height: auto ! important;
+	min-height: 74px;
+	height: 74px;
+	float: left;
+	margin-left: 15px;
+	margin-top: 10px;
+	width: 480px;
+	padding: 5px;
+}
+
+.mensajesAntiguos, .conversaciones{
+	float: left;
+	margin-bottom: 30px;
+}
+.nuevoMensaje{
+	float: left;
+	margin-left: 15px;
+	margin-bottom: 10px;
+	margin-top: 20px;
+}
+
+textarea.textoMensaje{
+	resize:none;
+	width: 392px;
+	height: 70px;
+	margin-left: 15px;
+	font-size: 14px;
+	font-family: Arial;
+	padding: 10px;
+}
+.enviarMensaje{
+	cursor: pointer;
+	float: right;
+	margin: 0px;
+	border: 0px;
+	background-color: #424242;
+	color: white;
+	padding-bottom: 4px;
+	padding-top: 4px;
+	padding-left: 8px;
+	padding-right: 8px;
+	margin-top: 5px;
+	background: white url('../images/BotonEnviar.png');
+	width: 140px;
+	height: 66px;
+	margin-right: 2px;
+}
+.volverAtras{
+	cursor: pointer;
+	float: left;
+	margin: 0px;
+	border: 0px;
+	padding: 0px;
+	background: white url('../images/BotonVolverBandEntra.png');
+	width: 155px;
+	height: 38px;
+	color: black;
+	margin-left: 6px;
+	padding-bottom: 4px;
+	padding-top: 4px;
+	padding-left: 14px;
+	padding-right: 8px;
+	margin-top: 5px;
+	font-size: 10px;
+}
+#ajax_loader{
+	float: left;
+	margin-left: 290px;
+	margin-top: 12px;
+	width: 40px;
+	height: 40px;
+}
+.img_loader{
+	display: none;
+	width: 40px;
+	height: 40px;
+}
+.imgFoto{
+	width:74px;
+	height:74px;
+}
+.noHay p{
+	float: left;
+	margin-left: 15px;
+	font-style: italic;
+}
+.flechaEnviado{
+	float: right;
+	width: 13px;
+	height: 9px;
+	margin-top: 2px;
+}
+.usuarioIzq{
+	float: left;
+	width: 55px;
+}
+.usuarioIzq .msg_user_nombre{
+	float: left;
+	margin-left: 0px;
+	text-align: center;
+	width: 55px;
+	font-size: 12px;
+	font-weight: bold;
+	color: #00AEEF;
+}
+.marcoTextoIzq{
+	float: left;
+	width: 396px;
+	height: auto ! important;
+	margin-left: 25px;
+	padding-bottom: 5px;
+	border: 1px solid #BCBEB0;
+	-webkit-box-shadow: 2px 2px 20px rgba(50, 50, 50, 0.5);
+	-moz-box-shadow:    2px 2px 20px rgba(50, 50, 50, 0.5);
+	box-shadow:         2px 2px 20px rgba(50, 50, 50, 0.5);
+}
+.usuarioDer{
+	float: right;
+	width: 55px;
+}
+.usuarioDer .msg_user_nombre{
+	float: right;
+	margin-left: 0px;
+	text-align: center;
+	width: 55px;
+	font-size: 12px;
+	font-weight: bold;
+	color: #00AEEF;
+}
+.marcoTextoDer{
+	float: right;
+	width: 396px;
+	height: auto ! important;
+	margin-right: 25px;
+	padding-bottom: 5px;
+	border: 1px solid #BCBEB0;
+	background-color: #C7EAFB;
+	-webkit-box-shadow: 2px 2px 20px rgba(50, 50, 50, 0.5);
+	-moz-box-shadow:    2px 2px 20px rgba(50, 50, 50, 0.5);
+	box-shadow:         2px 2px 20px rgba(50, 50, 50, 0.5);
+}
+.texto{
+	margin-left: 5px;
+	margin-top: 5px;
+	padding: 5px;
+	float: left;
+	float: left;
+	width: 374px;
+	height: auto ! important;
+	min-height: 28px;
+	height: 28px;
+	border: 1px solid #BCBEB0;
+	background-color: white;
+}
+.horaFecha{
+	float: right;
+	font-size: 10px;
+	margin-right: 10px;
+	color: #A4A4A4;
+	margin-top: 10px;
+	font-style: italic;
+}
+.texto p{
+	float: left;
+	font-size: 12px;
+}
+.msg{
+	float: left;
+	width: 372px;
+}
+.puntaBlanca{
+	position: absolute;
+	background: url('../images/TrianguloMsjBlanco.png') no-repeat;
+	width: 24px;
+	height: 12px;
+	z-index: 1;
+	margin-top: 16px;
+	margin-left: 58px;
+}
+.puntaCeleste{
+	position: absolute;
+	background: url('../images/TrianguloMensajeCeleste.png') no-repeat;
+	width: 24px;
+	height: 12px;
+	z-index: 1;
+	margin-top: 16px;
+	margin-left: 398px;
+}

@@ -1,0 +1,25 @@
+#show-maps #maps{
+  width: 550px;
+  height: 400px;
+  margin-left: 23px;
+  margin-right: 23px;
+  border:2px solid #ccc;
+}
+#show-maps #head-maps {
+  margin-lefT: 20px;
+  height: 30px;
+  vertical-align: middle;
+  font-size: 12px;
+  font-weight: bolder;
+  line-height: 30px;
+}
+#show-maps #address-maps {
+  height: 30px;
+}
+#show-maps #tool-maps {
+  text-align:center;
+  vertical-align: middle;
+  margin-top: 10px;
+  height: 30px;
+}
+

@@ -1,0 +1,31 @@
+# # Populate this file with data to be loaded by your ORM's *:data-load task.
+# # You can create multiple files in this directory (i.e. 010_users.yml,
+# # 020_articles.yml, etc) which will be loaded in alphabetical order.
+# # 
+# # See documentation for your ORM's *:data-load task for more information.
+# 
+# User:
+#   fabien:
+#     username: fabien
+#     password: changeme
+#     name:     Fabien Potencier
+#     email:    fabien.potencier@symfony-project.com
+#   kris:
+#     username: Kris.Wallsmith
+#     password: changeme
+#     name:     Kris Wallsmith
+#     email:    kris.wallsmith@symfony-project.com
+
+User:
+   usertest:
+     firstname: firstname
+     lastname: lastname
+     email: email
+     username: username
+     password: e10adc3949ba59abbe56e057f20f883e
+     paypal_id: 000000
+     picture_file: picture.jpg 
+     driver_license_file: license.jpg
+     driver_license_number: 123456
+     Telephone: 555-5555
+     

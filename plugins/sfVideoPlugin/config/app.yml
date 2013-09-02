@@ -1,0 +1,7 @@
+all:
+  video:
+    width: 280px
+    height: 210px
+    autoplay: false
+    autobuffering: true
+    hideDelay: 100

@@ -1,0 +1,20 @@
+# You can find more information about this file on the symfony website:
+# http://www.symfony-project.org/reference/1_4/en/13-View
+
+default:
+  http_metas:
+    content-type: text/html
+
+  metas:
+    title:        Arriendas
+    #description:  symfony project
+    #keywords:     symfony, project
+    #language:     en
+    #robots:       index, follow
+    
+  stylesheets:    [ui-lightness/jquery-ui-1.8.18.custom.css, style_ui.css, jquery.timepicker-1.2.2.css,timePicker.css, jquery.weekcalendar.css,  default.css, demo.css, main.css, trickbox.css, /fancybox/source/jquery.fancybox.css]
+
+  javascripts:    [jquery-1.7.1.js,jquery-ui-1.8.16.custom.min.js, jquery.ui.core.js,jquery.ui.widget.js,jquery.ui.tabs.js, scripts.js, markerclusterer.js, jquery.jcarousel.min.js, jquery-ui-timepicker-addon.js,jquery-ui-sliderAccess.js, jquery.form.js, gen_validatorv4.js,jquery.timePicker.js, date.js, jquery.weekcalendar.js, functions.js, trickbox.js, /fancybox/source/jquery.fancybox.pack.js]
+
+  has_layout:     true
+  layout:         layout

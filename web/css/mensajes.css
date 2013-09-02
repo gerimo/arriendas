@@ -1,0 +1,97 @@
+@import url("comunes.css");
+
+h1.msg_titulo_seccion {float: left;font-family:Arial, Helvetica, sans-serif; color:#2d2d2d; font-size: 28px;font-weight: normal;margin: 20px 0 20px 20px;display: block;width: 94%; height:38px;border-bottom: dashed 1px #d1d1d1;
+}
+
+/* box principal */
+.msg_box {
+	float: left;
+	margin-left: 10px;
+	background-color: #fff;
+	border: 1px solid #c3c3c3;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	width: 480px;
+	background-image: url('../images/img_mensajes/msg_box_bg.png');
+	background-repeat: repeat-x;
+	background-position: bottom;
+	padding-bottom: 30px;
+	margin-bottom: 20px;
+}
+.msg_box_header {
+	/*background-image: url('../images/img_mensajes/msg_box_header_bg.png');
+	background-repeat: repeat-x;*/
+	background:#eaeaea;
+	height: 40px;
+	border-bottom: 1px solid #c3c3c3;
+	-webkit-border-top-left-radius: 10px;
+	-webkit-border-top-right-radius: 10px;
+	-moz-border-radius-topleft: 10px;
+	-moz-border-radius-topright: 10px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	font-family: Tahoma;
+	color: #333;
+	font-size: 15px;
+	margin-bottom: 20px;
+}
+.msg_box_header h2 {
+	margin-left: 20px;
+	padding-top: 10px;
+}
+
+
+/* msg user items */
+.msg_user_item {
+	width: 480px;
+	margin-left: 20px;
+	margin-bottom: 20px;
+}
+.msg_user_frame {
+	background-image: url('../images/img_mensajes/msg_user_frame_bg.png');
+	width: 92px;
+	height: 102px;
+}
+.msg_user_frame img {
+	margin-top: 4px;
+	margin-left: 4px;
+}
+.msg_user_nombre {
+	float: left;
+	width: 92px;
+	font-size: 11px;
+	color: #838383;
+	text-align: center;
+	line-height: 13px;
+	margin-bottom: 10px;
+}
+.msg_user_post {
+	position: relative;
+	float: right;
+	width: 350px;
+	border: 1px solid #c3c3c3;
+	background-image: url('../images/img_mensajes/msg_user_post_bg.png');
+	background-repeat: repeat-x;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	line-height: 15px;
+	padding-top: 10px;
+	padding-left: 10px;
+	padding-bottom: 35px;
+	padding-right: 10px;
+}
+.msg_user_fecha {
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+	color: #9e9e9e;
+}
+.msg_user_item_flecha {
+	position: absolute;
+	top: 10px;
+	left: -6px;
+	width: 6px;
+	height: 11px;
+	background-image: url('../images/img_mensajes/msg_user_post_flecha.png');
+}

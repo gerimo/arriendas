@@ -1,0 +1,498 @@
+.land_container {
+	margin: 0 auto;
+	width: 960px;
+}
+.land_slogan_area {
+	width: 960px;
+	height: 40px;
+	padding-top: 15px;
+	text-align: center;
+	background-color: white;
+	-webkit-box-shadow: 4px 4px 30px rgba(50, 50, 50, 0.4);
+    -moz-box-shadow:    4px 4px 30px rgba(50, 50, 50, 0.4);
+    box-shadow:         4px 4px 30px rgba(50, 50, 50, 0.4);
+}
+.land_slogan_area h2 {
+	font-family: 'Helvetica', Arial, sans-serif;
+	font-size: 26px;
+	letter-spacing: -1px;
+	font-weight: normal;
+	/*text-shadow: 2px 2px 0px #dddddd;*/
+	display:block;
+	color:#303030;
+	font-style: italic;
+}
+.land_slogan_area h2 .dest {
+	color:#00AEEF;
+	font-weight: bold;
+}
+.land_slogan_area h2 .dest_rosa{
+	color:#EC008C;
+	font-weight: bold;
+}
+/* box busqueda */
+.land_box_1 {
+	float: left;	
+	background-color: #fff;
+	border: 1px solid #c3c3c3;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	width: 650px;
+	height: 610px;
+	background-image: url('../images/img_mensajes/msg_box_bg.png');
+	background-repeat: repeat-x;
+	background-position: bottom;
+	margin-bottom: 20px;
+	box-shadow: 3px 3px 3px #dedede;
+}
+.land_box_1_header {
+	background-image: url('../images/img_landing/land_box1_header_bg.png');
+	background-repeat: repeat-x;
+	width: 650px;
+	height: 67px;
+	border-bottom: 1px solid #c3c3c3;
+	-webkit-border-top-left-radius: 10px;
+	-webkit-border-top-right-radius: 10px;
+	-moz-border-radius-topleft: 10px;
+	-moz-border-radius-topright: 10px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	font-family: Tahoma;
+	color: #fff;
+	font-size: 14px;
+	margin-top: 1px;
+	position: relative;
+}
+.land_box_1_header h2 {
+	margin-left: 20px;
+	padding-top: 8px;
+}
+.land_box1_form {
+	float: left;
+	margin-top: 17px;
+	margin-left: 20px;
+}
+.land_box1_form input {
+	background-image: url("../images/img_landing/land_form_input_bg.png");		
+	background-repeat:repeat-x;
+   background-color: #FFFFFF;
+    border: 1px solid #9A9A9A;
+    float: left;
+    height: 30px;
+    margin-right: 50px;
+    padding-left: 10px;
+    width: 160px;
+    color: #909090;
+    font-family: 'MakoRegular', Arial, "MS Trebuchet", sans-serif;
+}
+.land_box1_form button {
+	width: 133px;
+	height: 37px;
+	background-image: url("../images/img_landing/land_box1_btn_buscar.png");
+	background-color: transparent;
+	border: 0;
+}
+
+.land_form_calendar_1 {
+ left: 200px;
+    position: absolute;
+    top: 22px;
+}
+
+.land_form_calendar_2 {
+ left: 423px;
+    position: absolute;
+    top: 22px;
+}
+
+.land_box_1_maparea {
+	float: left;
+	width: 630px;
+	height: 520px;
+	margin-top: 10px;
+	margin-left: 10px;
+}
+
+
+
+
+/* box autos recomendados + videos formato caja  */
+.land_box_2 {
+	float: left;
+	margin-left: 20px;
+	background-color: #fff;
+	border: 1px solid #c3c3c3;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	width: 280px;
+	height: 290px;
+	background-image: url('../images/img_landing/land_box_bottom_bg.png');
+	background-repeat: repeat-x;
+	background-position: bottom;
+	margin-bottom: 27px;
+	box-shadow: 3px 3px 3px #dedede;
+}
+.land_box_2_header {
+	background-image: url('../images/img_landing/land_box_header_bg.png');
+	background-repeat: repeat-x;
+	width: 280px;
+	height: 50px;
+	border-bottom: 1px solid #c3c3c3;
+	-webkit-border-top-left-radius: 10px;
+	-webkit-border-top-right-radius: 10px;
+	-moz-border-radius-topleft: 10px;
+	-moz-border-radius-topright: 10px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #fff;
+	font-size: 16px;
+	font-weight: bold;
+	margin-top: -1px;
+	position: relative;
+	margin-bottom: 15px;
+}
+.land_box_header_flecha {
+	bottom: -17px;
+	left: 21px;
+	position: relative;
+}
+.land_box_2_header h2 {
+	margin-left: 20px;
+	padding-top: 17px;
+	text-shadow: -1px -1px 0px #43abda ;
+}
+
+/* box autos recomendados  items */
+.land_arecomend_window {
+	float: left;
+	margin-top: 5px;
+	margin-left: 10px;
+	width: 260px;
+	height: 210px;
+	overflow: auto;
+}
+.land_arecomend_item {
+	border-bottom: 1px solid #D1D1D1;
+	float: left;
+	height: 70px;
+	margin-bottom: 10px;
+	width: 240px;
+}
+.land_arecomend_frame {
+	float: left;
+	width: 70px;
+	height: 60px;
+	border: 1px solid #cecece;
+}
+.land_arecomend_frame img {
+	margin-left: 3px;
+	margin-top: 3px;
+}
+ul.land_arecomend_info {
+	float: left;
+	width: 150px;
+	margin-left: 10px;
+}
+ul.land_arecomend_info li {
+	font-size: 11px;
+	color: #7e7e7e;
+	margin-bottom: 3px;
+}
+ul.land_arecomend_info li.land_arecomend_marca {
+	margin-bottom: 7px;
+	font-size: 12px;
+}
+ul.land_arecomend_info li.land_arecomend_marca a {
+	color: #562a84;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+
+/* ultimos autos en actividad video items */
+
+.land_sector2 {
+	float: left;
+	width: 960px;
+	margin-top: 20px;
+	margin-bottom: 30px;
+}
+.land_box_3 {
+	float: left;
+	margin-left: 0px;
+	background-color: #fff;
+	border: 1px solid #c3c3c3;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	width: 960px;
+	height: 370px;
+	background-image: url('../images/img_landing/land_box_bottom_bg.png');
+	background-repeat: repeat-x;
+	background-position: bottom;
+	margin-bottom: 27px;
+	box-shadow: 3px 3px 3px #dedede;
+}
+.land_box_3_header {
+	background-image: url('../images/img_landing/land_box_header_bg.png');
+	background-repeat: repeat-x;
+	width: 960px;
+	height: 50px;
+	border-bottom: 1px solid #c3c3c3;
+	-webkit-border-top-left-radius: 10px;
+	-webkit-border-top-right-radius: 10px;
+	-moz-border-radius-topleft: 10px;
+	-moz-border-radius-topright: 10px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #fff;
+	font-size: 20px;
+	font-weight: bold;
+	margin-top: -1px;
+	position: relative;
+}
+.land_box_3_header h2 {
+	margin-left: 20px;
+	padding-top: 15px;
+	text-shadow: -1px -1px 0px #43abda;
+}
+.land_ultauto_area {
+	width: 930px;
+	height: 270px;
+	margin-top: 30px;
+	margin-left: 40px;
+	position: relative;
+}
+.land_ultauto_item {
+	float: left;
+	width: 160px;
+	height: 260px;
+	/*margin-right: 20px;*/
+	position: relative;
+}
+.land_ultauto_frame {
+	width: 160px;
+	height: 130px;
+	border: 1px solid #cecece;
+}
+.land_ultauto_frame img {
+	margin-top: 4px;
+	margin-left: 4px;
+}
+.land_ultauto_info {
+	width: 160px;
+	height: 120px;
+	background-color: #efefef;
+	position: relative;
+}
+
+.land_ultauto_info p {
+	position: absolute;
+	top: 45px;
+	left: 10px;
+	color: #7e7e7e;
+	font-size: 11px;
+	line-height: 14px;	
+}
+
+.land_ultauto_info p a {
+	font-weight: bold;
+	padding-bottom: 7px;
+	text-decoration: none;
+	color: #562a84;
+	display: inline-block;
+}
+
+
+.land_ultauto_usuario {
+	background-image: url("../images/img_landing/land_ultauto_usuario.png");
+	color: #FFFFFF;
+	font-size: 11px;
+	height: 45px;
+	left: -8px;
+	position: absolute;
+	top: 121px;
+	width: 173px;
+}
+.land_ultauto_usuario p {
+	line-height: 13px;
+	margin-left: 9px;
+	margin-top: 6px;
+}
+
+a.land_ultauto_flecha_izq {
+background-image: url("../images/img_landing/land_ultauto_flecha_izq.png");
+    display: block;
+    height: 52px;
+    left: -57px;
+    position: absolute;
+    top: 50px;
+    width: 52px;
+}
+
+a.land_ultauto_flecha_dere {
+	background-image: url("../images/img_landing/land_ultauto_flecha_dere.png");
+	width: 52px;
+	height: 52px;
+	position: absolute;
+	top: 50px;
+	right: -6px; 
+	display: block;
+}
+
+/* slider area
+------------------------------------------------------------------*/
+.slider_area {
+	float: left;
+	margin-left: 30px;
+	width: 930px;
+	height: 270px;
+}
+.jcarousel-skin-tango .jcarousel-direction-rtl {
+	direction: rtl;
+}
+.jcarousel-skin-tango .jcarousel-container-horizontal {
+	width: 904px;
+}
+.jcarousel-skin-tango .jcarousel-clip {
+	overflow: hidden;
+}
+.jcarousel-skin-tango .jcarousel-clip-horizontal {
+	width: 904px;
+	height: 270px;
+}
+.jcarousel-skin-tango .jcarousel-item {
+	width: 173px;
+	height: 260px;
+}
+.jcarousel-skin-tango .jcarousel-item-horizontal {
+	margin-left: 0;
+	margin-right: 1px;
+	padding-left: 8px;
+}
+.jcarousel-skin-tango .jcarousel-direction-rtl .jcarousel-item-horizontal {
+	margin-left: 10px;
+	margin-right: 0;
+}
+.jcarousel-skin-tango .jcarousel-item-placeholder {
+	background: #fff;
+	color: #000;
+}
+/**
+ *  Horizontal Buttons
+ */
+.jcarousel-skin-tango .jcarousel-next-horizontal {
+	background: url("../images/img_landing/land_ultauto_flecha_dere.png") no-repeat scroll 0 0 transparent;
+	cursor: pointer;
+	height: 50px;
+	position: absolute;
+	right: -30px;
+	top: 73px;
+	width: 50px;
+}
+.jcarousel-skin-tango .jcarousel-prev-horizontal {
+	position: absolute;
+	top: 73px;
+	left: -56px;
+	width: 50px;
+	height: 50px;
+	cursor: pointer;
+	background: transparent url('../images/img_landing/land_ultauto_flecha_izq.png') no-repeat 0 0;
+}
+
+
+
+.land_video_splash {
+	float: left;
+	width: 260px;
+	height: 150px;
+	border: 1px solid #000000;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	margin-top: 15px;
+	margin-left: 10px;
+	position: relative;	
+	}
+
+.land_video_usuario {
+	width: 260px;
+	height: 31px;
+	background-image: url('../images/img_landing/land_video_usuario.png');
+	position: absolute;
+	top:0px; left;0;	
+}
+
+.land_video_usuario span {
+	display:block;
+	color: #32b0e8;
+	font-weight: bold;
+	font-size: 12px;
+	margin-left: 10px;
+	margin-top: 9px;
+	text-transform: uppercase;
+	text-shadow: 1px 1px 0px #000;	
+	}
+
+img.land_video_play_splash {
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+}
+	
+.land_video_titulo {
+	float: left;
+	width: 260px;
+	height: 40px;
+	font-size: 14px;
+	margin-left: 10px;
+	margin-top: 10px;
+	line-height: 17px;
+	color: #1d95cb;
+}
+
+.land_video_titulo span {
+	font-size: 12px;
+	color: #7e7e7e;
+	display: block;
+}
+a.button2, a.button2 span{
+    background-image: url("../images/img_search/buttons.png");
+    background-position: 0 -200px;
+    background-repeat: no-repeat;
+    outline: medium none !important;
+}
+a.button2 {
+    margin-top: 5px;
+    display: inline-block;
+    font: bold 14px/12px Arial,Helvetica,sans-serif;
+    height: 24px;
+    width: 25px;
+    float: right;
+}
+a.altCta2 {
+    background-position: right -500px;
+    color: #009FD9;
+    text-shadow: none;
+}
+a.altCta2.menor span {
+    background-position: 0 -524px;
+}
+a.button2 span {
+    cursor: pointer;
+    display: inline-block;
+    margin: 0 7px 0 0;
+    padding: 6px 2px 6px 8px;
+    white-space: nowrap;
+}
+a.altCta2 span{
+    background-position: 0 -500px;
+}
+a.altCta2.menor {
+    background-position: right -524px;
+    display:none;
+}

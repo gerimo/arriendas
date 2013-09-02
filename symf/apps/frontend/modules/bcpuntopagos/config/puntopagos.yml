@@ -1,0 +1,17 @@
+betterchoice:
+ puntopagos:
+  enviroment: production 
+  sandbox:
+   url: http://sandbox.puntopagos.com
+   key: w2HWJ5bIqXXcRVgIS3vx
+   secret: C6etS5kd0MgOUGgQuJSwST5NoFTEsU8qZ3HfGv6T
+   status_success: 1
+   status_failure: 2
+   status_error: 3
+  production:
+   url: https://www.puntopagos.com
+   key: 4oOnxvqhXGxuWD0fHvQg
+   secret: EWXTeKZ9qZXNbnTtLRFaRqGDa76JyFB5b29TEJtl
+   status_success: 1
+   status_failure: 2
+   status_error: 3

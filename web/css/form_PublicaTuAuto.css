@@ -1,0 +1,375 @@
+
+.titulo{
+	border-bottom: none;
+	color: #00AEEF;
+	font-weight: bold;
+	text-align: center;
+	margin-bottom: 5px;
+	width: 500px;
+}
+
+.subtitulo{
+	color: #00AEEF;
+	text-align: center;
+	width: 500px;
+	margin-left: 20px;
+}
+
+.pasos{
+	height: 20px;
+	margin-bottom: 50px;
+	margin-top: 20px;
+	text-align: center;
+	width: 470px;
+}
+
+.imagen{
+	display: inline;
+	vertical-align: -50%;
+}
+
+/* PASO 1 */
+
+.izqAncho{
+	float: left;
+	width: 280px;
+	height: 70px;
+	margin-right: 20px;
+}
+
+.izqAncho input{
+	width: 300px;
+}
+
+.izq{
+	float: left;
+	width: 130px;
+	height: 70px;
+	margin-right: 20px;
+}
+
+.izq select{
+	width: 130px;
+}
+
+.centro{
+	float: left;
+	width: 130px;
+	height: 70px;
+	margin-left: 25px;
+}
+
+.centro select{
+	width: 130px;
+}
+
+.der{
+	float: right;
+	width: 130px;
+	height: 70px;
+}
+
+.der select{
+	width: 130px;
+}
+
+.boton1{
+	margin-top: 390px;
+	margin-left: 307px;
+}
+
+label{
+	color: #00AEEF;
+	font-style: italic;
+	font-size: 15px;
+}
+
+select, input{
+	margin-top: 5px;
+}
+
+input{
+	color: black;
+	font-style: normal;
+	font-size: 13px;
+	height: 24px;
+	width: 170px;
+}
+
+::-webkit-input-placeholder {
+	color: #848484;
+	font-style: italic;
+}
+:-moz-placeholder {
+	color: #848484;
+	font-style: italic;
+}
+::-moz-placeholder {
+	color: #848484;
+	font-style: italic;
+}
+:-ms-input-placeholder {
+	color: #848484;
+	font-style: italic;
+}
+
+.upload{
+	margin-right: 40px;
+	height: 30px;
+}
+
+.separacionPunteada{
+	float: left;
+	width: 475px;
+	height: 30px;
+	border-top: 1px solid #848484;
+}
+
+.mensajeIngresoDatos1{
+	color: #EC008C;
+	float: left;
+	margin-left: 70px;
+	margin-top: 0px;
+	width: 400px;
+	font-size: 15px;
+	display: none;
+}
+
+.ampliarLabel{
+	width: 400px;
+}
+
+
+/* PASO 2 */
+
+.izqMitad{
+	float: left;
+	width: 205px;
+	height: 70px;
+	margin-left: 40px;
+}
+
+.msjPrecio{
+	margin-bottom: 50px;
+	text-align: center;
+}
+
+.msjModelo{
+	color: #EC008C;
+	font-weight: bold;
+}
+
+.msjPromocion1{
+	color: #00AEEF;
+	font-weight: bold;
+	margin-top: 60px;
+	text-align: center;
+}
+
+.msjPromocion2{
+	color: #EC008C;
+	font-size: 20px;
+	font-weight: bold;
+	margin-top: 10px;
+	text-align: center;
+}
+
+.msjPromocion3{
+	margin: 10px 0 0 0px;
+}
+
+.boton2{
+	margin-top: 70px;
+	margin-left: 307px;
+}
+
+.mensajeIngresoDatos2{
+	color: #EC008C;
+	float: left;
+	margin-left: 70px;
+	margin-top: 40px;
+	width: 400px;
+	font-size: 15px;
+	display: none;
+}
+
+/* PASO 3 */
+
+.subtituloDer{
+	border-bottom: 1px dashed black;
+	color: #00aeef;
+	float: left;
+	font-style: italic;
+	height: 20px;
+	margin-bottom: 15px;
+	margin-left: 200px;
+	width: 260px;
+}
+
+.imgIzq{
+	float: left;
+	margin-bottom: 40px;
+	width: 150px;
+	height: 180px;
+}
+
+.textoDer{
+	float: right;
+	height: 180px;
+	width: 260px;
+	margin-bottom: 40px;
+	text-align: right;
+}
+
+.boton3{
+	margin-top: 0px;
+	margin-left: 307px;
+}
+
+.textoUpload{
+	color: #00aeef;
+	font-style: italic;
+	margin-top: 18px;
+	padding-left: 50px;
+	text-align: left;
+}
+
+.sinMargenInf{
+	margin-bottom: 0;
+}
+
+.imgFlotante{
+	position: absolute;
+	margin-left: -5px;
+	margin-top: -20px;
+	z-index: 1;
+}
+
+#paso1{
+	margin: 20px;
+}
+
+#paso2{
+	margin: 20px;
+	display: none;
+}
+
+#paso3{
+	margin: 20px;
+	display: none;
+}
+#paso4{
+	margin: 20px;
+	display: none;
+}
+
+.mensajeIngresoDatos3{
+	color: #EC008C;
+	float: left;
+	margin-left: 80px;
+	margin-top: 0px;
+	width: 400px;
+	font-size: 15px;
+	display: none;
+}
+/*
+#frm1{
+	background-color: green;
+}
+*/
+
+/* error por campos faltantes */
+
+.faltaValor{
+	color: #ec008c;
+}
+
+#comuna{
+	width: 120px;
+}
+
+/* ventana emergente */
+#confirmacionUbicacion{
+	text-align: center;
+}
+
+#confirmacionUbicacion p{
+	font-size: 20px;
+	margin-top: 5px;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+#errorUbicacion{
+	text-align: center;
+}
+
+#errorUbicacion p{
+	font-size: 15px;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	text-align: center;
+}
+
+/* fin ventana emergente*/
+
+.imgCargada{
+	margin-left: 20px;
+    margin-top: 20px;
+    position: relative;
+	width: 140px;
+	height: 140px;
+}
+
+.imgNoCargada{
+	position: absolute;
+	z-index: 0;
+}
+
+.marco{
+	position: absolute;
+}
+
+#tipoBencinaLabel, #usosVehiculoLabel{
+	font-size: 13px;
+}
+
+#tipoBencina, #usosVehiculo{
+	margin-top: 8px;
+}
+
+#patente{
+	width: 125px;
+}
+#color{
+	width: 125px;
+}
+
+.contenedorFotoCar{
+	float: left;
+	width: 440px;
+}
+
+.regis_foto_car {
+    float: left;
+    margin-left: 18px;
+    margin-top: 20px;
+    padding: 6px;
+    margin-bottom: 5px;
+    text-align:right;
+    -webkit-box-shadow: 0px 0px 9px rgba(50, 50, 50, 0.32);
+	-moz-box-shadow: 0px 0px 9px rgba(50, 50, 50, 0.32);
+	box-shadow: 0px 0px 9px rgba(50, 50, 50, 0.32);
+}
+.regis_op_car{
+	float: left;
+	width: 180px;
+	margin-top: 40px;
+	margin-left: 20px;
+}
+.titulo_reg_car{
+	margin-left: 0px;
+	width: 190px;
+	border-bottom: 1px dashed rgb(158, 158, 158);
+	font-weight: normal;
+}

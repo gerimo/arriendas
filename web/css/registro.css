@@ -1,0 +1,397 @@
+/*@import url("reset.css");*/
+
+.regis_box {
+    margin: 0 auto;
+    background-color: #FFFFFF;
+    border: 10px solid #DFDFDF;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    width: 760px;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+    position: relative;
+}
+.regis_box_somb_izq {
+    background-image: url("../images/img_registro/regis_box_somb_izq.png");
+    height: 600px;
+    left: -20px;
+    position: absolute;
+    top: 10px;
+    width: 19px;
+}
+.regis_box_somb_dere {
+    background-image: url("../images/img_registro/regis_box_somb_dere.png");
+    height: 600px;
+    left: 761px;
+    position: absolute;
+    top: 10px;
+    width: 18px;
+}
+
+
+/* sector usuario  */
+.regis_box_usuario {
+    width: 240px;
+    float: left;
+    clear: left;
+}
+.regis_foto_frame {
+    float: left;
+    margin-left: 18px;
+    margin-top: 20px;
+    padding: 4px;
+    border: 1px solid #cccccc;
+    margin-bottom: 5px;
+    text-align:right;
+}
+h2.regis_usuario {
+    float: left;
+    margin-left: 18px;
+    margin-top: 6px;
+    font-family: 'UbuntuRegular';
+    color: #4380BC;
+    font-size: 18px;
+    font-weight: normal;
+    width: 200px;
+    margin-left: 20px;
+}
+ul.regis_validar {
+    float: left;
+    width: 200px;
+    margin-left: 20px;
+    font-size: 12px;
+    display:none;
+}
+ul.regis_validar li {
+    background-image: url("http://wwww.arriendas.cl/images/img_registro/regis_ico_sinverif.png");
+    background-position: left center;
+    background-repeat: no-repeat;
+    height: 16px;
+    line-height: 16px;
+    margin-bottom: 4px;
+    padding-left: 22px;
+}
+
+ul.regis_validado,ul.notif_validado {
+    float: left;
+    width: 200px;
+    font-size: 12px;
+}
+ul.regis_validado{
+    margin-left: 20px;
+    margin-top: 20px;
+    display:none;
+}
+ul.regis_validado li {
+    background-image: url("../images/img_registro/regis_ico_list_validar.png");
+    background-position: left center;
+    background-repeat: no-repeat;
+    height: 16px;
+    line-height: 16px;
+    margin-bottom: 4px;
+    padding-left: 22px;
+}
+ul.notif_validado li {
+    background-image: url("../images/CruzFaltaHomeLogIn.png");
+    background-color: white;
+    background-position: left center;
+    background-repeat: no-repeat;
+    border-bottom: 1px solid #EFEFEF;
+    height: 22px;
+    line-height: 16px;
+    margin-left: 8px;
+    width: 200px;
+    padding-top: 6px;
+    padding-left: 22px;
+}
+
+
+p.regis_edit_perfil {
+    float: left;
+    margin-left: 20px;
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+
+/* sector datos de usuario  */
+
+.regis_box_info {
+    width: 670px;
+    float: left;
+    margin-left: 20px;
+    padding-bottom: 20px;
+}
+
+.regis_titulo_1 {
+    font-size: 20px;
+    color: #333333;
+    font-family: Arial, Helvetica, sans-serif;
+    padding-bottom: 5px;
+    float: left;
+    width: 95%;
+    border-bottom: 1px solid #e8e8e8;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+.regis_titulo_2 {
+    font-size: 18px;
+    color: #4380bc;
+    font-family: Arial, Helvetica, sans-serif;
+    padding-bottom: 5px;
+    float: left;
+    width: 420px;
+    border-bottom: 1px solid #e8e8e8;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+
+/* formulario */
+.regis_formulario {
+    /* bloques de formularios */
+    float: left;
+    margin-left: 10px;
+    margin-top: 20px;
+}
+.c1 {
+    float: left;
+    margin-bottom: 20px;
+    margin-right:20px;
+    /*height:40px;
+    clear: left;*/
+}
+.c1 label {
+    display: block;
+    font-family: Arial;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+.c1 input {
+    border: 1px solid #cecece;
+    background-color: #fff;
+    width: 264px;
+    height: 30px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding-left: 10px;
+}
+.c1 select {
+    padding: 4px;
+    border: 1px solid #cecece;
+}
+.c1 .c2 {
+    float: left;
+    margin-right: 10px;
+    margin-top:10px;
+}
+.c1 .clear {
+	clear:both;
+	margin-top:17px;
+}
+.c1 .c2 input {
+    width: 116px;
+}
+
+#region {width:278px}
+.combo {padding-top: 10px;}
+.ingresa {float:left;font-size:13px;}
+.img_capcha {vertical-align:middle;float:left;clear:both;margin-left:27px;}
+.ing_capcha {margin-left:10px;height:20px;}
+.height {height:auto;}
+
+/* sector terminos y condiciones */
+.regis_term {
+    float: left;
+    width: 620px;
+}
+.captcha {width:420px;float:left}
+.regis_term p {
+    color: #696969;
+    float: left;
+    font-size: 11px;
+    margin-bottom: 5px;
+    margin-top: 30px;
+}
+
+.regis_term textarea {
+    border: 1px solid #d9d9d9;
+    background-color: #fff;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;	
+    width: 380px;
+    height: 200px;
+    padding: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    resize: none;	
+    color:#838383;
+}
+
+
+/* sector botones */
+
+.regis_botones {
+    float: left;
+    margin-top: 42px;
+    width: 180px;
+    margin-left: 20px;
+}
+.posit {width:574px;}
+button.regis_btn_formulario.left {
+    float: left;
+}
+
+button.regis_btn_formulario.right {
+    float: right;
+}
+
+
+/* btn registro*/
+button.regis_btn_formulario {
+    cursor: pointer;
+    display: block;
+    border: 0px;
+    width: 119px;
+    height: 26px;
+    background: url('../images/bt_orange_on_v2.png');
+	float:left;
+	border: 1px solid #ef8609;
+	border-radius:1px 1px 1px 1px;
+	color:#FFFFFF;
+	text-shadow: 1px 1px 1px #758386;
+	font-size: 12px;
+	line-height:23px;
+	text-align:center;
+	text-decoration:none;
+	margin-left:20px;
+}
+button.regis_btn_formulario:hover {
+    background: url('../images/bt_orange_hover_v2.png');
+	text-decoration:underline;
+}
+
+
+/* sector agregar medios de pagos adicionales */
+
+.regis_agregar_area {
+    float: left;
+    width: 420px;
+    margin-left: 20px;
+    border-top: 1px solid #e8e8e8;
+    padding-top: 15px;
+
+}
+
+button.regis_btn_agregar {
+    float: left;
+    border: 0px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px; font-weight: bold;
+    height: 30px;
+    border: 1px solid #459a00;
+    background-image: url('../images/img_registro/regis_btn_agregar_bg.png');
+    background-repeat: repeat-x;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;	
+    color: #fff;
+}
+
+
+/* sector verificaciones */
+
+/* verificados */
+.regis_titulo_verif {
+    width: 420px;
+    height: 40px;
+    margin-left: 20px;
+    font-size: 17px;
+    font-weight: bold;
+    background-color: #f5f5f5;
+    border: 1px solid #c8c8c8;
+    margin-top: 20px;
+    float: left;
+    background-image: url('../images/img_registro/regis_ico_tit_verif.png');
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+}
+.regis_titulo_verif span {
+    display: block;
+    margin-left: 43px;
+    margin-top: 12px;
+}
+
+/* items verificados */
+.regis_item_verif {
+    background-image: url("../images/img_registro/regis_ico_verif.png");
+    background-position: 10px 1px;
+    background-repeat: no-repeat;
+    border-bottom: 1px solid #C8C8C8;
+    float: left;
+    font-size: 12px;
+    height: 40px;
+    margin-left: 20px;
+    margin-top: 20px;
+    padding-left: 36px;
+    width: 380px;
+}
+
+.regis_item_verif span {
+    font-size: 14px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 2px;
+}
+
+
+/* no verificados */
+.regis_titulo_sinverif {
+    width: 420px;
+    height: 40px;
+    margin-left: 20px;
+    font-size: 17px;
+    font-weight: bold;
+    background-color: #f5f5f5;
+    border: 1px solid #c8c8c8;
+    margin-top: 20px;
+    float: left;
+    background-image: url('../images/img_registro/regis_ico_tit_sinverif.png');
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+}
+.regis_titulo_sinverif span {
+    display: block;
+    margin-left: 43px;
+    margin-top: 12px;
+}
+
+/* items no verificados */
+.regis_item_sinverif {
+    background-image: url("http://www.arriendas.cl/images/img_registro/regis_ico_sinverif.png");
+    background-position: 10px 1px;
+    background-repeat: no-repeat;
+    border-bottom: 1px solid #C8C8C8;
+    float: left;
+    font-size: 12px;
+    height: 30px;
+    margin-left: 20px;
+    margin-top: 14px;
+    padding-left: 36px;
+    width: 380px;
+}
+
+.regis_item_sinverif span {
+    font-size: 12px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 2px;
+}
+
+
+.login_box h1 {float: left;font-family:Arial, Helvetica, sans-serif; color:#2d2d2d; font-size: 28px;font-weight: normal;margin: 20px 0 20px 20px;display: block;width: 94%; height:38px;border-bottom: dashed 1px #d1d1d1;}
+.login_box h2 {margin-top: 20px;padding: 6px;color:#575757;font-size:13px;font-weight:bold;text-align:center;}

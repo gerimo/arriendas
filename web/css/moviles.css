@@ -1,0 +1,584 @@
+@media only screen and (min-width: 641px){
+    .headerImage{
+        background: url(../images/Home/Header_960.png) center repeat-y;
+        height: 70px;
+        width: 960px;
+        margin: 0px 0px 0px 0px;
+    }
+    #contenedorInvitaAmigos{
+        display: none;
+    }
+    .header_contenido{
+        width: 960px;
+    }
+    .header_menu, .header_menu ul.menu_1{
+        width: 390px;
+    }
+    .item_ayuda{
+        display: none;
+    }
+    #barraAlerta, #barraAlerta p{
+        width: 956px;
+        margin: 0px 0px 0px 0px;
+    }
+    #barraAlerta p.textVersionWeb{
+        display: none;
+    }
+    #barraAlerta p.textVersionMovil{
+        display: block;
+        font-size: 14px;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+/*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SEARCH.CSS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+    .search_box_1, .search_sector1, .search_ext_box{
+        width: 480px;
+    }
+    .search_box_1_title{
+        width: 430px;
+    }
+    .search_box_1_header{
+        width: 465px;
+    }
+    .search_box1_form .input_f1{
+        width: 80px;
+    }
+    .search_box_ubica input{
+        width: 442px;
+    }
+    .group_hasta{
+        width: 190px;
+        margin-left: 22px;
+    }
+    .group_desde{
+        width: 197px;
+    }
+    .search_box_1_title .txt_buscador span{
+        display: none;
+    }
+    .search_box1_form .input_f1b{
+        width: 84px;
+    }
+    .search_container{
+        width: 480px;
+        margin: 0px 0px 0px 0px;
+    }
+    .search_box_2{
+        /*display: none;*/
+        height: auto ! important;
+        min-height: 360px;
+        padding-bottom: 10px;
+    }
+    .search_arecomend_window{
+        height: auto ! important;
+        min-height: 300px;
+        width: 450px;
+    }
+    .search_box_1_maparea{
+        visibility: hidden;
+        width: 0px;
+        height: 0px;
+    }
+    .search_ext_box select{
+        width: 120px;
+    }
+    .search_ext_wrapper{
+        margin-bottom: 10px;
+    }
+    .search_box_2_header{
+        margin-left: 5px;
+        width: 450px;
+    }
+    .marcadores{
+        display: none;
+    }
+    ul.search_arecomend_info{
+        width: 300px;
+        margin-left: 20px;
+    }
+    .search_arecomend_frame{
+        margin-left: 55px;
+    }
+    .search_arecomend_item{
+        width: 470px;
+    }
+/*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ COMUNES.CSS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+    .main_col_izq {
+    display: none;
+    }
+    .main_col_right {
+    display: none;
+    }
+    .colDer {
+    display:none;
+    }    
+    .main_contenido {
+    margin-left: 0px;
+    width: 100%;
+    }
+    .header_menu {
+    display: none;
+    }
+    .header {
+    width: 100%;
+    }
+    .item_ayuda{
+        display: none;
+    }
+    .mis_autos_marca {
+    font-size: large;
+    }
+    span {
+    font-size: large;
+    }
+    .header_image {
+    display: none;
+    }
+    .misautos_user_item {
+    width: 100%;
+    }
+    .main_box_1{
+        width: 480px;
+    }
+/*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ LANDING.CSS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+    .land_slogan_area{
+        display: none;
+    }
+/*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ STYLE_UI.CSS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+    #barraAlerta, #barraAlerta p{
+        width: 480px;
+        margin: 0px 0px 0px 0px;
+    }
+    #barraAlerta p.textVersionWeb{
+        display: none;
+    }
+    #barraAlerta p.textVersionMovil{
+        display: block;
+        font-size: 14px;
+    }
+    #contenedorInvitaAmigos, ul.movil, .header_menu, .cuadro_logueado{
+        display: none;
+    }
+    ul.movilView{
+        display: block;
+        float: right;
+        margin-top: 10px;
+        text-align: right;
+        width: 150px;
+    }
+    ul.movilView li a{
+        color: white;
+        text-decoration: none;
+        font-size: 13px;
+    }
+    ul.enlaces_box{
+        margin-right: 0px;
+    }
+    .header_contenido{
+        width: 100%;
+    }
+    .fondoOscuro{
+        width: 150px;
+    }
+    .headerImage{
+        background: url(../images/Home/Header_480.png) center repeat-y;
+        height: 70px;
+        width: 480px;
+        margin: 0px 0px 0px 0px;
+    }
+    .main_box_2_anterior, .footer_contenido, .main_box_1_anterior{
+        width: 480px;
+        margin: 0px 0px 0px 0px;
+    }
+    .footer, .footer_enlaces{
+        width: 480px;
+    }
+    p.footer_copy{
+        right: 4px;
+    }
+    #map{
+        width: 455px;
+    }
+    .link_opciones_moviles{
+        display: block;
+    }
+    .subMenu_moviles{
+        background-color: white;
+        box-shadow: 2px 2px 5px #545454;
+        display: none;
+        height: 42px;
+        margin-left: 154px;
+        margin-top: 46px;
+        position: absolute;
+        width: 140px;
+        z-index: 1000;
+    }
+    .subMenu_moviles dt{
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 12px;
+        font-weight: bold;
+        height: 9px;
+        margin-left: 5px;
+        padding: 5px;
+        width: 8px;
+    }
+    .subMenu_moviles a{
+        color: #575757;
+        text-decoration: none;
+        padding-left: 5px;
+        white-space: nowrap;
+        font-weight: normal;
+    }
+    #logout_moviles{
+        cursor: pointer;
+        float: right;
+        margin-right: 22px;
+        margin-top: 28px;
+        color: white;
+        font-weight: bold;
+    }
+/*@@@@@@@@@@@@@@@@@@ CALIFICACIONES_PROFILE.CSS @@@@@@@@@@@@@@@@@@@@@*/
+    .barrasNavegadoras .barraNavegadoraOpciones .boton1_cla,.barrasNavegadoras .barraNavegadoraOpciones  .boton1_osc{
+        width: 130px;
+    }
+    .barrasNavegadoras .barraNavegadoraOpciones .boton2_cla,.barrasNavegadoras .barraNavegadoraOpciones .boton2_osc{
+        width: 135px;
+    }
+    .barrasNavegadoras .barraNavegadoraOpciones .boton3_cla,.barrasNavegadoras .barraNavegadoraOpciones .boton3_osc{
+        width: 122px;
+    }
+    .main_contenido span{
+        font-size: 9px;
+    }
+    .campoTexto .margenTexto .texto{
+        width: 344px;
+    }
+    .margenTexto{
+        width: 358px;
+    }
+    .detallesComentario{
+        display: none;
+    }
+    .punta{
+        margin-left: -377px;
+    }
+    .menu ul li a.encabezadoPestania{
+        width: 430px;
+    }
+    .conten_opcion3 .evaluaciones .evaluacion .calificacionEstrellas{
+        width: 80%;
+        margin-left: 40px;
+    }
+    .formularioContenidoPestania .escribeSobre textarea{
+        width: 380px;
+    }
+    .formularioContenidoPestania .botonListo{
+        margin-right: -5px;
+    }
+/*@@@@@@@@@@@@@@@@@@@@@@@ MIS_ARRIENDOS.CSS @@@@@@@@@@@@@@@@@@@@@@@*/
+    .barraNavegadora #boton1, .barraNavegadora #boton2{
+        width: 222px;
+    }
+    .bloqueEstado, .cabecera, .bloqueEstadoCabecera{
+        width: 460px;
+    }
+    .nombreMovil{
+        display: block;
+        margin-bottom: 4px;
+        margin-left: 4px;
+    }
+    .ocultarWeb{
+        display: none;
+    }
+    .main_contenido h3 {
+        width: 460px;
+    }
+    .pedidosEnEspera .cabecera{
+        width: 440px;
+    }
+    .lineaSeparacion{
+        width: 450px;
+    }
+}
+
+
+
+
+/*############################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################*/
+
+
+
+
+
+@media only screen and (min-width: 481px) and (max-width: 640px) {
+/*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SEARCH.CSS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+    .search_box_1, .search_sector1, .search_ext_box{
+        width: 640px;
+    }
+    .search_box_1_title{
+        width: 590px;
+    }
+    .search_box_1_header{
+        width: 625px;
+    }
+    .search_box1_form .input_f1{
+        width: 104px;
+    }
+    .search_box_ubica input{
+        width: 600px;
+    }
+    .group_hasta{
+        width: 250px;
+        margin-left: 22px;
+    }
+    .group_desde{
+        width: 260px;
+    }
+    .search_box_1_title .txt_buscador span{
+        display: none;
+    }
+    .search_box1_form .input_f1b{
+        width: 112px;
+    }
+    .search_container{
+        width: 640px;
+        margin: 0px 0px 0px 0px;
+    }
+    .search_box_2{
+        /*display: none;*/
+        height: auto ! important;
+        min-height: 360px;
+        padding-bottom: 10px;
+    }
+    .search_arecomend_window{
+        height: auto ! important;
+        min-height: 300px;
+        width: 640px;
+    }
+    .search_box_1_maparea{
+        visibility: hidden;
+        width: 0px;
+        height: 0px;
+    }
+    .search_ext_box select{
+        width: 160px;
+    }
+    .search_ext_wrapper{
+        margin-bottom: 10px;
+    }
+    .search_box_2_header{
+        margin-left: 5px;
+        width: 610px
+    }
+    .marcadores{
+        display: none;
+    }
+    ul.search_arecomend_info{
+        width: 300px;
+        margin-left: 20px;
+    }
+    .search_arecomend_frame{
+        margin-left: 55px;
+    }
+    .search_arecomend_item{
+        width: 630px;
+    }
+/*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ COMUNES.CSS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+    .main_col_izq {
+    display: none;
+    }
+    .main_col_right {
+    display: none;
+    }
+    .colDer {
+    display:none;
+    }    
+    .main_contenido {
+    width: 100%;
+    margin-left: 0px;
+    }
+    .header_menu {
+    display: none;
+    }
+    .header {
+    width: 100%;
+    }
+    .item_ayuda{
+        display: none;
+    }
+    .mis_autos_marca {
+    font-size: large;
+    }
+    span {
+    font-size: large;
+    }
+    .misautos_user_item {
+    width: 100%;
+    }
+    .main_box_1{
+        width: 640px;
+    }
+/*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ LANDING.CSS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+    .land_slogan_area{
+        display: none;
+    }
+/*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ STYLE_UI.CSS @@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+    #barraAlerta, #barraAlerta p{
+        width: 640px;
+        margin: 0px 0px 0px 0px;
+    }
+    #barraAlerta p.textVersionWeb{
+        display: none;
+    }
+    #barraAlerta p.textVersionMovil{
+        display: block;
+        font-size: 14px;
+    }
+    #contenedorInvitaAmigos, ul.movil, .header_menu, .cuadro_logueado{
+        display: none;
+    }
+    ul.movilView{
+        display: block;
+        float:right;
+        margin-top: 10px;
+        text-align: right;
+        width: 150px;
+    }
+    ul.movilView li a{
+        color: white;
+        text-decoration: none;
+        font-size: 13px;
+    }
+    ul.enlaces_box{
+        margin-right: 0px;
+    }
+    .header_contenido{
+        width: 100%;
+    }
+    .fondoOscuro{
+        width: 150px;
+    }
+    .headerImage{
+        background: url(../images/Home/Header_640.png) center repeat-y;
+        height: 70px;
+        width: 640px;
+        margin: 0px 0px 0px 0px;
+    }
+    .main_box_2_anterior, .footer_contenido, .main_box_1_anterior{
+        width: 640px;
+        margin: 0px 0px 0px 0px;
+    }
+    .footer, .footer_enlaces{
+        width: 640px;
+    }
+    p.footer_copy{
+        right: 8px;
+    }
+    #map{
+        width: 615px;
+    }
+    .link_opciones_moviles{
+        display: block;
+    }
+    .subMenu_moviles{
+        background-color: white;
+        box-shadow: 2px 2px 5px #545454;
+        display: none;
+        height: 42px;
+        margin-left: 314px;
+        margin-top: 46px;
+        position: absolute;
+        width: 140px;
+        z-index: 1000;
+    }
+    .subMenu_moviles dt{
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 12px;
+        font-weight: bold;
+        height: 9px;
+        margin-left: 5px;
+        padding: 5px;
+        width: 8px;
+    }
+    .subMenu_moviles a{
+        color: #575757;
+        text-decoration: none;
+        padding-left: 5px;
+        white-space: nowrap;
+        font-weight: normal;
+    }
+    #logout_moviles{
+        cursor: pointer;
+        float: right;
+        margin-right: 22px;
+        margin-top: 28px;
+        color: white;
+        font-weight: bold;
+    }
+/*@@@@@@@@@@@@@@@@@@ CALIFICACIONES_PROFILE.CSS @@@@@@@@@@@@@@@@@@@@@@@*/
+    .barrasNavegadoras .barraNavegadoraOpciones .boton3_cla{
+        width: 260px;
+    }
+    .barrasNavegadoras .barraNavegadoraOpciones .boton3_osc{
+        width: 260px;
+    }
+    .main_contenido span{
+        font-size: 9px;
+    }
+    .campoTexto .margenTexto .texto{
+        width: 491px;
+    }
+    .margenTexto{
+        width: 504px;
+    }
+    .detallesComentario{
+        display: none;
+    }
+    .punta{
+        margin-left: -523px;
+    }
+    .menu ul li a.encabezadoPestania{
+        width: 580px;
+    }
+    .conten_opcion3 .evaluaciones .evaluacion .calificacionEstrellas{
+        width: 100%;
+    }
+    .contenidoPestania_R, .contenidoPestania_O{
+        width: 550px;
+    }
+    .formularioContenidoPestania .recomiendas,.formularioContenidoPestania .fuePuntual,.formularioContenidoPestania .autoLimpio,.formularioContenidoPestania .desperfecto,.formularioContenidoPestania .escribeSobre{
+        width: 550px;
+    }
+    .formularioContenidoPestania .escribeSobre textarea{
+        width: 490px;
+    }
+    .formularioContenidoPestania .botonListo{
+        margin-right: -10px;
+    }
+/*@@@@@@@@@@@@@@@@@@@@@@@ MIS_ARRIENDOS.CSS @@@@@@@@@@@@@@@@@@@@@@@*/
+    .barraNavegadora #boton1, .barraNavegadora #boton2{
+        width: 302px;
+    }
+    .bloqueEstado, .cabecera, .bloqueEstadoCabecera{
+        width: 610px;
+    }
+    .main_contenido h3 {
+        width: 610px;
+    }
+    .bloqueEstado .direccion{
+        width: 200px;
+    }
+    .bloqueEstado .precio{
+        width: 180px;
+    }
+    .pagoBoton{
+        margin-left: 0px;
+    }
+    .pedidosEnEspera .cabecera{
+        width: 600px;
+    }
+    .lineaSeparacion{
+        width: 610px;
+    }
+}

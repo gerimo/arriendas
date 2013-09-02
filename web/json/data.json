@@ -1,0 +1,10 @@
+var data = {
+"photos": [
+{"photo_id": 27932, "photo_title": "Atardecer en Embalse", "photo_url": "http://www.panoramio.com/photo/27932", "photo_file_url": "http://mw2.google.com/mw-panoramio/photos/medium/27932.jpg", "longitude": -64.404945, "latitude": -32.202924, "width": 500, "height": 375, "upload_date": "25 June 2006", "owner_id": 4483, "owner_name": "Miguel Coranti", "owner_url": "http://www.panoramio.com/user/4483"}
+,
+{"photo_id": 3186699, "photo_title": "Ruta del Cares: Pam. de vertical-", "photo_url": "http://www.panoramio.com/photo/3186699", "photo_file_url": "http://mw2.google.com/mw-panoramio/photos/medium/3186699.jpg", "longitude": -4.863296, "latitude": 43.253174, "width": 335, "height": 500, "upload_date": "08 July 2007", "owner_id": 129297, "owner_name": "Enrique Ortiz de", "owner_url": "http://www.panoramio.com/user/129297"}
+,
+{"photo_id": 324623, "photo_title": "richmond bridge", "photo_url": "http://www.panoramio.com/photo/324623", "photo_file_url": "http://mw2.google.com/mw-panoramio/photos/medium/324623.jpg", "longitude": 147.439506, "latitude": -42.734358, "width": 500, "height": 375, "upload_date": "06 January 2007", "owner_id": 66974, "owner_name": "lieskovec", "owner_url": "http://www.panoramio.com/user/66974"}
+]}
+
+

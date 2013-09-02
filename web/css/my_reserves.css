@@ -1,0 +1,75 @@
+
+
+.main_contenido h2{
+    margin: 20px 0 20px 20px;
+    font-family: 'MuseoSlab500';
+    font-size: 20px;
+    font-weight: normal;
+    letter-spacing: -1px;
+    text-shadow: 0px 2px 0px #DDD;
+}
+
+.main_contenido p{
+    margin: 0 0 20px 20px;
+}
+
+.main_col_izq h1{
+    float: left;
+    margin-left: 20px;
+    margin-top: 20px;
+    font-family: 'MuseoSlab500';
+    font-size: 24px;
+    font-weight: normal;
+    letter-spacing: -1px;
+    text-shadow: 0px 2px 0px #DDD;
+}
+.d1 {
+    width:100%;
+    margin:15px;
+    font-size: 12px;
+}
+.ciudades{
+    left: 460px;
+}
+.auto{
+    border-bottom: 1px solid #CCCCCC;
+    margin:60px 0 0 20px;
+    padding: 15px;
+    width: 500px;
+    height: 140px;
+    cursor: pointer;
+}
+.foto_auto, .info_auto{
+    float: left;
+}
+
+.info_auto{
+    color: #3D3D3D;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 12px;
+    line-height: 20px;
+    margin: 0 20px;
+    width: 300px;
+}
+
+.info_auto label {
+    display: inline-block;
+    width: 118px;
+}
+.auto span {
+    font-size: 12px
+}
+.modo_edicion{
+    display: none;
+}
+.botones_edit {
+	position:absolute;
+	right:220px;
+}
+
+.vertodos{
+    margin: 20px 0;
+    text-align: right;
+    width: 550px;
+    font-size:12px;
+}

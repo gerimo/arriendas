@@ -1,0 +1,226 @@
+/* HEADER TIPO FACEBOOK */
+.header_tools {
+    position: relative; 
+    top: -20px;
+    left: 6px;
+    margin-right: 20px;
+
+}
+.header_tools ul li {
+    float: left;
+    /*	background-image: url('../images/header_menu_separador.png');
+            background-repeat: no-repeat;
+            background-position: right;*/
+    height: 45px;
+    padding-left: 0px;
+    padding-bottom: 20px;
+    position: relative;
+}
+.header_tools ul li a {
+    display: block;
+    background-image: url('../images/header_tools_v2.png');
+    margin-bottom: 10px;
+}
+.header_tools ul li a.tool_trans {
+    background-position: 0 0;
+    height: 28px;
+    width: 30px;
+}
+.header_tools ul li a.tool_msg {
+    background-position: -31px 0;
+    height: 28px;
+    width: 30px;
+}
+.header_tools ul li a.tool_car {
+    background-position: -165px 0;
+    height: 28px;
+    width: 30px;
+}
+.header_tools ul li p {
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.header_tools ul li p.tool_cant_trans {
+    left: 5px;
+    position: absolute;
+    text-align: center;
+    top: 7px;
+    width: 18px;
+}
+.header_tools ul li p.tool_cant_msg {
+    left: 12px;
+    position: absolute;
+    text-align: center;
+    top: 7px;
+    width: 5px;
+}
+.header_tools ul li p.tool_cant_car {
+    left: 15px;
+    position: absolute;
+    text-align: center;
+    top: 7px;
+    width: 18px;
+}
+
+
+.msg_mail_icon {
+    /*background: transparent url(../images/mail.png) no-repeat;
+    background-position: right center;
+    padding-right: 25px;*/
+}
+.alert_menu_icons {
+    z-index: 0;
+    line-height: 46px;
+}
+.alert_menu_icons li{
+    width: 30px;
+    height: 46px;
+    text-align:center;
+}  
+div.info_alert_menu{
+    position: absolute;
+    width: 230px;
+    z-index: 5;
+    margin-top: 25px;
+    background-color: white;
+    -webkit-box-shadow: 1px 1px 10px rgba(50, 50, 50, 0.4);
+    -moz-box-shadow: 1px 1px 10px rgba(50, 50, 50, 0.4);
+    box-shadow: 1px 1px 10px rgba(50, 50, 50, 0.4);
+}
+div.info_alert_menu div.alert_header{
+    height: 34px;
+    line-height: 30px;
+    font-size: 16px;
+    padding-left: 10px;
+    border: 1px solid #efefef;
+    border-bottom: 0px;
+    color: white;
+    display:none;
+}
+div.info_alert_menu div.alert_content{
+    border-top:0px;
+    border-bottom: 0px;
+} 
+
+div.info_alert_menu div.alert_footer a{
+    width: 100%;
+    border-top: 1px solid #ccc;
+    height: 30px;
+    line-height: 30px;
+    display: block;
+    color: #333;
+    text-decoration: none;
+    font-size:12px;
+    text-align: center;
+    font-weight:bold;
+    background-color: #efefef;
+} 
+div.alert_footer a{
+    clear: both;
+}
+div.info_alert_menu div.alert_footer a:hover {
+    text-decoration:underline;
+}  
+
+div.info_alert_menu div.alert_content .user_item:hover {
+    background-color: #00AEEF;
+}  
+div.info_alert_menu div.alert_content .user_item {
+    padding: 5px;
+    cursor: pointer;
+    border-bottom: 1px solid #efefef;
+    height: 56px;
+}
+div#globe_menu div.alert_content div.user_item{
+    padding-left: 10px;
+}
+div.info_alert_menu div.alert_content .car_item{
+    height: 62px;
+}
+div.info_alert_menu div.alert_content .mensaje {
+    height: 60px;
+}
+div.info_alert_menu div.alert_content .user_frame {
+    width: 60px;
+    height: 60px;
+    float: left;
+    vertical-align: middle;
+    text-align: center;
+    margin-right: 5px;
+}  
+div.info_alert_menu div.alert_content .user_frame img{
+    margin-top: 5px;
+    width: 50px;
+    height: 50px;
+}  
+
+div.info_alert_menu div.alert_content .user_post{
+    font-size: 11px;
+}  
+div.info_alert_menu div.alert_content .user_nombre {
+    font-size: 13px;
+    width: auto;
+    text-decoration: none;
+    color: #000;
+    height: 15px;
+    margin-top: 7px;
+}
+div.alert_mess_unread {
+    background-color: #FFFBCC;
+}
+div.info_alert_menu div.alert_content .user_body{
+    margin-top: 2px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: underline;
+}  
+div.info_alert_menu div.alert_content .user_fecha{
+    font-size: 10px;
+    color: #72726E;
+    font-style: italic;
+}  
+div.user_info ul.regis_validado li{
+    float: none;
+    height: 20px;
+    padding: 5px 0 5px 20px;
+    background-image: url("http://www.arriendas.cl/images/img_registro/regis_ico_sinverif.png");
+    background-position: 3px 5px;
+    background-repeat: no-repeat;
+}
+.alerts_submenu{
+    display: inline-block;
+    width: 34px;
+}
+.btn_editar{
+    background-image: url("../images/img_login/login_btn_conectar_bg.png");
+    background-repeat: repeat-x;
+    border: 1px solid #E09A1A;
+    border-radius: 5px 5px 5px 5px;
+    font-family: 'MakoRegular';
+    font-size: 15px;
+    height: 16px;
+    width: 150px;
+    display:none;
+    margin: 20px;
+    padding: 5px;
+    text-decoration: none;
+    text-align: center;
+    color: #000000;
+}
+
+.main_col_izq .btn_editar{
+    display:none;
+}
+.terminosycondiciones { padding: 5px; }
+
+.puntaNotificacion{
+    width: 18px;
+    height: 15px;
+    position: absolute;
+    margin-left: 102px;
+    margin-top: -14px;
+    background-image: url("../images/TrianguloHomeLogIn.png");
+}

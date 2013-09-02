@@ -1,0 +1,308 @@
+
+@import url("comunes.css");
+
+
+.main_box_2 {
+	background-image: none;
+	padding-bottom: 30px;
+}
+a.upcar_btn_agregar_auto {
+	background-image: url("../images/img_subi_tu_auto/upcar_btn_agregar_auto.png");
+	clear: left;
+	display: block;
+	float: left;
+	height: 32px;
+	margin-bottom: 10px;
+	margin-left: 550px;
+	width: 182px;
+}
+
+a.upcar_btn_guardar_datos  {
+    display: block;
+    width: 100px;
+    height: 26px;
+    background-image: url('../images/bt_blue_on_v2.png');
+	float:left;
+	clear: left;
+	border: 1px solid #36cced;
+	border-radius:1px 1px 1px 1px;
+	color:#FFFFFF;
+	text-shadow: 1px 1px 1px #758386;
+	font-size: 12px;
+	line-height:23px;
+	text-align:center;
+	clear:right;
+	text-decoration:none;
+	margin-left: 380px;
+}
+a.upcar_btn_guardar_datos:hover  {
+    background-image: url('../images/bt_blue_hover_v2.png');
+	text-decoration:underline;
+}
+
+h1.trans_titulo_seccion {
+	float: left;
+	font-family: 'MuseoSlab500';
+	font-size: 30px;
+	letter-spacing: -1px;
+	font-weight: normal;
+	margin-top: 20px;
+	margin-left: 20px;
+	margin-bottom: 30px;
+}
+h1.trans_titulo_seccion span {
+	color: #757575;
+}
+.upcar_box_1 {
+	float: left;
+	margin-left: 10px;
+	background-color: #fff;
+	border: 1px solid #F1F1F1;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+	width: 500px;
+	background-image: url('../images/img_subi_tu_auto/upcar_box_1_bg.png');
+	background-repeat: repeat-x;
+	background-position: bottom;
+	padding-bottom: 30px;
+	margin-bottom: 20px;
+}
+.upcar_box_1_header {
+	width:auto;
+	height: 40px;
+	margin-bottom: 20px;
+	position: relative;
+}
+.upcar_box_1_header h2 {padding: 6px;background-color:#ededed;color:#575757;font-size:13px;font-weight:bold;text-align:center;border-radius:6px 6px 0 0;margin-top:0;
+}
+/* sector 1  formulario*/
+.upcar_sector_1 {
+	float: left;
+	margin-left: 20px;
+	width: 670px;
+}
+.sector_1_form {
+	float: left;
+	margin-left: 10px;
+	width: 470px;
+	/*margin-top:70px;  ¿? */
+}
+.upcar_foto_frame {
+	float: left;
+	background-image: url('../images/img_subi_tu_auto/upcar_foto_frame.png');
+	width: 182px;
+	height: 196px;
+}
+.upcar_foto_frame img {
+	margin-top: 3px;
+	margin-left: 3px;
+}
+.c1 {
+	float: left;
+	margin-bottom: 10px;
+	margin-left: 10px;
+}
+.c1 label {
+	display: block;
+	font-family: Arial;
+	font-size: 14px;
+	margin-bottom: 6px;
+}
+.c1 input {
+	border: 1px solid #cecece;
+	background-color: #fff;
+	width: 380px;
+	height: 30px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	padding-left: 10px;
+	background-image: url('../images/img_subi_tu_auto/upcar_sector_1_input.png');
+	background-position: top;
+	background-repeat: repeat-x;
+}
+.c1 .input img {display:none}
+.c1 select {
+	padding: 4px;
+	border: 1px solid #cecece;
+	width: 120px;
+}
+.c1 .c2 {
+	float: left;
+	margin-right: 10px;
+}
+.c1 .c2 input {
+	width: 180px;
+}
+/* sector 2  formulario*/
+.upcar_sector_2 {
+	float: left;
+	width: 670px;
+	margin-bottom: 20px;
+	font-family:Arial, Helvetica, sans-serif;
+}
+.upcar_sector_2 p {
+	font-size: 14px;
+	margin-bottom: 10px;
+}
+.upcar_sector_2 textarea {
+	border: 1px solid #cecece;
+	background-color: #fff;
+	width: 445px;
+	height: 100px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	padding-left: 10px;
+	resize: none;
+	background-image: url('../images/img_subi_tu_auto/upcar_sector_2_textarea_bg.png');
+	background-repeat: repeat-x;
+	background-position: top;
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:13px;
+}
+/* sector fotografias */
+
+.upcar_box_2 {
+	float: left;
+	background-color: #fff;
+	border: 1px solid #c3c3c3;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	width: 480px;
+	background-image: url('../images/img_mensajes/msg_box_bg.png');
+	background-repeat: repeat-x;
+	background-position: bottom;
+	padding-bottom: 30px;
+	margin-bottom: 20px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.upcar_box_2_header {
+	width: 480px;
+	height: 30px;
+	-webkit-border-top-left-radius: 6px;
+	-webkit-border-top-right-radius: 6px;
+	-moz-border-radius-topleft:6px;
+	-moz-border-radius-topright: 6px;
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+	color: #575757;
+	font-size: 14px;
+	margin-bottom: 20px;
+	margin-top: -1px;
+	position: relative;
+}
+.upcar_box_2_header h2 {
+	margin:1px 0;
+	border-radius: 6px 6px 0 0; 
+	padding: 6px;background-color:#ededed;color:#575757;font-size:13px;font-weight:bold;text-align:center;border-radius:6px 6px 0 0;margin-top:0;
+}
+ul.upcar_fotos {
+	float: left;
+	margin-top: 20px;
+	margin-left: 10px;
+}
+ul.upcar_fotos li {
+	background-image: url('../images/img_subi_tu_auto/upcar_fotos_adic.png');
+	width: 82px;
+	height: 91px;
+	float: left;
+	margin-right: 12px;
+	position: relative;
+}
+ul.upcar_fotos li img.imagen {
+	margin-top: 4px;
+	margin-left: 4px;
+}
+ul.upcar_fotos li a {
+	position: absolute;
+	bottom: 20px;
+	left: 54px;
+}
+/* calendario y ubicacion del auto */
+
+.upcar_box_3 {
+	float: left;
+	margin-left: 20px;
+	background-color: #fff;
+	border: 1px solid #c3c3c3;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	width: 660px;
+	background-image: url('../images/img_mensajes/msg_box_bg.png');
+	background-repeat: repeat-x;
+	background-position: bottom;
+	padding-bottom: 30px;
+	margin-bottom: 20px;
+}
+.upcar_box_3_header {
+	background-image: url('../images/img_subi_tu_auto/upcar_box_3_header_bg.png');
+	background-repeat: repeat-x;
+	width: 660px;
+	height: 50px;
+	border-bottom: 1px solid #c3c3c3;
+	-webkit-border-top-left-radius: 10px;
+	-webkit-border-top-right-radius: 10px;
+	-moz-border-radius-topleft: 10px;
+	-moz-border-radius-topright: 10px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	font-family: Tahoma;
+	color: #fff;
+	font-size: 14px;
+	margin-bottom: 20px;
+	margin-top: 0px;
+	position: relative;
+}
+.upcar_box__header h2 {
+	margin-left: 20px;
+	padding-top: 8px;
+}
+.bt_reserva {position:absolute; right: 244px; top:150px;}
+
+/********************************** cars/car **********************************/
+.img_s1{
+	background-image: url("../images/img_autos/SeguroContraDaños_Icono.png");
+	float: left;
+	width: 30px;
+	height: 14px;
+	margin-right: 7px;
+}
+.img_s2{
+	background-image: url("../images/img_autos/SeguroPerdidaCompleta_Icono.png");
+	float: left;
+	width: 19px;
+	height: 17px;
+	margin-right: 13px;
+	margin-left: 4px;
+	margin-top: -6px;
+}
+.img_s3{
+	background-image: url("../images/img_autos/Terceros_Icono.png");
+	float: left;
+	width: 8px;
+	height: 18px;
+	margin-right: 20px;
+	margin-top: -3px;
+	margin-left: 9px;
+}
+.img_s4{
+	background-image: url("../images/img_autos/SeguroAcompañantes_Icono.png");
+	float: left;
+	width: 27px;
+	height: 19px;
+	margin-right: 11px;
+	margin-top: -2px;
+}
+.img_s5{
+	background-image: url("../images/img_autos/5UF_Icono.png");
+	float: left;
+	width: 19px;
+	height: 17px;
+	margin-right: 15px;
+	margin-left: 4px;
+	margin-top: -4px;
+}

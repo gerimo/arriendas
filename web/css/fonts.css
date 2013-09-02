@@ -1,0 +1,36 @@
+
+@font-face {
+    font-family: 'MuseoSlab500';
+    src: url('../fonts/museo_slab_500-webfont.eot');
+    src: url('../fonts/museo_slab_500-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/museo_slab_500-webfont.woff') format('woff'),
+         url('../fonts/museo_slab_500-webfont.ttf') format('truetype'),
+         url('../fonts/museo_slab_500-webfont.svg#MuseoSlab500') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'MakoRegular';
+    src: url('../fonts/mako-regular-webfont.eot');
+    src: url('../fonts/mako-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/mako-regular-webfont.woff') format('woff'),
+         url('../fonts/mako-regular-webfont.ttf') format('truetype'),
+         url('../fonts/mako-regular-webfont.svg#MakoRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'UbuntuRegular';
+    src: url('../fonts/ubuntu-regular-webfont.eot');
+    src: url('../fonts/ubuntu-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/ubuntu-regular-webfont.woff') format('woff'),
+         url('../fonts/ubuntu-regular-webfont.ttf') format('truetype'),
+         url('../fonts/ubuntu-regular-webfont.svg#UbuntuRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
