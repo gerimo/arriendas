@@ -14,3 +14,4 @@
 /web/uploads/verificaciones/
 /config/databases.yml
 /config/ProjectConfiguration.class.php
+.DS_Store
