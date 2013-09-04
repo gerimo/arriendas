@@ -1,3 +1,24 @@
-1. copiar archivos y borrar cache con php symfony cc
-2. para que lo anterior funcione, hay que modificar el archivo de configuración ProjectConfiguration.class.php. Ahí hay que decirle donde esta la carpeta autoload ubicada en el proyecto desde "symf/symfony/lib/autoload/sfCoreAutoload.class.php". Usar ruta absoluta para que no se maree.
-3. Configurar config/databases.yml
+1. Copiar las carpetas de log y cache sacándoles el .bkp
+2. darles permisos 777 a esas nuevas carpetas
+3. Modificar el archivo de configuración ProjectConfiguration.class.php. Ahí hay que decirle donde esta la carpeta autoload ubicada en el proyecto desde "symf/symfony/lib/autoload/sfCoreAutoload.class.php". Usar ruta absoluta para que no se maree.
+4. Configurar config/databases.yml
+5. Borrar cache con php symfony cc
+6. Copiar imágenes, dar permisos de escritura a estas carpetas.
+7. (opcional) hacer correr la instalación en un subdominio. Hay que usar la siguiente configuración:
+
+<VirtualHost *:80>
+ServerName web.arriendas.cl
+DocumentRoot "/var/www/web/web"
+    DirectoryIndex index.php
+    <Directory "/var/www/web/web">
+        AllowOverride All
+        Allow from All
+    </Directory>
+    ErrorLog "logs/web.arriendas.local-error_log"
+    Alias /sf "/var/www/web/symf/symfony/data/web/sf"
+        <Directory "/var/www/web/symf/symfony/data/web/sf">
+                AllowOverride All
+                Allow from All
+        </Directory>
+</VirtualHost>
+
