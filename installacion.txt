@@ -2,7 +2,7 @@
 2. darles permisos 777 a esas nuevas carpetas
 3. Modificar el archivo de configuración ProjectConfiguration.class.php. Ahí hay que decirle donde esta la carpeta autoload ubicada en el proyecto desde "symf/symfony/lib/autoload/sfCoreAutoload.class.php". Usar ruta absoluta para que no se maree.
 4. Configurar config/databases.yml
-5. Borrar cache con php symfony cc
+5. Borrar cache con (sudo) php symfony cc
 6. Copiar imágenes, dar permisos de escritura a estas carpetas.
 7. (opcional) hacer correr la instalación en un subdominio. Hay que usar la siguiente configuración:
 
