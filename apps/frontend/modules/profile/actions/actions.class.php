@@ -2865,7 +2865,7 @@ public function executeAgreePdf2(sfWebRequest $request)
         require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
         $mail = new Email();
         $mail->setSubject('Has subido un auto!');
-        $mail->setBody("<p>Hola $name</p> <p>Has subido un auto.</p> <p>Para empezar a recibir arriendos a partir de la próxima semana, debes verificar tu auto.</p><p>Te esperamos en Obispo Perez de Espinoza 5, equina Providencia durante la semana.</p>");
+        $mail->setBody("<p>Hola $name</p> <p>Has subido un auto.</p> <p>Para empezar a recibir arriendos a partir de la próxima semana, debes verificar tu auto.</p><p>Te esperamos en Perez de Espinoza 5, esquina Providencia durante la semana.</p>");
         $mail->setTo($correo);
         $mail->setCc('soporte@arriendas.cl');
         $mail->submit();
