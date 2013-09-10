@@ -1,0 +1,8 @@
+all:
+  doctrine:
+    class: sfDoctrineDatabase
+    param:
+        dsn: 'mysql:host=arriendas.c7k3jmulvdxx.sa-east-1.rds.amazonaws.com;dbname=arriendas'
+        username: arriendas_aws
+        password: leonracing
+
