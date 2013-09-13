@@ -10,7 +10,7 @@
 - (opcional) hacer correr la instalación en un subdominio. Hay que usar la siguiente configuración:
 
 <VirtualHost *:80>
-ServerName web.arriendas.cl
+ServerName web.arriendas.local
 DocumentRoot "/var/www/web/web"
     DirectoryIndex index.php
     <Directory "/var/www/web/web">
@@ -24,4 +24,9 @@ DocumentRoot "/var/www/web/web"
                 Allow from All
         </Directory>
 </VirtualHost>
+
+Explicación del virtual host:
+- El DocumentRoot (y el Directory) tiene que apuntar a la carpeta web dentro del proyecto arriendas, donde sea que esté en el computador donde se está instalando.
+- ErrorLog tiene que apuntar a algún lugar donde el computador tenga permisos de escritura. Ahí se van a loguear todos los errores del sitio (apache y php).
+- El Alias (y el Directory del Alias) se compone de dos variables, la "/sf" y una ruta. La ruta tiene que apuntar a la carpeta "sf", donde sea que se encuentre. 
 
