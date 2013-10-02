@@ -121,7 +121,7 @@ if (sfContext::getInstance()->getUser()->getAttribute("logged")){
 
     function initialize() {
         
-		<?
+		<?php
 		if (stripos($_SERVER['SERVER_NAME'], "arrendas") !== FALSE)
 		    echo "var center = new google.maps.LatLng(-34.59, -58.401604);";
 		else
