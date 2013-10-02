@@ -6,7 +6,7 @@
 	<link href="http://arriendas.assets.s3.amazonaws.com/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <meta name="description" content="Arrienda un auto vecino con seguro premium, asistencia de viaje y TAGs incluídos. Busca un auto por ubicación o por precio. Rent a car Vecino.">
-        <meta property="og:image" content="<?php echo image_path('Home/logo_arriendas.jpg');?>">
+        <meta property="og:image" content="<?php echo image_path('Home/logo_arriendas.jpg', 'absolute=true');?>">
             <?php /* include_http_metas() */ ?>
             <?php include_metas() ?>
             <?php
