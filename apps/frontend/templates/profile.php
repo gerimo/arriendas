@@ -3,6 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <meta name="description" content="Arrienda un auto vecino con seguro premium, asistencia de viaje y TAGs incluídos. Busca un auto por ubicación o por precio. Rent a car Vecino.">
+        
     <link href="http://arriendas.assets.s3.amazonaws.com/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
             <?php /* include_http_metas() */ ?>
             <?php include_metas() ?>
@@ -39,6 +40,7 @@
   })();
 
 </script>
+    
     </head>
 
     <body>
