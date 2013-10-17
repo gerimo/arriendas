@@ -2937,7 +2937,31 @@ public function executeAgreePdf2(sfWebRequest $request)
         $this->brand = $this->ordenarBrand(Doctrine_Core::getTable('Brand')->createQuery('a')->execute());
 
         $this->comunas = Doctrine_Core::getTable('Comunas')->createQuery('a')->execute();
-	    $this->getResponse()->setHttpHeader('Access-Control-Allow-Origin', '*');        
+	    $this->getResponse()->setHttpHeader('Access-Control-Allow-Origin', '*');
+
+        $this->partes = array('seguroFotoFrente','seguroFotoCostadoDerecho','seguroFotoCostadoIzquierdo','seguroFotoTraseroDerecho','tablero','llanta_del_der','llanta_del_izq','llanta_tra_der','llanta_tra_izq','rueda_repuesto','accesorio1', 'accesorio2','padron','foto_padron_reverso');
+        $this->nombresPartes = array('Foto Frente', 'Foto Costado Derecho', 'Foto Costado Izquierdo', 'Foto Trasera', 'Foto Panel', 'Foto Rueda Delantera Derecha', 'Foto Rueda Delantera Izquierda', 'Foto Rueda Trasera Derecha', 'Foto Rueda Trasera Izquierda', 'Foto Rueda Repuesto', 'Foto Accesorios 1', 'Foto Accesorios 2', 'Foto Frente Padrón', 'Foto Reverso Padrón');
+        $this->idAuto = $idCar;
+
+        //Cargamos las fotos por defecto de los autos
+        $auto= Doctrine_Core::getTable('car')->findOneById($this->idAuto);
+        $this->fotosPartes = array();
+
+        $this->fotosPartes['seguroFotoFrente'] = ($auto->getSeguroFotoFrente() != null && $auto->getSeguroFotoFrente() != "") ? $auto->getSeguroFotoFrente() : null;
+        $this->fotosPartes['seguroFotoCostadoDerecho'] = ($auto->getSeguroFotoCostadoDerecho() != null && $auto->getSeguroFotoCostadoDerecho() != "") ? $auto->getSeguroFotoCostadoDerecho() : null;
+        $this->fotosPartes['seguroFotoCostadoIzquierdo'] = ($auto->getSeguroFotoCostadoIzquierdo() != null && $auto->getSeguroFotoCostadoIzquierdo() != "") ? $auto->getSeguroFotoCostadoIzquierdo() : null;
+        $this->fotosPartes['seguroFotoTraseroDerecho'] = ($auto->getSeguroFotoTraseroDerecho() != null && $auto->getSeguroFotoTraseroDerecho() != "") ? $auto->getSeguroFotoTraseroDerecho() : null;
+        $this->fotosPartes['tablero'] = ($auto->getTablero() != null && $auto->getTablero() != "") ? $auto->getTablero() : null;
+        $this->fotosPartes['llanta_del_der'] = ($auto->getLlantaDelDer() != null && $auto->getLlantaDelDer() != "") ? $auto->getLlantaDelDer() : null;
+        $this->fotosPartes['llanta_del_izq'] = ($auto->getLlantaDelIzq() != null && $auto->getLlantaDelIzq() != "") ? $auto->getLlantaDelIzq() : null;
+        $this->fotosPartes['llanta_tra_der'] = ($auto->getLlantaTraDer() != null && $auto->getLlantaTraDer() != "") ? $auto->getLlantaTraDer() : null;
+        $this->fotosPartes['llanta_tra_izq'] = ($auto->getLlantaTraIzq() != null && $auto->getLlantaTraIzq() != "") ? $auto->getLlantaTraIzq() : null;
+        $this->fotosPartes['rueda_repuesto'] = ($auto->getRuedaRepuesto() != null && $auto->getRuedaRepuesto() != "") ? $auto->getRuedaRepuesto() : null;
+        $this->fotosPartes['accesorio1'] = ($auto->getAccesorio1() != null && $auto->getAccesorio1() != "") ? $auto->getAccesorio1() : null; 
+        $this->fotosPartes['accesorio2'] = ($auto->getAccesorio2() != null && $auto->getAccesorio2() != "") ? $auto->getAccesorio2() : null;     
+        $this->fotosPartes['padron'] = ($auto->getPadron() != null && $auto->getPadron() != "") ? $auto->getPadron() : null;      
+        $this->fotosPartes['foto_padron_reverso'] = ($auto->getFotoPadronReverso() != null && $auto->getFotoPadronReverso() != "") ? $auto->getFotoPadronReverso() : null;
+
     }
 
     public function ordenarBrand($brand){

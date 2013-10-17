@@ -24,7 +24,7 @@
 <div class="main_contenido">
 
 
-<?php include_partial('profile/car2', array('car' => $car,'brand' => $brand, 'comunas'=>$comunas, 'urlAbsoluta'=>$urlAbsoluta,'rutaArchivo'=>$rutaArchivo, 'auto' => $auto)) ?>
+<?php include_partial('profile/car2', array('car' => $car,'brand' => $brand, 'comunas'=>$comunas, 'urlAbsoluta'=>$urlAbsoluta,'rutaArchivo'=>$rutaArchivo, "partes"=>$partes,"nombresPartes"=>$nombresPartes, 'auto' => $auto, "id" => $idAuto, "fotosPartes"=>$fotosPartes)) ?>
 
 
 </div><!-- main_contenido -->
