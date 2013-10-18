@@ -3771,7 +3771,7 @@ public function executeAgreePdf2(sfWebRequest $request)
             //actualiza los datos asociados al vehículo, por medio de la $idCar
             $q = Doctrine_Manager::getInstance()->getCurrentConnection();
             $query = "update arriendas.Car set address='$ubicacion', comuna_id='$comuna',
-			    model_id='$modelo', year='$anio', doors='$puertas', transmission='$transmision', photoS3='0', seguro_ok='5',
+			    model_id='$modelo', year='$anio', doors='$puertas', transmission='$transmision', photoS3='0',
 			    tipoBencina='$tipoBencina', uso_vehiculo_id='$usosVehiculo', price_per_hour='$precioHora',
 			    price_per_day='$precioDia' ,lat=$lat, lng=$lng, patente='$patente', color='$color' where id=$idCar";
             $result = $q->execute($query);
