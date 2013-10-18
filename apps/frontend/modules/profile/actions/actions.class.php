@@ -829,79 +829,97 @@ class profileActions extends sfActions {
         $query = Doctrine_Query::create()->query($q);
         $this->result = $query->toArray();
 
+        //contador de fotos cargadas
+        $photoCounter = 0;
+
     	//Cargamos las fotos por defecto de los autos
     	$auto= Doctrine_Core::getTable('car')->findOneById($this->idAuto);
         $this->fotosPartes = array();
         if($auto->getSeguroFotoFrente() != null && $auto->getSeguroFotoFrente() != "") {
             $this->fotosPartes['seguroFotoFrente'] = $auto->getSeguroFotoFrente();
+            $photoCounter++;
         } else {
             $this->fotosPartes['seguroFotoFrente'] = null;
         }
         if($auto->getSeguroFotoCostadoDerecho() != null && $auto->getSeguroFotoCostadoDerecho() != "") {
             $this->fotosPartes['seguroFotoCostadoDerecho'] = $auto->getSeguroFotoCostadoDerecho(); 
+            $photoCounter++;
         } else {
             $this->fotosPartes['seguroFotoCostadoDerecho'] = null;
         }
         if($auto->getSeguroFotoCostadoIzquierdo() != null && $auto->getSeguroFotoCostadoIzquierdo() != "") {
             $this->fotosPartes['seguroFotoCostadoIzquierdo'] = $auto->getSeguroFotoCostadoIzquierdo(); 
+            $photoCounter++;
         } else {
             $this->fotosPartes['seguroFotoCostadoIzquierdo'] = null;
         }
         if($auto->getSeguroFotoTraseroDerecho() != null && $auto->getSeguroFotoTraseroDerecho() != "") {
             $this->fotosPartes['seguroFotoTraseroDerecho'] = $auto->getSeguroFotoTraseroDerecho();
+            $photoCounter++;
         } else {
             $this->fotosPartes['seguroFotoTraseroDerecho'] = null;
         }   
         if($auto->getTablero() != null && $auto->getTablero() != "") {
-            $this->fotosPartes['tablero'] = $auto->getTablero();   
+            $this->fotosPartes['tablero'] = $auto->getTablero();
+            $photoCounter++;   
         } else {
             $this->fotosPartes['tablero'] = null;
         }   
         if($auto->getLlantaDelDer() != null && $auto->getLlantaDelDer() != "") {
             $this->fotosPartes['llanta_del_der'] = $auto->getLlantaDelDer();
+            $photoCounter++;
         } else {
             $this->fotosPartes['llanta_del_der'] = null;
         }   
         if($auto->getLlantaDelIzq() != null && $auto->getLlantaDelIzq() != "") {
             $this->fotosPartes['llanta_del_izq'] = $auto->getLlantaDelIzq();
+            $photoCounter++;
         } else {
             $this->fotosPartes['llanta_del_izq'] = null;
         }
         if($auto->getLlantaTraDer() != null && $auto->getLlantaTraDer() != "") {
-            $this->fotosPartes['llanta_tra_der'] = $auto->getLlantaTraDer();   
+            $this->fotosPartes['llanta_tra_der'] = $auto->getLlantaTraDer(); 
+            $photoCounter++;  
         } else {
             $this->fotosPartes['llanta_tra_der'] = null;
         }       
         if($auto->getLlantaTraIzq() != null && $auto->getLlantaTraIzq() != "") {
             $this->fotosPartes['llanta_tra_izq'] = $auto->getLlantaTraIzq();
+            $photoCounter++;
         } else {
             $this->fotosPartes['llanta_tra_izq'] = null;
         }       
         if($auto->getRuedaRepuesto() != null && $auto->getRuedaRepuesto() != "") {
-            $this->fotosPartes['rueda_repuesto'] = $auto->getRuedaRepuesto(); 
+            $this->fotosPartes['rueda_repuesto'] = $auto->getRuedaRepuesto();
+            $photoCounter++; 
         } else {
             $this->fotosPartes['rueda_repuesto'] = null;
         }
         if($auto->getAccesorio1() != null && $auto->getAccesorio1() != "") {
             $this->fotosPartes['accesorio1'] = $auto->getAccesorio1();
+            $photoCounter++;
         } else {
             $this->fotosPartes['accesorio1'] = null;
         }   
         if($auto->getAccesorio2() != null && $auto->getAccesorio2() != "") {
             $this->fotosPartes['accesorio2'] = $auto->getAccesorio2();
+            $photoCounter++;
         } else {
             $this->fotosPartes['accesorio2'] = null;
         }   
         if($auto->getPadron() != null && $auto->getPadron() != "") {
             $this->fotosPartes['padron'] = $auto->getPadron();
+            $photoCounter++;
         } else {
             $this->fotosPartes['padron']  = null;
         }
         if($auto->getFotoPadronReverso() != null && $auto->getFotoPadronReverso() != "") {
             $this->fotosPartes['foto_padron_reverso'] = $auto->getFotoPadronReverso();
+            $photoCounter++;
         } else {
             $this->fotosPartes['foto_padron_reverso']  = null;
         }
+
         $this->partes = array('seguroFotoFrente','seguroFotoCostadoDerecho','seguroFotoCostadoIzquierdo','seguroFotoTraseroDerecho','tablero','llanta_del_der','llanta_del_izq','llanta_tra_der','llanta_tra_izq','rueda_repuesto','accesorio1', 'accesorio2','padron','foto_padron_reverso');
         $this->nombresPartes = array('Foto Frente', 'Foto Costado Derecho', 'Foto Costado Izquierdo', 'Foto Trasera', 'Foto Panel', 'Foto Rueda Delantera Derecha', 'Foto Rueda Delantera Izquierda', 'Foto Rueda Trasera Derecha', 'Foto Rueda Trasera Izquierda', 'Foto Rueda Repuesto', 'Foto Accesorios 1', 'Foto Accesorios 2', 'Foto Frente Padrón', 'Foto Reverso Padrón');
 	    //var_dump($this->nombresPartes);die();
@@ -965,7 +983,8 @@ class profileActions extends sfActions {
             }
 	    
             if($this->idAuto){
-                $ok=1;
+                $ok = ($photoCounter >= 4 ) ? 3 : 1;
+                //$ok=1;
                 //$idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
                 $q = Doctrine_Manager::getInstance()->getCurrentConnection();
                 //$query = "update arriendas.Car set doors='$puertas', transmission='$transmision', uso_vehiculo_id='$usosVehiculo', foto_perfil='$fotoPerfilAuto[name]', padron='$fotoPadronFrente[name]', foto_padron_reverso='$fotoPadronReverso[name]' where id=$idAuto";
