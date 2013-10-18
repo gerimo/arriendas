@@ -2892,12 +2892,14 @@ public function executeAgreePdf2(sfWebRequest $request)
         $this->emailUser = $correo;
 
     }
-
     public function executeAddCar(sfWebRequest $request) {
         $idCar = $request -> getParameter('id');
         //obtener url absoluta
         sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
         $this->urlAbsoluta = url_for('main/priceJson');
+        
+        $this->partes = array('seguroFotoFrente','seguroFotoCostadoDerecho','seguroFotoCostadoIzquierdo','seguroFotoTraseroDerecho','tablero','llanta_del_der','llanta_del_izq','llanta_tra_der','llanta_tra_izq','rueda_repuesto','accesorio1', 'accesorio2','padron','foto_padron_reverso');
+        $this->nombresPartes = array('Foto Frente', 'Foto Costado Derecho', 'Foto Costado Izquierdo', 'Foto Trasera', 'Foto Panel', 'Foto Rueda Delantera Derecha', 'Foto Rueda Delantera Izquierda', 'Foto Rueda Trasera Derecha', 'Foto Rueda Trasera Izquierda', 'Foto Rueda Repuesto', 'Foto Accesorios 1', 'Foto Accesorios 2', 'Foto Frente Padrón', 'Foto Reverso Padrón');
         
 
         if($idCar!=""){
@@ -2931,22 +2933,42 @@ public function executeAgreePdf2(sfWebRequest $request)
             }
 
             $this->car = $car;
-	    
-    	    //Generamos la ruta para cargar la foto del vehículo si esta en el S3
-    	    $posicion= strpos($car[0]['foto_perfil'],"http");
-    	    if($posicion != 1) {
-    		$this->rutaArchivo= $car[0]['foto_perfil'];
-    	    } else {
-    		$this->rutaArchivo= "http://www.arriendas.cl/images/img_publica_auto/AutoVistaAerea.png";
-    	    }
+        
+             //Generamos la ruta para cargar la foto del vehículo si esta en el S3
+             $posicion= strpos($car[0]['foto_perfil'],"http");
+             if($posicion != 1) {
+                    $this->rutaArchivo= $car[0]['foto_perfil'];
+             } else {
+                    $this->rutaArchivo= "http://www.arriendas.cl/images/img_publica_auto/AutoVistaAerea.png";
+             }
 
             //Forma Miguel de subir la foto del auto
             $claseCar = Doctrine_Core::getTable('car')->findOneById($idCar);
             $this->auto = $claseCar;
 
+            //Cargamos las fotos por defecto de los autos
+            $auto= Doctrine_Core::getTable('car')->findOneById($this->idAuto);
+            $this->fotosPartes = array();
+
+            $this->fotosPartes['seguroFotoFrente'] = ($auto->getSeguroFotoFrente() != null && $auto->getSeguroFotoFrente() != "") ? $auto->getSeguroFotoFrente() : null;
+            $this->fotosPartes['seguroFotoCostadoDerecho'] = ($auto->getSeguroFotoCostadoDerecho() != null && $auto->getSeguroFotoCostadoDerecho() != "") ? $auto->getSeguroFotoCostadoDerecho() : null;
+            $this->fotosPartes['seguroFotoCostadoIzquierdo'] = ($auto->getSeguroFotoCostadoIzquierdo() != null && $auto->getSeguroFotoCostadoIzquierdo() != "") ? $auto->getSeguroFotoCostadoIzquierdo() : null;
+            $this->fotosPartes['seguroFotoTraseroDerecho'] = ($auto->getSeguroFotoTraseroDerecho() != null && $auto->getSeguroFotoTraseroDerecho() != "") ? $auto->getSeguroFotoTraseroDerecho() : null;
+            $this->fotosPartes['tablero'] = ($auto->getTablero() != null && $auto->getTablero() != "") ? $auto->getTablero() : null;
+            $this->fotosPartes['llanta_del_der'] = ($auto->getLlantaDelDer() != null && $auto->getLlantaDelDer() != "") ? $auto->getLlantaDelDer() : null;
+            $this->fotosPartes['llanta_del_izq'] = ($auto->getLlantaDelIzq() != null && $auto->getLlantaDelIzq() != "") ? $auto->getLlantaDelIzq() : null;
+            $this->fotosPartes['llanta_tra_der'] = ($auto->getLlantaTraDer() != null && $auto->getLlantaTraDer() != "") ? $auto->getLlantaTraDer() : null;
+            $this->fotosPartes['llanta_tra_izq'] = ($auto->getLlantaTraIzq() != null && $auto->getLlantaTraIzq() != "") ? $auto->getLlantaTraIzq() : null;
+            $this->fotosPartes['rueda_repuesto'] = ($auto->getRuedaRepuesto() != null && $auto->getRuedaRepuesto() != "") ? $auto->getRuedaRepuesto() : null;
+            $this->fotosPartes['accesorio1'] = ($auto->getAccesorio1() != null && $auto->getAccesorio1() != "") ? $auto->getAccesorio1() : null; 
+            $this->fotosPartes['accesorio2'] = ($auto->getAccesorio2() != null && $auto->getAccesorio2() != "") ? $auto->getAccesorio2() : null;     
+            $this->fotosPartes['padron'] = ($auto->getPadron() != null && $auto->getPadron() != "") ? $auto->getPadron() : null;      
+            $this->fotosPartes['foto_padron_reverso'] = ($auto->getFotoPadronReverso() != null && $auto->getFotoPadronReverso() != "") ? $auto->getFotoPadronReverso() : null;
+
+
         }else{
             $this->car = null;
-	        $this->rutaArchivo= "http://www.arriendas.cl/images/img_publica_auto/AutoVistaAerea.png";
+            $this->rutaArchivo= "http://www.arriendas.cl/images/img_publica_auto/AutoVistaAerea.png";
 
             $this->auto = null;
         }
@@ -2956,32 +2978,102 @@ public function executeAgreePdf2(sfWebRequest $request)
         $this->brand = $this->ordenarBrand(Doctrine_Core::getTable('Brand')->createQuery('a')->execute());
 
         $this->comunas = Doctrine_Core::getTable('Comunas')->createQuery('a')->execute();
-	    $this->getResponse()->setHttpHeader('Access-Control-Allow-Origin', '*');
+        $this->getResponse()->setHttpHeader('Access-Control-Allow-Origin', '*');
 
-        $this->partes = array('seguroFotoFrente','seguroFotoCostadoDerecho','seguroFotoCostadoIzquierdo','seguroFotoTraseroDerecho','tablero','llanta_del_der','llanta_del_izq','llanta_tra_der','llanta_tra_izq','rueda_repuesto','accesorio1', 'accesorio2','padron','foto_padron_reverso');
-        $this->nombresPartes = array('Foto Frente', 'Foto Costado Derecho', 'Foto Costado Izquierdo', 'Foto Trasera', 'Foto Panel', 'Foto Rueda Delantera Derecha', 'Foto Rueda Delantera Izquierda', 'Foto Rueda Trasera Derecha', 'Foto Rueda Trasera Izquierda', 'Foto Rueda Repuesto', 'Foto Accesorios 1', 'Foto Accesorios 2', 'Foto Frente Padrón', 'Foto Reverso Padrón');
         $this->idAuto = $idCar;
 
-        //Cargamos las fotos por defecto de los autos
-        $auto= Doctrine_Core::getTable('car')->findOneById($this->idAuto);
-        $this->fotosPartes = array();
-
-        $this->fotosPartes['seguroFotoFrente'] = ($auto->getSeguroFotoFrente() != null && $auto->getSeguroFotoFrente() != "") ? $auto->getSeguroFotoFrente() : null;
-        $this->fotosPartes['seguroFotoCostadoDerecho'] = ($auto->getSeguroFotoCostadoDerecho() != null && $auto->getSeguroFotoCostadoDerecho() != "") ? $auto->getSeguroFotoCostadoDerecho() : null;
-        $this->fotosPartes['seguroFotoCostadoIzquierdo'] = ($auto->getSeguroFotoCostadoIzquierdo() != null && $auto->getSeguroFotoCostadoIzquierdo() != "") ? $auto->getSeguroFotoCostadoIzquierdo() : null;
-        $this->fotosPartes['seguroFotoTraseroDerecho'] = ($auto->getSeguroFotoTraseroDerecho() != null && $auto->getSeguroFotoTraseroDerecho() != "") ? $auto->getSeguroFotoTraseroDerecho() : null;
-        $this->fotosPartes['tablero'] = ($auto->getTablero() != null && $auto->getTablero() != "") ? $auto->getTablero() : null;
-        $this->fotosPartes['llanta_del_der'] = ($auto->getLlantaDelDer() != null && $auto->getLlantaDelDer() != "") ? $auto->getLlantaDelDer() : null;
-        $this->fotosPartes['llanta_del_izq'] = ($auto->getLlantaDelIzq() != null && $auto->getLlantaDelIzq() != "") ? $auto->getLlantaDelIzq() : null;
-        $this->fotosPartes['llanta_tra_der'] = ($auto->getLlantaTraDer() != null && $auto->getLlantaTraDer() != "") ? $auto->getLlantaTraDer() : null;
-        $this->fotosPartes['llanta_tra_izq'] = ($auto->getLlantaTraIzq() != null && $auto->getLlantaTraIzq() != "") ? $auto->getLlantaTraIzq() : null;
-        $this->fotosPartes['rueda_repuesto'] = ($auto->getRuedaRepuesto() != null && $auto->getRuedaRepuesto() != "") ? $auto->getRuedaRepuesto() : null;
-        $this->fotosPartes['accesorio1'] = ($auto->getAccesorio1() != null && $auto->getAccesorio1() != "") ? $auto->getAccesorio1() : null; 
-        $this->fotosPartes['accesorio2'] = ($auto->getAccesorio2() != null && $auto->getAccesorio2() != "") ? $auto->getAccesorio2() : null;     
-        $this->fotosPartes['padron'] = ($auto->getPadron() != null && $auto->getPadron() != "") ? $auto->getPadron() : null;      
-        $this->fotosPartes['foto_padron_reverso'] = ($auto->getFotoPadronReverso() != null && $auto->getFotoPadronReverso() != "") ? $auto->getFotoPadronReverso() : null;
-
+//      
+//      
     }
+//     public function executeAddCar(sfWebRequest $request) {
+//         $idCar = $request -> getParameter('id');
+//         //obtener url absoluta
+//         sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
+//         $this->urlAbsoluta = url_for('main/priceJson');
+        
+
+//         if($idCar!=""){
+
+//             sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
+//             $url = public_path("/uploads/cars/");
+            
+//             $q = "SELECT * FROM car WHERE id=$idCar";
+            
+//             $query = Doctrine_Query::create()->query($q);
+//             $car = $query->toArray();
+//             $car[0]['url'] = $url;
+
+//             //selecciona el id de la marca a partir del modelo
+//             $model = $car[0]['Model_id'];
+//             $q = "SELECT brand_id FROM model WHERE id=$model";
+//             $query = Doctrine_Query::create()->query($q);
+//             $modelo = $query->toArray();
+
+//             $car[0]['marca'] = $modelo[0]['brand_id'];
+
+//             $codigoInterno = $car[0]['comuna_id'];
+
+//             //obtiene el nombre de la comuna dada la comuna_id
+//             $q = "SELECT nombre FROM comunas WHERE codigoInterno=$codigoInterno";
+//             $query = Doctrine_Query::create()->query($q);
+//             $comuna = $query->toArray();
+
+//             if(isset($comuna[0]['nombre'])){
+//                 $car[0]['nombreComuna'] = $comuna[0]['nombre'];
+//             }
+
+//             $this->car = $car;
+	    
+//     	    //Generamos la ruta para cargar la foto del vehículo si esta en el S3
+//     	    $posicion= strpos($car[0]['foto_perfil'],"http");
+//     	    if($posicion != 1) {
+//     		$this->rutaArchivo= $car[0]['foto_perfil'];
+//     	    } else {
+//     		$this->rutaArchivo= "http://www.arriendas.cl/images/img_publica_auto/AutoVistaAerea.png";
+//     	    }
+
+//             //Forma Miguel de subir la foto del auto
+//             $claseCar = Doctrine_Core::getTable('car')->findOneById($idCar);
+//             $this->auto = $claseCar;
+
+//         }else{
+//             $this->car = null;
+// 	        $this->rutaArchivo= "http://www.arriendas.cl/images/img_publica_auto/AutoVistaAerea.png";
+
+//             $this->auto = null;
+//         }
+
+// //Doctrine_Core::getTable('Car')->find(array($request->getParameter('id')));
+
+//         $this->brand = $this->ordenarBrand(Doctrine_Core::getTable('Brand')->createQuery('a')->execute());
+
+//         $this->comunas = Doctrine_Core::getTable('Comunas')->createQuery('a')->execute();
+// 	    $this->getResponse()->setHttpHeader('Access-Control-Allow-Origin', '*');
+
+//         $this->partes = array('seguroFotoFrente','seguroFotoCostadoDerecho','seguroFotoCostadoIzquierdo','seguroFotoTraseroDerecho','tablero','llanta_del_der','llanta_del_izq','llanta_tra_der','llanta_tra_izq','rueda_repuesto','accesorio1', 'accesorio2','padron','foto_padron_reverso');
+//         $this->nombresPartes = array('Foto Frente', 'Foto Costado Derecho', 'Foto Costado Izquierdo', 'Foto Trasera', 'Foto Panel', 'Foto Rueda Delantera Derecha', 'Foto Rueda Delantera Izquierda', 'Foto Rueda Trasera Derecha', 'Foto Rueda Trasera Izquierda', 'Foto Rueda Repuesto', 'Foto Accesorios 1', 'Foto Accesorios 2', 'Foto Frente Padrón', 'Foto Reverso Padrón');
+//         $this->idAuto = $idCar;
+
+//         //Cargamos las fotos por defecto de los autos
+//         $auto= Doctrine_Core::getTable('car')->findOneById($this->idAuto);
+//         $this->fotosPartes = array();
+
+//         $this->fotosPartes['seguroFotoFrente'] = ($auto->getSeguroFotoFrente() != null && $auto->getSeguroFotoFrente() != "") ? $auto->getSeguroFotoFrente() : null;
+//         $this->fotosPartes['seguroFotoCostadoDerecho'] = ($auto->getSeguroFotoCostadoDerecho() != null && $auto->getSeguroFotoCostadoDerecho() != "") ? $auto->getSeguroFotoCostadoDerecho() : null;
+//         $this->fotosPartes['seguroFotoCostadoIzquierdo'] = ($auto->getSeguroFotoCostadoIzquierdo() != null && $auto->getSeguroFotoCostadoIzquierdo() != "") ? $auto->getSeguroFotoCostadoIzquierdo() : null;
+//         $this->fotosPartes['seguroFotoTraseroDerecho'] = ($auto->getSeguroFotoTraseroDerecho() != null && $auto->getSeguroFotoTraseroDerecho() != "") ? $auto->getSeguroFotoTraseroDerecho() : null;
+//         $this->fotosPartes['tablero'] = ($auto->getTablero() != null && $auto->getTablero() != "") ? $auto->getTablero() : null;
+//         $this->fotosPartes['llanta_del_der'] = ($auto->getLlantaDelDer() != null && $auto->getLlantaDelDer() != "") ? $auto->getLlantaDelDer() : null;
+//         $this->fotosPartes['llanta_del_izq'] = ($auto->getLlantaDelIzq() != null && $auto->getLlantaDelIzq() != "") ? $auto->getLlantaDelIzq() : null;
+//         $this->fotosPartes['llanta_tra_der'] = ($auto->getLlantaTraDer() != null && $auto->getLlantaTraDer() != "") ? $auto->getLlantaTraDer() : null;
+//         $this->fotosPartes['llanta_tra_izq'] = ($auto->getLlantaTraIzq() != null && $auto->getLlantaTraIzq() != "") ? $auto->getLlantaTraIzq() : null;
+//         $this->fotosPartes['rueda_repuesto'] = ($auto->getRuedaRepuesto() != null && $auto->getRuedaRepuesto() != "") ? $auto->getRuedaRepuesto() : null;
+//         $this->fotosPartes['accesorio1'] = ($auto->getAccesorio1() != null && $auto->getAccesorio1() != "") ? $auto->getAccesorio1() : null; 
+//         $this->fotosPartes['accesorio2'] = ($auto->getAccesorio2() != null && $auto->getAccesorio2() != "") ? $auto->getAccesorio2() : null;     
+//         $this->fotosPartes['padron'] = ($auto->getPadron() != null && $auto->getPadron() != "") ? $auto->getPadron() : null;      
+//         $this->fotosPartes['foto_padron_reverso'] = ($auto->getFotoPadronReverso() != null && $auto->getFotoPadronReverso() != "") ? $auto->getFotoPadronReverso() : null;
+
+//     }
 
     public function ordenarBrand($brand){
 
