@@ -120,7 +120,8 @@ $(document).on('ready',function(){
 
 		//alert($('#comuna').val());
 		event.preventDefault();
-
+		console.log('paso1');
+		console.log($('#ubicacion').val());
 		//verificar los datos ingresados
 		if(verificaPaso1()){
 
@@ -180,7 +181,7 @@ $(document).on('ready',function(){
 	});
 
 	function obtenerCoordenadas(){
-		return true;
+		//return true;
 		var direccion = $('#ubicacion').val();
 		var comuna = $('#comuna').val();
 
@@ -222,11 +223,15 @@ $(document).on('ready',function(){
 	        }).fail(function(jqXHR, textStatus){
 			//PArche para levantar el tema
 			//CORREGIR
-			$('#lat').val(-33);
+					$('#lat').val(-33);
 	                $('#lng').val(-70);
 	        });
 
 		}
+		console.log(direccion);
+		console.log(comuna);
+		console.log($('#lng').val());
+		console.log($('#lat').val());
 	}
 
 	//http://maps.google.com/maps/api/staticmap?zoom=16&size=512x512&maptype=roadmap&markers=color:red|label:C|-33.4874866,-70.7368552&sensor=false

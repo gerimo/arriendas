@@ -1,5 +1,6 @@
 
 <script type="text/javascript">
+console.log('<?php echo $id ?>');
 
 function ingresaPrecios(modelo, anio){
 	//alert('hola1');
@@ -514,7 +515,8 @@ $(document).on('ready',function(){
 <div class="contenido">
 <div id="contenidoFotoFrente">
 <?php
-	for($i=0;$i<count($partes);$i++){
+	if($id != ""){
+		for($i=0;$i<count($partes);$i++){
 ?>
 
 <div style="visibility:hidden;overflow:hidden;height:0px;">
@@ -543,7 +545,8 @@ $(document).on('ready',function(){
 </div>
 
 <?php
-	}//fin for
+		}
+	}
 ?>
 
 </div>

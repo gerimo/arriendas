@@ -944,7 +944,8 @@ print_r(date('h:i:s'));
                 ->where('ca.lat > ?', $boundleft)
                 ->andWhere('ca.activo = ?', 1)
                 //->andWhere('ca.comuna_id <> NULL OR ca.comuna_id <> 0')
-                ->andWhere('ca.seguro_ok > 0')
+                ->andWhere('ca.seguro_ok = ?', 3)
+                ->orWhere('ca.seguro_ok = ?', 4)
                 ->andWhere('ca.lat < ?', $boundright)
                 ->andWhere('ca.lng > ?', $boundtop)
                 ->andWhere('ca.lng < ?', $boundbottom);
@@ -1319,7 +1320,8 @@ die;
                 ->innerJoin('st.Country co')
                 ->where('ca.lat > ?', $boundleft)
                 ->andWhere('ca.activo = ?', 1)
-                ->andWhere('ca.seguro_ok = ?', 4)
+                ->andWhere('ca.seguro_ok = ?', 3)
+                ->orWhere('ca.seguro_ok = ?', 4)
                 ->andWhere('ca.lat < ?', $boundright)
                 ->andWhere('ca.lng > ?', $boundtop)
                 ->andWhere('ca.lng < ?', $boundbottom);
