@@ -1,5 +1,6 @@
 
 <script type="text/javascript">
+console.log('<?php echo $id ?>');
 
 function ingresaPrecios(modelo, anio){
 	//alert('hola1');
@@ -119,9 +120,14 @@ $(document).on('ready',function(){
             $(formfile).click();
         });
 
-    }	
+    }
 
 	imageUpload('#formcar', '#filecar', '#previewcar','#linkcar');
+	<?php
+	    for ($i=0;$i<count($partes);$i++){
+	    	echo "imageUpload('#form_".$partes[$i]."', '#file_".$partes[$i]."', '#preview_".$partes[$i]."','#link_".$partes[$i]."'); \n";
+	    }
+	?>
 
 	$("#brand").change(function(){
 		getModel($(this));
@@ -465,9 +471,7 @@ $(document).on('ready',function(){
 		?>
 	</div>
 
-<div class="subtituloDer">
-	<p>Foto de perfil de tu veh&iacute;culo</p>
-</div>
+<div class="etiquetaPrincipal">FOTOS DEL VEHÍCULO</div>
 
 <!-- almacena la url de la foto anterior si es que ya la ingresó -->
 <input type="hidden" id="urlPerfil" name="urlPerfil" value="<?php echo $car[0]['foto_perfil']; ?>">
@@ -508,6 +512,46 @@ $(document).on('ready',function(){
 		<span style="font-size: 12px; margin-left:10px;">Tamaño máximo foto: 1 MB</span>
 	</div>
 </div>
+<div class="contenido">
+<div id="contenidoFotoFrente">
+<?php
+	if($id != ""){
+		for($i=0;$i<count($partes);$i++){
+?>
+
+<div style="visibility:hidden;overflow:hidden;height:0px;">
+    <form id="form_<?=$partes[$i]?>" method="post" enctype="multipart/form-data" action='<?php echo url_for('profile/uploadPhotoVerification?photo='.$partes[$i].'&width=140&height=140&file=file_'.$partes[$i].'&idCar='.$id) ?>'>
+        <input type="file" name="file_<?=$partes[$i]?>" id="file_<?=$partes[$i]?>" />
+        <input type="submit" />
+    </form>
+</div>
+<div class="contenedorFotoCar">
+	<div class="regis_foto_car">
+	    <div id="preview_<?=$partes[$i]?>">
+	        <?php if ($fotosPartes[$partes[$i]]== null): ?>
+         		<?php echo image_tag('img_asegura_tu_auto/'.$partes[$i].'.png', 'size=140x140') ?>
+         	<?php else: ?>
+         	 	<?php echo image_tag('../uploads/verificaciones/'.$fotosPartes[$partes[$i]], 'size=140x140') ?>
+         	<?php endif; ?>
+	    </div>
+	</div>
+	<div class="regis_op_car">
+		<div class="subtituloDer titulo_reg_car">
+			<p><?=$nombresPartes[$i]?></p>
+		</div>
+		<a href="#" id="link_<?=$partes[$i]?>" title="Agregar una foto"><?php echo image_tag('img_subi_tu_auto/upcar_ico_agrega_foto.png') ?></a>
+		<span style="font-size: 12px; margin-left:10px;">Tamaño máximo foto: 1 MB</span>
+	</div>
+</div>
+
+<?php
+		}
+	}
+?>
+
+</div>
+</div>
+
 <!-- fin foto de perfil auto -->
 
 <div class="mensajeIngresoDatos3">

@@ -373,3 +373,11 @@ input{
 	border-bottom: 1px dashed rgb(158, 158, 158);
 	font-weight: normal;
 }
+.etiquetaPrincipal{
+	background-color: #EC008C;
+	color: white;
+	font-size: 15px;
+	padding: 5px;
+	font-weight: bold;
+	margin-left: 10px;
+}
