@@ -221,7 +221,8 @@
             if (inModuleAndAction("main", "index")) {
                 if(sfContext::getInstance()->getUser()->isAuthenticated()){
             ?>
-            <div id="contenedorInvitaAmigos">
+            <?php
+/*            <div id="contenedorInvitaAmigos">
                <div class="invitar_amigos" style="display:none;">
                     <div class="fondo_invitar"> 
                         <a href="#" title="Cerrar" class="enlaceCerrarInvitar"><div class="cerrarInvitar"></div></a>
@@ -229,7 +230,8 @@
                     </div>
                 </div>
             </div>
-                <?php 
+  */?>
+  <?php 
                 /*
                 <div id="contenedorOpcionArrendadorArrendatario">
                    <div class="seleccionar_tipo_usuario">
@@ -252,7 +254,9 @@
                 include_component("profile","alerta");
                 }else{
             ?>  
-                <div id="contenedorInvitaAmigos">
+                <?php
+				/*
+							<div id="contenedorInvitaAmigos">
                    <div class="invitar_amigos" style="display:none;">
                         <div class="fondo_invitar"> 
                             <a href="#" title="Cerrar" class="enlaceCerrarInvitar"><div class="cerrarInvitar"></div></a>
@@ -260,7 +264,8 @@
                         </div>
                     </div>
                 </div>
-                    <?php
+				*/?>
+				<?php
                     /*
                     <div id="contenedorOpcionArrendadorArrendatario">
                        <div class="seleccionar_tipo_usuario">
@@ -283,7 +288,9 @@
             }else{
                 if(sfContext::getInstance()->getUser()->isAuthenticated()){
             ?>
-                    <div id="contenedorInvitaAmigos">
+	            <?php
+				/*
+				<div id="contenedorInvitaAmigos">
                        <div class="invitar_amigos" style="display:none;">
                             <div class="fondo_invitar"> 
                                 <a href="#" title="Cerrar" class="enlaceCerrarInvitar"><div class="cerrarInvitar"></div></a>
@@ -291,10 +298,13 @@
                             </div>
                         </div>
                     </div>
+				*/?>
             <?php
                     include_component("profile","alerta");
                 }else{
             ?>
+	            <?php
+				/*
                     <div id="contenedorInvitaAmigos">
                        <div class="invitar_amigos" style="display:none;">
                             <div class="fondo_invitar"> 
@@ -303,7 +313,8 @@
                             </div>
                         </div>
                     </div>
-            <?php
+				*/?>
+				<?php
                 } //end else
             }
             ?>
