@@ -391,9 +391,11 @@ $(document).on('ready',function(){
 		if((isset($car))){
 			echo "<input type='hidden' id='lat' value='".$car[0]['lat']."'>";
 			echo "<input type='hidden' id='lng' value='".$car[0]['lng']."'>";
+			echo "<input type='hidden' id='seguro_ok' value='".$car[0]['seguro_ok']."'>";
 		}else{
 			echo "<input type='hidden' id='lat' value=''>";
 			echo "<input type='hidden' id='lng' value=''>";
+			echo "<input type='hidden' id='seguro_ok' value=''>";
 		}
 	?>
 
@@ -477,7 +479,7 @@ $(document).on('ready',function(){
 <input type="hidden" id="urlPerfil" name="urlPerfil" value="<?php echo $car[0]['foto_perfil']; ?>">
 <input type="hidden" id="urlPadronFrente" name="urlPadronFrente" value="<?php echo $car[0]['padron']; ?>">
 <input type="hidden" id="urlPadronReverso" name="urlPadronReverso" value="<?php echo $car[0]['foto_padron_reverso']; ?>">
-<input type="hidden" id="idCar" name="idCar" value="<?php echo $car[0]['id']; ?>">
+<input type="hidden" id="idCar" name="idCar" value="<?php echo $id; ?>">
 
 </form>
 

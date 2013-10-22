@@ -2805,6 +2805,8 @@ public function executeAgreePdf2(sfWebRequest $request)
 
         $this->emailUser = $correo;
 
+        $this->redirect('profile/cars');
+
     }
     public function executeAddCar(sfWebRequest $request) {
         $idCar = $request -> getParameter('id');
@@ -3747,7 +3749,8 @@ public function executeAgreePdf2(sfWebRequest $request)
         $urlPadronReverso = $request -> getPostParameter('urlPadronReverso');
 
         $idCar = $request -> getPostParameter('idCar');
-
+        $seguro_ok = $request->getPostParameter('seguro_ok');
+        $this->idAuto = $idCar;
         //variables para subir fotos
         $uploadDir = sfConfig::get("sf_web_dir");
         $path = $uploadDir . '/uploads/cars/';
@@ -3761,12 +3764,11 @@ public function executeAgreePdf2(sfWebRequest $request)
             $q->execute($query);
 
             $this->fotosPartes = array();
-            $this->idAuto = $idCar;
             $photoCounter = $this->photoCounter();
 
             //nos aseguramos que seguro_ok tenga un valor. Se actualiza a 3 si tiene mas de 4 fotos, en caso contrario conserva el valor que tiene almacenado
-            $auto = Doctrine_Core::getTable('car')->findOneById($this->idAuto);
-            $ok = ($photoCounter >= 4 ) ? 3 : $auto->getAttribute('seguro_ok');
+            print_r($seguro_ok);      
+            $ok = ($photoCounter >= 4 ) ? 3 : $seguro_ok;
 
             //actualiza los datos asociados al vehículo, por medio de la $idCar
             $q = Doctrine_Manager::getInstance()->getCurrentConnection();
