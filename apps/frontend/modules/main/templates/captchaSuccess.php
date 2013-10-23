@@ -1,7 +1,12 @@
 <?php
-session_start();
+
+
+//session_start();
+
+
 
 function texto($ancho) {
+	$muestra = '';
     $cadena = "0123456789abcdefghijkmnlopqrstwxyz";
     for ($i = 0; $i < $ancho; $i++) {
         $muestra .= $cadena{rand(0, 35)};

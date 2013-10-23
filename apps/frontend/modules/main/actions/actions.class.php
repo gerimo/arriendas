@@ -16,6 +16,8 @@ class mainActions extends sfActions {
      * @param sfRequest $request A request object
      */
     //MAIN
+	
+	
 public function executeArriendo(sfWebRequest $request){
     $ciudad = $request->getParameter("autos");
     $objeto_ciudad = Doctrine_Core::getTable("city")->findOneByName($ciudad);
@@ -1594,6 +1596,7 @@ die;
             $username = $this->getRequestParameter('username');
             $activate = $this->getRequestParameter('activate');
 
+			
 
             $q = Doctrine::getTable('user')->createQuery('u')->where('u.username = ? and u.hash = ?', array($username, $activate));
             $user = $q->fetchOne();
@@ -1641,8 +1644,8 @@ Tu cuenta ha sido verificada. <br/><br/>Puedes ver autos cerca tuyo haciendo cli
             $mail->setSubject('Bienvenido a Arriendas.cl!');
             $mail->setBody("<p>Hola $name:</p><p>Bienvenido a Arriendas.cl!</p><p>Tu cuenta ha sido verificada.</p><p>[Puedes ver autos cerca tuyo haciendo click <a href='http://www.arriendas.cl'>aquí</a>]</p>");
             $mail->setTo($correo);
-  //          $mail->setBcc("fredskwara@gmail.com");
-			$mail->submit();
+            //$mail->setBcc("soporte@arriendas.cl");
+			$mail->submit();			
 
             }
         } else if ($userid != null) {
@@ -1664,6 +1667,10 @@ Tu cuenta ha sido verificada. <br/><br/>Puedes ver autos cerca tuyo haciendo cli
             sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
             $name = htmlentities($user->getFirstName());
             $correo = $user->getUsername();
+            $lastName = $user->getLastname();
+            $email = $user->getEmail();
+            $telefono = $user->getTelephone();
+
             
             /*
             $mail = '<body>Hola ' . htmlentities($user->getFirstName()) . ',<br/> Bienvenido a Arriendas.cl!<br/><br/>Haciendo click <a href="http://' . $url .$this->getController()->genUrl('main/registerVerify') . '?activate=' . $user->getHash() . '&username=' . $user->getUsername() . '">aqu&iacute;</a> confirmar&aacute;s la validez de tu direcci&oacute;n de mail.<br/><br/>Puedes ver autos cerca tuyo haciendo click <a href="http://'.$url.'">aqu&iacute;</a>.<br/><br/>El equipo de Arriendas.cl
@@ -1681,7 +1688,13 @@ Tu cuenta ha sido verificada. <br/><br/>Puedes ver autos cerca tuyo haciendo cli
             $mail->setSubject('Bienvenido a Arriendas.cl!');
             $mail->setBody("<p>Hola $name:</p><p>Bienvenido a Arriendas.cl!</p><p>Haciendo click <a href='$verificacion'>aquí</a> confirmarás la validez de tu dirección de mail.</p><p>[Puedes ver autos cerca tuyo haciendo click <a href='http://www.arriendas.cl'>aquí</a>]</p>");
             $mail->setTo($correo);
-//            $mail->setBcc("fredskwara@gmail.com");
+            $mail->submit();
+
+//            require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
+            $mail = new Email();
+            $mail->setSubject('Registro de Nuevo Usuario');
+            $mail->setBody("<p>$name $lastName</p><p>$email</p><p>$telefono</p>");
+            $mail->setTo("soporte@arriendas.cl");
             $mail->submit();
 
         }
@@ -2541,7 +2554,13 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
     }
 
     public function executeCaptcha() {
-        $this->setLayout(false);
+
+//    $this->get('profiler')->disable();
+
+
+sfConfig::set('sf_web_debug', false);  
+
+	$this->setLayout(false);
     }
     
     public function mailSmtp($to_input,$subject_input,$mail,$headers) {

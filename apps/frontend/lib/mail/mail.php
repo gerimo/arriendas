@@ -7,6 +7,7 @@ class Email{
 	private $headers = array(
                         'From'          => 'Soporte Arriendas<soporte@arriendas.cl>',
                         'To'			=> '',
+                        'Bcc'			=> '',
                         'Return-Path'   => 'Soporte Arriendas<soporte@arriendas.cl>',
                         'Subject'       => 'Arriendas.cl'
                         );
@@ -39,6 +40,10 @@ class Email{
 
 	public function setCc($cc){
 		$this->to = $this->to.','.$cc;
+	}
+	public function setBcc($bcc){
+		$this->bcc = $bcc;
+		//	$this->headers['Bcc'] = $bcc;
 	}
 
 	//destinatario
@@ -87,8 +92,10 @@ class Email{
 					    'auth' => true,
 					    'username' => $this->username,
 					    'password' => $this->password));
+		
+		$recipients = $this->to.", ".$this->bcc;
 
-        if($smtp->send($this->to, $headers, $body)){
+        if($smtp->send($recipients, $headers, $body)){
         	return true;
         }else{
         	return false;
