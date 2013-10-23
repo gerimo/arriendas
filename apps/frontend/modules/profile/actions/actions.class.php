@@ -1450,12 +1450,18 @@ class profileActions extends sfActions {
         $reserve_id = '';
         if( $request->getParameter('reserve_id') ) $reserve_id = $request->getParameter('reserve_id');
 
+        //Validate Dates
+		if( $from == 0 || $to == 0 ) {
+			$this->getUser()->setFlash('msg', 'Seleccione la fecha de inicio y de entrega');
+	        $this->redirect('profile/reserve?id=' . $request->getParameter('id'));
+		}
+  
         $hourdesde = $request->getParameter('hour_from');
         $hourhasta = $request->getParameter('hour_to');
 
         if (preg_match('/^\d{1,2}\-\d{1,2}\-\d{4}$/', $from) && preg_match('/^\d{1,2}\-\d{1,2}\-\d{4}$/', $to)) {
 
-//CORROBORAR SI SE SOLICITO ANTES PERO TIENE DURACION DURANTE EL PEDIDO
+			//CORROBORAR SI SE SOLICITO ANTES PERO TIENE DURACION DURANTE EL PEDIDO
 
             $startDate = date("Y-m-d H:i:s", strtotime($from . ' ' . $hourdesde));
             $endDate = date("Y-m-d H:i:s", strtotime($to . ' ' . $hourhasta));
@@ -2235,7 +2241,8 @@ public function executeAgreePdf2(sfWebRequest $request)
 }
 
      public function executeReserve(sfWebRequest $request) {
-        if ($this->getRequest()->getParameter('carid') != null)
+
+	 if ($this->getRequest()->getParameter('carid') != null)
             $carid = $this->getRequest()->getParameter('carid');
         else
             $carid = $request->getParameter('id');
@@ -2251,6 +2258,7 @@ public function executeAgreePdf2(sfWebRequest $request)
 		}
 
         $this->car = Doctrine_Core::getTable('car')->find(array($carid));
+
         $this->user = $this->car->getUser();
         $this->getUser()->setAttribute('lastview', $request->getReferer());
 		
@@ -2300,9 +2308,8 @@ public function executeAgreePdf2(sfWebRequest $request)
         }
 
 
-
         /////información del auto
-        $this->car = Doctrine_Core::getTable('car')->find($carid);
+        //$this->car = Doctrine_Core::getTable('car')->find($carid);
 
         $this->df = ''; if($request->getParameter('df')) $this->df = $request->getParameter('df');
         $this->hf = ''; if($request->getParameter('hf')) $this->df = $request->getParameter('hf');
@@ -2324,7 +2331,9 @@ public function executeAgreePdf2(sfWebRequest $request)
         $q->execute();
 
         //Cargamos las fotos por defecto de los autos
-        $auto= Doctrine_Core::getTable('car')->find(array($request->getParameter('id')));
+        //duplicated query
+		//Doctrine_Core::getTable('car')->find(array($request->getParameter('id')));
+		$auto= $this->car; 
         $id_comuna=$auto->getComunaId($request->getParameter('id'));
 
         if($id_comuna){

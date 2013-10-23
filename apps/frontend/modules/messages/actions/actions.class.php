@@ -164,7 +164,9 @@ class messagesActions extends sfActions
   public function obtenerMisConversaciones(){
     $tipo = "";
     $ListaDeConversaciones = Doctrine_Core::getTable("Conversation")->findConversation($this->getUser()->getAttribute("userid"));
-    for($k=0;$k<count($ListaDeConversaciones);$k++){
+    
+	
+	for($k=0;$k<count($ListaDeConversaciones);$k++){
       $idConversacion = $ListaDeConversaciones[$k]->getId();
       $usuarioEsFrom = $this->verificarUsuarioFrom($idConversacion);
       if($usuarioEsFrom){//rescate de mensajes para usuarios como FROM
@@ -232,7 +234,7 @@ class messagesActions extends sfActions
         }
       }
     }//fin for padre
-
+	
     //Ordenando los nodos internos
     for($i=0;$i<count($MisConversaciones);$i++){
         $subArray = $MisConversaciones[$i];

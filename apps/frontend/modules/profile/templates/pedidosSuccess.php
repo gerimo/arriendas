@@ -135,15 +135,20 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 
             <?php
             $mostrar = false;
+			$checkMostrar=0;
 
             //ARRENDATARIO $reservasRealizadas
             //echo "<p class='tiutlo'>PEDIDOS REALIZADOS</p>";
 
+//			if($cantidadConversacionesOrdenadas > 0){
+
+			
             if($reservasRealizadas){
                 foreach ($reservasRealizadas as $reserva) {
                     //echo $reserva['estado']."<br>";
                     if(isset($reserva['estado']) && $reserva['estado']==3){
                         $mostrar = true;
+			            $checkMostrar++;	
                     }
                 }
             }
@@ -214,6 +219,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                     //if(isset($reserva['estado']) && ($reserva['estado']==1 || $reserva['estado']==2)){
                     if(isset($reserva['estado']) && $reserva['estado']==2){
                         $mostrar = true;
+			            $checkMostrar++;	
                     }
                 }
             }
@@ -288,6 +294,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                 foreach ($reservasRealizadas as $reserva) {
                     if(isset($reserva['estado']) && $reserva['estado']==0){
                         $mostrar = true;
+			            $checkMostrar++;	
                     }
                 }
             }
@@ -387,6 +394,11 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                 //echo "<h3>EN ESPERA</h3>";
                 //echo "<p class='alerta' style='margin-bottom: 30px;'>No registra pedidos en espera de confirmaci&oacute;n";
             }
+
+				if ($checkMostrar>=0){
+					echo "<p class='alerta' style='margin-bottom: 30px;'>No existen pedidos de reserva.";
+				};
+		
             
             ?>
 
@@ -402,12 +414,14 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
             
 
             $mostrar = false;
+            $checkMostrar = 0;
 
             if($reservasRecibidas){
                 foreach ($reservasRecibidas as $reserva) {
                     if(isset($reserva['estado']) && $reserva['estado']==3){
                         $mostrar = true;
-                    }
+			            $checkMostrar++;	
+					}
                 }
             }
             
@@ -481,6 +495,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                 foreach ($reservasRecibidas as $reserva) {
                     if(isset($reserva['estado']) && $reserva['estado']==2){
                         $mostrar = true;
+			            $checkMostrar++;	
                     }
                 }
             }

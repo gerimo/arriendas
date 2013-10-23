@@ -82,6 +82,7 @@ class autoActions extends sfActions {
         $this->primerNombre = ucwords(current(explode(' ' ,$this->user->getFirstname())));
         $this->inicialApellido = ucwords(substr($this->user->getLastName(), 0, 1)).".";
     	//Modificaci—n para llevar el conteo de la cantidad de consulas que recibe el perfil del auto
+
     	$q= Doctrine_Query::create()
     	    ->update("car")
     	    ->set("consultas","consultas + 1")
@@ -89,7 +90,11 @@ class autoActions extends sfActions {
     	$q->execute();
 
         //Cargamos las fotos por defecto de los autos
-        $auto= Doctrine_Core::getTable('car')->find(array($request->getParameter('id')));
+
+		//unnecessary: the car was already loaded ($this->car). 
+        //$auto= Doctrine_Core::getTable('car')->find(array($request->getParameter('id')));
+        $auto= $this->car;
+
         $id_comuna=$auto->getComunaId($request->getParameter('id'));
 
         if($id_comuna == $codigoInterno_comunaURL){ //Si las comunas del auto y de la URL son las mismas
