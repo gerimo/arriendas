@@ -1641,8 +1641,8 @@ Tu cuenta ha sido verificada. <br/><br/>Puedes ver autos cerca tuyo haciendo cli
             $mail->setSubject('Bienvenido a Arriendas.cl!');
             $mail->setBody("<p>Hola $name:</p><p>Bienvenido a Arriendas.cl!</p><p>Tu cuenta ha sido verificada.</p><p>[Puedes ver autos cerca tuyo haciendo click <a href='http://www.arriendas.cl'>aquí</a>]</p>");
             $mail->setTo($correo);
-            $mail->setBcc("fredskwara@gmail.com");
-            $mail->submit();
+  //          $mail->setBcc("fredskwara@gmail.com");
+			$mail->submit();
 
             }
         } else if ($userid != null) {
@@ -1681,7 +1681,7 @@ Tu cuenta ha sido verificada. <br/><br/>Puedes ver autos cerca tuyo haciendo cli
             $mail->setSubject('Bienvenido a Arriendas.cl!');
             $mail->setBody("<p>Hola $name:</p><p>Bienvenido a Arriendas.cl!</p><p>Haciendo click <a href='$verificacion'>aquí</a> confirmarás la validez de tu dirección de mail.</p><p>[Puedes ver autos cerca tuyo haciendo click <a href='http://www.arriendas.cl'>aquí</a>]</p>");
             $mail->setTo($correo);
-            $mail->setBcc("fredskwara@gmail.com");
+//            $mail->setBcc("fredskwara@gmail.com");
             $mail->submit();
 
         }
