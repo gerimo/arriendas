@@ -480,7 +480,6 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                 <label class="input">
                     <span>Nombres</span>
                     <input id="firstname" name="firstname" type="text" value="<?php if($user->getFirstName()) echo $user->getFirstName(); ?>" style="width: 566px;" >
-                    <?php  echo $user->getConfirmed() ?>
 					</label>
             </div><!-- /c1 -->  
 
