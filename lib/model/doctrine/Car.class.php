@@ -20,7 +20,7 @@ class Car extends BaseCar
   }
   
   public function autoVerificado() {
-    if($this->getSeguroOK()==4) {
+    if($this->getSeguroOK()==4 OR $this->getSeguroOk()==3) {
       return true;
     } else {
       return false;

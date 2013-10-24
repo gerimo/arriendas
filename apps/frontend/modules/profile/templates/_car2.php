@@ -1,7 +1,5 @@
 
 <script type="text/javascript">
-console.log('<?php echo $id ?>');
-
 function ingresaPrecios(modelo, anio){
 	//alert('hola1');
 	/*
