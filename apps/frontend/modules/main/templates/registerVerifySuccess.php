@@ -60,8 +60,8 @@ input#botonVolver{
         <div id="Enunciado">
             <b style="color:#EC008C;font-size:26px;">Registro de usuarios</b><br><br>
             <p style="margin-top:20px;">
-                Gracias por registrarse en Arriendas.cl<br><br>
-                Hemos enviado un link a tu e-mail para que verifiques tu cuenta.
+				<?php echo $sf_data->getRaw('info')?>
+				
             </p>
         </div>
     <br /><br />

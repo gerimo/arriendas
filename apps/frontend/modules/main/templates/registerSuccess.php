@@ -260,6 +260,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
         if( $("#passwordAgain").val() == "" ) { $("#passwordAgain").parent("label").find("span").text("* Falta Confirmar Contraseña"); }
         if( $("#run").val() == "" ) { $("#run").parent("label").find("span").text("* Falta ingresar Rut"); }
         if( $("#address").val() == "" ) { $("#address").parent("label").find("span").text("* Falta ingresar Dirección"); }
+        if( $("#comunas").val() =='0') ) { $("#address").parent("label").find("span").text("* Falta ingresar Comuna"); }
         
         document.forms["frm1"].username.value = document.forms["frm1"].email.value;
 
@@ -268,7 +269,6 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 
         if(document.myform.onsubmit())
         {
-            //alert("entro!");
             document.forms["frm1"].submit();
         }
     }
@@ -489,7 +489,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
             <div class="c1 combo">
                 <label class="input">
                     <select name="comunas" id="comunas">
-                        <option value="">---Comunas---</option>
+                        <option value="0">---Comunas---</option>
                         <?php
                         foreach ($comunas as $c) {
                             if ($c["codigoInterno"] == $userComuna) {
@@ -602,8 +602,10 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     //frmvalidator.addValidation("run","rut", "Ingrese un Rut valido");
     
     frmvalidator.addValidation("region","req", "Ingrese Region");
-    frmvalidator.addValidation("comunas","req", "Ingrese Comuna");
-    
+    //frmvalidator.addValidation("comunas","req", "Ingrese Comuna");
+	
+    frmvalidator.addValidation("comunas","dontselect=0","Ingrese Comuna");	
+	
     frmvalidator.addValidation("address","req", "Ingrese Direccion");
  
     frmvalidator.addValidation("tandc","shouldselchk=on", "Acepte los terminos y condiciones");
@@ -611,7 +613,6 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     frmvalidator.setAddnlValidationFunction(DoPassValidation);
     frmvalidator.setAddnlValidationFunction(DoEmailValidation);
     //frmvalidator.setAddnlValidationFunction(DoRutValidation);
- 
 
  
 </script>

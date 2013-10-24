@@ -1597,7 +1597,6 @@ die;
             $activate = $this->getRequestParameter('activate');
 
 			
-
             $q = Doctrine::getTable('user')->createQuery('u')->where('u.username = ? and u.hash = ?', array($username, $activate));
             $user = $q->fetchOne();
 
@@ -1609,7 +1608,7 @@ die;
 				$url = str_replace('http://', '', $url);
 				$url = str_replace('https://', '', $url);
 				
-                $this->info = "<h2>Felicitaciones!</h2><br/>Su cuenta a sido activada, ahora puede ingresar con su nombre de usuario y contrase&ntilde;a.";
+                $this->info = "Felicitaciones!<br><br>Su cuenta a sido activada, ahora puede ingresar con su nombre de usuario y contrase&ntilde;a.";
                 $userid = $user->getId();
 
 		//Proceso de logueo automatico
@@ -1626,16 +1625,6 @@ die;
 		} else {
 		    $this->getUser()->setAttribute("propietario",false);
 		}
-            /*
-            $mail = '<body>Hola ' . $user->getFirstName() . ',<br/><br/> Bienvenido a Arriendas.cl!<br/><br/>
-Tu cuenta ha sido verificada. <br/><br/>Puedes ver autos cerca tuyo haciendo click <a href="http://'.$url.'">aqu&iacute;</a>.<br/><br/>El equipo de Arriendas.cl<br><br><em style="color: #969696">Nota: Para evitar posibles problemas con la recepci&oacute;n de este correo le aconsejamos nos agregue a su libreta de contactos.</em></body>';
-            $to = $user->getEmail();
-            $subject = "Cuenta verificada";
-            $headers = "From: \"Arriendas Reservas\" <no-reply@arriendas.cl>\r\n";
-            $headers .= "Content-type: text/html\r\n";
-            $headers .= "X-Mailer: PHP/" . phpversion();
-            $this->mailSmtp($to, $subject, $mail, $headers);
-            */
             $name = htmlentities($user->getFirstName());
             $correo = $user->getUsername();
             
@@ -1658,7 +1647,7 @@ Tu cuenta ha sido verificada. <br/><br/>Puedes ver autos cerca tuyo haciendo cli
 
             $verificacion = "http://".$url.$this->getController()->genUrl('main/registerVerify')."?activate=".$user->getHash()."&username=".$user->getUsername();
 
-            $this->info = "Usted recibir&aacute; un correo con un link para activar su cuenta. Si no recibe el correo en 5 minutos, revise en SPAM.";
+            $this->info = "Gracias por registrarse en Arriendas.cl<br><br>Hemos enviado un link a tu e-mail para que verifiques tu cuenta. Si no recibe el correo en 5 minutos, revise en SPAM.";
 
             $user = Doctrine_Core::getTable('user')->find(array($userid));
 
@@ -1670,18 +1659,6 @@ Tu cuenta ha sido verificada. <br/><br/>Puedes ver autos cerca tuyo haciendo cli
             $lastName = $user->getLastname();
             $email = $user->getEmail();
             $telefono = $user->getTelephone();
-
-            
-            /*
-            $mail = '<body>Hola ' . htmlentities($user->getFirstName()) . ',<br/> Bienvenido a Arriendas.cl!<br/><br/>Haciendo click <a href="http://' . $url .$this->getController()->genUrl('main/registerVerify') . '?activate=' . $user->getHash() . '&username=' . $user->getUsername() . '">aqu&iacute;</a> confirmar&aacute;s la validez de tu direcci&oacute;n de mail.<br/><br/>Puedes ver autos cerca tuyo haciendo click <a href="http://'.$url.'">aqu&iacute;</a>.<br/><br/>El equipo de Arriendas.cl
-<br><br><em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em></body>';
-            $to = $user->getEmail();
-            $subject = "Bienvenido a Arriendas.cl!";
-            $headers = "From: \"Arriendas Reservas\" <no-reply@arriendas.cl>\r\n";
-            $headers .= "Content-type: text/html\r\n";
-            $headers .= "X-Mailer: PHP/" . phpversion();
-            $this->mailSmtp($to, $subject, $mail, $headers);
-            */
 
             require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
             $mail = new Email();
@@ -1696,7 +1673,6 @@ Tu cuenta ha sido verificada. <br/><br/>Puedes ver autos cerca tuyo haciendo cli
             $mail->setBody("<p>$name $lastName</p><p>$email</p><p>$telefono</p>");
             $mail->setTo("soporte@arriendas.cl");
             $mail->submit();
-
         }
 
         if ($userid != null) {
@@ -1716,6 +1692,9 @@ Tu cuenta ha sido verificada. <br/><br/>Puedes ver autos cerca tuyo haciendo cli
         }
         $this->userdata = $data;
     }
+	
+	
+	
 
     public function executeDoRegister(sfWebRequest $request) {
         
@@ -2556,6 +2535,8 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
     public function executeCaptcha() {
 
 //    $this->get('profiler')->disable();
+
+ $this->getResponse()->setContentType('image/png');
 
 
 sfConfig::set('sf_web_debug', false);  

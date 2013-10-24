@@ -1625,7 +1625,7 @@ class profileActions extends sfActions {
                                 $this->enviarSMS($user->getTelephone(),$texto);
                             }
                         }
-                        if($user->getFirstReserve() == intval("1") && $user->getDriverLicenseFile == NULL){
+                        if($user->getFirstReserve() == intval("1") && $user->getDriverLicenseFile() == NULL){
                             $mail3 = new Email();
                             $mail3->setSubject('Servicio al Cliente - Tu reserva en Arriendas.cl');
                             $mail3->setBody("<p>Hola $nameRenter:</p><p>Recuerda completar tu perfil y subir la imagen de tu licencia (arriba a la derecha, opción 'Mi Perfil').</p><p>Ante cualquier pregunta llámanos al 2 2333-3714.</p>");
@@ -1665,9 +1665,12 @@ class profileActions extends sfActions {
     }
 
     public function executeReserveSend(sfWebRequest $request) {
-        $this->getUser()->setFlash('msg', 'Reserva enviada. Realiza multiples reservas hasta recibir una aprobación. <a href="http://www.arriendas.cl">Siguiente</a>');
+		$url = $this->generateUrl('homepage');
+        $this->getUser()->setFlash('msg', 'Reserva enviada. Realiza multiples reservas hasta recibir una aprobación. <a href="'.$url.'">Siguiente</a>');
     }
 
+	 
+	 
     public function executeDoSaveCar(sfWebRequest $request) {
 
         $car = new Car();
