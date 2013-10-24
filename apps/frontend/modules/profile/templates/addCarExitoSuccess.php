@@ -8,8 +8,38 @@
 <!-- vínculos para el formulario de "publica tu auto" -->
 <?php use_stylesheet('form_PublicaTuAuto.css') ?>
 <?php use_javascript('form_PublicaTuAuto.js') ?>
+<?php use_javascript('jquery.uploadify.v2.1.0.min.js') ?>
+<?php use_javascript('swfobject.js') ?>
+<script type="text/javascript">
 
+	$(document).on('ready',function(){
 
+		function imageUpload(form, formfile, preview, link){
+
+	        $(formfile).live('change', function()	
+	        { 
+	            $(preview).html('');
+	            $(preview).html('<?php echo image_tag('loader.gif') ?>');
+	            $(form).ajaxForm(
+	            {
+	                target: preview
+	            }).submit();
+	        });
+			
+	        $(link).click(function(event) {
+	            $(formfile).click();
+	        });
+
+	    }
+
+		<?php
+		    for ($i=0;$i<count($partes);$i++){
+		    	echo "imageUpload('#form_".$partes[$i]."', '#file_".$partes[$i]."', '#preview_".$partes[$i]."','#link_".$partes[$i]."'); \n";
+		    }
+		?>
+	});
+
+</script>
 <div class="main_box_1">
 <div class="main_box_2">
 
@@ -25,7 +55,51 @@
 
 <p style="text-align: center;margin-top: 35px;font-style: italic;color:#EC008C;font-size:26px;">¡Su auto se ha publicado exitosamente!</p>
 
-<p style="text-align: center;margin-top: 25px;font-style: italic;font-size: 17px;">Te hemos enviado un correo a <?=$emailUser;?></p>
+<p style="text-align: center;margin-top: 25px; margin-bottom:30px; font-style: italic;font-size: 17px;">Te hemos enviado un correo a <?=$emailUser;?></p>
+
+
+<div class="etiquetaPrincipal">FOTOS DEL VEHÍCULO</div>
+<div class="contenido">
+<div id="contenidoFotoFrente">
+<?php
+	if($id != ""){
+		for($i=0;$i<count($partes);$i++){
+?>
+
+<div style="visibility:hidden;overflow:hidden;height:0px;">
+    <form id="form_<?=$partes[$i]?>" method="post" enctype="multipart/form-data" action='<?php echo url_for('profile/uploadPhotoVerification?photo='.$partes[$i].'&width=140&height=140&file=file_'.$partes[$i].'&idCar='.$id) ?>'>
+        <input type="file" name="file_<?=$partes[$i]?>" id="file_<?=$partes[$i]?>" />
+        <input type="submit" />
+    </form>
+</div>
+<div class="contenedorFotoCar">
+	<div class="regis_foto_car">
+	    <div id="preview_<?=$partes[$i]?>">
+        	<?php echo image_tag('img_asegura_tu_auto/'.$partes[$i].'.png', 'size=140x140') ?>
+	    </div>
+	</div>
+	<div class="regis_op_car">
+		<div class="subtituloDer titulo_reg_car">
+			<p><?=$nombresPartes[$i]?></p>
+		</div>
+		<a href="#" id="link_<?=$partes[$i]?>" title="Agregar una foto"><?php echo image_tag('img_subi_tu_auto/upcar_ico_agrega_foto.png') ?></a>
+		<span style="font-size: 12px; margin-left:10px;">Tamaño máximo foto: 1 MB</span>
+	</div>
+</div>
+
+<?php
+		}
+	}
+?>
+
+</div>
+</div>
+
+<div class="boton3">
+	<a href="<?php echo url_for('profile/addCarExitoFotos?id='.$id); ?>">
+		<?php echo image_tag('img_publica_auto/Listo_SubeTuAuto.png', 'id=ok_photo') ?>
+	</a>
+</div>
 
 </div><!-- main_contenido -->
 
@@ -34,17 +108,6 @@
 </div><!-- main_box_2 -->
 </div><!-- main_box_1 -->
 
-<script type="text/javascript">
-
-$(document).ready(function(){
-	/*
-	setTimeout(function() {
-  		window.location.href = "http://www.arriendas.cl/profile/cars";
-	}, 4000);
-	*/
-});
-
-</script>
 
 <!-- Google Code for Sube tu auto Conversion Page -->
 <script type="text/javascript">

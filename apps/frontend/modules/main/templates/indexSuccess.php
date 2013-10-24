@@ -482,7 +482,6 @@ center = new google.maps.LatLng(-33.0,-71.3);
                 var dataCar = data.cars[i];
 				
                 var latLng = new google.maps.LatLng(dataCar.latitude,dataCar.longitude);
-
                 if (dataCar.verificado) {
                     var verificado="<img src='http://www.arriendas.cl/images/verificado.png' class='img_verificado' title='Auto Asegurado'/>";
                 } else {

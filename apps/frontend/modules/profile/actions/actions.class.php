@@ -834,8 +834,8 @@ class profileActions extends sfActions {
         $photoCounter = $this->photoCounter();
 	
 
-        $this->partes = array('seguroFotoFrente','seguroFotoCostadoDerecho','seguroFotoCostadoIzquierdo','seguroFotoTraseroDerecho','tablero','llanta_del_der','llanta_del_izq','llanta_tra_der','llanta_tra_izq','rueda_repuesto','accesorio1', 'accesorio2','padron','foto_padron_reverso');
-        $this->nombresPartes = array('Foto Frente', 'Foto Costado Derecho', 'Foto Costado Izquierdo', 'Foto Trasera', 'Foto Panel', 'Foto Rueda Delantera Derecha', 'Foto Rueda Delantera Izquierda', 'Foto Rueda Trasera Derecha', 'Foto Rueda Trasera Izquierda', 'Foto Rueda Repuesto', 'Foto Accesorios 1', 'Foto Accesorios 2', 'Foto Frente Padrón', 'Foto Reverso Padrón');
+        $this->partes = $this->partesAuto();
+        $this->nombresPartes = $this->nombrePartesAuto();
 	    //var_dump($this->nombresPartes);die();
         if($FormularioListo != "ok"){
             $FormularioListo = false;
@@ -843,26 +843,26 @@ class profileActions extends sfActions {
 
         if($FormularioListo){
 
-	    //paso 1
-	    //Cambio por widget para subir fotos de gran tamaño
-	    $fotoFrente= $request->getPostParameter("fotoFrente");
-	    $fotoCostadoDerecho= $request->getPostParameter("fotoCostadoDerecho");
-	    $fotoCostadoIzquierdo= $request->getPostParameter("fotoCostadoIzquierdo");
-	    $fotoTrasera= $request->getPostParameter("fotoTrasera");
-	
-	    $fotoPanel= $request->getPostParameter("fotoPanel");
-	
-	    $fotoRuedaDelDer= $request->getPostParameter("fotoRuedaDelDer");
-	    $fotoRuedaDelIzq= $request->getPostParameter("fotoRuedaDelIzq");
-	    $fotoRuedaTraIzq= $request->getPostParameter("fotoRuedaTraDer");
-	    $fotoRuedaTraDer= $request->getPostParameter("fotoRuedaTraIzq");
-	    $fotoRuedaRepuesto= $request->getPostParameter("fotoRuedaRepuesto");
-	    
-	    $fotoAccesorios1= $request->getPostParameter("fotoAccesorios1");
-	    $fotoAccesorios2= $request->getPostParameter("fotoAccesorios2");
-	    
-	    $fotoFrentePadron= $request->getPostParameter("fotoFrentePadron");
-	    $fotoReversoPadron= $request->getPostParameter("fotoReversoPadron");
+	       //paso 1
+	       //Cambio por widget para subir fotos de gran tamaño
+    	    $fotoFrente= $request->getPostParameter("fotoFrente");
+    	    $fotoCostadoDerecho= $request->getPostParameter("fotoCostadoDerecho");
+    	    $fotoCostadoIzquierdo= $request->getPostParameter("fotoCostadoIzquierdo");
+    	    $fotoTrasera= $request->getPostParameter("fotoTrasera");
+    	
+    	    $fotoPanel= $request->getPostParameter("fotoPanel");
+    	
+    	    $fotoRuedaDelDer= $request->getPostParameter("fotoRuedaDelDer");
+    	    $fotoRuedaDelIzq= $request->getPostParameter("fotoRuedaDelIzq");
+    	    $fotoRuedaTraIzq= $request->getPostParameter("fotoRuedaTraDer");
+    	    $fotoRuedaTraDer= $request->getPostParameter("fotoRuedaTraIzq");
+    	    $fotoRuedaRepuesto= $request->getPostParameter("fotoRuedaRepuesto");
+    	    
+    	    $fotoAccesorios1= $request->getPostParameter("fotoAccesorios1");
+    	    $fotoAccesorios2= $request->getPostParameter("fotoAccesorios2");
+    	    
+    	    $fotoFrentePadron= $request->getPostParameter("fotoFrentePadron");
+    	    $fotoReversoPadron= $request->getPostParameter("fotoReversoPadron");
 	
             //paso 3
             $radioMarca = $request -> getPostParameter('marca_Radio');
@@ -2788,26 +2788,45 @@ public function executeAgreePdf2(sfWebRequest $request)
     }
 
     public function executeAddCarExito(sfWebRequest $request){
-
+        $idCar = $request->getParameter('id');
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
         $usuario = Doctrine_Core::getTable('user')->findOneById($idUsuario);
 
         $correo = $usuario->getEmail();
         $name = $usuario->getFirstname();
 
-        require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
-        $mail = new Email();
-        $mail->setSubject('Has subido un auto!');
-        $mail->setBody("<p>Hola $name</p> <p>Has subido un auto.</p> <p>Para empezar a recibir arriendos a partir de la próxima semana, debes verificar tu auto.</p><p>Te esperamos en Perez de Espinoza 5, esquina Providencia durante la semana.</p>");
-        $mail->setTo($correo);
-        $mail->setCc('soporte@arriendas.cl');
-        $mail->submit();
+        // require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
+        // $mail = new Email();
+        // $mail->setSubject('Has subido un auto!');
+        // $mail->setBody("<p>Hola $name</p> <p>Has subido un auto.</p> <p>Para empezar a recibir arriendos a partir de la próxima semana, debes verificar tu auto.</p><p>Te esperamos en Perez de Espinoza 5, esquina Providencia durante la semana.</p>");
+        // $mail->setTo($correo);
+        // $mail->setCc('soporte@arriendas.cl');
+        //$mail->submit();
 
         $this->emailUser = $correo;
-
-        $this->redirect('profile/cars');
+        $this->partes = $this->partesAuto();
+        $this->nombresPartes = $this->nombrePartesAuto();
+        $this->id = $idCar;
 
     }
+
+    public function executeAddCarExitoFotos(sfWebRequest $request){
+        $idCar = $request -> getParameter('id');
+        $this->idAuto = $idCar;
+        $this->fotosPartes = array();
+        $photoCounter = $this->photoCounter();
+
+        //nos aseguramos que seguro_ok tenga un valor. Se actualiza a 3 si tiene mas de 4 fotos, en caso contrario conserva el valor que tiene almacenado    
+        $ok = ($photoCounter >= 4 ) ? 3 : 5;
+
+        //actualiza los datos asociados al vehículo, por medio de la $idCar
+        $q = Doctrine_Manager::getInstance()->getCurrentConnection();
+        $query = "update arriendas.Car set seguro_ok='$ok' where id=$idCar";
+        $result = $q->execute($query);
+
+        $this->redirect('profile/cars');
+    }
+
     public function executeAddCar(sfWebRequest $request) {
         $idCar = $request -> getParameter('id');
         $this->idAuto = $idCar;
@@ -2815,8 +2834,8 @@ public function executeAgreePdf2(sfWebRequest $request)
         sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
         $this->urlAbsoluta = url_for('main/priceJson');
         
-        $this->partes = array('seguroFotoFrente','seguroFotoCostadoDerecho','seguroFotoCostadoIzquierdo','seguroFotoTraseroDerecho','tablero','llanta_del_der','llanta_del_izq','llanta_tra_der','llanta_tra_izq','rueda_repuesto','accesorio1', 'accesorio2','padron','foto_padron_reverso');
-        $this->nombresPartes = array('Foto Frente', 'Foto Costado Derecho', 'Foto Costado Izquierdo', 'Foto Trasera', 'Foto Panel', 'Foto Rueda Delantera Derecha', 'Foto Rueda Delantera Izquierda', 'Foto Rueda Trasera Derecha', 'Foto Rueda Trasera Izquierda', 'Foto Rueda Repuesto', 'Foto Accesorios 1', 'Foto Accesorios 2', 'Foto Frente Padrón', 'Foto Reverso Padrón');
+        $this->partes = $this->partesAuto();
+        $this->nombresPartes = $this->nombrePartesAuto();
         
 
         if($idCar!=""){
@@ -3136,6 +3155,7 @@ public function executeAgreePdf2(sfWebRequest $request)
 
     private function photoCounter()
     {
+        $this->fotosPartes = array();
         $photoCounter = 0;
         $auto= Doctrine_Core::getTable('car')->findOneById($this->idAuto);
         
@@ -3225,6 +3245,16 @@ public function executeAgreePdf2(sfWebRequest $request)
         }
 
         return $photoCounter;
+    }
+
+    private function partesAuto()
+    {
+        return array('seguroFotoFrente','seguroFotoCostadoDerecho','seguroFotoCostadoIzquierdo','seguroFotoTraseroDerecho','tablero','rueda_repuesto','accesorio1', 'accesorio2','padron','foto_padron_reverso');
+    }
+
+    private function nombrePartesAuto()
+    {
+        return array('Foto Frente', 'Foto Costado Derecho', 'Foto Costado Izquierdo', 'Foto Trasera', 'Foto Panel', 'Foto Rueda Repuesto', 'Foto Accesorios 1', 'Foto Accesorios 2', 'Foto Frente Padrón', 'Foto Reverso Padrón');
     }
 
     public function sendConfirmEmail($reserve) {
@@ -3766,8 +3796,7 @@ public function executeAgreePdf2(sfWebRequest $request)
             $this->fotosPartes = array();
             $photoCounter = $this->photoCounter();
 
-            //nos aseguramos que seguro_ok tenga un valor. Se actualiza a 3 si tiene mas de 4 fotos, en caso contrario conserva el valor que tiene almacenado
-            print_r($seguro_ok);      
+            //nos aseguramos que seguro_ok tenga un valor. Se actualiza a 3 si tiene mas de 4 fotos, en caso contrario conserva el valor que tiene almacenado    
             $ok = ($photoCounter >= 4 ) ? 3 : $seguro_ok;
 
             //actualiza los datos asociados al vehículo, por medio de la $idCar
@@ -3839,7 +3868,7 @@ public function executeAgreePdf2(sfWebRequest $request)
     $avai->save();
 
     //redireccionar
-    if(!$creado) $this->redirect('profile/addCarExito');
+    if(!$creado) $this->redirect('profile/addCarExito?id=' . $idCar);
     else $this->redirect('profile/cars');
 
     }

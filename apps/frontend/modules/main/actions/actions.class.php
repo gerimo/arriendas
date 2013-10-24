@@ -704,7 +704,7 @@ public function executeNotificacion(sfWebRequest $request) {
 		  owner.lastname lastname,
 		  ca.price_per_day priceday,
 		  ca.price_per_hour pricehour,
-		  owner.id userid, IF(ca.seguro_ok=4,1,0) as verificado'
+		  owner.id userid, IF(ca.seguro_ok=4 or ca.seguro_ok=3,1,0) as verificado'
                 )
                 ->from('Car ca')
                 ->innerJoin('ca.Availabilities av')
@@ -944,8 +944,7 @@ print_r(date('h:i:s'));
                 ->where('ca.lat > ?', $boundleft)
                 ->andWhere('ca.activo = ?', 1)
                 //->andWhere('ca.comuna_id <> NULL OR ca.comuna_id <> 0')
-                ->andWhere('ca.seguro_ok = ?', 3)
-                ->orWhere('ca.seguro_ok = ?', 4)
+                ->andWhereIn('ca.seguro_ok', array(3,4))
                 ->andWhere('ca.lat < ?', $boundright)
                 ->andWhere('ca.lng > ?', $boundtop)
                 ->andWhere('ca.lng < ?', $boundbottom);
@@ -1096,7 +1095,7 @@ print_r('<br />auto numero: '.$contador.', '.date('h:i:s'));
                     'cantidadCalificacionesPositivas' => $car->getCantidadCalificacionesPositivas(),
                     'reservasRespondidas' => $reservasRespondidas,
                     'd' => $d,
-		    'verificado'=>$car->autoVerificado(),
+		            'verificado'=>$car->autoVerificado(),
                 );
             }
         }//fin foreach
@@ -1320,8 +1319,7 @@ die;
                 ->innerJoin('st.Country co')
                 ->where('ca.lat > ?', $boundleft)
                 ->andWhere('ca.activo = ?', 1)
-                ->andWhere('ca.seguro_ok = ?', 3)
-                ->orWhere('ca.seguro_ok = ?', 4)
+                ->andWhereIn('ca.seguro_ok', array(3,4))
                 ->andWhere('ca.lat < ?', $boundright)
                 ->andWhere('ca.lng > ?', $boundtop)
                 ->andWhere('ca.lng < ?', $boundbottom);
