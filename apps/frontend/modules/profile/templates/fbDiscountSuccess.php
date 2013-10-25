@@ -87,8 +87,8 @@
 
         if(licenseUp != "" && licenseUp != null){
         }else{
-            alert("No has registrado tu licencia de conductor. Te redireccionaremos para que puedas continuar con tu pago");
-            setTimeout("redireccion()",2);
+ //          alert("No has registrado tu licencia de conductor. Te redireccionaremos para que puedas continuar con tu pago");
+//            setTimeout("redireccion()",2);
         }
         
         $('.botonSiguiente').click(function(event) {
@@ -120,8 +120,8 @@
                     $('form#pago').submit();
                 }
             }else{
-                event.preventDefault();
-                alert("Debe indicar una opción de Pago");
+//                event.preventDefault();
+//                alert("Debe indicar una opción de Pago");
             }
         });
         $("input[type='radio'][name='deposito'][value='depositoGarantia']").prop('checked', false);
