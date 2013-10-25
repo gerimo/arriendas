@@ -2437,8 +2437,13 @@ public function executeAgreePdf2(sfWebRequest $request)
 				$resp = curl_exec($curl);
 				curl_close($curl);
 				$response = json_decode($resp);
-				$this->nShares = $response->{'shares'};
 
+				if (isset($response->{'shares'})) {
+					$this->nShares = $response->{'shares'};
+				}else{
+					$this->nShares = 0;
+				};
+				
 				//test $this->nShares=0;
 				
 				if (!$this->nShares) $this->nShares==0;
@@ -2520,9 +2525,7 @@ public function executeAgreePdf2(sfWebRequest $request)
 					$this->montoDeposito = $montoTotalPagoPorDia;
 				}
 				
-				
-
-
+	
 	$idArrendatario = $this->reserve->getUserId();
                 $arrendatario = Doctrine_Core::getTable('user')->find($idArrendatario);
                 $this->licenseUp = $arrendatario->getDriverLicenseFile();
