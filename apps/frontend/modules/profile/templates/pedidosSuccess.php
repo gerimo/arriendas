@@ -396,7 +396,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
             }
 
 				if ($checkMostrar==0){
-					echo "<p class='alerta' style='margin-bottom: 30px;'>No existen pedidos de reserva.";
+//					echo "<p class='alerta' style='margin-bottom: 30px;'>No existen pedidos de reserva.";
 				};
 		
             
@@ -414,7 +414,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
             
 
             $mostrar = false;
-            $checkMostrar = 0;
+  //          $checkMostrar = 0;
 
             if($reservasRecibidas){
                 foreach ($reservasRecibidas as $reserva) {
@@ -579,6 +579,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                     //if(isset($reserva['estado']) && ($reserva['estado']==0 || $reserva['estado']==1)){
                     if(isset($reserva['estado']) && ($reserva['estado']==0)){
                         $mostrar = true;
+						$checkMostrar++;
                     }
                 }
             }
@@ -705,6 +706,10 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                 //echo "<h3>EN ESPERA</h3>";
                 //echo "<p class='alerta'>No registra pedidos en espera de confirmaci&oacute;n";
             }
+
+			if ($checkMostrar==0){
+				echo "<p class='alerta' style='margin-bottom: 30px;'>No existen pedidos de reserva.";
+			};
 
             ?>
 
