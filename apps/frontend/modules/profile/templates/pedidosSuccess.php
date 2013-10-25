@@ -395,7 +395,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                 //echo "<p class='alerta' style='margin-bottom: 30px;'>No registra pedidos en espera de confirmaci&oacute;n";
             }
 
-				if ($checkMostrar>=0){
+				if ($checkMostrar==0){
 					echo "<p class='alerta' style='margin-bottom: 30px;'>No existen pedidos de reserva.";
 				};
 		
