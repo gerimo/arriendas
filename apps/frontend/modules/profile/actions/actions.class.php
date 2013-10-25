@@ -884,7 +884,7 @@ class profileActions extends sfActions {
             $sist_Modelo  = $request -> getPostParameter('modelo_SistemaDVD');
             $otrosAcc  = $request -> getPostParameter('otrosAccesorios');
             $idAuto  = $request -> getPostParameter('idAuto');
-
+            $seguro_ok = $request->getPostParameter('seguro_ok');
             //paso 4
             $tipoacc = $request -> getPostParameter('accesorio');
             $cantidad = count($tipoacc);
@@ -897,7 +897,7 @@ class profileActions extends sfActions {
             }
 	    
             if($this->idAuto){
-                $ok = ($photoCounter >= 4 ) ? 3 : 1;
+                $ok = ($photoCounter >= 4 AND $seguro_ok != 4 ) ? 3 : $seguro_ok;
                 //$ok=1;
                 //$idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
                 $q = Doctrine_Manager::getInstance()->getCurrentConnection();
@@ -3809,7 +3809,7 @@ public function executeAgreePdf2(sfWebRequest $request)
             $photoCounter = $this->photoCounter();
 
             //nos aseguramos que seguro_ok tenga un valor. Se actualiza a 3 si tiene mas de 4 fotos, en caso contrario conserva el valor que tiene almacenado    
-            $ok = ($photoCounter >= 4 ) ? 3 : $seguro_ok;
+            $ok = ($photoCounter >= 4 AND $seguro_ok != 4 ) ? 3 : $seguro_ok;
 
             //actualiza los datos asociados al vehículo, por medio de la $idCar
             $q = Doctrine_Manager::getInstance()->getCurrentConnection();

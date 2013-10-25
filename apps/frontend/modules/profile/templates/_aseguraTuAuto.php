@@ -454,6 +454,7 @@
 	<div id="cajaContenedora"></div>
 	<div id="confirmarListo" style="display:none;"><p>Tu verificación será aprobada o rechazada por nuestro equipo en 48 horas.<p></div>
 	<div class="botonesVolverSiguiente">
+		<input type="hidden" name="seguro_ok" value="<?=$seguroFotos[0]['seguro_ok']?>">
 		<a href="#" class="siguiente2"><?php echo image_tag('img_asegura_tu_auto/BotonVolver.png') ?></a>
 		<div class="extremoDerecho"><a href="#" id="listo"><?php echo image_tag('img_asegura_tu_auto/Listo_SubeTuAuto.png') ?></a></div>
 	</div>
