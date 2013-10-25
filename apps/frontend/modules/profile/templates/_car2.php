@@ -389,11 +389,11 @@ $(document).on('ready',function(){
 		if((isset($car))){
 			echo "<input type='hidden' id='lat' value='".$car[0]['lat']."'>";
 			echo "<input type='hidden' id='lng' value='".$car[0]['lng']."'>";
-			echo "<input type='hidden' id='seguro_ok' value='".$car[0]['seguro_ok']."'>";
+			echo "<input type='hidden' name='seguro_ok' id='seguro_ok' value='".$car[0]['seguro_ok']."'>";
 		}else{
 			echo "<input type='hidden' id='lat' value=''>";
 			echo "<input type='hidden' id='lng' value=''>";
-			echo "<input type='hidden' id='seguro_ok' value=''>";
+			echo "<input type='hidden' name='seguro_ok' id='seguro_ok' value=''>";
 		}
 	?>
 

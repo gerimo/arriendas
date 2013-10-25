@@ -821,7 +821,6 @@ class profileActions extends sfActions {
 
     public function executeAseguraTuAuto(sfWebRequest $request) {
 
-
         $FormularioListo = $request -> getParameter('form');
         $this->idAuto = $request ->getParameter("id");
 
@@ -885,6 +884,8 @@ class profileActions extends sfActions {
             $otrosAcc  = $request -> getPostParameter('otrosAccesorios');
             $idAuto  = $request -> getPostParameter('idAuto');
 
+            $seguro_ok = $request->getPostParameter('seguro_ok');
+
             //paso 4
             $tipoacc = $request -> getPostParameter('accesorio');
             $cantidad = count($tipoacc);
@@ -897,7 +898,7 @@ class profileActions extends sfActions {
             }
 	    
             if($this->idAuto){
-                $ok = ($photoCounter >= 4 ) ? 3 : 1;
+                $ok = ($photoCounter >= 4 AND $seguro_ok != 4 ) ? 3 : $seguro_ok;
                 //$ok=1;
                 //$idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
                 $q = Doctrine_Manager::getInstance()->getCurrentConnection();
@@ -2234,7 +2235,7 @@ public function executeAgreePdf2(sfWebRequest $request)
 
 }
 
-     public function executeReserve(sfWebRequest $request) {
+    public function executeReserve(sfWebRequest $request) {
         if ($this->getRequest()->getParameter('carid') != null)
             $carid = $this->getRequest()->getParameter('carid');
         else
@@ -2399,7 +2400,7 @@ public function executeAgreePdf2(sfWebRequest $request)
 
     }
 
-     public function executePayReserve(sfWebRequest $request) {
+    public function executePayReserve(sfWebRequest $request) {
 
 		$this->reserve = '';
 		if( $request->getParameter('id') ) {
@@ -2435,7 +2436,7 @@ public function executeAgreePdf2(sfWebRequest $request)
 		}
     }
 	 
-     public function executePedidos(sfWebRequest $request){
+    public function executePedidos(sfWebRequest $request){
         //id del usuario actual
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
         //$idUsuario = 885;
@@ -3796,8 +3797,8 @@ public function executeAgreePdf2(sfWebRequest $request)
             $this->fotosPartes = array();
             $photoCounter = $this->photoCounter();
 
-            //nos aseguramos que seguro_ok tenga un valor. Se actualiza a 3 si tiene mas de 4 fotos, en caso contrario conserva el valor que tiene almacenado    
-            $ok = ($photoCounter >= 4 ) ? 3 : $seguro_ok;
+            //nos aseguramos que seguro_ok tenga un valor. Se actualiza a 3 si tiene mas de 4 fotos, en caso contrario conserva el valor que tiene almacenado 
+            $ok = ($photoCounter >= 4 AND $seguro_ok != 4 ) ? 3 : $seguro_ok;
 
             //actualiza los datos asociados al vehículo, por medio de la $idCar
             $q = Doctrine_Manager::getInstance()->getCurrentConnection();
