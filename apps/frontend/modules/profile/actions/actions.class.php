@@ -1451,12 +1451,18 @@ class profileActions extends sfActions {
         $reserve_id = '';
         if( $request->getParameter('reserve_id') ) $reserve_id = $request->getParameter('reserve_id');
 
+        //Validate Dates
+        if( $from == 0 || $to == 0 ) {
+            $this->getUser()->setFlash('msg', 'Seleccione la fecha de inicio y de entrega');
+            $this->redirect('profile/reserve?id=' . $request->getParameter('id'));
+        }
+  
         $hourdesde = $request->getParameter('hour_from');
         $hourhasta = $request->getParameter('hour_to');
 
         if (preg_match('/^\d{1,2}\-\d{1,2}\-\d{4}$/', $from) && preg_match('/^\d{1,2}\-\d{1,2}\-\d{4}$/', $to)) {
 
-//CORROBORAR SI SE SOLICITO ANTES PERO TIENE DURACION DURANTE EL PEDIDO
+            //CORROBORAR SI SE SOLICITO ANTES PERO TIENE DURACION DURANTE EL PEDIDO
 
             $startDate = date("Y-m-d H:i:s", strtotime($from . ' ' . $hourdesde));
             $endDate = date("Y-m-d H:i:s", strtotime($to . ' ' . $hourhasta));
@@ -1620,7 +1626,7 @@ class profileActions extends sfActions {
                                 $this->enviarSMS($user->getTelephone(),$texto);
                             }
                         }
-                        if($user->getFirstReserve() == intval("1") && $user->getDriverLicenseFile == NULL){
+                        if($user->getFirstReserve() == intval("1") && $user->getDriverLicenseFile() == NULL){
                             $mail3 = new Email();
                             $mail3->setSubject('Servicio al Cliente - Tu reserva en Arriendas.cl');
                             $mail3->setBody("<p>Hola $nameRenter:</p><p>Recuerda completar tu perfil y subir la imagen de tu licencia (arriba a la derecha, opción 'Mi Perfil').</p><p>Ante cualquier pregunta llámanos al 2 2333-3714.</p>");
@@ -1660,9 +1666,12 @@ class profileActions extends sfActions {
     }
 
     public function executeReserveSend(sfWebRequest $request) {
-        $this->getUser()->setFlash('msg', 'Reserva enviada. Realiza multiples reservas hasta recibir una aprobación. <a href="http://www.arriendas.cl">Siguiente</a>');
+        $url = $this->generateUrl('homepage');
+        $this->getUser()->setFlash('msg', 'Reserva enviada. Realiza multiples reservas hasta recibir una aprobación. <a href="'.$url.'">Siguiente</a>');
     }
 
+     
+     
     public function executeDoSaveCar(sfWebRequest $request) {
 
         $car = new Car();
@@ -2235,8 +2244,9 @@ public function executeAgreePdf2(sfWebRequest $request)
 
 }
 
-    public function executeReserve(sfWebRequest $request) {
-        if ($this->getRequest()->getParameter('carid') != null)
+     public function executeReserve(sfWebRequest $request) {
+
+     if ($this->getRequest()->getParameter('carid') != null)
             $carid = $this->getRequest()->getParameter('carid');
         else
             $carid = $request->getParameter('id');
@@ -2252,6 +2262,7 @@ public function executeAgreePdf2(sfWebRequest $request)
         }
 
         $this->car = Doctrine_Core::getTable('car')->find(array($carid));
+
         $this->user = $this->car->getUser();
         $this->getUser()->setAttribute('lastview', $request->getReferer());
         
@@ -2301,9 +2312,8 @@ public function executeAgreePdf2(sfWebRequest $request)
         }
 
 
-
         /////información del auto
-        $this->car = Doctrine_Core::getTable('car')->find($carid);
+        //$this->car = Doctrine_Core::getTable('car')->find($carid);
 
         $this->df = ''; if($request->getParameter('df')) $this->df = $request->getParameter('df');
         $this->hf = ''; if($request->getParameter('hf')) $this->df = $request->getParameter('hf');
@@ -2325,7 +2335,9 @@ public function executeAgreePdf2(sfWebRequest $request)
         $q->execute();
 
         //Cargamos las fotos por defecto de los autos
-        $auto= Doctrine_Core::getTable('car')->find(array($request->getParameter('id')));
+        //duplicated query
+        //Doctrine_Core::getTable('car')->find(array($request->getParameter('id')));
+        $auto= $this->car; 
         $id_comuna=$auto->getComunaId($request->getParameter('id'));
 
         if($id_comuna){
@@ -2400,7 +2412,7 @@ public function executeAgreePdf2(sfWebRequest $request)
 
     }
 
-    public function executePayReserve(sfWebRequest $request) {
+     public function executePayReserve(sfWebRequest $request) {
 
         $this->reserve = '';
         if( $request->getParameter('id') ) {
@@ -2436,7 +2448,7 @@ public function executeAgreePdf2(sfWebRequest $request)
         }
     }
      
-    public function executePedidos(sfWebRequest $request){
+     public function executePedidos(sfWebRequest $request){
         //id del usuario actual
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
         //$idUsuario = 885;
@@ -3797,7 +3809,7 @@ public function executeAgreePdf2(sfWebRequest $request)
             $this->fotosPartes = array();
             $photoCounter = $this->photoCounter();
 
-            //nos aseguramos que seguro_ok tenga un valor. Se actualiza a 3 si tiene mas de 4 fotos, en caso contrario conserva el valor que tiene almacenado 
+            //nos aseguramos que seguro_ok tenga un valor. Se actualiza a 3 si tiene mas de 4 fotos, en caso contrario conserva el valor que tiene almacenado    
             $ok = ($photoCounter >= 4 AND $seguro_ok != 4 ) ? 3 : $seguro_ok;
 
             //actualiza los datos asociados al vehículo, por medio de la $idCar
