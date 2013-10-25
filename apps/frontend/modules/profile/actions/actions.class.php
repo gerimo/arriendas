@@ -139,40 +139,40 @@ class profileActions extends sfActions {
 
      
      public function executeEnviarConfirmacionSMS(sfWebRequest $request) {
-	$token=rand(1000,9999);
-	$fono=$request->getParameter("numero");
-	if(substr($fono,0,1)=="0") {
-	    $fono= substr($fono,1);
-	}
-	$url="http://api.infobip.com/api/v3/sendsms/plain?user=arriendas&password=arriendas&sender=Arriendas&SMSText=".$token."&GSM=569".$fono;
-	$ch= curl_init();
-	curl_setopt($ch,CURLOPT_URL,$url);
-	curl_exec($ch);
-	curl_close($ch);
-	//guardamos el codigo en la tabla correspondiente
-	$idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
-	$user= Doctrine_Core::getTable("User")->findOneById($idUsuario);
-	$user->setCodigoConfirmacion($token);
-	$user->save();
-	return $this->renderText("OK");
+    $token=rand(1000,9999);
+    $fono=$request->getParameter("numero");
+    if(substr($fono,0,1)=="0") {
+        $fono= substr($fono,1);
+    }
+    $url="http://api.infobip.com/api/v3/sendsms/plain?user=arriendas&password=arriendas&sender=Arriendas&SMSText=".$token."&GSM=569".$fono;
+    $ch= curl_init();
+    curl_setopt($ch,CURLOPT_URL,$url);
+    curl_exec($ch);
+    curl_close($ch);
+    //guardamos el codigo en la tabla correspondiente
+    $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+    $user= Doctrine_Core::getTable("User")->findOneById($idUsuario);
+    $user->setCodigoConfirmacion($token);
+    $user->save();
+    return $this->renderText("OK");
      }
      
     public function executeValidarSMS(sfWebRequest $request) {
-    	$token=$request->getParameter("token");
-    	$idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
-    	$user= Doctrine_Core::getTable("User")->findOneById($idUsuario);
-    	if($user->getCodigoConfirmacion() == $token) {
-    	    $user->setConfirmedSMS(1);
-    	    $user->save();
-    	    return $this->renderText("1");
-    	} else {
-    	    return $this->renderText("0");
-    	}
+        $token=$request->getParameter("token");
+        $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+        $user= Doctrine_Core::getTable("User")->findOneById($idUsuario);
+        if($user->getCodigoConfirmacion() == $token) {
+            $user->setConfirmedSMS(1);
+            $user->save();
+            return $this->renderText("1");
+        } else {
+            return $this->renderText("0");
+        }
     }
      
     public function executeConfirmarSMS(sfWebRequest $request) {
-	
-	
+    
+    
     }
 
     public function executeExtenderReservaAjax(sfWebRequest $request){
@@ -831,38 +831,38 @@ class profileActions extends sfActions {
         //contador de fotos cargadas
         $this->fotosPartes = array();
         $photoCounter = $this->photoCounter();
-	
+    
 
         $this->partes = $this->partesAuto();
         $this->nombresPartes = $this->nombrePartesAuto();
-	    //var_dump($this->nombresPartes);die();
+        //var_dump($this->nombresPartes);die();
         if($FormularioListo != "ok"){
             $FormularioListo = false;
          }
 
         if($FormularioListo){
 
-	       //paso 1
-	       //Cambio por widget para subir fotos de gran tamaño
-    	    $fotoFrente= $request->getPostParameter("fotoFrente");
-    	    $fotoCostadoDerecho= $request->getPostParameter("fotoCostadoDerecho");
-    	    $fotoCostadoIzquierdo= $request->getPostParameter("fotoCostadoIzquierdo");
-    	    $fotoTrasera= $request->getPostParameter("fotoTrasera");
-    	
-    	    $fotoPanel= $request->getPostParameter("fotoPanel");
-    	
-    	    $fotoRuedaDelDer= $request->getPostParameter("fotoRuedaDelDer");
-    	    $fotoRuedaDelIzq= $request->getPostParameter("fotoRuedaDelIzq");
-    	    $fotoRuedaTraIzq= $request->getPostParameter("fotoRuedaTraDer");
-    	    $fotoRuedaTraDer= $request->getPostParameter("fotoRuedaTraIzq");
-    	    $fotoRuedaRepuesto= $request->getPostParameter("fotoRuedaRepuesto");
-    	    
-    	    $fotoAccesorios1= $request->getPostParameter("fotoAccesorios1");
-    	    $fotoAccesorios2= $request->getPostParameter("fotoAccesorios2");
-    	    
-    	    $fotoFrentePadron= $request->getPostParameter("fotoFrentePadron");
-    	    $fotoReversoPadron= $request->getPostParameter("fotoReversoPadron");
-	
+           //paso 1
+           //Cambio por widget para subir fotos de gran tamaño
+            $fotoFrente= $request->getPostParameter("fotoFrente");
+            $fotoCostadoDerecho= $request->getPostParameter("fotoCostadoDerecho");
+            $fotoCostadoIzquierdo= $request->getPostParameter("fotoCostadoIzquierdo");
+            $fotoTrasera= $request->getPostParameter("fotoTrasera");
+        
+            $fotoPanel= $request->getPostParameter("fotoPanel");
+        
+            $fotoRuedaDelDer= $request->getPostParameter("fotoRuedaDelDer");
+            $fotoRuedaDelIzq= $request->getPostParameter("fotoRuedaDelIzq");
+            $fotoRuedaTraIzq= $request->getPostParameter("fotoRuedaTraDer");
+            $fotoRuedaTraDer= $request->getPostParameter("fotoRuedaTraIzq");
+            $fotoRuedaRepuesto= $request->getPostParameter("fotoRuedaRepuesto");
+            
+            $fotoAccesorios1= $request->getPostParameter("fotoAccesorios1");
+            $fotoAccesorios2= $request->getPostParameter("fotoAccesorios2");
+            
+            $fotoFrentePadron= $request->getPostParameter("fotoFrentePadron");
+            $fotoReversoPadron= $request->getPostParameter("fotoReversoPadron");
+    
             //paso 3
             $radioMarca = $request -> getPostParameter('marca_Radio');
             $tipoRadio = $request -> getPostParameter('tipo_Radio');
@@ -896,7 +896,7 @@ class profileActions extends sfActions {
                     else $cadena = $cadena.",".$tipoacc[$i];
                 }
             }
-	    
+        
             if($this->idAuto){
                 $ok = ($photoCounter >= 4 AND $seguro_ok != 4 ) ? 3 : $seguro_ok;
                 //$ok=1;
@@ -929,21 +929,21 @@ class profileActions extends sfActions {
                     //die($query);
                 $result = $q->execute($query);
                 
-        		//Revisamos si las fotos están cargadas o no. En este caso, el vehículo pasa a espera de revisión arriendas
-        		$auto= Doctrine_Core::getTable("Car")->findOneById($this->idAuto);
-        		if($auto->getVerificacionOK()) {
-        		    $auto->setFechaFinVerificacion($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
-        		    $auto->setSeguroOK(2);
-        		    //Obtenemos el ID de verificacion mas alto
-        		    $q= Doctrine_Manager::connection();
-        		    $pdo=$q->execute("SELECT MAX(verification_id)+1 as valor FROM Car");
-        		    $pdo->setFetchMode(Doctrine_Core::FETCH_ASSOC);
-        		    $result = $pdo->fetchAll();
-        		    $auto->setVerificationId($result[0]['valor']);
-        		    $auto->save();
-        		}
-		
-		
+                //Revisamos si las fotos están cargadas o no. En este caso, el vehículo pasa a espera de revisión arriendas
+                $auto= Doctrine_Core::getTable("Car")->findOneById($this->idAuto);
+                if($auto->getVerificacionOK()) {
+                    $auto->setFechaFinVerificacion($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
+                    $auto->setSeguroOK(2);
+                    //Obtenemos el ID de verificacion mas alto
+                    $q= Doctrine_Manager::connection();
+                    $pdo=$q->execute("SELECT MAX(verification_id)+1 as valor FROM Car");
+                    $pdo->setFetchMode(Doctrine_Core::FETCH_ASSOC);
+                    $result = $pdo->fetchAll();
+                    $auto->setVerificationId($result[0]['valor']);
+                    $auto->save();
+                }
+        
+        
                 //redireccionar
                 $this->redirect('profile/cars/index');
                 //die();
@@ -1082,10 +1082,10 @@ class profileActions extends sfActions {
                 ->createQuery('a')
                 ->where("a.Car.User.id = ?", $this->getUser()->getAttribute("userid"))
                 ->andWhere("
-		(a.date_from >= '$start' and a.date_from <= '$end') or 
-		(a.date_from <= '$start' and a.date_to >= '$end') or
-		(a.date_to >= '$start' and a.date_to <= '$end') or
-		(a.date_from <= '$end' and a.date_to = 0) "
+        (a.date_from >= '$start' and a.date_from <= '$end') or 
+        (a.date_from <= '$start' and a.date_to >= '$end') or
+        (a.date_to >= '$start' and a.date_to <= '$end') or
+        (a.date_from <= '$end' and a.date_to = 0) "
                 )
                 ->execute();
 
@@ -1392,7 +1392,7 @@ class profileActions extends sfActions {
     }
 
     public function executePagoDeposito(sfWebRequest $request) {
-	
+    
     }
     
     public function executeCars(sfWebRequest $request) {
@@ -1410,14 +1410,14 @@ class profileActions extends sfActions {
         $this->selectedState = $this->car->getCity()->getState();
         $this->selectedCity = $this->car->getCity();
         $this->selectedCountry = $this->car->getCity()->getState()->getCountry();
-	    $this->damages = Doctrine_Core::getTable("Damage")->findByCar($this->car->getId());
-	
-    	//Revisamos que el usuario sea el propietario del auto
-    	if ($this->car->getUserId() == $this->getUser()->getAttribute("userid")) {
-    	    $this->getUser()->shutdown();
-    	} else {
-    	    $this->redirect("profile/cars","200");
-    	}
+        $this->damages = Doctrine_Core::getTable("Damage")->findByCar($this->car->getId());
+    
+        //Revisamos que el usuario sea el propietario del auto
+        if ($this->car->getUserId() == $this->getUser()->getAttribute("userid")) {
+            $this->getUser()->shutdown();
+        } else {
+            $this->redirect("profile/cars","200");
+        }
     }
 
     private function getFileExtension($fileName) {
@@ -1669,8 +1669,8 @@ class profileActions extends sfActions {
         $car->setPricePerDay(floor($request->getParameter('priceday')));
         $car->setPricePerHour(floor($request->getParameter('pricehour')));
         $car->setYear($request->getParameter('year'));
-		$car->setPatente($request->getParameter('patente'));
-		$car->setTipoBencina($request->getParameter('tipobencina'));
+        $car->setPatente($request->getParameter('patente'));
+        $car->setTipoBencina($request->getParameter('tipobencina'));
         $car->setKm($request->getParameter('km'));
         $car->setAddress($request->getParameter('address'));
         $model = Doctrine_Core::getTable('Model')->find(array($request->getParameter('model')));
@@ -1756,8 +1756,8 @@ class profileActions extends sfActions {
         $car->setPricePerDay(floor($request->getParameter('priceday')));
         $car->setPricePerHour(floor($request->getParameter('pricehour')));
         $car->setYear($request->getParameter('year'));
-		$car->setPatente($request->getParameter('patente'));
-		$car->setTipoBencina($request->getParameter('tipobencina'));
+        $car->setPatente($request->getParameter('patente'));
+        $car->setTipoBencina($request->getParameter('tipobencina'));
         $car->setKm($request->getParameter('km'));
         $car->setAddress($request->getParameter('address'));
         $model = Doctrine_Core::getTable('Model')->find(array($request->getParameter('model')));
@@ -1769,20 +1769,20 @@ class profileActions extends sfActions {
         $car->setDescription($request->getParameter('description'));
         $car->save();
 
-		if($request->getParameter('danos') != '') {
-		
-			Doctrine_Core::getTable('Damage')->findByCarDelete($request->getParameter('id'));
-			
-			$danos = $request->getParameter('danos');
-			$danos = explode(',', $danos);
-			foreach($danos as $elem) {
-				
-				$dano = new Damage();
-				$dano->setDescription(trim($elem));
-				$dano->setCarId($request->getParameter('id'));
-				$dano->save();
-			}
-		}
+        if($request->getParameter('danos') != '') {
+        
+            Doctrine_Core::getTable('Damage')->findByCarDelete($request->getParameter('id'));
+            
+            $danos = $request->getParameter('danos');
+            $danos = explode(',', $danos);
+            foreach($danos as $elem) {
+                
+                $dano = new Damage();
+                $dano->setDescription(trim($elem));
+                $dano->setCarId($request->getParameter('id'));
+                $dano->save();
+            }
+        }
 
         if ($request->getParameter('main') != null) {
             $q = Doctrine_Query::create()->from('Photo')
@@ -1913,50 +1913,50 @@ class profileActions extends sfActions {
         $this->redirect('profile/ratings');
     }
 
-	/* ejemplo llamado methos gettransaction() y savetransaction() */ 
-	public function executeTransaction(sfWebRequest $request) {
-		
-		try {
-			
-			/*
-			$idtrans = '';
-			if($request->getParameter('idtrans')) $idtrans = $request->getParameter('idtrans'); 
-			
-			$trans = Doctrine_Core::getTable("Transaction")->getTransaction($idtrans);
-			
-			foreach ($trans as $value) {
-				
-				echo $value['id'];
-			}
-			*/
+    /* ejemplo llamado methos gettransaction() y savetransaction() */ 
+    public function executeTransaction(sfWebRequest $request) {
+        
+        try {
+            
+            /*
+            $idtrans = '';
+            if($request->getParameter('idtrans')) $idtrans = $request->getParameter('idtrans'); 
+            
+            $trans = Doctrine_Core::getTable("Transaction")->getTransaction($idtrans);
+            
+            foreach ($trans as $value) {
+                
+                echo $value['id'];
+            }
+            */
 
-			$idreserve = '';
-			if($request->getParameter('idreserve')) $idreserve = $request->getParameter('idreserve'); 
-			
-			$trans = Doctrine_Core::getTable("Transaction")->getTransactionByReserve($idreserve);
-			
-			echo $trans['id'];
-			
-		
-		} catch(Exception $e) { die($e); }
-		
-		throw new sfStopException();
-	}
-	
-	/*
-	public function executeSaveTransaction(sfWebRequest $request) {
-		
-		$idreserve = '';
-		if($request->getParameter('idreserve')) $idreserve = $request->getParameter('idreserve'); 
-		
-		$this->trans = Doctrine_Core::getTable("Transaction")->saveTransaction($idreserve);
-	}
-	
-	public function executePuntoPagos() {
-		
-		$this->trans = Doctrine_Core::getTable("Transaction")->successTransaction(28, '121389126', 1, 1);
-	}
-	/**/
+            $idreserve = '';
+            if($request->getParameter('idreserve')) $idreserve = $request->getParameter('idreserve'); 
+            
+            $trans = Doctrine_Core::getTable("Transaction")->getTransactionByReserve($idreserve);
+            
+            echo $trans['id'];
+            
+        
+        } catch(Exception $e) { die($e); }
+        
+        throw new sfStopException();
+    }
+    
+    /*
+    public function executeSaveTransaction(sfWebRequest $request) {
+        
+        $idreserve = '';
+        if($request->getParameter('idreserve')) $idreserve = $request->getParameter('idreserve'); 
+        
+        $this->trans = Doctrine_Core::getTable("Transaction")->saveTransaction($idreserve);
+    }
+    
+    public function executePuntoPagos() {
+        
+        $this->trans = Doctrine_Core::getTable("Transaction")->successTransaction(28, '121389126', 1, 1);
+    }
+    /**/
 
     public function executeTransactions(sfWebRequest $request) {
         
@@ -2058,7 +2058,7 @@ public function executeAgreePdf(sfWebRequest $request)
   
   //Daños
   $danos = Doctrine_Query::create()->from("Damage")->where("car_id = ? ",$car->getId());
-  $dam = array(); foreach ($danos->execute() as $value) { $dam[] = $value; }	
+  $dam = array(); foreach ($danos->execute() as $value) { $dam[] = $value; }    
   $listado_danos = implode(', ',$dam);
 
   $config = sfTCPDFPluginConfigHandler::loadConfig('pdf_configs');
@@ -2168,7 +2168,7 @@ public function executeAgreePdf2(sfWebRequest $request)
   
   //Daños
   $danos = Doctrine_Query::create()->from("Damage")->where("car_id = ? ",$car->getId());
-  $dam = array(); foreach ($danos->execute() as $value) { $dam[] = $value; }	
+  $dam = array(); foreach ($danos->execute() as $value) { $dam[] = $value; }    
   $listado_danos = implode(', ',$dam);
 
   $config = sfTCPDFPluginConfigHandler::loadConfig('pdf_configs');
@@ -2241,26 +2241,26 @@ public function executeAgreePdf2(sfWebRequest $request)
         else
             $carid = $request->getParameter('id');
 
-		$this->reserve = NULL;
-		if( $request->getParameter('idreserve') ) {
+        $this->reserve = NULL;
+        if( $request->getParameter('idreserve') ) {
 
-	        $q = Doctrine_Query::create()
-	                ->select('r.id , r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin')
-	                ->from('Reserve r')
-	                ->where('r.id = ?', $request->getParameter('idreserve'));
-	        $this->reserve = $q->fetchArray();
-		}
+            $q = Doctrine_Query::create()
+                    ->select('r.id , r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin')
+                    ->from('Reserve r')
+                    ->where('r.id = ?', $request->getParameter('idreserve'));
+            $this->reserve = $q->fetchArray();
+        }
 
         $this->car = Doctrine_Core::getTable('car')->find(array($carid));
         $this->user = $this->car->getUser();
         $this->getUser()->setAttribute('lastview', $request->getReferer());
-		
-		$this->fndreserve = array('fechainicio' => '', 'horainicio' => '', 'fechatermino' => '', 'horatermino' => '');
-		
-		if($this->getUser()->getAttribute("fechainicio")) $this->fndreserve['fechainicio'] = $this->getUser()->getAttribute("fechainicio");
-		if($this->getUser()->getAttribute("horainicio")) $this->fndreserve['horainicio'] = $this->getUser()->getAttribute("horainicio");
-		if($this->getUser()->getAttribute("fechatermino")) $this->fndreserve['fechatermino'] = $this->getUser()->getAttribute("fechatermino");
-		if($this->getUser()->getAttribute("horatermino")) $this->fndreserve['horatermino'] = $this->getUser()->getAttribute("horatermino");
+        
+        $this->fndreserve = array('fechainicio' => '', 'horainicio' => '', 'fechatermino' => '', 'horatermino' => '');
+        
+        if($this->getUser()->getAttribute("fechainicio")) $this->fndreserve['fechainicio'] = $this->getUser()->getAttribute("fechainicio");
+        if($this->getUser()->getAttribute("horainicio")) $this->fndreserve['horainicio'] = $this->getUser()->getAttribute("horainicio");
+        if($this->getUser()->getAttribute("fechatermino")) $this->fndreserve['fechatermino'] = $this->getUser()->getAttribute("fechatermino");
+        if($this->getUser()->getAttribute("horatermino")) $this->fndreserve['horatermino'] = $this->getUser()->getAttribute("horatermino");
 
         //obtiene la fecha y hora de la última reserva vigente (a cualquier vehículo)
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
@@ -2402,23 +2402,23 @@ public function executeAgreePdf2(sfWebRequest $request)
 
     public function executePayReserve(sfWebRequest $request) {
 
-		$this->reserve = '';
-		if( $request->getParameter('id') ) {
-			
-			try {
+        $this->reserve = '';
+        if( $request->getParameter('id') ) {
+            
+            try {
                 //echo "hola";
                 //die();
-		        $this->reserve = Doctrine_Core::getTable('reserve')->find(array( $request->getParameter('id') ));
+                $this->reserve = Doctrine_Core::getTable('reserve')->find(array( $request->getParameter('id') ));
 
                 //var_dump($this->reserve);
                 //die();
-		        $this->car = Doctrine_Core::getTable('car')->find(array( $this->reserve->getCarId() ));
-				$this->model = Doctrine_Core::getTable('Model')->find(array( $this->car->getModel()->getId() ));
-		        $this->user = $this->car->getUser();
-				
-				$this->trans = Doctrine_Core::getTable("Transaction")->getTransactionByReserve($this->reserve->getId());
-				
-		        $this->getUser()->setAttribute('lastview', $request->getReferer());
+                $this->car = Doctrine_Core::getTable('car')->find(array( $this->reserve->getCarId() ));
+                $this->model = Doctrine_Core::getTable('Model')->find(array( $this->car->getModel()->getId() ));
+                $this->user = $this->car->getUser();
+                
+                $this->trans = Doctrine_Core::getTable("Transaction")->getTransactionByReserve($this->reserve->getId());
+                
+                $this->getUser()->setAttribute('lastview', $request->getReferer());
 
                 //$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(1);
                 //$this->monto = $deposito[0]['monto'];
@@ -2432,10 +2432,10 @@ public function executeAgreePdf2(sfWebRequest $request)
                 $arrendatario = Doctrine_Core::getTable('user')->find($idArrendatario);
                 $this->licenseUp = $arrendatario->getDriverLicenseFile();
 
-			} catch(Exception $e) { die($e); }
-		}
+            } catch(Exception $e) { die($e); }
+        }
     }
-	 
+     
     public function executePedidos(sfWebRequest $request){
         //id del usuario actual
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
@@ -3015,11 +3015,11 @@ public function executeAgreePdf2(sfWebRequest $request)
 
         $q = Doctrine_Query::create()
                 ->select('r.id , ca.id idcar , mo.name model, 
-	  br.name brand, ca.year year, 
-	  ca.address address, ci.name city, 
-	  st.name state, co.name country, 
-	  user.firstname firstname, user.lastname lastname,
-	  r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin'
+      br.name brand, ca.year year, 
+      ca.address address, ci.name city, 
+      st.name state, co.name country, 
+      user.firstname firstname, user.lastname lastname,
+      r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin'
                 )
                 ->from('Reserve r')
                 ->innerJoin('r.Car ca')
@@ -3042,11 +3042,11 @@ public function executeAgreePdf2(sfWebRequest $request)
 
         $q = Doctrine_Query::create()
                 ->select('r.id , ca.id idcar , mo.name model, 
-	  br.name brand, ca.year year, 
-	  ca.address address, ci.name city, 
-	  st.name state, co.name country, 
-	  user.firstname firstname, user.lastname lastname,
-	  r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin'
+      br.name brand, ca.year year, 
+      ca.address address, ci.name city, 
+      st.name state, co.name country, 
+      user.firstname firstname, user.lastname lastname,
+      r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin'
                 )
                 ->from('Reserve r')
                 ->innerJoin('r.Car ca')
@@ -3068,11 +3068,11 @@ public function executeAgreePdf2(sfWebRequest $request)
         try {
             $q = Doctrine_Query::create()
                     ->select('r.id , ca.id idcar , mo.name model, 
-	  br.name brand, ca.year year, 
-	  ca.address address, ci.name city, 
-	  st.name state, co.name country, 
-	  user.firstname firstname, user.lastname lastname,
-	  r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin'
+      br.name brand, ca.year year, 
+      ca.address address, ci.name city, 
+      st.name state, co.name country, 
+      user.firstname firstname, user.lastname lastname,
+      r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin'
                     )
                     ->from('Reserve r')
                     ->innerJoin('r.Car ca')
@@ -3095,14 +3095,14 @@ public function executeAgreePdf2(sfWebRequest $request)
         } catch (Exception $e) {
             
         }
-		
+        
             $q = Doctrine_Query::create()
                     ->select('r.id , ca.id idcar , mo.name model, 
-	  br.name brand, ca.year year, 
-	  ca.address address, ci.name city, 
-	  st.name state, co.name country, 
-	  user.firstname firstname, user.lastname lastname,
-	  r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin '
+      br.name brand, ca.year year, 
+      ca.address address, ci.name city, 
+      st.name state, co.name country, 
+      user.firstname firstname, user.lastname lastname,
+      r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin '
                     )
                     ->from('Reserve r')
                     ->innerJoin('r.Car ca')
@@ -3117,7 +3117,7 @@ public function executeAgreePdf2(sfWebRequest $request)
                     ->andWhere('r.confirmed = ?', false)
                     ->andWhere('r.complete = ?', false)
                     ->andWhere('r.canceled = ?', false);
-            $this->toconfirm = $q->execute();		
+            $this->toconfirm = $q->execute();       
     }
 
     public function executeRentalToConfirm(sfWebRequest $request) {
@@ -3125,11 +3125,11 @@ public function executeAgreePdf2(sfWebRequest $request)
         try {
             $q = Doctrine_Query::create()
                     ->select('r.id , ca.id idcar , mo.name model, 
-	  br.name brand, ca.year year, 
-	  ca.address address, ci.name city, 
-	  st.name state, co.name country, 
-	  user.firstname firstname, user.lastname lastname,
-	  r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin '
+      br.name brand, ca.year year, 
+      ca.address address, ci.name city, 
+      st.name state, co.name country, 
+      user.firstname firstname, user.lastname lastname,
+      r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin '
                     )
                     ->from('Reserve r')
                     ->innerJoin('r.Car ca')
@@ -3260,9 +3260,9 @@ public function executeAgreePdf2(sfWebRequest $request)
 
     public function sendConfirmEmail($reserve) {
 
-		$url = $_SERVER['SERVER_NAME'];
-		$url = str_replace('http://', '', $url);
-		$url = str_replace('https://', '', $url);
+        $url = $_SERVER['SERVER_NAME'];
+        $url = str_replace('http://', '', $url);
+        $url = str_replace('https://', '', $url);
 
         $to = $reserve->getUser()->getEmail();
         $subject = "Reserva Confirmada";
@@ -3283,18 +3283,18 @@ public function executeAgreePdf2(sfWebRequest $request)
 
         $mail = 'Su reserva para el auto ' . $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
                 ' del usuario ' . $reserve->getCar()->getUser()->getFirstName() . ' ' . $reserve->getCar()->getUser()->getLastName() . ' ha sido confirmada.<br/><br/>
-	
-	Debes retirar el auto el d&iacute;a <b>' . $date_from . '</b> a las <b>' . $hour_from . '</b> y devolverlo el d&iacute;a <b>' . $date_to . '</b> a las <b>' . $hour_to . '</b>.<br/>
-	Recuerda que debes verificar el estado del auto antes de subirte. Si el auto presenta otros daños debes cancelar la reserva. <br /><br />
-	
-	El equipo de Arriendas.cl
-	<br><br>
-	<em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-	';
+    
+    Debes retirar el auto el d&iacute;a <b>' . $date_from . '</b> a las <b>' . $hour_from . '</b> y devolverlo el d&iacute;a <b>' . $date_to . '</b> a las <b>' . $hour_to . '</b>.<br/>
+    Recuerda que debes verificar el estado del auto antes de subirte. Si el auto presenta otros daños debes cancelar la reserva. <br /><br />
+    
+    El equipo de Arriendas.cl
+    <br><br>
+    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
+    ';
 
 
 /*
-	Para ver el perfil del due&ntilde;o del auto ' .
+    Para ver el perfil del due&ntilde;o del auto ' .
                 $reserve->getCar()->getUser()->getFirstname() . ' ' . $reserve->getCar()->getUser()->getLastname() . ' has click <a href="' . $url . '">aqui</a>. <br/><br/>
 */ 
 
@@ -3308,9 +3308,9 @@ public function executeAgreePdf2(sfWebRequest $request)
 
 // compose headers
 
-		$url = $_SERVER['SERVER_NAME'];
-		$url = str_replace('http://', '', $url);
-		$url = str_replace('https://', '', $url);
+        $url = $_SERVER['SERVER_NAME'];
+        $url = str_replace('http://', '', $url);
+        $url = str_replace('https://', '', $url);
 
         $headers = "From: \"Arriendas Reservas\" <no-reply@arriendas.cl>\n";
         $headers .= "Content-type: text/html\n";
@@ -3329,21 +3329,21 @@ public function executeAgreePdf2(sfWebRequest $request)
                 $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
                 ' desde el d&iacute;a ' . $date_from . ' a las ' . $hour_from .
                 ' hasta el d&iacute;a ' . $date_to . ' a las ' . $hour_to . ' cuando el usuario ' . $reserve->getUser()->getFirstname() . ' ' . $reserve->getUser()->getLastname() . ' devuelva el auto. <br/>'.
-		'Recuerda que debes verificar el estado del auto en la devolución. De haber ocurrido daños al auto durante el arriendo, debes informar a Arriendas.cl en el acto.<br /><br />
-	
-	El equipo de Arriendas.cl
-	<br><br>
-	<em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-	';
-	
-	
-	
-	/*
-		
-	Para ver el perfil del usuario ' .
+        'Recuerda que debes verificar el estado del auto en la devolución. De haber ocurrido daños al auto durante el arriendo, debes informar a Arriendas.cl en el acto.<br /><br />
+    
+    El equipo de Arriendas.cl
+    <br><br>
+    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
+    ';
+    
+    
+    
+    /*
+        
+    Para ver el perfil del usuario ' .
                 $reserve->getUser()->getFirstname() . ' ' . $reserve->getUser()->getLastname() . ' has click <a href="' . $url . '">aqui</a>. <br/><br/>
-	*/
-	
+    */
+    
 
 // send email
         $this->smtpMail($to, $subject, $mail, $headers);
@@ -3361,12 +3361,12 @@ public function executeAgreePdf2(sfWebRequest $request)
 
         $mail = 'Se ha solicitado una reserva para el auto ' . $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
                 ' del usuario ' . $reserve->getCar()->getUser()->getFirstName() . ' ' . $reserve->getCar()->getUser()->getLastName() . '.
-	
-	Gracias
-	Arriendas.cl
-	<br><br>
-	<em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-	';
+    
+    Gracias
+    Arriendas.cl
+    <br><br>
+    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
+    ';
 
 // send email
         $this->smtpMail($to, $subject, $mail, $headers);
@@ -3377,9 +3377,9 @@ public function executeAgreePdf2(sfWebRequest $request)
         $subject = 'Has recibido un pedido de reserva!';
 
 // compose headers
-		$url = $_SERVER['SERVER_NAME'];
-		$url = str_replace('http://', '', $url);
-		$url = str_replace('https://', '', $url);
+        $url = $_SERVER['SERVER_NAME'];
+        $url = str_replace('http://', '', $url);
+        $url = str_replace('https://', '', $url);
 
         $headers = "From: \"Arriendas Reservas\" <no-reply@arriendas.cl>\n";
         $headers .= "Content-type: text/html\n";
@@ -3394,28 +3394,28 @@ public function executeAgreePdf2(sfWebRequest $request)
         $hour_to = date("H:s", mktime($datetime[4] + $reserve->getDuration(), $datetime[5], 0, $datetime[2], $datetime[3], $datetime[1]));
         $url = 'http://'.$url . $this->getController()->genUrl('profile/publicprofile?id=' . $reserve->getUser()->getId());
 
-		$site = $_SERVER['SERVER_NAME'];
-		$site = str_replace('http://', '', $site);
-		$site = str_replace('https://', '', $site);
+        $site = $_SERVER['SERVER_NAME'];
+        $site = str_replace('http://', '', $site);
+        $site = str_replace('https://', '', $site);
 
         $mail = 'Has recibido un pedido de reserva por tu ' .
                 $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
                 ' desde el día <b>' . $date_from . '</b> a las <b>' . $hour_from .
                 '</b> hasta el día <b>' . $date_to . '</b> a las <b>' . $hour_to . '</b> cuando te habrán devuelto el auto. <br/><br/>
-	
-		Para ver la reserva has click <a href="http://'.$site . $this->getController()->genUrl('profile/rentalToConfirm').'">aquí</a><br/><br/>
-	
-	El equipo de Arriendas.cl
-	<br><br>
-	<em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em>	
-	';
-	
-	
-	/*
-		Para ver el perfil del usuario ' .
+    
+        Para ver la reserva has click <a href="http://'.$site . $this->getController()->genUrl('profile/rentalToConfirm').'">aquí</a><br/><br/>
+    
+    El equipo de Arriendas.cl
+    <br><br>
+    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em>  
+    ';
+    
+    
+    /*
+        Para ver el perfil del usuario ' .
                 $reserve->getUser()->getFirstname() . ' ' . $reserve->getUser()->getLastname() . ' has click <a href="' . $url . '">aqui</a>. <br/><br/>
-	*/
-	
+    */
+    
 
 // send email
         $this->smtpMail($to, $subject, $mail, $headers,"german@arriendas.cl");
@@ -3433,12 +3433,12 @@ public function executeAgreePdf2(sfWebRequest $request)
 
         $mail = 'Ha finalizado la reseva para el auto ' . $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
                 ' del usuario ' . $reserve->getCar()->getUser()->getFirstName() . ' ' . $reserve->getCar()->getUser()->getLastName() . ' que usted realizo.
-	
-	Gracias
-	Arriendas.cl
-	<br><br>
-	<em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-	';
+    
+    Gracias
+    Arriendas.cl
+    <br><br>
+    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
+    ';
 
 // send email
         $this->smtpMail($to, $subject, $mail, $headers);
@@ -3456,12 +3456,12 @@ public function executeAgreePdf2(sfWebRequest $request)
 
         $mail = 'Ha solicitado la reserva de su auto ' . $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
                 ' alquilado por el usuario ' . $reserve->getUser()->getFirstName() . ' ' . $reserve->getUser()->getLastName() . '.
-	
-	Gracias
-	Arriendas.cl
-	<br><br>
-	<em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-	';
+    
+    Gracias
+    Arriendas.cl
+    <br><br>
+    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
+    ';
 
 // send email
         $this->smtpMail($to, $subject, $mail, $headers);
@@ -3472,7 +3472,7 @@ public function executeAgreePdf2(sfWebRequest $request)
         $reserve = Doctrine_Core::getTable('Reserve')->find(array($request->getParameter('id')));
         $reserve->setCanceled(true);
         $reserve->save();
-		
+        
         $to = $reserve->getUser()->getEmail();
         $subject = 'Reserva Cancelada';
 
@@ -3483,11 +3483,11 @@ public function executeAgreePdf2(sfWebRequest $request)
 
         $mail = 'Su reserva para el auto ' . $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
                 ' del usuario ' . $reserve->getCar()->getUser()->getFirstName() . ' ' . $reserve->getCar()->getUser()->getLastName() . ' ha sido cancelada.<br/><br/>
-	
-	El equipo de Arriendas.cl
-	<br><br>
-	<em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-	';
+    
+    El equipo de Arriendas.cl
+    <br><br>
+    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
+    ';
 
 // send email
         $this->smtpMail($to, $subject, $mail, $headers);
@@ -3504,7 +3504,7 @@ public function executeAgreePdf2(sfWebRequest $request)
         $transaccion = Doctrine_Core::getTable('Transaction')->findByReserveId(array($idReserve));
 
         if (!count($transaccion)) {
-        	
+            
             $transaction = new Transaction();
             $carString = $reserve->getCar()->getModel()->getName() . " " . $reserve->getCar()->getModel()->getBrand()->getName();
             $transaction->setCar($carString);
@@ -3598,14 +3598,14 @@ public function executeAgreePdf2(sfWebRequest $request)
             $profile->setEmail($request->getParameter('email'));
             $profile->setRegion($request->getParameter('region'));
             $profile->setComuna($request->getParameter('comunas'));
-	        $profile->setAddress($request->getParameter('address'));
+            $profile->setAddress($request->getParameter('address'));
             $profile->setBirthdate($request->getParameter('birth'));
-	        $profile->setApellidoMaterno($request->getParameter('apellidoMaterno'));
-	        $profile->setSerieRut($request->getParameter('serie_run'));
-    	    if($request->getParameter('password') != '') {
+            $profile->setApellidoMaterno($request->getParameter('apellidoMaterno'));
+            $profile->setSerieRut($request->getParameter('serie_run'));
+            if($request->getParameter('password') != '') {
                 if ($request->getParameter('password') == $request->getParameter('passwordAgain'))
                     $profile->setPassword(md5($request->getParameter('password')));
-			}
+            }
             if($profile->getTelephone() != $request->getParameter('telephone')){//Si se ingresa un nuevo telefono celular distinto al de la base de datos, el usuario podrá confirmarlo de nuevo
                 $profile->setTelephone($request->getParameter('telephone'));
                 $profile->setConfirmedSms(0);
@@ -3616,9 +3616,9 @@ public function executeAgreePdf2(sfWebRequest $request)
                 $profile->setPictureFile($request->getParameter('main'));
             if ($request->getParameter('licence') != NULL)
                 $profile->setDriverLicenseFile($request->getParameter('licence'));
-			if ($request->getParameter('rut') != NULL)
+            if ($request->getParameter('rut') != NULL)
                 $profile->setRutFile($request->getParameter('rut'));
-			$profile->setRut($request->getParameter('run'));
+            $profile->setRut($request->getParameter('run'));
             $profile->save();
             $this->getUser()->setAttribute('picture_url', $profile->getFileName());
         } catch (Exception $e) {
@@ -3803,9 +3803,9 @@ public function executeAgreePdf2(sfWebRequest $request)
             //actualiza los datos asociados al vehículo, por medio de la $idCar
             $q = Doctrine_Manager::getInstance()->getCurrentConnection();
             $query = "update arriendas.Car set address='$ubicacion', comuna_id='$comuna',
-			    model_id='$modelo', year='$anio', doors='$puertas', transmission='$transmision', photoS3='0',
-			    tipoBencina='$tipoBencina', uso_vehiculo_id='$usosVehiculo', price_per_hour='$precioHora',
-			    price_per_day='$precioDia' ,lat=$lat, lng=$lng, patente='$patente', color='$color', seguro_ok='$ok' where id=$idCar";
+                model_id='$modelo', year='$anio', doors='$puertas', transmission='$transmision', photoS3='0',
+                tipoBencina='$tipoBencina', uso_vehiculo_id='$usosVehiculo', price_per_hour='$precioHora',
+                price_per_day='$precioDia' ,lat=$lat, lng=$lng, patente='$patente', color='$color', seguro_ok='$ok' where id=$idCar";
             $result = $q->execute($query);
             
 
@@ -3841,10 +3841,10 @@ public function executeAgreePdf2(sfWebRequest $request)
             $auto -> setPatente($patente);
             $auto -> setColor($color);
 
-	        $auto -> setFotoPerfil($fotoPerfilAuto);
+            $auto -> setFotoPerfil($fotoPerfilAuto);
             
-	        $auto->setFechaSubida($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
-	            
+            $auto->setFechaSubida($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
+                
             $auto -> save();
 
             $idCar = $auto->getId();        
@@ -3881,7 +3881,7 @@ public function executeAgreePdf2(sfWebRequest $request)
         if (isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST") {
             $name = $_FILES[$request->getParameter('file')]['name'];
             $size = $_FILES[$request->getParameter('file')]['size'];
-			$tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
+            $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
             if (strlen($name)) {
                 list($txt, $ext) = explode(".", $name);
                 if (in_array($ext, $valid_formats) || 1==1) {
@@ -3917,7 +3917,7 @@ public function executeAgreePdf2(sfWebRequest $request)
 
 
 
-        /* 	foreach ($request->getFiles() as $fileName) {
+        /*  foreach ($request->getFiles() as $fileName) {
           $fileSize = $fileName['size'];
           $fileType = $fileName['type'];
           $extesion = getFileExtension($fileName['name']);
@@ -4106,12 +4106,12 @@ public function executeAgreePdf2(sfWebRequest $request)
 
                 $q = Doctrine_Query::create()
                         ->select('r.id , ca.id idcar , mo.name model, 
-	  br.name brand, ca.year year, 
+      br.name brand, ca.year year, 
           ca.price_per_hour pricehour, ca.price_per_day priceday,
-	  ca.address address, ci.name city, 
-	  st.name state, co.name country, 
-	  user.firstname firstname, user.lastname lastname,
-	  r.date date, r.duration'
+      ca.address address, ci.name city, 
+      st.name state, co.name country, 
+      user.firstname firstname, user.lastname lastname,
+      r.date date, r.duration'
                         )
                         ->from('Reserve r')
                         ->innerJoin('r.Car ca')
@@ -4255,12 +4255,12 @@ public function executeAgreePdf2(sfWebRequest $request)
 
         $q = Doctrine_Query::create()
                 ->select('r.id , ca.id idcar , r.confirmed, mo.name model, 
-	  br.name brand, ca.year year, 
+      br.name brand, ca.year year, 
           ca.price_per_hour pricehour, ca.price_per_day priceday,
-	  ca.address address, ci.name city, 
-	  st.name state, co.name country, 
-	  user.firstname firstname, user.lastname lastname,
-	  r.date date, r.duration, date_add(r.date, INTERVAL r.duration HOUR) fechafin'
+      ca.address address, ci.name city, 
+      st.name state, co.name country, 
+      user.firstname firstname, user.lastname lastname,
+      r.date date, r.duration, date_add(r.date, INTERVAL r.duration HOUR) fechafin'
                 )
                 ->from('Reserve r')
                 ->innerJoin('r.Car ca')
@@ -4336,12 +4336,12 @@ public function executeAgreePdf2(sfWebRequest $request)
 
             $mail = 'Se ha solicitado confirmación de kms para el auto ' . $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
                     ' reservado por el usuario ' . $reserve->getUser()->getFirstName() . ' ' . $reserve->getUser()->getLastName() . '.
-	
-	Gracias
-	Arriendas.cl
-	<br><br>
-	<em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-	';
+    
+    Gracias
+    Arriendas.cl
+    <br><br>
+    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
+    ';
         } else {
             $to = $reserve->getUser()->getEmail();
 
@@ -4353,12 +4353,12 @@ public function executeAgreePdf2(sfWebRequest $request)
 
             $mail = 'Se ha solicitado confirmación de kms para el auto ' . $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
                     ' del usuario ' . $reserve->getCar()->getUser()->getFirstName() . ' ' . $reserve->getCar()->getUser()->getLastName() . '.
-	
-	Gracias
-	Arriendas.cl
-	<br><br>
-	<em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-	';
+    
+    Gracias
+    Arriendas.cl
+    <br><br>
+    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
+    ';
         }
 
         $this->smtpMail($to, $subject, $mail, $headers);
