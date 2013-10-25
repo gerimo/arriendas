@@ -2417,6 +2417,7 @@ public function executeAgreePdf2(sfWebRequest $request)
 		if( $request->getParameter('id') ) {
 			
 			try {
+
                 //echo "hola";
                 //die();
 		        $this->reserve = Doctrine_Core::getTable('reserve')->find(array( $request->getParameter('id') ));
@@ -2447,7 +2448,65 @@ public function executeAgreePdf2(sfWebRequest $request)
 		}
     }
 	 
-     public function executePedidos(sfWebRequest $request){
+     public function executeFbDiscount(sfWebRequest $request) {
+
+		$this->reserve = '';
+		$this->deposito=$request->getParameter('deposito');
+		$this->carMarcaModel = $request->getParameter("carMarcaModel");
+		$this->duracionReserva = $request->getParameter("duracionReserva");
+		$this->valorTotalActualizado = $request->getParameter("valorTotalActualizado");
+
+		
+		if( $request->getParameter('id') ) {
+			
+			try {
+
+				//echo "hola";
+                //die();
+		        $this->reserve = Doctrine_Core::getTable('reserve')->find(array( $request->getParameter('id') ));
+
+                //var_dump($this->reserve);
+                //die();
+		        $this->car = Doctrine_Core::getTable('car')->find(array( $this->reserve->getCarId() ));
+				$this->model = Doctrine_Core::getTable('Model')->find(array( $this->car->getModel()->getId() ));
+		        $this->user = $this->car->getUser();
+				
+				$this->trans = Doctrine_Core::getTable("Transaction")->getTransactionByReserve($this->reserve->getId());
+				
+		        $this->getUser()->setAttribute('lastview', $request->getReferer());
+
+                //$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(1);
+                //$this->monto = $deposito[0]['monto'];
+                $this->monto = 5800;
+                $this->montoDiaUnico = 5800;
+                //$depo = Doctrine_Core::getTable("liberacionDeposito")->findById(2);
+                //$this->garantia = $depo[0]['monto'];
+                $this->garantia = 122330;
+
+				$this->deposito = $request->getParameter("deposito");
+				$this->montoDeposito = 0;
+				if($this->deposito == "depositoGarantia"){
+					//$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(2);
+					$this->montoDeposito = 122330;
+					$this->enviarCorreoTransferenciaBancaria();
+				}else if($this->deposito == "pagoPorDia"){
+					//$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(1);
+					$this->montoDeposito = $montoTotalPagoPorDia;
+				}
+				
+				
+
+
+	$idArrendatario = $this->reserve->getUserId();
+                $arrendatario = Doctrine_Core::getTable('user')->find($idArrendatario);
+                $this->licenseUp = $arrendatario->getDriverLicenseFile();
+
+			} catch(Exception $e) { die($e); }
+		}
+    }
+
+
+		public function executePedidos(sfWebRequest $request){
         //id del usuario actual
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
         //$idUsuario = 885;
