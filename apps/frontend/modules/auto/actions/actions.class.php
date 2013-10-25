@@ -95,6 +95,12 @@ class autoActions extends sfActions {
         //$auto= Doctrine_Core::getTable('car')->find(array($request->getParameter('id')));
         $auto= $this->car;
 
+		$tipoTrans = $auto->getTransmission();
+            if($tipoTrans == 0) $this->transmision = "Manual";
+            if($tipoTrans == 1) $this->transmision = "Autom&aacute;tica";
+
+
+			
         $id_comuna=$auto->getComunaId($request->getParameter('id'));
 
         if($id_comuna == $codigoInterno_comunaURL){ //Si las comunas del auto y de la URL son las mismas

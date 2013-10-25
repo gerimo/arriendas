@@ -11,7 +11,7 @@ if(count($cars)>0){
 	foreach ($cars as $c){
 		echo "<div class=marcoFoto>";
 		echo "<a href='".url_for('cars/car?id='.$c->getId())."' title='Ver ficha de auto'>";
-		echo image_tag($c->getFoto(),array("width"=>"140px","height"=>"140px","class"=>"foto"));
+		echo image_tag('../uploads/cars/'.$c->getFoto(),array("width"=>"140px","height"=>"140px","class"=>"foto"));
 		echo "</a></div>";
 	}
 ?>

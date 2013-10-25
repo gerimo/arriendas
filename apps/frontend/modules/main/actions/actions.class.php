@@ -164,9 +164,17 @@ public function executeArriendo(sfWebRequest $request){
 
 }
 
+public function executeFbShare(sfWebRequest $request){
+	$this->forward ('main', 'index');
+}
+
+
 public function executePruebaImagen(sfWebRequest $request){
 
 }
+
+
+
 
 public function executeSubirImagenS3(sfWebRequest $request){
 
@@ -1069,9 +1077,13 @@ print_r('<br />auto numero: '.$contador.', '.date('h:i:s'));
             $velocidad = $user->getVelocidadRespuesta_mensajes();
             $transmision = "-";
             $tipoTrans = $car->getTransmission();
-            if($tipoTrans == 1) $transmision = "Manual";
-            if($tipoTrans == 0) $transmision = "Autom&aacute;tica";
 
+			
+            if($tipoTrans == 0) $transmision = "Manual";
+            if($tipoTrans == 1) $transmision = "Autom&aacute;tica";
+
+
+  
             if (!$has_reserve) {
 
                 $data[] = array('id' => $car->getId(),

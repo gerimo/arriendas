@@ -32,10 +32,14 @@ class bcpuntopagosActions extends sfActions
   }
   public function executeIndex(sfWebRequest $request)
   {
-  	$this->carMarcaModel = $request->getParameter("carMarcaModel");
+
+
+	$this->carMarcaModel = $request->getParameter("carMarcaModel");
   	$this->duracionReserva = $request->getParameter("duracionReserva");
   	$montoTotalPagoPorDia = $request->getParameter("duracionReservaPagoPorDia");
 
+	
+	
   	$this->deposito = $request->getParameter("deposito");
   	$this->montoDeposito = 0;
   	if($this->deposito == "depositoGarantia"){
@@ -72,6 +76,10 @@ class bcpuntopagosActions extends sfActions
 					$reserve->setMontoLiberacion($this->montoDeposito);
 				}
 				$reserve->save();
+
+				$this->hasDiscountFB = $order->getDiscountfb();
+				$this->priceMultiply = 1-(0.1*$order->getDiscountfb());
+				
 				
 				if($order != false){
 					
@@ -144,7 +152,7 @@ class bcpuntopagosActions extends sfActions
 			if($opcionLiberacion == 0) $montoLiberacion = 0;
 			else if($opcionLiberacion == 1) $montoLiberacion = $reserve->getMontoLiberacion();
 
-			$finalPrice = $order->getPrice()+$montoLiberacion;
+			$finalPrice = $order->getPrice()-$order->getDiscountamount()+$montoLiberacion;
 			if($finalPrice > 0){
 				
 				$conf = $this->getConfiguration();

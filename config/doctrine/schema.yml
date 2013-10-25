@@ -781,6 +781,10 @@ Transaction:
       type: integer(4)
     completed:
       type: boolean
+    discountfb:
+      type: integer(4)
+    discountamount:
+      type: decimal(10,2)
   relations:
     User:
       class: User

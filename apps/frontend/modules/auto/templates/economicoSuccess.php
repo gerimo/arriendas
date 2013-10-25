@@ -257,6 +257,7 @@ a{text-decoration:none;}
 		<div class="texto_normal precios"><div class="interlineado">Ubicaci&oacute;n |</div><div class="interlineado2"><strong><?php echo ucwords(strtolower($car->getAddressAprox()))."" .$nombreComunaAuto ?></strong></div></div>
 		<div class="texto_normal precios">A&ntilde;o | <strong><?php echo $car->getYear(); ?></strong></div>
 		<div class="texto_normal precios">Tipo de Bencina | <strong><?php echo strtoupper($car->getTipoBencina()); ?></strong></div>
+		<div class="texto_normal precios">Transmisión | <strong><?php echo $sf_data->getRaw('transmision'); ?></strong></div>
 		
 		<div class="subtitulos punteado espaciado"><p>Due&ntilde;o - <a class="colorSub" href="<?php echo url_for('profile/publicprofile?id=' . $user->getId()) ?>" title="Ir al perfil de <?=$primerNombre?>"><?=$primerNombre." ".$inicialApellido;?></a></p><a href="<?php echo url_for('messages/new?id='.$user->getId()) ?>" style="" title="Enviar e-mail a <?php echo ucwords($user->getFirstname()).' '.ucwords($user->getLastname()); ?>"><?php echo image_tag('img_msj/EnviarMsjSinSombraChico.png',"class=boton2"); ?></a></div>
 		<div class="texto_normal precios">Calificaciones Positivas | <strong><?=$aprobacionDuenio['porcentaje'];?>%</strong></div>

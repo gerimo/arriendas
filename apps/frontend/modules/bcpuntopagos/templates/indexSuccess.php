@@ -3,9 +3,9 @@
     <div class="main_box_2">
 	<div id="fondoPP">
 <?php if($ppId): ?>
-	<form name="pp" action="<? echo url_for('bcpuntopagos/creacion?id='.$ppId)?>" method="post">
+	<form name="pp" action="<?php echo url_for('bcpuntopagos/creacion?id='.$ppId)?>" method="post">
 		
-		<div id="detallesPP">
+		<div id="detallesPP"  <?php if ($hasDiscountFB): ?>style="height:200px;"<?php endif; ?>>
 			<table id="tableDetallesPP">
 				<thead>
 					<tr>
@@ -37,6 +37,16 @@
 	                    	<?php } ?>
 	                    </td>
 	                </tr>
+
+            <?php if ($hasDiscountFB): ?>
+	                <tr>
+	                    <td class="bordeDerGris bordeIzqGris"></td>
+	                    <td class="bordeDerGris"></td>
+	                    <td class="bordeDerGris">
+	                    Descuento Facebook</td>
+						<td class="bordeDerGris">- <?=number_format($ppMonto*(1-$priceMultiply), 0, ',', '.');?> CLP</td>
+	                </tr>
+			<?php endif; ?>
 				</tbody>
 				<tfoot>
 					<tr>
@@ -45,7 +55,7 @@
 	                    <th class="bordeDerGris">Valor Total a pagar por PuntoPagos</th>
 	                    <?php if($montoDeposito == 0) echo "<th class='bordeDerGris'>ERROR</th>";else{ ?>
 	                    <?php if($deposito == "depositoGarantia") $montoDeposito = 0; ?>
-	                    <th class="bordeDerGris"><?=number_format($ppMonto+$montoDeposito, 0, ',', '.');?> CLP</th>
+	                    <th class="bordeDerGris"><?=number_format($ppMonto*($priceMultiply)+$montoDeposito, 0, ',', '.');?> CLP</th>
 	                    <?php } ?>
 	                </tr>
 				</tfoot>

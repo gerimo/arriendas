@@ -90,11 +90,6 @@
             alert("No has registrado tu licencia de conductor. Te redireccionaremos para que puedas continuar con tu pago");
             setTimeout("redireccion()",2);
         }
-
-
-//            opcion = "<?php echo $deposito; ?>";
-  //          actualizarPrecioTotal(opcion);
-
         
         $('.botonSiguiente').click(function(event) {
             if($("input[type='radio'][name='deposito']:checked").val()=='depositoGarantia' || $("input[type='radio'][name='deposito']:checked").val()=='pagoPorDia'){
@@ -140,25 +135,22 @@
             opcion = "opcionPagoPorDia";
             actualizarPrecioTotal(opcion);
         });
+
         var valorMomentaneo = document.getElementById("valorTotalActualizado");
         var parrafo = document.createElement("span");
-        parrafo.innerHTML = "<?php echo number_format($reserve->getPrice(), 0, ',', '.'); ?>";
+        parrafo.innerHTML = "<?php echo number_format($reserve->getPrice()*0.9, 0, ',', '.'); ?>";
         valorMomentaneo.appendChild(parrafo);
-    });
+
+		});
 
     function actualizarPrecioTotal(opcion){
-
-
-		var precioArriendo = "<?php echo $reserve->getPrice(); ?>";
+        var precioArriendo = "<?php echo $reserve->getPrice(); ?>";
         var montoDepositoGarantia = "<?php echo $garantia; ?>";
         var montoPorDia = "<?php echo $monto; ?>";
         var montoPorDiaUnico = "<?php echo $montoDiaUnico; ?>";
         var valorActualizado = 0;
         var valorPrecioFinal = document.getElementById("valorTotalActualizado");
-
-		console.log(valorPrecioFinal)
-
-		if(opcion == "opcionDepositoGarantia"){
+        if(opcion == "opcionDepositoGarantia"){
             valorActualizado = parseInt(precioArriendo)+parseInt(montoDepositoGarantia);
             $("input[type='hidden'][name='duracionReservaPagoPorDia']").prop("value","0");
         }else if(opcion == "opcionPagoPorDia"){
@@ -256,11 +248,22 @@
             <p>DETALLES DEL ARRIENDO</p>
             </div>
 
-            <form name="pago" method="post" action="<?php echo url_for('bcpuntopagos/index') ?>?id=<?=$reserve->getId()?>" id="pago">
-                    
-            <div id="contenidoPayReserva">
-                <div class="numReserva">Nro. Reserva: <b><?=$reserve->getId()?></b></div>
+            <form name="pago" method="post" action="<?php echo url_for('profile/fbDiscount') ?>?id=<?=$reserve->getId()?>" id="pago">
 
+
+
+
+			
+            <div id="contenidoPayReserva">
+
+                <div style="float: left;
+width: 440px;
+margin-top: 10px;
+margin-left: 30px;">
+<center>
+            <b style="color:#EC008C;font-size:16px;text-align:center;">COMPARTE Y OBTÉN UN 10% DE DESCUENTO</b><br><br>
+                    
+                </div>
                 <?php $termino = strtotime($inicio) + ($reserve->getDuration() * 60 * 60);
                       if($reserve->getDuration()>24){
                         $duracion = intval($reserve->getDuration()/24)." día(s)";
@@ -272,32 +275,37 @@
                       } 
                 ?>
 
-                <div class="valorSubTotal">
-                    <div class="fondoRosa">
-                        Valor Subtotal: <span><?=$valorTotalActualizado?> CLP</span>
-                    </div>
-                </div>
-                <div id="eleccionDeposito">
+                <div id="eleccionDeposito" style="height: 80px;">
+<center>
 
-				Compartir en Facebook! Si tu...
-						
+				Comparta ahora Arriendas.cl en Facebook y obtén un 10% de descuento!
+				<br><br><br>
+			
+<center>
+				
+				<a href="#" 
+					  onclick="
+						window.open(
+						  'https://www.facebook.com/sharer/sharer.php?u=<?php echo url_for("main/fbShare?id=".$reserve->getId(),true)?>', 
+						  'facebook-share-dialog', 
+						  'width=626,height=436'); 
+						return false;"><?php echo image_tag('compartir_en_face.png') ?></a>
+				</center>
+
+					
                 </div>
-                <div class="valorTotal">
-                    <div class="fondoRosa">
-                        Valor Total: <span id="valorTotalActualizado"></span> CLP
-                    </div>
+
+                <div class="botones">
+                    <a href="<?php echo url_for("profile/pedidos") ?>" class="botonVolver" title="Vuelve a pedidos"></a>
+                    <a href="<?php echo url_for("profile/payReserve?id=".$reserve->getId())?>" class="botonSiguiente" title="Ir a punto pago"></a>
                 </div>
-				<div class="botones">
-					<a href="<?php echo url_for("profile/pedidos") ?>" class="botonVolver" title="Vuelve a pedidos"></a>
-					<a href="<?php echo url_for("bcpuntopagos/index?id=".$reserve->getId())?>" class="botonSiguiente" title="Ir a punto pago"></a>
-				</div>
                 <div id="mensajePagoGarantia" style="display:none;"><p>En los próximos segundos te enviaremos un e-mail con los datos de la cuenta para hacer la transferencia.<p></div>
             </div>
         <input type="hidden" name="monto" id="monto" value="<?php echo $reserve->getPrice(); ?>" />
-        <input type="hidden" name="deposito" id="deposito" value="<?php echo $deposito; ?>" />
         <input type="hidden" name="carMarcaModel" value="<?php echo $model->getBrand().', '.$model->getName() ?>"/>
         <input type="hidden" name="duracionReserva" value="<?php echo $duracion ?>"/>
         <input type="hidden" name="duracionReservaPagoPorDia" value="" />
+        <input type="hidden" name="valorTotalActualizado" id="valorTotalActualizado" value="" />
         </form>
         </div><!-- main_contenido -->
 

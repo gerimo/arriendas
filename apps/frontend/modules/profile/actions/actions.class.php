@@ -2418,12 +2418,7 @@ public function executeAgreePdf2(sfWebRequest $request)
 			
 			try {
 
-                //echo "hola";
-                //die();
 		        $this->reserve = Doctrine_Core::getTable('reserve')->find(array( $request->getParameter('id') ));
-
-                //var_dump($this->reserve);
-                //die();
 		        $this->car = Doctrine_Core::getTable('car')->find(array( $this->reserve->getCarId() ));
 				$this->model = Doctrine_Core::getTable('Model')->find(array( $this->car->getModel()->getId() ));
 		        $this->user = $this->car->getUser();
@@ -2431,6 +2426,37 @@ public function executeAgreePdf2(sfWebRequest $request)
 				$this->trans = Doctrine_Core::getTable("Transaction")->getTransactionByReserve($this->reserve->getId());
 				
 		        $this->getUser()->setAttribute('lastview', $request->getReferer());
+			
+				//get number of shares for reserve ID
+				$curl = curl_init();
+				curl_setopt_array($curl, array(
+					CURLOPT_RETURNTRANSFER => 1,
+					CURLOPT_URL => 'http://graph.facebook.com/'.$this->getController()->genUrl("main/fbShare?id=".$request->getParameter('id'),true),
+					CURLOPT_USERAGENT => 'Codular Sample cURL Request'
+				));
+				$resp = curl_exec($curl);
+				curl_close($curl);
+				$response = json_decode($resp);
+				$this->nShares = $response->{'shares'};
+
+				//test $this->nShares=0;
+				
+				if (!$this->nShares) $this->nShares==0;
+				if ($this->nShares==0){
+					$this->trans->setDiscountfb(false);
+					$this->trans->setDiscountamount(0);					
+					$this->priceMultiply = 1;
+				}else{
+					$this->trans->setDiscountamount($this->reserve->getPrice()*0.1);
+					$this->trans->setDiscountfb(true);				
+					$this->priceMultiply = 0.9;
+				};
+
+					$this->trans->save();			
+				
+
+                //var_dump($this->reserve);
+                //die();
 
                 //$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(1);
                 //$this->monto = $deposito[0]['monto'];
@@ -2866,6 +2892,12 @@ public function executeAgreePdf2(sfWebRequest $request)
         $correo = $usuario->getEmail();
         $name = $usuario->getFirstname();
 
+		$usuario->setPropietario(true);
+   	    $this->getUser()->setAttribute("propietario",true);			    
+		$usuario->save();
+		
+//		$this->logMessage($usuario->getPropietario());
+	
         require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
         $mail = new Email();
         $mail->setSubject('Has subido un auto!');
