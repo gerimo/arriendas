@@ -25,7 +25,7 @@ class bcpuntopagosActions extends sfActions
     require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
     $mail = new Email();
     $mail->setSubject('Realizar Depósito en Garantía');
-    $mail->setBody("<p>Hola $name</p><p>Realiza el depósito en garantía por transferecia bancaria:</p><p><ul><li><b>Banco de Chile</b></li><li>Cuenta: <b>031-50-147205</b></li><li>Rut: <b>23873249-2</b></li><li><b>Germán Rimoldi</b></li></ul></p>");
+    $mail->setBody("<p>Hola $name</p><p>Realiza el depósito en garantía por transferecia bancaria:</p><p><ul><li><b>Banco BCI</b></li><li>Cuenta Corriente: <b>70107459</b></li><li>Rut: <b>76208249-7</b></li><li><b>Rimoldi SPA</b></li><li><b>soporte@arriendas.cl</b></li></ul></p>");
     $mail->setTo($correo);
     $mail->setCc('soporte@arriendas.cl');
     $mail->submit();
