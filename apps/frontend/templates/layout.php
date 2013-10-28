@@ -534,16 +534,15 @@ var google_conversion_value = 0;
 <script type="text/javascript">
   if (typeof(Zenbox) !== "undefined") {
     Zenbox.init({
-      dropboxID:   "20200728",
+      dropboxID:   "20193521",
       url:         "https://arriendascl.zendesk.com",
-      tabTooltip:  "Soporte",
-      tabImageURL: "https://assets.zendesk.com/external/zenbox/images/tab_es_support_right.png",
+      tabTooltip:  "Chat",
+      tabImageURL: "https://assets.zendesk.com/external/zenbox/images/tab_es_support.png",
       tabColor:    "black",
       tabPosition: "Right"
     });
   }
-</script>
-<!-- fin chat-->
+</script><!-- fin chat-->
     </body>
 </html>
 
