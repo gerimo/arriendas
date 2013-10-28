@@ -260,7 +260,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
         if( $("#passwordAgain").val() == "" ) { $("#passwordAgain").parent("label").find("span").text("* Falta Confirmar Contraseña"); }
         if( $("#run").val() == "" ) { $("#run").parent("label").find("span").text("* Falta ingresar Rut"); }
         if( $("#address").val() == "" ) { $("#address").parent("label").find("span").text("* Falta ingresar Dirección"); }
-        if( $("#comunas").val() =='0') ) { $("#address").parent("label").find("span").text("* Falta ingresar Comuna"); }
+        if( $("#comunas").val() =='0') { $("#address").parent("label").find("span").text("* Falta ingresar Comuna"); }
         
         document.forms["frm1"].username.value = document.forms["frm1"].email.value;
 
