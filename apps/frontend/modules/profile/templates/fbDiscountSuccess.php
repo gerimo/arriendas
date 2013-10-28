@@ -261,7 +261,7 @@ width: 440px;
 margin-top: 10px;
 margin-left: 30px;">
 <center>
-            <b style="color:#EC008C;font-size:16px;text-align:center;">COMPARTE Y OBTÉN UN 10% DE DESCUENTO</b><br><br>
+            <b style="color:#EC008C;font-size:16px;text-align:center;">COMPARTE Y OBTÉN UN 5% DE DESCUENTO</b><br><br>
                     
                 </div>
                 <?php $termino = strtotime($inicio) + ($reserve->getDuration() * 60 * 60);
