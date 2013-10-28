@@ -2417,7 +2417,82 @@ public function executeAgreePdf2(sfWebRequest $request)
 		if( $request->getParameter('id') ) {
 			
 			try {
-                //echo "hola";
+
+		        $this->reserve = Doctrine_Core::getTable('reserve')->find(array( $request->getParameter('id') ));
+		        $this->car = Doctrine_Core::getTable('car')->find(array( $this->reserve->getCarId() ));
+				$this->model = Doctrine_Core::getTable('Model')->find(array( $this->car->getModel()->getId() ));
+		        $this->user = $this->car->getUser();
+				
+				$this->trans = Doctrine_Core::getTable("Transaction")->getTransactionByReserve($this->reserve->getId());
+				
+		        $this->getUser()->setAttribute('lastview', $request->getReferer());
+			
+				//get number of shares for reserve ID
+				$curl = curl_init();
+				curl_setopt_array($curl, array(
+					CURLOPT_RETURNTRANSFER => 1,
+					CURLOPT_URL => 'http://graph.facebook.com/'.$this->getController()->genUrl("main/fbShare?id=".$request->getParameter('id'),true),
+					CURLOPT_USERAGENT => 'Codular Sample cURL Request'
+				));
+				$resp = curl_exec($curl);
+				curl_close($curl);
+				$response = json_decode($resp);
+
+				if (isset($response->{'shares'})) {
+					$this->nShares = $response->{'shares'};
+				}else{
+					$this->nShares = 0;
+				};
+				
+				//test $this->nShares=0;
+				
+				if (!$this->nShares) $this->nShares==0;
+				if ($this->nShares==0){
+					$this->trans->setDiscountfb(false);
+					$this->trans->setDiscountamount(0);					
+					$this->priceMultiply = 1;
+				}else{
+					$this->trans->setDiscountamount($this->reserve->getPrice()*0.1);
+					$this->trans->setDiscountfb(true);				
+					$this->priceMultiply = 0.9;
+				};
+
+					$this->trans->save();			
+				
+
+                //var_dump($this->reserve);
+                //die();
+
+                //$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(1);
+                //$this->monto = $deposito[0]['monto'];
+                $this->monto = 5800;
+                $this->montoDiaUnico = 5800;
+                //$depo = Doctrine_Core::getTable("liberacionDeposito")->findById(2);
+                //$this->garantia = $depo[0]['monto'];
+                $this->garantia = 122330;
+
+                $idArrendatario = $this->reserve->getUserId();
+                $arrendatario = Doctrine_Core::getTable('user')->find($idArrendatario);
+                $this->licenseUp = $arrendatario->getDriverLicenseFile();
+
+			} catch(Exception $e) { die($e); }
+		}
+    }
+	 
+     public function executeFbDiscount(sfWebRequest $request) {
+
+		$this->reserve = '';
+		$this->deposito=$request->getParameter('deposito');
+		$this->carMarcaModel = $request->getParameter("carMarcaModel");
+		$this->duracionReserva = $request->getParameter("duracionReserva");
+		$this->valorTotalActualizado = $request->getParameter("valorTotalActualizado");
+
+		
+		if( $request->getParameter('id') ) {
+			
+			try {
+
+				//echo "hola";
                 //die();
 		        $this->reserve = Doctrine_Core::getTable('reserve')->find(array( $request->getParameter('id') ));
 
@@ -2439,15 +2514,28 @@ public function executeAgreePdf2(sfWebRequest $request)
                 //$this->garantia = $depo[0]['monto'];
                 $this->garantia = 122330;
 
-                $idArrendatario = $this->reserve->getUserId();
+				$this->deposito = $request->getParameter("deposito");
+				$this->montoDeposito = 0;
+				if($this->deposito == "depositoGarantia"){
+					//$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(2);
+					$this->montoDeposito = 122330;
+					$this->enviarCorreoTransferenciaBancaria();
+				}else if($this->deposito == "pagoPorDia"){
+					//$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(1);
+					$this->montoDeposito = $montoTotalPagoPorDia;
+				}
+				
+	
+	$idArrendatario = $this->reserve->getUserId();
                 $arrendatario = Doctrine_Core::getTable('user')->find($idArrendatario);
                 $this->licenseUp = $arrendatario->getDriverLicenseFile();
 
 			} catch(Exception $e) { die($e); }
 		}
     }
-	 
-     public function executePedidos(sfWebRequest $request){
+
+
+		public function executePedidos(sfWebRequest $request){
         //id del usuario actual
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
         //$idUsuario = 885;
@@ -2807,6 +2895,12 @@ public function executeAgreePdf2(sfWebRequest $request)
         $correo = $usuario->getEmail();
         $name = $usuario->getFirstname();
 
+		$usuario->setPropietario(true);
+   	    $this->getUser()->setAttribute("propietario",true);			    
+		$usuario->save();
+		
+//		$this->logMessage($usuario->getPropietario());
+	
         require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
         $mail = new Email();
         $mail->setSubject('Has subido un auto!');

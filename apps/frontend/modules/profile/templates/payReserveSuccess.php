@@ -137,12 +137,12 @@
         });
         var valorMomentaneo = document.getElementById("valorTotalActualizado");
         var parrafo = document.createElement("span");
-        parrafo.innerHTML = "<?php echo number_format($reserve->getPrice(), 0, ',', '.'); ?>";
+        parrafo.innerHTML = "<?php echo number_format($reserve->getPrice()*$priceMultiply, 0, ',', '.'); ?>";
         valorMomentaneo.appendChild(parrafo);
     });
 
     function actualizarPrecioTotal(opcion){
-        var precioArriendo = "<?php echo $reserve->getPrice(); ?>";
+        var precioArriendo = "<?php echo $reserve->getPrice()*$priceMultiply; ?>";
         var montoDepositoGarantia = "<?php echo $garantia; ?>";
         var montoPorDia = "<?php echo $monto; ?>";
         var montoPorDiaUnico = "<?php echo $montoDiaUnico; ?>";
@@ -298,11 +298,24 @@
                         </tbody>
                     </table>
                 </div>
+
+            <?php if ($nShares == 0): ?>
                 <div class="valorSubTotal">
+                    <div class="fondoRosa">
+                        Valor Subtotal: <span><?=number_format($reserve->getPrice(), 0, ',', '.')?> CLP (sin discuento)</span>
+                    </div>
+                </div>
+            <?php else: ?>
+                <div class="valorSubTotal" style="height:85px;">
                     <div class="fondoRosa">
                         Valor Subtotal: <span><?=number_format($reserve->getPrice(), 0, ',', '.')?> CLP</span>
                     </div>
+                    <div class="fondoRosa">
+                        Valor Subtotal con Discuento: <span><?=number_format($reserve->getPrice()*$priceMultiply, 0, ',', '.')?> CLP</span>
+                    </div>
                 </div>
+            <?php endif; ?>
+
                 <div id="eleccionDeposito">
                     <div class="titulo">Deducible <?=number_format($garantia, 0, ',', '.');?> UF y Depósito en Garantía</div>
                         <div id="eleccion1"><div class="selector"><input type="radio" name="deposito" value="depositoGarantia"></div><p>"Realizaré el Depósito en Garantía por <span><?=number_format($garantia, 0, ',', '.');?> CLP</span> Mediante Transferencia" (Este será devuelto en caso de que no se registren Daños)</p>
@@ -321,10 +334,11 @@
                 </div>
                 <div id="mensajePagoGarantia" style="display:none;"><p>En los próximos segundos te enviaremos un e-mail con los datos de la cuenta para hacer la transferencia.<p></div>
             </div>
-        <input type="hidden" name="monto" id="monto" value="<?php echo $reserve->getPrice(); ?>" />
+        <input type="hidden" name="monto" id="monto" value="<?php echo $reserve->getPrice()*$priceMultiply; ?>" />
         <input type="hidden" name="carMarcaModel" value="<?php echo $model->getBrand().', '.$model->getName() ?>"/>
         <input type="hidden" name="duracionReserva" value="<?php echo $duracion ?>"/>
         <input type="hidden" name="duracionReservaPagoPorDia" value="" />
+        <input type="hidden" name="valorTotalActualizado" id="valorTotalActualizado" value="" />
         </form>
         </div><!-- main_contenido -->
 

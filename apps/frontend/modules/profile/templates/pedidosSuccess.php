@@ -16,7 +16,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     var urlCambiarEstadoPedido = <?php echo "'".url_for("profile/cambiarEstadoPedidoAjax")."';" ?>
     var urlEditarFecha = <?php echo "'".url_for("profile/editarFechaPedidosAjax")."';" ?>
     var urlPedidos = <?php echo "'".url_for("profile/pedidos")."';" ?>
-    var urlPago = <?php echo "'".url_for("profile/payReserve")."';" ?>
+    var urlPago = <?php echo "'".url_for("profile/fbDiscount")."';" ?>
     var urlExtenderReserva = <?php echo "'".url_for("profile/extenderReservaAjax")."';" ?>
 </script>
 
@@ -396,7 +396,11 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
             }
 
 				if ($checkMostrar==0){
+<<<<<<< HEAD
+					echo "<p class='alerta' style='margin-bottom: 30px;'>No existen pedidos de reserva.";
+=======
 //					echo "<p class='alerta' style='margin-bottom: 30px;'>No existen pedidos de reserva.";
+>>>>>>> master
 				};
 		
             

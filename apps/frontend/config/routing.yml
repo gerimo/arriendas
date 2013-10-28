@@ -10,6 +10,10 @@ homepage:
   url:   /
   param: { module: main, action: index }
 
+fbShare:
+  url:    /fb/:id
+  param:  { module: main, action: fbShare }
+  
 # generic rules
 # please, remove them by adding more specific rules
 default_index:

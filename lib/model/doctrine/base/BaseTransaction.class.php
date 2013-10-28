@@ -154,6 +154,15 @@ abstract class BaseTransaction extends sfDoctrineRecord
              'type' => 'integer',
              'length' => 12,
              )); 
+        $this->hasColumn('discountfb', 'integer', 12, array(
+             'type' => 'integer',
+             'length' => 12,
+             )); 
+        $this->hasColumn('discountamount', 'decimal', 10, array(
+             'type' => 'decimal',
+             'length' => 10,
+             'scale' => '2',
+             ));
         $this->option('charset', 'utf8');
         $this->option('type', 'InnoDB');
     }
