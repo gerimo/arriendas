@@ -2431,7 +2431,7 @@ public function executeAgreePdf2(sfWebRequest $request)
 				$curl = curl_init();
 				curl_setopt_array($curl, array(
 					CURLOPT_RETURNTRANSFER => 1,
-					CURLOPT_URL => 'http://graph.facebook.com/'.$this->getController()->genUrl("main/fbShare?id=".$request->getParameter('id'),true)z,
+					CURLOPT_URL => 'http://graph.facebook.com/'.$this->getController()->genUrl("main/fbShare?id=".$request->getParameter('id'),true),
 					CURLOPT_USERAGENT => 'Codular Sample cURL Request'
 				));
 				$resp = curl_exec($curl);
