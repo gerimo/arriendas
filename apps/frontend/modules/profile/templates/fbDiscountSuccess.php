@@ -248,7 +248,7 @@
             <p>DETALLES DEL ARRIENDO</p>
             </div>
 
-            <form name="pago" method="post" action="http://arriendas.cl/fb/<?php echo $reserve->getId()?>/" id="pago">
+            <form name="pago" method="post" action="<?php echo url_for('profile/fbDiscount') ?>?id=<?=$reserve->getId()?>" id="pago">
 
 
 
@@ -286,7 +286,7 @@ margin-left: 30px;">
 				<a href="#" 
 					  onclick="
 						window.open(
-						  'https://www.facebook.com/sharer/sharer.php?u=<?php echo url_for("main/fbShare?id=".$reserve->getId(),true)?>/', 
+						  'https://www.facebook.com/sharer/sharer.php?u=http://arriendas.cl/fb/<?php echo $reserve->getId()?>/', 
 						  'facebook-share-dialog', 
 						  'width=626,height=436'); 
 						return false;"><?php echo image_tag('compartir_en_face.png') ?></a>
