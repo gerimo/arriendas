@@ -396,11 +396,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
             }
 
 				if ($checkMostrar==0){
-<<<<<<< HEAD
-					echo "<p class='alerta' style='margin-bottom: 30px;'>No existen pedidos de reserva.";
-=======
 //					echo "<p class='alerta' style='margin-bottom: 30px;'>No existen pedidos de reserva.";
->>>>>>> master
 				};
 		
             
