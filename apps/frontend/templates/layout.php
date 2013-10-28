@@ -13,8 +13,7 @@
         <meta property="image_src" content="<?php echo image_path('Home/logo_arriendas.png', 'absolute=true');?>">
 		<meta property="og:url" content="https://arriendas.cl" />
 		<meta property="og:site_name" content="Arriendas.cl - Arrienda un auto vecino, cerca de ti" />
-		<meta property="fb:admins" content="arriendaschile" />
-		<meta property="fb:admins" content="germanrimo" />
+		<meta property="fb:admins" content="213116695458112" />
 		<meta property="fb:appid" content="" />
 		<meta property="og:description" content="Arrienda un auto por horas o Gana dinero todos los meses arrendando tu auto, con seguro" />
         
