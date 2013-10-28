@@ -153,6 +153,8 @@ class bcpuntopagosActions extends sfActions
 			else if($opcionLiberacion == 1) $montoLiberacion = $reserve->getMontoLiberacion();
 
 			$finalPrice = $order->getPrice()-$order->getDiscountamount()+$montoLiberacion;
+			$finalPrice = number_format($finalPrice, 0, '.', '');
+
 			if($finalPrice > 0){
 				
 				$conf = $this->getConfiguration();
