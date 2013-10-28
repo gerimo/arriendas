@@ -171,7 +171,7 @@ class bcpuntopagosActions extends sfActions
 				
 				//Execution itself about punto pagos creation process
 				$funcion = "transaccion/crear";
-				$ammount_str = number_format($ammount, 2, '.', '');
+				$ammount_str = number_format($ammount, 0, '.', '');
 				
 				$http_request = "";
 				$http_request .= $data_creation_step = '{"trx_id":"'.$trx_id.'","medio_pago":'.$payment_id.',"monto":'.$ammount_str.'}';
