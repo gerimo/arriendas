@@ -278,7 +278,7 @@ margin-left: 30px;">
                 <div id="eleccionDeposito" style="height: 80px;">
 <center>
 
-				Comparta ahora Arriendas.cl en Facebook y obtén un 10% de descuento!
+				Comparta ahora Arriendas.cl en Facebook y obtén un 5% de descuento!
 				<br><br><br>
 			
 <center>

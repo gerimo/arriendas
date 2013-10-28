@@ -78,7 +78,7 @@ class bcpuntopagosActions extends sfActions
 				$reserve->save();
 
 				$this->hasDiscountFB = $order->getDiscountfb();
-				$this->priceMultiply = 1-(0.1*$order->getDiscountfb());
+				$this->priceMultiply = 1-(0.05*$order->getDiscountfb());
 				
 				
 				if($order != false){
