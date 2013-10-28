@@ -153,6 +153,8 @@ class bcpuntopagosActions extends sfActions
 			else if($opcionLiberacion == 1) $montoLiberacion = $reserve->getMontoLiberacion();
 
 			$finalPrice = $order->getPrice()-$order->getDiscountamount()+$montoLiberacion;
+			$finalPrice = number_format($finalPrice, 0);
+
 			if($finalPrice > 0){
 				
 				$conf = $this->getConfiguration();
@@ -171,7 +173,7 @@ class bcpuntopagosActions extends sfActions
 				
 				//Execution itself about punto pagos creation process
 				$funcion = "transaccion/crear";
-				$ammount_str = number_format($ammount, 0, '.', '');
+				$ammount_str = number_format($ammount, 2, '.', '');
 				
 				$http_request = "";
 				$http_request .= $data_creation_step = '{"trx_id":"'.$trx_id.'","medio_pago":'.$payment_id.',"monto":'.$ammount_str.'}';
