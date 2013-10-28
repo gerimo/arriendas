@@ -11,7 +11,7 @@ homepage:
   param: { module: main, action: index }
 
 fbShare:
-  url:    /fb/:id
+  url:    /fb/:id/
   param:  { module: main, action: fbShare }
   
 # generic rules
