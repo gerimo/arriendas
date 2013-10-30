@@ -9,7 +9,7 @@
         <meta property="og:description" content="Arrienda un auto vecino con seguro premium, asistencia de viaje y TAGs incluídos. Busca un auto por ubicación o por precio. Rent a car Vecino.">
 		<meta property="og:title" content="Arriendas.cl - Arrienda un auto vecino, cerca de ti" />
 		<meta property="og:type" content="website" />
-        <meta property="og:image" content="<?php echo image_path('Home/logo_arriendas2.jpg', 'absolute=true');?>">
+        <meta property="og:image" content="<?php echo image_path('Home/logo_arriendas3.jpg', 'absolute=true');?>">
 		<meta property="og:url" content="http://arriendas.cl<?php echo sfContext::getInstance()->getController()->genUrl(sfContext::getInstance()->getRouting()->getCurrentInternalUri());?>" />
 		<meta property="og:site_name" content="Arriendas.cl - Arrienda un auto vecino, cerca de ti" />
 		<meta property="fb:admins" content="germanrimo" />
@@ -518,7 +518,7 @@ var google_conversion_value = 0;
             
                     </div><!-- footer_enlaces -->
 
-                    <p class="footer_copy" style='text-align:center;'>Teléfono (02) 2333-3714 - Encomenderos 253, Las Condes, Santiago.</p>
+                    <p class="footer_copy" style='text-align:center;'>Teléfono (02) 2333-3714 - Providencia 229, (entrada por Perez Espinoza), Providencia, Santiago.</p>
 
                     <br><br>
                 </div><!-- /footer_contenido -->

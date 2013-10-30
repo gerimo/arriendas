@@ -2575,7 +2575,6 @@ public function executeAgreePdf2(sfWebRequest $request)
                 }
 
                 //comprueba si muestra o no la reserva, dependiendo del estado
-
                 if(($estado==3 && ($duracion*3600)+$fechaReserva>$fechaActual) || ($estado==2 && $fechaReserva>$fechaActual) || (($estado==1 || $estado==0) && $fechaReserva>$fechaActual)){
 
                     //obtiene el id de la reserva
@@ -2653,7 +2652,6 @@ public function executeAgreePdf2(sfWebRequest $request)
             $reserva = Doctrine_Core::getTable('reserve')->findOneById($reserva['id']);
 
             if($reserva->getVisibleOwner()){
-
 
                 //obtiene completed de transaction
                 $q = "SELECT completed FROM transaction WHERE reserve_id=".$reserva->getId();
@@ -2904,7 +2902,7 @@ public function executeAgreePdf2(sfWebRequest $request)
         require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
         $mail = new Email();
         $mail->setSubject('Has subido un auto!');
-        $mail->setBody("<p>Hola $name</p> <p>Has subido un auto.</p> <p>Para empezar a recibir arriendos a partir de la próxima semana, debes verificar tu auto.</p><p>Te esperamos en Perez de Espinoza 5, esquina Providencia durante la semana.</p>");
+        $mail->setBody("<p>Hola $name</p> <p>Has subido un auto.</p><p>Por favor, envíanos tu teléfono de contacto para que podamos explicarte el funcionamiento del sistema.</p><p>Verás tu auto publicado una vez que un inspector visite tu auto en en el horario que nos indiques.</p>");
         $mail->setTo($correo);
         $mail->setCc('soporte@arriendas.cl');
         $mail->submit();

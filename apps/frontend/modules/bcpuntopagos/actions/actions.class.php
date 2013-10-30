@@ -265,7 +265,6 @@ class bcpuntopagosActions extends sfActions
 		$STATE_SUCCESSFULL = $conf[$enviroment]["status_success"];
 		$STATE_ERROR = $conf[$enviroment]["status_error"];
 
-		//$last_order_id = 139;
 		$order = Doctrine_Core::getTable("Transaction")->getTransaction($last_order_id);
 
 		$this->idReserva = $order->getReserveId();
@@ -313,8 +312,7 @@ class bcpuntopagosActions extends sfActions
 		        //pedidos de reserva pagado (arrendatario)
 		        $mail2 = new Email();
 		        $mail2->setSubject('La reserva ha sido pagada!');
-		        $mail2->setBody("<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>
-		Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>Puedes llenar el formulario <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/$idReserve'>desde tu celular</a> o puedes firmar la <a href='http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/idReserve/$idReserve'>versión impresa</a>.</p><pNo des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p><a href='http://arriendas.cl/frontend_dev.php/main/generarReporteResumen/idAuto/$idCar'>Datos del arriendo</a></p>");
+		        $mail2->setBody("<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>Puedes llenar el formulario <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/$idReserve'>desde tu celular</a> o puedes firmar la <a href='http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/idReserve/$idReserve'>versión impresa</a>.</p><pNo des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p><a href='http://arriendas.cl/frontend_dev.php/main/generarReporteResumen/idAuto/$idCar'>Datos del arriendo</a></p>");
 		        $mail2->setTo($emailRenter);
 		  
 		        $mail2->submit();

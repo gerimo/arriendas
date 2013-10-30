@@ -55,7 +55,9 @@ var google_conversion_value = 0;
       		  <p>Tu pago se recibi&oacute; exitosamente!</p>
             <br>
             <p>Antes y despu&eacute;s de realizar la reserva, debes firmar el <a href='http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/idReserve/<?php echo $idReserva; ?>' target='_blank'>informe de da&ntilde;os impreso</a>, o <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/<?php echo $idReserva; ?>' target='_blank'>completarlo desde tu celular</a>. Ambos fueron enviados a tu correo.</p>
-            </div>
+            <br>
+			<p><a href="<?php echo url_for('main/index') ?>">Volver al Home</a></p>
+			</div>
       	</div> 
 
         <?php include_component('profile', 'colDer') ?>
