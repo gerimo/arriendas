@@ -259,6 +259,7 @@ class bcpuntopagosActions extends sfActions
 		$token = $request->getParameter('t');
 		$this->notificacion($token);
 		$last_order_id = $this->getUser()->getAttribute('PP_LAST_ORDER_ID');
+		$last_order_id = 429;
 		$conf = $this->getConfiguration();
 		$conf = $conf["betterchoice"]["puntopagos"];
 		$enviroment = $conf["enviroment"];
@@ -268,9 +269,14 @@ class bcpuntopagosActions extends sfActions
 		$order = Doctrine_Core::getTable("Transaction")->getTransaction($last_order_id);
 
 		$this->idReserva = $order->getReserveId();
-
+		
 		$reserve = Doctrine_Core::getTable('reserve')->findOneById($this->idReserva);
 
+		
+				
+
+				
+				
 		$opcionLiberacion = $reserve->getLiberadoDeGarantia();
 		if($opcionLiberacion == 0) $montoLiberacion = 0;
 		else if($opcionLiberacion == 1) $montoLiberacion = $reserve->getMontoLiberacion();
@@ -281,26 +287,35 @@ class bcpuntopagosActions extends sfActions
 			$this->_log("Pago","Exito","Usuario: ".$customer_in_session.". Order ID: ".$order->getId());
 			Doctrine_Core::getTable("Transaction")->successTransaction($last_order_id, $token, $STATE_SUCCESSFULL, 1);
 
+//							$this->logMessage('exito', 'err');
+
+							
 			//verifica que la reserva no esté completa
 			if(!$order->getCompleted()){
 				//actualiza el estado completed
 				$order->setCompleted(true);
 				$order->save();
 
+
 				//envío de mail
 				require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
 				$idReserve = $order->getReserveId();
 				$reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
 				$nameRenter = $reserve->getNameRenter();
+				$this->nameOwner = $reserve->getNameOwner();
 				$emailRenter = $reserve->getEmailRenter();
+				$this->emailOwner = $reserve->getEmailOwner();
 				$nameOwner = $reserve->getNameOwner();
 				$emailOwner = $reserve->getEmailOwner();
 				$lastnameRenter = $reserve->getLastnameRenter();
+				$this->lastnameOwner = $reserve->getLastnameOwner();
 				$lastnameOwner = $reserve->getLastnameOwner();
 				$telephoneRenter = $reserve->getTelephoneRenter();
+				$this->telephoneOwner = $reserve->getTelephoneOwner();
 				$telephoneOwner = $reserve->getTelephoneOwner();
 				$addressCar = $reserve->getAddressCar();
 				$idCar = $reserve->getCarId();
+				
 			
 		        //pedidos de reserva pagado (propietario)
 		        $mail1 = new Email();
