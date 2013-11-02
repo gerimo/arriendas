@@ -1,2 +1,2 @@
-Lo sentimos, pero has encontrado un error en la aplicaci&oacute;n<br/>
-Si tienes una duda, por favor cont&aacute;ctanos a nuestra mesa de soporte
+Estamos recibiendo demasiadas visitas en este momento. 
+Env&iacuteanos tu consulta por correo a soporte@arriendas.cl
