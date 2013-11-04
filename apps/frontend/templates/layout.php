@@ -518,7 +518,7 @@ var google_conversion_value = 0;
             
                     </div><!-- footer_enlaces -->
 
-                    <p class="footer_copy" style='text-align:center;'>Teléfono (02) 2333-3714 - Providencia 229, (entrada por Perez Espinoza), Providencia, Santiago.</p>
+                    <p class="footer_copy" style='text-align:center;'>Teléfono (02) 2333-3714 - Providencia 229 (entrada por Perez Espinoza), Providencia, Santiago.</p>
 
                     <br><br>
                 </div><!-- /footer_contenido -->
