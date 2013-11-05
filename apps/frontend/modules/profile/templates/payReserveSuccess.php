@@ -312,7 +312,7 @@
                         Valor Subtotal: <span><?=number_format($reserve->getPrice(), 0, ',', '.')?> CLP</span>
                     </div>
                     <div class="fondoRosa">
-                        Valor Subtotal con Descuento: <span><?=number_format($reserve->getPrice()*$priceMultiply, 0, ',', '.')?> CLP</span>
+                        Valor Subtotal (Con Descuento): <span><?=number_format($reserve->getPrice()*$priceMultiply, 0, ',', '.')?> CLP</span>
                     </div>
                 </div>
             <?php endif; ?>
