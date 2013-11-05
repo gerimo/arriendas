@@ -2889,9 +2889,15 @@ public function executeAgreePdf2(sfWebRequest $request)
         $idCar = $request->getParameter('id');
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
         $usuario = Doctrine_Core::getTable('user')->findOneById($idUsuario);
+			$correo = $usuario->getEmail();
+			$name = $usuario->getFirstname();
+			$lastname = $usuario->getLastname();
+			$telephone = $usuario->getTelephone();
+			$direccion = $usuario->getAddress();
 
-        $correo = $usuario->getEmail();
-        $name = $usuario->getFirstname();
+		$car = Doctrine_Core::getTable('car')->findOneById($idCar);
+			$brand = $car->getMarcaModelo();
+			$comuna = $car->getNombreComuna();
 
 		$usuario->setPropietario(true);
    	    $this->getUser()->setAttribute("propietario",true);			    
@@ -2904,9 +2910,16 @@ public function executeAgreePdf2(sfWebRequest $request)
         $mail->setSubject('Has subido un auto!');
         $mail->setBody("<p>Hola $name</p> <p>Has subido un auto.</p><p>Para verlo publicado responder a este correo escribiendo tu DIRECCION, COMUNA y NUMERO DE CELULAR.</p><p>Ante cualquier duda, llámanos al 2333-3714.</p>");
         $mail->setTo($correo);
-        $mail->setCc('soporte@arriendas.cl');
+        //$mail->setCc('soporte@arriendas.cl');
         $mail->submit();
 
+		$mail = new Email();
+        $mail->setSubject('Nuevo auto: '.$name.' '.$lastname.'');
+        $mail->setBody("<p>$name $lastname<br>$telephone<br>$direccion<br>$comuna<br>$brand</p>");
+        $mail->setTo('soporte@arriendas.cl');
+        $mail->submit();
+
+		
         $this->emailUser = $correo;
         $this->partes = $this->partesAuto();
         $this->nombresPartes = $this->nombrePartesAuto();
