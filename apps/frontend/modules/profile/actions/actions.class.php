@@ -2492,7 +2492,15 @@ public function executeAgreePdf2(sfWebRequest $request)
 			
 			try {
 
-				//echo "hola";
+					//check if facebook discount has been used
+					//$idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+					//$discountAlready = Doctrine_Query::create()
+					//  ->from('transaction t')
+					//  ->where('t.user_id = ?', $idUsuario);
+					//  ->andwhere('t.discountfb = ?', true);
+
+					
+  //echo "hola";
                 //die();
 		        $this->reserve = Doctrine_Core::getTable('reserve')->find(array( $request->getParameter('id') ));
 
@@ -2897,6 +2905,7 @@ public function executeAgreePdf2(sfWebRequest $request)
 
 		$car = Doctrine_Core::getTable('car')->findOneById($idCar);
 			$brand = $car->getMarcaModelo();
+			$patente = $car->getPatente();
 			$comuna = $car->getNombreComuna();
 
 		$usuario->setPropietario(true);
@@ -2907,17 +2916,20 @@ public function executeAgreePdf2(sfWebRequest $request)
 	
         require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
         $mail = new Email();
-        $mail->setSubject('Has subido un auto!');
-        $mail->setBody("<p>Hola $name</p> <p>Has subido un auto.</p><p>Para verlo publicado responder a este correo escribiendo tu DIRECCION, COMUNA y NUMERO DE CELULAR.</p><p>Ante cualquier duda, llámanos al 2333-3714.</p>");
+        $mail->setSubject('Responde este e-mail para subir tu '.$brand.' ('.$patente.') en Arriendas.cl');
+        $mail->setBody("<p>Hola $name</p>
+		<p>Has subido un auto.</p>
+		<p>Para verlo publicado responde a este correo escribiendo tu DIRECCION, COMUNA y NUMERO DE CELULAR.</p>
+		<p>Ante cualquier duda, llámanos al 2333-3714.</p>");
         $mail->setTo($correo);
-        //$mail->setCc('soporte@arriendas.cl');
+        $mail->setCc('soporte@arriendas.cl');
         $mail->submit();
 
-		$mail = new Email();
-        $mail->setSubject('Nuevo auto: '.$name.' '.$lastname.'');
-        $mail->setBody("<p>$name $lastname<br>$telephone<br>$direccion<br>$comuna<br>$brand</p>");
-        $mail->setTo('soporte@arriendas.cl');
-        $mail->submit();
+		//$mail = new Email();
+        //$mail->setSubject('Nuevo auto: '.$name.' '.$lastname.'');
+        //$mail->setBody("<p>$name $lastname<br>$telephone<br>$direccion<br>$comuna<br>$brand</p>");
+        //$mail->setTo('soporte@arriendas.cl');
+        //$mail->submit();
 
 		
         $this->emailUser = $correo;
