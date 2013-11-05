@@ -2511,7 +2511,7 @@ public function executeAgreePdf2(sfWebRequest $request)
 	
 						if( $discountAlready ) {
 							$this->getRequest()->setParameter('hideNoDiscountLabel', true);
-							$this->forward('profile', 'PayReserve');
+							$this->forward('profile', 'payreserve');
 						};
 					
                 //die();
