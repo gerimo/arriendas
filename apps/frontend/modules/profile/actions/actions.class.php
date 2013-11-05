@@ -2452,8 +2452,8 @@ public function executeAgreePdf2(sfWebRequest $request)
 					$this->trans->setDiscountamount(0);					
 					$this->priceMultiply = 1;
 				}else{
-					$this->trans->setDiscountamount($this->reserve->getPrice()*0.05);
 					$this->trans->setDiscountfb(true);				
+					$this->trans->setDiscountamount($this->reserve->getPrice()*0.05);
 					$this->priceMultiply = 0.95;
 				};
 
@@ -2904,7 +2904,9 @@ public function executeAgreePdf2(sfWebRequest $request)
         require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
         $mail = new Email();
         $mail->setSubject('Has subido un auto!');
-        $mail->setBody("<p>Hola $name</p> <p>Has subido un auto.</p> <p>Para empezar a recibir arriendos a partir de la próxima semana, debes verificar tu auto.</p><p>Te esperamos en Perez de Espinoza 5, esquina Providencia durante la semana.</p>");
+        $mail->setBody("<p>Hola $name</p> <p>Has subido un auto.</p>
+		<p>Para verlo publicado responder a este correo escribiendo tu DIRECCION, COMUNA y NUMERO DE CELULAR.</p>
+		<p>Ante cualquier duda, llámanos al 2333-3714.</p>");
         $mail->setTo($correo);
         $mail->setCc('soporte@arriendas.cl');
         $mail->submit();
