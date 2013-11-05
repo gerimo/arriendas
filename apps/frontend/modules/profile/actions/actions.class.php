@@ -2902,7 +2902,7 @@ public function executeAgreePdf2(sfWebRequest $request)
         require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
         $mail = new Email();
         $mail->setSubject('Has subido un auto!');
-        $mail->setBody("<p>Hola $name</p> <p>Has subido un auto.</p><p>Para empezar a recibir arriendos necesitamos enviar un inspector.</p><p>Verás tu auto publicado una vez que un inspector visite tu auto en el horario que nos indiques.</p><p>Si tienes preguntas puedes llamarnos al 2333-3714.</p>");
+        $mail->setBody("<p>Hola $name</p> <p>Has subido un auto.</p><p>Para verlo publicado responder a este correo escribiendo tu DIRECCION, COMUNA y NUMERO DE CELULAR.</p><p>Ante cualquier duda, llámanos al 2333-3714.</p>");
         $mail->setTo($correo);
         $mail->setCc('soporte@arriendas.cl');
         $mail->submit();
