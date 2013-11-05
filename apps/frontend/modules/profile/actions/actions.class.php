@@ -2452,8 +2452,8 @@ public function executeAgreePdf2(sfWebRequest $request)
 					$this->trans->setDiscountamount(0);					
 					$this->priceMultiply = 1;
 				}else{
-					$this->trans->setDiscountamount($this->reserve->getPrice()*0.05);
 					$this->trans->setDiscountfb(true);				
+					$this->trans->setDiscountamount($this->reserve->getPrice()*0.05);
 					$this->priceMultiply = 0.95;
 				};
 
