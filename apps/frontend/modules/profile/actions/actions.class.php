@@ -884,7 +884,7 @@ class profileActions extends sfActions {
             $sist_Modelo  = $request -> getPostParameter('modelo_SistemaDVD');
             $otrosAcc  = $request -> getPostParameter('otrosAccesorios');
             $idAuto  = $request -> getPostParameter('idAuto');
-
+            $seguro_ok = $request->getPostParameter('seguro_ok');
             //paso 4
             $tipoacc = $request -> getPostParameter('accesorio');
             $cantidad = count($tipoacc);
@@ -897,7 +897,7 @@ class profileActions extends sfActions {
             }
 	    
             if($this->idAuto){
-                $ok = ($photoCounter >= 4 ) ? 3 : 1;
+                $ok = ($photoCounter >= 4 AND $seguro_ok != 4 ) ? 3 : $seguro_ok;
                 //$ok=1;
                 //$idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
                 $q = Doctrine_Manager::getInstance()->getCurrentConnection();
@@ -2575,7 +2575,6 @@ public function executeAgreePdf2(sfWebRequest $request)
                 }
 
                 //comprueba si muestra o no la reserva, dependiendo del estado
-
                 if(($estado==3 && ($duracion*3600)+$fechaReserva>$fechaActual) || ($estado==2 && $fechaReserva>$fechaActual) || (($estado==1 || $estado==0) && $fechaReserva>$fechaActual)){
 
                     //obtiene el id de la reserva
@@ -2653,7 +2652,6 @@ public function executeAgreePdf2(sfWebRequest $request)
             $reserva = Doctrine_Core::getTable('reserve')->findOneById($reserva['id']);
 
             if($reserva->getVisibleOwner()){
-
 
                 //obtiene completed de transaction
                 $q = "SELECT completed FROM transaction WHERE reserve_id=".$reserva->getId();
@@ -2904,9 +2902,7 @@ public function executeAgreePdf2(sfWebRequest $request)
         require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
         $mail = new Email();
         $mail->setSubject('Has subido un auto!');
-        $mail->setBody("<p>Hola $name</p> <p>Has subido un auto.</p>
-		<p>Para verlo publicado responder a este correo escribiendo tu DIRECCION, COMUNA y NUMERO DE CELULAR.</p>
-		<p>Ante cualquier duda, llámanos al 2333-3714.</p>");
+        $mail->setBody("<p>Hola $name</p> <p>Has subido un auto.</p><p>Para empezar a recibir arriendos necesitamos enviar un inspector.</p><p>Verás tu auto publicado una vez que un inspector visite tu auto en el horario que nos indiques.</p><p>Si tienes preguntas puedes llamarnos al 2333-3714.</p>");
         $mail->setTo($correo);
         $mail->setCc('soporte@arriendas.cl');
         $mail->submit();
@@ -3905,7 +3901,7 @@ public function executeAgreePdf2(sfWebRequest $request)
             $photoCounter = $this->photoCounter();
 
             //nos aseguramos que seguro_ok tenga un valor. Se actualiza a 3 si tiene mas de 4 fotos, en caso contrario conserva el valor que tiene almacenado    
-            $ok = ($photoCounter >= 4 ) ? 3 : $seguro_ok;
+            $ok = ($photoCounter >= 4 AND $seguro_ok != 4 ) ? 3 : $seguro_ok;
 
             //actualiza los datos asociados al vehículo, por medio de la $idCar
             $q = Doctrine_Manager::getInstance()->getCurrentConnection();

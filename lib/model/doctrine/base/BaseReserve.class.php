@@ -239,6 +239,11 @@ abstract class BaseReserve extends sfDoctrineRecord
              'notnull' => true,
              'default' => "",
              ));
+        $this->hasColumn('payment_cancelled', 'boolean', null, array(
+            'type' => 'boolean',
+            'notnull' => true,
+            'default' => 0,
+            ));
         $this->index('fk_Reserve_User1', array(
              'fields' => 
              array(

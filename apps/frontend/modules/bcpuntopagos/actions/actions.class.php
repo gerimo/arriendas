@@ -25,7 +25,7 @@ class bcpuntopagosActions extends sfActions
     require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
     $mail = new Email();
     $mail->setSubject('Realizar Depósito en Garantía');
-    $mail->setBody("<p>Hola $name</p><p>Realiza el depósito en garantía por transferecia bancaria:</p><p><ul><li><b>Banco de Chile</b></li><li>Cuenta: <b>031-50-147205</b></li><li>Rut: <b>23873249-2</b></li><li><b>Germán Rimoldi</b></li></ul></p>");
+    $mail->setBody("<p>Hola $name</p><p>Realiza el depósito en garantía por transferecia bancaria:</p><p><ul><li><b>Banco BCI</b></li><li>Cuenta Corriente: <b>70107459</b></li><li>Rut: <b>76208249-7</b></li><li><b>Rimoldi SPA</b></li><li><b>soporte@arriendas.cl</b></li></ul></p>");
     $mail->setTo($correo);
     $mail->setCc('soporte@arriendas.cl');
     $mail->submit();
@@ -259,19 +259,24 @@ class bcpuntopagosActions extends sfActions
 		$token = $request->getParameter('t');
 		$this->notificacion($token);
 		$last_order_id = $this->getUser()->getAttribute('PP_LAST_ORDER_ID');
+		$last_order_id = 429;
 		$conf = $this->getConfiguration();
 		$conf = $conf["betterchoice"]["puntopagos"];
 		$enviroment = $conf["enviroment"];
 		$STATE_SUCCESSFULL = $conf[$enviroment]["status_success"];
 		$STATE_ERROR = $conf[$enviroment]["status_error"];
 
-		//$last_order_id = 139;
 		$order = Doctrine_Core::getTable("Transaction")->getTransaction($last_order_id);
 
 		$this->idReserva = $order->getReserveId();
-
+		
 		$reserve = Doctrine_Core::getTable('reserve')->findOneById($this->idReserva);
 
+		
+				
+
+				
+				
 		$opcionLiberacion = $reserve->getLiberadoDeGarantia();
 		if($opcionLiberacion == 0) $montoLiberacion = 0;
 		else if($opcionLiberacion == 1) $montoLiberacion = $reserve->getMontoLiberacion();
@@ -282,26 +287,35 @@ class bcpuntopagosActions extends sfActions
 			$this->_log("Pago","Exito","Usuario: ".$customer_in_session.". Order ID: ".$order->getId());
 			Doctrine_Core::getTable("Transaction")->successTransaction($last_order_id, $token, $STATE_SUCCESSFULL, 1);
 
+//							$this->logMessage('exito', 'err');
+
+							
 			//verifica que la reserva no esté completa
 			if(!$order->getCompleted()){
 				//actualiza el estado completed
 				$order->setCompleted(true);
 				$order->save();
 
+
 				//envío de mail
 				require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
 				$idReserve = $order->getReserveId();
 				$reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
 				$nameRenter = $reserve->getNameRenter();
+				$this->nameOwner = $reserve->getNameOwner();
 				$emailRenter = $reserve->getEmailRenter();
+				$this->emailOwner = $reserve->getEmailOwner();
 				$nameOwner = $reserve->getNameOwner();
 				$emailOwner = $reserve->getEmailOwner();
 				$lastnameRenter = $reserve->getLastnameRenter();
+				$this->lastnameOwner = $reserve->getLastnameOwner();
 				$lastnameOwner = $reserve->getLastnameOwner();
 				$telephoneRenter = $reserve->getTelephoneRenter();
+				$this->telephoneOwner = $reserve->getTelephoneOwner();
 				$telephoneOwner = $reserve->getTelephoneOwner();
 				$addressCar = $reserve->getAddressCar();
 				$idCar = $reserve->getCarId();
+				
 			
 		        //pedidos de reserva pagado (propietario)
 		        $mail1 = new Email();
@@ -313,8 +327,7 @@ class bcpuntopagosActions extends sfActions
 		        //pedidos de reserva pagado (arrendatario)
 		        $mail2 = new Email();
 		        $mail2->setSubject('La reserva ha sido pagada!');
-		        $mail2->setBody("<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>
-		Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>Puedes llenar el formulario <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/$idReserve'>desde tu celular</a> o puedes firmar la <a href='http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/idReserve/$idReserve'>versión impresa</a>.</p><pNo des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p><a href='http://arriendas.cl/frontend_dev.php/main/generarReporteResumen/idAuto/$idCar'>Datos del arriendo</a></p>");
+		        $mail2->setBody("<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>Puedes llenar el formulario <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/$idReserve'>desde tu celular</a> o puedes firmar la <a href='http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/idReserve/$idReserve'>versión impresa</a>.</p><pNo des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p><a href='http://arriendas.cl/frontend_dev.php/main/generarReporteResumen/idAuto/$idCar'>Datos del arriendo</a></p>");
 		        $mail2->setTo($emailRenter);
 		  
 		        $mail2->submit();

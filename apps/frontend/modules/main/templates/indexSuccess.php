@@ -1365,7 +1365,7 @@ $('#hour_to').datetimepicker({
 
 
 <div id="comoUsar">
-<div class="tituloEspecial"> C&oacutemo usar Arriendas? </div>
+<div class="titulos"> C&oacutemo usar Arriendas? </div>
 <div id="instrucciones_1"><?php echo image_tag("comparaprecios/arrendatario.png", array("class" => "img_instrucciones_1")) ?></div>
 <div id="sliderComoUsar"><?php echo image_tag("comparaprecios/slider1.png", array("class" => "img_instrucciones_2")) ?></div>
 
@@ -1421,7 +1421,9 @@ $('#hour_to').datetimepicker({
 
 
 
-<div class="tituloEspecial"> Ver video explicativo </div>
+<div class="titulos" style="margin-left: 10px;
+margin-top: 5px;
+padding: 10px 0;float: left;width: 940px;"> Ver video explicativo </div>
 
 <div id="video">
 <iframe src="http://player.vimeo.com/video/45668172?title=0&byline=0&portrait=0ll" width="940" height="500" frameborder="0" 
