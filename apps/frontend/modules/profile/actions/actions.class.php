@@ -2414,6 +2414,8 @@ public function executeAgreePdf2(sfWebRequest $request)
      public function executePayReserve(sfWebRequest $request) {
 
 		$this->reserve = '';
+		$this->hideNoDiscountLabel= $request->getParameter('hideNoDiscountLabel');
+		
 		if( $request->getParameter('id') ) {
 			
 			try {
@@ -2447,14 +2449,20 @@ public function executeAgreePdf2(sfWebRequest $request)
 				//test $this->nShares=0;
 				
 				if (!$this->nShares) $this->nShares==0;
-				if ($this->nShares==0){
+				if ($this->hideNoDiscountLabel==true){
 					$this->trans->setDiscountfb(false);
 					$this->trans->setDiscountamount(0);					
 					$this->priceMultiply = 1;
 				}else{
-					$this->trans->setDiscountfb(true);				
-					$this->trans->setDiscountamount($this->reserve->getPrice()*0.05);
-					$this->priceMultiply = 0.95;
+					if ($this->nShares==0){
+						$this->trans->setDiscountfb(false);
+						$this->trans->setDiscountamount(0);					
+						$this->priceMultiply = 1;
+					}else{
+						$this->trans->setDiscountfb(true);				
+						$this->trans->setDiscountamount($this->reserve->getPrice()*0.05);
+						$this->priceMultiply = 0.95;
+					};
 				};
 
 					$this->trans->save();			
@@ -2493,14 +2501,19 @@ public function executeAgreePdf2(sfWebRequest $request)
 			try {
 
 					//check if facebook discount has been used
-					//$idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
-					//$discountAlready = Doctrine_Query::create()
-					//  ->from('transaction t')
-					//  ->where('t.user_id = ?', $idUsuario);
-					//  ->andwhere('t.discountfb = ?', true);
-
+					$idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+					$q = Doctrine_Query::create()
+					  ->from('transaction t')
+					  ->where('t.user_id = ?', $idUsuario)
+					  ->andwhere('t.discountfb = ?', true);
+	
+						$discountAlready = $q->fetchArray();
+	
+						if( $discountAlready ) {
+							$this->getRequest()->setParameter('hideNoDiscountLabel', true);
+							$this->forward('profile', 'PayReserve');
+						};
 					
-  //echo "hola";
                 //die();
 		        $this->reserve = Doctrine_Core::getTable('reserve')->find(array( $request->getParameter('id') ));
 
@@ -2917,8 +2930,8 @@ public function executeAgreePdf2(sfWebRequest $request)
         require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
         $mail = new Email();
         $mail->setSubject('Responde este e-mail para subir tu '.$brand.' ('.$patente.') en Arriendas.cl');
-        $mail->setBody("<p>Hola $name</p>
-		<p>Has subido un auto.</p>
+        $mail->setBody("<p>Hola $name,</p>
+		<p>Has subido un auto!</p>
 		<p>Para verlo publicado responde a este correo escribiendo tu DIRECCION, COMUNA y NUMERO DE CELULAR.</p>
 		<p>Ante cualquier duda, llámanos al 2333-3714.</p>");
         $mail->setTo($correo);

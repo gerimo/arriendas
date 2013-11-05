@@ -299,10 +299,11 @@
                     </table>
                 </div>
 
-            <?php if ($nShares == 0): ?>
+            <?php if ($nShares == 0 || $hideNoDiscountLabel==true): ?>
                 <div class="valorSubTotal">
                     <div class="fondoRosa">
-                        Valor Subtotal: <span><?=number_format($reserve->getPrice(), 0, ',', '.')?> CLP (sin discuento)</span>
+                        Valor Subtotal: <span><?=number_format($reserve->getPrice(), 0, ',', '.')?> CLP <?php echo ($hideNoDiscountLabel) ?  '' :  '(sin descuento)';?>
+						</span>
                     </div>
                 </div>
             <?php else: ?>
@@ -311,7 +312,7 @@
                         Valor Subtotal: <span><?=number_format($reserve->getPrice(), 0, ',', '.')?> CLP</span>
                     </div>
                     <div class="fondoRosa">
-                        Valor Subtotal con Discuento: <span><?=number_format($reserve->getPrice()*$priceMultiply, 0, ',', '.')?> CLP</span>
+                        Valor Subtotal con Descuento: <span><?=number_format($reserve->getPrice()*$priceMultiply, 0, ',', '.')?> CLP</span>
                     </div>
                 </div>
             <?php endif; ?>
