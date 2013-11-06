@@ -893,7 +893,7 @@ public function executeNotificacion(sfWebRequest $request) {
 
     public function executeMap(sfWebRequest $request) {
 
-	$modelo= new Model();
+	    $modelo = new Model();
 
         sfConfig::set('sf_web_debug', false);
         $this->getResponse()->setContentType('application/json');
@@ -930,21 +930,13 @@ public function executeNotificacion(sfWebRequest $request) {
           list($day_to, $hour_to) = split(' ', $hour_to);
           }
          */
-
-
-$debug = 0;
-if($debug){
-print_r(date('h:i:s'));
-}
         $q = Doctrine_Query::create()
-                ->select('DISTINCT ca.id, av.id idav ,
-	        	ca.lat lat, ca.lng lng, ca.price_per_day, ca.price_per_hour,
-	        	ca.photoS3 photoS3, mo.name modelo, br.name brand, ca.year year,
-	        	ca.address address,
-	        	us.username username, us.id userid')
+                ->select('DISTINCT ca.id, av.id idav, ca.lat lat, ca.lng lng, 
+                            ca.price_per_day, ca.price_per_hour, ca.photoS3 photoS3, ca.year year, ca.address address,
+                            mo.name modelo, br.name brand,	        	
+                            us.username username, us.id userid')
                 ->from('Car ca')
                 ->innerJoin('ca.Availabilities av')
-                ->leftJoin('ca.Reserves re')
                 ->innerJoin('ca.Model mo')
                 ->innerJoin('ca.User us')
                 ->innerJoin('mo.Brand br')
@@ -1002,22 +994,15 @@ print_r(date('h:i:s'));
         }
         $cars = $q->execute();
 
-if($debug) {
-print_r('<br />'.date('h:i:s'));
-}
+        //print "asdf";
+        //print ($q->getSqlQuery());
 
 
         $data = array();
         $carsid = Array();
 
-sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
-$contador = 0;
+        sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
         foreach ($cars as $car) {
-
-$contador ++;
-if($debug){
-print_r('<br />auto numero: '.$contador.', '.date('h:i:s'));
-}
             if ($lat_centro != null && $lng_centro != null) {
 
                 $lat1 = $car->getlat();
@@ -1086,10 +1071,10 @@ print_r('<br />auto numero: '.$contador.', '.date('h:i:s'));
   
             if (!$has_reserve) {
 
-                $data[] = array('id' => $car->getId(),
-                    'idav' => $car->getIdav(),
-                    'longitude' => $car->getlng(),
-                    'latitude' => $car->getlat(),
+                $data[] = array('id' => $car->getId(), //
+                    'idav' => $car->getIdav(), //
+                    'longitude' => $car->getlng(), //
+                    'latitude' => $car->getlat(), //
                     'comuna' => strtolower($car->getNombreComuna()),
                     'brand' => $car->getBrand(),
                     'model' => $car->getModelo(),
@@ -1130,10 +1115,6 @@ print_r('<br />auto numero: '.$contador.', '.date('h:i:s'));
 
         $carsArray = array("cars" => $returnArray);
 	
-if($debug){
-print_r('<br />'.date('h:i:s'));
-die;
-}
         return $this->renderText(json_encode($carsArray));
     }
     public function transformarPrecioAPuntos($precio){
