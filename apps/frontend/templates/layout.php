@@ -401,18 +401,18 @@
                 <!-- inicio header_menu -->
                     <div class="header_menu"> 
                         <ul class="menu_1">
-            <li><a href="http://www.arriendas.cl" target="_blank" class="item_1<?php
+            <li><a href="<?php echo url_for('main/index') ?>" target="_blank" class="item_1<?php
                             if (inModuleAndAction("main", "index")) {
                                 echo "_in";
                             }
                         ?>" title="Inicio">
                             <span>HOME</span></a></li>
-                            <li><a href="https://arriendascl.zendesk.com/forums/21581681-Informaci%C3%B3n-para-arrendatarios-" target="_blank" class="item_1<?php
+                            <li><a href="<?php echo url_for('como_funciona/index') ?>" class="item_1<?php
                             if (inModuleAndAction("main", "index")) {
                                 echo "_in";
                             }
-                        ?>" title="Ir a preguntas frecuentes">
-                            <span>¿QU&Eacute; ES?</span></a></li>    
+                        ?>" title="¿Como funciona Arriendas.cl?">
+                            <span>¿COMO FUNCIONA?</span></a></li>    
 
     
                 <li><a href="https://arriendascl.zendesk.com/anonymous_requests/new"

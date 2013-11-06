@@ -1,0 +1,20 @@
+agradecimientoSuccess:
+    layout: simple
+    
+subirImagenS3Success:
+    layout: basic
+
+informeDaniosSuccess:
+    layout: basic
+    
+reporteDaniosSuccess:
+    layout: basic
+    
+reporteResumenSuccess:
+    layout: basic
+    
+formularioEntregaSuccess:
+    layout: basic
+    
+upload2S3Success:
+    layout: basic

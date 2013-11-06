@@ -1,0 +1,4 @@
+map:
+enabled:     true
+with_layout: false   # Valor por defecto
+lifetime:    86400   # Valor por defecto
