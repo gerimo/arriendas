@@ -1530,6 +1530,8 @@ class profileActions extends sfActions {
                         }
                         //var_dump(number_format( $this->calcularMontoTotal($duration, $car->getPricePerHour(), $car->getPricePerDay()) , 2, '.', ''));die();
                         //Formato para Chile Ej: 10000.00
+
+
                         $reserve->setPrice( number_format( $this->calcularMontoTotal($durationReserva, $car->getPricePerHour(), $car->getPricePerDay()) , 2, '.', '') );
                         
                         //if($reserve_id) $reserve->setExtend($reserve_id);
@@ -1634,13 +1636,7 @@ class profileActions extends sfActions {
                         }
                             
                         $this->redirect('profile/reserveSend');
-                    /*
-                    } else {
-                        
-                        $this->getUser()->setFlash('msg', 'Ya tienes 5 reservas en espera de confirmación para este período');
-                        $this->forward('profile', 'reserve');
-                    }
-                    */
+						die();
                 }
                 
                 $this->getUser()->setFlash('msg', 'Ya hay una reserva confirmada para ese horario');
@@ -4507,16 +4503,22 @@ public function executeAgreePdf2(sfWebRequest $request)
     
     public function calcularMontoTotal($duration = 0, $preciohora = 0, $preciodia = 0) {
 
+
+						
         $dias = floor($duration / 24);
         $horas = ($duration / 24) - $dias;
 
+						
+						
         if ($horas >= 0.25) {
             $dias = $dias + 1;
             $horas = 0;
         } else {
-            $horas = $horas * 24;
+            $horas = round($horas * 24,0);
         }
         
+
+						
         $montototal = floor($preciodia * $dias + $preciohora * $horas);
         
         return $montototal;

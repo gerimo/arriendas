@@ -2213,8 +2213,8 @@ public function executeAgreePdf2(sfWebRequest $request)
             $dias = $dias + 1;
             $horas = 0;
         } else {
-            $horas = $horas * 24;
-        }
+			$horas = round($horas * 24,0);
+  }
         
         $montototal = floor($preciodia * $dias + $preciohora * $horas);
         

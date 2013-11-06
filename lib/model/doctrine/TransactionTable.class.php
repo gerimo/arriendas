@@ -124,6 +124,8 @@ class TransactionTable extends Doctrine_Table
 	
     private function calcularMontoTotal($duration = 0, $preciohora = 0, $preciodia = 0) {
     	
+	
+		
         $dias = floor($duration / 24);
         $horas = ($duration / 24) - $dias;
 
@@ -131,8 +133,9 @@ class TransactionTable extends Doctrine_Table
         	
             $dias = $dias + 1;
             $horas = 0;
-        } else { $horas = $horas * 24; }
+        } else {       $horas = round($horas * 24,0);}
         
+	
         $montototal = floor($preciodia * $dias + $preciohora * $horas);
         
         return $montototal;
