@@ -1466,6 +1466,7 @@ class profileActions extends sfActions {
             $startDate = date("Y-m-d H:i:s", strtotime($from . ' ' . $hourdesde));
             $endDate = date("Y-m-d H:i:s", strtotime($to . ' ' . $hourhasta));
 
+			$rangeDates = array($startDate, $endDate,$startDate, $endDate,$startDate, $endDate);
             $diff = strtotime($endDate) - strtotime($startDate);
 
 
@@ -1473,8 +1474,29 @@ class profileActions extends sfActions {
             $durationReserva = $diff / 60 / 60;
 
             if ($diff > 0) {
-                
-                //comprueba que no haya una reserva vigente(fecha mayor a la actual) para la fecha y hora señalada, al mismo auto
+
+                //comprueba que no haya una reserva PAGA para la fecha y hora señalada, al mismo auto, a cualquier usuario			
+					$q = Doctrine_Query::create()
+					  ->from('reserve r')
+					  ->where('r.complete = ?', true)
+					  ->andwhere('r.car_id = ?', $carid)
+					  ->andwhere('? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR ? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR r.date BETWEEN ? AND ? OR DATE_ADD(r.date, INTERVAL r.duration HOUR) BETWEEN ? AND ?', $rangeDates);
+	
+						$checkAvailability = $q->fetchArray();
+	
+						if( $checkAvailability ) {
+							$this->getUser()->setFlash('msg', 'Ya hay una reserva paga para ese mismo auto en esa fecha y horario');
+							$this->getRequest()->setParameter('carid', $carid);
+							$this->getRequest()->setParameter('idreserve', $reserve_id);
+							$this->forward('profile', 'reserve');
+							die();
+						};
+					
+                //END comprueba que no haya una reserva PAGA para la fecha y hora señalada, al mismo auto, a cualquier usuario			
+
+
+				
+                //comprueba que no haya una reserva vigente(fecha mayor a la actual) para la fecha y hora señalada, al mismo auto, al mismo usuario
                 $reservas = Doctrine_Core::getTable("reserve")->findByUserId($idUsuario);
                 $reservaPrevia = false;
 

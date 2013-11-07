@@ -257,24 +257,45 @@ class bcpuntopagosActions extends sfActions
 	if($customer_in_session){
 	
 		$token = $request->getParameter('t');
-		$this->notificacion($token);
-		$last_order_id = $this->getUser()->getAttribute('PP_LAST_ORDER_ID');
-		$last_order_id = 429;
-		$conf = $this->getConfiguration();
-		$conf = $conf["betterchoice"]["puntopagos"];
-		$enviroment = $conf["enviroment"];
-		$STATE_SUCCESSFULL = $conf[$enviroment]["status_success"];
-		$STATE_ERROR = $conf[$enviroment]["status_error"];
-
+		$token2 = $request->getParameter('lr');
+		
+		if ($token){
+			$this->notificacion($token);
+			$last_order_id = $this->getUser()->getAttribute('PP_LAST_ORDER_ID');
+			$conf = $this->getConfiguration();
+			$conf = $conf["betterchoice"]["puntopagos"];
+			$enviroment = $conf["enviroment"];
+			$STATE_SUCCESSFULL = $conf[$enviroment]["status_success"];
+			$STATE_ERROR = $conf[$enviroment]["status_error"];
+		}else{
+			$last_order_id = $token2;
+		}
+		
 		$order = Doctrine_Core::getTable("Transaction")->getTransaction($last_order_id);
 
 		$this->idReserva = $order->getReserveId();
 		
 		$reserve = Doctrine_Core::getTable('reserve')->findOneById($this->idReserva);
-
 		
-				
+		//cancel other reserves not paid for the same rental dates
 
+			$startDate0 = $reserve->getDate();
+			$startDate = date("Y-m-d H:i:s", strtotime($startDate0));
+			$endDate = date("Y-m-d H:i:s", strtotime($startDate0) + ($reserve->getDuration()*60*60));
+			
+			$rangeDates = array($startDate, $endDate,$startDate, $endDate,$startDate, $endDate);
+			$carid = $reserve->getCarId();
+
+					$q = Doctrine_Query::create()
+					  ->update('reserve r')
+					  ->set('r.canceled', '?', 1)
+					  ->set('r.visible_renter', '?', 0)
+					  ->set('r.visible_owner', '?', 0)
+					  ->set('r.cancel_reason', '?', 2)
+					  ->where('r.car_id = ?', $carid)
+					  ->andwhere('r.id <> ?', $reserve->getId())
+					  ->andwhere('? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR ? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR r.date BETWEEN ? AND ? OR DATE_ADD(r.date, INTERVAL r.duration HOUR) BETWEEN ? AND ?', $rangeDates)
+					  ->execute();			
 				
 				
 		$opcionLiberacion = $reserve->getLiberadoDeGarantia();
@@ -295,7 +316,6 @@ class bcpuntopagosActions extends sfActions
 				//actualiza el estado completed
 				$order->setCompleted(true);
 				$order->save();
-
 
 				//envío de mail
 				require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
@@ -329,7 +349,16 @@ class bcpuntopagosActions extends sfActions
 		        $mail2->setSubject('La reserva ha sido pagada!');
 		        $mail2->setBody("<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>Puedes llenar el formulario <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/$idReserve'>desde tu celular</a> o puedes firmar la <a href='http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/idReserve/$idReserve'>versión impresa</a>.</p><pNo des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p><a href='http://arriendas.cl/frontend_dev.php/main/generarReporteResumen/idAuto/$idCar'>Datos del arriendo</a></p>");
 		        $mail2->setTo($emailRenter);
-		  
+
+		        //mail Soporte
+		        $mail2 = new Email();
+		        $mail2->setSubject('Nueva reserva paga '.idReserve.'');
+		        $mail2->setBody("<p>Hola $nameRenter:</p>
+				<p>Has pagado la reserva y esta ya esta confirmada.</p>
+				<p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>Puedes llenar el formulario <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/$idReserve'>desde tu celular</a> o puedes firmar la <a href='http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/idReserve/$idReserve'>versión impresa</a>.</p><pNo des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p><a href='http://arriendas.cl/frontend_dev.php/main/generarReporteResumen/idAuto/$idCar'>Datos del arriendo</a></p>");
+		        $mail2->setTo("soporte@arriendas.cl");
+
+				
 		        $mail2->submit();
 
 		        //crea la fila calificaciones habilitada para la fecha de término de reserva + 2 horas (solo si no es una extension de otra reserva)

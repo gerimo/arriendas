@@ -426,7 +426,7 @@
 
                 <div class="header_menu">
                     <ul class="menu_1">
-                        <li><a href="http://www.arriendas.cl" class="item_1<?php if (inModuleAndAction("main", "index")) { echo "_in"; } ?>" title="Inicio"><span>HOME</span></a>
+                        <li><a href="<?php echo url_for('main/index') ?>" class="item_1<?php if (inModuleAndAction("main", "index")) { echo "_in"; } ?>" title="Inicio"><span>HOME</span></a>
                         </li>                                        
                         <?php  if(sfContext::getInstance()->getUser()->getAttribute("propietario")) {  ?>
                             <li><a href="<?php echo url_for('profile/pedidos') ?>" class="item_5<?php if (inModuleAndAction("profile", "pedidos")) { echo "_in"; }?>" title="Reservas de mis Autos"><span>RESERVAS</span></a>

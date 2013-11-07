@@ -212,7 +212,7 @@ abstract class BaseCar extends sfDoctrineRecord
        $this->hasColumn('verificationPhotoS3', 'boolean', null, array(
              'type' => 'boolean',
              'notnull' => true,
-             'default' => 1,
+             'default' => 0,
              ));
        $this->hasColumn('foto_padron_reverso', 'string', 255, array(
              'type' => 'string',

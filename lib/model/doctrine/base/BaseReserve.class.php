@@ -244,6 +244,11 @@ abstract class BaseReserve extends sfDoctrineRecord
             'notnull' => true,
             'default' => 0,
             ));
+        $this->hasColumn('cancel_reason', 'integer', 11, array(
+             'type' => 'integer',
+             'notnull' => '0',
+             'default' => 0,
+             ));
         $this->index('fk_Reserve_User1', array(
              'fields' => 
              array(

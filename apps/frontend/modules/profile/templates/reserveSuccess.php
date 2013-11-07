@@ -209,7 +209,7 @@ a{text-decoration:none;}
     border: 1px solid #CCCCCC;
     color: #FF0000;
     display: block;
-    height: 25px;
+    height: auto;
     line-height: 30px;
     margin-left: 20px;
     padding: 9px;
