@@ -1478,7 +1478,9 @@ class profileActions extends sfActions {
                 //comprueba que no haya una reserva PAGA para la fecha y hora señalada, al mismo auto, a cualquier usuario			
 					$q = Doctrine_Query::create()
 					  ->from('reserve r')
-					  ->where('r.complete = ?', true)
+//					  ->leftJoin('transaction t ON r.id = t.reserve_id')
+					  ->leftJoin('r.Transaction t')
+					  ->where('t.completed = ?', true)
 					  ->andwhere('r.car_id = ?', $carid)
 					  ->andwhere('? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR ? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR r.date BETWEEN ? AND ? OR DATE_ADD(r.date, INTERVAL r.duration HOUR) BETWEEN ? AND ?', $rangeDates);
 	
