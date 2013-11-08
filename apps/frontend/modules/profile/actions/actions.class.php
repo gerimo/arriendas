@@ -836,12 +836,12 @@ class profileActions extends sfActions {
 
         $this->partes = $this->partesAuto();
         $this->nombresPartes = $this->nombrePartesAuto();
-	    //var_dump($this->nombresPartes);die();
-        if($FormularioListo != "ok"){
-            $FormularioListo = false;
-         }
+	    // var_dump($this->nombresPartes);die();
+        // if($FormularioListo != "ok"){
+        //     $FormularioListo = false;
+        // }
 
-        if($FormularioListo){
+        if($FormularioListo == 'ok'){
 
 	       //paso 1
 	       //Cambio por widget para subir fotos de gran tamaño
@@ -897,13 +897,13 @@ class profileActions extends sfActions {
             }
 	    
             if($this->idAuto){
-                $ok = ($photoCounter >= 4 AND $seguro_ok != 4 ) ? 3 : $seguro_ok;
-                //$ok=1;
+                //$ok = ($photoCounter >= 4 AND $seguro_ok != 4 ) ? 3 : $seguro_ok;
+                $ok=4;
                 //$idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
                 $q = Doctrine_Manager::getInstance()->getCurrentConnection();
                 //$query = "update arriendas.Car set doors='$puertas', transmission='$transmision', uso_vehiculo_id='$usosVehiculo', foto_perfil='$fotoPerfilAuto[name]', padron='$fotoPadronFrente[name]', foto_padron_reverso='$fotoPadronReverso[name]' where id=$idAuto";
                 $query = "update arriendas.Car
-                        set radioMarca='$radioMarca',
+                            set radioMarca='$radioMarca',
                             radioModelo='$modeloRadio',
                             radioTipo='$tipoRadio',
                             parlantesMarca = '$parlantesMarca',
