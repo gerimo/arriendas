@@ -25,7 +25,6 @@
             ?>
             <?php include_stylesheets() ?>
             <script src="http://maps.google.com/maps/api/js?sensor=false"></script>
-            <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
             
             <script src="//cdn.optimizely.com/js/241768225.js"></script>
 
