@@ -504,9 +504,15 @@ class bcpuntopagosActions extends sfActions
 		
 		$fecha = gmdate("D, d M Y H:i:s", time())." GMT";
 		$mensaje = $funcion."\n".$token."\n".$trx_id."\n".$ammount_str."\n".$fecha;
+
+		$this->_log("Notificacion","Mensage",$mensaje);		
+
 		$signature = base64_encode(hash_hmac('sha1', $mensaje, $PUNTOPAGOS_SECRET, true));
 		$firma = "PP ".$PUNTOPAGOS_KEY.":".$signature;
 
+		$this->_log("Notificacion","Firma",$firma);		
+		
+		
 		$header = array();
 		$http_request .= $header[] = "Accept: application/json;";
 		$http_request .= $header[] = "Accept-Charset: utf-8;";
