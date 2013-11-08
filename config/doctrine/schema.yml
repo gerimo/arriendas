@@ -1,0 +1,1027 @@
+Availability:
+  tableName: Availability
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    date_from:
+      type: timestamp
+    date_to:
+      type: timestamp
+    hour_from:
+      type: time
+    hour_to:
+      type: time
+    day:
+      type: integer(4)
+    Car_id:
+      type: integer(4)
+      primary: true
+      notnull: true
+  relations:
+    Car:
+      class: Car
+      local: Car_id
+      foreign: id
+      foreignAlias: Availabilities
+      onDelete: no action
+      onUpdate: no action
+  indexes:
+    id_UNIQUE:
+      fields: [id]
+      type: unique
+    fk_Availability_Car1:
+      fields: [Car_id]
+  options:
+    charset: utf8
+    type: InnoDB
+
+Brand:
+  tableName: Brand
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    name:
+      type: string(45)
+  indexes:
+    id_UNIQUE:
+      fields: [id]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+Car:
+  tableName: Car
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    User_id:
+      type: integer(4)
+      notnull: true
+    km:
+      type: string(45)
+    City_id:
+      type: integer(4)
+      notnull: true
+    address:
+      type: string(45)
+    lat:
+      type: float(10,6)
+    lng:
+      type: float(10,6)
+    offer:
+      type: integer(4)
+    observations:
+      type: string(45)
+    price_per_hour:
+      type: decimal(10,2)
+    price_per_day:
+      type: decimal(10,2)
+    Model_id:
+      type: integer(4)
+      notnull: true
+    year:
+      type: integer(4)
+    description:
+      type: string(45)
+<<<<<<< HEAD
+=======
+    seguro_ok:
+      type: integer(4)
+    patente:
+      type: string(10)
+    color:
+      type: string(20)
+    doors:
+      type: integer(11)
+    tipobencina:
+      type: string(50)
+    engine_num:
+      type: string(60)
+    vin_num:
+      type: string(60)
+    transmission:
+      type: integer(4)
+    padron:
+      type: string(255)
+    tablero:
+      type: string(255)
+    equipo_audio:
+      type: string(255)
+    consultas:
+      type: integer(11)
+    foto_perfil:
+      type: string(255)
+    photoS3:
+      type: boolean
+      notnull: true
+      default: 1
+    verificationPhotoS3:
+      type: boolean
+      notnull: true
+      default: 1
+    foto_padron_reverso:
+      type: string(255)
+    comuna_id:
+      type: integer(11)
+    uso_vehiculo_id:
+      type: integer(11)
+    radioMarca:
+      type: string(255)
+    radioModelo:
+      type: string(255)
+    radioTipo:
+      type: string(255)
+    parlantesMarca:
+      type: string(255)
+    parlantesModelo:
+      type: string(255)
+    tweeMarca:
+      type: string(255)
+    tweeModelo:
+      type: string(255)
+    ecuaMarca:
+      type: string(255)
+    ecuaModelo:
+      type: string(255)
+    ampliMarca:
+      type: string(255)
+    ampliModelo:
+      type: string(255)
+    compMarca:
+      type: string(255)
+    compModelo:
+      type: string(255)
+    subwMarca:
+      type: string(255)
+    subwModelo:
+      type: string(255)
+    sistMarca:
+      type: string(255)
+    sistModelo:
+      type: string(255)
+    otros:
+      type: string(255)
+    accesoriosSeguro:
+      type: string(255)
+    seguroFotoFrente:
+      type: string(255)
+    seguroFotoCostadoDerecho:
+      type: string(255)
+    seguroFotoCostadoIzquierdo:
+      type: string(255)
+    seguroFotoTraseroDerecho:
+      type: string(255)
+    seguroFotoTraseroIzquierdo:
+      type: string(255)
+    llanta_del_der:
+      type: string(255)
+    llanta_del_izq:
+      type: string(255)
+    llanta_tra_der:
+      type: string(255)
+    llanta_tra_izq:
+      type: string(255)
+    rueda_repuesto:
+      type: string(255)
+    accesorio1:
+      type: string(255)
+    accesorio2:
+      type: string(255)
+    activo:
+      type: boolean
+      notnull: true
+      default: 1
+    verification_id:
+      type: integer(11)
+    fecha_subida:
+      type: timestamp
+    fecha_inicio_verificacion:
+      type: timestamp
+    fecha_fin_verificacion:
+      type: timestamp
+    fecha_validacion:
+      type: timestamp
+>>>>>>> 51c885deb874035d496df5e146ba05eac848c3b2
+  relations:
+    User:
+      class: User
+      local: User_id
+      foreign: id
+      foreignAlias: Cars
+      onDelete: no action
+      onUpdate: no action
+    Model:
+      class: Model
+      local: Model_id
+      foreign: id
+      foreignAlias: Cars
+      onDelete: no action
+      onUpdate: no action
+    City:
+      class: City
+      local: City_id
+      foreign: id
+      foreignAlias: Cars
+      onDelete: no action
+      onUpdate: no action
+  indexes:
+    fk_Car_User:
+      fields: [User_id]
+    fk_Car_Model1:
+      fields: [Model_id]
+    fk_Car_City1:
+      fields: [City_id]
+    id_UNIQUE:
+      fields: [id]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+City:
+  tableName: City
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    name:
+      type: string(45)
+    State_idt:
+      type: integer(4)
+      notnull: true
+    lng:
+      type: string(45)
+    lat:
+      type: string(45)
+  relations:
+    State:
+      class: State
+      local: State_idt
+      foreign: id
+      foreignAlias: Cities
+      onDelete: no action
+      onUpdate: no action
+  indexes:
+    fk_City_State1:
+      fields: [State_idt]
+    id_UNIQUE:
+      fields: [id]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+Country:
+  tableName: Country
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    name:
+      type: string(45)
+  indexes:
+    id_UNIQUE:
+      fields: [id]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+Damage:
+  tableName: Damages
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    description:
+      type: string(45)
+    Car_id:
+      type: integer(4)
+      notnull: true
+  relations:
+    Car:
+      class: Car
+      local: Car_id
+      foreign: id
+      foreignAlias: Damages
+      onDelete: no action
+      onUpdate: no action
+  indexes:
+    fk_Damages_Car1:
+      fields: [Car_id]
+    id_UNIQUE:
+      fields: [id]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+
+
+Conversation:
+  tableName: Conversation
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    filed:
+      type: boolean
+      notnull: true
+      default: 0
+    user_to_id:
+      notnull: true
+      type: integer(4)
+    user_from_id:
+      notnull: true
+      type: integer(4)
+    start:
+      type: timestamp
+      notnull: true
+    end:
+      type: timestamp
+  relations:
+    UserTo: { local: user_to_id, foreign: id, class: User, onDelete: no action, onUpdate: no action }
+    UserFrom: { local: user_from_id, foreign: id, class: User , onDelete: no action, onUpdate: no action }
+  indexes:
+    id_UNIQUE:
+      fields: [id]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+
+
+Message:
+  tableName: Message
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    body:
+      type: text
+      notnull: true
+    conversation_id:
+      type: integer(4)
+      notnull: true
+    date:
+      type: timestamp
+      notnull: true
+    received:
+      type: boolean
+      notnull: true
+      default: 0
+    user_id:
+      type: integer(4)
+      notnull: true
+  relations:
+    Conversation: { local: conversation_id}
+    User: { local: user_id, foreign: id }
+  indexes:
+    id_UNIQUE:
+      fields: [id]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+
+Model:
+  tableName: Model
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    name:
+      type: string(45)
+    Brand_id:
+      type: integer(4)
+      notnull: true
+  relations:
+    Brand:
+      class: Brand
+      local: Brand_id
+      foreign: id
+      foreignAlias: Models
+      onDelete: no action
+      onUpdate: no action
+  indexes:
+    fk_Model_Brand1:
+      fields: [Brand_id]
+    id_UNIQUE:
+      fields: [id]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+ModelPrice:
+  tableName: ModelPrice
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    Model_id:
+      type: integer(4)
+      notnull: true
+    year:
+      type: string(45)
+    price:
+      type: string(45)
+  relations:
+    Model:
+      class: Model
+      local: Model_id
+      foreign: id
+      foreignAlias: ModelPrices
+      onDelete: no action
+      onUpdate: no action
+  indexes:
+    fk_ModelPrice_Model1:
+      fields: [Model_id]
+    id_UNIQUE:
+      fields: [id]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+Photo:
+  tableName: Photos
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    path:
+      type: string(90)
+    type:
+      type: string(45)
+    Car_id:
+      type: integer(4)
+      notnull: true
+  relations:
+    Car:
+      class: Car
+      local: Car_id
+      foreign: id
+      foreignAlias: Photoes
+      onDelete: no action
+      onUpdate: no action
+  indexes:
+    fk_Photos_Car1:
+      fields: [Car_id]
+    id_UNIQUE:
+      fields: [id]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+Rating:
+  tableName: Rating
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    description:
+      type: string(45)
+    user_owner_opnion:
+      type: string(45)
+    user_renter_opnion:
+      type: string(45)
+    complete:
+      type: boolean
+    qualified:
+      type: boolean
+    intime:
+      type: boolean
+    km:
+      type: boolean
+    clean_satisfied:
+      type: string(45)
+  indexes:
+    id_UNIQUE:
+      fields: [id]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+Report:
+  tableName: Report
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    renter_comment:
+      type: string(90)
+    owner_comment:
+      type: string(90)
+    Reserve_id:
+      type: integer(4)
+      notnull: true
+    ReportType_id:
+      type: integer(4)
+      notnull: true
+  relations:
+    Reserve:
+      class: Reserve
+      local: Reserve_id
+      foreign: id
+      foreignAlias: Reports
+      onDelete: no action
+      onUpdate: no action
+    ReportType:
+      class: ReportType
+      local: ReportType_id
+      foreign: id
+      foreignAlias: Reports
+      onDelete: no action
+      onUpdate: no action
+  indexes:
+    fk_Report_Reserve1:
+      fields: [Reserve_id]
+    fk_Report_ReportType1:
+      fields: [ReportType_id]
+    id_UNIQUE:
+      fields: [id]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+ReportType:
+  tableName: ReportType
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    name:
+      type: string(45)
+  indexes:
+    id_UNIQUE:
+      fields: [id]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+Reserve:
+  tableName: Reserve
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    date:
+      type: timestamp
+    duration:
+      type: integer(4)
+    confirmed:
+      type: boolean
+      notnull: true
+      default: 0
+    User_id:
+      type: integer(4)
+      notnull: true
+    Car_id:
+      type: integer(4)
+      notnull: true
+    Rating_id:
+      type: integer(4)
+    complete:
+      type: boolean
+      notnull: true
+      default: 0
+<<<<<<< HEAD
+=======
+    visible_owner:
+      type: boolean
+      notnull: true
+      default: 1
+    visible_renter:
+      type: boolean
+      notnull: true
+      default: 1
+    documentos_owner:
+      type: boolean
+      notnull: true
+      default: 0
+    documentos_renter:
+      type: boolean
+      notnull: true
+      default: 0
+    declaracion_danios:
+      type: boolean
+      notnull: true
+      default: 0
+    declaracion_devolucion:
+      type: boolean
+      notnull: true
+      default: 0
+    hora_devolucion:
+      type: time
+    estado:
+      type: integer(10)
+      notnull: false
+      default: null
+    comentario:
+        type: string(300)
+        notnull: false
+        default: null
+    id_padre:
+      type: integer(11)
+      notnull: false
+      default: null
+    fecha_reserva:
+      type: timestamp
+    fecha_confirmacion:
+      type: timestamp
+    fecha_pago:
+      type: timestamp
+    liberadoDeGarantia:
+      type: boolean
+      notnull: true
+    montoLiberacion:
+      type: decimal(10,2)
+<<<<<<< HEAD
+>>>>>>> 60b601d9a31f98057c922e1d46052569d4f39038
+=======
+    cambioEstadoRapido:
+      type: boolean
+      notnull: true
+>>>>>>> 725fd68aa812c5bc262311b6be1802d5b4b183f1
+  relations:
+    User:
+      class: User
+      local: User_id
+      foreign: id
+      foreignAlias: Reserves
+      onDelete: no action
+      onUpdate: no action
+    Car:
+      class: Car
+      local: Car_id
+      foreign: id
+      foreignAlias: Reserves
+      onDelete: no action
+      onUpdate: no action
+    Rating:
+      class: Rating
+      local: Rating_id
+      foreign: id
+      foreignAlias: Reserve
+      onDelete: no action
+      onUpdate: no action
+  indexes:
+    fk_Reserve_User1:
+      fields: [User_id]
+    fk_Reserve_Car1:
+      fields: [Car_id]
+    fk_Reserve_Rating1:
+      fields: [Rating_id]
+    id_UNIQUE:
+      fields: [id]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+State:
+  tableName: State
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    name:
+      type: string(45)
+    Country_id:
+      type: integer(4)
+      notnull: true
+  relations:
+    Country:
+      class: Country
+      local: Country_id
+      foreign: id
+      foreignAlias: States
+      onDelete: no action
+      onUpdate: no action
+  indexes:
+    fk_State_Country1:
+      fields: [Country_id]
+    id_UNIQUE:
+      fields: [id]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+Transaction:
+  tableName: Transaction
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    car:
+      type: string(45)
+    date:
+      type: timestamp
+    price:
+      type: decimal(10,2)
+    insurance:
+      type: decimal(10,2)
+    commission:
+      type: decimal(10,2)
+    fuel:
+      type: decimal(10,2)
+    User_id:
+      type: integer(4)
+      notnull: true
+    TransactionType_id:
+      type: integer(4)
+      notnull: true
+    Reserve_id:
+      type: integer(4)
+    completed:
+      type: boolean
+    discountfb:
+      type: integer(4)
+    discountamount:
+      type: decimal(10,2)
+  relations:
+    User:
+      class: User
+      local: User_id
+      foreign: id
+      foreignAlias: Transactions
+      onDelete: no action
+      onUpdate: no action
+    TransactionType:
+      class: TransactionType
+      local: TransactionType_id
+      foreign: id
+      foreignAlias: Transactions
+      onDelete: no action
+      onUpdate: no action
+    Reserve:
+      class: Reserve
+      local: Reserve_id
+      foreign: id
+      foreignAlias: Transaction
+      foreignType: one  
+      type: one  
+  indexes:
+    fk_Transaction_User1:
+      fields: [User_id]
+    fk_Transaction_TransactionType1:
+      fields: [TransactionType_id]
+    id_UNIQUE:
+      fields: [id]
+      type: unique
+    fk_Transaction_Reserve1:
+      fields: [Reserve_id]
+  options:
+    charset: utf8
+    type: InnoDB
+
+TransactionType:
+  tableName: TransactionType
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    name:
+      type: string(45)
+  indexes:
+    id_UNIQUE:
+      fields: [id]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+User:
+  tableName: User
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    username:
+      type: string(45)
+    password:
+      type: string(45)
+    facebook_id:
+      type: string(255)
+    url:
+      type: string(255)
+    email:
+      type: string(45)
+    firstname:
+      type: string(45)
+    lastname:
+      type: string(45)
+    paypal_id:
+      type: string(45)
+    driver_license_number:
+      type: string(45)
+    driver_license_file:
+      type: string(90)
+    picture_file:
+      type: string(90)
+    telephone:
+      type: string(45)
+    identification:
+      type: string(45)
+    birthdate:
+      type: string(45)
+    country:
+      type: string(45)
+    city:
+      type: string(45)
+    hash:
+      type: string(45)
+    confirmed:
+      type: boolean
+      notnull: true
+      default: false
+    autoconfirm:
+      type: boolean
+      notnull: true
+      default: false
+    deleted:
+      type: boolean
+      notnull: true
+      default: false
+    confirmed_fb:
+      type: boolean
+      notnull: true
+      default: false
+    confirmed_sms:
+      type: boolean
+      notnull: true
+      default: false
+    propietario:
+      type: boolean
+      notnull: true
+      default: false
+    friend_invite:
+      type: boolean
+      notnull: true
+      default: false
+    apellido_materno:
+      type: string
+    serie_rut:
+      type: string
+    fecha_registro:
+      type: date
+    credito:
+      type: integer
+  indexes:
+    id_UNIQUE:
+      fields: [id]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+UserAdmin:
+  tableName: UserAdmin
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    username:
+      type: string(45)
+    password:
+      type: string(45)
+    firstname:
+      type: string(45)
+    lastname:
+      type: string(45)
+  indexes:
+    id_UNIQUE:
+      fields: [id]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+<<<<<<< HEAD
+=======
+SecurityTokens:
+  tableName: security_tokens
+  columns:
+    id:
+      type: varchar(10)
+      primary: true
+      notnull:true
+    secret:
+      type: varchar(30)
+    valid:
+      type: boolean
+
+puntaje_mapa:
+  tableName: puntaje_mapa
+  columns:
+    car_id:
+      type: integer(11)
+      primary:true
+    user_id:
+      type:integer(11)
+    porcentaje_respuesta:
+      type: float
+    asegurado:
+      type: boolean
+
+mail_calificaciones:
+  tableName: mail_calificaciones
+  columns:
+    id:
+      type: integer(11)
+      primary: true
+      notnull: true
+    reserve_id:
+      type: integer(11)
+      primary: true
+      notnull: true
+    date:
+      type: timestamp
+      notnull: true
+    enviado:
+      type: boolean
+      notnull: true
+      default: 0
+  relations:
+    Reserve:
+      class: Reserve
+      local: Reserve_id
+      foreign: id
+      foreignAlias: Reports
+      onDelete: no action
+      onUpdate: no action
+  indexes:
+    fk_Report_Reserve1:
+      fields: [Reserve_id]
+    id_UNIQUE:
+      fields: [id]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+<<<<<<< HEAD
+>>>>>>> 51c885deb874035d496df5e146ba05eac848c3b2
+=======
+
+LiberacionDeposito:
+  tableName: LiberacionDeposito
+  columns:
+    id:
+      type: integer(11)
+      primary: true
+      notnull: true
+    monto:
+      type: decimal(10,2)
+>>>>>>> 60b601d9a31f98057c922e1d46052569d4f39038
