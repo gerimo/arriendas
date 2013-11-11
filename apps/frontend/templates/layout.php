@@ -24,9 +24,12 @@
 				echo "<title>Arriendas.cl | Rent a car vecino en Chile</title>";
             ?>
             <?php include_stylesheets() ?>
-            <script src="http://maps.google.com/maps/api/js?sensor=false"></script>
-            
-            <script src="//cdn.optimizely.com/js/241768225.js"></script>
+			
+			<?php if (sfContext::getInstance()->getModuleName()=='main' && sfContext::getInstance()->getActionName()=='index'): ?>
+			<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"/>            
+            <?php endif ?>
+
+			<script src="//cdn.optimizely.com/js/241768225.js"></script>
 
             <?php include_javascripts() ?>
 			<script type="text/javascript">
@@ -407,11 +410,18 @@
                         ?>" title="Inicio">
                             <span>HOME</span></a></li>
                             <li><a href="<?php echo url_for('como_funciona/index') ?>" class="item_1<?php
-                            if (inModuleAndAction("main", "index")) {
+                            if (inModuleAndAction("como_funciona", "index")) {
                                 echo "_in";
                             }
                         ?>" title="¿Como funciona Arriendas.cl?">
                             <span>¿COMO FUNCIONA?</span></a></li>    
+
+                        <li><a href="<?php echo url_for('en_los_medios/index') ?>" class="item_1<?php
+                            if (inModuleAndAction("en_los_medios", "index")) {
+                                echo "_in";
+                            }
+                        ?>" title="Arriendas.cl En Los Medios">
+                            <span>EN LOS MEDIOS</span></a></li>    
 
     
                 <li><a href="https://arriendascl.zendesk.com/anonymous_requests/new"

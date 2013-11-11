@@ -1886,7 +1886,8 @@ die;
 
         //echo $this->getContext()->getRequest()->getHost() . $this->getContext()->getRequest()->getScriptName();
         //$_SESSION['urlback'] = $this->getRequest()->getUri();
-
+		  sfContext::getInstance()->getLogger()->info($this->getRequest()->getUri());
+		
         if (isset($_SESSION['login_back_url'])) {
             $urlpage = explode('/', $_SESSION['login_back_url']);
 
@@ -1897,7 +1898,7 @@ die;
         }else{
             //$_SESSION['login_back_url'] = $request->getReferer();
             $_SESSION['login_back_url'] = $this->getRequest()->getUri();
-        }
+			}
     }
 
     public function sendRecoverEmail($user) {
@@ -2079,6 +2080,8 @@ El equipo de Arriendas.cl
 	                }
 	
 	                $this->getUser()->setAttribute('geolocalizacion', true);
+	
+					sfContext::getInstance()->getLogger()->info($_SESSION['login_back_url']);
 	
 					$this->redirect($_SESSION['login_back_url']);
 
