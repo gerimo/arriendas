@@ -687,7 +687,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
  
     frmvalidator.addValidation("tandc","shouldselchk=on", "Acepte los terminos y condiciones");
 
-    frmvalidator.setAddnlValidationFunction(DoPassValidation);
+    //frmvalidator.setAddnlValidationFunction(DoPassValidation);
     //frmvalidator.setAddnlValidationFunction(DoEmailValidation);
  
 
