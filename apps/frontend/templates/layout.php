@@ -26,7 +26,7 @@
             <?php include_stylesheets() ?>
 			
 			<?php if (sfContext::getInstance()->getModuleName()=='main' && sfContext::getInstance()->getActionName()=='index'): ?>
-			<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"/>            
+			<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
             <?php endif ?>
 
 			<script src="//cdn.optimizely.com/js/241768225.js"></script>
@@ -403,7 +403,7 @@
                 <!-- inicio header_menu -->
                     <div class="header_menu"> 
                         <ul class="menu_1">
-            <li><a href="<?php echo url_for('main/index') ?>" target="_blank" class="item_1<?php
+            <li><a href="<?php echo url_for('main/index') ?>" class="item_1<?php
                             if (inModuleAndAction("main", "index")) {
                                 echo "_in";
                             }
