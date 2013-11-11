@@ -252,6 +252,10 @@ abstract class BaseUser extends sfDoctrineRecord {
         $this->hasColumn('propietario', 'boolean', null, array(
             'type' => 'boolean'
         ));
+        $this->hasColumn('codigo_confirmacion', 'string', 4, array(
+            'type' => 'string',
+            'length' => 4,
+        ));
 
         $this->index('id_UNIQUE', array(
             'fields' =>

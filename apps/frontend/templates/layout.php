@@ -24,9 +24,12 @@
 				echo "<title>Arriendas.cl | Rent a car vecino en Chile</title>";
             ?>
             <?php include_stylesheets() ?>
-            <script src="http://maps.google.com/maps/api/js?sensor=false"></script>
-            
-            <script src="//cdn.optimizely.com/js/241768225.js"></script>
+			
+			<?php if (sfContext::getInstance()->getModuleName()=='main' && sfContext::getInstance()->getActionName()=='index'): ?>
+			<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"/>            
+            <?php endif ?>
+
+			<script src="//cdn.optimizely.com/js/241768225.js"></script>
 
             <?php include_javascripts() ?>
 			<script type="text/javascript">
