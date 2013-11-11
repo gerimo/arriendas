@@ -114,7 +114,22 @@ class Car extends BaseCar
       return $ratings->count();
 
   }
-  
+
+    public function isAvailable($hour_from, $hour_to, $day_from, $day_to){
+        $ia = Doctrine_Query::create()
+            ->select('car_id')
+            ->from('Availability av')
+            ->where('av.hour_from < ? and av.hour_to > ? and av.date_from <= ? and av.date_to >= ? and av.car_id = ?', array($hour_from, $hour_to, $day_from, $day_to, $this->getId()))
+            ->orWhere('av.hour_from < ? and av.hour_to > ? and av.date_from < ? and av.car_id = ?', array($hour_from, $hour_to, $day_from, $this->getId()))
+            ->limit(1);
+        if(count($ia->execute()) != 0)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
  public function hasReserve($startDate, $startDate, $endDate, $endDate)
   {
   
@@ -132,7 +147,11 @@ class Car extends BaseCar
 
    $has_reserve = Doctrine_Core::getTable('Reserve')
 	->createQuery('a')
-	->where('((a.date <= ? and date_add(a.date, INTERVAL a.duration HOUR) > ?) or (a.date <= ? and date_add(a.date, INTERVAL a.duration HOUR) > ?) or (a.date > ? and date_add(a.date, INTERVAL a.duration HOUR) < ?)) and (a.Car.id = ?)', array($startDate, $startDate, $endDate, $endDate, $startDate, $endDate, $this->getId()))
+	->where('  (
+                    (a.date <= ? and date_add(a.date, INTERVAL a.duration HOUR) > ?) or 
+                    (a.date <= ? and date_add(a.date, INTERVAL a.duration HOUR) > ?) or 
+                    (a.date > ? and date_add(a.date, INTERVAL a.duration HOUR) < ?)
+                ) and (a.Car.id = ?)', array($startDate, $startDate, $endDate, $endDate, $startDate, $endDate, $this->getId()))
 	->fetchArray();
 	
 	//print_r(count($has_reserve));

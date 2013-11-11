@@ -919,24 +919,22 @@ public function executeNotificacion(sfWebRequest $request) {
         $lat_centro = $request->getParameter('clat');
         $lng_centro = $request->getParameter('clng');
 
-        /*
-          if (
-          $hour_from != "Hora de inicio" &&
-          $hour_to != "Hora de entrega" &&
-          $hour_from != "" &&
-          $hour_from != ""
-          ) {
-          list($day_from, $hour_from) = split(' ', $hour_from);
-          list($day_to, $hour_to) = split(' ', $hour_to);
-          }
-         */
         $q = Doctrine_Query::create()
-                ->select('DISTINCT ca.id, av.id idav, ca.lat lat, ca.lng lng, 
-                            ca.price_per_day, ca.price_per_hour, ca.photoS3 photoS3, ca.year year, ca.address address,
-                            mo.name modelo, br.name brand,	        	
-                            us.username username, us.id userid')
+                ->select('  ca.id,
+                            ca.lat lat,
+                            ca.lng lng, 
+                            ca.price_per_day,
+                            ca.price_per_hour,
+                            ca.photoS3 photoS3,
+                            ca.year year,
+                            ca.address address,
+                            mo.name modelo,
+                            br.name brand,
+                            us.username username,
+                            us.id userid
+                            ')
+          
                 ->from('Car ca')
-                ->innerJoin('ca.Availabilities av')
                 ->innerJoin('ca.Model mo')
                 ->innerJoin('ca.User us')
                 ->innerJoin('mo.Brand br')
@@ -945,59 +943,30 @@ public function executeNotificacion(sfWebRequest $request) {
                 ->innerJoin('st.Country co')
                 ->where('ca.lat > ?', $boundleft)
                 ->andWhere('ca.activo = ?', 1)
-                //->andWhere('ca.comuna_id <> NULL OR ca.comuna_id <> 0')
                 ->andWhereIn('ca.seguro_ok', array(3,4))
                 ->andWhere('ca.lat < ?', $boundright)
                 ->andWhere('ca.lng > ?', $boundtop)
                 ->andWhere('ca.lng < ?', $boundbottom);
-                //->orderBy('ca.price_per_day asc');
-
-        if (
-                $hour_from != "Hora de inicio" &&
-                $hour_to != "Hora de entrega" &&
-                $hour_from != "" &&
-                $hour_from != "" &&
-                $day_from != "Dia de inicio" &&
-                $day_to != "Dia de entrega" &&
-                $day_from != "" &&
-                $day_to != ""
-        ) {
-
-            $day_from = implode('-', array_reverse(explode('-', $day_from)));
-            $day_to = implode('-', array_reverse(explode('-', $day_to)));
-
-            $fullstartdate = $day_from . " " . $hour_from;
-            $fullenddate = $day_to . " " . $hour_to;
-
-            $q = $q->andWhere('av.hour_from < ? and av.hour_to > ? and av.date_from <= ? and av.date_to >= ?', array($hour_from, $hour_to, $day_from, $day_to));
-            $q = $q->orWhere('av.hour_from < ? and av.hour_to > ? and av.date_from < ?', array($hour_from, $hour_to, $day_from));
-        }
 
         if ($brand != "") {
-            $q = $q->andWhere('br.id = ?', $brand);
+            $q->andWhere('br.id = ?', $brand);
         }
-
-
         if ($model != "" && $model != "0") {
-            $q = $q->andWhere('mo.id = ?', $model);
+            $q->andWhere('mo.id = ?', $model);
+        }
+        if ($location != "") {
+            $q->andWhere('co.id = ?', $location);
         }
 
-        if ($location != "") {
-            $q = $q->andWhere('co.id = ?', $location);
-        }
         if ($price != null) {
             if ($price == "1") {
-                $q = $q->orderBy('ca.price_per_day asc');
+                $q->orderBy('ca.price_per_day asc');
             } else {
-                $q = $q->orderBy('ca.price_per_day desc');
+                $q->orderBy('ca.price_per_day desc');
             }
         }
+
         $cars = $q->execute();
-
-        //print "asdf";
-        //print ($q->getSqlQuery());
-
-
         $data = array();
         $carsid = Array();
 
@@ -1023,56 +992,60 @@ public function executeNotificacion(sfWebRequest $request) {
                 $d = $R * $c;
             }
 
-        // T aca iba load url    
-	$photo = $car->getFoto();
-	//    if($photo != null) {
-	//	$photo= url_for($photo);
-	//    } else {
-	//	//En este caso, al auto no tiene foto de perfil cargada. Usamos la foto por defecto del modelo
-	//	$idModelo= $car->getModelId();
-	//	$query = "SELECT foto_defecto from Model WHERE id='".$idModelo."'";
-	//	$rs = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAssoc($query);
-	//	$photo= "http://admin.arriendas.cl/uploads/".$rs[0]['foto_defecto'];
-	//    }	
-	    
             $has_reserve = false;
-
+            $is_available = true;
+            
             if (
-                    $hour_from != "Hora de inicio" &&
-                    $hour_to != "Hora de entrega" &&
-                    $hour_from != "" &&
-                    $hour_from != "" &&
-                    $day_from != "Dia de inicio" &&
-                    $day_to != "Dia de entrega" &&
-                    $day_from != "" &&
-                    $day_to != ""
+                $hour_from != "Hora de inicio" &&
+                $hour_to != "Hora de entrega" &&
+                $hour_from != "" &&
+                $hour_to != "" &&
+                $day_from != "Dia de inicio" &&
+                $day_to != "Dia de entrega" &&
+                $day_from != "" &&
+                $day_to != ""
             ) {
 
-
+                $day_from = implode('-', array_reverse(explode('-', $day_from)));
+                $day_to = implode('-', array_reverse(explode('-', $day_to)));
 
                 $fullstartdate = $day_from . " " . $hour_from;
                 $fullenddate = $day_to . " " . $hour_to;
+
                 $has_reserve = $car->hasReserve($fullstartdate, $fullstartdate, $fullenddate, $fullenddate);
-            }
+                $is_available = $car->isAvailable($hour_from, $hour_to, $day_from, $day_to);
+            }  
+
+    	   /*if($photo != null) {
+            $photo= url_for($photo);
+    	   } else {
+    		//En este caso, al auto no tiene foto de perfil cargada. Usamos la foto por defecto del modelo
+    		$idModelo= $car->getModelId();
+    		$query = "SELECT foto_defecto from Model WHERE id='".$idModelo."'";
+    		$rs = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAssoc($query);
+    		$photo= "http://admin.arriendas.cl/uploads/".$rs[0]['foto_defecto'];
+    	   }*/
+
+            
 
             $urlUser = $this->getPhotoUser($car->getUser()->getId());
 
+            $photo = $car->getFoto();
             $user = $car->getUser();
             $reservasRespondidas = $user->getReservasContestadas_aLaFecha();
             $velocidad = $user->getVelocidadRespuesta_mensajes();
             $transmision = "-";
             $tipoTrans = $car->getTransmission();
 
-			
             if($tipoTrans == 0) $transmision = "Manual";
             if($tipoTrans == 1) $transmision = "Autom&aacute;tica";
 
 
-  
-            if (!$has_reserve) {
+            
+            if (!$has_reserve AND $is_available) {
 
                 $data[] = array('id' => $car->getId(), //
-                    'idav' => $car->getIdav(), //
+                    //'idav' => $car->getIdav(), //
                     'longitude' => $car->getlng(), //
                     'latitude' => $car->getlat(), //
                     'comuna' => strtolower($car->getNombreComuna()),
@@ -1094,29 +1067,27 @@ public function executeNotificacion(sfWebRequest $request) {
                     'cantidadCalificacionesPositivas' => $car->getCantidadCalificacionesPositivas(),
                     'reservasRespondidas' => $reservasRespondidas,
                     'd' => $d,
-		            'verificado'=>$car->autoVerificado(),
+		            'verificado'=>$car->autoVerificado()
                 );
             }
-        }//fin foreach
+        }
         $position = array();
         $newRow = array();
         foreach ($data as $key => $row) {
             $position[$key] = $row["verificado"];
             $newRow[$key] = $row;
         }
-        //asort($position); //Se comenta porque no se utilizará el orden por ubicación, sino que por precio por dia
+
 	    $returnArray = array();
         foreach ($position as $key => $pos) {
             $returnArray[] = $newRow[$key];
         }
 	
-	    $returnArray=array_reverse($returnArray);
-        //$data = $returnArray;
-
-        $carsArray = array("cars" => $returnArray);
+	    $returnArray = array_reverse($returnArray);
 	
-        return $this->renderText(json_encode($carsArray));
+        return $this->renderText(json_encode(array("cars" => $returnArray)));
     }
+
     public function transformarPrecioAPuntos($precio){
         $precioMillones = intval($precio/1000000);
         $precioMiles = $precio - ($precioMillones*1000000);
