@@ -410,11 +410,18 @@
                         ?>" title="Inicio">
                             <span>HOME</span></a></li>
                             <li><a href="<?php echo url_for('como_funciona/index') ?>" class="item_1<?php
-                            if (inModuleAndAction("main", "index")) {
+                            if (inModuleAndAction("como_funciona", "index")) {
                                 echo "_in";
                             }
                         ?>" title="¿Como funciona Arriendas.cl?">
                             <span>¿COMO FUNCIONA?</span></a></li>    
+
+                        <li><a href="<?php echo url_for('en_los_medios/index') ?>" class="item_1<?php
+                            if (inModuleAndAction("en_los_medios", "index")) {
+                                echo "_in";
+                            }
+                        ?>" title="Arriendas.cl En Los Medios">
+                            <span>EN LOS MEDIOS</span></a></li>    
 
     
                 <li><a href="https://arriendascl.zendesk.com/anonymous_requests/new"

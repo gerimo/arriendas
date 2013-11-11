@@ -1576,8 +1576,10 @@ class profileActions extends sfActions {
                         $correoEmail = $reserve->getEmailOwnerCorreo();
                         $correoRenter = $reserve->getCorreoRenter();
                         $name = $reserve->getNameOwner();
+                        $lastName = $reserve->getLastnameOwner();
                         $telephone = $reserve->getTelephoneOwner();
                         $nameRenter = $reserve->getNameRenter();
+                        $lastNameRenter = $reserve->getLastNameRenter();
                         $telephoneRenter = $reserve->getTelephoneRenter();
 
                         require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
@@ -1591,7 +1593,7 @@ class profileActions extends sfActions {
 						
                         $mail = new Email();
                         $mail->setSubject('Nuevo pedido de reserva!');
-                        $mail->setBody("<p>Dueño: $name ($telephone) - $correoEmail</p><p>Arrendatario: $nameRenter ($telephoneRenter) - $correoRenter</p><p>----------------------</p><p></p><p>Has recibido un pedido de reserva por el monto de $price por tu $marcaModelo desde el día <b>$fechaInicio</b> a las <b>$horaInicio</b> hasta el día <b>$fechaTermino</b> a las <b>$horaTermino</b> cuando te habrán devuelto el auto.</p><p>Para ver la reserva has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a></p>");
+                        $mail->setBody("<p>Dueño: $name $lastName ($telephone) - $correoEmail</p><p>Arrendatario: $nameRenter $lastNameRenter ($telephoneRenter) - $correoRenter</p><p>----------------------</p><p></p><p>Has recibido un pedido de reserva por el monto de $price por tu $marcaModelo desde el día <b>$fechaInicio</b> a las <b>$horaInicio</b> hasta el día <b>$fechaTermino</b> a las <b>$horaTermino</b> cuando te habrán devuelto el auto.</p><p>Para ver la reserva has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a></p>");
                         $mail->setTo('soporte@arriendas.cl');
                         $mail->submit();
 						
