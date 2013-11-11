@@ -261,6 +261,8 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     
     function enviarSMS() {
         $("#ingreso_codigo").show();
+		console.log($("#telephone").val());
+		console.log($("#telephone").html());
         $.ajax({
         type: "GET",
         url: "<?php echo url_for("profile/enviarConfirmacionSMS")."?numero="; ?>" + $("#telephone").val(),
@@ -516,7 +518,6 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
             <?php else:?>
                 <input type="hidden" id="email" name="email" value="<?php if($user->getEmail()) echo $user->getEmail();?>" />
                 <input type="hidden" id="emailAgain" name="emailAgain" value="<?php if($user->getEmail()) echo $user->getEmail();?>"/>
-                <input type="hidden" name="telephone" id="telephone" value="<?php if ($user->getTelephone() != null) echo $user->getTelephone(); ?>" />
             <?php endif; ?>
 
                 <div class="c1">

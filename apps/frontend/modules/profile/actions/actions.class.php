@@ -1574,6 +1574,7 @@ class profileActions extends sfActions {
                         $price=number_format(($price),0,',','.');
 						$correo = $reserve->getEmailOwner();
                         $correoEmail = $reserve->getEmailOwnerCorreo();
+                        $correoRenter = $reserve->getCorreoRenter();
                         $name = $reserve->getNameOwner();
                         $telephone = $reserve->getTelephoneOwner();
                         $nameRenter = $reserve->getNameRenter();
@@ -1582,7 +1583,7 @@ class profileActions extends sfActions {
                         require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
                         $mail = new Email();
                         $mail->setSubject('Has recibido un pedido de reserva!');
-                        $mail->setBody("<p>Hola $name:</p><p>Has recibido un pedido de reserva por el monto de $price por tu $marcaModelo desde el día <b>$fechaInicio</b> a las <b>$horaInicio</b> hasta el día <b>$fechaTermino</b> a las <b>$horaTermino</b> cuando te habrán devuelto el auto.</p><p>Para ver la reserva has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a></p>");
+                        $mail->setBody("<p>Hola $name:</p><p>Has recibido un pedido de reserva por $$price por tu $marcaModelo desde el día <b>$fechaInicio</b> a las <b>$horaInicio</b> hasta el día <b>$fechaTermino</b> a las <b>$horaTermino</b> cuando te habrán devuelto el auto.</p><p>Para ver la reserva has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a></p>");
                         $mail->setTo($correo);
                         $mail->setCc('soporte@arriendas.cl');
                         if($correo != $correoEmail) $mail->setCc($correoEmail);
@@ -1590,7 +1591,7 @@ class profileActions extends sfActions {
 						
                         $mail = new Email();
                         $mail->setSubject('Nuevo pedido de reserva!');
-                        $mail->setBody("<p>Dueño: $name ($telephone)</p><p>Arrendatario: $nameRenter ($telephoneRenter)</p><p>----------------------</p><p></p><p>Has recibido un pedido de reserva por el monto de $price por tu $marcaModelo desde el día <b>$fechaInicio</b> a las <b>$horaInicio</b> hasta el día <b>$fechaTermino</b> a las <b>$horaTermino</b> cuando te habrán devuelto el auto.</p><p>Para ver la reserva has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a></p>");
+                        $mail->setBody("<p>Dueño: $name ($telephone) - $correoEmail</p><p>Arrendatario: $nameRenter ($telephoneRenter) - $correoRenter</p><p>----------------------</p><p></p><p>Has recibido un pedido de reserva por el monto de $price por tu $marcaModelo desde el día <b>$fechaInicio</b> a las <b>$horaInicio</b> hasta el día <b>$fechaTermino</b> a las <b>$horaTermino</b> cuando te habrán devuelto el auto.</p><p>Para ver la reserva has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a></p>");
                         $mail->setTo('soporte@arriendas.cl');
                         $mail->submit();
 						
