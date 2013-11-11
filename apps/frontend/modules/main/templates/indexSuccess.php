@@ -260,7 +260,7 @@ center = new google.maps.LatLng(-33.0,-71.3);
     function doReload(){
 	
         $("#loading").css("display","inline");
-		$("#loadingSearch").css("display","table");
+		    $("#loadingSearch").css("display","table");
 
         $('.search_arecomend_window').fadeOut('fast');
         $("#loader").fadeIn("fast");
@@ -364,15 +364,16 @@ center = new google.maps.LatLng(-33.0,-71.3);
         $('.search_arecomend_window').fadeOut('fast');
       	$("#loader").fadeIn("fast");
   	
-  	
-        document.getElementById("hour_from_hidden").value = document.getElementById("hour_from").value;
-        document.getElementById("hour_to_hidden").value = document.getElementById("hour_to").value;
-        document.getElementById("price_hidden").value = document.getElementById("price").value;
-        document.getElementById("model_hidden").value = document.getElementById("model").value;
-        document.getElementById("location_hidden").value = ""; //document.getElementById("location").value;
-        document.getElementById("brand_hidden").value = document.getElementById("brand").value;
-        document.getElementById("day_from_hidden").value = document.getElementById("day_from").value;
-        document.getElementById("day_to_hidden").value = document.getElementById("day_to").value; 
+  	     
+        $('#hour_from_hidden').val($('hour_from').val());
+        $('#hour_to_hidden').val($('hour_to').val());
+        $('#price_hidden').val($('price').val());
+        $('#model_hidden').val($('model').val());
+        $('#location_hidden').val('');
+        $('#brand_hidden').val($('brand').val());
+        $('#day_from_hidden').val($('day_from').val());
+        $('#day_to_hidden').val($('day_to').val());
+
 
 		//valido que hora desde sea mayor a la actual
 		var current = new Date();
@@ -466,14 +467,14 @@ center = new google.maps.LatLng(-33.0,-71.3);
         neLat = nePoint.lat();
         neLng = nePoint.lng();
 	
-        var hour_from = document.getElementById("hour_from_hidden").value;
-        var hour_to = document.getElementById("hour_to_hidden").value;
-        var brand_hidden = encodeURIComponent(document.getElementById("brand_hidden").value);
-        var location_hidden = encodeURIComponent(document.getElementById("location_hidden").value);
-        var price_hidden = encodeURIComponent(document.getElementById("price_hidden").value);
-        var model_hidden = encodeURIComponent(document.getElementById("model_hidden").value);
-        var day_from_hidden = encodeURIComponent(document.getElementById("day_from_hidden").value);
-        var day_to_hidden = encodeURIComponent(document.getElementById("day_to_hidden").value);    
+        var hour_from = $('#hour_from_hidden').val();
+        var hour_to = $('#hour_to_hidden').val();
+        var brand_hidden = encodeURIComponent($('#brand_hidden').val());
+        var location_hidden = encodeURIComponent($('#location_hidden').val());
+        var price_hidden = encodeURIComponent($('#price_hidden').val());
+        var model_hidden = encodeURIComponent($('#model_hidden').val());
+        var day_from_hidden = encodeURIComponent($('#day_from_hidden').val());
+        var day_to_hidden = encodeURIComponent($('#day_to_hidden').val());    
 
         if(price_hidden != '-'){
             precio = "&price="+price_hidden;
@@ -1301,7 +1302,7 @@ $('#hour_to').datetimepicker({
                 <div class="search_box_ubica">
                 	<input id="searchTextField" type="text" size="50" placeholder="Introduce una ubicación" autocomplete="off"/>
                 </div>
-                <div class="search_box1_form" style="display:none;">
+                <div class="search_box1_form">
                 	<span class="group_desde">Disponible desde</span><span class="group_hasta">Hasta</span>
                     <input class="input_f1" readonly="readonly" type="text" id="day_from" value="Dia de inicio"/>
                     <input class="input_f1" readonly="readonly" type="text" id="hour_from" value=""/>
