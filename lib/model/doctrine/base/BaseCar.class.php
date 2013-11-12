@@ -416,6 +416,11 @@ abstract class BaseCar extends sfDoctrineRecord
              'onDelete' => 'no action',
              'onUpdate' => 'no action'));
 
+        $this->hasOne('Comunas', array(
+             'local' => 'comuna_id',
+             'foreign' => 'codigoInterno',
+             'onDelete' => 'no action',
+             'onUpdate' => 'no action'));
         $this->hasOne('City', array(
              'local' => 'City_id',
              'foreign' => 'id',

@@ -9,8 +9,28 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
   use_stylesheet('moviles.css');
 }
 ?>
-
 <style>
+    .marcadores{
+        width: 30px;
+        float: left;
+        padding: 14px 0;
+    }
+    .marcadores img{
+
+    }
+    li.sep{
+        margin-top: 7px;
+        font-size: 11px;
+    }
+    a.link_user{
+        color: #05a4e7;
+        text-decoration: none;
+        border-bottom: 1px solid #05a4e7;
+    }
+    .img_verificado{
+        width: 14px;
+        height: 15px;
+    }
     .land_ultauto_item {
         margin-right:20px;
     }
@@ -68,7 +88,8 @@ if (sfContext::getInstance()->getUser()->getAttribute("logged")){
     var neLng;
     var latitud;
     var longitud;
-    var geolocalizacion;    
+    var geolocalizacion;   
+    var _data; 
     
     function localizame() {
         if (navigator.geolocation) { /* Si el navegador tiene geolocalizacion */
@@ -91,14 +112,12 @@ if (sfContext::getInstance()->getUser()->getAttribute("logged")){
     function coordenadas(position) {
         latitud = position.coords.latitude; /*Guardamos nuestra latitud*/
         longitud = position.coords.longitude; /*Guardamos nuestra longitud*/
-       
         <?php if($sf_user->getAttribute('geolocalizacion')==true):?>
-        
             geolocalizacion = true;
         <?php else: ?>
             geolocalizacion = false;
         <?php endif; ?>
-        initialize();
+        //initialize();
     }
         
     function errores(err) {
@@ -120,7 +139,13 @@ if (sfContext::getInstance()->getUser()->getAttribute("logged")){
     google.maps.event.addDomListener(window, 'load', initialize);
 
     function initialize() {
-        
+
+	console.log('initialize gmaps')
+	
+
+//	alert('stop');
+	initialize2();
+
 		<?php
 		if (stripos($_SERVER['SERVER_NAME'], "arrendas") !== FALSE)
 		    echo "var center = new google.maps.LatLng(-34.59, -58.401604);";
@@ -238,68 +263,75 @@ center = new google.maps.LatLng(-33.0,-71.3);
 
     function doReload(){
 	
-             $("#loading").css("display","inline");
-			 $("#loadingSearch").css("display","table");
-		     $(".returncar_area").css("display","none");
+        $("#loading").css("display","inline");
+		$("#loadingSearch").css("display","table");
+
+        $('.search_arecomend_window').fadeOut('fast');
+        $("#loader").fadeIn("fast");
 		   
-        if (markerCluster && markerCluster.clearMarkers)
-            markerCluster.clearMarkers();
+        // if (markerCluster && markerCluster.clearMarkers)
+        //     markerCluster.clearMarkers();
 	
       	
-        var hour_from_hidden = encodeURIComponent(document.getElementById("hour_from_hidden").value);
-        var hour_to_hidden = encodeURIComponent(document.getElementById("hour_to_hidden").value);
-        var brand_hidden = encodeURIComponent(document.getElementById("brand_hidden").value);
-        var location_hidden = "";//encodeURIComponent(document.getElementById("location_hidden").value);
-        var price_hidden = encodeURIComponent(document.getElementById("price_hidden").value);
-        var model_hidden = encodeURIComponent(document.getElementById("model_hidden").value);
-        var day_from_hidden = encodeURIComponent(document.getElementById("day_from_hidden").value);
-        var day_to_hidden = encodeURIComponent(document.getElementById("day_to_hidden").value);      	  
+        // var hour_from_hidden = encodeURIComponent(document.getElementById("hour_from_hidden").value);
+        // var hour_to_hidden = encodeURIComponent(document.getElementById("hour_to_hidden").value);
+        // var brand_hidden = encodeURIComponent(document.getElementById("brand_hidden").value);
+        // var location_hidden = "";//encodeURIComponent(document.getElementById("location_hidden").value);
+        // var price_hidden = encodeURIComponent(document.getElementById("price_hidden").value);
+        // var model_hidden = encodeURIComponent(document.getElementById("model_hidden").value);
+        // var day_from_hidden = encodeURIComponent(document.getElementById("day_from_hidden").value);
+        // var day_to_hidden = encodeURIComponent(document.getElementById("day_to_hidden").value);      	  
 		  
-        if(price_hidden != '-'){
-            precio = "&price="+price_hidden;
-        } else {
-            var center = map.getCenter();
-            var lat = center.lat();
-            var lon = center.lng();
-            var start_price = "0";
-            precio = "&clat=" + lat + "&clng=" + lon + "&price=" + start_price;
-        }       
+        // if(price_hidden != '-'){
+        //     precio = "&price="+price_hidden;
+        // } else {
+        //     var center = map.getCenter();
+        //     var lat = center.lat();
+        //     var lon = center.lng();
+        //     var start_price = "0";
+        //     precio = "&clat=" + lat + "&clng=" + lon + "&price=" + start_price;
+        // }       
       	     
 		
         // var url = "<?php echo url_for('main/searchResult') ?>"+"?hour_from=" + hour_from_hidden  + "&hour_to=" + hour_to_hidden  + "&brand=" + brand_hidden  + "&location=" + location_hidden  + "&price=" + price_hidden  + "&swLat="+swLat+"&swLng="+swLng+"&neLat="+neLat+"&neLng="+neLng;
-        var url = "<?php echo url_for('main/searchResult') ?>?day_from=" + day_from_hidden + "&day_to=" + day_to_hidden +"&model="+ model_hidden + "&hour_from=" + hour_from_hidden  + "&hour_to=" + hour_to_hidden  + "&brand=" + brand_hidden  + "&location=" + location_hidden  + precio  + "&swLat="+swLat+"&swLng="+swLng+"&neLat="+neLat+"&neLng="+neLng;
+        //var url = "<?php echo url_for('main/searchResult') ?>?day_from=" + day_from_hidden + "&day_to=" + day_to_hidden +"&model="+ model_hidden + "&hour_from=" + hour_from_hidden  + "&hour_to=" + hour_to_hidden  + "&brand=" + brand_hidden  + "&location=" + location_hidden  + precio  + "&swLat="+swLat+"&swLng="+swLng+"&neLat="+neLat+"&neLng="+neLng;
 		
         //  document.write(var_dump(url,'html'));
 
-        
-        $(".search_arecomend_window").load(url,  function() {
+
+        // $('.search_arecomend_window').css("visibility", "visible");
+        // $("#loader").fadeOut("slow");
+
+        //$(".search_arecomend_window").html(nodes);
+
+     //    $(".search_arecomend_window").load(url,  function() {
 
         
-            $('a.thickbox').click(function(){
-                var t = this.title || this.name || null;
-                var a = this.href || this.alt;
-                var g = this.rel || false;
-                tb_show(t,a,g);
-                this.blur();
-                return false;
-            });
+     //        $('a.thickbox').click(function(){
+     //            var t = this.title || this.name || null;
+     //            var a = this.href || this.alt;
+     //            var g = this.rel || false;
+     //            tb_show(t,a,g);
+     //            this.blur();
+     //            return false;
+     //        });
         
-            var numItems = $('.search_arecomend_item').length;
+     //        var numItems = $('.search_arecomend_item').length;
 
-            $("#loader").css("display","none")
-            if(numItems == 0){
+     //        $("#loader").css("display","none")
+     //        if(numItems == 0){
             
-			  //  document.write(var_dump(url,'html'));
-                $('.search_arecomend_window').css("visibility", "hidden");
+			  // //  document.write(var_dump(url,'html'));
+     //            $('.search_arecomend_window').css("visibility", "hidden");
             
-            }
+     //        }
         
-            else
-            {   
-                $('.search_arecomend_window').css("visibility", "visible");
-            }
+     //        else
+     //        {   
+     //            $('.search_arecomend_window').css("visibility", "visible");
+     //        }
 
-        });
+     //    });
 
         //createClickToMarker();
   	      
@@ -332,9 +364,10 @@ center = new google.maps.LatLng(-33.0,-71.3);
 
     function doSearch()
     {
-
-        $('.search_arecomend_window').css("visibility", "hidden");
-      	$("#loader").fadeIn("slow");
+		console.log('doSearch')
+	
+        $('.search_arecomend_window').fadeOut('fast');
+      	$("#loader").fadeIn("fast");
   	
   	
         document.getElementById("hour_from_hidden").value = document.getElementById("hour_from").value;
@@ -464,11 +497,8 @@ center = new google.maps.LatLng(-33.0,-71.3);
 		 	    
         //document.write(var_dump(url,'html'));
 
-		
         $.getJSON(url, function(data){
 	    	
-
-	
             if (markers) {
                 for (i in markers) {
                     markers[i].setMap(null);
@@ -478,8 +508,10 @@ center = new google.maps.LatLng(-33.0,-71.3);
             }
             
 	    	var contador = 0;
+            var nodes = '';
             for (var i = 0; i < data.cars.length; i++) {
                 var dataCar = data.cars[i];
+
 				
                 var latLng = new google.maps.LatLng(dataCar.latitude,dataCar.longitude);
                 if (dataCar.verificado) {
@@ -570,8 +602,35 @@ center = new google.maps.LatLng(-33.0,-71.3);
 			
                     markers.push(marker);
 
+                    //search box
+                    nodes += '<div class="search_arecomend_item" id="'+dataCar.id+'">';
+                    nodes +=    '<div class="marcadores">';
+                    nodes +=        '<img src="http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld='+contador+'|05a4e7|ffffff"/></div>';
+                    nodes +=        '<div class="search_arecomend_frame">';
+                    nodes +=            '<img src="'+urlFotoThumbTipo+'" />';
+                    nodes +=        '</div>';
+                    nodes +=        '<ul class="search_arecomend_info">';
+                    nodes +=            '<input type="hidden" class="link" value="<?php echo url_for('auto/economico?chile=') ?>'+dataCar.comuna + '/id/' + dataCar.id +'"/>';
+                    nodes +=            '<li class="search_arecomend_marca">';
+                    nodes +=                '<a target="_blank" title="Ir al perfil del auto" href="<?php echo url_for('auto/economico?chile=') ?>'+dataCar.comuna + '/id/' + dataCar.id +'">';
+                    nodes +=                    dataCar.brand + ' ' +dataCar.model;
+                    nodes +=                '</a>';
+                    nodes +=                verificado;
+                    nodes +=            '</li>';
+                    nodes +=            '<li>Día: <b>$'+dataCar.price_per_day+'</b></li>';
+                    nodes +=            '<li>Hora: <b>$'+dataCar.price_per_hour+'</b></li>';
+                    <?php if (sfContext::getInstance()->getUser()->getAttribute("logged")){?>
+                    nodes +=            '<li class="sep">Usuario: <a target="_blank" title="Ir al perfil de '+dataCar.firstname+'" class="link_user" href="http://www.arriendas.cl/profile/publicprofile/id/'+dataCar.userid+'">'+dataCar.firstname+' '+dataCar.lastname+'</a></li>';
+                    <?php } ?>
+                    nodes+=            '</ul>';
+                    nodes+=        '</div>';
+
             }
 
+            $("#loader").hide();
+            $(".search_arecomend_window").html(nodes);            
+            $('.search_arecomend_window').fadeIn("fast");
+            
 				
             //createClickToMarker();
 		
@@ -730,15 +789,16 @@ center = new google.maps.LatLng(-33.0,-71.3);
 
 	 
 	 
-    $(document).ready(function() {
+    //$(document).ready(
+	function initialize2() {
 
         //timerSet("#hour_from", "#hour_to");
         $("#hour_from , #hour_to").timePicker();	
 			
-        getModel($("#brand"));
+        getModel($("#brand"),false);
 		 
         $("#brand").change(function(){
-            getModel($(this)); 
+            getModel($(this),true); 
         });
 	
         $('#model').change(function() {
@@ -787,7 +847,7 @@ $('#day_to').change(function() {
 });
          */	
         $('#brand').change(function() {
-            //doSearch();
+            doSearch();
         });
 	
         $('#price').change(function() {
@@ -1001,8 +1061,34 @@ $('#hour_to').datetimepicker({
 
         /*Fin Código Miguel */
 
+		
+		
+		
+		  // async load of Zendesk
+      var c = document.createElement('link');
+     c.rel = "stylesheet";
+     c.type = "text/css";
+     c.href = "//asset.zendesk.com/external/zenbox/v2.6/zenbox.css";
+     var h = document.getElementsByTagName('head')[0];
+     h.appendChild(c);
+     $.ajax({
+       url: "//asset.zendesk.com/external/zenbox/v2.6/zenbox.js",
+       dataType: "script",
+       cache: true,
+       success: function() {
+         Zenbox.init({
+      dropboxID:   "20193521",
+      url:         "https://arriendascl.zendesk.com",
+      tabTooltip:  "Chat",
+      tabImageURL: "https://assets.zendesk.com/external/zenbox/images/tab_es_support.png",
+      tabColor:    "black",
+      tabPosition: "Right"
+	  });
+       }
+    })
+  
     	
-    });
+    };
 	
 
 	
@@ -1039,7 +1125,9 @@ $('#hour_to').datetimepicker({
 
     ///}
 	
-    function getModel(currentElement){
+    function getModel(currentElement,reloadCars){
+		
+		console.log('getModel');
 	
         $("#model").html("");
 	
@@ -1053,7 +1141,10 @@ $('#hour_to').datetimepicker({
             }
             $("#model").html(options);
 	  
-            doSearch();
+	  
+            if (reloadCars){
+				doSearch();
+			};
 	  
         })
     }
@@ -1146,7 +1237,7 @@ $('#hour_to').datetimepicker({
 <input type="hidden" id="model_hidden" value="0"  />
 <input type="hidden" id="brand_hidden" />
 <input type="hidden" id="location_hidden" />
-<input type="hidden" id="day_from_hidden" />
+<input type="hidden" id="day_from_hidden" value="12-11-2013" />
 <input type="hidden" id="day_to_hidden" />
 
 <script>
@@ -1329,27 +1420,6 @@ $('#hour_to').datetimepicker({
 
             <div id="loader" style="display:none;margin-left: 105px;margin-top: 30px;"><?php echo image_tag("ajax-loader.gif", array("width" => "80px", "height" => "80px")); ?></div>  
             <div class="search_arecomend_window">  
-
-             <!--   <?php foreach ($offers as $c): ?>        
-
-             
-                    <div class="search_arecomend_item">
-                        <div class="search_arecomend_frame">
-
-
-                        </div>
-
-                        <ul class="search_arecomend_info">
-                           
-                            <li>A&ntilde;o: <?= $c->getYear() ?></li>
-                            <li>D&iacute;a: $<?= floor($c->getPriceday()) ?> - Hora: $<?= floor($c->getPricehour()) ?></li>
-                        </ul>
-                    </div>
-
-
-                <?php endforeach; ?> 
-	
-	-->
 
             </div><!-- search_arecomend_window -->   
 

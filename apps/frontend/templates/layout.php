@@ -23,12 +23,13 @@
 			else
 				echo "<title>Arriendas.cl | Rent a car vecino en Chile</title>";
             ?>
-            <?php include_stylesheets() ?>
-			
-			<?php if (sfContext::getInstance()->getModuleName()=='main' && sfContext::getInstance()->getActionName()=='index'): ?>
+        	<?php if (sfContext::getInstance()->getModuleName()=='main' && sfContext::getInstance()->getActionName()=='index'): ?>
 			<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
             <?php endif ?>
 
+			<?php include_stylesheets() ?>
+			
+		
 			<script src="//cdn.optimizely.com/js/241768225.js"></script>
 
             <?php include_javascripts() ?>
@@ -84,6 +85,7 @@
         <!-- login facebook -->
         <div id="fb-root"></div>
         <script>
+        <?php if (inModuleAndAction("main", "login")): ?>
 			window.fbAsyncInit = function() {
 				FB.init({
 					appId : '213116695458112/8d8f44d1d2a893e82c89a483f8830c25',
@@ -97,6 +99,7 @@
 					e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
 					document.getElementById('fb-root').appendChild(e);
 				}());
+        <?php endif; ?>
 
 			function timeMsg() {
 				var t = setTimeout("slide()", 5000);
@@ -538,23 +541,6 @@ var google_conversion_value = 0;
                 </div><!-- /footer_contenido -->
             </div><!-- /footer -->
         </div><!-- body_bg -->
-<!-- Nuevo sistema de chat -->  
-<script type="text/javascript" src="//assets.zendesk.com/external/zenbox/v2.6/zenbox.js"></script>
-<style type="text/css" media="screen, projection">
-  @import url(//assets.zendesk.com/external/zenbox/v2.6/zenbox.css);
-</style>
-<script type="text/javascript">
-  if (typeof(Zenbox) !== "undefined") {
-    Zenbox.init({
-      dropboxID:   "20193521",
-      url:         "https://arriendascl.zendesk.com",
-      tabTooltip:  "Chat",
-      tabImageURL: "https://assets.zendesk.com/external/zenbox/images/tab_es_support.png",
-      tabColor:    "black",
-      tabPosition: "Right"
-    });
-  }
-</script><!-- fin chat-->
     </body>
 </html>
 

@@ -265,7 +265,7 @@ ul.upcar_fotos li a {
 
 /********************************** cars/car **********************************/
 .img_s1{
-	background-image: url("../images/img_autos/SeguroContraDaños_Icono.png");
+	background-image: url("../images/img_autos/SeguroContraDanos_Icono.png");
 	float: left;
 	width: 30px;
 	height: 14px;
@@ -290,7 +290,7 @@ ul.upcar_fotos li a {
 	margin-left: 9px;
 }
 .img_s4{
-	background-image: url("../images/img_autos/SeguroAcompañantes_Icono.png");
+	background-image: url("../images/img_autos/SeguroAcompanantes_Icono.png");
 	float: left;
 	width: 27px;
 	height: 19px;
