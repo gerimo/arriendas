@@ -195,16 +195,16 @@ center = new google.maps.LatLng(-33.0,-71.3);
         google.maps.event.addListener(map, 'idle', function () {
             google.maps.event.clearListeners(map, 'idle');
             searchMarkers();  
-            doReload();        
+                    
         });
 
         google.maps.event.addListener(map, 'dragend', function () {
             searchMarkers();
-            doReload();          
+                      
         });
         google.maps.event.addListener(map, 'zoom_changed', function () {	
             searchMarkers();
-            doReload();	
+            	
         });
 		
 		//Autocomplete
@@ -264,11 +264,8 @@ center = new google.maps.LatLng(-33.0,-71.3);
     function doReload(){
 	
 //        $("#loading").css("display","inline");
-		$("#loadingSearch").css("display","table");
+//		$("#loadingSearch").css("display","table");
 
-        $('.search_arecomend_window').fadeOut('fast',function() {
-			$("#loader").fadeIn("fast");		   
-  	    });
           
     }
 
@@ -347,7 +344,7 @@ center = new google.maps.LatLng(-33.0,-71.3);
 		
 
         searchMarkers();  
-        doReload();
+        
         //createClickToMarker();
   	        	
   	
@@ -389,7 +386,11 @@ center = new google.maps.LatLng(-33.0,-71.3);
     function searchMarkers() {
 
         
-		//alert('load markers');
+      $('.search_arecomend_window').fadeOut('fast',function() {
+			$("#loader").fadeIn("fast");		   
+  	    });
+  
+		console.log('load markers');
 		//$('.search_arecomend_window').css("visibility", "hidden");
         //$("#loader").fadeIn("slow");
 	
@@ -565,10 +566,15 @@ center = new google.maps.LatLng(-33.0,-71.3);
 
             }
 
-            $("#loader").hide();
+
+      $('.search_arecomend_window').stop(true,true);
+			$("#loader").stop(true,true);
+  	
+		$("#loader").hide();
             $(".search_arecomend_window").html(nodes);            
             $('.search_arecomend_window').fadeIn("fast");
-            
+            //$("#loader").fadeIn("fast");		   
+
 				
             //createClickToMarker();
 		
@@ -578,12 +584,13 @@ center = new google.maps.LatLng(-33.0,-71.3);
             markerCluster = new MarkerClusterer(map, markers, mcOptions);
             //alert(markers);
 		
-            $("#loading").css("display","none");
+//            $("#loading").css("display","none");
         
 		
 
 		
             //tb_show("Thickbox","cartaRec.html?placeValuesBefor eTB_=savedValues&TB_iframe=true&height=500&width=6 00&modal=true","media/loadingAnimation.gif");
+		
 		
         });
 
