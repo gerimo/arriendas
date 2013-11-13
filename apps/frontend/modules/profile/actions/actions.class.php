@@ -1589,7 +1589,6 @@ class profileActions extends sfActions {
                         $mail->setSubject('Has recibido un pedido de reserva!');
                         $mail->setBody("<p>Hola $name:</p><p>Has recibido un pedido de reserva por $$price por tu $marcaModelo desde el día <b>$fechaInicio</b> a las <b>$horaInicio</b> hasta el día <b>$fechaTermino</b> a las <b>$horaTermino</b> cuando te habrán devuelto el auto.</p><p>Para ver la reserva has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a></p>");
                         $mail->setTo($correo);
-                        $mail->setCc('soporte@arriendas.cl');
                         if($correo != $correoEmail) $mail->setCc($correoEmail);
                         $mail->submit();
 						

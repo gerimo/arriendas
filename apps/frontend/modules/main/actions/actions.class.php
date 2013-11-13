@@ -1011,11 +1011,11 @@ $this->logMessage(date('h:i:s'), 'err');
 //            $q = $q->andWhere('co.id = ?', $location);
         }
 //        if ($price != null) {
-            if ($price == "1") {
-                $q = $q->orderBy('ca.price_per_day asc');
-            } else {
+//            if ($price == "1") {
+    //            $q = $q->orderBy('ca.price_per_day asc');
+  //          } else {
                 $q = $q->orderBy('ca.price_per_day desc');
-            }
+      //      }
 //        }
         $cars = $q->execute();
 
