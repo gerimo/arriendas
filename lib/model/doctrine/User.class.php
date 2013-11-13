@@ -90,7 +90,7 @@ class User extends BaseUser {
     }
 
     public function getVelocidadRespuesta_mensajes(){
-        $q = "SELECT * FROM Message, Conversation WHERE Conversation.id=Message.conversation_id AND (Conversation.user_to_id=".$this->getId()." OR Conversation.user_from_id=".$this->getId().") AND Message.user_id!=".$this->getId()." AND Message.answered=1";
+        $q = "SELECT date, date_answered FROM Message, Conversation WHERE Conversation.id=Message.conversation_id AND (Conversation.user_to_id=".$this->getId()." OR Conversation.user_from_id=".$this->getId().") AND Message.user_id!=".$this->getId()." AND Message.answered=1";
         $query = Doctrine_Query::create()->query($q);
         $mensajes = $query->toArray();
 

@@ -895,7 +895,8 @@ public function executeNotificacion(sfWebRequest $request) {
 
 	$modelo= new Model();
 
-        sfConfig::set('sf_web_debug', true);
+	//$this->setLayout(true);
+  //      sfConfig::set('sf_web_debug', false);
         $this->getResponse()->setContentType('application/json');
 
         $boundleft = $request->getParameter('swLat');
@@ -951,6 +952,9 @@ $this->logMessage(date('h:i:s'), 'err');
 				ca.price_per_hour,
 	        	ca.photoS3 photoS3, 
 				ca.Seguro_OK, 
+				ca.foto_perfil, 
+				ca.transmission transmission,
+				ca.user_id,
 				mo.name modelo, 
 				br.name brand, 
 				')
@@ -1006,13 +1010,13 @@ $this->logMessage(date('h:i:s'), 'err');
         if ($location != "") {
 //            $q = $q->andWhere('co.id = ?', $location);
         }
-        if ($price != null) {
+//        if ($price != null) {
             if ($price == "1") {
                 $q = $q->orderBy('ca.price_per_day asc');
             } else {
                 $q = $q->orderBy('ca.price_per_day desc');
             }
-        }
+//        }
         $cars = $q->execute();
 
 if($debug) {
@@ -1056,7 +1060,7 @@ $this->logMessage(date('h:i:s'), 'err');
 				$d=0;
 				};
 
-//			$photo = $car->getFoto();
+			$photo = $car->getFotoPerfil();
 	    
             $has_reserve = false;
 
@@ -1079,15 +1083,22 @@ $this->logMessage(date('h:i:s'), 'err');
 
 //            $urlUser = $this->getPhotoUser($car->getUser()->getId());
 
-  //          $user = $car->getUser();
+//$this->logMessage($this->getUser()->getAttribute("logged"), 'err');
+
+	if ($this->getUser()->getAttribute("logged")){
+            $user = $car->getUser();
   //          $reservasRespondidas = $user->getReservasContestadas_aLaFecha();
-    //        $velocidad = $user->getVelocidadRespuesta_mensajes();
-      //      $transmision = "-";
-    //        $tipoTrans = $car->getTransmission();
+            $velocidad = $user->getVelocidadRespuesta_mensajes();
+}else{
+$reservasRespondidas=0;
+$velocidad=0;
+};
+			$transmision = "Manual";
+            $tipoTrans = $car->getTransmission();
 
 			
-//            if($tipoTrans == 0) $transmision = "Manual";
-  //          if($tipoTrans == 1) $transmision = "Autom&aacute;tica";
+            if($tipoTrans == 0) $transmision = "Manual";
+            if($tipoTrans == 1) $transmision = "Autom&aacute;tica";
 
 
   
@@ -1103,17 +1114,18 @@ $this->logMessage(date('h:i:s'), 'err');
 //                    'address' => $car->getAddress(),
 //                    'year' => $car->getYear(),
                     'photoType' => $car->getPhotoS3(),
-                    'photo' => '',
-//                    'photo' => $photo,
+//                    'photo' => '',
+                    'photo' => $photo,
 //                    'username' => ucwords(current(explode(' ' , $car->getUser()->getFirstname()))) . " " . ucwords(current(explode(' ' , $car->getUser()->getLastname()))),
 //                    'firstname' => ucwords(current(explode(' ' ,$car->getUser()->getFirstname()))),
 //                    'lastname' => ucwords(substr($car->getUser()->getLastName(), 0, 1)).".",
                     'price_per_hour' => $this->transformarPrecioAPuntos(floor($car->getPricePerHour())),
                     'price_per_day' => $this->transformarPrecioAPuntos(floor($car->getPricePerDay())),
-//                    'userid' => $car->getUser()->getId(),
+                    'userid' => $car->getUserId(),
 //                    'userPhoto' => $urlUser,
-//                    'typeTransmission' => $transmision,
-//                    'userVelocidadRespuesta' => $velocidad,
+                    'typeTransmission' => $transmision,
+                    'userVelocidadRespuesta' => $velocidad,
+                    'cantidadCalificacionesPositivas' => '0',
 //                    'cantidadCalificacionesPositivas' => $car->getCantidadCalificacionesPositivas(),
 //                    'reservasRespondidas' => $reservasRespondidas,
                     'd' => $d,
@@ -1147,6 +1159,7 @@ print_r('</html>');
 }
 $this->logMessage(date('h:i:s'), 'err');
         return $this->renderText(json_encode($carsArray));
+        //$this->carsArray=renderText(json_encode($carsArray));
     }
     public function transformarPrecioAPuntos($precio){
         $precioMillones = intval($precio/1000000);

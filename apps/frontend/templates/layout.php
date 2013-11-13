@@ -34,24 +34,24 @@
 
             <?php include_javascripts() ?>
 			<script type="text/javascript">
-				$(document).ready(function() {
-					$(".fancybox").fancybox();
-                    $(".enlaceCerrarInvitar").click(function(e){
-                        e.preventDefault();
-                        $(".invitar_amigos").fadeOut("slow");
-                    });
-                    $(".invitar_amigos").delay(3000).fadeIn("slow");
+//				$(document).ready(function() {
+//					$(".fancybox").fancybox();
+ //                   $(".enlaceCerrarInvitar").click(function(e){
+  //                      e.preventDefault();
+   //                     $(".invitar_amigos").fadeOut("slow");
+   //                 });
+    //                $(".invitar_amigos").delay(3000).fadeIn("slow");
 
-                    var loginFacebook = "<?php echo $sf_user->getAttribute('loggedFb'); ?>";
-                    if(loginFacebook == true){
-                        $("#contenedorSnippetLoginFacebook").css("display","block");
+//                    var loginFacebook = "<?php echo $sf_user->getAttribute('loggedFb'); ?>";
+ //                   if(loginFacebook == true){
+   //                     $("#contenedorSnippetLoginFacebook").css("display","block");
                         <?php 
-                        $sf_user->setAttribute("loggedFb", false);
+    //                    $sf_user->setAttribute("loggedFb", false);
                         ?>
-                    }else{
-                        $("#contenedorSnippetLoginFacebook").remove();
-                    }
-                });
+        //            }else{
+       //                 $("#contenedorSnippetLoginFacebook").remove();
+      //              }
+     //           });
 			</script>
 			
 			<style>
