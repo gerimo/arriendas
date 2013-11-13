@@ -895,7 +895,8 @@ public function executeNotificacion(sfWebRequest $request) {
 
 	$modelo= new Model();
 
-        sfConfig::set('sf_web_debug', false);
+	//$this->setLayout(true);
+  //      sfConfig::set('sf_web_debug', false);
         $this->getResponse()->setContentType('application/json');
 
         $boundleft = $request->getParameter('swLat');
@@ -919,6 +920,7 @@ public function executeNotificacion(sfWebRequest $request) {
         $lat_centro = $request->getParameter('clat');
         $lng_centro = $request->getParameter('clng');
 
+		
         /*
           if (
           $hour_from != "Hora de inicio" &&
@@ -934,23 +936,38 @@ public function executeNotificacion(sfWebRequest $request) {
 
 $debug = 0;
 if($debug){
+print_r('<html>');
+print_r('<body>');
 print_r(date('h:i:s'));
 }
+$this->logMessage(date('h:i:s'), 'err');
+
         $q = Doctrine_Query::create()
-                ->select('DISTINCT ca.id, av.id idav ,
-	        	ca.lat lat, ca.lng lng, ca.price_per_day, ca.price_per_hour,
-	        	ca.photoS3 photoS3, mo.name modelo, br.name brand, ca.year year,
-	        	ca.address address,
-	        	us.username username, us.id userid')
+                ->select('
+				ca.id, 
+				ca.lat lat, 
+				ca.lng lng, 
+				co.nombre comuna_nombre,
+				ca.price_per_day, 
+				ca.price_per_hour,
+	        	ca.photoS3 photoS3, 
+				ca.Seguro_OK, 
+				ca.foto_perfil, 
+				ca.transmission transmission,
+				ca.user_id,
+				mo.name modelo, 
+				br.name brand, 
+				')
                 ->from('Car ca')
-                ->innerJoin('ca.Availabilities av')
-                ->leftJoin('ca.Reserves re')
+//                ->innerJoin('ca.Availabilities av')
+//                ->leftJoin('ca.Reserves re')
                 ->innerJoin('ca.Model mo')
-                ->innerJoin('ca.User us')
+                ->innerJoin('ca.Comunas co')
+//                ->innerJoin('ca.User us')
                 ->innerJoin('mo.Brand br')
-                ->innerJoin('ca.City ci')
-                ->innerJoin('ci.State st')
-                ->innerJoin('st.Country co')
+//                ->innerJoin('ca.City ci')
+//                ->innerJoin('ci.State st')
+//                ->innerJoin('st.Country co')
                 ->where('ca.lat > ?', $boundleft)
                 ->andWhere('ca.activo = ?', 1)
                 //->andWhere('ca.comuna_id <> NULL OR ca.comuna_id <> 0')
@@ -977,34 +994,35 @@ print_r(date('h:i:s'));
             $fullstartdate = $day_from . " " . $hour_from;
             $fullenddate = $day_to . " " . $hour_to;
 
-            $q = $q->andWhere('av.hour_from < ? and av.hour_to > ? and av.date_from <= ? and av.date_to >= ?', array($hour_from, $hour_to, $day_from, $day_to));
-            $q = $q->orWhere('av.hour_from < ? and av.hour_to > ? and av.date_from < ?', array($hour_from, $hour_to, $day_from));
+//            $q = $q->andWhere('av.hour_from < ? and av.hour_to > ? and av.date_from <= ? and av.date_to >= ?', array($hour_from, $hour_to, $day_from, $day_to));
+//            $q = $q->orWhere('av.hour_from < ? and av.hour_to > ? and av.date_from < ?', array($hour_from, $hour_to, $day_from));
         }
 
         if ($brand != "") {
             $q = $q->andWhere('br.id = ?', $brand);
         }
 
-
+		
         if ($model != "" && $model != "0") {
             $q = $q->andWhere('mo.id = ?', $model);
         }
 
         if ($location != "") {
-            $q = $q->andWhere('co.id = ?', $location);
+//            $q = $q->andWhere('co.id = ?', $location);
         }
-        if ($price != null) {
-            if ($price == "1") {
-                $q = $q->orderBy('ca.price_per_day asc');
-            } else {
+//        if ($price != null) {
+//            if ($price == "1") {
+    //            $q = $q->orderBy('ca.price_per_day asc');
+  //          } else {
                 $q = $q->orderBy('ca.price_per_day desc');
-            }
-        }
+      //      }
+//        }
         $cars = $q->execute();
 
 if($debug) {
 print_r('<br />'.date('h:i:s'));
 }
+$this->logMessage(date('h:i:s'), 'err');
 
 
         $data = array();
@@ -1018,6 +1036,8 @@ $contador ++;
 if($debug){
 print_r('<br />auto numero: '.$contador.', '.date('h:i:s'));
 }
+$this->logMessage(date('h:i:s'), 'err');
+
             if ($lat_centro != null && $lng_centro != null) {
 
                 $lat1 = $car->getlat();
@@ -1036,19 +1056,11 @@ print_r('<br />auto numero: '.$contador.', '.date('h:i:s'));
                         sin($dLon / 2) * sin($dLon / 2) * cos($lat1) * cos($lat2);
                 $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
                 $d = $R * $c;
-            }
+            }else{
+				$d=0;
+				};
 
-        // T aca iba load url    
-	$photo = $car->getFoto();
-	//    if($photo != null) {
-	//	$photo= url_for($photo);
-	//    } else {
-	//	//En este caso, al auto no tiene foto de perfil cargada. Usamos la foto por defecto del modelo
-	//	$idModelo= $car->getModelId();
-	//	$query = "SELECT foto_defecto from Model WHERE id='".$idModelo."'";
-	//	$rs = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAssoc($query);
-	//	$photo= "http://admin.arriendas.cl/uploads/".$rs[0]['foto_defecto'];
-	//    }	
+			$photo = $car->getFotoPerfil();
 	    
             $has_reserve = false;
 
@@ -1064,18 +1076,24 @@ print_r('<br />auto numero: '.$contador.', '.date('h:i:s'));
             ) {
 
 
-
                 $fullstartdate = $day_from . " " . $hour_from;
                 $fullenddate = $day_to . " " . $hour_to;
-                $has_reserve = $car->hasReserve($fullstartdate, $fullstartdate, $fullenddate, $fullenddate);
+              //  $has_reserve = $car->hasReserve($fullstartdate, $fullstartdate, $fullenddate, $fullenddate);
             }
 
-            $urlUser = $this->getPhotoUser($car->getUser()->getId());
+//            $urlUser = $this->getPhotoUser($car->getUser()->getId());
 
+//$this->logMessage($this->getUser()->getAttribute("logged"), 'err');
+
+	if ($this->getUser()->getAttribute("logged")){
             $user = $car->getUser();
-            $reservasRespondidas = $user->getReservasContestadas_aLaFecha();
+  //          $reservasRespondidas = $user->getReservasContestadas_aLaFecha();
             $velocidad = $user->getVelocidadRespuesta_mensajes();
-            $transmision = "-";
+}else{
+$reservasRespondidas=0;
+$velocidad=0;
+};
+			$transmision = "Manual";
             $tipoTrans = $car->getTransmission();
 
 			
@@ -1087,28 +1105,31 @@ print_r('<br />auto numero: '.$contador.', '.date('h:i:s'));
             if (!$has_reserve) {
 
                 $data[] = array('id' => $car->getId(),
-                    'idav' => $car->getIdav(),
+//                    'idav' => $car->getIdav(),
                     'longitude' => $car->getlng(),
                     'latitude' => $car->getlat(),
-                    'comuna' => strtolower($car->getNombreComuna()),
+                    'comuna' => strtolower($car->getComunaNombre()),
                     'brand' => $car->getBrand(),
                     'model' => $car->getModelo(),
-                    'address' => $car->getAddress(),
-                    'year' => $car->getYear(),
+//                    'address' => $car->getAddress(),
+//                    'year' => $car->getYear(),
                     'photoType' => $car->getPhotoS3(),
+//                    'photo' => '',
                     'photo' => $photo,
-                    'username' => ucwords(current(explode(' ' , $car->getUser()->getFirstname()))) . " " . ucwords(current(explode(' ' , $car->getUser()->getLastname()))),
-                    'firstname' => ucwords(current(explode(' ' ,$car->getUser()->getFirstname()))),
-                    'lastname' => ucwords(substr($car->getUser()->getLastName(), 0, 1)).".",
+//                    'username' => ucwords(current(explode(' ' , $car->getUser()->getFirstname()))) . " " . ucwords(current(explode(' ' , $car->getUser()->getLastname()))),
+//                    'firstname' => ucwords(current(explode(' ' ,$car->getUser()->getFirstname()))),
+//                    'lastname' => ucwords(substr($car->getUser()->getLastName(), 0, 1)).".",
                     'price_per_hour' => $this->transformarPrecioAPuntos(floor($car->getPricePerHour())),
                     'price_per_day' => $this->transformarPrecioAPuntos(floor($car->getPricePerDay())),
-                    'userid' => $car->getUser()->getId(),
-                    'userPhoto' => $urlUser,
+                    'userid' => $car->getUserId(),
+//                    'userPhoto' => $urlUser,
                     'typeTransmission' => $transmision,
                     'userVelocidadRespuesta' => $velocidad,
-                    'cantidadCalificacionesPositivas' => $car->getCantidadCalificacionesPositivas(),
-                    'reservasRespondidas' => $reservasRespondidas,
+                    'cantidadCalificacionesPositivas' => '0',
+//                    'cantidadCalificacionesPositivas' => $car->getCantidadCalificacionesPositivas(),
+//                    'reservasRespondidas' => $reservasRespondidas,
                     'd' => $d,
+	//	            'verificado'=>'',
 		            'verificado'=>$car->autoVerificado(),
                 );
             }
@@ -1132,9 +1153,13 @@ print_r('<br />auto numero: '.$contador.', '.date('h:i:s'));
 	
 if($debug){
 print_r('<br />'.date('h:i:s'));
-die;
+print_r('</body>');
+print_r('</html>');
+//die;
 }
+$this->logMessage(date('h:i:s'), 'err');
         return $this->renderText(json_encode($carsArray));
+        //$this->carsArray=renderText(json_encode($carsArray));
     }
     public function transformarPrecioAPuntos($precio){
         $precioMillones = intval($precio/1000000);
