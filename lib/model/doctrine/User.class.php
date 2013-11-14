@@ -151,6 +151,47 @@ class User extends BaseUser {
 
       return $reserve->count();
     }
+
+    public function getReservasContestadas(){
+        $idUser = $this->getId();
+        $q = Doctrine_Query::create()
+        ->from("Reserve r, r.Car ")
+        ->leftJoin("r.Car c")
+        ->where("c.user_id=$idUser")
+        ->andWhere("c.id=r.car_id")
+        ->andWhere("r.confirmed=1 OR r.canceled=1");
+      $reserve = $q->execute();
+
+      return $reserve->count();
+    }
+
+	
+    public function getPercReservasContestadas(){
+        $idUser = $this->getId();
+//        $q = Doctrine_Manager::getInstance()->getCurrentConnection();
+        $query = "SELECT ((SUM(confirmed))+(SUM(canceled)))/(count(total)) as perc, count(total) as total FROM (SELECT r.confirmed as confirmed, r.canceled as canceled, r.id as total FROM reserve r LEFT JOIN car c ON c.id=r.car_id where c.user_id = $idUser ORDER BY r.id DESC LIMIT 10) listperc";
+		$rs = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAssoc($query);
+      
+	  //$result = $q->execute($query);
+  //      $result->fetchOne();
+        
+		$pedidosContestados=$rs[0]['perc'];
+		$pedidosTotal=$rs[0]['total'];
+		$pedidosnoContestados=1-$pedidosContestados;
+
+		$factorInicial=1;
+
+		if ($pedidosTotal<=4 ){
+			$factor=1;
+		}else{
+			$factor=$pedidosContestados;
+		}
+		
+		return $factor;
+    }
+
+
+
     public function getReservasNOContestadas_aLaFecha(){
         $idUser = $this->getId();
         $fechaHoraActual = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"));
@@ -161,6 +202,20 @@ class User extends BaseUser {
         ->andWhere("c.id=r.car_id")
         ->andWhere("r.confirmed=0 OR r.canceled=0")
         ->andWhere("r.date<'$fechaHoraActual'");
+      $reserve = $q->execute();
+
+      return $reserve->count();
+    }
+
+
+    public function getReservasNOContestadas(){
+        $idUser = $this->getId();
+        $q = Doctrine_Query::create()
+        ->from("Reserve r, r.Car ")
+        ->leftJoin("r.Car c")
+        ->where("c.user_id=$idUser")
+        ->andWhere("c.id=r.car_id")
+        ->andWhere("r.confirmed=0 OR r.canceled=0");
       $reserve = $q->execute();
 
       return $reserve->count();

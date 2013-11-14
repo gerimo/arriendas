@@ -795,7 +795,7 @@ function cambiarEstado(id,accion){
 
 		//recarga la página
 		if(accion == 'preaprobar'){
-			window.location.href = urlPedidos;
+		//	window.location.href = urlPedidos;
 		}
 
 	}).fail(function(){
@@ -1105,7 +1105,7 @@ function ingresarNuevasFechas(){
 				modificados++;
 
 				if(total == modificados){
-					window.location.href = urlPedidos;
+				//	window.location.href = urlPedidos;
 				}
 
 			}).fail(function(){
@@ -1208,7 +1208,7 @@ function ingresarExtension(id){
 		}
 	}).done(function(){
 		//recargar la página
-		window.location.href = urlPedidos;
+	//	window.location.href = urlPedidos;
 
 	}).fail(function(){
 		alert('Ha ocurrido un error al extender la reserva, inténtelo nuevamente');
