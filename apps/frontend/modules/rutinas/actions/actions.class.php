@@ -23,7 +23,10 @@ class rutinasActions extends sfActions
   
     public function executeReserve(sfWebRequest $request)
   {
-                $users = Doctrine_Core::getTable('reserve')
+  
+		$this->setLayout(false);
+
+                $users = Doctrine_Core::getTable('Reserve')
                         ->createQuery('s')
                         ->select('*')
                         ->execute();
