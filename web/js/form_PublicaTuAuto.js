@@ -19,6 +19,11 @@ $(document).on('ready',function(){
 		var precioDia = $('#precioDia').val();
 		precioDia = limpiarPrecio(precioDia);
 		$('#precioDia').val(precioDia);
+		if(precioDia!="" && precioDia<18000){
+			alert("El valor mínimo por día es $18.000.-");
+			$('#precioDia').val('');
+			$('#precioDia').focus();
+		}
 	});
 
 
