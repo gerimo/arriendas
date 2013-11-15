@@ -276,7 +276,7 @@ class Reserve extends BaseReserve
 			
 				$percTotalContestadas=$user->getPercReservasContestadas();
 				$q = Doctrine_Manager::getInstance()->getCurrentConnection();
-				$query = "update arriendas.car set contesta_pedidos=$percTotalContestadas where user_id='$ownerUserId'";
+				$query = "update Car set contesta_pedidos=$percTotalContestadas where user_id='$ownerUserId'";
 				$result = $q->execute($query);
 
 	if (!$this->getToken())
