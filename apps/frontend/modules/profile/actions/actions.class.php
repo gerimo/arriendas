@@ -319,6 +319,7 @@ class profileActions extends sfActions {
         $reserve->save();
         
         //obtiene fecha inicio, fecha termino, marca y modelo del auto
+        $tokenReserve = $reserve->getToken();
         $fechaInicio = $reserve->getFechaInicio();
         $horaInicio = $reserve->getHoraInicio();
         $fechaTermino = $reserve->getFechaTermino();
@@ -341,7 +342,7 @@ class profileActions extends sfActions {
             //al arrendatario
             $mail = new Email();
             $mail->setSubject('Se ha aprobado tu reserva! (Falta pagar)');
-            $mail->setBody("<p>Hola $nameRenter:</p><p>Se ha aprobado tu reserva!</p><p>Para acceder a los datos entrega del vehículo debes pagar $$precio.- CLP.</p><p>Si tu arriendo no se concreta, Arriendas.cl no le pagará al dueño del auto y te daremos un auto a elección.</p><p>Has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a> para pagar.</p><p><a href='http://www.arriendas.cl/main/generarReporte/idAuto/$idCar'>Datos del arriendo</a><br><a href='http://admin.arriendas.cl/api.php/contrato/generarContrato/idReserva/$idReserve'>Ver contrato</a></p>");
+            $mail->setBody("<p>Hola $nameRenter:</p><p>Se ha aprobado tu reserva!</p><p>Para acceder a los datos entrega del vehículo debes pagar $$precio.- CLP.</p><p>Si tu arriendo no se concreta, Arriendas.cl no le pagará al dueño del auto y te daremos un auto a elección.</p><p>Has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a> para pagar.</p><p><a href='http://www.arriendas.cl/main/generarReporte/idAuto/$idCar'>Datos del arriendo</a><br><a href='http://admin.arriendas.cl/api.php/contrato/generarContrato/tokenReserva/$tokenReserve'>Ver contrato</a></p>");
             $mail->setTo($correoRenter);
             $mail->setCc('soporte@arriendas.cl');
             echo $mail->submit();
@@ -354,7 +355,7 @@ class profileActions extends sfActions {
             //al propietario
             $mail2 = new Email();
             $mail2->setSubject('Has aprobado una reserva!');
-            $mail2->setBody("<p>Hola $nameOwner:</p><p>Has aprobado una reserva!</p><p>Recuerda que debes tener el informe de daños de tu auto completo para poder realizarla, si no es así <a href='http://www.arriendas.cl/profile/aseguraTuAuto/id/$idCar/paso/1'>complétalo aquí.</a></p><p><a href='http://www.arriendas.cl/main/generarReporte/idAuto/$idCar'>Datos del arriendo</a><br><a href='http://admin.arriendas.cl/api.php/contrato/generarContrato/idReserva/$idReserve'>Ver contrato</a></p>");
+            $mail2->setBody("<p>Hola $nameOwner:</p><p>Has aprobado una reserva!</p><p>Recuerda que debes tener el informe de daños de tu auto completo para poder realizarla, si no es así <a href='http://www.arriendas.cl/profile/aseguraTuAuto/id/$idCar/paso/1'>complétalo aquí.</a></p><p><a href='http://www.arriendas.cl/main/generarReporte/idAuto/$idCar'>Datos del arriendo</a><br><a href='http://admin.arriendas.cl/api.php/contrato/generarContrato/tokenReserva/$tokenReserve'>Ver contrato</a></p>");
             $mail2->setTo($correoOwner);
             echo $mail2->submit();
         }
@@ -2655,6 +2656,7 @@ public function executeAgreePdf2(sfWebRequest $request)
                     $reservasRealizadas[$i]['horaTermino'] = $reserva->getHoraTermino();
                     $reservasRealizadas[$i]['tiempoArriendo'] = $reserva->getTiempoArriendoTexto();
                     $reservasRealizadas[$i]['duracion'] = $reserva->getDuration();
+                    $reservasRealizadas[$i]['token'] = $reserva->getToken();
 
                     //obtiene valor
                     $reservasRealizadas[$i]['valor'] = number_format(intval($reserva->getPrice()),0,'','.');
@@ -2764,6 +2766,7 @@ public function executeAgreePdf2(sfWebRequest $request)
                     $reservasRecibidas[$i]['horaTermino'] = $reserva->getHoraTermino();
                     $reservasRecibidas[$i]['tiempoArriendo'] = $reserva->getTiempoArriendoTexto();
                     $reservasRecibidas[$i]['duracion'] = $reserva->getDuration();
+                    $reservasRecibidas[$i]['token'] = $reserva->getToken();
 
                     //obtiene valor
                     $reservasRecibidas[$i]['valor'] = number_format(intval($reserva->getPrice()),0,'','.');

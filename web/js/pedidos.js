@@ -597,12 +597,13 @@ $(document).on('ready',function(){
 
 		idReserve = contrato_id[1];
 		idCar = contrato_id[2];
+		tokenReserve = contrato_id[3];
 
-		var urlContrato1 = 'http://admin.arriendas.cl/api.php/contrato/generarContrato/idReserva/';
-		var urlContrato2 = 'http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/idReserve/';
+		var urlContrato1 = 'http://admin.arriendas.cl/api.php/contrato/generarContrato/tokenReserva/';
+		var urlContrato2 = 'http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/tokenReserve/';
 		var urlContrato3 = 'http://www.arriendas.cl/main/generarReporte/idAuto/';
-		window.open(urlContrato1+idReserve);
-		window.open(urlContrato2+idReserve);
+		window.open(urlContrato1+tokenReserve);
+		window.open(urlContrato2+tokenReserve);
 		window.open(urlContrato3+idCar);
 	});
 

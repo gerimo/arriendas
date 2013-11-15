@@ -357,6 +357,7 @@ public function executeGenerarFormularioEntregaDevolucion(sfWebRequest $request)
 
     //Generamos el HTML correspondiente
     $request->setParameter("idReserve",$request->getParameter("idReserve"));
+    $request->setParameter("tokenReserve",$request->getParameter("tokenReserve"));
     $html=$this->getController()->getPresentationFor("main","formularioEntrega");
     $pdf->WriteHTML($html,0);
     return $this->renderText($pdf->Output());
@@ -367,11 +368,16 @@ public function executeFormularioEntrega(sfWebRequest $request){
     //se asume que se recibe el id de la tabla reserva desde la página anterior
         //$idReserve = 605;
         $idReserve= $request->getParameter("idReserve");
+        $tokenReserve= $request->getParameter("tokenReserve");
 
         //id del usuario que accede al sitio
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
 
-        $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+		if (!$tokenReserve){
+			$reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+		}else{
+			$reserve = Doctrine_Core::getTable('reserve')->findOneByToken($tokenReserve);
+		};
 
         sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
         $this->url = public_path("");
