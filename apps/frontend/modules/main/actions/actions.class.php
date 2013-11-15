@@ -281,8 +281,9 @@ public function executeVerificacionSeguro(sfWebRequest $request) {
 Esta funcion recibe el ID de un daño almacenado en la tabla Damages, y devuelve el PNG correspondiente
 a la vista superior del auto con el daño marcado con una X
 */
+
 public function executeGenerarMapaDanio(sfWebRequest $request) {
-    $idDanio= $request->getParameter("idDanio");
+    $idDanio= $request->getParameter("idDanio").".jpg";
     $danio= Doctrine_Core::getTable("damage")->findOneById($idDanio);
     require sfConfig::get("sf_app_lib_dir")."/wideimage/WideImage.php";
     $image = WideImage::load(sfConfig::get("sf_web_dir")."/images/autoFotoDanios.png");
@@ -291,6 +292,8 @@ public function executeGenerarMapaDanio(sfWebRequest $request) {
     $this->getResponse()->setContentType('image/png');
     return $new->output('png');
 }
+
+
 
 public function executeGenerarDaniosAuto(sfWebRequest $request) {
     $idAuto= $request->getParameter("idAuto");
@@ -312,15 +315,15 @@ public function executeGenerarReporte(sfWebRequest $request) {
 
     //Creamos la instancia de la libreria mPDF
     require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
-    $this->getResponse()->setContentType('application/pdf');
+ //   $this->getResponse()->setContentType('application/pdf');
     $pdf= new mPDF();
 
     //Generamos el HTML correspondiente
     $request->setParameter("idAuto",$request->getParameter("idAuto"));
     $html=$this->getController()->getPresentationFor("main","informeDanios");
-    $pdf->WriteHTML($html,0);
-    return $this->renderText($pdf->Output());
-    //return $this->renderText($html);
+   // $pdf->WriteHTML($html,0);
+  //  return $this->renderText($pdf->Output());
+    return $this->renderText($html);
 }
 
 public function executeGenerarReporteResumen(sfWebRequest $request){
@@ -547,7 +550,7 @@ public function executeInformeDanios(sfWebRequest $request) {
     $this->propietario= $user->getFirstname()." ".$user->getLastName();
     $this->telefono= $user->getTelephone();
     $this->direccion=$car->getAddress();
-    $this->foto=$car->getFoto();
+    $this->foto="../uploads/cars/".$car->getFoto();
     $this->agno=$car->getYear();
     $this->precioHora=$car->getPricePerHour();
     $this->precioDia=$car->getPricePerDay();
