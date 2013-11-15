@@ -1402,11 +1402,13 @@ class User extends BaseUser {
                                 if($fechaPropuesta<$fechaAlmacenada){
                                     $proximaReserva['id'] = $reserva->getId();
                                     $proximaReserva['date'] = $reserva->getDate();
+                                    $proximaReserva['token'] = $reserva->getToken();
                                 }
 
                             }else{
                                 $proximaReserva['id'] = $reserva->getId();
                                 $proximaReserva['date'] = $reserva->getDate();
+                                $proximaReserva['token'] = $reserva->getToken();
                             }
                         }
                     }

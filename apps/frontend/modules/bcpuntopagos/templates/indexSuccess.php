@@ -81,9 +81,9 @@
 			</table>
 			<table id="tablePP2">
 				<tr>
-					<td style="width:130px;"><input type="radio" name="pp_medio_pago" value="6"/> <?php echo image_tag('puntopagos/mp6.gif')?></td>
-					<td style="width:220px;"><input type="radio" name="pp_medio_pago" value="7"/> <?php echo image_tag('puntopagos/mp7.gif')?></td>
-					<td style="width:150px;"><input type="radio" name="pp_medio_pago" value="10"/> <?php echo image_tag('puntopagos/mp10.gif')?></td>
+					<td style="width:33%;"><input type="radio" name="pp_medio_pago" value="6"/> <?php echo image_tag('puntopagos/mp6.gif')?></td>
+					<td style="width:33%;"><input type="radio" name="pp_medio_pago" value="7"/> <?php echo image_tag('puntopagos/mp7.gif')?></td>
+					<td style="width:33%;"><input type="radio" name="pp_medio_pago" value="10"/> <?php echo image_tag('puntopagos/mp10.gif')?></td>
 				</tr>
 			</table>
 
