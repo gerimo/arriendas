@@ -308,7 +308,7 @@
                             <td><?php include_component("messages", "positiveRatings", array("user" => $reserve->getUser())) ?></td>
                             <td><?php include_component("messages", "cleanRatings", array("user" => $reserve->getUser())) ?></td>
                             <td>
-                            	<input type="checkbox" id="chkcontrato_<?php echo $reserve->getId()?>" value="1"><a target="_blank" href="<?php echo url_for('http://admin.arriendas.cl/api.php/contrato/generarContrato/tokenReserva/'.$reserve->getToken())?>" class="vercontrato" id="<?php echo $reserve->getId()?>">Contrato</a><br/>
+                            	<input type="checkbox" id="chkcontrato_<?php echo $reserve->getId()?>" value="1"><a target="_blank" href="<?php echo url_for('http://www.arriendas.cl/api.php/contrato/generarContrato/tokenReserva/'.$reserve->getToken())?>" class="vercontrato" id="<?php echo $reserve->getId()?>">Contrato</a><br/>
                             	<?= link_to('Confirmar', 'profile/confirmReserve?id=' . $reserve->getId(), array('title' => 'Confirmar', 'id' => $reserve->getId() , 'class' => 'Confirmar')) ?><br/>
                                 <?php
                                 echo link_to('Cancelar', 'profile/cancelReserveConfirmation?id=' . $reserve->getId(), array(

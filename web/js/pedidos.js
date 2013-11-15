@@ -599,7 +599,7 @@ $(document).on('ready',function(){
 		idCar = contrato_id[2];
 		tokenReserve = contrato_id[3];
 
-		var urlContrato1 = 'http://admin.arriendas.cl/api.php/contrato/generarContrato/tokenReserva/';
+		var urlContrato1 = 'http://www.arriendas.cl/api.php/contrato/generarContrato/tokenReserva/';
 		var urlContrato2 = 'http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/tokenReserve/';
 		var urlContrato3 = 'http://www.arriendas.cl/main/generarReporte/idAuto/';
 		window.open(urlContrato1+tokenReserve);
