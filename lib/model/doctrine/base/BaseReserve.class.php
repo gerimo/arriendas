@@ -210,7 +210,13 @@ abstract class BaseReserve extends sfDoctrineRecord
             'length' => 300,
             'default' => 'null',
         ));
-        $this->hasColumn('id_padre', 'integer', 11, array(
+       $this->hasColumn('token', 'string', 255, array(
+             'type' => 'string',
+             'notnull' => true,
+             'unique' => true,
+             'length' => 255,
+             ));
+         $this->hasColumn('id_padre', 'integer', 11, array(
              'type' => 'integer',
              'length' => 11,
              'default' => 'null',

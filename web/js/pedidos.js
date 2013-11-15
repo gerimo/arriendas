@@ -597,12 +597,13 @@ $(document).on('ready',function(){
 
 		idReserve = contrato_id[1];
 		idCar = contrato_id[2];
+		tokenReserve = contrato_id[3];
 
-		var urlContrato1 = 'http://admin.arriendas.cl/api.php/contrato/generarContrato/idReserva/';
-		var urlContrato2 = 'http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/idReserve/';
+		var urlContrato1 = 'http://www.arriendas.cl/api.php/contrato/generarContrato/tokenReserva/';
+		var urlContrato2 = 'http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/tokenReserve/';
 		var urlContrato3 = 'http://www.arriendas.cl/main/generarReporte/idAuto/';
-		window.open(urlContrato1+idReserve);
-		window.open(urlContrato2+idReserve);
+		window.open(urlContrato1+tokenReserve);
+		window.open(urlContrato2+tokenReserve);
 		window.open(urlContrato3+idCar);
 	});
 
@@ -795,7 +796,7 @@ function cambiarEstado(id,accion){
 
 		//recarga la página
 		if(accion == 'preaprobar'){
-			window.location.href = urlPedidos;
+		//	window.location.href = urlPedidos;
 		}
 
 	}).fail(function(){
@@ -1105,7 +1106,7 @@ function ingresarNuevasFechas(){
 				modificados++;
 
 				if(total == modificados){
-					window.location.href = urlPedidos;
+				//	window.location.href = urlPedidos;
 				}
 
 			}).fail(function(){
@@ -1208,7 +1209,7 @@ function ingresarExtension(id){
 		}
 	}).done(function(){
 		//recargar la página
-		window.location.href = urlPedidos;
+	//	window.location.href = urlPedidos;
 
 	}).fail(function(){
 		alert('Ha ocurrido un error al extender la reserva, inténtelo nuevamente');

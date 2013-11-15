@@ -268,6 +268,23 @@ class Reserve extends BaseReserve
         return date("Y-m-d H:i:s",$entrega);
 	}
 
-	
+	public function save(Doctrine_Connection $conn = null)	{
+
+			$car = Doctrine_Core::getTable('car')->findOneById($this->getCarId());	
+			$user = Doctrine_Core::getTable('user')->findOneById($car->getUserId());	
+			$ownerUserId=$user->getId();
+			
+				$percTotalContestadas=$user->getPercReservasContestadas();
+				$q = Doctrine_Manager::getInstance()->getCurrentConnection();
+				$query = "update Car set contesta_pedidos=$percTotalContestadas where user_id='$ownerUserId'";
+				$result = $q->execute($query);
+
+	if (!$this->getToken())
+	  {
+		$this->setToken(sha1($this->getDuration().rand(11111, 99999)));
+	  }
+
+	  return parent::save($conn);
+	}
 
 }

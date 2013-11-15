@@ -192,7 +192,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                                 echo "<div class='img'>".image_tag('img_pedidos/IconoAutoAprobado.png')."</div>";
                                 echo "<span class='textoColor'>¡APROBADO!</span>";
                             echo "</div>";
-                            echo "<a href='#' id='contrato_".$reserva['idReserve']."_".$reserva['carId']."' class='descargarContrato'>Descargar Contratos</a>";
+                            echo "<a href='#' id='contrato_".$reserva['idReserve']."_".$reserva['carId']."_".$reserva['token']."' class='descargarContrato'>Descargar Contratos</a>";
                         echo "</div>";
                         echo "<div class='pago'>";
                             echo "<a href='#' id='extender_".$reserva['idReserve']."' class='boton_extender ".$reserva['fechaInicio']."_".$reserva['horaInicio']."_".$reserva['fechaTermino']."_".$reserva['horaTermino']."'>".image_tag('img_pedidos/BotonExtender.png')."</a>";
@@ -470,7 +470,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                                 echo "<div class='img'>".image_tag('img_pedidos/IconoAutoAprobado.png')."</div>";
                                 echo "<span class='textoColor'>¡APROBADO!</span>";
                             echo "</div>";
-                            echo "<a href='#' id='contrato_".$reserva['idReserve']."_".$reserva['carId']."' class='descargarContrato'>Descargar Contratos</a>";
+                            echo "<a href='#' id='contrato_".$reserva['idReserve']."_".$reserva['carId']."_".$reserva['token']."' class='descargarContrato'>Descargar Contratos</a>";
                         echo "</div>";
                         echo "<div class='precioPagados'>";
                             echo "<span class='textoGrande2'>$".$reserva['valor']."</span> CLP<br>(".$reserva['tiempoArriendo']." - asegurado)";

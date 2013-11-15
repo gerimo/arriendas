@@ -56,7 +56,7 @@ var google_conversion_value = 0;
 <center>
             <b style="color:#EC008C;font-size:16px;text-align:center;">TU PAGO SE RECIBIÓ EXITOSAMENTE!</b></center>
             <br>
-            <p>Antes y despu&eacute;s de realizar la reserva, debes firmar el <a href='http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/idReserve/<?php echo $idReserva; ?>' target='_blank'>informe de da&ntilde;os impreso</a>, o <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/<?php echo $idReserva; ?>' target='_blank'>completarlo desde tu celular</a>.</p>
+            <p>Antes y despu&eacute;s de realizar la reserva, debes firmar el <a href='http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/tokenReserve/<?php echo $tokenReserva; ?>' target='_blank'>informe de da&ntilde;os impreso</a>, o <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/<?php echo $idReserva; ?>' target='_blank'>completarlo desde tu celular</a>.</p>
             <br>
 			<br>
 

@@ -139,6 +139,11 @@ abstract class BaseCar extends sfDoctrineRecord
              'length' => 10,
              'scale' => '2',
              ));
+        $this->hasColumn('contesta_pedidos', 'float', 10, array(
+             'type' => 'float',
+             'length' => 10,
+             'scale' => '2',
+             ));
         $this->hasColumn('Model_id', 'integer', 4, array(
              'type' => 'integer',
              'notnull' => true,
