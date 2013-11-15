@@ -283,7 +283,7 @@ a la vista superior del auto con el daño marcado con una X
 */
 
 public function executeGenerarMapaDanio(sfWebRequest $request) {
-    $idDanio= $request->getParameter("idDanio").".jpg";
+    $idDanio= $request->getParameter("idDanio");
     $danio= Doctrine_Core::getTable("damage")->findOneById($idDanio);
     require sfConfig::get("sf_app_lib_dir")."/wideimage/WideImage.php";
     $image = WideImage::load(sfConfig::get("sf_web_dir")."/images/autoFotoDanios.png");
@@ -323,7 +323,7 @@ public function executeGenerarReporte(sfWebRequest $request) {
     $html=$this->getController()->getPresentationFor("main","informeDanios");
     $pdf->WriteHTML($html,0);
     return $this->renderText($pdf->Output());
-  //  return $this->renderText($html);
+ //   return $this->renderText($html);
 }
 
 public function executeGenerarReporteResumen(sfWebRequest $request){

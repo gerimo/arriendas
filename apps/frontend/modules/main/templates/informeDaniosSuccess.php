@@ -399,7 +399,8 @@ p{
 			<div style="float:left;" class='zonaDelDanio'>
 				<h2 style="color: #00AEEF;">> Zona del Daño</h2>
 				<div>
-					<?php echo image_tag(url_for("main/generarMapaDanio?idDanio=".$danios[$i]['id'].""),array("id"=>"fotoDanio","width"=>"300","height"=>"200")); ?>
+					<?php echo str_replace(".png","",image_tag(url_for("main/generarMapaDanio?idDanio=".$danios[$i]['id'],true),array("id"=>"fotoDanio","width"=>"300","height"=>"200"))); ?>
+					<?php //echo url_for("main/generarMapaDanio?idDanio=".$danios[$i]['id']); ?>
 				</div>
 			</div>
 			<div class='imagenDelDanio' style="float:left; position: absolute; width: 300px; height: 300px;">
