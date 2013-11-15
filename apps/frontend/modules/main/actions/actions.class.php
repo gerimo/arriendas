@@ -315,15 +315,15 @@ public function executeGenerarReporte(sfWebRequest $request) {
 
     //Creamos la instancia de la libreria mPDF
     require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
-   $this->getResponse()->setContentType('application/pdf');
-    $pdf= new mPDF();
+//   $this->getResponse()->setContentType('application/pdf');
+//    $pdf= new mPDF();
 
     //Generamos el HTML correspondiente
     $request->setParameter("idAuto",$request->getParameter("idAuto"));
     $html=$this->getController()->getPresentationFor("main","informeDanios");
-    $pdf->WriteHTML($html,0);
-    return $this->renderText($pdf->Output());
- //   return $this->renderText($html);
+//    $pdf->WriteHTML($html,0);
+//    return $this->renderText($pdf->Output());
+    return $this->renderText($html);
 }
 
 public function executeGenerarReporteResumen(sfWebRequest $request){
@@ -550,7 +550,7 @@ public function executeInformeDanios(sfWebRequest $request) {
     $this->propietario= $user->getFirstname()." ".$user->getLastName();
     $this->telefono= $user->getTelephone();
     $this->direccion=$car->getAddress();
-    $this->foto="../uploads/cars/".$car->getFoto();
+    $this->foto="http://cdn1.arriendas.cl/uploads/cars/".$car->getFoto();
     $this->agno=$car->getYear();
     $this->precioHora=$car->getPricePerHour();
     $this->precioDia=$car->getPricePerDay();
