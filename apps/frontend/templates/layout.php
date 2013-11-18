@@ -156,7 +156,7 @@
                 //Condición para calendario
                 $('#day_from').on('change',function(){
                     $('#day_to').attr("value", $('#day_from').val());
-                    calcularPrecio();
+                    //calcularPrecio();
                 });
                 $('#hour_from').click(function(){
                     $('div.time-picker ul li.horaImpar').css('display', 'block');

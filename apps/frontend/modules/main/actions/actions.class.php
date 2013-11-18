@@ -1010,7 +1010,7 @@ $this->logMessage(date('h:i:s'), 'err');
         if ($brand != "") {
             $q = $q->andWhere('br.id = ?', $brand);
         }
-
+		
 		
         if ($model != "" && $model != "0") {
             $q = $q->andWhere('mo.id = ?', $model);
@@ -1072,6 +1072,9 @@ $this->logMessage(date('h:i:s'), 'err');
 			$photo = $car->getFotoPerfil();
 	    
             $has_reserve = false;
+			$is_available = true;
+
+			$this->logMessage('day_from '.$day_from, 'err');
 
             if (
                     $hour_from != "Hora de inicio" &&
@@ -1087,28 +1090,34 @@ $this->logMessage(date('h:i:s'), 'err');
 
                 $fullstartdate = $day_from . " " . $hour_from;
                 $fullenddate = $day_to . " " . $hour_to;
-              //  $has_reserve = $car->hasReserve($fullstartdate, $fullstartdate, $fullenddate, $fullenddate);
+				
+                $day_from = implode('-', array_reverse(explode('-', $day_from)));
+                $day_to = implode('-', array_reverse(explode('-', $day_to)));
+ 
+                $has_reserve = $car->hasReserve($fullstartdate, $fullstartdate, $fullenddate, $fullenddate);
+//                $is_available = $car->isAvailable($hour_from, $hour_to, $day_from, $day_to);
             }
 
 //            $urlUser = $this->getPhotoUser($car->getUser()->getId());
 
+
+
+
 //$this->logMessage($this->getUser()->getAttribute("logged"), 'err');
 
 	if ($this->getUser()->getAttribute("logged")){
-            $user = $car->getUser();
+   //         $user = $car->getUser();
   //          $reservasRespondidas = $user->getReservasContestadas_aLaFecha();
-            $velocidad = $user->getVelocidadRespuesta_mensajes();
+  //          $velocidad = $user->getVelocidadRespuesta_mensajes();
 }else{
 $reservasRespondidas=0;
 $velocidad=0;
 };
 			$transmision = "Manual";
             $tipoTrans = $car->getTransmission();
-
 			
             if($tipoTrans == 0) $transmision = "Manual";
             if($tipoTrans == 1) $transmision = "Autom&aacute;tica";
-
 
   
             if (!$has_reserve) {
@@ -1133,7 +1142,7 @@ $velocidad=0;
                     'userid' => $car->getUserId(),
 //                    'userPhoto' => $urlUser,
                     'typeTransmission' => $transmision,
-                    'userVelocidadRespuesta' => $velocidad,
+//                    'userVelocidadRespuesta' => $velocidad,
                     'cantidadCalificacionesPositivas' => '0',
 //                    'cantidadCalificacionesPositivas' => $car->getCantidadCalificacionesPositivas(),
 //                    'reservasRespondidas' => $reservasRespondidas,

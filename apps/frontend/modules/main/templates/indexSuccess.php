@@ -1287,7 +1287,7 @@ $('#hour_to').datetimepicker({
                 <div class="search_box_ubica">
                 	<input id="searchTextField" type="text" size="50" placeholder="Introduce una ubicación" autocomplete="off"/>
                 </div>
-                <div class="search_box1_form" style="display:none;">
+                <div class="search_box1_form" style="">
                 	<span class="group_desde">Disponible desde</span><span class="group_hasta">Hasta</span>
                     <input class="input_f1" readonly="readonly" type="text" id="day_from" value="Dia de inicio"/>
                     <input class="input_f1" readonly="readonly" type="text" id="hour_from" value=""/>
