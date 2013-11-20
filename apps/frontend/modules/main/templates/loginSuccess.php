@@ -28,13 +28,16 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 	</div>
 	<?php endif; ?>
 	
-    <h2>Conéctate con Facebook</h2>
+    <h2>Regístrate o Ingresa con Facebook</h2>
     <div class="login_btn_fb">
         <div id="social-register" class="registration_panel">
             <a href="<?php echo url_for("main/loginFacebook")?>" id="facebook-login"><?php echo image_tag('img_login/login_btn_fb') ?></a>
         </div>
     </div>
-    <div id="separadorLogin">
+        <div style="width: 100%;height: 15px;" class="opt_reg"><center>
+        	<a style="font-size:11px;float: center;" href="<?php echo url_for('main/register')?>" class="nouser">&iquest;No tienes Facebook? <span style="font-size:11px;"><b>REGISTRATE AQUÍ</b></span></a>
+        </center></div>
+			<div id="separadorLogin">
         <div class="lineaIzq"></div>
         <div class="letraO"><?php echo image_tag('img_login/O_Registro.png') ?></div>
         <div class="lineaDer"></div>
@@ -53,7 +56,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 
         <div class="opt_reg">
 	    <a href="<?php echo url_for('main/forgot')?>" class="login_olvidar">&iquest;Olvidaste tu clave?</a>
-    	<a href="<?php echo url_for('main/register')?>" class="nouser">&iquest;No tienes Facebook? <span style="font-size:11px;">REGISTRATE</span></a>
+
 		</div>
     </div>
 </div>

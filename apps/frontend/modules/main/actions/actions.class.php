@@ -2560,14 +2560,20 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
 
                 $this->calificacionesPendientes();
 
-                if ($this->getUser()->getAttribute("lastview") != null) {
-                    $this->redirect($this->getUser()->getAttribute("lastview"));
-                } else {
-                    $this->redirect('main/index');
-                    //$this->redirect('profile/cars');
-                    //$this->redirect($_SESSION['login_back_url']);
-                }
-            } else {
+                if (!$myUser) {
+		            $this->getRequest()->setParameter('userid', $userdb->getId());
+					$this->redirect('main/registerVerify');
+				}else{
+					if ($this->getUser()->getAttribute("lastview") != null) {
+						$this->redirect($this->getUser()->getAttribute("lastview"));
+					} else {
+						$this->redirect('main/index');
+						//$this->redirect('profile/cars');
+						//$this->redirect($_SESSION['login_back_url']);
+					}
+				}
+	
+			} else {
                 $this->getUser()->setFlash('msg', 'Hubo un error en el login con Facebook');
                 $this->forward('main', 'login');
             }

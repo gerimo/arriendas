@@ -349,7 +349,6 @@ class profileActions extends sfActions {
             $mail->setSubject('Se ha aprobado tu reserva! (Falta pagar)');
             $mail->setBody("<p>Hola $nameRenter:</p><p>Se ha aprobado tu reserva!</p><p>Para acceder a los datos entrega del vehículo debes pagar $$precio.- CLP.</p><p>Si tu arriendo no se concreta, Arriendas.cl no le pagará al dueño del auto y te daremos un auto a elección.</p><p>Has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a> para pagar.</p><p><a href='http://www.arriendas.cl/main/generarReporte/idAuto/$idCar'>Datos del arriendo</a><br><a href='http://www.arriendas.cl/api.php/contrato/generarContrato/tokenReserva/$tokenReserve'>Ver contrato</a></p>");
             $mail->setTo($correoRenter);
-//            $mail->setCc('soporte@arriendas.cl');
             echo $mail->submit();
 
             $mail = new Email();
