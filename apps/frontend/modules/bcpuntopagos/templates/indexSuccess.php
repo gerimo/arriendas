@@ -73,20 +73,17 @@
 		<div id="contenedorMedios">
 			<table id="tablePP">
 				<tr>
-					<td><input type="radio" name="pp_medio_pago" value="1"/> <?php echo image_tag('puntopagos/mp1.gif')?></td>
 					<td><input type="radio" name="pp_medio_pago" value="2"/> <?php echo image_tag('puntopagos/mp2.gif')?></td>
 					<td><input type="radio" name="pp_medio_pago" value="3"/> <?php echo image_tag('puntopagos/mp3.gif')?></td>
 					<td><input type="radio" name="pp_medio_pago" value="4"/> <?php echo image_tag('puntopagos/mp4.gif')?></td>
+					<td><input type="radio" name="pp_medio_pago" value="5"/> <?php echo image_tag('puntopagos/mp5.gif')?></td>
 				</tr>
 			</table>
 			<table id="tablePP2">
 				<tr>
-					<td><input type="radio" name="pp_medio_pago" value="5"/> <?php echo image_tag('puntopagos/mp5.gif')?></td>
-					<td style="width:130px;"><input type="radio" name="pp_medio_pago" value="6"/> <?php echo image_tag('puntopagos/mp6.gif')?></td>
-					<td style="width:220px;"><input type="radio" name="pp_medio_pago" value="7"/> <?php echo image_tag('puntopagos/mp7.gif')?></td>
-					<td style="width:150px;"><input type="radio" name="pp_medio_pago" value="10"/> <?php echo image_tag('puntopagos/mp10.gif')?></td>
-					<!--
-					<td style="width:170px;"><input type="radio" name="pp_medio_pago" value="15"/> <?php echo image_tag('puntopagos/mp15.gif')?></td>-->
+					<td style="width:33%;"><input type="radio" name="pp_medio_pago" value="6"/> <?php echo image_tag('puntopagos/mp6.gif')?></td>
+					<td style="width:33%;"><input type="radio" name="pp_medio_pago" value="7"/> <?php echo image_tag('puntopagos/mp7.gif')?></td>
+					<td style="width:33%;"><input type="radio" name="pp_medio_pago" value="10"/> <?php echo image_tag('puntopagos/mp10.gif')?></td>
 				</tr>
 			</table>
 

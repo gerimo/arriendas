@@ -22,6 +22,7 @@ class profileComponents extends sfComponents {
 
             $fecha = strtotime($reserva['date']);
             $reserva['date'] = $dias[date('w',$fecha)]." ".date('d',$fecha)." de ".$meses[date('n',$fecha)-1];
+//            $reserva['date'] = $reserva
             $this->reserva = $reserva;
         }else{
             $this->reserva = null;

@@ -156,7 +156,7 @@
                 //Condición para calendario
                 $('#day_from').on('change',function(){
                     $('#day_to').attr("value", $('#day_from').val());
-                    calcularPrecio();
+                    //calcularPrecio();
                 });
                 $('#hour_from').click(function(){
                     $('div.time-picker ul li.horaImpar').css('display', 'block');
@@ -178,7 +178,7 @@
                         var nuevaFecha = dia+"-"+mes+"-"+anio;//creando un string de la nueva fecha
                         $('#day_to').attr("value", nuevaFecha);//mostrar la nueva fecha en fecha_to
                     }
-                    var tiempoTo = tiempoHora+":"+hora[1]+":"+hora[2];
+                    var tiempoTo = tiempoHora+":"+hora[1];
                     $('#hour_to').attr("value", tiempoTo);
                 });
 
