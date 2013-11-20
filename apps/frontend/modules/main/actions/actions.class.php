@@ -1639,7 +1639,10 @@ $this->logMessage(date('h:i:s'), 'err');
     public function executeRegisterVerify(sfWebRequest $request) {
 
         $userid = $this->getRequest()->getParameter('userid');
-
+		if (!$userid){
+			$userid = $this->getUser()->getAttribute("userid");
+		};
+		
         $this->info = "";
 
         $data = array();
