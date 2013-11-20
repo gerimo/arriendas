@@ -767,10 +767,10 @@ center = new google.maps.LatLng(-33.0,-71.3);
 
 		if( date.getMinutes() < 30 ){
             var hora = date.getHours()+1;
-//            $('#hour_from').val(hora + ':00:00');
+            $('#hour_from').val(hora + ':00:00');
         }else{
             var hora = date.getHours()+1;
- //           $('#hour_from').val(hora+':30:00');
+            $('#hour_from').val(hora+':30:00');
         }
 
         //fecha actual
@@ -986,7 +986,6 @@ $('#day_to').change(function() {
         })
     }
 
-
 	
 	
         
@@ -1176,10 +1175,10 @@ $('#day_to').change(function() {
                 <div class="search_box1_form" style="">
                 	<span style="width: 206px;" class="group_desde">Ubicación</span><span style="width: 214px;" class="group_desde">Disponible desde</span><span style="width: 140px;" class="group_hasta">Hasta</span>
                 	<input id="searchTextField" style="margin-right: 5px;width: 185px;" type="text" size="50" placeholder="Introduce una ubicación" autocomplete="off"/>
-                    <input class="input_f1" style="width: 90px;margin-right: 5px;" readonly="readonly" type="text" id="day_from" value="Dia de inicio"/>
-                    <input class="input_f1" style="width: 90px;margin-right: 5px;" readonly="readonly" type="text" id="hour_from" value=""/>
-                    <input class="input_f1" style="width: 90px;margin-right: 5px;" readonly="readonly" type="text" id="day_to" value="Dia de entrega"/>
-                    <input class="input_f1b" style="width: 90px;margin-right: 0px;" readonly="readonly" type="text" id="hour_to"  value="Hora de entrega" />
+                    <input class="input_f1" style="width: 90px;margin-right: 5px;" readonly="readonly" type="text" id="day_from" value="Dia de entrega"/>
+                    <input class="input_f1" style="width: 90px;margin-right: 5px;" readonly="readonly" type="text" id="hour_from" value="Hora de entrega"/>
+                    <input class="input_f1" style="width: 90px;margin-right: 5px;" readonly="readonly" type="text" id="day_to" value="Dia de devolución"/>
+                    <input class="input_f1b" style="width: 90px;margin-right: 0px;" readonly="readonly" type="text" id="hour_to"  value="Hora de devolución" />
                     <a id="more" class="button2 altCta2 menor" href="#"><span id="spanprecio">+</span></a>
                 </div>
 
