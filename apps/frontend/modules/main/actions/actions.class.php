@@ -2511,6 +2511,7 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
                     $myUser = null;
                 }
                 if (!$myUser) {
+					$newUser=true;
                     $myUser = new User();
                     $myUser->setFirstname($user["first_name"]);
                     $myUser->setLastname($user["last_name"]);
@@ -2523,6 +2524,7 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
                     $myUser->setConfirmed(true);
                     $myUser->save();
                 } else {
+					$newUser=false;
                     $myUser->setFacebookId($user["id"]);
                     $myUser->setPictureFile($photo_url);
                     $myUser->setConfirmedFb(true);
@@ -2560,7 +2562,7 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
 
                 $this->calificacionesPendientes();
 
-                if (!$myUser) {
+                if ($newUser) {
 		            $this->getRequest()->setParameter('userid', $userdb->getId());
 					$this->redirect('main/registerVerify');
 				}else{
