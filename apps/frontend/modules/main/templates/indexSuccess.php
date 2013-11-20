@@ -317,7 +317,8 @@ center = new google.maps.LatLng(-33.0,-71.3);
 			
 			if( $('#day_from').val() == '<?php echo date('d-m-Y')?>' && isValidTime( $('#hour_from').val() ) ) {
 			
-				var dif = restarHoras(current.getHours() + ':' + current.getMinutes() + ':' + current.getSeconds(), $('#hour_from').val())
+//				var dif = restarHoras(current.getHours() + ':' + current.getMinutes() + ':' + current.getSeconds(), $('#hour_from').val())
+				var dif = restarHoras(current.getHours() + ':' + current.getMinutes() , $('#hour_from').val())
 				if( dif < 0 ) { alert('La hora no puede ser menor a la actual'); $('#hour_from').val('Hora de inicio'); }
 			}
 		}
@@ -326,7 +327,8 @@ center = new google.maps.LatLng(-33.0,-71.3);
 			
 			if( $('#day_to').val() == '<?php echo date('d-m-Y')?>' && isValidTime( $('#hour_to').val() ) ) {
 			
-				var dif = restarHoras(current.getHours() + ':' + current.getMinutes() + ':' + current.getSeconds(), $('#hour_to').val())
+//				var dif = restarHoras(current.getHours() + ':' + current.getMinutes() + ':' + current.getSeconds(), $('#hour_to').val())
+				var dif = restarHoras(current.getHours() + ':' + current.getMinutes() , $('#hour_to').val())
 				if( dif < 0 ) { alert('La hora no puede ser menor a la actual'); $('#hour_to').val('Hora de entrega'); }
 			}
 		}
@@ -741,7 +743,7 @@ center = new google.maps.LatLng(-33.0,-71.3);
 	 $('#video').html('	<iframe src="http://player.vimeo.com/video/45668172?title=0&byline=0&portrait=0ll" width="940" height="500" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>')
 
         //timerSet("#hour_from", "#hour_to");
-        $("#hour_from , #hour_to").timePicker();	
+        $("#hour_from , #hour_to").timePicker({show24Hours:false});	
 			
         getModel($("#brand"),false);
 		 
@@ -765,10 +767,10 @@ center = new google.maps.LatLng(-33.0,-71.3);
 
 		if( date.getMinutes() < 30 ){
             var hora = date.getHours()+1;
-            $('#hour_from').val(hora + ':00:00');
+//            $('#hour_from').val(hora + ':00:00');
         }else{
             var hora = date.getHours()+1;
-            $('#hour_from').val(hora+':30:00');
+ //           $('#hour_from').val(hora+':30:00');
         }
 
         //fecha actual
@@ -807,7 +809,12 @@ $('#day_to').change(function() {
         $( "#day_from" ).datepicker({
             dateFormat: 'dd-mm-yy',
             buttonImageOnly: true,
-            minDate:'-0d'
+            minDate:'-0d',
+			monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+			dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado'],
+			dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+			dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá']
         });
 
 		
@@ -815,62 +822,16 @@ $('#day_to').change(function() {
         $( "#day_to" ).datepicker({
             dateFormat: 'dd-mm-yy',
             buttonImageOnly: true,
-            minDate:'-0d'
+            minDate:'-0d',
+			monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+			dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado'],
+			dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+			dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá']
         });
 
 	
-
-	
-
-
-
-        /*$('#hour_from').datetimepicker({
-                addSliderAccess: true,
-                sliderAccessArgs: { touchonly: false },
-                minuteGrid: 15
-    // timeFormat: 'HH:mm',
-    // minHour: null,
-    // minMinutes: null,
-    // minTime: null,
-    // maxHour: null,
-    // maxMinutes: null,
-    // maxTime: null,
-    // startHour: 0,
-    // startMinutes: 0,
-    // startTime: null,
-    // interval: 30,
-    // callbacks
-    change: function(time) {}
-});
-        
-$('#hour_to').datetimepicker({
-                addSliderAccess: true,
-                sliderAccessArgs: { touchonly: false },
-                minuteGrid: 15
-    // timeFormat: 'HH:mm',
-    // minHour: null,
-    // minMinutes: null,
-    // minTime: null,
-    // maxHour: null,
-    // maxMinutes: null,
-    // maxTime: null,
-    // startHour: 0,
-    // startMinutes: 0,
-    // startTime: null,
-    // interval: 30,
-    // callbacks
-    change: function(time) {}
-});
-		
-         */
-        
-//        $('#mycarousel').jcarousel({
-  //          wrap: 'circular',
-    //        auto: 4,
-      //      scroll: 5,
-        //    initCallback: mycarousel_initCallback
-      //  });
-    	
+   	
     	
     	$('a.mapcar_btn_detalle').live('click',function(event) {
     		
@@ -888,25 +849,6 @@ $('#hour_to').datetimepicker({
 	        	}
 	        })
     	})
-    	/*
-       	$('.search_arecomend_marca a').live('click',function(event) {
-    		
-    		//event.preventDefault();
-    		obj = $(this);
-    		
-	        $.ajax({
-	        	
-	        	type: 'post',
-	        	url: '<?php echo url_for('main/filtrosBusqueda') ?>',
-	        	data: { fechainicio: $('#day_from').val(), horainicio: $('#hour_from').val(), fechatermino: $('#day_to').val(), horatermino: $('#hour_to').val() },
-	        	success: function() {
-	        		
-	        		top.location = obj.attr('href');
-	        	}
-	        })
-    	});
-        */
-
         /*código german*/
 
         $("#sliderComoUsar").click(function(){
@@ -924,19 +866,11 @@ $('#hour_to').datetimepicker({
                 url2[url2.length-1] = 'slider1.png';
                 $(".boton_ponerAutoArriendo").removeClass("botonSeleccionado");
                 $(".boton_arriendaUnAuto").addClass("botonSeleccionado");
-                //$("#tagLineArrendador").css("display","none");
-                //$("#tagLineArrendatario").css("display","block");
-                //$("#preguntasContenedor2").css("display","none");
-                //$("#preguntasContenedor").css("display","block");
             }else{
                 url1[url1.length-1] = 'dueno.png';
                 url2[url2.length-1] = 'slider2.png';
                 $(".boton_arriendaUnAuto").removeClass("botonSeleccionado");
                 $(".boton_ponerAutoArriendo").addClass("botonSeleccionado");
-                //$("#tagLineArrendatario").css("display","none");
-                //$("#tagLineArrendador").css("display","block");
-                //$("#preguntasContenedor").css("display","none");
-                //$("#preguntasContenedor2").css("display","block"); 
             }
 
             url1 = url1.join('/');
@@ -969,12 +903,6 @@ $('#hour_to').datetimepicker({
 
             url2 = url2.join('/');
             $(".img_instrucciones_2").attr('src',url2);
-
-            //$("#tagLineArrendador").css("display","none");
-            //$("#tagLineArrendatario").css("display","block");
-
-            //$("#preguntasContenedor2").css("display","none");
-            //$("#preguntasContenedor").css("display","block");
                         
         });
         $(".boton_ponerAutoArriendo").click(function(){
@@ -996,11 +924,6 @@ $('#hour_to').datetimepicker({
             url2 = url2.join('/');
             $(".img_instrucciones_2").attr('src',url2);
 
-            //$("#tagLineArrendatario").css("display","none");
-            //$("#tagLineArrendador").css("display","block");
-
-            //$("#preguntasContenedor").css("display","none");
-            //$("#preguntasContenedor2").css("display","block");           
 
         });
 
@@ -1038,38 +961,6 @@ $('#hour_to').datetimepicker({
 	
 
 	
-    //function timerSet( input1, input2 ){	
-
-
-    ///$(input1, input2).timePicker();	
-
-    // Store time used by duration.
-
-    /*	var oldTime = $.timePicker(input1).getTime();
-
-        alert("aaa");
-        // Keep the duration between the two inputs.
-        $(input1).change(function() {
-          if ($(input2).val()) { // Only update when second input has a value.
-                // Calculate duration.
-                var duration = ($.timePicker(input2).getTime() - oldTime);
-                var time = $.timePicker(input1).getTime();
-                // Calculate and update the time in the second input.
-                $.timePicker(input2).setTime(new Date(new Date(time.getTime() + duration)));
-                oldTime = time;
-          }
-        });
-        // Validate.
-        $(input2).change(function() {
-          if($.timePicker(input1).getTime() > $.timePicker(this).getTime()) {
-                $(this).addClass("error");
-          }
-          else {
-                $(this).removeClass("error");
-          }
-        });*/
-
-    ///}
 	
     function getModel(currentElement,reloadCars){
 		
@@ -1279,7 +1170,7 @@ $('#hour_to').datetimepicker({
         <div class="search_box_1">
             <input type="button" class="buton_more_options"/>
             <div class="search_box_1_title">
-                <p class="txt_buscador">Busca autos cerca de ti</p>
+                <p class="txt_buscador" style="margin-top: 10px;">Busca autos cerca de ti</p>
             </div>
             <div class="search_box_1_header">    
                 <div class="search_box1_form" style="">

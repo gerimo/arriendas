@@ -296,7 +296,7 @@ input.buton_more_options{
 .search_arecomend_window {
 	float: left;
 	width: 280px;
-	height: 595px;
+	height: 585px;
 	overflow-y: visible;
     overflow-x: hidden;
 }
