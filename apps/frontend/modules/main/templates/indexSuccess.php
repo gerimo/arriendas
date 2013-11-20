@@ -1197,10 +1197,10 @@ $('#day_to').change(function() {
                 <div class="search_box1_form" style="">
                 	<span style="width: 206px;" class="group_desde">Ubicación</span><span style="width: 214px;" class="group_desde">Disponible desde</span><span style="width: 140px;" class="group_hasta">Hasta</span>
                 	<input id="searchTextField" style="margin-right: 5px;width: 185px;" type="text" size="50" placeholder="Introduce una ubicación" autocomplete="off"/>
-                    <input class="input_f1" style="width: 90px;margin-right: 5px;" readonly="readonly" type="text" id="day_from" value="Dia de entrega"/>
-                    <input class="input_f1" style="width: 90px;margin-right: 5px;" readonly="readonly" type="text" id="hour_from" value="Hora de entrega"/>
-                    <input class="input_f1" style="width: 90px;margin-right: 5px;" readonly="readonly" type="text" id="day_to" value="Dia de devolución"/>
-                    <input class="input_f1b" style="width: 90px;margin-right: 0px;" readonly="readonly" type="text" id="hour_to"  value="Hora de devolución" />
+                    <input class="input_f1" style="width: 90px;margin-right: 5px;" readonly="readonly" type="text" id="day_from" value="Día entrega"/>
+                    <input class="input_f1" style="width: 90px;margin-right: 5px;" readonly="readonly" type="text" id="hour_from" value="Hora entrega"/>
+                    <input class="input_f1" style="width: 90px;margin-right: 5px;" readonly="readonly" type="text" id="day_to" value="Día devolución"/>
+                    <input class="input_f1b" style="width: 95px;margin-right: 0px;padding-left:5px" readonly="readonly" type="text" id="hour_to"  value="Hora devolución" />
                     <a id="more" class="button2 altCta2 menor" href="#"><span id="spanprecio">+</span></a>
                 </div>
 
