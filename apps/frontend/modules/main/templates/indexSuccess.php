@@ -438,15 +438,37 @@ center = new google.maps.LatLng(-33.0,-71.3);
         //document.write(var_dump(url,'html'));
 
         $.getJSON(url, function(data){
-	    	
-            if (markers) {
-                for (i in markers) {
-                    markers[i].setMap(null);
-                }
-                markers =  new Array();
-                markers.length = 0;
-            }
-            
+	    	console.log(markers);
+			
+        //    if (markers) {
+        //        for (i in markers) {
+         //           markers[i].setMap(null);
+          //      }
+      //          markers =  new Array();
+    //            markers.length = 0;
+  //          }
+
+//	    	console.log(markers);
+
+            if (markers) {		
+			// Unset all markers
+console.log('clearMarkers');
+
+
+var i = 0, l = markers.length;
+var markersLength = markers.length;
+for (i; i<l; i++) {
+    markers[i].setMap(null)
+}
+markers = [];
+};
+
+if (markersLength>0) {
+console.log('clearMarkersCluster');
+  //          if (markerCluster) {
+//markerCluster.clearMarkers();
+markerCluster.clearMarkers();
+        };    
 	    	var contador = 0;
             var nodes = '';
             for (var i = 0; i < data.cars.length; i++) {
