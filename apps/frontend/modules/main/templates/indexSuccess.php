@@ -765,7 +765,8 @@ markerCluster.clearMarkers();
 	 $('#video').html('	<iframe src="http://player.vimeo.com/video/45668172?title=0&byline=0&portrait=0ll" width="940" height="500" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>')
 
         //timerSet("#hour_from", "#hour_to");
-        $("#hour_from , #hour_to").timePicker({show24Hours:false});	
+//        $("#hour_from , #hour_to").timePicker({show24Hours:false});	
+        $("#hour_from , #hour_to").timePicker();	
 			
         getModel($("#brand"),false);
 		 
