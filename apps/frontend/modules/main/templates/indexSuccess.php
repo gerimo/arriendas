@@ -765,8 +765,7 @@ markerCluster.clearMarkers();
 	 $('#video').html('	<iframe src="http://player.vimeo.com/video/45668172?title=0&byline=0&portrait=0ll" width="940" height="500" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>')
 
         //timerSet("#hour_from", "#hour_to");
-//        $("#hour_from , #hour_to").timePicker({show24Hours:false});	
-        $("#hour_from , #hour_to").timePicker();	
+        $("#hour_from , #hour_to").timePicker({show24Hours:false});	
 			
         getModel($("#brand"),false);
 		 
@@ -790,10 +789,16 @@ markerCluster.clearMarkers();
 
 		if( date.getMinutes() < 30 ){
             var hora = date.getHours()+1;
-            $('#hour_from').val(hora + ':00:00');
+    suffex = (hora >= 12)? 'PM' : 'AM';
+    hora = (hora > 12)? hora -12 : hora;
+    hora = (hora == '00')? 12 : hora;
+	$('#hour_from').val(hora + ':00 '+suffex);
         }else{
             var hora = date.getHours()+1;
-            $('#hour_from').val(hora+':30:00');
+    suffex = (hora >= 12)? 'PM' : 'AM';
+    hora = (hora > 12)? hora -12 : hora;
+    hora = (hora == '00')? 12 : hora;
+	$('#hour_from').val(hora+':30 '+suffex);
         }
 
         //fecha actual
