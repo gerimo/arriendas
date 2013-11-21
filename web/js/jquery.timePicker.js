@@ -58,8 +58,8 @@
 
     // Build the list.
     for(var i = 0; i < times.length; i++) {
-      if(i%2==0) $tpList.append("<li class='horaPar'>" + times[i] + "" + "</li>");
-      else $tpList.append("<li class='horaImpar'>" + times[i] + "" + "</li>");
+      if(i%2==0) $tpList.append("<li class='horaPar'>" + times[i] + ":00" + "</li>");
+      else $tpList.append("<li class='horaImpar'>" + times[i] + ":00" + "</li>");
     }
     $tpDiv.append($tpList);
     // Append the timPicker to the body and position it.
