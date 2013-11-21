@@ -275,7 +275,7 @@ margin-left: 30px;">
                       } 
                 ?>
 
-                <div id="eleccionDeposito" style="height: 80px;">
+                <div id="eleccionDeposito" style="height: 120px;">
 <center>
 
 				Comparta ahora Arriendas.cl en Facebook y obtén un 5% de descuento!
@@ -292,7 +292,7 @@ margin-left: 30px;">
 						return false;"><?php echo image_tag('compartir_en_face.png') ?></a>
 				</center>
 
-					
+					<br><br>Texto sugerido: <i>Arriendas.cl te permite arrendar TU PROPIO AUTO con seguro y ganar lucas. ¿Algún interesado? @arriendaschile</i>
                 </div>
 
                 <div class="botones">
