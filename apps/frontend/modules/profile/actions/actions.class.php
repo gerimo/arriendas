@@ -1598,7 +1598,7 @@ class profileActions extends sfActions {
                         require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
                         $mail = new Email();
                         $mail->setSubject('Has recibido un pedido de reserva!');
-                        $mail->setBody("<p>Hola $name:</p><p>Has recibido un pedido de reserva por $$price por tu $marcaModelo desde el día <b>$fechaInicio</b> a las <b>$horaInicio</b> hasta el día <b>$fechaTermino</b> a las <b>$horaTermino</b> cuando te habrán devuelto el auto.</p><p>Para ver la reserva has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a></p>");
+                        $mail->setBody("<p>Hola $name:</p><p>Has recibido un pedido de reserva por $$price por tu $marcaModelo desde <b>$fechaInicio $horaInicio</b> hasta <b>$fechaTermino $horaTermino</b> cuando te habrán devuelto el auto.</p><p>Para ver la reserva has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a></p>");
                         $mail->setTo($correo);
                         if($correo != $correoEmail) $mail->setCc($correoEmail);
                         $mail->submit();
@@ -1640,7 +1640,7 @@ class profileActions extends sfActions {
                         $nameRenter = $reserve->getNameRenter();
                         $mail2 = new Email();
                         $mail2->setSubject('Has realizado una reserva!');
-                        $stringVar = "<p>Hola $nameRenter:</p><p>Has realizado un pedido de reserva al vehículo $marcaModelo para el día <b>$fechaInicio</b> a las <b>$horaTermino</b>.</p><p>El precio es final e incluye Seguro de daños, robo y destrucción, TAGs y Asistencia.</p><p><u><b>Esta es una lista de otros autos disponibles en esta categoría:</b></u></p><ul>";
+                        $stringVar = "<p>Hola $nameRenter:</p><p>Has realizado un pedido de reserva al vehículo $marcaModelo desde <b>$fechaInicio $horaInicio</b> hasta <b>$fechaTermino $horaTermino</b>.</p><p>El precio es final e incluye Seguro de daños, robo y destrucción, TAGs y Asistencia.</p><p><u><b>Esta es una lista de otros autos disponibles en esta categoría:</b></u></p><ul>";
                         $cantidad = count($cars);
                         if($cantidad>=5) $cantidad = 5;
                         else $cantidad = count($cars);
