@@ -245,9 +245,9 @@ $(document).ready(function() {
         */
 		
 		//valido que reserva sea de mínimo 1 hora
-		if( isValidDate( $('#datefrom').val() ) && isValidDate( $('#dateto').val() ) && isValidTime( $('#hour_from').val() ) && isValidTime( $('#hour_to').val() ) ) {				
-			if( $('#datefrom').val() == $('#dateto').val() ) {					
-				var dif = restarHoras($('#hour_from').val(), $('#hour_to').val())					
+		if( isValidDate( $('#datefrom').val() ) && isValidDate( $('#dateto').val() ) && isValidTime( convertAmPmto24($('#hour_from').val()) ) && isValidTime( convertAmPmto24($('#hour_to').val()) ) ) {				
+		if( $('#datefrom').val() == $('#dateto').val() ) {
+				var dif = restarHoras(convertAmPmto24($('#hour_from').val()), convertAmPmto24($('#hour_to').val()))					
 				if( dif < 1 ) { alert('La reserva no puede ser menor a 1 hora'); return false; }
 			}
 		}
@@ -294,19 +294,19 @@ $(document).ready(function() {
     $.datepicker.setDefaults($.datepicker.regional['es']);
 
 
-    $.timepicker.regional['es'] = {
-        timeOnlyTitle: 'Seleccione la hora',
-        timeText: 'Tiempo',
-        hourText: 'Hora',
-        minuteText: 'Minutos',
-        secondText: 'Segundos',
-        millisecText: 'Milisegundos',
-        currentText: 'Hoy',
-        closeText: 'Cerrar',
-        timeFormat: 'hh:mm:ss',
-        ampm: false
-    };
-    $.timepicker.setDefaults($.timepicker.regional['es']);
+//    $.timepicker.regional['es'] = {
+//        timeOnlyTitle: 'Seleccione la hora',
+//        timeText: 'Tiempo',
+//        hourText: 'Hora',
+//        minuteText: 'Minutos',
+//        secondText: 'Segundos',
+//        millisecText: 'Milisegundos',
+//        currentText: 'Hoy',
+//        closeText: 'Cerrar',
+//        timeFormat: 'hh:mm:ss',
+ //       ampm: false
+  //  };
+  //  $.timepicker.setDefaults($.timepicker.regional['es']);
 
     $('#datefrom,#dateto').datepicker({
         dateFormat: 'dd-mm-yy',
@@ -314,13 +314,13 @@ $(document).ready(function() {
         minDate:'-0d'
     });
     
-    $("#hour_from , #hour_to").timePicker();
+    $("#hour_from , #hour_to").timePicker({show24Hours:false});	
 
 
-	if(isValidDate('<?php echo $fndreserve['fechainicio']?>')) $('#datefrom').val('<?php echo $fndreserve['fechainicio']?>');
-	if(isValidTime('<?php echo $fndreserve['horainicio']?>')) $('#hour_from').val('<?php echo $fndreserve['horainicio']?>');
-	if(isValidDate('<?php echo $fndreserve['fechatermino']?>')) $('#dateto').val('<?php echo $fndreserve['fechatermino']?>');
-	if(isValidTime('<?php echo $fndreserve['horatermino']?>')) $('#hour_to').val('<?php echo $fndreserve['horatermino']?>');
+//	if(isValidDate('<?php echo $fndreserve['fechainicio']?>')) $('#datefrom').val('<?php echo $fndreserve['fechainicio']?>');
+//	if(isValidTime('<?php echo $fndreserve['horainicio']?>')) $('#hour_from').val(tConvert('<?php echo $fndreserve['horainicio']?>'));
+//	if(isValidDate('<?php echo $fndreserve['fechatermino']?>')) $('#dateto').val('<?php echo $fndreserve['fechatermino']?>');
+//	if(isValidTime('<?php echo $fndreserve['horatermino']?>')) $('#hour_to').val(tConvert('<?php echo $fndreserve['horatermino']?>'));
 
     //calcula el precio
     calcularPrecio();
@@ -351,7 +351,7 @@ $(document).ready(function() {
             var nuevaFecha = dia+"-"+mes+"-"+anio;//creando un string de la nueva fecha
             $('#dateto').attr("value", nuevaFecha);//mostrar la nueva fecha en fecha_to
         }
-        var tiempoTo = tiempoHora+":"+hora[1]+":"+hora[2];
+        var tiempoTo = tiempoHora+":"+hora[1];//+":"+hora[2];
         $('#hour_to').attr("value", tiempoTo);
 
         calcularPrecio();
@@ -362,7 +362,7 @@ $(document).ready(function() {
     });
 
     $('#hour_to').click(function(){
-        var hora_inicial= $("#hour_from").timePicker('getTime').val();
+        var hora_inicial= convertAmPmto24($("#hour_from").timePicker('getTime').val());
         hora_inicial = hora_inicial.split(':');
         var tipoMinutos = hora_inicial[1];
         if(tipoMinutos==00){
@@ -379,6 +379,18 @@ $(document).ready(function() {
 
 });
 
+function tConvert (time) {
+  // Check correct time format and split into components
+  time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+
+  if (time.length > 1) { // If time format correct
+    time = time.slice (1);  // Remove full string match value
+    time[5] = +time[0] < 12 ? 'AM' : 'PM'; // Set AM/PM
+    time[0] = +time[0] % 12 || 12; // Adjust hours
+  }
+  return time.join (''); // return adjusted time or original string
+}
+
 //FUNCIONES JAVASCRIPT
 function obtenerNumeroCorrecto(numero){
     var numeroNuevo = "";
@@ -390,24 +402,54 @@ function obtenerNumeroCorrecto(numero){
     }
     return numeroNuevo;
 }
+
+function convertAmPmto24(time) {
+
+//console.log(time);
+//var time = $("#starttime").val();
+var hours = Number(time.match(/^(\d+)/)[1]);
+var minutes = Number(time.match(/:(\d+)/)[1]);
+var AMPM = time.match(/\s(.*)$/)[1];
+if(AMPM == "PM" && hours<12) hours = hours+12;
+if(AMPM == "AM" && hours==12) hours = hours-12;
+var sHours = hours.toString();
+var sMinutes = minutes.toString();
+if(hours<10) sHours = "0" + sHours;
+if(minutes<10) sMinutes = "0" + sMinutes;
+
+return sHours + ":" + sMinutes;
+
+}
+
 function calcularPrecio(){
     var fecha_inicial= $("#datefrom").val();
     var fecha_final= $("#dateto").val();
-    var hora_inicial= $("#hour_from").timePicker('getTime').val();
-    var hora_final= $("#hour_to").timePicker('getTime').val();
+    var hora_inicial= convertAmPmto24($("#hour_from").timePicker('getTime').val());
+    var hora_final= convertAmPmto24($("#hour_to").timePicker('getTime').val());
     //var fechaInicio = fecha_inicial+' '+hora_inicial;
 
+		if( isValidDate( $('#datefrom').val() ) && isValidDate( $('#dateto').val() ) && isValidTime( convertAmPmto24($('#hour_from').val()) ) && isValidTime( convertAmPmto24($('#hour_to').val()) ) ) {				
+		if( $('#datefrom').val() == $('#dateto').val() ) {
+				var dif = restarHoras(convertAmPmto24($('#hour_from').val()), convertAmPmto24($('#hour_to').val()))					
+				if( dif < 1 ) { alert('La reserva no puede ser menor a 1 hora'); return false; }
+			}
+		}
+			
     if(fecha_inicial!='' && fecha_final!='Día de entrega' && hora_inicial!='' && hora_final!='Hora de entrega'){
-        //alert(fecha_inicial+' '+hora_inicial+' '+fecha_final+' '+hora_final);
-
+        //alert(fecha_inicial+' '+hora_inicInvalid Date ial+' '+fecha_final+' '+hora_final);        fecha_inicial = fecha_inicial.split('-');
         fecha_inicial = fecha_inicial.split('-');
         fecha_final = fecha_final.split('-');
-        hora_inicial = hora_inicial.split(':');
-        hora_final = hora_final.split(':');
+        hora_inicial = (hora_inicial.split(':'));
+        hora_final = (hora_final.split(':'));
 
-        var dateInicio = new Date(fecha_inicial[2],fecha_inicial[1]-1,fecha_inicial[0],hora_inicial[0],hora_inicial[1],hora_inicial[2]);
-        var dateTermino = new Date(fecha_final[2],fecha_final[1]-1,fecha_final[0],hora_final[0],hora_final[1],hora_final[2]);
+			console.log(hora_inicial[0]);
 
+
+        var dateInicio = new Date(fecha_inicial[2],fecha_inicial[1]-1,fecha_inicial[0],hora_inicial[0],hora_inicial[1],0);
+        var dateTermino = new Date(fecha_final[2],fecha_final[1]-1,fecha_final[0],hora_final[0],hora_final[1],0);
+
+		console.log(dateInicio);
+		
         var diferencia = new Date(dateTermino.valueOf()-dateInicio.valueOf());
         diferencia = Math.round(diferencia/(1000*3600)); // cantidad de horas de diferencia
 
@@ -460,7 +502,7 @@ function isValidDate(date){
 }
 
 function isValidTime(time){
-	var objRegExp  = /(^\d{2}:\d{2}:\d{2}$)/;
+	var objRegExp  = /(^\d{2}:\d{2}$)/;
 	
 	if(time.match(objRegExp)) {
       return true;
@@ -539,14 +581,14 @@ function restarHoras(hora_desde, hora_hasta) {
                         <div class="c1 height">
                             <label>Desde</label>
                             <input id="datefrom" name="datefrom" type="text" class="datepicker" readonly="readonly" value="<?php if(isset($ultimaFechaValidaDesde)) echo $ultimaFechaValidaDesde; else echo "Día de inicio";?>" /><br/><br/>
-                            <input readonly="readonly" type="text" id="hour_from" name="hour_from" readonly="readonly" value="<?php if(isset($ultimaHoraValidaDesde)) echo $ultimaHoraValidaDesde; else echo "Hora de inicio"; ?>"/>
+                            <input readonly="readonly" type="text" id="hour_from" name="hour_from" readonly="readonly" value="<?php if(isset($ultimaHoraValidaDesde)) echo date("g:i A", strtotime($ultimaHoraValidaDesde)); else echo "Hora de inicio"; ?>"/>
                         </div><!-- /c1 -->
 						<?php } ?>
 
                         <div class="c1 height">
                             <label>Hasta</label>
                             <input id="dateto" name="dateto" type="text" class="datepicker" readonly="readonly" value="<?php if(isset($ultimaFechaValidaHasta)) echo $ultimaFechaValidaHasta; else echo "Día de entrega";?>"/><br/><br/>
-                            <input readonly="readonly" type="text" id="hour_to" name="hour_to" value="<?php if(isset($ultimaHoraValidaHasta)) echo $ultimaHoraValidaHasta; else echo "Hora de entrega"; ?>" />
+                            <input readonly="readonly" type="text" id="hour_to" name="hour_to" value="<?php if(isset($ultimaHoraValidaHasta)) echo date("g:i A", strtotime($ultimaHoraValidaHasta)); else echo "Hora de entrega"; ?>" />
                         </div><!-- /c1 -->
 			
                         <div class="c1 height" style="width:256px;">

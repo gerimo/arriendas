@@ -967,20 +967,20 @@ $.datepicker.regional['es'] = {
 
 $.datepicker.setDefaults($.datepicker.regional['es']);
 
-$.timepicker.regional['es'] = {
-	timeOnlyTitle: 'Seleccione la hora',
-	timeText: 'Tiempo',
-	hourText: 'Hora',
-	minuteText: 'Minutos',
-	secondText: 'Segundos',
-	millisecText: 'Milisegundos',
-	currentText: 'Hoy',
-	closeText: 'Cerrar',
-	timeFormat: 'hh:mm:ss',
-	ampm: false
-};
+//$.timepicker.regional['es'] = {
+//	timeOnlyTitle: 'Seleccione la hora',
+//	timeText: 'Tiempo',
+//	hourText: 'Hora',
+//	minuteText: 'Minutos',
+//	secondText: 'Segundos',
+//	millisecText: 'Milisegundos',
+//	currentText: 'Hoy',
+//	closeText: 'Cerrar',
+//	timeFormat: 'hh:mm:ss',
+//	ampm: false
+//};
 
-$.timepicker.setDefaults($.timepicker.regional['es']);
+//$.timepicker.setDefaults($.timepicker.regional['es']);
 
 //ingresa valores de fecha y hora al dialog
 function cargarFecha(fechas){

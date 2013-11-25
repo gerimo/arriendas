@@ -916,10 +916,16 @@ public function executeNotificacion(sfWebRequest $request) {
         $day_from = $request->getParameter('day_from');
         $day_to = $request->getParameter('day_to');
 
-        $hour_from = $request->getParameter('hour_from');
-        $hour_to = $request->getParameter('hour_to');
+					$this->logMessage('day_from '.$day_from, 'err');
 
-        $brand = $request->getParameter('brand');
+					
+        $hour_from = date("H:i", strtotime($request->getParameter('hour_from')));
+        $hour_to = date("H:i", strtotime($request->getParameter('hour_to')));
+
+
+		
+        
+		$brand = $request->getParameter('brand');
         $model = $request->getParameter('model');
 
         $location = $request->getParameter('location');
@@ -997,8 +1003,12 @@ $this->logMessage(date('h:i:s'), 'err');
                 $day_to != ""
         ) {
 
+			$this->logMessage('day_from0 '.$day_from, 'err');
+
             $day_from = implode('-', array_reverse(explode('-', $day_from)));
             $day_to = implode('-', array_reverse(explode('-', $day_to)));
+
+						$this->logMessage('day_from1 '.$day_from, 'err');
 
             $fullstartdate = $day_from . " " . $hour_from;
             $fullenddate = $day_to . " " . $hour_to;
@@ -1033,6 +1043,7 @@ print_r('<br />'.date('h:i:s'));
 }
 $this->logMessage(date('h:i:s'), 'err');
 
+			$this->logMessage('day_from2 '.$day_from, 'err');
 
         $data = array();
         $carsid = Array();
@@ -1088,12 +1099,16 @@ $this->logMessage(date('h:i:s'), 'err');
             ) {
 
 
-                $fullstartdate = $day_from . " " . $hour_from;
-                $fullenddate = $day_to . " " . $hour_to;
+    //            $fullstartdate = $day_from . " " . $hour_from;
+      //          $fullenddate = $day_to . " " . $hour_to;
 				
-                $day_from = implode('-', array_reverse(explode('-', $day_from)));
-                $day_to = implode('-', array_reverse(explode('-', $day_to)));
- 
+//                $day_from = implode('-', array_reverse(explode('-', $day_from)));
+  //              $day_to = implode('-', array_reverse(explode('-', $day_to)));
+
+$this->logMessage('fullstartdate '.$fullstartdate, 'err');
+$this->logMessage('fullenddate '.$fullenddate, 'err');
+
+				
                 $has_reserve = $car->hasReserve($fullstartdate, $fullstartdate, $fullenddate, $fullenddate);
 //                $is_available = $car->isAvailable($hour_from, $hour_to, $day_from, $day_to);
             }
@@ -1119,6 +1134,7 @@ $velocidad=0;
             if($tipoTrans == 0) $transmision = "Manual";
             if($tipoTrans == 1) $transmision = "Autom&aacute;tica";
 
+$this->logMessage($has_reserve, 'err');
   
             if (!$has_reserve) {
 
@@ -1639,7 +1655,10 @@ $this->logMessage(date('h:i:s'), 'err');
     public function executeRegisterVerify(sfWebRequest $request) {
 
         $userid = $this->getRequest()->getParameter('userid');
-
+		if (!$userid){
+			$userid = $this->getUser()->getAttribute("userid");
+		};
+		
         $this->info = "";
 
         $data = array();
@@ -1670,6 +1689,10 @@ $this->logMessage(date('h:i:s'), 'err');
 		$this->getUser()->setAuthenticated(true);
 		$this->getUser()->setAttribute("logged", true);
 		$this->getUser()->setAttribute("userid", $user->getId());
+		$this->getUser()->setAttribute("fecha_registro", $user->getFechaRegistro());
+		$this->getUser()->setAttribute("email", $user->getEmail());
+		$this->getUser()->setAttribute("telephone", $user->getTelephone());
+		$this->getUser()->setAttribute("comuna", $user->getComuna());
 		$this->getUser()->setAttribute("name", current(explode(' ' , $user->getFirstName())) . " " . substr($user->getLastName(), 0, 1) . '.');
 		$this->getUser()->setAttribute("picture_url", $user->getFileName());
 		//Modificacion para identificar si el usuario es propietario o no de vehiculo
@@ -1817,7 +1840,7 @@ $this->logMessage(date('h:i:s'), 'err');
                         $u->setRutFile($request->getParameter('rut'));
 
                     $u->setRut($rut);
-		            $u->setFechaRegistro(strftime("%Y/%m/%d"));
+//		            $u->setFechaRegistro(strftime("%Y/%m/%d"));
                     $u->save();
                     
                       $this->getUser()->setFlash('msg', 'Autenticado');
@@ -2110,6 +2133,10 @@ El equipo de Arriendas.cl
 	                $this->getUser()->setAttribute("logged", true);
                     $this->getUser()->setAttribute("loggedFb", false);
 	                $this->getUser()->setAttribute("userid", $user->getId());
+					$this->getUser()->setAttribute("fecha_registro", $user->getFechaRegistro());
+					$this->getUser()->setAttribute("email", $user->getEmail());
+					$this->getUser()->setAttribute("telephone", $user->getTelephone());
+					$this->getUser()->setAttribute("comuna", $user->getComuna());
 	                $this->getUser()->setAttribute("name", current(explode(' ' , $user->getFirstName())) . " " . substr($user->getLastName(), 0, 1) . '.');
 	                $this->getUser()->setAttribute("picture_url", $user->getFileName());
         			//Modificacion para identificar si el usuario es propietario o no de vehiculo
@@ -2511,6 +2538,7 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
                     $myUser = null;
                 }
                 if (!$myUser) {
+					$newUser=true;
                     $myUser = new User();
                     $myUser->setFirstname($user["first_name"]);
                     $myUser->setLastname($user["last_name"]);
@@ -2523,6 +2551,7 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
                     $myUser->setConfirmed(true);
                     $myUser->save();
                 } else {
+					$newUser=false;
                     $myUser->setFacebookId($user["id"]);
                     $myUser->setPictureFile($photo_url);
                     $myUser->setConfirmedFb(true);
@@ -2560,14 +2589,20 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
 
                 $this->calificacionesPendientes();
 
-                if ($this->getUser()->getAttribute("lastview") != null) {
-                    $this->redirect($this->getUser()->getAttribute("lastview"));
-                } else {
-                    $this->redirect('main/index');
-                    //$this->redirect('profile/cars');
-                    //$this->redirect($_SESSION['login_back_url']);
-                }
-            } else {
+                if ($newUser) {
+		            $this->getRequest()->setParameter('userid', $userdb->getId());
+					$this->redirect('main/registerVerify');
+				}else{
+					if ($this->getUser()->getAttribute("lastview") != null) {
+						$this->redirect($this->getUser()->getAttribute("lastview"));
+					} else {
+						$this->redirect('main/index');
+						//$this->redirect('profile/cars');
+						//$this->redirect($_SESSION['login_back_url']);
+					}
+				}
+	
+			} else {
                 $this->getUser()->setFlash('msg', 'Hubo un error en el login con Facebook');
                 $this->forward('main', 'login');
             }

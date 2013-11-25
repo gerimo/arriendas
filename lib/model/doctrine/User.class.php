@@ -1439,4 +1439,15 @@ class User extends BaseUser {
         
     }
 
+		public function save(Doctrine_Connection $conn = null)	{
+
+	
+	if (!$this->getFechaRegistro())
+	  {
+		$this->setFechaRegistro(strftime("%Y/%m/%d %H:%i:%s"));
+	  }
+
+	  return parent::save($conn);
+	}
+	
 }

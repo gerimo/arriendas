@@ -333,6 +333,11 @@ class profileActions extends sfActions {
         $precio = number_format($precio, 0, ',', '.');
         $idCar = $reserve->getCarId();
 
+		$lastName = $reserve->getLastnameOwner();
+		$telephone = $reserve->getTelephoneOwner();
+		$lastNameRenter = $reserve->getLastNameRenter();
+		$telephoneRenter = $reserve->getTelephoneRenter();
+
         if($accion == 'preaprobar'){
             //crea la fila en la tabla transaction
             $this->executeConfirmReserve($idReserve);
@@ -344,7 +349,12 @@ class profileActions extends sfActions {
             $mail->setSubject('Se ha aprobado tu reserva! (Falta pagar)');
             $mail->setBody("<p>Hola $nameRenter:</p><p>Se ha aprobado tu reserva!</p><p>Para acceder a los datos entrega del vehículo debes pagar $$precio.- CLP.</p><p>Si tu arriendo no se concreta, Arriendas.cl no le pagará al dueño del auto y te daremos un auto a elección.</p><p>Has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a> para pagar.</p><p><a href='http://www.arriendas.cl/main/generarReporte/idAuto/$idCar'>Datos del arriendo</a><br><a href='http://www.arriendas.cl/api.php/contrato/generarContrato/tokenReserva/$tokenReserve'>Ver contrato</a></p>");
             $mail->setTo($correoRenter);
-            $mail->setCc('soporte@arriendas.cl');
+            echo $mail->submit();
+
+            $mail = new Email();
+            $mail->setSubject('Se ha aprobado una reserva');
+            $mail->setBody("<p>Dueño: $nameOwner $lastName ($telephone) - $correoOwner</p><p>Arrendatario: $nameRenter $lastNameRenter ($telephoneRenter) - $correoRenter</p><p>Precio: $precio</p>");
+            $mail->setTo('soporte@arriendas.cl');
             echo $mail->submit();
 
             if($reserve->getConfirmedSMSRenter()==1){
@@ -355,7 +365,7 @@ class profileActions extends sfActions {
             //al propietario
             $mail2 = new Email();
             $mail2->setSubject('Has aprobado una reserva!');
-            $mail2->setBody("<p>Hola $nameOwner:</p><p>Has aprobado una reserva!</p><p>Recuerda que debes tener el informe de daños de tu auto completo para poder realizarla, si no es así <a href='http://www.arriendas.cl/profile/aseguraTuAuto/id/$idCar/paso/1'>complétalo aquí.</a></p><p><a href='http://www.arriendas.cl/main/generarReporte/idAuto/$idCar'>Datos del arriendo</a><br><a href='http://www.arriendas.cl/api.php/contrato/generarContrato/tokenReserva/$tokenReserve'>Ver contrato</a></p>");
+            $mail2->setBody("<p>Hola $nameOwner:</p><p>Has aprobado una reserva!</p><p>Recuerda que puedes aprobar varios pedidos de reserva para la misma fecha. El primer arrendatario que pague, ganará el arriendo.</p><p>El contrato de arriendo se emitirá una vez que el arrendatario haya pagado. <a href='http://www.arriendas.cl/api.php/contrato/generarContrato/tokenReserva/$tokenReserve'>Esta es la versión preliminar</a>.</p><p>Su pago se te informará por este medio y verás el cambio en la pestaña 'Reservas' del sitio.</p>");
             $mail2->setTo($correoOwner);
             echo $mail2->submit();
         }
@@ -1588,7 +1598,7 @@ class profileActions extends sfActions {
                         require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
                         $mail = new Email();
                         $mail->setSubject('Has recibido un pedido de reserva!');
-                        $mail->setBody("<p>Hola $name:</p><p>Has recibido un pedido de reserva por $$price por tu $marcaModelo desde el día <b>$fechaInicio</b> a las <b>$horaInicio</b> hasta el día <b>$fechaTermino</b> a las <b>$horaTermino</b> cuando te habrán devuelto el auto.</p><p>Para ver la reserva has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a></p>");
+                        $mail->setBody("<p>Hola $name:</p><p>Has recibido un pedido de reserva por $$price por tu $marcaModelo desde <b>$fechaInicio $horaInicio</b> hasta <b>$fechaTermino $horaTermino</b> cuando te habrán devuelto el auto.</p><p>Para ver la reserva has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a></p>");
                         $mail->setTo($correo);
                         if($correo != $correoEmail) $mail->setCc($correoEmail);
                         $mail->submit();
@@ -1630,7 +1640,7 @@ class profileActions extends sfActions {
                         $nameRenter = $reserve->getNameRenter();
                         $mail2 = new Email();
                         $mail2->setSubject('Has realizado una reserva!');
-                        $stringVar = "<p>Hola $nameRenter:</p><p>Has realizado un pedido de reserva al vehículo $marcaModelo para el día <b>$fechaInicio</b> a las <b>$horaTermino</b>.</p><p>El precio es final e incluye Seguro de daños, robo y destrucción, TAGs y Asistencia.</p><p><u><b>Esta es una lista de otros autos disponibles en esta categoría:</b></u></p><ul>";
+                        $stringVar = "<p>Hola $nameRenter:</p><p>Has realizado un pedido de reserva al vehículo $marcaModelo desde <b>$fechaInicio $horaInicio</b> hasta <b>$fechaTermino $horaTermino</b>.</p><p>El precio es final e incluye Seguro de daños, robo y destrucción, TAGs y Asistencia.</p><p><u><b>Esta es una lista de otros autos disponibles en esta categoría:</b></u></p><ul>";
                         $cantidad = count($cars);
                         if($cantidad>=5) $cantidad = 5;
                         else $cantidad = count($cars);
