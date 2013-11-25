@@ -551,7 +551,7 @@ var google_conversion_value = 0;
 				s = document.getElementsByTagName('script')[0];
 			t.async = true;
 			t.id    = 'cio-tracker';
-			t.setAttribute('data-site-id', 'ae657aef27af3c3392fc');
+			t.setAttribute('data-site-id', '0c462a970bacf1efb272');
 			t.src = 'https://assets.customer.io/assets/track.js';
 			s.parentNode.insertBefore(t, s);
 		  })();
@@ -563,7 +563,10 @@ var google_conversion_value = 0;
 			email: '<?php echo ucwords($sf_user->getAttribute('email')) ?>',
 			created_at: <?php echo (strtotime($sf_user->getAttribute('fecha_registro'))) ?>,
 			name: '<?php echo ucwords($sf_user->getAttribute('name')) ?>',
-			proprietario: '<?php echo ucwords($sf_user->getAttribute('proprietario')) ?>',
+			propietario: '<?php echo ucwords($sf_user->getAttribute('propietario')) ?>',
+			telephone: '<?php echo ucwords($sf_user->getAttribute('telephone')) ?>',
+			comuna: '<?php echo ucwords($sf_user->getAttribute('comuna')) ?>',
+			region: '<?php echo ucwords($sf_user->getAttribute('region')) ?>',
 		  });
 		</script>		
 <?php }?>

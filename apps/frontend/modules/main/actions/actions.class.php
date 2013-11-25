@@ -1693,10 +1693,11 @@ $this->logMessage(date('h:i:s'), 'err');
 		$this->getUser()->setAttribute("email", $user->getEmail());
 		$this->getUser()->setAttribute("telephone", $user->getTelephone());
 		$this->getUser()->setAttribute("comuna", $user->getComuna());
+		$this->getUser()->setAttribute("region", $user->getRegion());
 		$this->getUser()->setAttribute("name", current(explode(' ' , $user->getFirstName())) . " " . substr($user->getLastName(), 0, 1) . '.');
 		$this->getUser()->setAttribute("picture_url", $user->getFileName());
 		//Modificacion para identificar si el usuario es propietario o no de vehiculo
-		if($user->isPropietario()) {
+		if($user->getPropietario()) {
 		    $this->getUser()->setAttribute("propietario",true);			    
 		} else {
 		    $this->getUser()->setAttribute("propietario",false);
@@ -1979,7 +1980,7 @@ $this->logMessage(date('h:i:s'), 'err');
         require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
         $mail = new Email();
         $mail->setSubject('Recuperar Password');
-        $mail->setBody("<p>Hola:</p><p>Para generar una nueva contraña, haz click <a href='$url'>aqu&iacute;</a></p>");
+        $mail->setBody("<p>Hola:</p><p>Para generar una nueva contraseña, haz click <a href='$url'>aqu&iacute;</a></p>");
         $mail->setTo($correo);
         $mail->submit();
 
@@ -2138,10 +2139,11 @@ El equipo de Arriendas.cl
 					$this->getUser()->setAttribute("email", $user->getEmail());
 					$this->getUser()->setAttribute("telephone", $user->getTelephone());
 					$this->getUser()->setAttribute("comuna", $user->getComuna());
+					$this->getUser()->setAttribute("region", $user->getRegion());
 	                $this->getUser()->setAttribute("name", current(explode(' ' , $user->getFirstName())) . " " . substr($user->getLastName(), 0, 1) . '.');
 	                $this->getUser()->setAttribute("picture_url", $user->getFileName());
         			//Modificacion para identificar si el usuario es propietario o no de vehiculo
-        			if($user->isPropietario()) {
+        			if($user->getPropietario()) {
         	        	    $this->getUser()->setAttribute("propietario",true);			    
         	    		} else {
         			    $this->getUser()->setAttribute("propietario",false);
@@ -2580,7 +2582,7 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
                 $this->getUser()->setAttribute("picture_url", $userdb->getPictureFile());
                 $this->getUser()->setAttribute("fb", true);	
         		//Modificacion para identificar si el usuario es propietario o no de vehiculo
-        		if($userdb->isPropietario()) {
+        		if($userdb->getPropietario()) {
         		    $this->getUser()->setAttribute("propietario",true);			    
         		} else {
         		    $this->getUser()->setAttribute("propietario",false);
