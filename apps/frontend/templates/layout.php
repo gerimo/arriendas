@@ -506,7 +506,7 @@ var google_conversion_value = 0;
                         </ul>
                         <ul class="enlaces_box movil">
                             <li class="enlaces_titulo">Acerca de Arriendas</li>
-                            <li><a href="<?php echo url_for('main/compania') ?>" target="_blank" title="La compañía Arriendas.cl">La Compañía</a></li>
+                            <li><a href="<?php echo url_for('main/compania') ?>"  title="La compañía Arriendas.cl">La Compañía</a></li>
                             <li><a href="<?php echo url_for('main/terminos') ?>" target="_blank" title="Términos y Condiciones">Términos y Condiciones</a></li>
                             <li><a href="https://arriendascl.zendesk.com/anonymous_requests/new" target="_blank" title="Contacto">Contacto</a></li>
                             <li><a href="https://arriendascl.zendesk.com/forums" target="_blank" title="Foro">Foro</a></li>

@@ -35,6 +35,23 @@ class rutinasActions extends sfActions
 					$user->save();
                 }			
  }
+ 
+ 
+  public function executeUser(sfWebRequest $request)
+  {
+  
+		$this->setLayout(false);
+
+                $users = Doctrine_Core::getTable('User')
+                        ->createQuery('s')
+                        ->select('*')
+                        ->execute();
+
+                foreach($users as $user) {
+					$user->save();
+                }			
+ }
+ 
 
   
   }

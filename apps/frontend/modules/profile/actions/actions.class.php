@@ -1515,38 +1515,38 @@ class profileActions extends sfActions {
                 $reservas = Doctrine_Core::getTable("reserve")->findByUserId($idUsuario);
                 $reservaPrevia = false;
 
-                foreach ($reservas as $reserva) {
-                    //comprueba que sea el mismo auto
-                    if($carid == $reserva->getCarId()){
+//                foreach ($reservas as $reserva) {
+//                    //comprueba que sea el mismo auto
+//                    if($carid == $reserva->getCarId()){
+//
+//                        //comprueba que la reserva no esté eliminada o cancelada
+//                        if(!$reserva->getCanceled()){
+//
+  //                          $date = $reserva->getDate();
+    //                        $date = strtotime($date);
+      //                      $duration = $reserva->getDuration();
+   //                         $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
 
-                        //comprueba que la reserva no esté eliminada o cancelada
-                        if(!$reserva->getCanceled()){
+//                            $dateInicio = strtotime($startDate);
+  //                          $dateFin = strtotime($endDate);
 
-                            $date = $reserva->getDate();
-                            $date = strtotime($date);
-                            $duration = $reserva->getDuration();
-                            $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
-
-                            $dateInicio = strtotime($startDate);
-                            $dateFin = strtotime($endDate);
-
-                            if($date>=$fechaActual){
+    //                        if($date>=$fechaActual){
                                 //echo $date." ".$dateInicio." ".$dateFin."<br>";
 
                                 //fecha de inicio y fecha de termino se encuentra dentro del rango $dateInicio y $dateFin
-                                if($date>=$dateInicio && $date<=$dateFin){
-                                    $reservaPrevia = true;
-                                }
+      //                          if($date>=$dateInicio && $date<=$dateFin){
+        //                            $reservaPrevia = true;
+          //                      }
 
-                                $date = $date+$duration*3600;
-                                if($date>=$dateInicio && $date<=$dateFin){
-                                    $reservaPrevia = true;
-                                }
-                            }
-                        }
+       //                         $date = $date+$duration*3600;
+       //                         if($date>=$dateInicio && $date<=$dateFin){
+       //                             $reservaPrevia = true;
+        //                        }
+          //                  }
+            //            }
 
-                    }
-                }
+              //      }
+               // }
 
                 if(!$reservaPrevia){
 

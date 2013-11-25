@@ -42,9 +42,9 @@ p.textoPie{
             Para los dueños de autos Arriendas.cl es una verdadera alternativa para gestionar tu propio negocio y armar un equipo.<br><br>
             ¡Empieza tu propio negocio hoy!<br><br>
             <p class="textoPie">
-            <b style="margin-bottom:10px;float: left;">Visítanos en cualquier momento:</b><br>
-            Encomenderos 253<br>Las Condes, Santiago<br>7550166
-            </p>
+            <b style="margin-bottom:0px;float: left;">Visítanos en cualquier momento:</b>
+			<br>Providencia 229 (entrada por Perez Espinoza)<br>Providencia, Santiago
+			</p>
             </p>
         </div>
     <br /><br />

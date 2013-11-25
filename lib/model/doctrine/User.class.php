@@ -1447,6 +1447,16 @@ class User extends BaseUser {
 		$this->setFechaRegistro(strftime("%Y/%m/%d %H:%i:%s"));
 	  }
 
+//	  if (!$this->getPassword())
+//	  {
+//		$this->setPassword(sha1($this->getFacebookId().rand(11111, 99999)));
+//	  }
+
+ 	  if (!$this->getHash())
+	  {
+		$this->setHash(sha1($this->getFacebookId().rand(11111, 99999)));
+	  }
+
 	  return parent::save($conn);
 	}
 	
