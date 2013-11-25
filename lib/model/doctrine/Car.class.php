@@ -117,30 +117,35 @@ class Car extends BaseCar
   
  public function hasReserve($startDate, $startDate, $endDate, $endDate)
   {
-  
-	/*echo "<pre>";
-	echo "ID:" . $this->getId()."\n"; 
-	echo "INdate:" . $startDate . "\n";
-	echo "Indate:" . $endDate . "\n";
-	echo "Reserves:" . count($this->getReserves()). "\n";
-	  
-	foreach ($this->getReserves() as $c) 
-	{
-			echo "Dates:" . $c->getDate()."\n"; 
-	}
-	*/
 
-   $has_reserve = Doctrine_Core::getTable('Reserve')
-	->createQuery('a')
-	->where('((a.date <= ? and date_add(a.date, INTERVAL a.duration HOUR) > ?) or (a.date <= ? and date_add(a.date, INTERVAL a.duration HOUR) > ?) or (a.date > ? and date_add(a.date, INTERVAL a.duration HOUR) < ?)) and (a.Car.id = ?)', array($startDate, $startDate, $endDate, $endDate, $startDate, $endDate, $this->getId()))
-	->fetchArray();
+	$rangeDates = array($startDate, $endDate,$startDate, $endDate,$startDate, $endDate);
+					$q = Doctrine_Query::create()
+					  ->from('reserve r')
+//					  ->leftJoin('transaction t ON r.id = t.reserve_id')
+					  ->leftJoin('r.Transaction t')
+					  ->where('t.completed = ?', true)
+					  ->andwhere('r.car_id = ?', $this->getId())
+					  ->andwhere('? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR ? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR r.date BETWEEN ? AND ? OR DATE_ADD(r.date, INTERVAL r.duration HOUR) BETWEEN ? AND ?', $rangeDates);
+	
+						$checkAvailability = $q->fetchArray();
+	
+						if( !$checkAvailability ) {
+							return false;
+						 }else{
+							return true;
+							};
+
+//   $has_reserve = Doctrine_Core::getTable('Reserve')
+//	->createQuery('a')
+//	->where('((a.date <= ? and date_add(a.date, INTERVAL a.duration HOUR) > ?) or (a.date <= ? and date_add(a.date, INTERVAL a.duration HOUR) > ?) or (a.date > ? and date_add(a.date, INTERVAL a.duration HOUR) < ?)) and (a.Car.id = ?)', array($startDate, $startDate, $endDate, $endDate, $startDate, $endDate, $this->getId()))
+//	->fetchArray();
 	
 	//print_r(count($has_reserve));
   
-	 if (count($has_reserve) == 0)
-		return false;
-	 else
-		return true;
+//	 if (count($has_reserve) == 0)
+//		return false;
+//	 else
+//		return true;
 	 
 
   }

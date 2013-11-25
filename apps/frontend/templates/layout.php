@@ -541,7 +541,33 @@ var google_conversion_value = 0;
                 </div><!-- /footer_contenido -->
             </div><!-- /footer -->
         </div><!-- body_bg -->
-    </body>
+		<script type="text/javascript">
+		  var _cio = _cio || [];
+		  (function() {
+			var a,b,c;a=function(f){return function(){_cio.push([f].
+			concat(Array.prototype.slice.call(arguments,0)))}};b=["load","identify",
+			"sidentify","track","page"];for(c=0;c<b.length;c++){_cio[b[c]]=a(b[c])};
+			var t = document.createElement('script'),
+				s = document.getElementsByTagName('script')[0];
+			t.async = true;
+			t.id    = 'cio-tracker';
+			t.setAttribute('data-site-id', 'ae657aef27af3c3392fc');
+			t.src = 'https://assets.customer.io/assets/track.js';
+			s.parentNode.insertBefore(t, s);
+		  })();
+		</script>
+<?php if (sfContext::getInstance()->getUser()->isAuthenticated()){ ?>
+       		<script type="text/javascript">
+		  _cio.identify({
+			id: 'a_<?php echo ucwords($sf_user->getAttribute('userid')) ?>',
+			email: '<?php echo ucwords($sf_user->getAttribute('email')) ?>',
+			created_at: <?php echo (strtotime($sf_user->getAttribute('fecha_registro'))) ?>,
+			name: '<?php echo ucwords($sf_user->getAttribute('name')) ?>',
+			proprietario: '<?php echo ucwords($sf_user->getAttribute('proprietario')) ?>',
+		  });
+		</script>		
+<?php }?>
+</body>
 </html>
 
 

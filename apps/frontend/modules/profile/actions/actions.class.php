@@ -365,7 +365,7 @@ class profileActions extends sfActions {
             //al propietario
             $mail2 = new Email();
             $mail2->setSubject('Has aprobado una reserva!');
-            $mail2->setBody("<p>Hola $nameOwner:</p><p>Has aprobado una reserva!</p><p>Recuerda que debes tener el informe de daños de tu auto completo para poder realizarla, si no es así <a href='http://www.arriendas.cl/profile/aseguraTuAuto/id/$idCar/paso/1'>complétalo aquí.</a></p><p><a href='http://www.arriendas.cl/main/generarReporte/idAuto/$idCar'>Datos del arriendo</a><br><a href='http://www.arriendas.cl/api.php/contrato/generarContrato/tokenReserva/$tokenReserve'>Ver contrato</a></p>");
+            $mail2->setBody("<p>Hola $nameOwner:</p><p>Has aprobado una reserva!</p><p>Recuerda que puedes aprobar varios pedidos de reserva para la misma fecha. El primer arrendatario que pague, ganará el arriendo.</p><p>El contrato de arriendo se emitirá una vez que el arrendatario haya pagado. <a href='http://www.arriendas.cl/api.php/contrato/generarContrato/tokenReserva/$tokenReserve'>Esta es la versión preliminar</a>.</p><p>Su pago se te informará por este medio y verás el cambio en la pestaña 'Reservas' del sitio.</p>");
             $mail2->setTo($correoOwner);
             echo $mail2->submit();
         }

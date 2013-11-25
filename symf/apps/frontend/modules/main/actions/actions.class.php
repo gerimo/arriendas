@@ -1212,6 +1212,10 @@ El equipo de Arriendas.cl
 	                $this->getUser()->setAuthenticated(true);
 	                $this->getUser()->setAttribute("logged", true);
 	                $this->getUser()->setAttribute("userid", $user->getId());
+					$this->getUser()->setAttribute("fecha_registro", $user->getFechaRegistro());
+					$this->getUser()->setAttribute("email", $user->getEmail());
+					$this->getUser()->setAttribute("telephone", $user->getTelephone());
+					$this->getUser()->setAttribute("comuna", $user->getComuna());
 	                $this->getUser()->setAttribute("name", $user->getFirstName() . " " . substr($user->getLastName(), 0, 1) . '.');
 	                $this->getUser()->setAttribute("picture_url", $user->getFileName());
 			//Modificacion para identificar si el usuario es propietario o no de vehiculo
@@ -1594,6 +1598,10 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
                 $this->getUser()->setAuthenticated(true);
                 $this->getUser()->setAttribute("logged", true);
                 $this->getUser()->setAttribute("userid", $userdb->getId());
+				$this->getUser()->setAttribute("fecha_registro", $userdb->getFechaRegistro());
+				$this->getUser()->setAttribute("email", $userdb->getEmail());
+				$this->getUser()->setAttribute("telephone", $userdb->getTelephone());
+				$this->getUser()->setAttribute("comuna", $userdb->getComuna());
                 $this->getUser()->setAttribute("name", $userdb->getFirstName() . " " . substr($userdb->getLastName(), 0, 1) . '.');
                 $this->getUser()->setAttribute("picture_url", $userdb->getPictureFile());
                 $this->getUser()->setAttribute("fb", true);	
