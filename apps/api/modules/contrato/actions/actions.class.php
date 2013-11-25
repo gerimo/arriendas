@@ -27,14 +27,16 @@ class contratoActions extends sfActions
     
     if (!$tokenReserva){
 		$reserva= Doctrine_Core::getTable('reserve')->findOneById($idReserva);
+		$transaction= Doctrine_Core::getTable('transaction')->findOneByReserveId($idReserva);
     }else{
 		$reserva= Doctrine_Core::getTable('reserve')->findOneByToken($tokenReserva);
+		$transaction= Doctrine_Core::getTable('transaction')->findOneByReserveId($reserva->getId());
     };
 	
     $datosContrato= new stdClass();
     
-    $confirmed=$reserva->getConfirmed();
-	
+	$confirmed=$transaction->getCompleted();
+		
 	
     $datosContrato->fecha_arriendo=substr($reserva->getDate(),8,2)."/".substr($reserva->getDate(),5,2)."/".substr($reserva->getDate(),0,4);
     $datosContrato->hora_arriendo=substr($reserva->getDate(),11,5);
