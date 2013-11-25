@@ -1972,7 +1972,7 @@ $this->logMessage(date('h:i:s'), 'err');
         $url = $_SERVER['SERVER_NAME'];
         $url = str_replace('http://', '', $url);
         $url = str_replace('https://', '', $url);
-        $url = 'http://www.arriendas.cl/main/recover?email=' . $user->getEmail() . "&hash=" . $user->getPassword();
+        $url = 'http://www.arriendas.cl/main/recover?email=' . $user->getEmail() . "&hash=" . $user->getHash();
 
         $correo = $user->getUsername();
 
@@ -2011,7 +2011,7 @@ $this->logMessage(date('h:i:s'), 'err');
         $this->email = $this->getRequestParameter('email');
         $this->hash = $this->getRequestParameter('hash');
 
-        $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ? and u.password = ?', array($this->email, $this->hash));
+        $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ? and u.hash = ?', array($this->email, $this->hash));
         $user = $q->fetchOne();
         if ($user == null)
             exit();
@@ -2023,7 +2023,7 @@ $this->logMessage(date('h:i:s'), 'err');
         $hash = $this->getRequestParameter('hash');
         $password = $this->getRequestParameter('password');
 
-        $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ? and u.password = ?', array($email, $hash));
+        $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ? and u.hash = ?', array($email, $hash));
         $user = $q->fetchOne();
         if ($user != null) {
             $user->setPassword(md5($password));
