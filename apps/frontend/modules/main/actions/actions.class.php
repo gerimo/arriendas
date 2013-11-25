@@ -2027,7 +2027,7 @@ $this->logMessage(date('h:i:s'), 'err');
         $user = $q->fetchOne();
         if ($user != null) {
             $user->setPassword(md5($password));
-			$this->setHash(sha1($password.rand(11111, 99999)));
+			$user->setHash(sha1($password.rand(11111, 99999)));
             $user->save();
             $this->redirect('main/login');
         }
