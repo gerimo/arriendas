@@ -14,7 +14,7 @@
 		<meta property="og:site_name" content="Arriendas.cl - Arrienda un auto vecino, cerca de ti" />
 		<meta property="fb:admins" content="germanrimo" />
 		<meta property="og:description" content="Arrienda un auto por horas o Gana dinero todos los meses arrendando tu auto, con seguro." />
-        
+		<meta name="google-site-verification" content="Y0Lya1N8r_8QIRxeyg3ht2lcwxR2B0VmBLAgopF2lgQ" />        
             <?php /* include_http_metas() */ ?>
             <?php include_metas() ?>
             <?php
