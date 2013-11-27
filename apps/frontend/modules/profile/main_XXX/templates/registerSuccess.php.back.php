@@ -1,14 +1,6 @@
 
 <?php use_stylesheet('registro.css') ?>
 <?php use_stylesheet('comunes.css') ?>
-<?php
-$useragent=$_SERVER['HTTP_USER_AGENT'];
-if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i',$useragent)||preg_match('/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i',substr($useragent,0,4))){
-  use_stylesheet('moviles.css');
-}
-?>
-<?php use_javascript('validaRut.js') ?>
-
 <style>
 
     .input {
@@ -82,8 +74,8 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
         width:200px;
     }
 
-    input.inputerror { border: 1px solid #FF8003; background-color:#FFFADC;}
-    select.inputerror { border: 1px solid #FF8003; }
+	input.inputerror { border: 1px solid #FF8003; background-color:#FFFADC;}
+	select.inputerror { border: 1px solid #FF8003; }
 
 </style>
 
@@ -99,8 +91,8 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
             changeYear: true,
             yearRange: ' 1920 : * ',
             onSelect: function(dateText, inst) { 
-        
-        
+		
+		
                 var input = $(this);
                 var def = input.attr('title');
                 if (!input.val() || (input.val() == def)) {
@@ -114,9 +106,9 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                     input.prev('span').css('visibility', 'hidden');
                 }
       
-        
-        
-        
+		
+		
+		
             }
         });
   
@@ -124,7 +116,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
         function imageUpload(form, formfile, preview, link)
         {
 
-            $(formfile).live('change', function()   
+            $(formfile).live('change', function()	
             { 
                 $(preview).html('');
                 $(preview).html('<?=image_tag("loader.gif")?>');
@@ -133,12 +125,12 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                     target: preview
                 }).submit();
             });
-        
+		
             $(link).click(function(event) {
                 $(formfile).click();
             });
 
-        }       
+        }		
 
         var i=1;
         imageUpload('#formmain', '#filemain', '#previewmain','#linkmain');
@@ -150,8 +142,8 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
         //$('#logo').change(function(click) {
         //$('#text-logo').val(this.value);
         //});
-    
-    
+	
+	
 
         function toggleLabel() {
             var input = $(this);
@@ -187,10 +179,10 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
         $('input, textarea').live('focusin', function() {
             $(this).prev('span').css('color', '#ccc');
         });
-    
-    
+	
+	
         $('input, textarea').live('focusin', toggleLabel);
-    
+	
         $('input, textarea').live('focusout', function() {
             $(this).prev('span').css('color', '#999');
         });
@@ -198,10 +190,6 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
         $(function() {
             $('input, textarea').each(function() { toggleLabel.call(this); });
         });
-
-        /* carga las comunas de la región metropolitana por default */
-        cargarComunas(13);
-
 
     });
 
@@ -218,7 +206,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     }
 </script>
 
-<!--
+
 <div style="visibility:hidden;overflow:hidden;height:0px;">
 
     <form id="formlicence" method="post" enctype="multipart/form-data" action='<?php echo url_for('main/uploadLicence?photo=licence&width=194&height=204&file=filelicence') ?>'>
@@ -238,38 +226,35 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     </form>
     
 </div>
--->
+
 
 <?php echo form_tag('main/doRegister', array('method' => 'post', 'id' => 'frm1')); ?> 
 
 <script>
     function submitFrom()
     {
-        
-        $('.inputerror').each(function() {
-            
-            $(this).removeClass('inputerror');
-        })
-        
-        //Validaciones
-        if( $("#firstname").val() == "" ) { $("#firstname").parent("label").find("span").text("* Falta ingresar Nombre"); }
-        if( $("#lastname").val() == "" ) { $("#lastname").parent("label").find("span").text("* Falta ingresar Apellido"); }
-        if( $("#email").val() == "" ) { $("#email").parent("label").find("span").text("* Falta ingresar Email"); }
-        if( $("#emailAgain").val() == "" ) { $("#emailAgain").parent("label").find("span").text("* Falta Confirmar Email"); }
-        if( $("#password").val() == "" ) { $("#password").parent("label").find("span").text("* Falta ingresar Contraseña"); }
-        if( $("#passwordAgain").val() == "" ) { $("#passwordAgain").parent("label").find("span").text("* Falta Confirmar Contraseña"); }
-        if( $("#run").val() == "" ) { $("#run").parent("label").find("span").text("* Falta ingresar Rut"); }
-        if( $("#address").val() == "" ) { $("#address").parent("label").find("span").text("* Falta ingresar Dirección"); }
-        
-        document.forms["frm1"].username.value = document.forms["frm1"].email.value;
-
-        //alert("se va a enviar");
-        DoRutValidation();
+    	
+    	$('.inputerror').each(function() {
+    		
+    		$(this).removeClass('inputerror');
+    	})
+    	
+    	//Validaciones
+    	if( $("#firstname").val() == "" ) { $("#firstname").parent("label").find("span").text("* Falta ingresar Nombre"); }
+    	if( $("#lastname").val() == "" ) { $("#lastname").parent("label").find("span").text("* Falta ingresar Apellido"); }
+    	if( $("#email").val() == "" ) { $("#email").parent("label").find("span").text("* Falta ingresar Email"); }
+    	if( $("#emailAgain").val() == "" ) { $("#emailAgain").parent("label").find("span").text("* Falta Confirmar Email"); }
+    	if( $("#password").val() == "" ) { $("#password").parent("label").find("span").text("* Falta ingresar Contraseña"); }
+    	if( $("#passwordAgain").val() == "" ) { $("#passwordAgain").parent("label").find("span").text("* Falta Confirmar Contraseña"); }
+    	if( $("#run").val() == "" ) { $("#run").parent("label").find("span").text("* Falta ingresar Rut"); }
+    	if( $("#address").val() == "" ) { $("#address").parent("label").find("span").text("* Falta ingresar Dirección"); }
+    	
+		document.forms["frm1"].username.value = document.forms["frm1"].email.value;
 
         if(document.myform.onsubmit())
         {
-            //alert("entro!");
-            document.forms["frm1"].submit();
+        	
+        	document.forms["frm1"].submit();
         }
     }
 
@@ -281,8 +266,8 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     }
 </script>
 
-<div class="main_box_1_anterior">
-    <div class="main_box_2_anterior">
+<div class="main_box_1">
+    <div class="main_box_2">
 
     <h1>Registro de usuarios</h1>
 
@@ -303,8 +288,10 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 
             <a href="#" id="linkmain"><?= image_tag('img_subi_tu_auto/upcar_ico_agrega_foto.png') ?></a>
 
+
+
+
         </div>
-<!--
         <br/>
         <div class="titulolteral">Licencia de conducir</div>
 
@@ -338,8 +325,11 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 
             <a href="#" id="linkrut"><?= image_tag('img_subi_tu_auto/upcar_ico_agrega_foto.png') ?></a>
 
+
+
+
         </div>
--->
+
 
         <!--  <h2 class="regis_usuario">Katia Dolizniak</h2>-->
 
@@ -366,7 +356,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 
             <?php if ($sf_user->getFlash('show')): ?>
 
-                <div style="border:1px solid #FF0000; background: #fcdfff;  width:360px; display:table;margin-bottom:20px; padding:20px;font-size:14px;">
+                <div style="border:1px solid #FF0000; background: #fcdfff; 	width:360px; display:table;margin-bottom:20px; padding:20px;font-size:14px;">
                     <?php echo $sf_user->getFlash('msg'); ?>
                 </div>
             <?php endif; ?>
@@ -447,17 +437,13 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
             <div class="c1 combo">
                 <label>
                     <select name="region" id="region" onChange="cargarComunas(this.value)">
+                        <option value="">---Regiones---</option>
                         <?php
                         foreach ($regiones as $r) {
                             if ($r["codigo"] == $userRegion) {
                                 echo '<option value="' . $r["codigo"] . '" selected>' . $r["nombre"] . '</option>';
                             } else {
-                                //marca por defaul la región metropolitana
-                                if($r["codigo"] == 13){
-                                    echo '<option value="' . $r["codigo"] . '" selected="selected">' . $r["nombre"] . '</option>';
-                                }else{
-                                    echo '<option value="' . $r["codigo"] . '">' . $r["nombre"] . '</option>';
-                                }
+                                echo '<option value="' . $r["codigo"] . '">' . $r["nombre"] . '</option>';
                             }
                         }
                         ?>
@@ -468,7 +454,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
             <div class="c1 combo">
                 <label class="input">
                     <select name="comunas" id="comunas">
-                        <option value="">Selecciona la Comuna</option>
+                    	<option value="">---Comunas---</option>
                         <?php
                         foreach ($comunas as $c) {
                             if ($c["codigoInterno"] == $userComuna) {
@@ -486,12 +472,11 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
             <div class="c1">
                 <label class="input">
                     <span>Fecha de nacimiento</span>
-                    <input type="text" id="birth" name="birth" class="datepicker" onfocus="checkclear(this)" >
+                    <input type="text" name="" id="birth" name="birth" class="datepicker" onfocus="checkclear(this)" >
                 </label>
             </div><!-- /c1 -->
 
-            <div style="clear: left;"><input type="checkbox" style="width:25px;" id="propietario" name="propietario"/>
-                <span style="font-family: 'Arial';font-size:11px;">Deseo ofrecer mi auto en arriendo</span></div>    
+
 
             <div class="regis_term">
                 <p>Terminos y Condiciones:</p>
@@ -502,7 +487,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                     </div>
                 </div><!-- /c1 -->
                 <div class="captcha" style="text-align: center; margin-top: 27px;">
-                    <span class="ingresa">Ingresa el siguiente texto</span><br/>
+                	<span class="ingresa">Ingresa el siguiente texto</span><br/>
                     <img class="img_capcha"src="<?php echo url_for('main/captcha') ?>" width="100" height="30" vspace="3"> <input class="ing_capcha" name="code" type="text"/><br />
                 </div>
                 
@@ -510,8 +495,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 
             <button class="regis_btn_formulario" name="save" onclick="submitFrom()"> Siguiente </button>        
 
-        </div>
-
+        </div><!-- regis_botones -->
             </div>
 
         </div><!-- regis_formulario -->
@@ -557,20 +541,6 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
         }
     }
 
-    function DoRutValidation(){
-        
-        var frm = document.forms["frm1"];
-        var rut = frm.run.value;
-        //alert(rut);
-        
-        if($.validaRut(rut)){ //rut correcto
-            $('#run').removeClass('inputerror');
-        }else{ //rut incorrecto
-            $('#run').addClass('inputerror');
-        }
-        
-    }
-
     var frmvalidator = new Validator("frm1");
  
     frmvalidator.EnableMsgsTogether();
@@ -591,8 +561,8 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     frmvalidator.addValidation("emailAgain","req", "Vuelva a ingresar el correo electronico");
     frmvalidator.addValidation("emailAgain","email", "Ingresa una direccion de correo valida");
     
-    //frmvalidator.addValidation("run","req", "Ingrese Rut");
-    //frmvalidator.addValidation("run","rut", "Ingrese un Rut valido");
+    frmvalidator.addValidation("run","req", "Ingrese Rut");
+    frmvalidator.addValidation("run","rut", "Ingrese un Rut valido");
     
     frmvalidator.addValidation("region","req", "Ingrese Region");
     frmvalidator.addValidation("comunas","req", "Ingrese Comuna");
@@ -603,7 +573,6 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 
     frmvalidator.setAddnlValidationFunction(DoPassValidation);
     frmvalidator.setAddnlValidationFunction(DoEmailValidation);
-    //frmvalidator.setAddnlValidationFunction(DoRutValidation);
  
 
  

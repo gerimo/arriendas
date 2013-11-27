@@ -256,6 +256,10 @@ abstract class BaseUser extends sfDoctrineRecord {
             'type' => 'string',
             'length' => 4,
         ));
+        $this->hasColumn('como', 'string', 200, array(
+            'type' => 'string',
+            'length' => 200,
+        ));
 
         $this->index('id_UNIQUE', array(
             'fields' =>

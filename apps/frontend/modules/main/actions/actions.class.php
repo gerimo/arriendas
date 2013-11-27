@@ -1792,38 +1792,38 @@ $this->logMessage(date('h:i:s'), 'err');
 
                 if ($request->getParameter('username') != null &&
                         $request->getParameter('firstname') != null &&
-                        $request->getParameter('lastname') != null &&
+ //                       $request->getParameter('lastname') != null &&
                         $request->getParameter('email') != null &&
                         $request->getParameter('password') != null &&
-                        $request->getParameter('email') == $request->getParameter('emailAgain') &&
-                        $request->getParameter('password') == $request->getParameter('passwordAgain') &&
-                        $request->getParameter('region') != 0 &&
-                        $request->getParameter('region') != null &&
-                        $request->getParameter('comunas') != 0 &&
-                        $request->getParameter('comunas') != null &&
-                        $request->getParameter('run') != null &&
-                        $request->getParameter('address') != null
+                        $request->getParameter('email') == $request->getParameter('emailAgain') 
+  //                      $request->getParameter('password') == $request->getParameter('passwordAgain') &&
+   //                     $request->getParameter('region') != 0 &&
+    //                    $request->getParameter('region') != null &&
+     //                   $request->getParameter('comunas') != 0 &&
+      //                  $request->getParameter('comunas') != null &&
+      //                  $request->getParameter('run') != null &&
+       //                 $request->getParameter('address') != null
                 ) {
 
                     //quita los puntos y el guión al rut
-                    $rut = $request->getParameter('run');
-                    $rut = str_replace(".", "", $rut);
-                    $rut = str_replace("-", "", $rut);
+//                    $rut = $request->getParameter('run');
+ //                   $rut = str_replace(".", "", $rut);
+  //                  $rut = str_replace("-", "", $rut);
 
                     $u = new User();
                     $u->setFirstname($request->getParameter('firstname'));
-                    $u->setLastname($request->getParameter('lastname'));
+    //                $u->setLastname($request->getParameter('lastname'));
                     $u->setEmail($request->getParameter('email'));
                     $u->setUsername($request->getParameter('username'));
                     $u->setPassword(md5($request->getParameter('password')));
 
                     $u->setCountry($request->getParameter('country'));
-                    $u->setCity($request->getParameter('city'));
-                    $u->setBirthdate($request->getParameter('birth'));
-                    $u->setTelephone($request->getParameter('telephone'));
-                    $u->setRegion($request->getParameter('region'));
-		    $u->setAddress($request->getParameter('address'));
-                    $u->setComuna($request->getParameter('comunas'));
+    //                $u->setCity($request->getParameter('city'));
+     //               $u->setBirthdate($request->getParameter('birth'));
+      //              $u->setTelephone($request->getParameter('telephone'));
+      //              $u->setRegion($request->getParameter('region'));
+//		    $u->setAddress($request->getParameter('address'));
+ //                   $u->setComuna($request->getParameter('comunas'));
 
                     $u->setHash(substr(md5($request->getParameter('username')), 0, 6));
 
@@ -1840,7 +1840,7 @@ $this->logMessage(date('h:i:s'), 'err');
                     if ($request->getParameter('rut') != NULL)
                         $u->setRutFile($request->getParameter('rut'));
 
-                    $u->setRut($rut);
+    //                $u->setRut($rut);
 //		            $u->setFechaRegistro(strftime("%Y/%m/%d"));
                     $u->save();
                     
@@ -1855,7 +1855,7 @@ $this->logMessage(date('h:i:s'), 'err');
 
                     $this->getRequest()->setParameter('userid', $u->getId());
 
-                    $this->forward('main', 'registerVerify');
+                    $this->forward('main', 'completeRegister');
                 }
                 else {
                     $this->getUser()->setFlash('msg', 'Uno de los datos ingresados es incorrecto');
@@ -1880,7 +1880,20 @@ $this->logMessage(date('h:i:s'), 'err');
 
     public function executeRegister(sfWebRequest $request) {
 
-        //print_r($_SESSION);die;
+    
+        if (!isset($_SESSION['reg_back'])) {
+            $urlpage = split('/', $request->getReferer());
+
+            if ($urlpage[count($urlpage) - 1] != "register" && $urlpage[count($urlpage) - 1] != "doRegister") {
+                $_SESSION['reg_back'] = $request->getReferer();
+            }
+        }
+        
+    }
+
+	
+	
+	    public function executeCompleteRegister(sfWebRequest $request) {
 
         if (!isset($_SESSION['reg_back'])) {
             $urlpage = split('/', $request->getReferer());
@@ -1899,8 +1912,71 @@ $this->logMessage(date('h:i:s'), 'err');
             echo $e->getMessage();
             die;
         }
+    
+   }
+
+	
+	
+
+    public function executeDoCompleteRegister(sfWebRequest $request) {
+        
+        if ($this->getRequest()->getMethod() != sfRequest::POST) {
+            sfView::SUCCESS;
+        } else {
+
+
+		        try {
+
+            $profile = Doctrine_Core::getTable('User')->find($this->getUser()->getAttribute('userid'));
+        //    $profile->setFirstname($request->getParameter('firstname'));
+        //    $profile->setLastname($request->getParameter('lastname'));
+        //    $profile->setEmail($request->getParameter('email'));
+            $profile->setRegion($request->getParameter('region'));
+            $profile->setComuna($request->getParameter('comunas'));
+            $profile->setComo($request->getParameter('como'));
+	    //    $profile->setAddress($request->getParameter('address'));
+        //    $profile->setBirthdate($request->getParameter('birth'));
+	    //    $profile->setApellidoMaterno($request->getParameter('apellidoMaterno'));
+	    //    $profile->setSerieRut($request->getParameter('serie_run'));
+    	 //   if($request->getParameter('password') != '') {
+         //       if ($request->getParameter('password') == $request->getParameter('passwordAgain'))
+         //           $profile->setPassword(md5($request->getParameter('password')));
+		//	}
+            if($profile->getTelephone() != $request->getParameter('telephone')){//Si se ingresa un nuevo telefono celular distinto al de la base de datos, el usuario podrá confirmarlo de nuevo
+                $profile->setTelephone($request->getParameter('telephone'));
+                $profile->setConfirmedSms(0);
+            }else{
+                $profile->setTelephone($request->getParameter('telephone'));
+            }
+     //       if ($request->getParameter('main') != NULL)
+      //          $profile->setPictureFile($request->getParameter('main'));
+       //     if ($request->getParameter('licence') != NULL)
+        //        $profile->setDriverLicenseFile($request->getParameter('licence'));
+		//	if ($request->getParameter('rut') != NULL)
+         //       $profile->setRutFile($request->getParameter('rut'));
+	//		$profile->setRut($request->getParameter('run'));
+            $profile->save();
+            $this->getUser()->setAttribute('picture_url', $profile->getFileName());
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+
+		            $this->redirect('main/registerVerify');
+
+		
+//        if($request->getParameter('redirect') && $request->getParameter('idRedirect')){
+  //          $this->redirect('profile/'.$request->getParameter('redirect')."?id=".$request->getParameter('idRedirect'));
+   //     }else{
+    //        $this->redirect('profile/cars');
+     //   }
+
+		
+		
+        return sfView::NONE;
+    }
     }
 
+	
     public function executeUserRegister(sfWebRequest $request) {
 
         //print_r($_SESSION);die;
@@ -2594,7 +2670,7 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
 
                 if ($newUser) {
 		            $this->getRequest()->setParameter('userid', $userdb->getId());
-					$this->redirect('main/registerVerify');
+					$this->redirect('main/completeRegister');
 				}else{
 					if ($this->getUser()->getAttribute("lastview") != null) {
 						$this->redirect($this->getUser()->getAttribute("lastview"));

@@ -491,3 +491,39 @@ ul.list_der li a:visited {
 .subMenu_moviles{
     display: none;
 }
+
+.arriendas_pink_btn {
+height: 36px;
+border: 2px solid #ec008c;
+background-color: #ec008c;
+-webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+color: white;
+text-transform: uppercase;
+font-weight: bold;
+box-shadow: 0px 0px 0px 1px #fff inset;
+-webkit-border-radius: 2px;
+-moz-border-radius: 2px;
+border-radius: 3px;
+cursor: pointer;
+user-select: none;
+padding-left: 10px;
+padding-right: 10px;
+display: inline-block;
+}
+
+.arriendas_pink_btn:hover {
+color: #fff;
+background-color: #D51085;
+border-color: #D51085;
+}
+
+.arriendas_btn_big {
+height: 39px !important;
+padding-left: 14px !important;
+padding-right: 14px !important;
+}
+

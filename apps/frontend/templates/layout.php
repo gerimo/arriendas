@@ -335,7 +335,7 @@
                 <div class="header_contenido">
                 
                     <div class="header_logo">
-                        <?php echo link_to(image_tag("arriendas_c.png", 'size=120x18'), 'main/index') ?>
+                        <?php echo link_to(image_tag("arriendas_c.png", 'size=120x18'), 'main/index',array('title' => 'Inicio')) ?>
                     </div>
                     
                     <?php if (!sfContext::getInstance()->getUser()->isAuthenticated()): ?>
@@ -406,13 +406,13 @@
                 <!-- inicio header_menu -->
                     <div class="header_menu"> 
                         <ul class="menu_1">
-            <li><a href="<?php echo url_for('main/index') ?>" class="item_1<?php
+       <!--     <li><a href="<?php echo url_for('main/index') ?>" class="item_1<?php
                             if (inModuleAndAction("main", "index")) {
                                 echo "_in";
                             }
                         ?>" title="Inicio">
                             <span>HOME</span></a></li>
-                            <li><a href="<?php echo url_for('como_funciona/index') ?>" class="item_1<?php
+    -->                        <li><a href="<?php echo url_for('como_funciona/index') ?>" class="item_1<?php
                             if (inModuleAndAction("como_funciona", "index")) {
                                 echo "_in";
                             }
@@ -427,19 +427,19 @@
                             <span>EN LOS MEDIOS</span></a></li>    
 
     
-                <li><a href="https://arriendascl.zendesk.com/anonymous_requests/new"
+<!--                <li><a href="https://arriendascl.zendesk.com/anonymous_requests/new"
                     class="item_2<?php if (inModuleAndAction("main", "contact")) { echo "_in"; } ?>"
                     target="_blank" title="Contacto"><span>CONTACTO</span></a></li>
-                    
-                <li class="item_ayuda"><a href="https://arriendascl.zendesk.com/forums" target="_blank" class="item_2"><span>AYUDA</span></a></li>
+    -->                
+                <li class="item_ayuda"><a href="https://arriendascl.zendesk.com/" target="_blank" class="item_2"><span>AYUDA</span></a></li>
                 </ul><!-- menu_1 -->
                 </div><!-- Fin header_menu -->
             <?php else: ?>
 
                 <div class="header_menu">
                     <ul class="menu_1">
-                        <li><a href="<?php echo url_for('main/index') ?>" class="item_1<?php if (inModuleAndAction("main", "index")) { echo "_in"; } ?>" title="Inicio"><span>HOME</span></a>
-                        </li>                                        
+<!--                        <li><a href="<?php echo url_for('main/index') ?>" class="item_1<?php if (inModuleAndAction("main", "index")) { echo "_in"; } ?>" title="Inicio"><span>HOME</span></a>
+                        </li>                                        -->
                         <?php  if(sfContext::getInstance()->getUser()->getAttribute("propietario")) {  ?>
                             <li><a href="<?php echo url_for('profile/pedidos') ?>" class="item_5<?php if (inModuleAndAction("profile", "pedidos")) { echo "_in"; }?>" title="Reservas de mis Autos"><span>RESERVAS</span></a>
                             </li>
@@ -451,9 +451,9 @@
                             <li><a href="<?php echo url_for("profile/addCar"); ?>" class="item_2<?php if (inModuleAndAction("profile", "index")) { echo "_in";} ?>" title="Sube un auto"><span>SUBE UN AUTO</span></a>
                         </li>
                         <?php } ?>
-                        <li><a href="https://arriendascl.zendesk.com/anonymous_requests/new" class="item_2<?php if (inModuleAndAction("main", "contact")) { echo "_in"; } ?>" target="_blank" title="Contacto"><span>CONTACTO</span></a>
-                        </li>
-                        <li class="item_ayuda"><a href="https://arriendascl.zendesk.com/forums" target="_blank" class="item_2"><span>AYUDA</span></a> 
+                        <!--<li><a href="https://arriendascl.zendesk.com/anonymous_requests/new" class="item_2<?php if (inModuleAndAction("main", "contact")) { echo "_in"; } ?>" target="_blank" title="Contacto"><span>CONTACTO</span></a>
+                        </li>-->
+                        <li class="item_ayuda"><a href="https://arriendascl.zendesk.com/" target="_blank" class="item_2"><span>AYUDA</span></a> 
                         </li>
                     </ul><!-- menu_1 -->  
                 </div><!-- header_menu -->

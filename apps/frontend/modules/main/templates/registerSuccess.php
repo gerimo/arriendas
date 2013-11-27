@@ -10,7 +10,23 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 <?php use_javascript('validaRut.js') ?>
 
 <style>
+.comboReg{
 
+width:333px;height:40px;
+-moz-border-radius-bottomleft: 5px;
+-moz-border-radius-bottomright: 5px;
+-webkit-border-bottom-left-radius: 5px;
+-webkit-border-bottom-right-radius: 5px;
+border-bottom-left-radius: 5px;
+border-bottom-right-radius: 5px;
+-moz-border-radius-topleft: 5px;
+-moz-border-radius-topright: 5px;
+-webkit-border-top-right-radius: 5px;
+-webkit-border-top-left-radius: 5px;
+border-top-left-radius: 5px;
+border-top-right-radius: 5px;
+
+}
     .input {
         /*margin: 5px 0;*/
         background: white;
@@ -85,13 +101,30 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     input.inputerror { border: 1px solid #FF8003; background-color:#FFFADC;}
     select.inputerror { border: 1px solid #FF8003; }
 
+select
+{
+    color: #999;
+}
+option
+{
+    color: #000;
+}
+option:first-child
+{
+    color: #999;
+}
 </style>
 
 <script type="text/javascript">
+	 function changeMe(sel)
+    {
+      sel.style.color = "#000";              
+    }
 
     $(document).ready(function() 
     { 
 
+	
         $( ".datepicker" ).datepicker({
             dateFormat: 'dd-mm-yy',
             buttonImageOnly: true,
@@ -117,7 +150,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
         
         
         
-            }
+				}
         });
   
 
@@ -253,19 +286,19 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
         
         //Validaciones
         if( $("#firstname").val() == "" ) { $("#firstname").parent("label").find("span").text("* Falta ingresar Nombre"); }
-        if( $("#lastname").val() == "" ) { $("#lastname").parent("label").find("span").text("* Falta ingresar Apellido"); }
+//        if( $("#lastname").val() == "" ) { $("#lastname").parent("label").find("span").text("* Falta ingresar Apellido"); }
         if( $("#email").val() == "" ) { $("#email").parent("label").find("span").text("* Falta ingresar Email"); }
         if( $("#emailAgain").val() == "" ) { $("#emailAgain").parent("label").find("span").text("* Falta Confirmar Email"); }
         if( $("#password").val() == "" ) { $("#password").parent("label").find("span").text("* Falta ingresar Contraseña"); }
-        if( $("#passwordAgain").val() == "" ) { $("#passwordAgain").parent("label").find("span").text("* Falta Confirmar Contraseña"); }
-        if( $("#run").val() == "" ) { $("#run").parent("label").find("span").text("* Falta ingresar Rut"); }
-        if( $("#address").val() == "" ) { $("#address").parent("label").find("span").text("* Falta ingresar Dirección"); }
-        if( $("#comunas").val() =='0') { $("#address").parent("label").find("span").text("* Falta ingresar Comuna"); }
+ //       if( $("#passwordAgain").val() == "" ) { $("#passwordAgain").parent("label").find("span").text("* Falta Confirmar Contraseña"); }
+//        if( $("#run").val() == "" ) { $("#run").parent("label").find("span").text("* Falta ingresar Rut"); }
+//        if( $("#address").val() == "" ) { $("#address").parent("label").find("span").text("* Falta ingresar Dirección"); }
+ //       if( $("#comunas").val() =='0') { $("#address").parent("label").find("span").text("* Falta ingresar Comuna"); }
         
         document.forms["frm1"].username.value = document.forms["frm1"].email.value;
 
         //alert("se va a enviar");
-        DoRutValidation();
+   //     DoRutValidation();
 
         if(document.myform.onsubmit())
         {
@@ -281,13 +314,14 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     }
 </script>
 
-<div class="main_box_1_anterior">
-    <div class="main_box_2_anterior">
-
-    <h1>Registro de usuarios</h1>
+<div class="main_box_1_anterior" style="width:380px;margin-bottom: 30px;">
+    <div class="main_box_2_anterior" style="width:380px;">
+<div class="barraSuperior"><p>REGISTRO</p></div>
+<div class="pasos" style="text-align: center;"> 
+		<img src="/images/img_publica_auto/1.png"><img src="/images/img_publica_auto/2claro.png">	</div>
 
     <!-- sector usuario -->
-
+	<!--
     <div class="regis_box_usuario">
 
         <div class="titulolteral">Foto perfil</div>
@@ -350,19 +384,19 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
              <li>Validar direccion</li>        
          </ul>
          
-        -->
+        
+    </div>
+	-->
 
-    </div><!-- regis_box_usuario -->
-
+<!-- regis_box_usuario -->
 
     <!-- sector datos de usuario -->
-    <div class="regis_box_info">     
-
-        <div class="regis_titulo_1">Datos de usuario</div>
+    <div class="regis_box_info" style="width:380px;">     
 
 
 
-        <div class="regis_formulario">  
+
+        <div class="regis_formulario" style="width: 370px;">  
 
             <?php if ($sf_user->getFlash('show')): ?>
 
@@ -386,25 +420,24 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                 </label>
             </div><!-- /c1 -->    
 
-            <div class="c1">
+<!--            <div class="c1">
                 <label class="input">
                     <span>Apellido Paterno</span>
                     <input id="lastname" name="lastname" type="text"  onfocus="checkclear(this)" >
                 </label>
             </div><!-- /c1 -->  
 
-            <div class="c1">
+ <!--           <div class="c1">
                 <label class="input">
                     <span>Apellido Materno</span>
                     <input id="lastname_2" name="lastname_2" type="text"  onfocus="checkclear(this)" >
                 </label>
             </div><!-- /c1 -->  
-
-            <div class="c1">
+<!--           <div class="c1">
                 <label class="input">
                     <span>Fecha de nacimiento</span>
                     <input type="text" name="" id="birth" name="birth" class="datepicker" onfocus="checkclear(this)" >
-                </label>
+                </label> 
             </div><!-- /c1 -->
             
             <div class="c1">
@@ -429,7 +462,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                 <br/>
             </div><!-- /c1 -->
 
-            <div class="c1">
+<!--            <div class="c1">
                 <label class="input">
                     <span>Confirma tu contrase&ntilde;a</span>
                     <input id="passwordAgain" name="passwordAgain" type="password" onfocus="checkclear(this)" />
@@ -437,37 +470,46 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                 <br/>
             </div><!-- /c1 -->
 
-            <div class="c1">
+ <!--           <div class="c1">
                 <label class="input">
                     <span>Rut</span>
                     <input type="text" id="run" name="run" onfocus="checkclear(this)" >
                 </label>
             </div><!-- /c1 -->  
 
-            <div class="c1">
+  <!--          <div class="c1">
                 <label class="input">
                     <span>Serie Rut</span>
                     <input type="text" id="serie_run" name="serie_run" onfocus="checkclear(this)" >
                 </label>
             </div><!-- /c1 -->  
             
-            <div class="c1">
+     <!--       <div class="c1">
                 <label class="input">
                     <span>Tel&eacute;fono</span>
                     <input type="text" name="telephone" id="telephone" onfocus="checkclear(this)" >
                 </label>
             </div><!-- /c1 -->
+
+       <!--     <div class="c1">
+                <label class="input" style="width:282px;height:40px;">
+                    <select onchange="changeMe(this)" name="como" id="como" class="comboReg">
+                        <option value="0" selected disabled>¿Cómo escuchaste de Nosotros?</option>
+						<option value="Google" >Google</option>
+                    </select>
+                </label>
+            </div><!-- /c1 -->
             
-            <div class="c1">
+    <!--        <div class="c1">
                 <label class="input">
                     <span>Direcci&oacute;n #1111</span>
                     <input type="text" name="address" id="address" onfocus="checkclear(this)" style="width:566px;" >
                 </label>
             </div><!-- /c1 -->
 
-            <div class="c1 combo">
+<!--            <div class="c1 combo">
                 <label>
-                    <select name="region" id="region" onChange="cargarComunas(this.value)">
+                    <select name="region" id="region" onChange="cargarComunas(this.value);changeMe(this)" class="comboReg">
                         <?php
                         foreach ($regiones as $r) {
                             if ($r["codigo"] == $userRegion) {
@@ -486,10 +528,10 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                 </label>
             </div><!-- /c1 -->
             
-            <div class="c1 combo">
+    <!--        <div class="c1 combo">
                 <label class="input">
-                    <select name="comunas" id="comunas">
-                        <option value="0">---Comunas---</option>
+                    <select name="comunas" id="comunas" onchange="changeMe(this)" class="comboReg" >
+                        <option value="0" selected disabled>---Comunas---</option>
                         <?php
                         foreach ($comunas as $c) {
                             if ($c["codigoInterno"] == $userComuna) {
@@ -502,20 +544,17 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                     </select>
                 </label>
             </div><!-- /c1 -->
-            <div style="clear: left;"><input type="checkbox" style="width:25px;" id="propietario" name="propietario"/>
+            
+		<!--	<div style="clear: left;"><input type="checkbox" style="width:25px;" id="propietario" name="propietario"/>
                 <span style="font-family: 'Arial';font-size:11px;">Deseo ofrecer mi auto en arriendo</span></div>    
-
-            <div class="regis_term">
-                <p><input type="checkbox" id="tandc" name="tandc" style="width:12px;height:12px; vertical-align: middle; " />
-                    Acepto <a href="http://www.arriendas.cl/main/terminosycondiciones" target="_blank">t&eacute;rminos y condiciones</a></p>
-                <div class="captcha" style="text-align: center; margin-top: 27px;">
-                    <span class="ingresa">Ingresa el siguiente texto</span><br/>
-                    <img class="img_capcha"src="<?php echo url_for('main/captcha') ?>" width="100" height="30" vspace="3"> <input class="ing_capcha" name="code" type="text"/><br />
-                </div>
+-->
+            <div class="regis_term" style="padding-top: 10px;width: 90%;">
+                <p style="margin-top: 0px;line-height: 15px;">
+				Al registrarme, declaro<br>aceptar los <a href="http://www.arriendas.cl/main/terminosycondiciones" target="_blank">t&eacute;rminos y condiciones</a></p>
                 
-        <div class="regis_botones">     
-
-            <button class="regis_btn_formulario" name="save" onclick="submitFrom()"> Siguiente </button>        
+        <div class="regis_botones" style="float: right;margin-top: 0px;width: 80px;">    
+             
+            <button class="arriendas_pink_btn arriendas_big_btn right" name="save" onclick="submitFrom()"> Siguiente </button>        
 
         </div>
 
@@ -584,11 +623,11 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
  
     //frmvalidator.addValidation("username","req","Ingrese un nombre de usuario");
     frmvalidator.addValidation("firstname","req","Ingrese su nombre");
-    frmvalidator.addValidation("lastname","req","Ingrese su apellido");
-    frmvalidator.addValidation("telephone","numeric","El Telefono Debe ser numerico");
+//    frmvalidator.addValidation("lastname","req","Ingrese su apellido");
+//    frmvalidator.addValidation("telephone","numeric","El Telefono Debe ser numerico");
 
     frmvalidator.addValidation("password","req", "Ingrese su contraseña");
-    frmvalidator.addValidation("passwordAgain","req", "Vuelva a ingresar su contraseña");
+//    frmvalidator.addValidation("passwordAgain","req", "Vuelva a ingresar su contraseña");
  
     frmvalidator.addValidation("email","maxlen=50");
     frmvalidator.addValidation("email","req", "Ingrese un correo electronico");
@@ -601,16 +640,16 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     //frmvalidator.addValidation("run","req", "Ingrese Rut");
     //frmvalidator.addValidation("run","rut", "Ingrese un Rut valido");
     
-    frmvalidator.addValidation("region","req", "Ingrese Region");
+//    frmvalidator.addValidation("region","req", "Ingrese Region");
     //frmvalidator.addValidation("comunas","req", "Ingrese Comuna");
 	
-    frmvalidator.addValidation("comunas","dontselect=0","Ingrese Comuna");	
+//    frmvalidator.addValidation("comunas","dontselect=0","Ingrese Comuna");	
 	
-    frmvalidator.addValidation("address","req", "Ingrese Direccion");
+  //  frmvalidator.addValidation("address","req", "Ingrese Direccion");
  
-    frmvalidator.addValidation("tandc","shouldselchk=on", "Acepte los terminos y condiciones");
+//    frmvalidator.addValidation("tandc","shouldselchk=on", "Acepte los terminos y condiciones");
 
-    frmvalidator.setAddnlValidationFunction(DoPassValidation);
+//    frmvalidator.setAddnlValidationFunction(DoPassValidation);
     frmvalidator.setAddnlValidationFunction(DoEmailValidation);
     //frmvalidator.setAddnlValidationFunction(DoRutValidation);
 
