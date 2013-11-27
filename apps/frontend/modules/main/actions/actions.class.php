@@ -1851,6 +1851,10 @@ $this->logMessage(date('h:i:s'), 'err');
                       //$this->getUser()->setAttribute("name", current(explode(' ' , $user->getFirstName())) . " " . substr($user->getLastName(), 0, 1) . '.');
                       $this->getUser()->setAttribute("name", current(explode(' ' , $u->getFirstName())) . " " . substr($u->getLastName(), 0, 1) . '.');
 
+		$this->getUser()->setAttribute("fecha_registro", $u->getFechaRegistro());
+		$this->getUser()->setAttribute("email", $u->getEmail());
+
+		
                     //$this->getRequest()->setParameter('emails',array('first@email.com','second@email.com','third@email.com'));
 
                     $this->getRequest()->setParameter('userid', $u->getId());
@@ -1928,36 +1932,23 @@ $this->logMessage(date('h:i:s'), 'err');
 		        try {
 
             $profile = Doctrine_Core::getTable('User')->find($this->getUser()->getAttribute('userid'));
-        //    $profile->setFirstname($request->getParameter('firstname'));
-        //    $profile->setLastname($request->getParameter('lastname'));
-        //    $profile->setEmail($request->getParameter('email'));
             $profile->setRegion($request->getParameter('region'));
             $profile->setComuna($request->getParameter('comunas'));
             $profile->setComo($request->getParameter('como'));
-	    //    $profile->setAddress($request->getParameter('address'));
-        //    $profile->setBirthdate($request->getParameter('birth'));
-	    //    $profile->setApellidoMaterno($request->getParameter('apellidoMaterno'));
-	    //    $profile->setSerieRut($request->getParameter('serie_run'));
-    	 //   if($request->getParameter('password') != '') {
-         //       if ($request->getParameter('password') == $request->getParameter('passwordAgain'))
-         //           $profile->setPassword(md5($request->getParameter('password')));
-		//	}
             if($profile->getTelephone() != $request->getParameter('telephone')){//Si se ingresa un nuevo telefono celular distinto al de la base de datos, el usuario podrá confirmarlo de nuevo
                 $profile->setTelephone($request->getParameter('telephone'));
                 $profile->setConfirmedSms(0);
             }else{
                 $profile->setTelephone($request->getParameter('telephone'));
             }
-     //       if ($request->getParameter('main') != NULL)
-      //          $profile->setPictureFile($request->getParameter('main'));
-       //     if ($request->getParameter('licence') != NULL)
-        //        $profile->setDriverLicenseFile($request->getParameter('licence'));
-		//	if ($request->getParameter('rut') != NULL)
-         //       $profile->setRutFile($request->getParameter('rut'));
-	//		$profile->setRut($request->getParameter('run'));
             $profile->save();
             $this->getUser()->setAttribute('picture_url', $profile->getFileName());
-        } catch (Exception $e) {
+			$this->getUser()->setAttribute("telephone", $profile->getTelephone());
+			$this->getUser()->setAttribute("comuna", $profile->getComuna());
+			$this->getUser()->setAttribute("region", $profile->getRegion());
+
+
+			} catch (Exception $e) {
             echo $e->getMessage();
         }
 
