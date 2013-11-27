@@ -2629,6 +2629,11 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
                 $this->getUser()->setAttribute("userid", $userdb->getId());
                 $this->getUser()->setAttribute("name", current(explode(' ' , $userdb->getFirstName())) . " " . substr($userdb->getLastName(), 0, 1) . '.');
                 $this->getUser()->setAttribute("picture_url", $userdb->getPictureFile());
+				$this->getUser()->setAttribute("fecha_registro", $userdb->getFechaRegistro());
+				$this->getUser()->setAttribute("email", $userdb->getEmail());
+				$this->getUser()->setAttribute("telephone", $userdb->getTelephone());
+				$this->getUser()->setAttribute("comuna", $userdb->getComuna());
+				$this->getUser()->setAttribute("region", $userdb->getRegion());
                 $this->getUser()->setAttribute("fb", true);	
         		//Modificacion para identificar si el usuario es propietario o no de vehiculo
         		if($userdb->getPropietario()) {
