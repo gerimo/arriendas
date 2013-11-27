@@ -1441,17 +1441,20 @@ class User extends BaseUser {
 
 		public function save(Doctrine_Connection $conn = null)	{
 
-	
+		sfContext::getInstance()->getLogger()->err($this->getFechaRegistro());
+		
 	if (!$this->getFechaRegistro())
 	  {
-		$this->setFechaRegistro(strftime("%Y/%m/%d %H:%i:%s"));
-	  }
+		$this->setFechaRegistro(date('Y-m-d H:i:s'));
+//		$this->setFechaRegistro(strftime("11/27/2013"));
+		sfContext::getInstance()->getLogger()->err('setou!');
 
-//	  if (!$this->getPassword())
-//	  {
-//		$this->setPassword(sha1($this->getFacebookId().rand(11111, 99999)));
-//	  }
+		}
 
+//	  	$this->logMessage(strftime("11/27/2013"), 'err');
+		sfContext::getInstance()->getLogger()->err(strftime("%Y/%m/%d %H:%i:%s"));
+
+		
  	  if (!$this->getHash())
 	  {
 		$this->setHash(sha1($this->getFacebookId().rand(11111, 99999)));

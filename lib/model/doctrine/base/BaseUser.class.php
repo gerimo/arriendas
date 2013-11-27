@@ -243,9 +243,9 @@ abstract class BaseUser extends sfDoctrineRecord {
             'type' => 'integer',
             'length' => 11,
         ));
-        $this->hasColumn('fecha_registro', 'date', null, array(
-            'type' => 'date'
-        ));
+        $this->hasColumn('fecha_registro', 'timestamp', null, array(
+             'type' => 'timestamp',
+             ));
         $this->hasColumn('credito', 'integer', null, array(
             'type' => 'integer'
         ));

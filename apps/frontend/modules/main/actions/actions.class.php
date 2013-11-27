@@ -1792,39 +1792,18 @@ $this->logMessage(date('h:i:s'), 'err');
 
                 if ($request->getParameter('username') != null &&
                         $request->getParameter('firstname') != null &&
- //                       $request->getParameter('lastname') != null &&
                         $request->getParameter('email') != null &&
                         $request->getParameter('password') != null &&
                         $request->getParameter('email') == $request->getParameter('emailAgain') 
-  //                      $request->getParameter('password') == $request->getParameter('passwordAgain') &&
-   //                     $request->getParameter('region') != 0 &&
-    //                    $request->getParameter('region') != null &&
-     //                   $request->getParameter('comunas') != 0 &&
-      //                  $request->getParameter('comunas') != null &&
-      //                  $request->getParameter('run') != null &&
-       //                 $request->getParameter('address') != null
                 ) {
 
-                    //quita los puntos y el guión al rut
-//                    $rut = $request->getParameter('run');
- //                   $rut = str_replace(".", "", $rut);
-  //                  $rut = str_replace("-", "", $rut);
 
                     $u = new User();
                     $u->setFirstname($request->getParameter('firstname'));
-    //                $u->setLastname($request->getParameter('lastname'));
                     $u->setEmail($request->getParameter('email'));
                     $u->setUsername($request->getParameter('username'));
                     $u->setPassword(md5($request->getParameter('password')));
-
                     $u->setCountry($request->getParameter('country'));
-    //                $u->setCity($request->getParameter('city'));
-     //               $u->setBirthdate($request->getParameter('birth'));
-      //              $u->setTelephone($request->getParameter('telephone'));
-      //              $u->setRegion($request->getParameter('region'));
-//		    $u->setAddress($request->getParameter('address'));
- //                   $u->setComuna($request->getParameter('comunas'));
-
                     $u->setHash(substr(md5($request->getParameter('username')), 0, 6));
 
 		    if($request->getParameter("propietario")=="on") {
@@ -1840,25 +1819,20 @@ $this->logMessage(date('h:i:s'), 'err');
                     if ($request->getParameter('rut') != NULL)
                         $u->setRutFile($request->getParameter('rut'));
 
-    //                $u->setRut($rut);
-//		            $u->setFechaRegistro(strftime("%Y/%m/%d"));
                     $u->save();
                     
                       $this->getUser()->setFlash('msg', 'Autenticado');
                       $this->getUser()->setAuthenticated(true);
                       $this->getUser()->setAttribute("logged", true);
                       $this->getUser()->setAttribute("userid", $u->getId());
-                      //$this->getUser()->setAttribute("name", current(explode(' ' , $user->getFirstName())) . " " . substr($user->getLastName(), 0, 1) . '.');
                       $this->getUser()->setAttribute("name", current(explode(' ' , $u->getFirstName())) . " " . substr($u->getLastName(), 0, 1) . '.');
-
-		$this->getUser()->setAttribute("fecha_registro", $u->getFechaRegistro());
-		$this->getUser()->setAttribute("email", $u->getEmail());
-
-		
-                    //$this->getRequest()->setParameter('emails',array('first@email.com','second@email.com','third@email.com'));
+					  $this->getUser()->setAttribute("email", $u->getEmail());
 
                     $this->getRequest()->setParameter('userid', $u->getId());
+					$this->getUser()->setAttribute("fecha_registro", $u->getFechaRegistro());
+					$this->logMessage($u->getFechaRegistro(), 'err');
 
+					
                     $this->forward('main', 'completeRegister');
                 }
                 else {
@@ -1946,6 +1920,7 @@ $this->logMessage(date('h:i:s'), 'err');
 			$this->getUser()->setAttribute("telephone", $profile->getTelephone());
 			$this->getUser()->setAttribute("comuna", $profile->getComuna());
 			$this->getUser()->setAttribute("region", $profile->getRegion());
+			$this->getUser()->setAttribute("fecha_registro", $profile->getFechaRegistro());
 
 
 			} catch (Exception $e) {
@@ -2262,6 +2237,13 @@ El equipo de Arriendas.cl
             $this->getUser()->setAttribute('geolocalizacion', null);
             $this->getUser()->setAttribute('userid', null);
             $this->getUser()->setAttribute('propietario', null);
+			$this->getUser()->setAttribute('userid',null);
+			$this->getUser()->setAttribute('email',null);
+			$this->getUser()->setAttribute('fecha_registro',null);
+			$this->getUser()->setAttribute('telephone',null);
+			$this->getUser()->setAttribute('comuna',null);
+			$this->getUser()->setAttribute('region',null);
+
             unset($_SESSION["login_back_url"]);
         }
         return $this->redirect('main/index');
