@@ -53,9 +53,14 @@
 		<p>¡PUBLICA TU AUTO!</p>
 	</div>
 
-<p style="text-align: center;margin-top: 35px;font-style: italic;color:#EC008C;font-size:26px;">¡Su auto se ha publicado exitosamente!</p>
+<p style="text-align: center;margin-top: 35px;font-style: italic;color:#EC008C;font-size:26px;">¡Su auto se ha guardado exitosamente!</p>
 
-<p style="text-align: center;margin-top: 25px; margin-bottom:30px; font-style: italic;font-size: 17px;">Te hemos enviado un correo a <?=$emailUser;?></p>
+<p style="text-align: center;margin-top: 25px; margin-bottom:30px; ;font-size: 17px;">Un inspector se contactará contigo para agendar la verificación de tu auto. Debes contestar al correo enviado a <?=$emailUser;?>.</p>
+
+<p style="text-align: center;margin-top: 25px; margin-bottom:30px; ;font-size: 17px;">Ahora debes subir al menos 4 fotos para que el auto se vea <b>publicado</b> en el sítio.</p>
+
+
+
 
 
 <div class="etiquetaPrincipal">FOTOS DEL VEHÍCULO</div>

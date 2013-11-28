@@ -66,9 +66,9 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 	    	//Obtener variable $ok del Auto, rescatandolo de la DB, por mientras se usará de variable
 		    //$ok = 0;
 		    $ok = $c -> getSeguroOk();
-		    if($ok == 0){
+		    if($ok <> 4){
 	    ?>
-	    		<div class="divBotonVerificar">
+	    		<div class="divBotonVerificar" style="backgound-color:#ec008c;">
 	    			<!--
 	   				<a href="<?php echo url_for('profile/aseguraTuAuto?id='.$c->getId() ) ?>" class="misautos_btn_alqui">Verificar</a>
 	   				-->
