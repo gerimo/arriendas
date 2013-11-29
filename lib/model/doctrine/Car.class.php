@@ -67,11 +67,12 @@ class Car extends BaseCar
       sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
       $photo = $this->getFotoPerfil();
       if(is_null($photo)) {
-	$idModelo= $this->getModelId();
-	$query = "SELECT foto_defecto from Model WHERE id='".$idModelo."'";
-	$rs = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAssoc($query);
-	$photo= "http://admin.arriendas.cl/uploads/".$rs[0]['foto_defecto'];
-	return $photo;
+//	$idModelo= $this->getModelId();
+//	$query = "SELECT foto_defecto from Model WHERE id='".$idModelo."'";
+//	$rs = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAssoc($query);
+//	$photo= "".$rs[0]['foto_defecto'];
+	$photo= "../../images/img_asegura_tu_auto/seguroFotoCostadoDerecho.png"
+;	return $photo;
       } else {
 	return $photo;
       }

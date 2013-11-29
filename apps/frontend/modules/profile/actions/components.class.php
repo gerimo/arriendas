@@ -128,7 +128,17 @@ class profileComponents extends sfComponents {
     }
 
     public function executePictureFile() {
-        $this->params = (!$this->params ) ? "" : $this->params;
+//        $this->params = (!$this->params ) ? "" : $this->params;
+		
+		$toStringParams = explode(" ", $this->params);
+
+		 preg_match( '/(?<==).*?(?=p)/', $toStringParams[0],$width );
+		preg_match( '/(?<==).*?(?=p)/', $toStringParams[1],$height);
+
+		
+		$this->width=$width[0];
+		$this->height=$height[0];
+		
     }
 
     public function executeMyreserves() {

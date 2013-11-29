@@ -255,7 +255,7 @@ span.usuario_nombre {
 }
 
 .main_col_right .marcoFoto{
-	background: url('../images/img_autos/Marco.png');
+/*	background: url('../images/img_autos/Marco.png');*/
 	background-repeat: no-repeat;
 	margin-left: 8px;
 	margin-top: -10px;
