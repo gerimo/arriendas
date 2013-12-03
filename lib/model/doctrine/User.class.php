@@ -1461,7 +1461,7 @@ class User extends BaseUser {
 	  }
 
 	  
-   	  if (!$this->getCustomerio())
+   	  if ($this->getCustomerio()<=0)
 	  {
 			
 	  $session = curl_init();
@@ -1473,7 +1473,7 @@ $api_key = 'd0cef25ee0d36c4500a9';
 
 sfContext::getInstance()->getLogger()->err($customerio_url);
 
-$data = array("email" => $this->getEmail(), "created_at" => time(),"name" => current(explode(' ' , $this->getFirstName())) . " " . substr($this->getLastName(), 0, 1) . '.',"propietario" => $this->getPropietario(),"telephone" => $this->getTelephone(),"comuna" => $this->getComuna(),"region" => $this->getRegion(), );						
+$data = array("email" => $this->getEmail(), "created_at" => $this->getFechaRegistro(),"name" => current(explode(' ' , $this->getFirstName())) . " " . substr($this->getLastName(), 0, 1) . '.',"propietario" => $this->getPropietario(),"telephone" => $this->getTelephone(),"comuna" => $this->getComuna(),"region" => $this->getRegion(), );						
 			
 curl_setopt($session, CURLOPT_URL, $customerio_url.$customer_id);
 curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
