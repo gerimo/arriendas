@@ -286,7 +286,7 @@ option:first-child
         
         //Validaciones
         if( $("#firstname").val() == "" ) { $("#firstname").parent("label").find("span").text("* Falta ingresar Nombre"); }
-//        if( $("#lastname").val() == "" ) { $("#lastname").parent("label").find("span").text("* Falta ingresar Apellido"); }
+        if( $("#lastname").val() == "" ) { $("#lastname").parent("label").find("span").text("* Falta ingresar Apellido"); }
         if( $("#email").val() == "" ) { $("#email").parent("label").find("span").text("* Falta ingresar Email"); }
         if( $("#emailAgain").val() == "" ) { $("#emailAgain").parent("label").find("span").text("* Falta Confirmar Email"); }
         if( $("#password").val() == "" ) { $("#password").parent("label").find("span").text("* Falta ingresar Contraseña"); }
@@ -420,14 +420,14 @@ option:first-child
                 </label>
             </div><!-- /c1 -->    
 
-<!--            <div class="c1">
+            <div class="c1">
                 <label class="input">
-                    <span>Apellido Paterno</span>
+                    <span>Apellido</span>
                     <input id="lastname" name="lastname" type="text"  onfocus="checkclear(this)" >
                 </label>
             </div><!-- /c1 -->  
 
- <!--           <div class="c1">
+            <div class="c1">
                 <label class="input">
                     <span>Apellido Materno</span>
                     <input id="lastname_2" name="lastname_2" type="text"  onfocus="checkclear(this)" >
@@ -623,7 +623,7 @@ option:first-child
  
     //frmvalidator.addValidation("username","req","Ingrese un nombre de usuario");
     frmvalidator.addValidation("firstname","req","Ingrese su nombre");
-//    frmvalidator.addValidation("lastname","req","Ingrese su apellido");
+    frmvalidator.addValidation("lastname","req","Ingrese su apellido");
 //    frmvalidator.addValidation("telephone","numeric","El Telefono Debe ser numerico");
 
     frmvalidator.addValidation("password","req", "Ingrese su contraseña");

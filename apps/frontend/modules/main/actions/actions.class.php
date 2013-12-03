@@ -1792,6 +1792,7 @@ $this->logMessage(date('h:i:s'), 'err');
 
                 if ($request->getParameter('username') != null &&
                         $request->getParameter('firstname') != null &&
+                        $request->getParameter('lastname') != null &&
                         $request->getParameter('email') != null &&
                         $request->getParameter('password') != null &&
                         $request->getParameter('email') == $request->getParameter('emailAgain') 
@@ -1800,6 +1801,7 @@ $this->logMessage(date('h:i:s'), 'err');
 
                     $u = new User();
                     $u->setFirstname($request->getParameter('firstname'));
+                    $u->setLastname($request->getParameter('lastname'));
                     $u->setEmail($request->getParameter('email'));
                     $u->setUsername($request->getParameter('username'));
                     $u->setPassword(md5($request->getParameter('password')));
@@ -1942,6 +1944,22 @@ $this->logMessage(date('h:i:s'), 'err');
     }
     }
 
+	
+	
+    public function executeAddCarFromRegister(sfWebRequest $request) {
+        
+          $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+        $usuario = Doctrine_Core::getTable('user')->findOneById($idUsuario);
+
+		$usuario->setPropietario(true);
+   	    $this->getUser()->setAttribute("propietario",true);			    
+		$usuario->save();
+		
+		            $this->redirect('profile/addCar');
+		
+        return sfView::NONE;
+   
+    }
 	
     public function executeUserRegister(sfWebRequest $request) {
 

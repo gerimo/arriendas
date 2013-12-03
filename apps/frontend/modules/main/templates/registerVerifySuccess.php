@@ -71,7 +71,7 @@ input#botonVolver{
             <center><b style="color:#EC008C;font-size:20px;">¿Qué quieres hacer ahora?</b><br><br>
             <button class="arriendas_pink_btn arriendas_btn_big" style="" onclick="location.href='<?php echo url_for('main/index') ?>'">Quiero Arrendar un Auto</button>
 			&nbsp;&nbsp;&nbsp;
-            <button class="arriendas_pink_btn arriendas_btn_big" style="" onclick="location.href='<?php echo url_for('profile/addCar') ?>'">Quero Subir mi Auto</button>        
+            <button class="arriendas_pink_btn arriendas_btn_big" style="" onclick="location.href='<?php echo url_for('main/AddCarFromRegister') ?>'">Quero Subir mi Auto</button>        
 </center>
         </div><!-- regis_botones -->
     </div>

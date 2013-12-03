@@ -2955,7 +2955,8 @@ public function executeAgreePdf2(sfWebRequest $request)
     }
 
     public function executeAddCarExito(sfWebRequest $request){
-        $idCar = $request->getParameter('id');
+
+		$idCar = $request->getParameter('id');
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
         $usuario = Doctrine_Core::getTable('user')->findOneById($idUsuario);
 			$correo = $usuario->getEmail();
@@ -2964,7 +2965,9 @@ public function executeAgreePdf2(sfWebRequest $request)
 			$telephone = $usuario->getTelephone();
 			$direccion = $usuario->getAddress();
 
-		$car = Doctrine_Core::getTable('car')->findOneById($idCar);
+
+
+			$car = Doctrine_Core::getTable('car')->findOneById($idCar);
 			$brand = $car->getMarcaModelo();
 			$patente = $car->getPatente();
 			$comuna = $car->getNombreComuna();
@@ -2985,13 +2988,8 @@ public function executeAgreePdf2(sfWebRequest $request)
         $mail->setTo($correo);
         $mail->setCc('soporte@arriendas.cl');
         $mail->submit();
-
-		//$mail = new Email();
-        //$mail->setSubject('Nuevo auto: '.$name.' '.$lastname.'');
-        //$mail->setBody("<p>$name $lastname<br>$telephone<br>$direccion<br>$comuna<br>$brand</p>");
-        //$mail->setTo('soporte@arriendas.cl');
-        //$mail->submit();
-
+		
+		
 		
         $this->emailUser = $correo;
         $this->partes = $this->partesAuto();
@@ -4043,8 +4041,7 @@ public function executeAgreePdf2(sfWebRequest $request)
 	            
             $auto -> save();
 
-            $idCar = $auto->getId();        
-
+            $idCar = $auto->getId();
             
 
             $q = Doctrine_Manager::getInstance()->getCurrentConnection();

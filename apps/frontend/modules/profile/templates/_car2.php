@@ -272,15 +272,15 @@ $(document).on('ready',function(){
 			<?php
 				if((isset($car)) && ($car[0]['transmission'] != "")){
 					if($car[0]['transmission']==0){
-						echo "<option value='M' selected>Manual</option>";
-						echo "<option value='A'>Automática</option>";
+						echo "<option value='0' selected>Manual</option>";
+						echo "<option value='1'>Automática</option>";
 					}else{
-						echo "<option value='M'>Manual</option>";
-						echo "<option value='A' selected>Automática</option>";
+						echo "<option value='0'>Manual</option>";
+						echo "<option value='1' selected>Automática</option>";
 					}
 				}else{
-					echo "<option value='M'>Manual</option>";
-					echo "<option value='A'>Automática</option>";
+					echo "<option value='0'>Manual</option>";
+					echo "<option value='1'>Automática</option>";
 				}
 			?>
 		</select>

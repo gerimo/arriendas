@@ -438,8 +438,6 @@
 
                 <div class="header_menu">
                     <ul class="menu_1">
-<!--                        <li><a href="<?php echo url_for('main/index') ?>" class="item_1<?php if (inModuleAndAction("main", "index")) { echo "_in"; } ?>" title="Inicio"><span>HOME</span></a>
-                        </li>                                        -->
                         <?php  if(sfContext::getInstance()->getUser()->getAttribute("propietario")) {  ?>
                             <li><a href="<?php echo url_for('profile/pedidos') ?>" class="item_5<?php if (inModuleAndAction("profile", "pedidos")) { echo "_in"; }?>" title="Reservas de mis Autos"><span>RESERVAS</span></a>
                             </li>
@@ -451,8 +449,6 @@
                             <li><a href="<?php echo url_for("profile/addCar"); ?>" class="item_2<?php if (inModuleAndAction("profile", "index")) { echo "_in";} ?>" title="Sube un auto"><span>SUBE UN AUTO</span></a>
                         </li>
                         <?php } ?>
-                        <!--<li><a href="https://arriendascl.zendesk.com/anonymous_requests/new" class="item_2<?php if (inModuleAndAction("main", "contact")) { echo "_in"; } ?>" target="_blank" title="Contacto"><span>CONTACTO</span></a>
-                        </li>-->
                         <li class="item_ayuda"><a href="https://arriendascl.zendesk.com/" target="_blank" class="item_2"><span>AYUDA</span></a> 
                         </li>
                     </ul><!-- menu_1 -->  
@@ -551,7 +547,7 @@ var google_conversion_value = 0;
 				s = document.getElementsByTagName('script')[0];
 			t.async = true;
 			t.id    = 'cio-tracker';
-			t.setAttribute('data-site-id', '0c462a970bacf1efb272');
+			t.setAttribute('data-site-id', '5b0fca62d5d751d7dcd9');
 			t.src = 'https://assets.customer.io/assets/track.js';
 			s.parentNode.insertBefore(t, s);
 		  })();

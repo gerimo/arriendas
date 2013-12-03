@@ -199,8 +199,8 @@
 		        
                 <div class="header_menu">
                     <ul class="menu_1">
-                        <li><a href="http://www.arriendas.cl" class="item_1<?php if (inModuleAndAction("main", "index")) { echo "_in"; } ?>" title="Inicio"><span>HOME</span></a>
-                        </li>  
+<!--                        <li><a href="http://www.arriendas.cl" class="item_1<?php if (inModuleAndAction("main", "index")) { echo "_in"; } ?>" title="Inicio"><span>HOME</span></a>
+                        </li>  -->
                         <?php  if(sfContext::getInstance()->getUser()->getAttribute("propietario")) {  ?>
                             <li><a href="<?php echo url_for('profile/pedidos') ?>" class="item_5<?php if (inModuleAndAction("profile", "pedidos")) { echo "_in"; }?>" title="Reservas de mis Autos"><span>RESERVAS</span></a>
                             </li>
@@ -211,8 +211,8 @@
                             </li>
                             <li><a href="<?php echo url_for("profile/addCar"); ?>" class="item_2<?php if (inModuleAndAction("profile", "index")) { echo "_in";} ?>" title="Sube un auto"><span>SUBE UN AUTO</span></a>
                         <?php } ?>
-                        <li><a href="https://arriendascl.zendesk.com/anonymous_requests/new" class="item_2<?php if (inModuleAndAction("main", "contact")) { echo "_in"; } ?>" target="_blank" title="Contacto"><span>CONTACTO</span></a>
-                        </li>
+<!--                        <li><a href="https://arriendascl.zendesk.com/anonymous_requests/new" class="item_2<?php if (inModuleAndAction("main", "contact")) { echo "_in"; } ?>" target="_blank" title="Contacto"><span>CONTACTO</span></a>
+                        </li>-->
                         <li class="item_ayuda"><a href="https://arriendascl.zendesk.com/forums" target="_blank" class="item_2"><span>AYUDA</span></a>
                         </li>
                         </ul><!-- menu_1 -->
@@ -300,6 +300,35 @@
             </div><!-- /footer -->
 
         </div><!-- body_bg -->
+		<script type="text/javascript">
+		  var _cio = _cio || [];
+		  (function() {
+			var a,b,c;a=function(f){return function(){_cio.push([f].
+			concat(Array.prototype.slice.call(arguments,0)))}};b=["load","identify",
+			"sidentify","track","page"];for(c=0;c<b.length;c++){_cio[b[c]]=a(b[c])};
+			var t = document.createElement('script'),
+				s = document.getElementsByTagName('script')[0];
+			t.async = true;
+			t.id    = 'cio-tracker';
+			t.setAttribute('data-site-id', '5b0fca62d5d751d7dcd9');
+			t.src = 'https://assets.customer.io/assets/track.js';
+			s.parentNode.insertBefore(t, s);
+		  })();
+		</script>
+<?php if (sfContext::getInstance()->getUser()->isAuthenticated()){ ?>
+       		<script type="text/javascript">
+		  _cio.identify({
+			id: 'a_<?php echo ucwords($sf_user->getAttribute('userid')) ?>',
+			email: '<?php echo ucwords($sf_user->getAttribute('email')) ?>',
+			created_at: <?php echo (strtotime($sf_user->getAttribute('fecha_registro'))) ?>,
+			name: '<?php echo ucwords($sf_user->getAttribute('name')) ?>',
+			propietario: '<?php echo ucwords($sf_user->getAttribute('propietario')) ?>',
+			telephone: '<?php echo ucwords($sf_user->getAttribute('telephone')) ?>',
+			comuna: '<?php echo ucwords($sf_user->getAttribute('comuna')) ?>',
+			region: '<?php echo ucwords($sf_user->getAttribute('region')) ?>',
+		  });
+		</script>		
+<?php }?>
     </body>
 </html>
 

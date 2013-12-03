@@ -284,6 +284,118 @@ class Reserve extends BaseReserve
 		$this->setToken(sha1($this->getDuration().rand(11111, 99999)));
 	  }
 
+	  
+	  
+ 	  if (!$this->getId() || !$this->getCustomerio())
+	  {
+			//event to renter
+			$session = curl_init();
+			$customer_id = 'a_'.$this->getUserId(); // You'll want to set this dynamically to the unique id of the user
+			$customerio_url = 'https://track.customer.io/api/v1/customers/'.$customer_id.'/events';
+			$site_id = '5b0fca62d5d751d7dcd9';
+			$api_key = 'd0cef25ee0d36c4500a9';
+			sfContext::getInstance()->getLogger()->err($customerio_url);
+			$data = array("name" => "hizo_pedido_reserva", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId());
+
+			curl_setopt($session, CURLOPT_URL, $customerio_url);
+			curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+			curl_setopt($session, CURLOPT_HEADER, false);
+			curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($session, CURLOPT_VERBOSE, 1);
+			curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
+			curl_setopt($session, CURLOPT_POSTFIELDS,http_build_query($data));
+
+			curl_setopt($session,CURLOPT_USERPWD,$site_id . ":" . $api_key);
+
+			curl_setopt($session,CURLOPT_SSL_VERIFYPEER,false);
+
+			curl_exec($session);
+			curl_close($session);
+
+			///event to owner
+			$session = curl_init();
+			$customer_id = 'a_'.$ownerUserId; // You'll want to set this dynamically to the unique id of the user
+			$customerio_url = 'https://track.customer.io/api/v1/customers/'.$customer_id.'/events';
+			$site_id = '5b0fca62d5d751d7dcd9';
+			$api_key = 'd0cef25ee0d36c4500a9';
+			sfContext::getInstance()->getLogger()->err($customerio_url);
+			$data = array("name" => "recibio_pedido_reserva", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId());
+
+			curl_setopt($session, CURLOPT_URL, $customerio_url);
+			curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+			curl_setopt($session, CURLOPT_HEADER, false);
+			curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($session, CURLOPT_VERBOSE, 1);
+			curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
+			curl_setopt($session, CURLOPT_POSTFIELDS,http_build_query($data));
+
+			curl_setopt($session,CURLOPT_USERPWD,$site_id . ":" . $api_key);
+
+			curl_setopt($session,CURLOPT_SSL_VERIFYPEER,false);
+
+			curl_exec($session);
+			curl_close($session);
+
+			$this->setCustomerio(true);
+			
+		}
+
+ 	  if ($this->getConfirmed() && !$this->getCustomerio())
+	  {
+
+			///event to renter
+			$session = curl_init();
+			$customer_id = 'a_'.$this->getUserId(); // You'll want to set this dynamically to the unique id of the user
+			$customerio_url = 'https://track.customer.io/api/v1/customers/'.$customer_id.'/events';
+			$site_id = '5b0fca62d5d751d7dcd9';
+			$api_key = 'd0cef25ee0d36c4500a9';
+			sfContext::getInstance()->getLogger()->err($customerio_url);
+			$data = array("name" => "pedido_reserva_aprovado", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId());
+
+			curl_setopt($session, CURLOPT_URL, $customerio_url);
+			curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+			curl_setopt($session, CURLOPT_HEADER, false);
+			curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($session, CURLOPT_VERBOSE, 1);
+			curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
+			curl_setopt($session, CURLOPT_POSTFIELDS,http_build_query($data));
+
+			curl_setopt($session,CURLOPT_USERPWD,$site_id . ":" . $api_key);
+
+			curl_setopt($session,CURLOPT_SSL_VERIFYPEER,false);
+
+			curl_exec($session);
+			curl_close($session);
+ 
+			///event to owner
+			$session = curl_init();
+			$customer_id = 'a_'.$ownerUserId; // You'll want to set this dynamically to the unique id of the user
+			$customerio_url = 'https://track.customer.io/api/v1/customers/'.$customer_id.'/events';
+			$site_id = '5b0fca62d5d751d7dcd9';
+			$api_key = 'd0cef25ee0d36c4500a9';
+			sfContext::getInstance()->getLogger()->err($customerio_url);
+			$data = array("name" => "aprobo_pedido_reserva", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId());
+
+			curl_setopt($session, CURLOPT_URL, $customerio_url);
+			curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+			curl_setopt($session, CURLOPT_HEADER, false);
+			curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($session, CURLOPT_VERBOSE, 1);
+			curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
+			curl_setopt($session, CURLOPT_POSTFIELDS,http_build_query($data));
+
+			curl_setopt($session,CURLOPT_USERPWD,$site_id . ":" . $api_key);
+
+			curl_setopt($session,CURLOPT_SSL_VERIFYPEER,false);
+
+			curl_exec($session);
+			curl_close($session);
+	  
+	$this->setCustomerio(true);
+
+
+	}	  
+	  
 	  return parent::save($conn);
 	}
 
