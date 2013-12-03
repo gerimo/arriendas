@@ -286,7 +286,7 @@ class Reserve extends BaseReserve
 
 	  
 	  
- 	  if (!$this->getId() || !$this->getCustomerio())
+ 	  if (!$this->getId() || $this->getCustomerio()<=0)
 	  {
 			//event to renter
 			$session = curl_init();
@@ -340,7 +340,7 @@ class Reserve extends BaseReserve
 			
 		}
 
- 	  if ($this->getConfirmed() && !$this->getCustomerio())
+ 	  if ($this->getConfirmed() && $this->getCustomerio()<=0)
 	  {
 
 			///event to renter

@@ -198,7 +198,7 @@ class Car extends BaseCar
 
 		public function save(Doctrine_Connection $conn = null)	{
 		
- 	  if (!$this->getId() || !$this->getCustomerio())
+ 	  if (!$this->getId() || $this->getCustomerio()<=0)
 	  {
 
 			$brand = $this->getMarcaModelo();

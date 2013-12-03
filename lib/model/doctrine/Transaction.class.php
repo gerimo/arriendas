@@ -29,7 +29,7 @@ class Transaction extends BaseTransaction
 			$ownerUserId=$user->getId();
 			
 
- 	  if ($this->getCompleted() && !$this->getCustomerio())
+ 	  if ($this->getCompleted() && $this->getCustomerio()<=0)
 	  {
 
 			///event to renter
