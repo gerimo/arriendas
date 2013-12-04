@@ -182,8 +182,9 @@ a{text-decoration:none;}
 					if($car->getPhotoS3() == 1){
 						echo image_tag("http://www.arriendas.cl/main/s3thumb?alto=185&ancho=185&urlFoto=".$car->getFoto(),array("width"=>"185","height"=>"185"));
 					}else{
-						echo image_tag("../uploads/cars/".$car->getFoto(),array("width"=>"185","height"=>"185"));
-					}
+//						echo image_tag("../uploads/cars/".$car->getFoto(),array("width"=>"185","height"=>"185"));
+						echo "<img src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_185,h_185,c_fill,g_center/http://arriendas.cl/uploads/cars/".$car->getFoto()."'/>";
+				}
 
 				?>
 			</div>
@@ -220,7 +221,7 @@ a{text-decoration:none;}
 	              		?>
 						<li>
 	                  		<a title="<?=$arrayDescripcionFotos[$i];?>" href="<?=image_path('../uploads/verificaciones/'.$arrayFotos[$i]);?>">
-	                    		<img title="<?=$arrayDescripcionFotos[$i];?>" src="<?=image_path('../uploads/verificaciones/thumbs/'.$arrayFotos[$i]);?>" width="40" height="40">
+	                    		<img title="<?=$arrayDescripcionFotos[$i];?>" src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_40,h_40,c_fill,g_center/http://arriendas.cl/<?=image_path('../uploads/verificaciones/thumbs/'.$arrayFotos[$i]);?>" width="40" height="40">
 	                  		</a>
 	                	</li>
 	              		<?php
@@ -295,7 +296,7 @@ a{text-decoration:none;}
 						<li>
 							
 	                  		<a title="<?=$arrayDescripcionesDanios[$i];?>" href="http://www.arriendas.cl/main/s3thumb?alto=600&ancho=600&urlFoto=http://www.arriendas.cl/uploads/damages/<?=$arrayFotosDanios[$i];?>">
-	                    		<img title="<?=$arrayDescripcionesDanios[$i];?>" src="http://www.arriendas.cl/main/s3thumb?alto=40&ancho=40&urlFoto=http://www.arriendas.cl/uploads/damages/<?=$arrayFotosDanios[$i];?>" width="40" height="40">
+	                    		<img title="<?=$arrayDescripcionesDanios[$i];?>" src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_40,h_40,c_fill,g_center/http://arriendas.cl/uploads/damages/<?=$arrayFotosDanios[$i];?>" width="40" height="40">
 	                  		</a>
 	                	</li>
 	              		<?php

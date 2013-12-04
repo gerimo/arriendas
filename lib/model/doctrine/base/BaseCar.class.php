@@ -376,7 +376,11 @@ abstract class BaseCar extends sfDoctrineRecord
         $this->hasColumn('fecha_validacion', 'timestamp', null, array(
              'type' => 'timestamp',
              ));
-             
+        $this->hasColumn('customerio', 'boolean', null, array(
+            'type' => 'boolean',
+            'notnull' => '0',
+            'default' => 0,
+            ));             
         $this->index('fk_Car_User', array(
              'fields' => 
              array(

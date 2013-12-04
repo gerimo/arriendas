@@ -67,11 +67,12 @@ class Car extends BaseCar
       sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
       $photo = $this->getFotoPerfil();
       if(is_null($photo)) {
-	$idModelo= $this->getModelId();
-	$query = "SELECT foto_defecto from Model WHERE id='".$idModelo."'";
-	$rs = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAssoc($query);
-	$photo= "http://admin.arriendas.cl/uploads/".$rs[0]['foto_defecto'];
-	return $photo;
+//	$idModelo= $this->getModelId();
+//	$query = "SELECT foto_defecto from Model WHERE id='".$idModelo."'";
+//	$rs = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAssoc($query);
+//	$photo= "".$rs[0]['foto_defecto'];
+	$photo= "../../images/img_asegura_tu_auto/seguroFotoCostadoDerecho.png"
+;	return $photo;
       } else {
 	return $photo;
       }
@@ -193,4 +194,50 @@ class Car extends BaseCar
       }
       return $direccionAprox;
     }
+
+
+		public function save(Doctrine_Connection $conn = null)	{
+		
+ 	  if (!$this->getId() || $this->getCustomerio()<=0)
+	  {
+
+			$brand = $this->getMarcaModelo();
+			$patente = $this->getPatente();
+			$comuna = $this->getNombreComuna();
+			
+	  $session = curl_init();
+
+$customer_id = 'a_'.$this->getUserId(); // You'll want to set this dynamically to the unique id of the user
+$customerio_url = 'https://track.customer.io/api/v1/customers/'.$customer_id.'/events';
+$site_id = '3a9fdc2493ced32f26ee';
+$api_key = '4f191ca12da03c6edca4';
+
+sfContext::getInstance()->getLogger()->err($customerio_url);
+
+$data = array("name" => "subir_auto", "data[brand]" => $brand, "data[patente]" => $patente, "data[comuna]" => $comuna);
+
+curl_setopt($session, CURLOPT_URL, $customerio_url);
+curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+curl_setopt($session, CURLOPT_HEADER, false);
+curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($session, CURLOPT_VERBOSE, 1);
+curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
+curl_setopt($session, CURLOPT_POSTFIELDS,http_build_query($data));
+
+curl_setopt($session,CURLOPT_USERPWD,$site_id . ":" . $api_key);
+
+//if(ereg("^(https)",$request)) 
+curl_setopt($session,CURLOPT_SSL_VERIFYPEER,false);
+
+curl_exec($session);
+curl_close($session);
+
+	$this->setCustomerio(true);
+		
+	  }
+
+	  return parent::save($conn);
+	}
+	
+	
 }

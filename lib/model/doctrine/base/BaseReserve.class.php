@@ -255,6 +255,11 @@ abstract class BaseReserve extends sfDoctrineRecord
              'notnull' => '0',
              'default' => 0,
              ));
+        $this->hasColumn('customerio', 'boolean', null, array(
+            'type' => 'boolean',
+            'notnull' => '0',
+            'default' => 0,
+            ));
         $this->index('fk_Reserve_User1', array(
              'fields' => 
              array(

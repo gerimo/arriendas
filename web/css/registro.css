@@ -172,7 +172,7 @@ p.regis_edit_perfil {
 .c1 input {
     border: 1px solid #cecece;
     background-color: #fff;
-    width: 264px;
+    width: 315px;
     height: 30px;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
@@ -196,7 +196,6 @@ p.regis_edit_perfil {
     width: 116px;
 }
 
-#region {width:278px}
 .combo {padding-top: 10px;}
 .ingresa {float:left;font-size:13px;}
 .img_capcha {vertical-align:middle;float:left;clear:both;margin-left:27px;}
@@ -242,11 +241,11 @@ p.regis_edit_perfil {
     margin-left: 20px;
 }
 .posit {width:574px;}
-button.regis_btn_formulario.left {
+.left {
     float: left;
 }
 
-button.regis_btn_formulario.right {
+.right {
     float: right;
 }
 
