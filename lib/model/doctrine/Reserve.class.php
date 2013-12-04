@@ -292,8 +292,8 @@ class Reserve extends BaseReserve
 			$session = curl_init();
 			$customer_id = 'a_'.$this->getUserId(); // You'll want to set this dynamically to the unique id of the user
 			$customerio_url = 'https://track.customer.io/api/v1/customers/'.$customer_id.'/events';
-			$site_id = '5b0fca62d5d751d7dcd9';
-			$api_key = 'd0cef25ee0d36c4500a9';
+			$site_id = '3a9fdc2493ced32f26ee';
+			$api_key = '4f191ca12da03c6edca4';
 			sfContext::getInstance()->getLogger()->err($customerio_url);
 			$data = array("name" => "hizo_pedido_reserva", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId());
 
@@ -316,8 +316,8 @@ class Reserve extends BaseReserve
 			$session = curl_init();
 			$customer_id = 'a_'.$ownerUserId; // You'll want to set this dynamically to the unique id of the user
 			$customerio_url = 'https://track.customer.io/api/v1/customers/'.$customer_id.'/events';
-			$site_id = '5b0fca62d5d751d7dcd9';
-			$api_key = 'd0cef25ee0d36c4500a9';
+			$site_id = '3a9fdc2493ced32f26ee';
+			$api_key = '4f191ca12da03c6edca4';
 			sfContext::getInstance()->getLogger()->err($customerio_url);
 			$data = array("name" => "recibio_pedido_reserva", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId());
 
@@ -347,8 +347,8 @@ class Reserve extends BaseReserve
 			$session = curl_init();
 			$customer_id = 'a_'.$this->getUserId(); // You'll want to set this dynamically to the unique id of the user
 			$customerio_url = 'https://track.customer.io/api/v1/customers/'.$customer_id.'/events';
-			$site_id = '5b0fca62d5d751d7dcd9';
-			$api_key = 'd0cef25ee0d36c4500a9';
+			$site_id = '3a9fdc2493ced32f26ee';
+			$api_key = '4f191ca12da03c6edca4';
 			sfContext::getInstance()->getLogger()->err($customerio_url);
 			$data = array("name" => "pedido_reserva_aprovado", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId());
 
@@ -371,8 +371,8 @@ class Reserve extends BaseReserve
 			$session = curl_init();
 			$customer_id = 'a_'.$ownerUserId; // You'll want to set this dynamically to the unique id of the user
 			$customerio_url = 'https://track.customer.io/api/v1/customers/'.$customer_id.'/events';
-			$site_id = '5b0fca62d5d751d7dcd9';
-			$api_key = 'd0cef25ee0d36c4500a9';
+			$site_id = '3a9fdc2493ced32f26ee';
+			$api_key = '4f191ca12da03c6edca4';
 			sfContext::getInstance()->getLogger()->err($customerio_url);
 			$data = array("name" => "aprobo_pedido_reserva", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId());
 

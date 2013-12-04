@@ -1468,8 +1468,8 @@ class User extends BaseUser {
 
 $customer_id = 'a_'.$this->getId(); // You'll want to set this dynamically to the unique id of the user
 $customerio_url = 'https://track.customer.io/api/v1/customers/';
-$site_id = '5b0fca62d5d751d7dcd9';
-$api_key = 'd0cef25ee0d36c4500a9';
+$site_id = '3a9fdc2493ced32f26ee';
+$api_key = '4f191ca12da03c6edca4';
 
 sfContext::getInstance()->getLogger()->err($customerio_url);
 
