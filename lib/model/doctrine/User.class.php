@@ -1473,7 +1473,7 @@ $api_key = '4f191ca12da03c6edca4';
 
 sfContext::getInstance()->getLogger()->err($customerio_url);
 
-$data = array("email" => $this->getEmail(), "created_at" => $this->getFechaRegistro(),"name" => current(explode(' ' , $this->getFirstName())) . " " . substr($this->getLastName(), 0, 1) . '.',"propietario" => $this->getPropietario(),"telephone" => $this->getTelephone(),"comuna" => $this->getComuna(),"region" => $this->getRegion(), );						
+$data = array("email" => $this->getEmail(), "created_at" => strtotime($this->getFechaRegistro()),"name" => current(explode(' ' , $this->getFirstName())) . " " . substr($this->getLastName(), 0, 1) . '.',"propietario" => $this->getPropietario(),"telephone" => $this->getTelephone(),"comuna" => $this->getComuna(),"region" => $this->getRegion(), );						
 			
 curl_setopt($session, CURLOPT_URL, $customerio_url.$customer_id);
 curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);

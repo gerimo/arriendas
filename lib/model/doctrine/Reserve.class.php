@@ -340,7 +340,8 @@ class Reserve extends BaseReserve
 			
 		}
 
- 	  if ($this->getConfirmed() && $this->getCustomerio()<=0)
+// 	  if ($this->getConfirmed() && $this->getCustomerio()<=0)
+ 	  if ($this->getConfirmed() )
 	  {
 
 			///event to renter
