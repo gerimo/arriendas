@@ -1926,7 +1926,6 @@ $this->logMessage(date('h:i:s'), 'err');
 			$this->getUser()->setAttribute("region", $profile->getNombreRegion());
 			$this->getUser()->setAttribute("fecha_registro", $profile->getFechaRegistro());
 
-
 			} catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -2203,6 +2202,13 @@ El equipo de Arriendas.cl
 					$this->getUser()->setAttribute("comuna", $user->getNombreComuna());
 					$this->getUser()->setAttribute("region", $user->getNombreRegion());
 	                $this->getUser()->setAttribute("name", current(explode(' ' , $user->getFirstName())) . " " . substr($user->getLastName(), 0, 1) . '.');
+
+
+					$this->logMessage('firstname', 'err');
+					$this->logMessage($user->getFirstName(), 'err');
+
+	                $this->getUser()->setAttribute("firstname", $user->getFirstName());
+
 	                $this->getUser()->setAttribute("picture_url", $user->getFileName());
         			//Modificacion para identificar si el usuario es propietario o no de vehiculo
         			if($user->getPropietario()) {
@@ -2649,6 +2655,7 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
                 $this->getUser()->setAttribute("userid", $userdb->getId());
                 $this->getUser()->setAttribute("name", current(explode(' ' , $userdb->getFirstName())) . " " . substr($userdb->getLastName(), 0, 1) . '.');
                 $this->getUser()->setAttribute("picture_url", $userdb->getPictureFile());
+                $this->getUser()->setAttribute("firstname", $userdb->getFirstName());
 				$this->getUser()->setAttribute("fecha_registro", $userdb->getFechaRegistro());
 				$this->getUser()->setAttribute("email", $userdb->getEmail());
 				$this->getUser()->setAttribute("telephone", $userdb->getTelephone());

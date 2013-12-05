@@ -3810,6 +3810,7 @@ public function executeAgreePdf2(sfWebRequest $request)
             $this->getUser()->setAttribute('picture_url', $profile->getFileName());
             $this->getUser()->setAttribute("name", current(explode(' ' , $profile->getFirstName())) . " " . substr($profile->getLastName(), 0, 1) . '.');
             $this->getUser()->setAttribute("picture_url", $profile->getPictureFile());
+            $this->getUser()->setAttribute("firstname", $profile->getFirstName());
 			$this->getUser()->setAttribute("fecha_registro", $profile->getFechaRegistro());
 			$this->getUser()->setAttribute("email", $profile->getEmail());
 			$this->getUser()->setAttribute("telephone", $profile->getTelephone());

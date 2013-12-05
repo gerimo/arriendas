@@ -1115,7 +1115,7 @@ class User extends BaseUser {
         $region = $q->fetchOne();
 
 	if(!is_object($region)) {
-	    return "Regi—n Metropolitana";
+	    return "Región Metropolitana";
 	} else {
 	    return $region->getNombre();
 	}
@@ -1473,7 +1473,7 @@ $api_key = '4f191ca12da03c6edca4';
 
 sfContext::getInstance()->getLogger()->err($customerio_url);
 
-$data = array("email" => $this->getEmail(), "created_at" => strtotime($this->getFechaRegistro()),"name" => $this->getFirstName(),"propietario" => $this->getPropietario(),"telephone" => $this->getTelephone(),"comuna" => $this->getNombreComuna(),"region" => $this->getNombreRegion(), );						
+$data = array("email" => $this->getEmail(), "created_at" => strtotime($this->getFechaRegistro()),"name" => htmlentities($this->getFirstName()),"propietario" => $this->getPropietario(),"telephone" => $this->getTelephone(),"comuna" => htmlentities($this->getNombreComuna()),"region" => htmlentities($this->getNombreRegion()), );						
 			
 curl_setopt($session, CURLOPT_URL, $customerio_url.$customer_id);
 curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
