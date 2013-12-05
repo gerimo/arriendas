@@ -1461,7 +1461,7 @@ class User extends BaseUser {
 	  }
 
 	  
-   	  if ($this->getCustomerio()<=0)
+   	  if ($this->getCustomerio()<=0 || 1==2)
 	  {
 			
 	  $session = curl_init();
