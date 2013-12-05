@@ -14,7 +14,7 @@
 		<meta property="og:site_name" content="Arriendas.cl - Arrienda un auto vecino, cerca de ti" />
 		<meta property="fb:admins" content="germanrimo" />
 		<meta property="og:description" content="Arrienda un auto por horas o Gana dinero todos los meses arrendando tu auto, con seguro." />
-        
+		<meta name="google-site-verification" content="Y0Lya1N8r_8QIRxeyg3ht2lcwxR2B0VmBLAgopF2lgQ" />        
             <?php /* include_http_metas() */ ?>
             <?php include_metas() ?>
             <?php
@@ -335,7 +335,7 @@
                 <div class="header_contenido">
                 
                     <div class="header_logo">
-                        <?php echo link_to(image_tag("arriendas_c.png", 'size=120x18'), 'main/index') ?>
+                        <?php echo link_to(image_tag("arriendas_c.png", 'size=120x18'), 'main/index',array('title' => 'Inicio')) ?>
                     </div>
                     
                     <?php if (!sfContext::getInstance()->getUser()->isAuthenticated()): ?>
@@ -406,13 +406,13 @@
                 <!-- inicio header_menu -->
                     <div class="header_menu"> 
                         <ul class="menu_1">
-            <li><a href="<?php echo url_for('main/index') ?>" class="item_1<?php
+       <!--     <li><a href="<?php echo url_for('main/index') ?>" class="item_1<?php
                             if (inModuleAndAction("main", "index")) {
                                 echo "_in";
                             }
                         ?>" title="Inicio">
                             <span>HOME</span></a></li>
-                            <li><a href="<?php echo url_for('como_funciona/index') ?>" class="item_1<?php
+    -->                        <li><a href="<?php echo url_for('como_funciona/index') ?>" class="item_1<?php
                             if (inModuleAndAction("como_funciona", "index")) {
                                 echo "_in";
                             }
@@ -427,19 +427,17 @@
                             <span>EN LOS MEDIOS</span></a></li>    
 
     
-                <li><a href="https://arriendascl.zendesk.com/anonymous_requests/new"
+<!--                <li><a href="https://arriendascl.zendesk.com/anonymous_requests/new"
                     class="item_2<?php if (inModuleAndAction("main", "contact")) { echo "_in"; } ?>"
                     target="_blank" title="Contacto"><span>CONTACTO</span></a></li>
-                    
-                <li class="item_ayuda"><a href="https://arriendascl.zendesk.com/forums" target="_blank" class="item_2"><span>AYUDA</span></a></li>
+    -->                
+                <li class="item_ayuda"><a href="https://arriendascl.zendesk.com/" target="_blank" class="item_2"><span>AYUDA</span></a></li>
                 </ul><!-- menu_1 -->
                 </div><!-- Fin header_menu -->
             <?php else: ?>
 
                 <div class="header_menu">
                     <ul class="menu_1">
-                        <li><a href="<?php echo url_for('main/index') ?>" class="item_1<?php if (inModuleAndAction("main", "index")) { echo "_in"; } ?>" title="Inicio"><span>HOME</span></a>
-                        </li>                                        
                         <?php  if(sfContext::getInstance()->getUser()->getAttribute("propietario")) {  ?>
                             <li><a href="<?php echo url_for('profile/pedidos') ?>" class="item_5<?php if (inModuleAndAction("profile", "pedidos")) { echo "_in"; }?>" title="Reservas de mis Autos"><span>RESERVAS</span></a>
                             </li>
@@ -451,9 +449,7 @@
                             <li><a href="<?php echo url_for("profile/addCar"); ?>" class="item_2<?php if (inModuleAndAction("profile", "index")) { echo "_in";} ?>" title="Sube un auto"><span>SUBE UN AUTO</span></a>
                         </li>
                         <?php } ?>
-                        <li><a href="https://arriendascl.zendesk.com/anonymous_requests/new" class="item_2<?php if (inModuleAndAction("main", "contact")) { echo "_in"; } ?>" target="_blank" title="Contacto"><span>CONTACTO</span></a>
-                        </li>
-                        <li class="item_ayuda"><a href="https://arriendascl.zendesk.com/forums" target="_blank" class="item_2"><span>AYUDA</span></a> 
+                        <li class="item_ayuda"><a href="https://arriendascl.zendesk.com/" target="_blank" class="item_2"><span>AYUDA</span></a> 
                         </li>
                     </ul><!-- menu_1 -->  
                 </div><!-- header_menu -->
@@ -506,7 +502,7 @@ var google_conversion_value = 0;
                         </ul>
                         <ul class="enlaces_box movil">
                             <li class="enlaces_titulo">Acerca de Arriendas</li>
-                            <li><a href="<?php echo url_for('main/compania') ?>" target="_blank" title="La compañía Arriendas.cl">La Compañía</a></li>
+                            <li><a href="<?php echo url_for('main/compania') ?>"  title="La compañía Arriendas.cl">La Compañía</a></li>
                             <li><a href="<?php echo url_for('main/terminos') ?>" target="_blank" title="Términos y Condiciones">Términos y Condiciones</a></li>
                             <li><a href="https://arriendascl.zendesk.com/anonymous_requests/new" target="_blank" title="Contacto">Contacto</a></li>
                             <li><a href="https://arriendascl.zendesk.com/forums" target="_blank" title="Foro">Foro</a></li>
@@ -551,7 +547,7 @@ var google_conversion_value = 0;
 				s = document.getElementsByTagName('script')[0];
 			t.async = true;
 			t.id    = 'cio-tracker';
-			t.setAttribute('data-site-id', 'ae657aef27af3c3392fc');
+			t.setAttribute('data-site-id', '3a9fdc2493ced32f26ee');
 			t.src = 'https://assets.customer.io/assets/track.js';
 			s.parentNode.insertBefore(t, s);
 		  })();
@@ -563,7 +559,10 @@ var google_conversion_value = 0;
 			email: '<?php echo ucwords($sf_user->getAttribute('email')) ?>',
 			created_at: <?php echo (strtotime($sf_user->getAttribute('fecha_registro'))) ?>,
 			name: '<?php echo ucwords($sf_user->getAttribute('name')) ?>',
-			proprietario: '<?php echo ucwords($sf_user->getAttribute('proprietario')) ?>',
+			propietario: '<?php echo ucwords($sf_user->getAttribute('propietario')) ?>',
+			telephone: '<?php echo ucwords($sf_user->getAttribute('telephone')) ?>',
+			comuna: '<?php echo ucwords($sf_user->getAttribute('comuna')) ?>',
+			region: '<?php echo ucwords($sf_user->getAttribute('region')) ?>',
 		  });
 		</script>		
 <?php }?>

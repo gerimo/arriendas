@@ -7,6 +7,8 @@
     }
 </script>
 <style type="text/css">
+
+
 #FondoReferidos{
     margin: 0 auto;
     width: 920px;
@@ -64,10 +66,13 @@ input#botonVolver{
 				
             </p>
         </div>
-    <br /><br />
-        <div class="regis_botones" style="margin-left: 324px;">
-            <!--<button class="regis_btn_formulario left">� Anterior</button>-->
-            <button class="regis_btn_formulario right" onclick="location.href='<?php echo url_for('main/registerClose') ?>'">Finalizar</button>        
+    <br />
+        <div class="regis_botones" style="width: 95%;">
+            <center><b style="color:#EC008C;font-size:20px;">¿Qué quieres hacer ahora?</b><br><br>
+            <button class="arriendas_pink_btn arriendas_btn_big" style="" onclick="location.href='<?php echo url_for('main/index') ?>'">Quiero Arrendar un Auto</button>
+			&nbsp;&nbsp;&nbsp;
+            <button class="arriendas_pink_btn arriendas_btn_big" style="" onclick="location.href='<?php echo url_for('main/AddCarFromRegister') ?>'">Quero Subir mi Auto</button>        
+</center>
         </div><!-- regis_botones -->
     </div>
 </div>

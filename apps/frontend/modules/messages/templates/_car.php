@@ -29,9 +29,9 @@
         }
     }
     ?>
-    <?php if($user->getAutosSinVerificar() && $user->isPropietario()): ?><li><a href="mailto:soporte@arriendas.cl?subject=Reserva%20un%20horario%20para%20que%20verifiquemos%20tu%20auto">Tienes autos sin verificar</a></a></li><?php $cont++; endif; ?>
-    <?php if($user->getEstadoVerificacion() && $user->isPropietario()): ?><li><a href="<?php echo url_for("profile/cars"); ?>">Verificaci&oacute;n incompleta</a></li><?php $cont++; endif; ?>
-    <?php if($user->getAutosPendientesVerificar() && $user->isPropietario()): ?><li style='height: 37px;'><a href="#"><a href="<?php echo url_for("profile/cars"); ?>">Tienes autos en espera de verificacion</a></li><?php $cont++; endif; ?>
+    <?php if($user->getAutosSinVerificar() && $user->getPropietario()): ?><li><a href="mailto:soporte@arriendas.cl?subject=Reserva%20un%20horario%20para%20que%20verifiquemos%20tu%20auto">Tienes autos sin verificar</a></a></li><?php $cont++; endif; ?>
+    <?php if($user->getEstadoVerificacion() && $user->getPropietario()): ?><li><a href="<?php echo url_for("profile/cars"); ?>">Verificaci&oacute;n incompleta</a></li><?php $cont++; endif; ?>
+    <?php if($user->getAutosPendientesVerificar() && $user->getPropietario()): ?><li style='height: 37px;'><a href="#"><a href="<?php echo url_for("profile/cars"); ?>">Tienes autos en espera de verificacion</a></li><?php $cont++; endif; ?>
 </ul>
 
 <div id="dialog_car" style="display: none;"><?php echo $cont; ?></div>

@@ -163,6 +163,11 @@ abstract class BaseTransaction extends sfDoctrineRecord
              'length' => 10,
              'scale' => '2',
              ));
+        $this->hasColumn('customerio', 'boolean', null, array(
+            'type' => 'boolean',
+            'notnull' => '0',
+            'default' => 0,
+            ));
         $this->option('charset', 'utf8');
         $this->option('type', 'InnoDB');
     }

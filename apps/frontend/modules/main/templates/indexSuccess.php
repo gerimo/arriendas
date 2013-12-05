@@ -509,14 +509,18 @@ markerCluster.clearMarkers();
                 var urlFotoThumbTipo = "";
                 if(dataCar.photoType == 1){
                     urlFotoTipo = dataCar.photo;
-                    urlFotoThumbTipo = "<?php echo url_for('main/s3thumb'); ?>?alto=84&ancho=112&urlFoto=" + dataCar.photo;
-                }else{
+//                    urlFotoThumbTipo = "<?php echo url_for('main/s3thumb'); ?>?alto=84&ancho=112&urlFoto=" + dataCar.photo;
+                    urlFotoThumbTipo = dataCar.photo;
+               }else{
                     urlFotoTipo = "<?php echo image_path('../uploads/cars/" + dataCar.photo + "'); ?>";
-                    urlFotoThumbTipo = "<?php echo image_path('../uploads/cars/thumbs/" + dataCar.photo + "'); ?>";
+					
+							
+                    urlFotoThumbTipo = "http://arriendas.cl/uploads/cars/"+dataCar.photo;
+					//"<?php echo image_path('../uploads/cars/thumbs/" + dataCar.photo + "'); ?>";
                 }
                 var contentString = '<div style="width:380px; height:165px;" class="mapcar_box" id="' + dataCar.id + '">' +
                     '<div class="mapcar_frame">' +
-                    '<a href="' + urlFotoTipo + '"  class="thickbox"  ><img class="imagemark" width="112" height="84" src="' + urlFotoThumbTipo + '"/></a>' +                  
+                    '<a href="' + urlFotoTipo + '"  class="thickbox"  ><img class="imagemark" width="112" height="84" src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/' + urlFotoThumbTipo + '"/></a>' +                  
                     '</div><div class="detalles_car"><div class="titulo"><a target="_blank" title="Ir al perfil del auto" href="<?php echo url_for('auto/economico?chile=') ?>'+dataCar.comuna + '/id/' + dataCar.id +'">' + dataCar.brand + ' ' + dataCar.model + " " + verificado + calificacionesPositivas +'</a></div><div class="datos_car"><p>Dia: <b>$' + dataCar.price_per_day + ' CLP</b></p><p>Hora: <b>$'+ dataCar.price_per_hour +' CLP</b></p><p>Transmisión: <b>'+ dataCar.typeTransmission +'</b></p></div>'+ opcionLogeado +'</div><a target="_blank" href="<?php echo url_for('profile/reserve?id=') ?>' + dataCar.id + '" class="mapcar_btn_detalle"></a></div>';
 					
 			
@@ -570,7 +574,7 @@ markerCluster.clearMarkers();
                     nodes +=    '<div class="marcadores">';
                     nodes +=        '<img src="http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld='+contador+'|05a4e7|ffffff"/></div>';
                     nodes +=        '<div class="search_arecomend_frame">';
-                    nodes +=            '<img width="64px" height="64px" src="'+urlFotoThumbTipo+'" />';
+                    nodes +=            '<img width="64px" height="64px" src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_64,h_64,c_fill,g_center/'+urlFotoThumbTipo+'" />';
                     nodes +=        '</div>';
                     nodes +=        '<ul class="search_arecomend_info">';
                     nodes +=            '<input type="hidden" class="link" value="<?php echo url_for('auto/economico?chile=') ?>'+dataCar.comuna + '/id/' + dataCar.id +'"/>';

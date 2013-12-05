@@ -1441,11 +1441,60 @@ class User extends BaseUser {
 
 		public function save(Doctrine_Connection $conn = null)	{
 
-	
+		sfContext::getInstance()->getLogger()->err($this->getFechaRegistro());
+		
 	if (!$this->getFechaRegistro())
 	  {
-		$this->setFechaRegistro(strftime("%Y/%m/%d %H:%i:%s"));
+		$this->setFechaRegistro(date('Y-m-d H:i:s'));
+//		$this->setFechaRegistro(strftime("11/27/2013"));
+		sfContext::getInstance()->getLogger()->err('setou!');
+
+		}
+
+//	  	$this->logMessage(strftime("11/27/2013"), 'err');
+		sfContext::getInstance()->getLogger()->err(strftime("%Y/%m/%d %H:%i:%s"));
+
+		
+ 	  if (!$this->getHash())
+	  {
+		$this->setHash(sha1($this->getFacebookId().rand(11111, 99999)));
 	  }
+
+	  
+   	  if ($this->getCustomerio()<=0)
+	  {
+			
+	  $session = curl_init();
+
+$customer_id = 'a_'.$this->getId(); // You'll want to set this dynamically to the unique id of the user
+$customerio_url = 'https://track.customer.io/api/v1/customers/';
+$site_id = '3a9fdc2493ced32f26ee';
+$api_key = '4f191ca12da03c6edca4';
+
+sfContext::getInstance()->getLogger()->err($customerio_url);
+
+$data = array("email" => $this->getEmail(), "created_at" => strtotime($this->getFechaRegistro()),"name" => current(explode(' ' , $this->getFirstName())) . " " . substr($this->getLastName(), 0, 1) . '.',"propietario" => $this->getPropietario(),"telephone" => $this->getTelephone(),"comuna" => $this->getComuna(),"region" => $this->getRegion(), );						
+			
+curl_setopt($session, CURLOPT_URL, $customerio_url.$customer_id);
+curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+curl_setopt($session, CURLOPT_HEADER, false);
+curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($session, CURLOPT_VERBOSE, 1);
+curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'PUT');
+curl_setopt($session, CURLOPT_POSTFIELDS,http_build_query($data));
+
+curl_setopt($session,CURLOPT_USERPWD,$site_id . ":" . $api_key);
+
+//if(ereg("^(https)",$request)) 
+curl_setopt($session,CURLOPT_SSL_VERIFYPEER,false);
+
+curl_exec($session);
+curl_close($session);
+
+	$this->setCustomerio(true);
+		
+	  }
+
 
 	  return parent::save($conn);
 	}

@@ -376,9 +376,9 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                 <?php else: ?>
                 
                     <?php if($user->getFacebookId()!=null):?>
-                        <?php echo image_tag($user->getPictureFile().'?type=large', 'size=194x204') ?>  
+						<img src="http://res.cloudinary.com/arriendas-cl/image/facebook/w_194,h_204,c_fill,g_face/<?php echo $user->getFacebookId();?>.jpg"/>
                     <?php else: ?>
-                        <?php echo image_tag('users/'.$user->getFileName(), 'size=194x204') ?>  
+						<img src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_194,h_204,c_fill,g_face/http://arriendas.cl/<?php echo "images/users/".$user->getFileName() ?>" />
                     <?php endif;?>
 
                 <?php endif; ?>

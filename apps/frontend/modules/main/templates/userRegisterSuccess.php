@@ -468,7 +468,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
             <div class="c1 combo">
                 <label class="input">
                     <select name="comunas" id="comunas">
-                        <option value="">---Comunas---</option>
+                        <option value="">Selecciona la Comuna</option>
                         <?php
                         foreach ($comunas as $c) {
                             if ($c["codigoInterno"] == $userComuna) {

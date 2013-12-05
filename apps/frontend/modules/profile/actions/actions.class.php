@@ -1515,38 +1515,38 @@ class profileActions extends sfActions {
                 $reservas = Doctrine_Core::getTable("reserve")->findByUserId($idUsuario);
                 $reservaPrevia = false;
 
-                foreach ($reservas as $reserva) {
-                    //comprueba que sea el mismo auto
-                    if($carid == $reserva->getCarId()){
+//                foreach ($reservas as $reserva) {
+//                    //comprueba que sea el mismo auto
+//                    if($carid == $reserva->getCarId()){
+//
+//                        //comprueba que la reserva no esté eliminada o cancelada
+//                        if(!$reserva->getCanceled()){
+//
+  //                          $date = $reserva->getDate();
+    //                        $date = strtotime($date);
+      //                      $duration = $reserva->getDuration();
+   //                         $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
 
-                        //comprueba que la reserva no esté eliminada o cancelada
-                        if(!$reserva->getCanceled()){
+//                            $dateInicio = strtotime($startDate);
+  //                          $dateFin = strtotime($endDate);
 
-                            $date = $reserva->getDate();
-                            $date = strtotime($date);
-                            $duration = $reserva->getDuration();
-                            $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
-
-                            $dateInicio = strtotime($startDate);
-                            $dateFin = strtotime($endDate);
-
-                            if($date>=$fechaActual){
+    //                        if($date>=$fechaActual){
                                 //echo $date." ".$dateInicio." ".$dateFin."<br>";
 
                                 //fecha de inicio y fecha de termino se encuentra dentro del rango $dateInicio y $dateFin
-                                if($date>=$dateInicio && $date<=$dateFin){
-                                    $reservaPrevia = true;
-                                }
+      //                          if($date>=$dateInicio && $date<=$dateFin){
+        //                            $reservaPrevia = true;
+          //                      }
 
-                                $date = $date+$duration*3600;
-                                if($date>=$dateInicio && $date<=$dateFin){
-                                    $reservaPrevia = true;
-                                }
-                            }
-                        }
+       //                         $date = $date+$duration*3600;
+       //                         if($date>=$dateInicio && $date<=$dateFin){
+       //                             $reservaPrevia = true;
+        //                        }
+          //                  }
+            //            }
 
-                    }
-                }
+              //      }
+               // }
 
                 if(!$reservaPrevia){
 
@@ -2955,7 +2955,8 @@ public function executeAgreePdf2(sfWebRequest $request)
     }
 
     public function executeAddCarExito(sfWebRequest $request){
-        $idCar = $request->getParameter('id');
+
+		$idCar = $request->getParameter('id');
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
         $usuario = Doctrine_Core::getTable('user')->findOneById($idUsuario);
 			$correo = $usuario->getEmail();
@@ -2964,7 +2965,9 @@ public function executeAgreePdf2(sfWebRequest $request)
 			$telephone = $usuario->getTelephone();
 			$direccion = $usuario->getAddress();
 
-		$car = Doctrine_Core::getTable('car')->findOneById($idCar);
+
+
+			$car = Doctrine_Core::getTable('car')->findOneById($idCar);
 			$brand = $car->getMarcaModelo();
 			$patente = $car->getPatente();
 			$comuna = $car->getNombreComuna();
@@ -2985,13 +2988,8 @@ public function executeAgreePdf2(sfWebRequest $request)
         $mail->setTo($correo);
         $mail->setCc('soporte@arriendas.cl');
         $mail->submit();
-
-		//$mail = new Email();
-        //$mail->setSubject('Nuevo auto: '.$name.' '.$lastname.'');
-        //$mail->setBody("<p>$name $lastname<br>$telephone<br>$direccion<br>$comuna<br>$brand</p>");
-        //$mail->setTo('soporte@arriendas.cl');
-        //$mail->submit();
-
+		
+		
 		
         $this->emailUser = $correo;
         $this->partes = $this->partesAuto();
@@ -3810,6 +3808,13 @@ public function executeAgreePdf2(sfWebRequest $request)
 			$profile->setRut($request->getParameter('run'));
             $profile->save();
             $this->getUser()->setAttribute('picture_url', $profile->getFileName());
+            $this->getUser()->setAttribute("name", current(explode(' ' , $profile->getFirstName())) . " " . substr($profile->getLastName(), 0, 1) . '.');
+            $this->getUser()->setAttribute("picture_url", $profile->getPictureFile());
+			$this->getUser()->setAttribute("fecha_registro", $profile->getFechaRegistro());
+			$this->getUser()->setAttribute("email", $profile->getEmail());
+			$this->getUser()->setAttribute("telephone", $profile->getTelephone());
+			$this->getUser()->setAttribute("comuna", $profile->getComuna());
+			$this->getUser()->setAttribute("region", $profile->getRegion());
         } catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -4036,8 +4041,7 @@ public function executeAgreePdf2(sfWebRequest $request)
 	            
             $auto -> save();
 
-            $idCar = $auto->getId();        
-
+            $idCar = $auto->getId();
             
 
             $q = Doctrine_Manager::getInstance()->getCurrentConnection();

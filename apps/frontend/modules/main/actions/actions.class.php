@@ -1693,10 +1693,11 @@ $this->logMessage(date('h:i:s'), 'err');
 		$this->getUser()->setAttribute("email", $user->getEmail());
 		$this->getUser()->setAttribute("telephone", $user->getTelephone());
 		$this->getUser()->setAttribute("comuna", $user->getComuna());
+		$this->getUser()->setAttribute("region", $user->getRegion());
 		$this->getUser()->setAttribute("name", current(explode(' ' , $user->getFirstName())) . " " . substr($user->getLastName(), 0, 1) . '.');
 		$this->getUser()->setAttribute("picture_url", $user->getFileName());
 		//Modificacion para identificar si el usuario es propietario o no de vehiculo
-		if($user->isPropietario()) {
+		if($user->getPropietario()) {
 		    $this->getUser()->setAttribute("propietario",true);			    
 		} else {
 		    $this->getUser()->setAttribute("propietario",false);
@@ -1794,20 +1795,9 @@ $this->logMessage(date('h:i:s'), 'err');
                         $request->getParameter('lastname') != null &&
                         $request->getParameter('email') != null &&
                         $request->getParameter('password') != null &&
-                        $request->getParameter('email') == $request->getParameter('emailAgain') &&
-                        $request->getParameter('password') == $request->getParameter('passwordAgain') &&
-                        $request->getParameter('region') != 0 &&
-                        $request->getParameter('region') != null &&
-                        $request->getParameter('comunas') != 0 &&
-                        $request->getParameter('comunas') != null &&
-                        $request->getParameter('run') != null &&
-                        $request->getParameter('address') != null
+                        $request->getParameter('email') == $request->getParameter('emailAgain') 
                 ) {
 
-                    //quita los puntos y el guión al rut
-                    $rut = $request->getParameter('run');
-                    $rut = str_replace(".", "", $rut);
-                    $rut = str_replace("-", "", $rut);
 
                     $u = new User();
                     $u->setFirstname($request->getParameter('firstname'));
@@ -1815,15 +1805,7 @@ $this->logMessage(date('h:i:s'), 'err');
                     $u->setEmail($request->getParameter('email'));
                     $u->setUsername($request->getParameter('username'));
                     $u->setPassword(md5($request->getParameter('password')));
-
                     $u->setCountry($request->getParameter('country'));
-                    $u->setCity($request->getParameter('city'));
-                    $u->setBirthdate($request->getParameter('birth'));
-                    $u->setTelephone($request->getParameter('telephone'));
-                    $u->setRegion($request->getParameter('region'));
-		    $u->setAddress($request->getParameter('address'));
-                    $u->setComuna($request->getParameter('comunas'));
-
                     $u->setHash(substr(md5($request->getParameter('username')), 0, 6));
 
 		    if($request->getParameter("propietario")=="on") {
@@ -1839,22 +1821,21 @@ $this->logMessage(date('h:i:s'), 'err');
                     if ($request->getParameter('rut') != NULL)
                         $u->setRutFile($request->getParameter('rut'));
 
-                    $u->setRut($rut);
-//		            $u->setFechaRegistro(strftime("%Y/%m/%d"));
                     $u->save();
                     
                       $this->getUser()->setFlash('msg', 'Autenticado');
                       $this->getUser()->setAuthenticated(true);
                       $this->getUser()->setAttribute("logged", true);
                       $this->getUser()->setAttribute("userid", $u->getId());
-                      //$this->getUser()->setAttribute("name", current(explode(' ' , $user->getFirstName())) . " " . substr($user->getLastName(), 0, 1) . '.');
                       $this->getUser()->setAttribute("name", current(explode(' ' , $u->getFirstName())) . " " . substr($u->getLastName(), 0, 1) . '.');
-
-                    //$this->getRequest()->setParameter('emails',array('first@email.com','second@email.com','third@email.com'));
+					  $this->getUser()->setAttribute("email", $u->getEmail());
 
                     $this->getRequest()->setParameter('userid', $u->getId());
+					$this->getUser()->setAttribute("fecha_registro", $u->getFechaRegistro());
+					$this->logMessage($u->getFechaRegistro(), 'err');
 
-                    $this->forward('main', 'registerVerify');
+					
+                    $this->forward('main', 'completeRegister');
                 }
                 else {
                     $this->getUser()->setFlash('msg', 'Uno de los datos ingresados es incorrecto');
@@ -1879,7 +1860,20 @@ $this->logMessage(date('h:i:s'), 'err');
 
     public function executeRegister(sfWebRequest $request) {
 
-        //print_r($_SESSION);die;
+    
+        if (!isset($_SESSION['reg_back'])) {
+            $urlpage = split('/', $request->getReferer());
+
+            if ($urlpage[count($urlpage) - 1] != "register" && $urlpage[count($urlpage) - 1] != "doRegister") {
+                $_SESSION['reg_back'] = $request->getReferer();
+            }
+        }
+        
+    }
+
+	
+	
+	    public function executeCompleteRegister(sfWebRequest $request) {
 
         if (!isset($_SESSION['reg_back'])) {
             $urlpage = split('/', $request->getReferer());
@@ -1898,8 +1892,75 @@ $this->logMessage(date('h:i:s'), 'err');
             echo $e->getMessage();
             die;
         }
+    
+   }
+
+	
+	
+
+    public function executeDoCompleteRegister(sfWebRequest $request) {
+        
+        if ($this->getRequest()->getMethod() != sfRequest::POST) {
+            sfView::SUCCESS;
+        } else {
+
+
+		        try {
+
+            $profile = Doctrine_Core::getTable('User')->find($this->getUser()->getAttribute('userid'));
+            $profile->setRegion($request->getParameter('region'));
+            $profile->setComuna($request->getParameter('comunas'));
+            $profile->setComo($request->getParameter('como'));
+            if($profile->getTelephone() != $request->getParameter('telephone')){//Si se ingresa un nuevo telefono celular distinto al de la base de datos, el usuario podrá confirmarlo de nuevo
+                $profile->setTelephone($request->getParameter('telephone'));
+                $profile->setConfirmedSms(0);
+            }else{
+                $profile->setTelephone($request->getParameter('telephone'));
+            }
+            $profile->save();
+            $this->getUser()->setAttribute('picture_url', $profile->getFileName());
+			$this->getUser()->setAttribute("telephone", $profile->getTelephone());
+			$this->getUser()->setAttribute("comuna", $profile->getComuna());
+			$this->getUser()->setAttribute("region", $profile->getRegion());
+			$this->getUser()->setAttribute("fecha_registro", $profile->getFechaRegistro());
+
+
+			} catch (Exception $e) {
+            echo $e->getMessage();
+        }
+
+		            $this->redirect('main/registerVerify');
+
+		
+//        if($request->getParameter('redirect') && $request->getParameter('idRedirect')){
+  //          $this->redirect('profile/'.$request->getParameter('redirect')."?id=".$request->getParameter('idRedirect'));
+   //     }else{
+    //        $this->redirect('profile/cars');
+     //   }
+
+		
+		
+        return sfView::NONE;
+    }
     }
 
+	
+	
+    public function executeAddCarFromRegister(sfWebRequest $request) {
+        
+          $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+        $usuario = Doctrine_Core::getTable('user')->findOneById($idUsuario);
+
+		$usuario->setPropietario(true);
+   	    $this->getUser()->setAttribute("propietario",true);			    
+		$usuario->save();
+		
+		            $this->redirect('profile/addCar');
+		
+        return sfView::NONE;
+   
+    }
+	
     public function executeUserRegister(sfWebRequest $request) {
 
         //print_r($_SESSION);die;
@@ -1972,14 +2033,14 @@ $this->logMessage(date('h:i:s'), 'err');
         $url = $_SERVER['SERVER_NAME'];
         $url = str_replace('http://', '', $url);
         $url = str_replace('https://', '', $url);
-        $url = 'http://www.arriendas.cl/main/recover?email=' . $user->getEmail() . "&hash=" . $user->getPassword();
+        $url = 'http://www.arriendas.cl/main/recover?email=' . $user->getEmail() . "&hash=" . $user->getHash();
 
         $correo = $user->getUsername();
 
         require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
         $mail = new Email();
         $mail->setSubject('Recuperar Password');
-        $mail->setBody("<p>Hola:</p><p>Para generar una nueva contraña, haz click <a href='$url'>aqu&iacute;</a></p>");
+        $mail->setBody("<p>Hola:</p><p>Para generar una nueva contraseña, haz click <a href='$url'>aqu&iacute;</a></p>");
         $mail->setTo($correo);
         $mail->submit();
 
@@ -2011,7 +2072,7 @@ $this->logMessage(date('h:i:s'), 'err');
         $this->email = $this->getRequestParameter('email');
         $this->hash = $this->getRequestParameter('hash');
 
-        $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ? and u.password = ?', array($this->email, $this->hash));
+        $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ? and u.hash = ?', array($this->email, $this->hash));
         $user = $q->fetchOne();
         if ($user == null)
             exit();
@@ -2023,10 +2084,11 @@ $this->logMessage(date('h:i:s'), 'err');
         $hash = $this->getRequestParameter('hash');
         $password = $this->getRequestParameter('password');
 
-        $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ? and u.password = ?', array($email, $hash));
+        $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ? and u.hash = ?', array($email, $hash));
         $user = $q->fetchOne();
         if ($user != null) {
             $user->setPassword(md5($password));
+			$user->setHash(sha1($password.rand(11111, 99999)));
             $user->save();
             $this->redirect('main/login');
         }
@@ -2137,10 +2199,11 @@ El equipo de Arriendas.cl
 					$this->getUser()->setAttribute("email", $user->getEmail());
 					$this->getUser()->setAttribute("telephone", $user->getTelephone());
 					$this->getUser()->setAttribute("comuna", $user->getComuna());
+					$this->getUser()->setAttribute("region", $user->getRegion());
 	                $this->getUser()->setAttribute("name", current(explode(' ' , $user->getFirstName())) . " " . substr($user->getLastName(), 0, 1) . '.');
 	                $this->getUser()->setAttribute("picture_url", $user->getFileName());
         			//Modificacion para identificar si el usuario es propietario o no de vehiculo
-        			if($user->isPropietario()) {
+        			if($user->getPropietario()) {
         	        	    $this->getUser()->setAttribute("propietario",true);			    
         	    		} else {
         			    $this->getUser()->setAttribute("propietario",false);
@@ -2192,6 +2255,13 @@ El equipo de Arriendas.cl
             $this->getUser()->setAttribute('geolocalizacion', null);
             $this->getUser()->setAttribute('userid', null);
             $this->getUser()->setAttribute('propietario', null);
+			$this->getUser()->setAttribute('userid',null);
+			$this->getUser()->setAttribute('email',null);
+			$this->getUser()->setAttribute('fecha_registro',null);
+			$this->getUser()->setAttribute('telephone',null);
+			$this->getUser()->setAttribute('comuna',null);
+			$this->getUser()->setAttribute('region',null);
+
             unset($_SESSION["login_back_url"]);
         }
         return $this->redirect('main/index');
@@ -2577,9 +2647,14 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
                 $this->getUser()->setAttribute("userid", $userdb->getId());
                 $this->getUser()->setAttribute("name", current(explode(' ' , $userdb->getFirstName())) . " " . substr($userdb->getLastName(), 0, 1) . '.');
                 $this->getUser()->setAttribute("picture_url", $userdb->getPictureFile());
+				$this->getUser()->setAttribute("fecha_registro", $userdb->getFechaRegistro());
+				$this->getUser()->setAttribute("email", $userdb->getEmail());
+				$this->getUser()->setAttribute("telephone", $userdb->getTelephone());
+				$this->getUser()->setAttribute("comuna", $userdb->getComuna());
+				$this->getUser()->setAttribute("region", $userdb->getRegion());
                 $this->getUser()->setAttribute("fb", true);	
         		//Modificacion para identificar si el usuario es propietario o no de vehiculo
-        		if($userdb->isPropietario()) {
+        		if($userdb->getPropietario()) {
         		    $this->getUser()->setAttribute("propietario",true);			    
         		} else {
         		    $this->getUser()->setAttribute("propietario",false);
@@ -2591,7 +2666,7 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
 
                 if ($newUser) {
 		            $this->getRequest()->setParameter('userid', $userdb->getId());
-					$this->redirect('main/registerVerify');
+					$this->redirect('main/completeRegister');
 				}else{
 					if ($this->getUser()->getAttribute("lastview") != null) {
 						$this->redirect($this->getUser()->getAttribute("lastview"));

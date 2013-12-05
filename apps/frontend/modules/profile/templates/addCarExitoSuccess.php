@@ -53,9 +53,17 @@
 		<p>¡PUBLICA TU AUTO!</p>
 	</div>
 
-<p style="text-align: center;margin-top: 35px;font-style: italic;color:#EC008C;font-size:26px;">¡Su auto se ha publicado exitosamente!</p>
+	
+	<div id="sub_contenido" style="margin: 15px;margin-right: 25px;">
+	
+<p style="text-align: center;margin-top: 35px;font-style: italic;color:#EC008C;font-size:26px;">¡Su auto se ha guardado exitosamente!</p>
 
-<p style="text-align: center;margin-top: 25px; margin-bottom:30px; font-style: italic;font-size: 17px;">Te hemos enviado un correo a <?=$emailUser;?></p>
+<p style="text-align: center;margin-top: 25px; margin-bottom:30px; ;font-size: 17px;">Un inspector te contactará para agendar la verificación de tu auto. Responde el correo enviado a <?=$emailUser;?> para inicial al proceso.</p>
+
+<p style="text-align: center;margin-top: 25px; margin-bottom:30px; ;font-size: 17px;">Ahora debes subir al menos 4 fotos para que el auto se vea <b>publicado</b> en el sítio.</p>
+
+
+
 
 
 <div class="etiquetaPrincipal">FOTOS DEL VEHÍCULO</div>
@@ -101,6 +109,8 @@
 	</a>
 </div>
 
+	</div>
+	
 </div><!-- main_contenido -->
 
 <?php include_component('profile', 'colDer') ?>

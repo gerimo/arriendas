@@ -28,8 +28,12 @@ class Model extends BaseModel
 
         //calcula el precio arrendando el vehículo los fines de semana del mes
         //$result = ceil($messeges->getPrice() * pow( ( 1 / (1 + 0.05) ), date('Y') - $year) );
-        return ceil($messeges->getPrice());
-    }
+		if ($messeges){
+			return ceil($messeges->getPrice());
+		}else{
+			return 5000;
+		};
+	}
     public function obtenerPrecioPorAnio($precio, $anio){
         $interes = 0.03;
         $n=2012-intval($anio);
