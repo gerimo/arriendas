@@ -336,12 +336,10 @@ class Reserve extends BaseReserve
 			curl_exec($session);
 			curl_close($session);
 
-			$this->setCustomerio(true);
 			
-		}
-
-// 	  if ($this->getConfirmed() && $this->getCustomerio()<=0)
- 	  if ($this->getConfirmed() )
+			
+			
+			 	  if ($this->getConfirmed() )
 	  {
 
 			///event to renter
@@ -392,10 +390,67 @@ class Reserve extends BaseReserve
 			curl_exec($session);
 			curl_close($session);
 	  
-	$this->setCustomerio(true);
-
-
 	}	  
+
+			 	  if ($this->getCanceled() )
+	  {
+
+			///event to renter
+			$session = curl_init();
+			$customer_id = 'a_'.$this->getUserId(); // You'll want to set this dynamically to the unique id of the user
+			$customerio_url = 'https://track.customer.io/api/v1/customers/'.$customer_id.'/events';
+			$site_id = '3a9fdc2493ced32f26ee';
+			$api_key = '4f191ca12da03c6edca4';
+			sfContext::getInstance()->getLogger()->err($customerio_url);
+			$data = array("name" => "pedido_reserva_rechazado", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId());
+
+			curl_setopt($session, CURLOPT_URL, $customerio_url);
+			curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+			curl_setopt($session, CURLOPT_HEADER, false);
+			curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($session, CURLOPT_VERBOSE, 1);
+			curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
+			curl_setopt($session, CURLOPT_POSTFIELDS,http_build_query($data));
+
+			curl_setopt($session,CURLOPT_USERPWD,$site_id . ":" . $api_key);
+
+			curl_setopt($session,CURLOPT_SSL_VERIFYPEER,false);
+
+			curl_exec($session);
+			curl_close($session);
+ 
+			///event to owner
+			$session = curl_init();
+			$customer_id = 'a_'.$ownerUserId; // You'll want to set this dynamically to the unique id of the user
+			$customerio_url = 'https://track.customer.io/api/v1/customers/'.$customer_id.'/events';
+			$site_id = '3a9fdc2493ced32f26ee';
+			$api_key = '4f191ca12da03c6edca4';
+			sfContext::getInstance()->getLogger()->err($customerio_url);
+			$data = array("name" => "rechazo_pedido_reserva", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId());
+
+			curl_setopt($session, CURLOPT_URL, $customerio_url);
+			curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+			curl_setopt($session, CURLOPT_HEADER, false);
+			curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($session, CURLOPT_VERBOSE, 1);
+			curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
+			curl_setopt($session, CURLOPT_POSTFIELDS,http_build_query($data));
+
+			curl_setopt($session,CURLOPT_USERPWD,$site_id . ":" . $api_key);
+
+			curl_setopt($session,CURLOPT_SSL_VERIFYPEER,false);
+
+			curl_exec($session);
+			curl_close($session);
+	  
+	}
+			
+						
+			
+			$this->setCustomerio(true);
+			
+		}
+
 	  
 	  return parent::save($conn);
 	}

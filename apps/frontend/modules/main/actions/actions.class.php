@@ -1692,9 +1692,10 @@ $this->logMessage(date('h:i:s'), 'err');
 		$this->getUser()->setAttribute("fecha_registro", $user->getFechaRegistro());
 		$this->getUser()->setAttribute("email", $user->getEmail());
 		$this->getUser()->setAttribute("telephone", $user->getTelephone());
-		$this->getUser()->setAttribute("comuna", $user->getComuna());
-		$this->getUser()->setAttribute("region", $user->getRegion());
+		$this->getUser()->setAttribute("comuna", $user->getNombreComuna());
+		$this->getUser()->setAttribute("region", $user->getNombreRegion());
 		$this->getUser()->setAttribute("name", current(explode(' ' , $user->getFirstName())) . " " . substr($user->getLastName(), 0, 1) . '.');
+		$this->getUser()->setAttribute("firstname", $user->getFirstName());
 		$this->getUser()->setAttribute("picture_url", $user->getFileName());
 		//Modificacion para identificar si el usuario es propietario o no de vehiculo
 		if($user->getPropietario()) {
@@ -1827,6 +1828,7 @@ $this->logMessage(date('h:i:s'), 'err');
                       $this->getUser()->setAuthenticated(true);
                       $this->getUser()->setAttribute("logged", true);
                       $this->getUser()->setAttribute("userid", $u->getId());
+                      $this->getUser()->setAttribute("firstname", $u->getFirstName());
                       $this->getUser()->setAttribute("name", current(explode(' ' , $u->getFirstName())) . " " . substr($u->getLastName(), 0, 1) . '.');
 					  $this->getUser()->setAttribute("email", $u->getEmail());
 
@@ -1920,8 +1922,8 @@ $this->logMessage(date('h:i:s'), 'err');
             $profile->save();
             $this->getUser()->setAttribute('picture_url', $profile->getFileName());
 			$this->getUser()->setAttribute("telephone", $profile->getTelephone());
-			$this->getUser()->setAttribute("comuna", $profile->getComuna());
-			$this->getUser()->setAttribute("region", $profile->getRegion());
+			$this->getUser()->setAttribute("comuna", $profile->getNombreComuna());
+			$this->getUser()->setAttribute("region", $profile->getNombreRegion());
 			$this->getUser()->setAttribute("fecha_registro", $profile->getFechaRegistro());
 
 
@@ -2198,8 +2200,8 @@ El equipo de Arriendas.cl
 					$this->getUser()->setAttribute("fecha_registro", $user->getFechaRegistro());
 					$this->getUser()->setAttribute("email", $user->getEmail());
 					$this->getUser()->setAttribute("telephone", $user->getTelephone());
-					$this->getUser()->setAttribute("comuna", $user->getComuna());
-					$this->getUser()->setAttribute("region", $user->getRegion());
+					$this->getUser()->setAttribute("comuna", $user->getNombreComuna());
+					$this->getUser()->setAttribute("region", $user->getNombreRegion());
 	                $this->getUser()->setAttribute("name", current(explode(' ' , $user->getFirstName())) . " " . substr($user->getLastName(), 0, 1) . '.');
 	                $this->getUser()->setAttribute("picture_url", $user->getFileName());
         			//Modificacion para identificar si el usuario es propietario o no de vehiculo
@@ -2650,8 +2652,8 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
 				$this->getUser()->setAttribute("fecha_registro", $userdb->getFechaRegistro());
 				$this->getUser()->setAttribute("email", $userdb->getEmail());
 				$this->getUser()->setAttribute("telephone", $userdb->getTelephone());
-				$this->getUser()->setAttribute("comuna", $userdb->getComuna());
-				$this->getUser()->setAttribute("region", $userdb->getRegion());
+				$this->getUser()->setAttribute("comuna", $userdb->getNombreComuna());
+				$this->getUser()->setAttribute("region", $userdb->getNombreRegion());
                 $this->getUser()->setAttribute("fb", true);	
         		//Modificacion para identificar si el usuario es propietario o no de vehiculo
         		if($userdb->getPropietario()) {

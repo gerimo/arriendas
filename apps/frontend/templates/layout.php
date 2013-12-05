@@ -558,7 +558,7 @@ var google_conversion_value = 0;
 			id: 'a_<?php echo ucwords($sf_user->getAttribute('userid')) ?>',
 			email: '<?php echo ucwords($sf_user->getAttribute('email')) ?>',
 			created_at: <?php echo (strtotime($sf_user->getAttribute('fecha_registro'))) ?>,
-			name: '<?php echo ucwords($sf_user->getAttribute('name')) ?>',
+			name: '<?php echo ucwords($sf_user->getAttribute('firstname')) ?>',
 			propietario: '<?php echo ucwords($sf_user->getAttribute('propietario')) ?>',
 			telephone: '<?php echo ucwords($sf_user->getAttribute('telephone')) ?>',
 			comuna: '<?php echo ucwords($sf_user->getAttribute('comuna')) ?>',
