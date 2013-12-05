@@ -576,12 +576,14 @@ markerCluster.clearMarkers();
                     nodes +=            '<input type="hidden" class="link" value="<?php echo url_for('auto/economico?chile=') ?>'+dataCar.comuna + '/id/' + dataCar.id +'"/>';
                     nodes +=            '<li class="search_arecomend_marca">';
                     nodes +=                '<a target="_blank" title="Ir al perfil del auto" href="<?php echo url_for('auto/economico?chile=') ?>'+dataCar.comuna + '/id/' + dataCar.id +'">';
-                    nodes +=                    dataCar.brand + ' ' +dataCar.model;
+                    nodes +=                    dataCar.brand + ' ' +dataCar.model+ ' (' +dataCar.year+')';
                     nodes +=                '</a>';
-                    nodes +=                verificado;
                     nodes +=            '</li>';
-                    nodes +=            '<li>Día: <b>$'+dataCar.price_per_day+'</b></li>';
-                    nodes +=            '<li>Hora: <b>$'+dataCar.price_per_hour+'</b></li>';
+                    nodes +=            '<li>Día: <b>$'+dataCar.price_per_day+' - </b>';
+                    nodes +=            'Hora: <b>$'+dataCar.price_per_hour+'</b></li>';
+                    //numStars = dataCar.stars por ejemplo
+                    var numStars = Math.floor((Math.random()*5)+1); //función temporal
+                    nodes +=             '<li class="stars">'+ generarBarraEstrellas(numStars) +'</li>'
                     <?php if (sfContext::getInstance()->getUser()->getAttribute("logged")){?>
                     //nodes +=            '<li class="sep">Usuario: <a target="_blank" title="Ir al perfil de '+dataCar.firstname+'" class="link_user" href="http://www.arriendas.cl/profile/publicprofile/id/'+dataCar.userid+'">'+dataCar.firstname+' '+dataCar.lastname+'</a></li>';
                     <?php } ?>
@@ -618,6 +620,19 @@ markerCluster.clearMarkers();
 		
         });
 
+    }
+    function generarBarraEstrellas(num){
+        var gris = "<?php echo image_path('img_search/EstrellaGris.png'); ?>";
+        var rosa = "<?php echo image_path('img_search/EstrellaRosada'); ?>";
+
+        var cadena = "";
+        for(var i=0;i<5;i++){
+            if(num>0) cadena = cadena +'<img width="10px" height="9px" src="'+rosa+'" />';
+            else cadena = cadena +'<img width="10px" height="9px" src="'+gris+'" />';
+
+            num--;
+        }
+        return cadena;
     }
     /*
     function formatNumber(precio){
@@ -1110,6 +1125,22 @@ $('#day_to').change(function() {
     
     
     $(document).ready(function() {
+        $(".btn_filtro").click(function () {     
+            $('#opc_filtro').toggle("slow");
+        });
+        $("#btn_filtro1").click(function () {     
+            $('#btn_filtro1').css("display","none");
+            $('#map').css("width","509px");
+            $('.search_box_1_maparea').css("width","511px");
+            $('.search_box_1_maparea').css("margin-left","119px");
+        });
+        $("#btn_filtro2").click(function () {     
+            $('#btn_filtro1').css("display","block");
+            $('#map').css("width","628px");
+            $('.search_box_1_maparea').css("width","630px");
+            $('.search_box_1_maparea').css("margin-left","0px");
+        });
+
         $("#more").click(function () {
 
             $(".search_ext_box").slideToggle("slow");
@@ -1195,7 +1226,7 @@ $('#day_to').change(function() {
     <div class="search_sector1">      
         <!--  busqueda avanzada -->
         <div class="search_box_1">
-            <input type="button" class="buton_more_options"/>
+            <!-- <input type="button" class="buton_more_options"/> -->
             <div class="search_box_1_title">
                 <p class="txt_buscador" style="margin-top: 10px;">Busca autos cerca de ti</p>
             </div>
@@ -1257,29 +1288,40 @@ $('#day_to').change(function() {
                     </div><!-- search_ext_wrapper -->
                 </div><!-- search_ext_box -->
 
-            </div><!-- search_box_1_header -->
+            </div><!-- search_box_1_header -->     
+        </div><!-- search_box_1 -->
+    </div><!-- search_sector1 -->
+    <!--<p class='comparaPrecio'><a href="<?php echo url_for('main/comparaPrecios') ?>" class='comparaPrecio'>Compara Precios</a></p>-->
+</div>
 
-            <div class="search_box_1_maparea" style="background-color: #ccc;">    
+<div class="main_box_2_anterior" style="margin-top:15px;border-radius: 0px 0x 0px 0px;">
+    <div class="search_sector1">
+
+        <div class="search_box_1new">
+            <button id="btn_filtro1" class="btn_filtro"></button>
+            <div id="opc_filtro">
+                <button id="btn_filtro2" class="btn_filtro"></button>
+                <div class="title_opc_filtro">Transmisión</div>
+                <div class="opc_filtro"><input type="checkbox" name="transmision" value="manual" style="margin-right:6px;">Manual</div>
+                <div class="opc_filtro"><input type="checkbox" name="transmision" value="automatica" style="margin-right:6px;">Automática</div>
+                <div class="title_opc_filtro">Tipo</div>
+                <div class="opc_filtro"><input type="checkbox" name="tipo" value="sedan" style="margin-right:6px;">Sedan</div>
+                <div class="opc_filtro"><input type="checkbox" name="tipo" value="SUV" style="margin-right:6px;">SUV</div>
+                <div class="opc_filtro"><input type="checkbox" name="tipo" value="wagon" style="margin-right:6px;">Wagon</div>
+                <div class="opc_filtro"><input type="checkbox" name="tipo" value="station" style="margin-right:6px;">Station</div>
+                <div class="opc_filtro"><input type="checkbox" name="tipo" value="pickup" style="margin-right:6px;">Pick Up</div>
+                <div class="opc_filtro"><input type="checkbox" name="tipo" value="furgon" style="margin-right:6px;">Furgón</div>
+                <div class="title_opc_filtro">Precio</div>
+                <div class="opc_filtro"><input type="checkbox" name="tipo" value="mintomax" style="margin-right:6px;">De -$ a +$</div>
+                <div class="opc_filtro"><input type="checkbox" name="tipo" value="maxtomin" style="margin-right:6px;">De +$ a -$</div>
+            </div> 
+            <div class="search_box_1_maparea" style="background-color: #ccc;">   
                 <div id="loading">
                 </div>
                 <div id="map"></div>
-            </div><!-- search_box_1_maparea -->        
-        </div><!-- search_box_1 -->     
+            </div><!-- search_box_1_maparea -->   
 
-
-
-        <!--  autos recomendados -->
         <div class="search_box_2">
-            <div class="search_box_2_header">
-
-                <!--<h2>Autos recomendados</h2>
-				<?php echo image_tag("img_landing/land_box_header_flecha.png", array("class" => "search_box_header_flecha")) ?>             
-				-->
-
-                <h2>RESULTADOS - <a target="_blank" href="<?=url_for('main/arriendo?autos=santiago');?>" title="Ver todos los autos" style="font-size: 14px;color: #00AEEF;text-decoration: none;">Ver Todos</a></h2>
-                <!-- ?php echo image_tag("img_landing/land_box_header_flecha.png", array("class" => "search_box_header_flecha")) ? -->             
-
-            </div><!-- land_box_2_header -->  
 
             <div id="loader" style="display:none;margin-left: 105px;margin-top: 30px;"><?php echo image_tag("ajax-loader.gif", array("width" => "80px", "height" => "80px")); ?></div>  
             <div class="search_arecomend_window">  
@@ -1288,11 +1330,12 @@ $('#day_to').change(function() {
 
 
 
-        </div><!-- search_box_2 -->    
+        </div><!-- search_box_2 -->
+    </div><!-- search_box_1new -->
 
-        <div class="clear"></div>
-    </div><!-- search_sector1 -->
-    <!--<p class='comparaPrecio'><a href="<?php echo url_for('main/comparaPrecios') ?>" class='comparaPrecio'>Compara Precios</a></p>-->
+    <div class="clear"></div>
+
+    </div>
 </div>
     <div id="centro">
 

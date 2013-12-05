@@ -39,7 +39,6 @@ a {
 .main_box_2_anterior{
     background-color: #FDFDFD;
     border: 1px solid #D7D7D7;
-    border-radius: 6px 6px 6px 6px;
     box-shadow: 0 0 8px #D7D7D7;
     display: table;
     margin: auto;
@@ -57,7 +56,7 @@ a {
 }
 
 #map {
-    width: 628px; height: 518px;border:1px solid #FFFFFF;
+    width: 628px; height: 518px;
 }
 
 /* header area 

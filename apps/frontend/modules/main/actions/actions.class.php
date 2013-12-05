@@ -1146,7 +1146,7 @@ $this->logMessage($has_reserve, 'err');
                     'brand' => $car->getBrand(),
                     'model' => $car->getModelo(),
 //                    'address' => $car->getAddress(),
-//                    'year' => $car->getYear(),
+                    'year' => $car->getYear(),
                     'photoType' => $car->getPhotoS3(),
 //                    'photo' => '',
                     'photo' => $photo,

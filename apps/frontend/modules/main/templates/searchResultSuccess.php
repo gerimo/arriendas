@@ -24,7 +24,9 @@
 <?php $i = 1; ?>
 <?php foreach ($cars as $c): ?>
     <div class="search_arecomend_item" id="<?=$c["id"]; ?>">
-        <div class="marcadores"><img src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=<?php echo $i; ?>|05a4e7|ffffff'/></div>
+        <div class="marcadores">
+        <img src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=<?php echo $i; ?>|05a4e7|ffffff'/>
+        </div>
         <div class="search_arecomend_frame">
             <?php   if ($c["photo"] != NULL){ 
                         if($c["photoType"] == 1) {
@@ -43,8 +45,7 @@
         <ul class="search_arecomend_info">
             <input type="hidden" class="link" value="<?php echo url_for('auto/economico?chile='.$c["comuna"] .'?id=' . $c["id"]) ?>"/>
             <li class="search_arecomend_marca"><?= '<a target="_blank" title="Ir al perfil del auto" href="'.url_for('auto/economico?chile=' . $c["comuna"].'&id='. $c["id"]).'">';?><?= $c["brand"] ?> <?= $c["model"] ?> </a><?php if($c['verificado']): ?><?php echo image_tag("verificado.png", "class=img_verificado title='Auto Asegurado'"); ?><?php endif; ?></li>
-            <li>Día: <b>$<?= $c["price_per_day"] ?></b></li>
-            <li>Hora: <b>$<?= $c["price_per_hour"] ?></b></li>
+            <li>Día: <b>$<?= $c["price_per_day"] ?> -</b> Hora:<b>$<?= $c["price_per_hour"] ?></b></li>
             <?php if (sfContext::getInstance()->getUser()->getAttribute("logged")){?>
             <li class="sep">Usuario: <?= '<a target="_blank" title="Ir al perfil de '.$c["firstname"].'" class="link_user" href="http://www.arriendas.cl/profile/publicprofile/id/'.$c["userid"].'">';?><?= $c["firstname"]." ".$c["lastname"] ?></a></li>
             <?php } ?>
