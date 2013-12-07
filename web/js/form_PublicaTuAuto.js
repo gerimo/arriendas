@@ -575,9 +575,16 @@ function isNum(numero){
 
 }
 
+function anadirPunto(x) {
+    x = x.toString();
+    var pattern = /(-?\d+)(\d{3})/;
+    while (pattern.test(x))
+        x = x.replace(pattern, "$1.$2");
+    return x;
+}
 
 //agrega . a variable numérica
-function anadirPunto(valor){
+function anadirPunto2(valor){
 	var resultado = "";
 	//alert(valor);
 	//alert(valor.toString().length);
