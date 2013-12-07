@@ -575,7 +575,19 @@ function isNum(numero){
 
 }
 
-function anadirPunto(x) {
+
+function anadirPunto(x){
+    x = x.toString();
+var num = x.replace(/\./g,'');
+if(!isNaN(num)){
+num = num.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
+num = num.split('').reverse().join('').replace(/^[\.]/,'');
+    return num;
+}
+};
+
+
+function anadirPunto3(x) {
     x = x.toString();
     var pattern = /(-?\d+)(\d{3})/;
     while (pattern.test(x))
