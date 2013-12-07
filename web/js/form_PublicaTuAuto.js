@@ -119,7 +119,27 @@ $(document).on('ready',function(){
 
 	//alert(getModel($("#brand")));
 	//anadirPunto('9030');
-	
+
+
+
+//$('#tengoDisponibilidadSemanal').change(function () {
+//    if ($(this).attr("checked")) {
+//		$("#siTengoDisponibilidadSemanal").show();
+//        return;
+//    }
+//		$("#siTengoDisponibilidadSemanal").hide();
+//		$("#precioSemana").value('');
+//});
+
+
+//$('#tengoDisponibilidadMensual').change(function () {
+//    if ($(this).attr("checked")) {
+//		$("#siTengoDisponibilidadMensual").show();
+//        return;
+//    }
+//		$("#siTengoDisponibilidadMensual").hide();
+//		$("#precioMes").value('');
+//});
 
 	$('#boton1').on('click',function(event){
 
@@ -160,12 +180,26 @@ $(document).on('ready',function(){
 		}
 	});
 
-	$('#boton3').on('click',function(event){
+		$('#boton3').on('click',function(event){
 
 		event.preventDefault();
 
 		//verificar los datos ingresados
 		if(verificaPaso3()){
+			$('#paso3').fadeOut('fast',function(){
+				$('#paso4').fadeIn('fast');	
+			});
+		}
+	});
+
+	
+	
+	$('#boton4').on('click',function(event){
+
+		event.preventDefault();
+
+		//verificar los datos ingresados
+		if(verificaPaso4()){
 			//envía el formulario
 			//alert('entro');
 			var url= $("#frm1").attr('action');
@@ -460,7 +494,34 @@ function verificaPaso2(){
 
 }
 
+
 function verificaPaso3(){
+	var disponibilidad = $('#disponibilidad').val();
+
+	var camposIngresados = true;
+
+	if(disponibilidad == "" ){
+		$('#disponibilidad').addClass('faltaValor');
+		var camposIngresados = false;
+	}else{
+		$('#disponibilidad').removeClass('faltaValor');
+	}
+
+	
+
+	if(camposIngresados){ //muestra mensaje de ingresar todos los datos
+		$('.mensajeIngresoDatos3').fadeOut('fast');
+	}else{
+		$('.mensajeIngresoDatos3').fadeIn('fast');
+	}
+	
+	return camposIngresados;
+
+}
+
+
+
+function verificaPaso4(){
 	var fotoPerfilAuto = $('#fotoPerfilAuto').val();
 	var fotoPadronFrente = $('#fotoPadronFrente').val();
 	var fotoPadronReverso = $('#fotoPadronReverso').val();
@@ -495,9 +556,9 @@ function verificaPaso3(){
 	}
 	*/
 	if(camposIngresados){ //muestra mensaje de ingresar todos los datos
-		$('.mensajeIngresoDatos3').fadeOut('fast');
+		$('.mensajeIngresoDatos4').fadeOut('fast');
 	}else{
-		$('.mensajeIngresoDatos3').fadeIn('fast');
+		$('.mensajeIngresoDatos4').fadeIn('fast');
 	}
 
 	return camposIngresados;

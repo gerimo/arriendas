@@ -3963,7 +3963,22 @@ public function executeAgreePdf2(sfWebRequest $request)
         $usosVehiculo = $request -> getPostParameter('usosVehiculo');
         $precioHora = $request -> getPostParameter('precioHora');
         $precioDia = $request -> getPostParameter('precioDia');
-        $patente = $request -> getPostParameter('patente');
+        $precioSemana = $request -> getPostParameter('precioSemana');
+        $precioMes = $request -> getPostParameter('precioMes');        
+		$disponibilidad = $request -> getPostParameter('disponibilidad');
+        
+		if ($disponibilidad==1){
+		$disponibilidadSemana = 1;
+        $disponibilidadFinde = 0;
+        }elseif ($disponibilidad==2){
+		$disponibilidadSemana = 0;
+        $disponibilidadFinde = 1;
+        }elseif ($disponibilidad==3){
+		$disponibilidadSemana = 1;
+        $disponibilidadFinde = 1;
+        };
+		
+		$patente = $request -> getPostParameter('patente');
         $color = $request -> getPostParameter('color');
 
         $fotoPerfilAuto = $request -> getParameter('foto_perfil'); //Se cambió por el metodo utilizado
@@ -3999,8 +4014,8 @@ public function executeAgreePdf2(sfWebRequest $request)
             $q = Doctrine_Manager::getInstance()->getCurrentConnection();
             $query = "update arriendas.Car set address='$ubicacion', comuna_id='$comuna',
 			    model_id='$modelo', year='$anio', doors='$puertas', transmission='$transmision', photoS3='0',
-			    tipoBencina='$tipoBencina', uso_vehiculo_id='$usosVehiculo', price_per_hour='$precioHora',
-			    price_per_day='$precioDia' ,lat=$lat, lng=$lng, patente='$patente', color='$color', seguro_ok='$ok' where id=$idCar";
+			    tipoBencina='$tipoBencina', uso_vehiculo_id='$usosVehiculo', price_per_hour='$precioHora',price_per_week='$precioSemana',price_per_month='$precioMes',
+			    disponibilidad_semana='$disponibilidadSemana' , disponibilidad_finde='$disponibilidadFinde', price_per_day='$precioDia' ,lat=$lat, lng=$lng, patente='$patente', color='$color', seguro_ok='$ok' where id=$idCar";
             $result = $q->execute($query);
             
 
@@ -4032,6 +4047,10 @@ public function executeAgreePdf2(sfWebRequest $request)
             $auto -> setUsoVehiculoId($usosVehiculo); //falta método usosVehículo
             $auto -> setPricePerHour($precioHora);
             $auto -> setPricePerDay($precioDia);
+            $auto -> setPricePerWeek($precioSemana);
+            $auto -> setPricePerMonth($precioMes);
+            $auto -> setDisponibilidadSemana($disponibilidadSemana);
+            $auto -> setDisponibilidadFinde($disponibilidadFinde);
 
             $auto -> setPatente($patente);
             $auto -> setColor($color);

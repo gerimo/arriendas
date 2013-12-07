@@ -29,6 +29,8 @@ function ingresaPrecios(modelo, anio){
 		//establece el valor de los inputs valor dia y valor hora
 		$('#precioHora').attr('placeholder','$ '+anadirPunto(valorHora)+'.- (sugerido)');
 		$('#precioDia').attr('placeholder','$ '+anadirPunto(valorDia)+'.- (sugerido)');
+		$('#precioSemana').attr('placeholder','$ '+anadirPunto(valorDia*0.9*7)+'.- (sugerido)');
+		$('#precioMes').attr('placeholder','$ '+anadirPunto(valorDia*0.62*30)+'.- (sugerido)');
 
 		$('#precioTotal').text('$ '+anadirPunto(valorTotal));
 
@@ -153,7 +155,16 @@ $(document).on('ready',function(){
 
 <?php echo form_tag('profile/subirauto', array('method'=>'post', 'enctype'=>'multipart/form-data','id'=>'frm1')); ?>
 
-<h3 class="subtitulo">en <div class="imagen"><?php echo image_tag('img_publica_auto/3Grande.png') ?></div> pasos</h3>
+<h3 class="subtitulo">en <div style="width: 16px;
+background-color: rgb(221, 35, 117);
+padding: 7px;
+color: white;
+-webkit-border-radius: 17px;
+-moz-border-radius: 17px;
+border-radius: 17px;
+display: inline-block;
+text-align: center;
+padding-right: 8px;">4</div> pasos</h3>
 
 <!-- inicio paso 1 -->
 <div id="paso1">
@@ -163,6 +174,7 @@ $(document).on('ready',function(){
 			echo image_tag('img_publica_auto/1.png');
 			echo image_tag('img_publica_auto/2claro.png');
 			echo image_tag('img_publica_auto/3claro.png'); 
+			echo image_tag('img_publica_auto/4claro.png'); 
 		?>
 	</div>
 
@@ -418,12 +430,13 @@ $(document).on('ready',function(){
 			echo image_tag('img_publica_auto/1claro.png');
 			echo image_tag('img_publica_auto/2.png');
 			echo image_tag('img_publica_auto/3claro.png'); 
+			echo image_tag('img_publica_auto/4claro.png'); 
 		?>
 	</div>
 
 	<p class="msjPrecio">Fija el precio de tu auto > <span class="msjModelo"></span></p>
 
-	<div class="izqMitad">
+	<div class="izqMitad" style="height: 70px;">
 		<label for="precioHora" id="precioHoraLabel">Precio por hora (*)</label><br>
 		<?php
 			if((isset($car)) && ($car[0]['price_per_hour'] != 0)){
@@ -433,7 +446,7 @@ $(document).on('ready',function(){
 			}
 		?>
 	</div>
-	<div class="derMitad">
+	<div class="derMitad" style="height: 70px;">
 		<label for="precioDia" id="precioDiaLabel">Precio por d&iacute;a (*)</label><br>
 		<?php
 			if((isset($car)) && ($car[0]['price_per_day'] != 0)){
@@ -443,7 +456,28 @@ $(document).on('ready',function(){
 			}
 		?>
 	</div>
+	<div class="izqMitad" style="height: 70px;">
+		<label for="precioSemanal" id="precioSemanaLabel">Precio por semana (Opcional)</label><br>
+		<?php
+			if((isset($car)) && ($car[0]['price_per_week'] != 0)){
+				echo "<input type='text' id='precioSemana' name='precioSemana' value='".intval($car[0]['price_per_week'])."'>";
+			}else{
+				echo "<input type='text' id='precioSemana' name='precioSemana'>";
+			}
+		?>
+	</div>
+	<div class="derMitad" style="height: 70px;">
+		<label for="precioMensual" id="precioMesLabel">Precio por mes (Opcional)</label><br>
+		<?php
+			if((isset($car)) && ($car[0]['price_per_month'] != 0)){
+				echo "<input type='text' id='precioMes' name='precioMes' value='".intval($car[0]['price_per_month'])."'>";
+			}else{
+				echo "<input type='text' id='precioMes' name='precioMes'>";
+			}
+		?>
+	</div>
 
+	
 	<p class="msjPromocion1">GANA <span class="msjPromocion2" id="precioTotal"></span> ARRENDANDO ESTE AUTO</p>
 	<p class="msjPromocion1 msjPromocion3">LOS FINES DE SEMANA, AL <span class="msjPromocion2" style="font-size:100%">MES</span></p>
 
@@ -460,6 +494,7 @@ $(document).on('ready',function(){
 </div>
 <!-- fin paso 2 -->
 
+
 <!-- inicio paso 3 -->
 <div id="paso3">
 
@@ -468,6 +503,68 @@ $(document).on('ready',function(){
 			echo image_tag('img_publica_auto/1claro.png');
 			echo image_tag('img_publica_auto/2claro.png');
 			echo image_tag('img_publica_auto/3.png'); 
+			echo image_tag('img_publica_auto/4claro.png');
+		?>
+	</div>
+
+	<p class="msjPrecio">¿Cúal es la disponibilidad de tu <span class="msjModelo"></span>?</p>
+
+	<div class="izqMitad" style="width: 100%;text-align:center;margin-left:0px;">
+		<label for="disponibilidad" id="disponibilidadLabel">¿Cuando puedes recibir pedidos de reserva?</label><br>
+		<select id="disponibilidad" name="disponibilidad" style="margin-top: 10px;">
+			<option value="">--</option>
+			<?php
+				if((isset($car))){
+					if(($car[0]['disponibilidad_semana'] ==1 ) && ($car[0]['disponibilidad_finde'] == 0)){
+						echo "<option value='1' selected>Los días de semana</option>";
+					}else{
+						echo "<option value='1'>Los días de semana</option>";
+					}
+					if(($car[0]['disponibilidad_semana'] == 0) && ($car[0]['disponibilidad_finde'] == 1)){
+						echo "<option value='2' selected >Algunos o todos los fines de semana</option>";
+					}else{
+						echo "<option value='2'>Algunos o todos los fines de semana</option>";
+					}
+					if(($car[0]['disponibilidad_semana'] == 1) && ($car[0]['disponibilidad_finde'] == 1)){
+						echo "<option value='3' selected>Disponibilidad completa</option>";
+					}else{
+						echo "<option value='3'>Disponibilidad completa</option>";
+					}
+				}else{
+					echo "<option value='1'>Los días de semana</option>";
+					echo "<option value='2'>Algunos o todos los fines de semana</option>";
+					echo "<option value='3'>Disponibilidad completa</option>";
+
+				}
+			?>
+			
+		</select>
+	</div>
+
+	<p style="font-size: 14px;">Te recomendamos marcar "Disponibilidad Completa" para que el auto siempre figure en los resultados de búsqueda. Recuerdas que siempre es posible rechazar un pedido de reserva si tu auto no esta disponible.</p>
+
+	<div class="mensajeIngresoDatos3">
+		<p>(*) Debe ingresar todos los campos</p>
+	</div>
+
+	<div class="boton3" style="margin-top: 15px;">
+		<a href="">
+			<?php echo image_tag('img_publica_auto/Siguiente_SubeTuAuto.png','id=boton3') ?>
+		</a>
+	</div>
+
+</div>
+<!-- fin paso 3 -->
+
+<!-- inicio paso 4 -->
+<div id="paso4">
+
+	<div class="pasos"> 
+		<?php
+			echo image_tag('img_publica_auto/1claro.png');
+			echo image_tag('img_publica_auto/2claro.png');
+			echo image_tag('img_publica_auto/3claro.png');
+			echo image_tag('img_publica_auto/4.png'); 
 		?>
 	</div>
 
@@ -554,13 +651,13 @@ $(document).on('ready',function(){
 
 <!-- fin foto de perfil auto -->
 
-<div class="mensajeIngresoDatos3">
+<div class="mensajeIngresoDatos4">
 	<p>(*) Debe ingresar todos los campos</p>
 </div>
 
-<div class="boton3">
+<div class="boton4">
 	<a href="">
-		<?php echo image_tag('img_publica_auto/Listo_SubeTuAuto.png','id=boton3') ?>
+		<?php echo image_tag('img_publica_auto/Listo_SubeTuAuto.png','id=boton4') ?>
 	</a>
 </div>
 
@@ -581,7 +678,7 @@ $(document).on('ready',function(){
 
 
 </div>
-<!-- fin paso 3 -->
+<!-- fin paso 4 -->
 
 
 <!-- inicio ventana emergente mapa ubicación -->

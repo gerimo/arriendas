@@ -139,7 +139,17 @@ abstract class BaseCar extends sfDoctrineRecord
              'length' => 10,
              'scale' => '2',
              ));
-        $this->hasColumn('contesta_pedidos', 'float', 10, array(
+         $this->hasColumn('price_per_week', 'decimal', 10, array(
+             'type' => 'decimal',
+             'length' => 10,
+             'scale' => '2',
+             ));
+        $this->hasColumn('price_per_month', 'decimal', 10, array(
+             'type' => 'decimal',
+             'length' => 10,
+             'scale' => '2',
+             ));
+       $this->hasColumn('contesta_pedidos', 'float', 10, array(
              'type' => 'float',
              'length' => 10,
              'scale' => '2',
@@ -380,6 +390,16 @@ abstract class BaseCar extends sfDoctrineRecord
             'type' => 'boolean',
             'notnull' => '0',
             'default' => 0,
+            ));             
+        $this->hasColumn('disponibilidad_semana', 'boolean', null, array(
+            'type' => 'boolean',
+            'notnull' => '0',
+            'default' => 1,
+            ));             
+        $this->hasColumn('disponibilidad_finde', 'boolean', null, array(
+            'type' => 'boolean',
+            'notnull' => '0',
+            'default' => 1,
             ));             
         $this->index('fk_Car_User', array(
              'fields' => 
