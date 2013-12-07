@@ -576,7 +576,37 @@ function isNum(numero){
 }
 
 
-function anadirPunto(x){
+function anadirPunto(numero){ // v2007-08-06
+
+var decimales=0;
+var separador_decimal=',';
+var separador_miles='.';
+
+    numero=parseFloat(numero);
+    if(isNaN(numero)){
+        return "";
+    }
+
+    if(decimales!==undefined){
+        // Redondeamos
+        numero=numero.toFixed(decimales);
+    }
+
+    // Convertimos el punto en separador_decimal
+    numero=numero.toString().replace(".", separador_decimal!==undefined ? separador_decimal : ",");
+
+    if(separador_miles){
+        // Añadimos los separadores de miles
+        var miles=new RegExp("(-?[0-9]+)([0-9]{3})");
+        while(miles.test(numero)) {
+            numero=numero.replace(miles, "$1" + separador_miles + "$2");
+        }
+    }
+
+    return numero;
+}
+
+function anadirPunto5(x){
     x = x.toString();
 var num = x.replace(/\./g,'');
 if(!isNaN(num)){
