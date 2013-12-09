@@ -427,7 +427,7 @@ option:first-child
                 </label>
             </div><!-- /c1 -->  
 
-            <div class="c1">
+<!--            <div class="c1">
                 <label class="input">
                     <span>Apellido Materno</span>
                     <input id="lastname_2" name="lastname_2" type="text"  onfocus="checkclear(this)" >
