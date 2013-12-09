@@ -6,8 +6,8 @@
 <?php use_stylesheet('cupertino/jquery-ui.css') ?>
 
 <!-- vínculos para el formulario de "publica tu auto" -->
-<?php use_stylesheet('form_PublicaTuAuto.css') ?>
-<?php use_javascript('form_PublicaTuAuto.js') ?>
+<?php use_stylesheet('form_PublicaTuAuto.css?v=09122013') ?>
+<?php use_javascript('form_PublicaTuAuto.js?v=09122013') ?>
 
 <!-- js para subir imagen perfil -->
 <?php use_javascript('jquery.uploadify.v2.1.0.min.js') ?>

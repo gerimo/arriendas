@@ -1,6 +1,6 @@
 
 <?php use_stylesheet('comunes.css') ?>
-<?php use_stylesheet('form_PublicaTuAuto.css') ?>
+<?php use_stylesheet('form_PublicaTuAuto.css?v=09122013') ?>
 <?php use_stylesheet('form_AseguraTuAuto.css') ?>
 <?php use_javascript('https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false') ?>
 

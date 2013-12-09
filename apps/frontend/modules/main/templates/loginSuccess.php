@@ -34,8 +34,8 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
             <a href="<?php echo url_for("main/loginFacebook")?>" id="facebook-login"><?php echo image_tag('img_login/login_btn_fb') ?></a>
         </div>
     </div>
-        <div style="width: 100%;height: 15px;" class="opt_reg"><center>
-        	<a style="font-size:11px;float: center;" href="<?php echo url_for('main/register')?>" class="nouser">&iquest;No tienes Facebook? <span style="font-size:11px;"><b>REGISTRATE AQUÍ</b></span></a>
+        <div style="width: 100%;height: 15px;text-align: center;text-align:-moz-center;" class="opt_reg"><center>
+        	<a style="font-size:11px;float: center;margin-left:auto;margin-right:auto;" href="<?php echo url_for('main/register')?>" class="nouser">&iquest;No tienes Facebook? <span style="font-size:11px;"><b>REGISTRATE AQUÍ</b></span></a>
         </center></div>
 			<div id="separadorLogin">
         <div class="lineaIzq"></div>
