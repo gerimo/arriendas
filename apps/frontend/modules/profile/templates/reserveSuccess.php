@@ -421,6 +421,38 @@ return sHours + ":" + sMinutes;
 
 }
 
+function anadirPunto(numero){ // v2007-08-06
+
+var decimales=0;
+var separador_decimal=',';
+var separador_miles='.';
+
+    numero=parseFloat(numero);
+    if(isNaN(numero)){
+        return "";
+    }
+
+    if(decimales!==undefined){
+        // Redondeamos
+        numero=numero.toFixed(decimales);
+    }
+
+    // Convertimos el punto en separador_decimal
+    numero=numero.toString().replace(".", separador_decimal!==undefined ? separador_decimal : ",");
+
+    if(separador_miles){
+        // Añadimos los separadores de miles
+        var miles=new RegExp("(-?[0-9]+)([0-9]{3})");
+        while(miles.test(numero)) {
+            numero=numero.replace(miles, "$1" + separador_miles + "$2");
+        }
+    }
+
+    return numero;
+}
+
+
+
 function calcularPrecio(){
     var fecha_inicial= $("#datefrom").val();
     var fecha_final= $("#dateto").val();
@@ -453,19 +485,28 @@ function calcularPrecio(){
         var diferencia = new Date(dateTermino.valueOf()-dateInicio.valueOf());
         diferencia = Math.round(diferencia/(1000*3600)); // cantidad de horas de diferencia
 
-        var dia = Math.floor(diferencia/24);
+        var precioHora = parseFloat(<?php echo $car->getPricePerHour(); ?>);
+        var precioDia = parseFloat(<?php echo $car->getPricePerDay() ; ?>);
+       var precioSemana = parseFloat(<?php echo $car->getPricePerWeek() ; ?>);
+       var precioMes = parseFloat(<?php echo $car->getPricePerMonth() ; ?>);
+
+	   var dia = Math.floor(diferencia/24);
         var hora = diferencia%24;
         if(hora>=6){
             hora = 0;
             dia++;
         }
 
-        //alert(dia+' '+hora);
-        var precioHora = <?php echo $car->getPricePerHour(); ?>;
-        var precioDia = <?php echo $car->getPricePerDay() ; ?>;
+		if (dia>=7 && precioSemana>0){
+			precioDia=precioSemana/7
+		};
+		
+		if (dia>=30 && precioMes>0){
+			precioDia=precioMes/30
+		};	
 
         var tarifa = precioHora*hora + precioDia*dia;
-        $("#valor_reserva").text('$'+tarifa);
+        $("#valor_reserva").text('$'+anadirPunto(tarifa));
 
         /*
         var inicio= fecha_inicial.getTime()+ (parseInt(hora_inicial.substring(0,2)) * 60 * 60) + (parseInt(hora_inicial.substring(3,5)) * 60);
@@ -698,6 +739,14 @@ function restarHoras(hora_desde, hora_hasta) {
                 <div class="subtitulos punteado">Precio Final</div>
                 <div class="texto_normal precios">Precio por Hora | <span class="texto_magenta"><strong><?php echo "$".number_format(floor($car->getPricePerHour()),0,',','.'); ?></strong></span></div>
                 <div class="texto_normal precios">Precio por D&iacute;a | <span class="texto_magenta"><strong><?php echo "$".number_format(floor($car->getPricePerDay()),0,',','.'); ?></strong></span></div>
+				<div class="texto_normal precios">Precio por Semana | 
+				<?php if($car->getPricePerWeek()>0): ?><span class="texto_magenta"><strong><?php echo "$".number_format(floor($car->getPricePerWeek()),0,',','.'); ?></strong></span>
+				<?php else: ?><a href="mailto:soporte@arriendas.cl&subject=Arriendo Semanal <?php echo $car->getModel()->getBrand()." ".$car->getModel(); ?> (<?php echo $car->getId(); ?>)"><span class="texto_magenta"><strong>Consultar</strong></span></a>
+				<?php endif; ?></div>
+				<div class="texto_normal precios">Precio por Mes | 
+				<?php if($car->getPricePerMonth()>0): ?><span class="texto_magenta"><strong><?php echo "$".number_format(floor($car->getPricePerMonth()),0,',','.'); ?></strong></span>
+				<?php else: ?><a href="mailto:soporte@arriendas.cl&subject=Arriendo Mensual <?php echo $car->getModel()->getBrand()." ".$car->getModel(); ?> (<?php echo $car->getId(); ?>)"><span class="texto_magenta"><strong>Consultar</strong></span></a>
+				<?php endif; ?></div>		
 
                 <div class="subtitulos punteado">Datos del Auto</div>
                 <div class="texto_normal precios"><div class="interlineado">Ubicaci&oacute;n |</div><div class="interlineado2"><strong><?php echo ucwords(strtolower($car->getAddressAprox()))."" .$nombreComunaAuto ?></strong></div></div>

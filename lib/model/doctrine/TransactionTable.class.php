@@ -82,8 +82,10 @@ class TransactionTable extends Doctrine_Table
 					$carString = $reserve->getCar()->getModel()->getName() . " " . $reserve->getCar()->getModel()->getBrand()->getName();
 					$price_hour = $reserve->getCar()->getPricePerHour();
 					$price_day = $reserve->getCar()->getPricePerDay();
+					$price_week = $reserve->getCar()->getPricePerWeek();
+					$price_month = $reserve->getCar()->getPricePerMonth();
 					$transaction->setCar($carString);
-					$transaction->setPrice($this->calcularMontoTotal($reserve->getDuration(), $price_hour, $price_day));
+					$transaction->setPrice($this->calcularMontoTotal($reserve->getDuration(), $price_hour, $price_day, $price_week, $price_month));
 					$transaction->setUser($reserve->getUser());
 					$transaction->setDate(date("Y-m-d H:i:s"));
 					$transactionType = Doctrine_Core::getTable('TransactionType')->find(1);
@@ -122,9 +124,7 @@ class TransactionTable extends Doctrine_Table
 		catch(Exception $e) { return $e; }
 	}
 	
-    private function calcularMontoTotal($duration = 0, $preciohora = 0, $preciodia = 0) {
-    	
-	
+    private function calcularMontoTotal($duration = 0, $preciohora = 0, $preciodia = 0, $preciosemana = 0, $preciomes = 0) {    	
 		
         $dias = floor($duration / 24);
         $horas = ($duration / 24) - $dias;
@@ -133,8 +133,18 @@ class TransactionTable extends Doctrine_Table
         	
             $dias = $dias + 1;
             $horas = 0;
-        } else {       $horas = round($horas * 24,0);}
+        } else {       
+			$horas = round($horas * 24,0);
+		}
         
+		if ($dias >=7 || $preciosemana>0){
+			$preciodia=$preciosemana/7;
+		}
+
+		if ($dias >=30 || $preciomes>0){
+			$preciodia=$preciomes/30;
+		}
+
 	
         $montototal = floor($preciodia * $dias + $preciohora * $horas);
         

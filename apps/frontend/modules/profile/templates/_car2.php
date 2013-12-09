@@ -526,14 +526,14 @@ padding-right: 8px;">4</div> pasos</h3>
 						echo "<option value='2'>Algunos o todos los fines de semana</option>";
 					}
 					if(($car[0]['disponibilidad_semana'] == 1) && ($car[0]['disponibilidad_finde'] == 1)){
-						echo "<option value='3' selected>Disponibilidad completa</option>";
+						echo "<option value='3' selected>Todos los días</option>";
 					}else{
-						echo "<option value='3'>Disponibilidad completa</option>";
+						echo "<option value='3'>Todos los días</option>";
 					}
 				}else{
 					echo "<option value='1'>Los días de semana</option>";
 					echo "<option value='2'>Algunos o todos los fines de semana</option>";
-					echo "<option value='3'>Disponibilidad completa</option>";
+					echo "<option value='3'>Todos los días</option>";
 
 				}
 			?>

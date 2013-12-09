@@ -211,8 +211,10 @@ class profileActions extends sfActions {
         $car = Doctrine_Core::getTable('car')->findOneById($carId);
         $valorHora = $car -> getPricePerHour();
         $valorDia = $car -> getPricePerDay();
-        $precioCompleto = $this -> calcularMontoTotal($duracionAnterior+$duracion, $valorHora, $valorDia);
-        $precioNuevo = $this -> calcularMontoTotal($duracion, $valorHora, $valorDia);
+        $valorSemana = $car -> getPricePerWeek();
+        $valorMes = $car -> getPricePerMonth();
+        $precioCompleto = $this -> calcularMontoTotal($duracionAnterior+$duracion, $valorHora, $valorDia,$valorSemana,$valorMes);
+        $precioNuevo = $this -> calcularMontoTotal($duracion, $valorHora, $valorDia,$valorSemana,$valorMes);
         //echo $duracionAnterior." ".$duracion."<br>";
         //echo $precioCompleto." ".$precioNuevo;
 
@@ -279,7 +281,9 @@ class profileActions extends sfActions {
         $car = Doctrine_Core::getTable('car')->findOneById($idCar);
         $valorHora = $car -> getPricePerHour();
         $valorDia = $car -> getPricePerDay();
-        $precio = $this -> calcularMontoTotal($duracion, $valorHora, $valorDia);
+        $valorSemana = $car -> getPricePerWeek();
+        $valorMes = $car -> getPricePerMonth();
+        $precio = $this -> calcularMontoTotal($duracion, $valorHora, $valorDia,$valorSemana,$valorMes);
 
         $reserve -> setDate($date);
         $reserve -> setDuration($duracion);
@@ -1565,11 +1569,8 @@ class profileActions extends sfActions {
                             
                             $reserve->setConfirmed(true);
                         }
-                        //var_dump(number_format( $this->calcularMontoTotal($duration, $car->getPricePerHour(), $car->getPricePerDay()) , 2, '.', ''));die();
-                        //Formato para Chile Ej: 10000.00
 
-
-                        $reserve->setPrice( number_format( $this->calcularMontoTotal($durationReserva, $car->getPricePerHour(), $car->getPricePerDay()) , 2, '.', '') );
+                        $reserve->setPrice( number_format( $this->calcularMontoTotal($durationReserva, $car->getPricePerHour(), $car->getPricePerDay(), $car->getPricePerWeek(), $car->getPricePerMonth()) , 2, '.', '') );
                         
                         //if($reserve_id) $reserve->setExtend($reserve_id);
                         
@@ -2102,7 +2103,7 @@ public function executeAgreePdf(sfWebRequest $request)
   
   $diff = strtotime($request->getParameter('termino')) - strtotime($request->getParameter('inicio'));
   $duration = $diff / 60 / 60;
-  $price = $this->calcularMontoTotal($duration, $car->getPricePerHour(), $car->getPricePerDay());
+  $price = $this->calcularMontoTotal($duration, $car->getPricePerHour(), $car->getPricePerDay(), $car->getPricePerWeek(), $car->getPricePerMonth());
   $price = ceil($price * 0.7);
   
   
@@ -2213,7 +2214,7 @@ public function executeAgreePdf2(sfWebRequest $request)
   
   $diff = strtotime($request->getParameter('termino')) - strtotime($request->getParameter('inicio'));
   $duration = $diff / 60 / 60;
-  $price = $this->calcularMontoTotal($duration, $car->getPricePerHour(), $car->getPricePerDay());
+  $price = $this->calcularMontoTotal($duration, $car->getPricePerHour(), $car->getPricePerDay(), $car->getPricePerWeek(), $car->getPricePerMonth());
   $price = ceil($price * 0.7);
   
   $duracion_contrato= ceil($duration);
@@ -4577,14 +4578,18 @@ public function executeAgreePdf2(sfWebRequest $request)
         $this->smtpMail($to, $subject, $mail, $headers);
     }
     
-    public function calcularMontoTotal($duration = 0, $preciohora = 0, $preciodia = 0) {
+    public function calcularMontoTotal($duration = 0, $preciohora = 0, $preciodia = 0, $preciosemana = 0, $preciomes = 0) {
+	
+	$this->logMessage('calcularMontoTotal', 'err');
+	$this->logMessage('duration '. $duration, 'err');
+	$this->logMessage('preciohora '. $preciohora, 'err');
+	$this->logMessage('preciodia '. $preciodia, 'err');
+	$this->logMessage('preciosemana '. $preciosemana, 'err');
+	$this->logMessage('preciomes '. $preciomes, 'err');
 
-
-						
+	
         $dias = floor($duration / 24);
         $horas = ($duration / 24) - $dias;
-
-						
 						
         if ($horas >= 0.25) {
             $dias = $dias + 1;
@@ -4592,9 +4597,21 @@ public function executeAgreePdf2(sfWebRequest $request)
         } else {
             $horas = round($horas * 24,0);
         }
-        
 
-						
+		$this->logMessage('dias '. $dias, 'err');
+
+			
+		if ($dias >=7 && $preciosemana>0){
+			$preciodia=$preciosemana/7;
+		}
+
+		if ($dias >=30 && $preciomes>0){
+			$preciodia=$preciomes/30;
+		}
+
+		$this->logMessage('preciodia '. $preciodia, 'err');
+
+		
         $montototal = floor($preciodia * $dias + $preciohora * $horas);
         
         return $montototal;
