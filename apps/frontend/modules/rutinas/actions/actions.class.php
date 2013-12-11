@@ -29,7 +29,7 @@ class rutinasActions extends sfActions
 		$users = Doctrine_Core::getTable('Reserve')
                         ->createQuery('s')
                         ->select('*')
-						->where('s.customerio < 1')
+//						->where('s.customerio < 1')
                         ->execute();
 
                 foreach($users as $user) {

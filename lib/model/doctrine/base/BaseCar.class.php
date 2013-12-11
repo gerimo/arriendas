@@ -154,6 +154,11 @@ abstract class BaseCar extends sfDoctrineRecord
              'length' => 10,
              'scale' => '2',
              ));
+       $this->hasColumn('velocidad_contesta_pedidos', 'float', 10, array(
+             'type' => 'float',
+             'length' => 10,
+             'scale' => '2',
+             ));
         $this->hasColumn('Model_id', 'integer', 4, array(
              'type' => 'integer',
              'notnull' => true,
@@ -467,7 +472,6 @@ abstract class BaseCar extends sfDoctrineRecord
         $this->hasMany('Photo as Photoes', array(
              'local' => 'id',
              'foreign' => 'Car_id'));
-
         $this->hasMany('Reserve as Reserves', array(
              'local' => 'id',
              'foreign' => 'Car_id'));

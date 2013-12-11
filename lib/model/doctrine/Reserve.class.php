@@ -275,8 +275,9 @@ class Reserve extends BaseReserve
 			$ownerUserId=$user->getId();
 			
 				$percTotalContestadas=$user->getPercReservasContestadas();
+				$velocidadContestaPedidos = $user->getVelocidadRespuesta('0');
 				$q = Doctrine_Manager::getInstance()->getCurrentConnection();
-				$query = "update Car set contesta_pedidos=$percTotalContestadas where user_id='$ownerUserId'";
+				$query = "update Car set contesta_pedidos=$percTotalContestadas, velocidad_contesta_pedidos=$velocidadContestaPedidos where user_id='$ownerUserId'";
 				$result = $q->execute($query);
 
 	if (!$this->getToken())
@@ -444,14 +445,11 @@ class Reserve extends BaseReserve
 			curl_close($session);
 	  
 	}
-			
 						
-			
 			$this->setCustomerio(true);
 			
 		}
 
-	  
 	  return parent::save($conn);
 	}
 

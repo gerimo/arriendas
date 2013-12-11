@@ -229,7 +229,6 @@ class User extends BaseUser {
         $query = Doctrine_Query::create()->query($q);
         $puntualidadOwner = $query->toArray();
 
-    
 	    //es arrendador
 	    $q = "SELECT time_delay_start_renter, time_delay_end_renter FROM rating WHERE state_renter=1 and idRenter=".$this->getId();
         $query = Doctrine_Query::create()->query($q);
@@ -762,12 +761,12 @@ class User extends BaseUser {
 
 	public function getAntiguedad(){
 
-		$q = "SELECT fecha_primer_ingreso FROM user WHERE id=".$this->getId();
+		$q = "SELECT fecha_registro FROM user WHERE id=".$this->getId();
         $query = Doctrine_Query::create()->query($q);
         $fecha = $query->toArray();
         
-        if($fecha[0]['fecha_primer_ingreso'] != null){
-	        $fecha = $fecha[0]['fecha_primer_ingreso'];
+        if($fecha[0]['fecha_registro'] != null){
+	        $fecha = $fecha[0]['fecha_registro'];
 
 			//$fecha = "2012-11-18 08:00:00"; //formato en que se obtiene de la base de datos
 
@@ -785,14 +784,15 @@ class User extends BaseUser {
 	}
 
 	//la obtiene a través de la fecha_reserva, fecha_confirmacion y fecha_pago de la tabla Reserve
-	public function getVelocidadRespuesta(){
+	public function getVelocidadRespuesta($texto=1){
+
 		//ARRENDADOR
 		//si es el que arrienda: fecha_pago - fecha_confirmacion
-		$q = "SELECT fecha_pago, fecha_confirmacion FROM reserve WHERE user_id=".$this->getId();
+		$q = "SELECT fecha_pago, fecha_confirmacion FROM reserve WHERE (confirmed=1 or canceled=1) and user_id=".$this->getId();
         $query = Doctrine_Query::create()->query($q);
         $arrendador = $query->toArray();
 
-        if(count($arrendador)>0){
+  //      if(count($arrendador)>0){
 	        $tiempo = 0;
 	        $count = 0;
 			
@@ -802,36 +802,69 @@ class User extends BaseUser {
 					$count++;
 				}
 			}
+//			}
 
-			//ARRENDATARIO(propietario)
-			//si el al que le arriendan: fecha_confirmacion - fecha_reserva
-			$q = "SELECT fecha_reserva, fecha_confirmacion FROM reserve r, car c WHERE c.id=r.car_id and c.user_id=".$this->getId();
-	        $query = Doctrine_Query::create()->query($q);
-	        $arrendatario = $query->toArray();
-			
+//		$car = Doctrine_Core::getTable('car')->findByUserId($this->getId())->toArray();	
+//		$q = "SELECT (timestampdiff(MINUTE,r.fecha_reserva ,r.fecha_confirmacion))/count(r.id) as diferencia FROM reserve left join car c on c.user_id=".$this->getId()." WHERE  r.fecha_confirmacion<>'' order by r.fecha_reserva desc Limit 1";
+  //      $query = Doctrine_Query::create()->query($q);
+    //    $arrendatario = $query->toArray();
+
+
+	$q = Doctrine_Manager::getInstance()->getCurrentConnection();
+	$query = "SELECT (timestampdiff(MINUTE,r.fecha_reserva ,r.fecha_confirmacion)) as diferencia FROM Reserve r inner join  Car c on r.car_id=c.id  WHERE  c.user_id=".$this->getId()." and r.fecha_confirmacion<>'' order by r.fecha_reserva desc limit 7";
+	$stmt= $q->prepare($query);
+	$stmt->execute();
+	$arrendatario= $stmt->fetchAll();
+    
+	
+  sfContext::getInstance()->getLogger()->info('count($arrendatario) '.count($arrendatario));
+  sfContext::getInstance()->getLogger()->info('$arrendatario[0][diferencia] '.$arrendatario[0]['diferencia']);
+//$i=0;  
 			for ($i=0; $i < count($arrendatario); $i++) { 
-				if($arrendatario[$i]['fecha_confirmacion'] != null){
-					$tiempo+= strtotime($arrendatario[$i]['fecha_confirmacion']) - strtotime($arrendatario[$i]['fecha_reserva']);
+//				if($arrendatario[$i]['fecha_confirmacion'] != null){
+					$tiempo+=($arrendatario[$i]['diferencia']);
 					$count++;
-				}
+	//			}
 			}
+		
+		$tiempo=($tiempo/$count);
+//		$tiempo=$tiempo;
+		
+  sfContext::getInstance()->getLogger()->info('$tiempo '.$tiempo);
 
 			if($count == 0){
-				return $tiempo = "No determinado";
+				if ($texto==1){
+					return $tiempo = "No determinado";
+				}else{
+					return $tiempo = 0;
+				}
 			}else{
-				$tiempo = round($tiempo/(3600*24));
-				$tiempo = intval($tiempo/$count);
+//				$tiempo = round($tiempo);
+//				$tiempo = intval($tiempo/$count);
 			}
 
-		}else{
-			return $tiempo = "No determinado";
-		}
+	//	}else{
+		//	if ($texto==1){
+	//			return $tiempo = "No determinado";
+//			}else{
+//				return $tiempo = 0;
+//			}
+//		}
 
-
-		if($tiempo == 1){
-			return $tiempo." día";
+		if ($texto==1){
+			if($tiempo < 1){
+				return "Menos de un minuto";
+			}elseif($tiempo < 10){
+				return "Menos de 10 minutos";
+			}elseif($tiempo < 60){
+				return "Menos de una hora";
+			}elseif($tiempo < 1440){
+				return floor($tiempo/60)." horas";
+			}else{
+				return floor($tiempo/60/24)." dias";
+			}
 		}else{
-			return $tiempo." días";
+			return $tiempo;
 		}
 
 	}
@@ -844,11 +877,20 @@ class User extends BaseUser {
 
         $cantidad = count($transacciones);
 
-        $q = "SELECT * FROM transaction t, car c WHERE t.completed=1 and c.id=t.car and t.user_id=".$this->getId();
+    //    $q = "SELECT * FROM transaction t, car c WHERE t.completed=1 and c.id=t.car and t.user_id=".$this->getId();
 
-        $query = Doctrine_Query::create()->query($q);
-        $transacciones = $query->toArray();
+		
+  //      $query = Doctrine_Query::create()->query($q);
+//        $transacciones = $query->toArray();
 
+		
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection();
+	$query = "SELECT t.id FROM Transaction t left join  Reserve r on t.reserve_id=r.id inner join Car c on r.car_id=c.id  WHERE  c.user_id=".$this->getId()." and t.completed='1'";
+	$stmt= $q->prepare($query);
+	$stmt->execute();
+	$transacciones= $stmt->fetchAll();
+
+	
         $cantidad+= count($transacciones);
 
 		return $cantidad;

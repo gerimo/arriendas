@@ -1464,6 +1464,40 @@ class profileActions extends sfActions {
         $to = $request->getParameter('dateto');
         $carid = $request->getParameter('id');
 
+		$car = Doctrine_Core::getTable('car')->find(array($request->getParameter('id')));
+
+        //Validar Disponibilidad
+		$startTime = strtotime($from);
+		$endTime = strtotime($to);		
+		$timeHasWorkday=false;
+		$timeHasWeekend=false;
+		for ($i = $startTime; $i <= $endTime; $i = $i + 86400) {
+		  $thisDate = date('Y-m-d', $i); // 2010-05-01, 2010-05-02, etc
+		  $dw = date( "w", $i);
+			if ($dw==6 ||  $dw==0){
+				$timeHasWeekend=true;
+				break;
+			}
+		}
+		for ($i = $startTime; $i <= $endTime; $i = $i + 86400) {
+		  $thisDate = date('Y-m-d', $i); // 2010-05-01, 2010-05-02, etc
+		  $dw = date( "w", $i);
+			if ($dw>0 && $dw<5){
+				$timeHasWorkday=true;
+				break;
+			}
+		}
+
+		if( $timeHasWorkday > $car->getDisponibilidadSemana() ){
+			$this->getUser()->setFlash('msg', 'Este auto no tiene disponibilidad durante la semana');
+	        $this->redirect('profile/reserve?id=' . $request->getParameter('id'));
+		}elseif ($timeHasWeekend > $car->getDisponibilidadFinde() ) {
+			$this->getUser()->setFlash('msg', 'Este auto no tiene disponibilidad durante los fines de semana');
+	        $this->redirect('profile/reserve?id=' . $request->getParameter('id'));		
+		};
+
+
+		
         $reserve_id = '';
         if( $request->getParameter('reserve_id') ) $reserve_id = $request->getParameter('reserve_id');
 
@@ -1472,7 +1506,8 @@ class profileActions extends sfActions {
 			$this->getUser()->setFlash('msg', 'Seleccione la fecha de inicio y de entrega');
 	        $this->redirect('profile/reserve?id=' . $request->getParameter('id'));
 		}
-  
+
+		
         $hourdesde = $request->getParameter('hour_from');
         $hourhasta = $request->getParameter('hour_to');
 

@@ -916,8 +916,31 @@ public function executeNotificacion(sfWebRequest $request) {
         $day_from = $request->getParameter('day_from');
         $day_to = $request->getParameter('day_to');
 
-					$this->logMessage('day_from '.$day_from, 'err');
+		$startTime = strtotime($day_from);
+		$endTime = strtotime($day_to);
+		
+		$timeHasWorkday=false;
+		$timeHasWeekend=false;
+		
+		for ($i = $startTime; $i <= $endTime; $i = $i + 86400) {
+		  $thisDate = date('Y-m-d', $i); // 2010-05-01, 2010-05-02, etc
+		  $dw = date( "w", $i);
+			if ($dw==6 || $dw==0){
+				$timeHasWeekend=true;
+				break;
+			}
+		}
 
+		for ($i = $startTime; $i <= $endTime; $i = $i + 86400) {
+		  $thisDate = date('Y-m-d', $i); // 2010-05-01, 2010-05-02, etc
+		  $dw = date( "w", $i);
+			if ($dw>0 && $dw<5){
+				$timeHasWorkday=true;
+				break;
+			}
+		}
+
+		$this->logMessage('day_from '.$day_from, 'err');
 					
         $hour_from = date("H:i", strtotime($request->getParameter('hour_from')));
         $hour_to = date("H:i", strtotime($request->getParameter('hour_to')));
@@ -930,7 +953,6 @@ public function executeNotificacion(sfWebRequest $request) {
 
         $location = $request->getParameter('location');
         $price = $request->getParameter('price');
-
 
         $lat_centro = $request->getParameter('clat');
         $lng_centro = $request->getParameter('clng');
@@ -992,6 +1014,8 @@ $this->logMessage(date('h:i:s'), 'err');
                 ->andWhere('ca.lng < ?', $boundbottom);
                 //->orderBy('ca.price_per_day asc');
 
+
+				
         if (
                 $hour_from != "Hora de inicio" &&
                 $hour_to != "Hora de entrega" &&
@@ -1015,6 +1039,11 @@ $this->logMessage(date('h:i:s'), 'err');
 
 //            $q = $q->andWhere('av.hour_from < ? and av.hour_to > ? and av.date_from <= ? and av.date_to >= ?', array($hour_from, $hour_to, $day_from, $day_to));
 //            $q = $q->orWhere('av.hour_from < ? and av.hour_to > ? and av.date_from < ?', array($hour_from, $hour_to, $day_from));
+
+			$q = $q->andWhere('ca.disponibilidad_semana >= ?', $timeHasWorkday);
+			$q = $q->andWhere('ca.disponibilidad_finde >= ?', $timeHasWeekend);
+
+
         }
 
         if ($brand != "") {
