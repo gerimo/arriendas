@@ -1294,6 +1294,21 @@ class User extends BaseUser {
         return $total;
     }
 
+	
+	    public function getCantReservasAprobadasTotalOwner(){
+
+
+        $q = "SELECT r.id FROM reserve r, car c WHERE (r.confirmed>0 or r.canceled>0) and c.id=r.car_id and c.user_id=".$this->getId();
+        $query = Doctrine_Query::create()->query($q);
+        $reserve = $query->toArray();
+        $reservasRecibidas = null;
+
+		$total= count($reserve);
+		
+        return $total;
+    }
+
+	
     public function getCantReservasAprobadasRenter(){
         $reservas = $this->getReservasRenter();
         $total = 0;

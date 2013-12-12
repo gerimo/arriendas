@@ -22,7 +22,6 @@
     <div id="iconoEnviarMensaje"><a href="<?php echo url_for('messages/new?id='.$user->getId()) ?>" title="Enviar mensaje a <?php echo $user->getFirstname(); ?>"><?php echo image_tag('img_msj/EnviarMsjSombra.png','class=img_iconoEnviarMensaje') ?></a></div>
 
     <div id="datosPerfil">
-
         
         <div id="lineaMiembroDesde"><?php echo image_tag('img_evaluaciones/IconoMiembroDesde.png','class=miembroDesde') ?><p><span>Miembro desde | </span><?php echo $antiguedad; ?></p></div>
         

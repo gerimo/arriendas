@@ -276,8 +276,10 @@ class Reserve extends BaseReserve
 			
 				$percTotalContestadas=$user->getPercReservasContestadas();
 				$velocidadContestaPedidos = $user->getVelocidadRespuesta('0');
+				$CantReservasAprobadas= $user->getCantReservasAprobadasTotalOwner();
 				$q = Doctrine_Manager::getInstance()->getCurrentConnection();
-				$query = "update Car set contesta_pedidos=$percTotalContestadas, velocidad_contesta_pedidos=$velocidadContestaPedidos where user_id='$ownerUserId'";
+				$query = "update Car set Cant_Reservas_Aprobadas= $CantReservasAprobadas, contesta_pedidos=$percTotalContestadas, velocidad_contesta_pedidos=$velocidadContestaPedidos where user_id='$ownerUserId'";
+//				$query = "update Car set Cant_Reservas_Aprobadas= $CantReservasAprobadas where user_id='$ownerUserId'";
 				$result = $q->execute($query);
 
 	if (!$this->getToken())
@@ -287,7 +289,7 @@ class Reserve extends BaseReserve
 
 	  
 	  
- 	  if (!$this->getId() || $this->getCustomerio()<=0)
+ 	  if (!$this->getId() )
 	  {
 			//event to renter
 			$session = curl_init();
@@ -337,10 +339,14 @@ class Reserve extends BaseReserve
 			curl_exec($session);
 			curl_close($session);
 
-			
-			
-			
-			 	  if ($this->getConfirmed() )
+//						$this->setCustomerio(true);
+
+						}
+
+			if ( $this->getCustomerio()<=0)
+	  {
+						
+			  if ($this->getConfirmed() )
 	  {
 
 			///event to renter
@@ -393,7 +399,7 @@ class Reserve extends BaseReserve
 	  
 	}	  
 
-			 	  if ($this->getCanceled() )
+	 	  if ($this->getCanceled() )
 	  {
 
 			///event to renter
@@ -446,8 +452,10 @@ class Reserve extends BaseReserve
 	  
 	}
 						
-			$this->setCustomerio(true);
-			
+		
+						$this->setCustomerio(true);
+
+						
 		}
 
 	  return parent::save($conn);

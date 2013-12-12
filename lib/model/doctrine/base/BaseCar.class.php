@@ -159,6 +159,13 @@ abstract class BaseCar extends sfDoctrineRecord
              'length' => 10,
              'scale' => '2',
              ));
+       $this->hasColumn('cant_reservas_aprobadas', 'float', 10, array(
+             'type' => 'float',
+             'length' => 10,
+             'scale' => '2',
+             ));
+
+
         $this->hasColumn('Model_id', 'integer', 4, array(
              'type' => 'integer',
              'notnull' => true,
