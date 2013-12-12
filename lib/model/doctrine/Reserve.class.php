@@ -270,17 +270,6 @@ class Reserve extends BaseReserve
 
 	public function save(Doctrine_Connection $conn = null)	{
 
-			$car = Doctrine_Core::getTable('car')->findOneById($this->getCarId());	
-			$user = Doctrine_Core::getTable('user')->findOneById($car->getUserId());	
-			$ownerUserId=$user->getId();
-			
-				$percTotalContestadas=$user->getPercReservasContestadas();
-				$velocidadContestaPedidos = $user->getVelocidadRespuesta('0');
-				$CantReservasAprobadas= $user->getCantReservasAprobadasTotalOwner();
-				$q = Doctrine_Manager::getInstance()->getCurrentConnection();
-				$query = "update Car set Cant_Reservas_Aprobadas= $CantReservasAprobadas, contesta_pedidos=$percTotalContestadas, velocidad_contesta_pedidos=$velocidadContestaPedidos where user_id='$ownerUserId'";
-//				$query = "update Car set Cant_Reservas_Aprobadas= $CantReservasAprobadas where user_id='$ownerUserId'";
-				$result = $q->execute($query);
 
 	if (!$this->getToken())
 	  {
@@ -458,7 +447,28 @@ class Reserve extends BaseReserve
 						
 		}
 
-	  return parent::save($conn);
-	}
+//	  return parent::save($conn);
+
+  $ret = parent::save($conn);
+ 
+  
+
+			$car = Doctrine_Core::getTable('car')->findOneById($this->getCarId());	
+			$user = Doctrine_Core::getTable('user')->findOneById($car->getUserId());	
+			$ownerUserId=$user->getId();
+			
+				$percTotalContestadas=$user->getPercReservasContestadas();
+				$velocidadContestaPedidos = $user->getVelocidadRespuesta('0');
+				$CantReservasAprobadas= $user->getCantReservasAprobadasTotalOwner();
+				$q = Doctrine_Manager::getInstance()->getCurrentConnection();
+				$query = "update Car set Cant_Reservas_Aprobadas= $CantReservasAprobadas, contesta_pedidos=$percTotalContestadas, velocidad_contesta_pedidos=$velocidadContestaPedidos where user_id='$ownerUserId'";
+//				$query = "update Car set Cant_Reservas_Aprobadas= $CantReservasAprobadas where user_id='$ownerUserId'";
+				$result = $q->execute($query);
+
+//  $this->updateLuceneIndex();
+ 
+  return $ret;
+
+  }
 
 }

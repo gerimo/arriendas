@@ -1298,11 +1298,19 @@ class User extends BaseUser {
 	    public function getCantReservasAprobadasTotalOwner(){
 
 
-        $q = "SELECT r.id FROM reserve r, car c WHERE (r.confirmed>0 or r.canceled>0) and c.id=r.car_id and c.user_id=".$this->getId();
-        $query = Doctrine_Query::create()->query($q);
-        $reserve = $query->toArray();
-        $reservasRecibidas = null;
+//        $q = "SELECT r.id FROM reserve r INNR JOIN car c on reserve.car_id = c.id WHERE (r.confirmed>0 or r.canceled>0) and c.user_id=".$this->getId();
+//        $query = Doctrine_Query::create()->query($q);
+ //       $reserve = $query->toArray();
+  //      $reservasRecibidas = null;
 
+	$q = Doctrine_Manager::getInstance()->getCurrentConnection();
+	        $query = "SELECT r.id FROM Reserve r INNER JOIN Car c on r.car_id = c.id WHERE (r.confirmed>0 or r.canceled>0) and c.user_id=".$this->getId();
+
+		$stmt= $q->prepare($query);
+	$stmt->execute();
+	$reserve= $stmt->fetchAll();
+
+	
 		$total= count($reserve);
 		
         return $total;
