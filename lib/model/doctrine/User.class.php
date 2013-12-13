@@ -1303,15 +1303,13 @@ class User extends BaseUser {
  //       $reserve = $query->toArray();
   //      $reservasRecibidas = null;
 
-	$q = Doctrine_Manager::getInstance()->getCurrentConnection();
-	        $query = "SELECT r.id FROM Reserve r INNER JOIN Car c on r.car_id = c.id WHERE (r.confirmed>0 or r.canceled>0) and c.user_id=".$this->getId();
-
-		$stmt= $q->prepare($query);
-	$stmt->execute();
-	$reserve= $stmt->fetchAll();
-
+		$q2 = Doctrine_Manager::getInstance()->getCurrentConnection();
+		$query2 = "SELECT r.id FROM Reserve r INNER JOIN Car c on r.car_id = c.id WHERE (r.confirmed>0 or r.canceled>0) and c.user_id=".$this->getId();
+		$stmt2= $q2->prepare($query2);
+		$stmt2->execute();
+		$reserve= $stmt2->fetchAll();
 	
-		$total= count($reserve);
+		$total_reserves= count($reserve);
 		
         return $total;
     }
