@@ -271,6 +271,12 @@ class Reserve extends BaseReserve
 	public function save(Doctrine_Connection $conn = null)	{
 
 
+				$car = Doctrine_Core::getTable('car')->findOneById($this->getCarId());	
+			$user = Doctrine_Core::getTable('user')->findOneById($car->getUserId());	
+			$ownerUserId=$user->getId();
+
+			
+			
 	if (!$this->getToken())
 	  {
 		$this->setToken(sha1($this->getDuration().rand(11111, 99999)));
@@ -369,7 +375,7 @@ class Reserve extends BaseReserve
 			$site_id = '3a9fdc2493ced32f26ee';
 			$api_key = '4f191ca12da03c6edca4';
 			sfContext::getInstance()->getLogger()->err($customerio_url);
-			$data = array("name" => "aprobo_pedido_reserva", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId());
+			$data = array("name" => "aprobo_pedido_reserva", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId(), "data[cambioEstadoRapido]" => $this->getCambioEstadoRapido());
 
 			curl_setopt($session, CURLOPT_URL, $customerio_url);
 			curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
@@ -385,6 +391,7 @@ class Reserve extends BaseReserve
 
 			curl_exec($session);
 			curl_close($session);
+						$this->setCustomerio(true);
 	  
 	}	  
 
@@ -438,11 +445,11 @@ class Reserve extends BaseReserve
 
 			curl_exec($session);
 			curl_close($session);
+						$this->setCustomerio(true);
 	  
 	}
 						
 		
-						$this->setCustomerio(true);
 
 						
 		}
@@ -450,12 +457,8 @@ class Reserve extends BaseReserve
 //	  return parent::save($conn);
 
   $ret = parent::save($conn);
- 
-  
+   
 
-			$car = Doctrine_Core::getTable('car')->findOneById($this->getCarId());	
-			$user = Doctrine_Core::getTable('user')->findOneById($car->getUserId());	
-			$ownerUserId=$user->getId();
 			
 				$percTotalContestadas=$user->getPercReservasContestadas();
 				$velocidadContestaPedidos = $user->getVelocidadRespuesta('0');

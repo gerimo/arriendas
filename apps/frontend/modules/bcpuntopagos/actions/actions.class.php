@@ -307,18 +307,11 @@ class bcpuntopagosActions extends sfActions
 
 //							$this->logMessage('exito', 'err');
 
-							
-			//verifica que la reserva no esté completa
-			if(!$order->getCompleted()){
-				//actualiza el estado completed
-				$order->setCompleted(true);
-				$order->save();
-
-				//envío de mail
-				require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
 				$idReserve = $order->getReserveId();
 				$reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+
 				$tokenReserve = $reserve->getToken();
+				$this->tokenReserve = $reserve->getToken();
 				$nameRenter = $reserve->getNameRenter();
 				$this->nameOwner = $reserve->getNameOwner();
 				$emailRenter = $reserve->getEmailRenter();
@@ -333,6 +326,16 @@ class bcpuntopagosActions extends sfActions
 				$telephoneOwner = $reserve->getTelephoneOwner();
 				$addressCar = $reserve->getAddressCar();
 				$idCar = $reserve->getCarId();
+							
+			//verifica que la reserva no esté completa
+			if(!$order->getCompleted()){
+				//actualiza el estado completed
+				$order->setCompleted(true);
+				$order->save();
+
+				//envío de mail
+				require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
+
 							
 		        //pedidos de reserva pagado (propietario)
 		        $mail1 = new Email();
