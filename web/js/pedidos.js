@@ -171,11 +171,11 @@ $(document).on('ready',function(){
 
 		if(accion != 'none'){
 
-			alert('change event reserva');
+//			alert('change event reserva');
 		
 			if(accion == 'preaprobar'){ //debe aprobar los contratos
 
-				alert('aprobar reserva');			
+	//			alert('aprobar reserva');			
 			
 				$("#confirmarContratosPropietario").dialog({
 			        resizable: false,
@@ -207,12 +207,12 @@ $(document).on('ready',function(){
 			        }
 		    	});
 
-				alert('open modal');			
+		//		alert('open modal');			
 
 								
 				$("#confirmarContratosPropietario").dialog('open');
 
-				alert('modal opened');			
+		//		alert('modal opened');			
 
 
 			}else{

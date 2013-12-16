@@ -582,3 +582,11 @@
         width: 610px;
     }
 }
+
+
+.ui-dialog {
+    left: 50% !important;
+    top: 50% !important;
+    margin-left: -325px !important; // half 650
+    margin-top: -165px !important; // half 330
+}
