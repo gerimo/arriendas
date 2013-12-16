@@ -29,7 +29,7 @@ class rutinasActions extends sfActions
 		$users = Doctrine_Core::getTable('Reserve')
                         ->createQuery('s')
                         ->select('*')
-//						->where('s.cant_reservas_aprobadas < 1')
+//						->where('s.contesta_pedidos = 1')
                         ->execute();
 
                 foreach($users as $user) {

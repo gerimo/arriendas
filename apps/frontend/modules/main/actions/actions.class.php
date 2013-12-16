@@ -979,6 +979,10 @@ print_r(date('h:i:s'));
 }
 $this->logMessage(date('h:i:s'), 'err');
 
+
+$query = Doctrine_Query::create()
+  ->from('Movie m');
+
         $q = Doctrine_Query::create()
                 ->select('
 				ca.id, 
@@ -992,6 +996,7 @@ $this->logMessage(date('h:i:s'), 'err');
 				ca.foto_perfil, 
 				ca.transmission transmission,
 				ca.user_id,
+				greatest(1440,ca.velocidad_contesta_pedidos)/greatest(0.1,ca.contesta_pedidos) carrank,
 				mo.name modelo, 
 				br.name brand, 
 				')
@@ -1062,8 +1067,19 @@ $this->logMessage(date('h:i:s'), 'err');
 //            if ($price == "1") {
     //            $q = $q->orderBy('ca.price_per_day asc');
   //          } else {
-                $q = $q->orderBy('ca.price_per_day desc');
-      //      }
+
+  
+  
+  
+  //              $q = $q->orderBy('ca.price_per_day desc');
+                $q = $q->orderBy('carrank asc');
+                $q = $q->addOrderBy(' IF( ca.velocidad_contesta_pedidos =0,1440, ca.velocidad_contesta_pedidos)  asc');
+                $q = $q->addOrderBy('ca.fecha_subida  asc');
+                $q = $q->limit(40);
+
+
+
+				//      }
 //        }
         $cars = $q->execute();
 
@@ -1159,6 +1175,7 @@ $velocidad=0;
 };
 			$transmision = "Manual";
             $tipoTrans = $car->getTransmission();
+            $carPercentile = $car->getCarPercentile();
 			
             if($tipoTrans == 0) $transmision = "Manual";
             if($tipoTrans == 1) $transmision = "Autom&aacute;tica";
@@ -1185,6 +1202,8 @@ $this->logMessage($has_reserve, 'err');
                     'price_per_hour' => $this->transformarPrecioAPuntos(floor($car->getPricePerHour())),
                     'price_per_day' => $this->transformarPrecioAPuntos(floor($car->getPricePerDay())),
                     'userid' => $car->getUserId(),
+                    'carRank' => $car->getCarrank(),
+					'carPercentile' => $carPercentile,
 //                    'userPhoto' => $urlUser,
                     'typeTransmission' => $transmision,
 //                    'userVelocidadRespuesta' => $velocidad,
@@ -1197,20 +1216,25 @@ $this->logMessage($has_reserve, 'err');
                 );
             }
         }//fin foreach
+
         $position = array();
         $newRow = array();
         foreach ($data as $key => $row) {
-            $position[$key] = $row["verificado"];
+            $position[$key] = $row["price_per_day"];
             $newRow[$key] = $row;
         }
-        //asort($position); //Se comenta porque no se utilizará el orden por ubicación, sino que por precio por dia
+
+        asort($position); //Se comenta porque no se utilizará el orden por ubicación, sino que por precio por dia
 	    $returnArray = array();
+
         foreach ($position as $key => $pos) {
             $returnArray[] = $newRow[$key];
         }
 	
-	    $returnArray=array_reverse($returnArray);
-        //$data = $returnArray;
+//	    $returnArray=array_reverse($returnArray);
+  
+
+  //$data = $returnArray;
 
         $carsArray = array("cars" => $returnArray);
 	

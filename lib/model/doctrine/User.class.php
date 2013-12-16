@@ -169,7 +169,7 @@ class User extends BaseUser {
     public function getPercReservasContestadas(){
         $idUser = $this->getId();
 //        $q = Doctrine_Manager::getInstance()->getCurrentConnection();
-        $query = "SELECT ((SUM(confirmed))+(SUM(canceled)))/(count(total)) as perc, count(total) as total FROM (SELECT r.confirmed as confirmed, r.canceled as canceled, r.id as total FROM Reserve r LEFT JOIN Car c ON c.id=r.car_id where c.user_id = $idUser ORDER BY r.id DESC LIMIT 10) listperc";
+        $query = "SELECT ((SUM(confirmed))+(SUM(canceled))-(SUM(cancel_reason)/2))/(count(total)) as perc, count(total) as total FROM (SELECT r.confirmed as confirmed, r.canceled as canceled, r.cancel_reason as cancel_reason, r.id as total FROM Reserve r LEFT JOIN Car c ON c.id=r.car_id where c.user_id = $idUser ORDER BY r.id DESC LIMIT 10) listperc";
 		$rs = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAssoc($query);
       
 	  //$result = $q->execute($query);
@@ -181,7 +181,7 @@ class User extends BaseUser {
 
 		$factorInicial=1;
 
-		if ($pedidosTotal<=4 ){
+		if ($pedidosTotal<=2 ){
 			$factor=1;
 		}else{
 			$factor=$pedidosContestados;

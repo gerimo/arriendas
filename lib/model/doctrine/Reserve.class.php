@@ -459,7 +459,6 @@ class Reserve extends BaseReserve
   $ret = parent::save($conn);
    
 
-			
 				$percTotalContestadas=$user->getPercReservasContestadas();
 				$velocidadContestaPedidos = $user->getVelocidadRespuesta('0');
 				$CantReservasAprobadas= $user->getCantReservasAprobadasTotalOwner();
