@@ -100,7 +100,8 @@ $(document).on('ready',function(){
 	        autoOpen: false,
 	        closeOnEscape: false,
 	        title: 'Confirmar contratos',
-	        position: { my: "center", at: "center"},
+//	        position: { my: "center", at: "center"},
+	        position: 'center',
 	        dialogClass: 'no-close',
 	        buttons: {
 	            "Aceptar": function() {
