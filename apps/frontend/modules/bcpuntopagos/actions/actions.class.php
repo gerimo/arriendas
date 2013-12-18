@@ -217,7 +217,6 @@ class bcpuntopagosActions extends sfActions
 						//We store in Session Last Order Id in Punto Pagos. We'll need after payment execution itself
 						$this->getUser()->setAttribute('PP_LAST_ORDER_ID', $order->getId());
 						$this->_log("Creacion","Exito","Usuario: ".$customer_in_session.". Order ID: ".$order->getId().". Token Punto Pagos: ".$response->token);
-						
 						$this->redirect($PUNTOPAGOS_URL.'/transaccion/procesar/'.$response->token);
 					
 					}else{
@@ -235,16 +234,14 @@ class bcpuntopagosActions extends sfActions
 					$this->getUser()->setFlash('error', "Fallo al tratar de recibir respuesta de ".$url_pp.". Header de respuesta: ".json_encode($http_info));
 					
 					$this->redirect('bcpuntopagos/index?id='.$request->getParameter("idReserva"));
-				}
-			
+				}		
 			}
 		}
 		
 	}else{
 		$this->redirect('@homepage');
 	}
-  }
-  
+  }  
   /**
   * Process suceess by verifying notification step to Punto Pagos and change status to order
   *
@@ -310,18 +307,11 @@ class bcpuntopagosActions extends sfActions
 
 //							$this->logMessage('exito', 'err');
 
-							
-			//verifica que la reserva no esté completa
-			if(!$order->getCompleted()){
-				//actualiza el estado completed
-				$order->setCompleted(true);
-				$order->save();
-
-				//envío de mail
-				require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
 				$idReserve = $order->getReserveId();
 				$reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+
 				$tokenReserve = $reserve->getToken();
+				$this->tokenReserve = $reserve->getToken();
 				$nameRenter = $reserve->getNameRenter();
 				$this->nameOwner = $reserve->getNameOwner();
 				$emailRenter = $reserve->getEmailRenter();
@@ -336,6 +326,16 @@ class bcpuntopagosActions extends sfActions
 				$telephoneOwner = $reserve->getTelephoneOwner();
 				$addressCar = $reserve->getAddressCar();
 				$idCar = $reserve->getCarId();
+							
+			//verifica que la reserva no esté completa
+			if(!$order->getCompleted()){
+				//actualiza el estado completed
+				$order->setCompleted(true);
+				$order->save();
+
+				//envío de mail
+				require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
+
 							
 		        //pedidos de reserva pagado (propietario)
 		        $mail1 = new Email();

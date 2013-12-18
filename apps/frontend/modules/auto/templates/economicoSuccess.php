@@ -250,6 +250,19 @@ a{text-decoration:none;}
 		<div class="texto_normal precios">Precio por Hora | <span class="texto_magenta"><strong><?php echo "$".number_format(floor($car->getPricePerHour()),0,',','.'); ?></strong></span></div>
 		<div class="texto_normal precios">Precio por D&iacute;a | <span class="texto_magenta"><strong><?php echo "$".number_format(floor($car->getPricePerDay()),0,',','.'); ?></strong></span></div>
 
+		<?php if($car->getDisponibilidadSemana()==1 && $car->getDisponibilidadFinde()==1): ?>
+			<div class="texto_normal precios">Precio por Semana | 
+			<?php if($car->getPricePerWeek()>0): ?><span class="texto_magenta"><strong><?php echo "$".number_format(floor($car->getPricePerWeek()),0,',','.'); ?></strong></span>
+			<?php else: ?>
+			<a href="<?php echo url_for('messages/new?id='.$user->getId().'&comentarios=Consulta arriendo Semanal '.$car->getModel()->getBrand()." ".$car->getModel()) ?>" title="Consultar arriendo Semanal de <?php echo $car->getModel()->getBrand()." ".$car->getModel(); ?>"><span class="texto_magenta"><strong>Consultar</strong></span></a>
+			<?php endif; ?></div>
+			<div class="texto_normal precios">Precio por Mes | 
+			<?php if($car->getPricePerMonth()>0): ?><span class="texto_magenta"><strong><?php echo "$".number_format(floor($car->getPricePerMonth()),0,',','.'); ?></strong></span>
+			<?php else: ?>
+						<a href="<?php echo url_for('messages/new?id='.$user->getId().'&comentarios=Consulta arriendo Mensual '.$car->getModel()->getBrand()." ".$car->getModel()) ?>" title="Consultar arriendo Mensual de <?php echo $car->getModel()->getBrand()." ".$car->getModel(); ?>"><span class="texto_magenta"><strong>Consultar</strong></span></a>
+			<?php endif; ?></div>		
+		<?php endif; ?>
+		
 		<div class="subtitulos punteado">Precio sin Depósito en Garantía</div>
 		<div class="texto_normal precios">Precio por Hora | <span class="texto_magenta"><strong><?php echo "$".number_format(floor($car->getPricePerHour())+967,0,',','.'); ?></strong></span></div>
 		<div class="texto_normal precios">Precio por D&iacute;a | <span class="texto_magenta"><strong><?php echo "$".number_format(floor($car->getPricePerDay())+5800,0,',','.'); ?></strong></span></div>

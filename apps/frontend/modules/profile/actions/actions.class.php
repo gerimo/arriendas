@@ -211,8 +211,10 @@ class profileActions extends sfActions {
         $car = Doctrine_Core::getTable('car')->findOneById($carId);
         $valorHora = $car -> getPricePerHour();
         $valorDia = $car -> getPricePerDay();
-        $precioCompleto = $this -> calcularMontoTotal($duracionAnterior+$duracion, $valorHora, $valorDia);
-        $precioNuevo = $this -> calcularMontoTotal($duracion, $valorHora, $valorDia);
+        $valorSemana = $car -> getPricePerWeek();
+        $valorMes = $car -> getPricePerMonth();
+        $precioCompleto = $this -> calcularMontoTotal($duracionAnterior+$duracion, $valorHora, $valorDia,$valorSemana,$valorMes);
+        $precioNuevo = $this -> calcularMontoTotal($duracion, $valorHora, $valorDia,$valorSemana,$valorMes);
         //echo $duracionAnterior." ".$duracion."<br>";
         //echo $precioCompleto." ".$precioNuevo;
 
@@ -279,7 +281,9 @@ class profileActions extends sfActions {
         $car = Doctrine_Core::getTable('car')->findOneById($idCar);
         $valorHora = $car -> getPricePerHour();
         $valorDia = $car -> getPricePerDay();
-        $precio = $this -> calcularMontoTotal($duracion, $valorHora, $valorDia);
+        $valorSemana = $car -> getPricePerWeek();
+        $valorMes = $car -> getPricePerMonth();
+        $precio = $this -> calcularMontoTotal($duracion, $valorHora, $valorDia,$valorSemana,$valorMes);
 
         $reserve -> setDate($date);
         $reserve -> setDuration($duracion);
@@ -1460,6 +1464,40 @@ class profileActions extends sfActions {
         $to = $request->getParameter('dateto');
         $carid = $request->getParameter('id');
 
+		$car = Doctrine_Core::getTable('car')->find(array($request->getParameter('id')));
+
+        //Validar Disponibilidad
+		$startTime = strtotime($from);
+		$endTime = strtotime($to);		
+		$timeHasWorkday=false;
+		$timeHasWeekend=false;
+		for ($i = $startTime; $i <= $endTime; $i = $i + 86400) {
+		  $thisDate = date('Y-m-d', $i); // 2010-05-01, 2010-05-02, etc
+		  $dw = date( "w", $i);
+			if ($dw==6 ||  $dw==0){
+				$timeHasWeekend=true;
+				break;
+			}
+		}
+		for ($i = $startTime; $i <= $endTime; $i = $i + 86400) {
+		  $thisDate = date('Y-m-d', $i); // 2010-05-01, 2010-05-02, etc
+		  $dw = date( "w", $i);
+			if ($dw>0 && $dw<5){
+				$timeHasWorkday=true;
+				break;
+			}
+		}
+
+		if( $timeHasWorkday > $car->getDisponibilidadSemana() ){
+			$this->getUser()->setFlash('msg', 'Este auto no tiene disponibilidad durante la semana');
+	        $this->redirect('profile/reserve?id=' . $request->getParameter('id'));
+		}elseif ($timeHasWeekend > $car->getDisponibilidadFinde() ) {
+			$this->getUser()->setFlash('msg', 'Este auto no tiene disponibilidad durante los fines de semana');
+	        $this->redirect('profile/reserve?id=' . $request->getParameter('id'));		
+		};
+
+
+		
         $reserve_id = '';
         if( $request->getParameter('reserve_id') ) $reserve_id = $request->getParameter('reserve_id');
 
@@ -1468,7 +1506,8 @@ class profileActions extends sfActions {
 			$this->getUser()->setFlash('msg', 'Seleccione la fecha de inicio y de entrega');
 	        $this->redirect('profile/reserve?id=' . $request->getParameter('id'));
 		}
-  
+
+		
         $hourdesde = $request->getParameter('hour_from');
         $hourhasta = $request->getParameter('hour_to');
 
@@ -1565,11 +1604,8 @@ class profileActions extends sfActions {
                             
                             $reserve->setConfirmed(true);
                         }
-                        //var_dump(number_format( $this->calcularMontoTotal($duration, $car->getPricePerHour(), $car->getPricePerDay()) , 2, '.', ''));die();
-                        //Formato para Chile Ej: 10000.00
 
-
-                        $reserve->setPrice( number_format( $this->calcularMontoTotal($durationReserva, $car->getPricePerHour(), $car->getPricePerDay()) , 2, '.', '') );
+                        $reserve->setPrice( number_format( $this->calcularMontoTotal($durationReserva, $car->getPricePerHour(), $car->getPricePerDay(), $car->getPricePerWeek(), $car->getPricePerMonth()) , 2, '.', '') );
                         
                         //if($reserve_id) $reserve->setExtend($reserve_id);
                         
@@ -2102,7 +2138,7 @@ public function executeAgreePdf(sfWebRequest $request)
   
   $diff = strtotime($request->getParameter('termino')) - strtotime($request->getParameter('inicio'));
   $duration = $diff / 60 / 60;
-  $price = $this->calcularMontoTotal($duration, $car->getPricePerHour(), $car->getPricePerDay());
+  $price = $this->calcularMontoTotal($duration, $car->getPricePerHour(), $car->getPricePerDay(), $car->getPricePerWeek(), $car->getPricePerMonth());
   $price = ceil($price * 0.7);
   
   
@@ -2213,7 +2249,7 @@ public function executeAgreePdf2(sfWebRequest $request)
   
   $diff = strtotime($request->getParameter('termino')) - strtotime($request->getParameter('inicio'));
   $duration = $diff / 60 / 60;
-  $price = $this->calcularMontoTotal($duration, $car->getPricePerHour(), $car->getPricePerDay());
+  $price = $this->calcularMontoTotal($duration, $car->getPricePerHour(), $car->getPricePerDay(), $car->getPricePerWeek(), $car->getPricePerMonth());
   $price = ceil($price * 0.7);
   
   $duracion_contrato= ceil($duration);
@@ -3810,6 +3846,7 @@ public function executeAgreePdf2(sfWebRequest $request)
             $this->getUser()->setAttribute('picture_url', $profile->getFileName());
             $this->getUser()->setAttribute("name", current(explode(' ' , $profile->getFirstName())) . " " . substr($profile->getLastName(), 0, 1) . '.');
             $this->getUser()->setAttribute("picture_url", $profile->getPictureFile());
+            $this->getUser()->setAttribute("firstname", $profile->getFirstName());
 			$this->getUser()->setAttribute("fecha_registro", $profile->getFechaRegistro());
 			$this->getUser()->setAttribute("email", $profile->getEmail());
 			$this->getUser()->setAttribute("telephone", $profile->getTelephone());
@@ -3962,7 +3999,22 @@ public function executeAgreePdf2(sfWebRequest $request)
         $usosVehiculo = $request -> getPostParameter('usosVehiculo');
         $precioHora = $request -> getPostParameter('precioHora');
         $precioDia = $request -> getPostParameter('precioDia');
-        $patente = $request -> getPostParameter('patente');
+        $precioSemana = $request -> getPostParameter('precioSemana');
+        $precioMes = $request -> getPostParameter('precioMes');        
+		$disponibilidad = $request -> getPostParameter('disponibilidad');
+        
+		if ($disponibilidad==1){
+		$disponibilidadSemana = 1;
+        $disponibilidadFinde = 0;
+        }elseif ($disponibilidad==2){
+		$disponibilidadSemana = 0;
+        $disponibilidadFinde = 1;
+        }elseif ($disponibilidad==3){
+		$disponibilidadSemana = 1;
+        $disponibilidadFinde = 1;
+        };
+		
+		$patente = $request -> getPostParameter('patente');
         $color = $request -> getPostParameter('color');
 
         $fotoPerfilAuto = $request -> getParameter('foto_perfil'); //Se cambió por el metodo utilizado
@@ -3998,8 +4050,8 @@ public function executeAgreePdf2(sfWebRequest $request)
             $q = Doctrine_Manager::getInstance()->getCurrentConnection();
             $query = "update arriendas.Car set address='$ubicacion', comuna_id='$comuna',
 			    model_id='$modelo', year='$anio', doors='$puertas', transmission='$transmision', photoS3='0',
-			    tipoBencina='$tipoBencina', uso_vehiculo_id='$usosVehiculo', price_per_hour='$precioHora',
-			    price_per_day='$precioDia' ,lat=$lat, lng=$lng, patente='$patente', color='$color', seguro_ok='$ok' where id=$idCar";
+			    tipoBencina='$tipoBencina', uso_vehiculo_id='$usosVehiculo', price_per_hour='$precioHora',price_per_week='$precioSemana',price_per_month='$precioMes',
+			    disponibilidad_semana='$disponibilidadSemana' , disponibilidad_finde='$disponibilidadFinde', price_per_day='$precioDia' ,lat=$lat, lng=$lng, patente='$patente', color='$color', seguro_ok='$ok' where id=$idCar";
             $result = $q->execute($query);
             
 
@@ -4031,6 +4083,10 @@ public function executeAgreePdf2(sfWebRequest $request)
             $auto -> setUsoVehiculoId($usosVehiculo); //falta método usosVehículo
             $auto -> setPricePerHour($precioHora);
             $auto -> setPricePerDay($precioDia);
+            $auto -> setPricePerWeek($precioSemana);
+            $auto -> setPricePerMonth($precioMes);
+            $auto -> setDisponibilidadSemana($disponibilidadSemana);
+            $auto -> setDisponibilidadFinde($disponibilidadFinde);
 
             $auto -> setPatente($patente);
             $auto -> setColor($color);
@@ -4557,14 +4613,18 @@ public function executeAgreePdf2(sfWebRequest $request)
         $this->smtpMail($to, $subject, $mail, $headers);
     }
     
-    public function calcularMontoTotal($duration = 0, $preciohora = 0, $preciodia = 0) {
+    public function calcularMontoTotal($duration = 0, $preciohora = 0, $preciodia = 0, $preciosemana = 0, $preciomes = 0) {
+	
+	$this->logMessage('calcularMontoTotal', 'err');
+	$this->logMessage('duration '. $duration, 'err');
+	$this->logMessage('preciohora '. $preciohora, 'err');
+	$this->logMessage('preciodia '. $preciodia, 'err');
+	$this->logMessage('preciosemana '. $preciosemana, 'err');
+	$this->logMessage('preciomes '. $preciomes, 'err');
 
-
-						
+	
         $dias = floor($duration / 24);
         $horas = ($duration / 24) - $dias;
-
-						
 						
         if ($horas >= 0.25) {
             $dias = $dias + 1;
@@ -4572,9 +4632,21 @@ public function executeAgreePdf2(sfWebRequest $request)
         } else {
             $horas = round($horas * 24,0);
         }
-        
 
-						
+		$this->logMessage('dias '. $dias, 'err');
+
+			
+		if ($dias >=7 && $preciosemana>0){
+			$preciodia=$preciosemana/7;
+		}
+
+		if ($dias >=30 && $preciomes>0){
+			$preciodia=$preciomes/30;
+		}
+
+		$this->logMessage('preciodia '. $preciodia, 'err');
+
+		
         $montototal = floor($preciodia * $dias + $preciohora * $horas);
         
         return $montototal;

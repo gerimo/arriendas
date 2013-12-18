@@ -916,8 +916,31 @@ public function executeNotificacion(sfWebRequest $request) {
         $day_from = $request->getParameter('day_from');
         $day_to = $request->getParameter('day_to');
 
-					$this->logMessage('day_from '.$day_from, 'err');
+		$startTime = strtotime($day_from);
+		$endTime = strtotime($day_to);
+		
+		$timeHasWorkday=false;
+		$timeHasWeekend=false;
+		
+		for ($i = $startTime; $i <= $endTime; $i = $i + 86400) {
+		  $thisDate = date('Y-m-d', $i); // 2010-05-01, 2010-05-02, etc
+		  $dw = date( "w", $i);
+			if ($dw==6 || $dw==0){
+				$timeHasWeekend=true;
+				break;
+			}
+		}
 
+		for ($i = $startTime; $i <= $endTime; $i = $i + 86400) {
+		  $thisDate = date('Y-m-d', $i); // 2010-05-01, 2010-05-02, etc
+		  $dw = date( "w", $i);
+			if ($dw>0 && $dw<5){
+				$timeHasWorkday=true;
+				break;
+			}
+		}
+
+		$this->logMessage('day_from '.$day_from, 'err');
 					
         $hour_from = date("H:i", strtotime($request->getParameter('hour_from')));
         $hour_to = date("H:i", strtotime($request->getParameter('hour_to')));
@@ -928,10 +951,12 @@ public function executeNotificacion(sfWebRequest $request) {
 		$brand = $request->getParameter('brand');
         $model = $request->getParameter('model');
 
+        $transmission = $request->getParameter('transmission');
+        $type = $request->getParameter('type');
+				
         $location = $request->getParameter('location');
         $price = $request->getParameter('price');
-
-
+        
         $lat_centro = $request->getParameter('clat');
         $lng_centro = $request->getParameter('clng');
 
@@ -957,6 +982,10 @@ print_r(date('h:i:s'));
 }
 $this->logMessage(date('h:i:s'), 'err');
 
+
+$query = Doctrine_Query::create()
+  ->from('Movie m');
+
         $q = Doctrine_Query::create()
                 ->select('
 				ca.id, 
@@ -970,7 +999,10 @@ $this->logMessage(date('h:i:s'), 'err');
 				ca.foto_perfil, 
 				ca.transmission transmission,
 				ca.user_id,
+				ca.velocidad_contesta_pedidos velocidad_contesta_pedidos,
+				greatest(1440,ca.velocidad_contesta_pedidos)/greatest(0.1,ca.contesta_pedidos) carrank,
 				mo.name modelo, 
+				mo.id_tipo_vehiculo id_tipo_vehiculo,
 				br.name brand, 
 				')
                 ->from('Car ca')
@@ -992,6 +1024,8 @@ $this->logMessage(date('h:i:s'), 'err');
                 ->andWhere('ca.lng < ?', $boundbottom);
                 //->orderBy('ca.price_per_day asc');
 
+
+				
         if (
                 $hour_from != "Hora de inicio" &&
                 $hour_to != "Hora de entrega" &&
@@ -1015,6 +1049,11 @@ $this->logMessage(date('h:i:s'), 'err');
 
 //            $q = $q->andWhere('av.hour_from < ? and av.hour_to > ? and av.date_from <= ? and av.date_to >= ?', array($hour_from, $hour_to, $day_from, $day_to));
 //            $q = $q->orWhere('av.hour_from < ? and av.hour_to > ? and av.date_from < ?', array($hour_from, $hour_to, $day_from));
+
+			$q = $q->andWhere('ca.disponibilidad_semana >= ?', $timeHasWorkday);
+			$q = $q->andWhere('ca.disponibilidad_finde >= ?', $timeHasWeekend);
+
+
         }
 
         if ($brand != "") {
@@ -1026,6 +1065,19 @@ $this->logMessage(date('h:i:s'), 'err');
             $q = $q->andWhere('mo.id = ?', $model);
         }
 
+        if ($transmission != "") {
+			$transmission=explode(",",$transmission); 
+            $q = $q->andWhereIn('ca.transmission', $transmission);
+        }
+
+
+        if ($type != "") {
+			$type=explode(",",$type); 
+			$q = $q->andWhereIn('mo.id_tipo_vehiculo', $type);
+        }
+		
+		
+		
         if ($location != "") {
 //            $q = $q->andWhere('co.id = ?', $location);
         }
@@ -1033,8 +1085,19 @@ $this->logMessage(date('h:i:s'), 'err');
 //            if ($price == "1") {
     //            $q = $q->orderBy('ca.price_per_day asc');
   //          } else {
-                $q = $q->orderBy('ca.price_per_day desc');
-      //      }
+
+  
+  
+  
+  //              $q = $q->orderBy('ca.price_per_day desc');
+                $q = $q->orderBy('carrank asc');
+                $q = $q->addOrderBy(' IF( ca.velocidad_contesta_pedidos =0,1440, ca.velocidad_contesta_pedidos)  asc');
+                $q = $q->addOrderBy('ca.fecha_subida  asc');
+                $q = $q->limit(33);
+
+
+
+				//      }
 //        }
         $cars = $q->execute();
 
@@ -1123,13 +1186,38 @@ $this->logMessage('fullenddate '.$fullenddate, 'err');
 	if ($this->getUser()->getAttribute("logged")){
    //         $user = $car->getUser();
   //          $reservasRespondidas = $user->getReservasContestadas_aLaFecha();
-  //          $velocidad = $user->getVelocidadRespuesta_mensajes();
+            $velocidad = $car->getVelocidadContestaPedidos();
+			
+			
+			if($velocidad < 1){
+				$velocidad="Menos de un minuto";
+			}elseif($velocidad < 10){
+				$velocidad="Menos de 10 minutos";
+			}elseif($velocidad < 60){
+				$velocidad= "Menos de una hora";
+			}elseif($velocidad < 1440){
+				if (floor($velocidad/60)==1){
+					$velocidad="1 hora";
+				}else{
+					$velocidad=floor($velocidad/60)." horas";
+				}
+			}else{
+				if (floor($velocidad/60/24)==1){
+					$velocidad="1 dia";
+				}else{
+					$velocidad= floor($velocidad/60/24)." dias";
+				}
+			}
+
+		
+		
 }else{
 $reservasRespondidas=0;
 $velocidad=0;
 };
 			$transmision = "Manual";
             $tipoTrans = $car->getTransmission();
+            $carPercentile = $car->getCarPercentile();
 			
             if($tipoTrans == 0) $transmision = "Manual";
             if($tipoTrans == 1) $transmision = "Autom&aacute;tica";
@@ -1156,9 +1244,11 @@ $this->logMessage($has_reserve, 'err');
                     'price_per_hour' => $this->transformarPrecioAPuntos(floor($car->getPricePerHour())),
                     'price_per_day' => $this->transformarPrecioAPuntos(floor($car->getPricePerDay())),
                     'userid' => $car->getUserId(),
+                    'carRank' => $car->getCarrank(),
+					'carPercentile' => $carPercentile,
 //                    'userPhoto' => $urlUser,
                     'typeTransmission' => $transmision,
-//                    'userVelocidadRespuesta' => $velocidad,
+                    'userVelocidadRespuesta' => $velocidad,
                     'cantidadCalificacionesPositivas' => '0',
 //                    'cantidadCalificacionesPositivas' => $car->getCantidadCalificacionesPositivas(),
 //                    'reservasRespondidas' => $reservasRespondidas,
@@ -1168,20 +1258,32 @@ $this->logMessage($has_reserve, 'err');
                 );
             }
         }//fin foreach
+
         $position = array();
         $newRow = array();
         foreach ($data as $key => $row) {
-            $position[$key] = $row["verificado"];
+            $position[$key] = $row["price_per_day"];
             $newRow[$key] = $row;
         }
-        //asort($position); //Se comenta porque no se utilizará el orden por ubicación, sino que por precio por dia
+
+        if ($price != "") {
+			if ($price == 0) {
+				asort($position); 
+			}else{
+				arsort($position);
+			}
+		}
+
 	    $returnArray = array();
+
         foreach ($position as $key => $pos) {
             $returnArray[] = $newRow[$key];
         }
 	
-	    $returnArray=array_reverse($returnArray);
-        //$data = $returnArray;
+//	    $returnArray=array_reverse($returnArray);
+  
+
+  //$data = $returnArray;
 
         $carsArray = array("cars" => $returnArray);
 	
@@ -1692,9 +1794,10 @@ $this->logMessage(date('h:i:s'), 'err');
 		$this->getUser()->setAttribute("fecha_registro", $user->getFechaRegistro());
 		$this->getUser()->setAttribute("email", $user->getEmail());
 		$this->getUser()->setAttribute("telephone", $user->getTelephone());
-		$this->getUser()->setAttribute("comuna", $user->getComuna());
-		$this->getUser()->setAttribute("region", $user->getRegion());
+		$this->getUser()->setAttribute("comuna", $user->getNombreComuna());
+		$this->getUser()->setAttribute("region", $user->getNombreRegion());
 		$this->getUser()->setAttribute("name", current(explode(' ' , $user->getFirstName())) . " " . substr($user->getLastName(), 0, 1) . '.');
+		$this->getUser()->setAttribute("firstname", $user->getFirstName());
 		$this->getUser()->setAttribute("picture_url", $user->getFileName());
 		//Modificacion para identificar si el usuario es propietario o no de vehiculo
 		if($user->getPropietario()) {
@@ -1827,6 +1930,7 @@ $this->logMessage(date('h:i:s'), 'err');
                       $this->getUser()->setAuthenticated(true);
                       $this->getUser()->setAttribute("logged", true);
                       $this->getUser()->setAttribute("userid", $u->getId());
+                      $this->getUser()->setAttribute("firstname", $u->getFirstName());
                       $this->getUser()->setAttribute("name", current(explode(' ' , $u->getFirstName())) . " " . substr($u->getLastName(), 0, 1) . '.');
 					  $this->getUser()->setAttribute("email", $u->getEmail());
 
@@ -1920,10 +2024,9 @@ $this->logMessage(date('h:i:s'), 'err');
             $profile->save();
             $this->getUser()->setAttribute('picture_url', $profile->getFileName());
 			$this->getUser()->setAttribute("telephone", $profile->getTelephone());
-			$this->getUser()->setAttribute("comuna", $profile->getComuna());
-			$this->getUser()->setAttribute("region", $profile->getRegion());
+			$this->getUser()->setAttribute("comuna", $profile->getNombreComuna());
+			$this->getUser()->setAttribute("region", $profile->getNombreRegion());
 			$this->getUser()->setAttribute("fecha_registro", $profile->getFechaRegistro());
-
 
 			} catch (Exception $e) {
             echo $e->getMessage();
@@ -2070,6 +2173,9 @@ $this->logMessage(date('h:i:s'), 'err');
     public function executeRecover(sfWebRequest $request) {
 
         $this->email = $this->getRequestParameter('email');
+        $this->email = str_replace("%2540", "@", $this->email);
+        $this->email = str_replace("%40", "@", $this->email);
+	
         $this->hash = $this->getRequestParameter('hash');
 
         $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ? and u.hash = ?', array($this->email, $this->hash));
@@ -2198,9 +2304,16 @@ El equipo de Arriendas.cl
 					$this->getUser()->setAttribute("fecha_registro", $user->getFechaRegistro());
 					$this->getUser()->setAttribute("email", $user->getEmail());
 					$this->getUser()->setAttribute("telephone", $user->getTelephone());
-					$this->getUser()->setAttribute("comuna", $user->getComuna());
-					$this->getUser()->setAttribute("region", $user->getRegion());
+					$this->getUser()->setAttribute("comuna", $user->getNombreComuna());
+					$this->getUser()->setAttribute("region", $user->getNombreRegion());
 	                $this->getUser()->setAttribute("name", current(explode(' ' , $user->getFirstName())) . " " . substr($user->getLastName(), 0, 1) . '.');
+
+
+					$this->logMessage('firstname', 'err');
+					$this->logMessage($user->getFirstName(), 'err');
+
+	                $this->getUser()->setAttribute("firstname", $user->getFirstName());
+
 	                $this->getUser()->setAttribute("picture_url", $user->getFileName());
         			//Modificacion para identificar si el usuario es propietario o no de vehiculo
         			if($user->getPropietario()) {
@@ -2647,11 +2760,12 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
                 $this->getUser()->setAttribute("userid", $userdb->getId());
                 $this->getUser()->setAttribute("name", current(explode(' ' , $userdb->getFirstName())) . " " . substr($userdb->getLastName(), 0, 1) . '.');
                 $this->getUser()->setAttribute("picture_url", $userdb->getPictureFile());
+                $this->getUser()->setAttribute("firstname", $userdb->getFirstName());
 				$this->getUser()->setAttribute("fecha_registro", $userdb->getFechaRegistro());
 				$this->getUser()->setAttribute("email", $userdb->getEmail());
 				$this->getUser()->setAttribute("telephone", $userdb->getTelephone());
-				$this->getUser()->setAttribute("comuna", $userdb->getComuna());
-				$this->getUser()->setAttribute("region", $userdb->getRegion());
+				$this->getUser()->setAttribute("comuna", $userdb->getNombreComuna());
+				$this->getUser()->setAttribute("region", $userdb->getNombreRegion());
                 $this->getUser()->setAttribute("fb", true);	
         		//Modificacion para identificar si el usuario es propietario o no de vehiculo
         		if($userdb->getPropietario()) {
