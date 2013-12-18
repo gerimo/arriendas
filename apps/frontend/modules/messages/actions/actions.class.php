@@ -372,6 +372,8 @@ class messagesActions extends sfActions
 
     $this->user_id = $this->getUser()->getAttribute("userid");
     $idConversacion = $request->getParameter("id");
+    $this->comentarios = $request->getParameter("comentarios");
+
     $objetoConversacion = Doctrine_Core::getTable("Conversation")->findConversationWithId($this->getUser()->getAttribute("userid"),$idConversacion);
 
     if($idConversacion){//si la id existe
@@ -407,6 +409,8 @@ class messagesActions extends sfActions
   public function executeNew(sfWebRequest $request) {
     $user_from = $this->getUser()->getAttribute("userid");
     $user_to = Doctrine_Core::getTable('user')->find($this->getRequestParameter("id"));
+    $comentarios = $this->getRequestParameter("comentarios");
+
     $idConversacionNew = null;
     $q = "SELECT id FROM conversation WHERE user_to_id=".$this->getRequestParameter("id")." and user_from_id=". $user_from;
     $query = Doctrine_Query::create()->query($q);
@@ -429,7 +433,7 @@ class messagesActions extends sfActions
         $idConversacionNew = $conv->getId();
       }
     }
-    $this->redirect('messages/conversation?id='.$idConversacionNew);
+    $this->redirect('messages/conversation?id='.$idConversacionNew.'&comentarios='.$comentarios);
   }
 
     public function sendNotificationConversation($idconversation, $msg, $userid) {

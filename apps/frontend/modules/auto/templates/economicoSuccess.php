@@ -253,11 +253,13 @@ a{text-decoration:none;}
 		<?php if($car->getDisponibilidadSemana()==1 && $car->getDisponibilidadFinde()==1): ?>
 			<div class="texto_normal precios">Precio por Semana | 
 			<?php if($car->getPricePerWeek()>0): ?><span class="texto_magenta"><strong><?php echo "$".number_format(floor($car->getPricePerWeek()),0,',','.'); ?></strong></span>
-			<?php else: ?><a href="mailto:soporte@arriendas.cl&subject=Arriendo Semanal <?php echo $car->getModel()->getBrand()." ".$car->getModel(); ?> (<?php echo $car->getId(); ?>)"><span class="texto_magenta"><strong>Consultar</strong></span></a>
+			<?php else: ?>
+			<a href="<?php echo url_for('messages/new?id='.$user->getId().'&comentarios=Consulta arriendo Semanal '.$car->getModel()->getBrand()." ".$car->getModel()) ?>" title="Consultar arriendo Semanal de <?php echo $car->getModel()->getBrand()." ".$car->getModel(); ?>"><span class="texto_magenta"><strong>Consultar</strong></span></a>
 			<?php endif; ?></div>
 			<div class="texto_normal precios">Precio por Mes | 
 			<?php if($car->getPricePerMonth()>0): ?><span class="texto_magenta"><strong><?php echo "$".number_format(floor($car->getPricePerMonth()),0,',','.'); ?></strong></span>
-			<?php else: ?><a href="mailto:soporte@arriendas.cl&subject=Arriendo Mensual <?php echo $car->getModel()->getBrand()." ".$car->getModel(); ?> (<?php echo $car->getId(); ?>)"><span class="texto_magenta"><strong>Consultar</strong></span></a>
+			<?php else: ?>
+						<a href="<?php echo url_for('messages/new?id='.$user->getId().'&comentarios=Consulta arriendo Mensual '.$car->getModel()->getBrand()." ".$car->getModel()) ?>" title="Consultar arriendo Mensual de <?php echo $car->getModel()->getBrand()." ".$car->getModel(); ?>"><span class="texto_magenta"><strong>Consultar</strong></span></a>
 			<?php endif; ?></div>		
 		<?php endif; ?>
 		

@@ -41,7 +41,7 @@
     		else if($yoSoyElTo) include_component("profile","pictureFile",array("user"=>$objetoConversacion[0]->getUserTo(),"params"=>"width=74px height=74px"));
     	?>
   	</div>
-	<textarea class="textoMensaje" name="nuevoMensaje" placeholder="<?php if($yoSoyElTo){ echo 'Escríbele un nuevo mensaje a '.$objetoConversacion[0]->getUserFrom()->getFirstName();}else if($yoSoyElFrom){ echo 'Escríbele un nuevo mensaje a '.$objetoConversacion[0]->getUserTo()->getFirstName();} ?>"></textarea>
+	<textarea  class="textoMensaje" name="nuevoMensaje" placeholder="<?php if($yoSoyElTo){ echo 'Escríbele un nuevo mensaje a '.$objetoConversacion[0]->getUserFrom()->getFirstName();}else if($yoSoyElFrom){ echo 'Escríbele un nuevo mensaje a '.$objetoConversacion[0]->getUserTo()->getFirstName();} ?>"><?php echo $comentarios;?></textarea>
 	<div id="ajax_loader"><?php echo image_tag('ajax-loader.gif', 'class=img_loader');?></div><input type="button" class="enviarMensaje" value=""/>
 </div>
 <div class="cargaDeNuevosMensajes"></div>

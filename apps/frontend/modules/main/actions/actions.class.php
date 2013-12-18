@@ -996,6 +996,7 @@ $query = Doctrine_Query::create()
 				ca.foto_perfil, 
 				ca.transmission transmission,
 				ca.user_id,
+				ca.velocidad_contesta_pedidos velocidad_contesta_pedidos,
 				greatest(1440,ca.velocidad_contesta_pedidos)/greatest(0.1,ca.contesta_pedidos) carrank,
 				mo.name modelo, 
 				br.name brand, 
@@ -1075,7 +1076,7 @@ $query = Doctrine_Query::create()
                 $q = $q->orderBy('carrank asc');
                 $q = $q->addOrderBy(' IF( ca.velocidad_contesta_pedidos =0,1440, ca.velocidad_contesta_pedidos)  asc');
                 $q = $q->addOrderBy('ca.fecha_subida  asc');
-                $q = $q->limit(40);
+                $q = $q->limit(33);
 
 
 
@@ -1168,7 +1169,31 @@ $this->logMessage('fullenddate '.$fullenddate, 'err');
 	if ($this->getUser()->getAttribute("logged")){
    //         $user = $car->getUser();
   //          $reservasRespondidas = $user->getReservasContestadas_aLaFecha();
-  //          $velocidad = $user->getVelocidadRespuesta_mensajes();
+            $velocidad = $car->getVelocidadContestaPedidos();
+			
+			
+			if($velocidad < 1){
+				$velocidad="Menos de un minuto";
+			}elseif($velocidad < 10){
+				$velocidad="Menos de 10 minutos";
+			}elseif($velocidad < 60){
+				$velocidad= "Menos de una hora";
+			}elseif($velocidad < 1440){
+				if (floor($velocidad/60)==1){
+					$velocidad="1 hora";
+				}else{
+					$velocidad=floor($velocidad/60)." horas";
+				}
+			}else{
+				if (floor($velocidad/60/24)==1){
+					$velocidad="1 dia";
+				}else{
+					$velocidad= floor($velocidad/60/24)." dias";
+				}
+			}
+
+		
+		
 }else{
 $reservasRespondidas=0;
 $velocidad=0;
@@ -1206,7 +1231,7 @@ $this->logMessage($has_reserve, 'err');
 					'carPercentile' => $carPercentile,
 //                    'userPhoto' => $urlUser,
                     'typeTransmission' => $transmision,
-//                    'userVelocidadRespuesta' => $velocidad,
+                    'userVelocidadRespuesta' => $velocidad,
                     'cantidadCalificacionesPositivas' => '0',
 //                    'cantidadCalificacionesPositivas' => $car->getCantidadCalificacionesPositivas(),
 //                    'reservasRespondidas' => $reservasRespondidas,
@@ -2124,6 +2149,9 @@ $this->logMessage(date('h:i:s'), 'err');
     public function executeRecover(sfWebRequest $request) {
 
         $this->email = $this->getRequestParameter('email');
+        $this->email = str_replace("%2540", "@", $this->email);
+        $this->email = str_replace("%40", "@", $this->email);
+	
         $this->hash = $this->getRequestParameter('hash');
 
         $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ? and u.hash = ?', array($this->email, $this->hash));
