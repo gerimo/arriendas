@@ -2,25 +2,52 @@
 	margin: 0 auto;
 	width: 960px;
 }
-.land_slogan_area {
+.slogan{
 	width: 960px;
-	height: 40px;
+	height: 50px;
+}
+.land_slogan_area {
+	float: left;
 	padding-top: 15px;
+	width: 934px;
+	height: 35px;
 	text-align: center;
 	background-color: white;
-	-webkit-box-shadow: 4px 4px 30px rgba(50, 50, 50, 0.4);
-    -moz-box-shadow:    4px 4px 30px rgba(50, 50, 50, 0.4);
-    box-shadow:         4px 4px 30px rgba(50, 50, 50, 0.4);
+	-webkit-box-shadow: 4px 4px 30px rgba(50, 50, 50, 0.5);
+    -moz-box-shadow:    4px 4px 30px rgba(50, 50, 50, 0.5);
+    box-shadow:         4px 4px 30px rgba(50, 50, 50, 0.5);
+}
+.slogan_izq{
+	float: left;
+	width: 13px;
+	height: 50px;
+	position: relative;
+}
+.triangulo_izq {
+	width: 0;
+    height: 0;
+    border-top: 25px solid white;
+    border-left: 13px solid transparent;
+    border-bottom: 25px solid white;         
+}
+.slogan_der{
+	float: left;
+	width: 13px;
+	height: 50px;
+	position: relative;
+}
+.triangulo_der{
+	width: 0;
+	height: 0;
+	border-top: 25px solid white;
+	border-right: 13px solid transparent;
+	border-bottom: 25px solid white;
 }
 .land_slogan_area h2 {
-	font-family: 'Helvetica', Arial, sans-serif;
-	font-size: 26px;
+	font-size: 19px;
 	letter-spacing: -1px;
-	font-weight: normal;
-	/*text-shadow: 2px 2px 0px #dddddd;*/
-	display:block;
-	color:#303030;
-	font-style: italic;
+	display: block;
+	color: black;
 }
 .land_slogan_area h2 .dest {
 	color:#00AEEF;

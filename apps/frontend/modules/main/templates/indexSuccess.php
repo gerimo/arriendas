@@ -330,7 +330,7 @@ center = new google.maps.LatLng(-33.0,-71.3);
 			
 //				var dif = restarHoras(current.getHours() + ':' + current.getMinutes() + ':' + current.getSeconds(), $('#hour_to').val())
 				var dif = restarHoras(current.getHours() + ':' + current.getMinutes() , $('#hour_to').val())
-				if( dif < 0 ) { alert('La hora no puede ser menor a la actual'); $('#hour_to').val('Hora de entrega'); }
+				if( dif < 0 ) { alert('La hora no puede ser menor a la actual'); $('#hour_to').val('Hora'); }
 			}
 		}
 
@@ -340,7 +340,7 @@ center = new google.maps.LatLng(-33.0,-71.3);
 			if( $('#day_from').val() == $('#day_to').val() ) {
 				
 				var dif = restarHoras($('#hour_from').val(), $('#hour_to').val())
-				if( dif < 1 ) { alert('La reserva no puede ser menor a 1 hora'); $('#hour_from').val('Hora de inicio'); $('#hour_to').val('Hora de entrega'); }
+				if( dif < 1 ) { alert('La reserva no puede ser menor a 1 hora'); $('#hour_from').val('Hora de inicio'); $('#hour_to').val('Hora'); }
 			}
 		}
 
@@ -535,10 +535,10 @@ markerCluster.clearMarkers();
                     //var num = i+1;
 
                     //var image = "<?php echo 'http://www.arriendas.cl/images/Home/IndicadorMapa.png';?>";
-                    //var image = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + contador + '|05a4e7|ffffff';
                     if(dataCar.verificado){
                         contador = contador + 1;
                         var image = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + contador + '|05a4e7|ffffff';
+                        //var image = "<?php echo image_path('Home/IcoPin.png'); ?>";
                     }else{
                         var image = "<?php echo 'http://www.arriendas.cl/images/Home/circle.png';?>";
                         //var image = "<?php echo 'http://devel.arriendas.cl/frontend/web/images/Home/circle.png';?>";
@@ -573,7 +573,7 @@ markerCluster.clearMarkers();
                     //search box
                     nodes += '<div class="search_arecomend_item" id="'+dataCar.id+'">';
                     nodes +=    '<div class="marcadores">';
-                    nodes +=        '<div class="fondo_newMarcador"><p class="numero_NewMarcador">'+contador+'</p></div></div>';
+                    nodes +=        '<img src="http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + contador + '|05a4e7|ffffff" /></div>';
                     nodes +=        '<div class="search_arecomend_frame">';
                     nodes +=            '<img width="64px" height="64px" src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_64,h_64,c_fill,g_center/'+urlFotoThumbTipo+'" />';
                     nodes +=        '</div>';
@@ -795,15 +795,15 @@ markerCluster.clearMarkers();
         });
 	
         $('#model').change(function() {
-            doSearch();
+            //doSearch();
         });	
 	
         $('#hour_from').change(function() {
-            doSearch();
+            //doSearch();
         });
 	
         $('#hour_to').change(function() {
-            doSearch();
+            //doSearch();
         });
 
 		var date = new Date();
@@ -813,13 +813,13 @@ markerCluster.clearMarkers();
     suffex = (hora >= 12)? 'PM' : 'AM';
     hora = (hora > 12)? hora -12 : hora;
     hora = (hora == '00')? 12 : hora;
-	$('#hour_from').val(hora + ':00 '+suffex);
+	//$('#hour_from').val(hora + ':00 '+suffex);
         }else{
             var hora = date.getHours()+1;
     suffex = (hora >= 12)? 'PM' : 'AM';
     hora = (hora > 12)? hora -12 : hora;
     hora = (hora == '00')? 12 : hora;
-	$('#hour_from').val(hora+':30 '+suffex);
+	//$('#hour_from').val(hora+':30 '+suffex);
         }
 
         //fecha actual
@@ -833,11 +833,11 @@ markerCluster.clearMarkers();
         }
         var anio = date.getFullYear();
 
-        $('#day_from').val(dia+'-'+mes+'-'+anio);
+        //$('#day_from').val(dia+'-'+mes+'-'+anio);
 	
         $('#day_from').change(function() {
         	
-        	if( $('#day_to').val() == 'Dia de entrega' || $('#day_to').val() == '' )
+        	if( $('#day_to').val() == 'Dia desde' || $('#day_to').val() == '' )
         		$('#day_to').val( $(this).val() );
 		});
 	/*	
@@ -846,11 +846,11 @@ $('#day_to').change(function() {
 });
          */	
         $('#brand').change(function() {
-            doSearch();
+            //doSearch();
         });
 	
         $('#price').change(function() {
-            doSearch();
+            //doSearch();
         });
 
 
@@ -1205,7 +1205,8 @@ $('#day_to').change(function() {
 
 <div class="search_container">
 
-
+<div class="slogan">
+    <div class="slogan_izq"><div class="triangulo_izq"></div></div>
     <div class="land_slogan_area">
         <?php
         if (stripos($_SERVER['SERVER_NAME'], "arrendas") !== FALSE)
@@ -1220,34 +1221,35 @@ $('#day_to').change(function() {
                 }
             echo "</div>
                 <div id='tagLineArrendatario'>
-                    <h2>Arrienda un auto <span class='dest'>vecino</span> con seguro 1000UF, asistencia y TAGs en el <span class='dest'>precio final</span></h2>      
+                    <h2>- ARRIENDA UN AUTO VECINO CON SEGURO PREMIUM, ASISTENCIA DE VIAJE Y TAGS INCLUÍDOS -</h2>      
                 </div>";
         ?>
 
     </div><!-- land_slogan_area -->
-
+    <div class="slogan_der"><div class="triangulo_der"></div></div>
+</div><!-- slogan-->
 
 <div class="main_box_1_anterior">
-<div class="main_box_2_anterior">
+<div class="main_box_2_anteriorNew">
     <div class="search_sector1">      
         <!--  busqueda avanzada -->
-        <div class="search_box_1">
-            <!-- <input type="button" class="buton_more_options"/> -->
-            <div class="search_box_1_title">
-                <p class="txt_buscador" style="margin-top: 10px;">Busca autos cerca de ti</p>
-            </div>
+        <div class="search_box_1_titleNew">
+            <button id="btn_busqueda"><img class="img_btn_busqueda" src="<?php echo image_path('img_search/IcoLupa.png'); ?>"/><p class="txt_btn_busqueda">Búsqueda</p></button>
+        </div>
+        <div class="search_box_1_PrincipalNew">
             <div class="search_box_1_header">    
                 <div class="search_box1_form" style="">
-                	<span style="width: 206px;" class="group_desde">Ubicación</span><span style="width: 214px;" class="group_desde">Disponible desde</span><span style="width: 140px;" class="group_hasta">Hasta</span>
-                	<input id="searchTextField" style="margin-right: 5px;width: 185px;" type="text" size="50" placeholder="Introduce una ubicación" autocomplete="off"/>
-                    <input class="input_f1" style="width: 90px;margin-right: 5px;" readonly="readonly" type="text" id="day_from" value="Día entrega"/>
-                    <input class="input_f1" style="width: 90px;margin-right: 5px;" readonly="readonly" type="text" id="hour_from" value="Hora entrega"/>
-                    <input class="input_f1" style="width: 90px;margin-right: 5px;" readonly="readonly" type="text" id="day_to" value="Día devolución"/>
-                    <input class="input_f1b" style="width: 95px;margin-right: 0px;padding-left:5px" readonly="readonly" type="text" id="hour_to"  value="Hora devolución" />
-                    <a id="more" class="button2 altCta2 menor" href="#"><span id="spanprecio">+</span></a>
+                	<span style="width: 360px;" class="group_desde"><span class="numberBlue">1</span>Ciudad |</span><span style="width: 222px;" class="group_desde"><span class="numberBlue">2</span>Desde |</span><span style="width: 140px;" class="group_hasta"><span class="numberBlue">3</span>Hasta |</span>
+                	<input class="input_f0" id="searchTextField" style="margin-right: 5px;margin-left: 10px;width: 355px;" type="text" size="50" placeholder="Ingrese Ciudad" autocomplete="off"/>
+                    <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_from" value="Fecha desde"/>
+                    <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="hour_from" value="Hora"/>
+                    <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_to" value="Fecha hasta"/>
+                    <input class="input_f1b" style="width: 95px;" readonly="readonly" type="text" id="hour_to"  value="Hora" />
+                    <button id="btn_buscar" title="Buscar autos"></button>
                 </div>
 
                 <!-- buscador avanzado -->
+                <!--
                 <div class="search_ext_box" style="display:none;">
                 	<span class="group_filtar">Filtrar por</span>
                     <div class="search_ext_wrapper">
@@ -1255,16 +1257,7 @@ $('#day_to').change(function() {
                             <option value="-" selected="selected">Precio</option>
                             <option value="1">Mayor a menor</option>
                             <option value="0">Menor a mayor</option>
-                        </select> 
-
-<!--<select>
-    
-    <option>Peugeot</option>
-    <option>Fiat</option>     
-    <option>Ford</option>     
-    <option>Citroen</option>              
-</select> 
-                        -->
+                        </select>
                         <select name="brand" id="brand" style="margin-right:20px;" >
                             <option value="" selected="selected">Marca</option>	
                             <?php foreach ($brand as $b): ?>	
@@ -1275,25 +1268,9 @@ $('#day_to').change(function() {
                         <select name="model" id="model" style="" >
                             <option value="" selected="selected">Modelo</option>
                         </select>
-
-<!-- <select name="location" id="location">
-        <option value="" selected="selected">Pais</option>
-                        <?php foreach ($country as $c): ?>
-                            <option value="<?= $c->getId() ?>" ><?= $c->getName() ?></option> 		
-                        <?php endforeach; ?>
-</select>-->
-
-<!-- <select>
-    <option  name="location" id="location" selected="selected">Ubicaci&oacute;n</option>
-    <option>Almagro</option>
-    <option>Caballito</option>     
-    <option>Congreso</option>     
-    <option>San Telmo</option>              
-</select>
-                        -->
-                    </div><!-- search_ext_wrapper -->
-                </div><!-- search_ext_box -->
-
+                    </div>
+                </div>
+                -->
             </div><!-- search_box_1_header -->     
         </div><!-- search_box_1 -->
     </div><!-- search_sector1 -->
@@ -1306,20 +1283,20 @@ $('#day_to').change(function() {
         <div class="search_box_1new">
             <button id="btn_filtro1" class="btn_filtro"></button>
             <div id="opc_filtro">
-                <button id="btn_filtro2" class="btn_filtro"></button>
+                <button id="btn_filtro2" class="btn_filtro"><img class="flechasfiltro2" src="<?php echo image_path('img_search/FlechasFiltro.png'); ?>"/><p class="textofiltro2">ELEGIR FILTROS</p></button>
                 <div class="title_opc_filtro">Transmisión</div>
-                <div class="opc_filtro"><input type="checkbox" name="transmision" value="manual" style="margin-right:6px;">Manual</div>
-                <div class="opc_filtro"><input type="checkbox" name="transmision" value="automatica" style="margin-right:6px;">Automática</div>
+                <div class="opc_filtro"><input type="checkbox" name="transmision" value="manual" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Manual</p></div>
+                <div class="opc_filtro"><input type="checkbox" name="transmision" value="automatica" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Automática</p></div>
                 <div class="title_opc_filtro">Tipo</div>
-                <div class="opc_filtro"><input type="checkbox" name="tipo" value="sedan" style="margin-right:6px;">Sedan</div>
-                <div class="opc_filtro"><input type="checkbox" name="tipo" value="SUV" style="margin-right:6px;">SUV</div>
-                <div class="opc_filtro"><input type="checkbox" name="tipo" value="wagon" style="margin-right:6px;">Wagon</div>
-                <div class="opc_filtro"><input type="checkbox" name="tipo" value="station" style="margin-right:6px;">Station</div>
-                <div class="opc_filtro"><input type="checkbox" name="tipo" value="pickup" style="margin-right:6px;">Pick Up</div>
-                <div class="opc_filtro"><input type="checkbox" name="tipo" value="furgon" style="margin-right:6px;">Furgón</div>
+                <div class="opc_filtro"><input type="checkbox" name="tipo" value="sedan" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Sedan</p></div>
+                <div class="opc_filtro"><input type="checkbox" name="tipo" value="SUV" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">SUV</p></div>
+                <div class="opc_filtro"><input type="checkbox" name="tipo" value="wagon" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Wagon</p></div>
+                <div class="opc_filtro"><input type="checkbox" name="tipo" value="station" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Station</p></div>
+                <div class="opc_filtro"><input type="checkbox" name="tipo" value="pickup" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Pick Up</p></div>
+                <div class="opc_filtro"><input type="checkbox" name="tipo" value="furgon" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Furgón</p></div>
                 <div class="title_opc_filtro">Precio</div>
-                <div class="opc_filtro"><input type="checkbox" name="tipo" value="mintomax" style="margin-right:6px;">De -$ a +$</div>
-                <div class="opc_filtro"><input type="checkbox" name="tipo" value="maxtomin" style="margin-right:6px;">De +$ a -$</div>
+                <div class="opc_filtro"><input type="checkbox" name="tipo" value="mintomax" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">De -$ a +$</p></div>
+                <div class="opc_filtro"><input type="checkbox" name="tipo" value="maxtomin" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">De +$ a -$</p></div>
             </div> 
             <div class="search_box_1_maparea">   
                 <div id="loading">
@@ -1328,7 +1305,7 @@ $('#day_to').change(function() {
             </div><!-- search_box_1_maparea -->   
         <div class="fondo_search_box_2">
             <div class="search_box_2">
-                <div id="title_search_box_2">RESULTADO</div>
+                <div id="title_search_box_2">RESULTADO ( 50 MEJORES )</div>
 
                 <div id="loader" style="display:none;margin-left: 105px;margin-top: 30px;"><?php echo image_tag("ajax-loader.gif", array("width" => "80px", "height" => "80px")); ?></div>  
                 <div class="search_arecomend_window">  
