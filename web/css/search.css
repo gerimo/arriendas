@@ -18,6 +18,11 @@
 }
 
 
+.main_box_2_anteriorNew{
+    display: table;
+    margin: auto;
+    width: 950px;
+}
 
 /* sectores de contenido */
 
@@ -284,7 +289,7 @@ a.returncar_btn_detalle span {
 	font-size: 12px;
 	color: white;
 	font-weight: bold;
-	border-bottom: 3px solid rgb(99, 98, 98);
+	border-bottom: 4px solid rgb(99, 98, 98);
 	padding-top: 12px;
 	padding-left: 15px;
 	padding-bottom: 8px;
@@ -350,6 +355,12 @@ input.buton_more_options{
 	height: 36px;
 	float: left;
 }
+.fondo_newMarcador3{
+	background-image: url("../images/Home/IcoPin.png");
+	width: 28px;
+	height: 41px;
+	float: left;
+}
 p.numero_NewMarcador{
 	text-align: center;
 	color: white;
@@ -407,6 +418,13 @@ ul.search_arecomend_info li.tag_comuna_city{
 	width: 100%;
 	height:auto;
 }
+.search_box_1_PrincipalNew{
+	float: left;
+	width: 100%;
+	height:auto;
+	background-color: #333333;
+	padding-bottom: 6px;
+}
 .search_ext_box { z-index: 15;}
 
 .txt_buscador {
@@ -423,6 +441,37 @@ ul.search_arecomend_info li.tag_comuna_city{
 	margin-top: 1px;
 	position: relative;
 }
+.search_box_1_titleNew{
+	width: 610px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #fff;
+	font-size: 13px;
+	margin-top: 1px;
+	position: relative;
+}
+#btn_busqueda{
+	margin: 0px;
+	padding: 0px;
+	border: 0px;
+	width: 70px;
+	height: 22px;
+	float: left;
+	cursor: pointer;
+	border-bottom: 1px solid rgb(172, 171, 171);
+	background-color: #333333;
+	font-size: 8px;
+	color: white;
+}
+.img_btn_busqueda{
+	float: left;
+	margin-top: -2px;
+	margin-left: 2px;
+}
+.txt_btn_busqueda{
+	float: left;
+	margin-top: 4px;
+	margin-left: 1px;
+}
 .search_box_1_header {
 	width: 650px;
 	font-family: Arial, Helvetica, sans-serif;
@@ -438,14 +487,43 @@ ul.search_arecomend_info li.tag_comuna_city{
 .search_box1_form {
 	float: left;
 	margin:10px;
+	width: 930px;
+}
+.search_box1_form .input_f0 {
+	border: 1px solid #05a4e7;
+	font-size: 11px;
 }
 .search_box1_form .input_f1 {
 	width:128px;
 	margin-right:23px;
+	background-image: url("../images/img_search/Ico3.png");
+	background-position: 95% 50%;
+	background-repeat: no-repeat;
+	border: 1px solid #05a4e7;
+	font-size: 10px;
+	cursor: pointer;
 }
 .search_box1_form .input_f1b {
 	width:128px;
 	margin:0 0 0 1px;
+	background-image: url("../images/img_search/Ico3.png");
+	background-position: 95% 50%;
+	background-repeat: no-repeat;
+	border: 1px solid #05a4e7;
+	font-size: 10px;
+	cursor: pointer;
+}
+#btn_buscar{
+	margin: 0px;
+	padding: 0px;
+	border: 0px;
+	width: 95px;
+	height: 23px;
+	background-image: url("../images/img_search/BotonBuscar.png");
+	cursor: pointer;
+	position: relative;
+	left: 86px;
+	top: 28px;
 }
 .search_box_ubica {
 	float: left;
@@ -473,7 +551,7 @@ ul.search_arecomend_info li.tag_comuna_city{
 	background-color: #FFFFFF;
 	border: 1px solid #9A9A9A;
 	float: left;
-	height: 26px;
+	height: 22px;
 	margin-right: 50px;
 	padding-left: 10px;
 	width: 160px;
@@ -509,8 +587,8 @@ ul.search_arecomend_info li.tag_comuna_city{
 	width: 24px;
 	height: 72px;
 	position: absolute;
-	top: 128px;
-	left: -25px;
+	top: 133px;
+	left: -24px;
 	background-image: url("../images/img_search/BotonFiltro.png");
 	cursor: pointer;
 
@@ -520,15 +598,27 @@ ul.search_arecomend_info li.tag_comuna_city{
 	padding: 0px;
 	border: 0px;
 	width: 119px;
-	height: 31px;
+	height: 34px;
 	float: left;
-	background-image: url("../images/img_search/ElegirFiltros.png");
 	cursor: pointer;
-
+	border-bottom: 4px solid rgb(99, 98, 98);
+	background-color: rgb(172, 171, 171);
+	font-size: 12px;
+	color: white;
+	font-weight: bold;
+}
+.flechasfiltro2{
+	float: left;
+	margin-top: 4px;
+}
+.textofiltro2{
+	float: left;
+	margin-top: 8px;
+	margin-left: 1px;
 }
 #opc_filtro{
 	position: absolute;
-	top: 128px;
+	top: 133px;
 	width: 119px;
 	height: 300px;
 	background-color: white;
@@ -539,8 +629,18 @@ ul.search_arecomend_info li.tag_comuna_city{
 	width: 100px;
 	float: left;
 }
+.fondo_newMarcador2{
+	background: #00aeef; /* Old browsers */
+	background: -moz-linear-gradient(top,  #00aeef 0%, #396ab3 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#00aeef), color-stop(100%,#396ab3)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #00aeef 0%,#396ab3 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #00aeef 0%,#396ab3 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #00aeef 0%,#396ab3 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #00aeef 0%,#396ab3 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00aeef', endColorstr='#396ab3',GradientType=0 ); /* IE6-9 */
+}
 .title_opc_filtro{
-	font-size: 11px;
+	font-size: 10px;
 	font-style: italic;
 	border-bottom: 1px solid gray;
 	margin-top: 6px;
@@ -549,7 +649,7 @@ ul.search_arecomend_info li.tag_comuna_city{
 }
 .opc_filtro{
 	margin-left: 14px;
-	font-size: 13px;
+	font-size: 12px;
 	margin-top: 5px;
 }
 /* buscador avanzado */
@@ -574,10 +674,49 @@ margin-right: 18px;
 	margin-left: 10px;
 }
 
-.group_desde {font-size:11px; font-weight:bold;text-align:left;display:inline-block;height:16px;margin:0;color:#000000;float:left;width:326px;}
-.group_hasta {font-size:11px; font-weight:bold;text-align:left;display:inline-block;height:16px;margin:0;color:#000000;float:left;width:293px;}
-.group_filtar {font-size:11px; font-weight:bold;text-align:left;display:inline-block;height:16px;margin:0 0 0 10px;color:#000000;float:left;width:293px;}
-
+.group_desde {
+	font-size:11px;
+	text-align:left;
+	display:inline-block;
+	height:16px;
+	margin:0;
+	color:white;
+	float:left;
+	width:326px;
+	margin-bottom: 10px;
+	margin-top: 2px;
+	margin-left: 12px;
+}
+.group_hasta {
+	font-size:11px;
+	text-align:left;
+	display:inline-block;
+	height:16px;
+	margin:0;
+	color:white;
+	float:left;
+	width:293px;
+	margin-bottom: 10px;
+	margin-top: 2px;
+}
+.group_filtar {
+	font-size:11px;
+	text-align:left;
+	display:inline-block;
+	height:16px;
+	margin:0 0 0 10px;
+	color:white;
+	float:left;
+	width:293px;
+	margin-bottom: 10px;
+	margin-top: 2px;
+}
+.numberBlue{
+	color: #05a4e7;
+	font-size: 17px;
+	margin-right: 4px;
+	font-weight: bold;
+}
 .mapcar_area {
 	float: left;
 	margin-left: 3px;
