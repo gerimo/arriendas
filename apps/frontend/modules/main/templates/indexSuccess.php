@@ -532,8 +532,8 @@ markerCluster.clearMarkers();
                     //var image = "<?php echo 'http://www.arriendas.cl/images/Home/IndicadorMapa.png';?>";
                     if(dataCar.verificado){
                         contador = contador + 1;
-                        //var image = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + contador + '|05a4e7|ffffff';
-                        var image = "<?php echo image_path('Home/IcoPin.png'); ?>";
+                        var image = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + contador + '|05a4e7|ffffff';
+                        //var image = "<?php echo image_path('Home/IcoPin.png'); ?>";
                     }else{
                         var image = "<?php echo 'http://www.arriendas.cl/images/Home/circle.png';?>";
                         //var image = "<?php echo 'http://devel.arriendas.cl/frontend/web/images/Home/circle.png';?>";
@@ -568,7 +568,7 @@ markerCluster.clearMarkers();
                     //search box
                     nodes += '<div class="search_arecomend_item" id="'+dataCar.id+'">';
                     nodes +=    '<div class="marcadores">';
-                    nodes +=        '<div class="fondo_newMarcador3"><p class="numero_NewMarcador">'+''+'</p></div></div>';
+                    nodes +=        '<img src="http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + contador + '|05a4e7|ffffff" /></div>';
                     nodes +=        '<div class="search_arecomend_frame">';
                     nodes +=            '<img width="64px" height="54px" src="'+urlFotoThumbTipo+'" />';
                     nodes +=        '</div>';
