@@ -13,7 +13,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     .marcadores{
         width: 30px;
         float: left;
-        padding: 14px 0;
+        padding: 20px 0;
     }
     .marcadores img{
 
@@ -534,7 +534,7 @@ markerCluster.clearMarkers();
                     //var num = i+1;
 
                     //var image = "<?php echo 'http://www.arriendas.cl/images/Home/IndicadorMapa.png';?>";
-                    
+                    //var image = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + contador + '|05a4e7|ffffff';
                     if(dataCar.verificado){
                         contador = contador + 1;
                         var image = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + contador + '|05a4e7|ffffff';
@@ -568,11 +568,11 @@ markerCluster.clearMarkers();
 
 			
                     markers.push(marker);
-
+                    //<img src="<?php echo image_path('Home/IndicadorMapa.png'); ?>"/>
                     //search box
                     nodes += '<div class="search_arecomend_item" id="'+dataCar.id+'">';
                     nodes +=    '<div class="marcadores">';
-                    nodes +=        '<img src="http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld='+contador+'|05a4e7|ffffff"/></div>';
+                    nodes +=        '<div class="fondo_newMarcador"><p class="numero_NewMarcador">'+contador+'</p></div></div>';
                     nodes +=        '<div class="search_arecomend_frame">';
                     nodes +=            '<img width="64px" height="64px" src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_64,h_64,c_fill,g_center/'+urlFotoThumbTipo+'" />';
                     nodes +=        '</div>';
@@ -580,9 +580,10 @@ markerCluster.clearMarkers();
                     nodes +=            '<input type="hidden" class="link" value="<?php echo url_for('auto/economico?chile=') ?>'+dataCar.comuna + '/id/' + dataCar.id +'"/>';
                     nodes +=            '<li class="search_arecomend_marca">';
                     nodes +=                '<a target="_blank" title="Ir al perfil del auto" href="<?php echo url_for('auto/economico?chile=') ?>'+dataCar.comuna + '/id/' + dataCar.id +'">';
-                    nodes +=                    dataCar.brand + ' ' +dataCar.model+ ' (' +dataCar.year+')';
+                    nodes +=                    dataCar.brand + ' ' +dataCar.model+ ' <span class="title_peq">(' +dataCar.year+', Tipo, Transmisión)</span>';
                     nodes +=                '</a>';
                     nodes +=            '</li>';
+                    nodes +=            '<li class="tag_comuna_city">Comuna, Ciudad</li>'
                     nodes +=            '<li>Día: <b>$'+dataCar.price_per_day+' - </b>';
                     nodes +=            'Hora: <b>$'+dataCar.price_per_hour+'</b></li>';
                     //numStars = dataCar.stars por ejemplo
@@ -1319,22 +1320,25 @@ $('#day_to').change(function() {
                 <div class="opc_filtro"><input type="checkbox" name="tipo" value="mintomax" style="margin-right:6px;">De -$ a +$</div>
                 <div class="opc_filtro"><input type="checkbox" name="tipo" value="maxtomin" style="margin-right:6px;">De +$ a -$</div>
             </div> 
-            <div class="search_box_1_maparea" style="background-color: #ccc;">   
+            <div class="search_box_1_maparea">   
                 <div id="loading">
                 </div>
                 <div id="map"></div>
             </div><!-- search_box_1_maparea -->   
+        <div class="fondo_search_box_2">
+            <div class="search_box_2">
+                <div id="title_search_box_2">RESULTADO</div>
 
-        <div class="search_box_2">
+                <div id="loader" style="display:none;margin-left: 105px;margin-top: 30px;"><?php echo image_tag("ajax-loader.gif", array("width" => "80px", "height" => "80px")); ?></div>  
+                <div class="search_arecomend_window">  
 
-            <div id="loader" style="display:none;margin-left: 105px;margin-top: 30px;"><?php echo image_tag("ajax-loader.gif", array("width" => "80px", "height" => "80px")); ?></div>  
-            <div class="search_arecomend_window">  
-
-            </div><!-- search_arecomend_window -->   
+                </div><!-- search_arecomend_window -->   
 
 
 
-        </div><!-- search_box_2 -->
+            </div><!-- search_box_2 -->
+            <button id="footer_search_box_2" title="Ver todos los autos">VER TODO</button>
+        </div>
     </div><!-- search_box_1new -->
 
     <div class="clear"></div>

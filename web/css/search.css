@@ -242,13 +242,15 @@ a.returncar_btn_detalle span {
 
 
 /* autos en oferta */
+.fondo_search_box_2{
+	float: left;
+	width: 325px;
+	margin-left: 5px;
+}
 .search_box_2 {
 	float: left;
+	height: 498px;
 	background-color: #fff;
-	width: 320px;
-	height: 540px;
-	border-radius: 0 6px 0 0;
-	margin-left: 5px;
 }
 .search_box_2_header {
 	margin-top: 8px;
@@ -276,7 +278,30 @@ a.returncar_btn_detalle span {
 	text-align: center;
 	padding-top: 8px;
 }
-
+#title_search_box_2{
+	width: 310px;
+	background-color: rgb(172, 171, 171);
+	font-size: 12px;
+	color: white;
+	font-weight: bold;
+	border-bottom: 3px solid rgb(99, 98, 98);
+	padding-top: 12px;
+	padding-left: 15px;
+	padding-bottom: 8px;
+}
+#footer_search_box_2{
+	margin: 0px;
+	border: 0px;
+	padding: 0px;
+	cursor: pointer;
+	width: 330px;
+	background-color: rgb(152, 213, 248);
+	height: 20px;
+	font-size: 11px;
+	font-weight: bold;
+	color: white;
+	float: right;
+}
 input.buton_more_options{
 	margin: 0px;
 	border: 0px;
@@ -296,14 +321,14 @@ input.buton_more_options{
 .search_arecomend_window {
 	float: left;
 	width: 100%;
-	height: 518px;
+	height: 463px;
 	overflow-y: visible;
     overflow-x: hidden;
 }
 .search_arecomend_item {
 	border-bottom: 1px solid rgb(167, 167, 167);
 	float: left;
-	min-height: 78px;
+	min-height: 70px;
 	padding-top: 7px;
 	width: 100%;
 	padding-left: 5px;
@@ -314,9 +339,23 @@ input.buton_more_options{
 .search_arecomend_frame {
 	float: left;
 	width: 70px;
-	height: 70px;
+	height: 60px;
 	border: 1px solid #cecece;
 	box-shadow: 2px 2px 2px #eeeeee;
+	margin-top: 8px;
+}
+.fondo_newMarcador{
+	background-image: url("../images/Home/IndicadorMapa.png");
+	width: 22px;
+	height: 36px;
+	float: left;
+}
+p.numero_NewMarcador{
+	text-align: center;
+	color: white;
+	font-weight: bold;
+	margin-top: 5px;
+	font-size: 13px;
 }
 .search_arecomend_frame img {
 	margin-left: 3px;
@@ -329,7 +368,7 @@ ul.search_arecomend_info {
 	margin-top: 5px;
 }
 ul.search_arecomend_info li {
-	font-size: 14px;
+	font-size: 13px;
 	color: #393939;
 	margin-bottom: 3px;
 	width: 182px;
@@ -344,7 +383,15 @@ ul.search_arecomend_info li.search_arecomend_marca a {
 	text-decoration: none;
 	font-size: 13px;
 }
-
+li.search_arecomend_marca a span.title_peq{
+	font-size: 10px;
+}
+ul.search_arecomend_info li.tag_comuna_city{
+	font-style: italic;
+	font-size: 9px;
+	color: black;
+	margin-top: -3px;
+}
 
 
 /* sector busqueda avanzada */
@@ -453,7 +500,7 @@ ul.search_arecomend_info li.search_arecomend_marca a {
 .search_box_1_maparea {
 	float: left;
 	width: 630px;
-	height: 520px;
+	height: 518px;
 }
 #btn_filtro1{
 	margin: 0px;
