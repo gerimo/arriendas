@@ -1233,6 +1233,7 @@ $this->logMessage($has_reserve, 'err');
                     'comuna' => strtolower($car->getComunaNombre()),
                     'brand' => $car->getBrand(),
                     'model' => $car->getModelo(),
+                    'typeModel' => $car->getIdTipoVehiculo(),
 //                    'address' => $car->getAddress(),
                     'year' => $car->getYear(),
                     'photoType' => $car->getPhotoS3(),
@@ -1272,6 +1273,8 @@ $this->logMessage($has_reserve, 'err');
 			}else{
 				arsort($position);
 			}
+		}else{
+			asort($position); 
 		}
 
 	    $returnArray = array();

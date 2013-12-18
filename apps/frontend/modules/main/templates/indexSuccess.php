@@ -302,13 +302,16 @@ center = new google.maps.LatLng(-33.0,-71.3);
         $('.search_arecomend_window').fadeOut('fast');
       	$("#loader").fadeIn("fast");
   	
-  	
+  	 console.log(        $('input[name=transmision]:checked').map(function(){return $(this).val() }).get().join()           );
+	 
         document.getElementById("hour_from_hidden").value = document.getElementById("hour_from").value;
         document.getElementById("hour_to_hidden").value = document.getElementById("hour_to").value;
-        document.getElementById("price_hidden").value = document.getElementById("price").value;
-        document.getElementById("model_hidden").value = document.getElementById("model").value;
+        document.getElementById("price_hidden").value = $('input[type=radio][name=price]:radio:checked').val();
+        document.getElementById("transmision_hidden").value = $('input[name=transmision]:checked').map(function(){return $(this).val() }).get().join();
+        document.getElementById("tipo_hidden").value = $('input[name=tipo]:checked').map(function(){return $(this).val() }).get().join();
+//        document.getElementById("model_hidden").value = document.getElementById("model").value;
         document.getElementById("location_hidden").value = ""; //document.getElementById("location").value;
-        document.getElementById("brand_hidden").value = document.getElementById("brand").value;
+//        document.getElementById("brand_hidden").value = document.getElementById("brand").value;
         document.getElementById("day_from_hidden").value = document.getElementById("day_from").value;
         document.getElementById("day_to_hidden").value = document.getElementById("day_to").value; 
 
@@ -417,6 +420,8 @@ center = new google.maps.LatLng(-33.0,-71.3);
         var brand_hidden = encodeURIComponent(document.getElementById("brand_hidden").value);
         var location_hidden = encodeURIComponent(document.getElementById("location_hidden").value);
         var price_hidden = encodeURIComponent(document.getElementById("price_hidden").value);
+        var transmision_hidden = encodeURIComponent(document.getElementById("transmision_hidden").value);
+        var tipo_hidden = encodeURIComponent(document.getElementById("tipo_hidden").value);
         var model_hidden = encodeURIComponent(document.getElementById("model_hidden").value);
         var day_from_hidden = encodeURIComponent(document.getElementById("day_from_hidden").value);
         var day_to_hidden = encodeURIComponent(document.getElementById("day_to_hidden").value);    
@@ -432,9 +437,8 @@ center = new google.maps.LatLng(-33.0,-71.3);
         }
 	    
 		
-		
 			
-        var url = "<?php echo url_for('main/map') ?>?day_from=" + day_from_hidden + "&day_to=" + day_to_hidden + "&model=" + model_hidden + "&hour_from=" + hour_from + "&hour_to=" + hour_to + "&brand=" + brand_hidden  + "&location=" + location_hidden  + precio  + "&swLat="+swLat+"&swLng="+swLng+"&neLat="+neLat+"&neLng="+neLng+"";
+        var url = "<?php echo url_for('main/map') ?>?day_from=" + day_from_hidden + "&day_to=" + day_to_hidden + "&model=" + model_hidden + "&hour_from=" + hour_from + "&hour_to=" + hour_to + "&brand=" + brand_hidden  + "&transmission=" + transmision_hidden  + "&type=" + tipo_hidden  + "&location=" + location_hidden  + precio  + "&swLat="+swLat+"&swLng="+swLng+"&neLat="+neLat+"&neLng="+neLng+"";
 		 	    
         //document.write(var_dump(url,'html'));
 
@@ -574,21 +578,39 @@ markerCluster.clearMarkers();
                     nodes += '<div class="search_arecomend_item" id="'+dataCar.id+'">';
                     nodes +=    '<div class="marcadores">';
                     nodes +=        '<img src="http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + contador + '|05a4e7|ffffff" /></div>';
-                    nodes +=        '<div class="search_arecomend_frame">';
-                    nodes +=            '<img width="64px" height="64px" src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_64,h_64,c_fill,g_center/'+urlFotoThumbTipo+'" />';
+                    nodes +=        '<div class="search_arecomend_frame" style="width: 86px;height: 59px;">';
+                    nodes +=            '<img width="80px" height="52px" src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_80,h_52,c_fill,g_center/'+urlFotoThumbTipo+'" />';
                     nodes +=        '</div>';
                     nodes +=        '<ul class="search_arecomend_info">';
                     nodes +=            '<input type="hidden" class="link" value="<?php echo url_for('auto/economico?chile=') ?>'+dataCar.comuna + '/id/' + dataCar.id +'"/>';
                     nodes +=            '<li class="search_arecomend_marca">';
                     nodes +=                '<a target="_blank" title="Ir al perfil del auto" href="<?php echo url_for('auto/economico?chile=') ?>'+dataCar.comuna + '/id/' + dataCar.id +'">';
-                    nodes +=                    dataCar.brand + ' ' +dataCar.model+ ' <span class="title_peq">(' +dataCar.year+', Tipo, Transmisión)</span>';
+					switch (dataCar.typeModel)
+					{
+						case "1":
+							typeModel = 'Automóvil';
+							break;
+						case "2":
+							typeModel = 'Pick-Up';
+							break;
+						case "3":
+							typeModel = 'Station Wagon';
+							break;
+						case "39":
+							typeModel = 'SUV';
+							break;
+						case "4":
+							typeModel = 'Furgón';
+							break;
+					}
+                    nodes +=                    dataCar.brand + ' ' +dataCar.model+ ' <span class="title_peq">(' +dataCar.year+', '+typeModel+', '+dataCar.typeTransmission+')</span>';
                     nodes +=                '</a>';
                     nodes +=            '</li>';
-                    nodes +=            '<li class="tag_comuna_city">Comuna, Ciudad</li>'
+//                    nodes +=            '<li class="tag_comuna_city">Comuna, Ciudad</li>'
                     nodes +=            '<li>Día: <b>$'+dataCar.price_per_day+' - </b>';
                     nodes +=            'Hora: <b>$'+dataCar.price_per_hour+'</b></li>';
                     //numStars = dataCar.stars por ejemplo
-                    var numStars = Math.floor((Math.random()*5)+1); //función temporal
+                    var numStars = (dataCar.carPercentile); //función temporal
                     nodes +=             '<li class="stars">'+ generarBarraEstrellas(numStars) +'</li>'
                     <?php if (sfContext::getInstance()->getUser()->getAttribute("logged")){?>
                     //nodes +=            '<li class="sep">Usuario: <a target="_blank" title="Ir al perfil de '+dataCar.firstname+'" class="link_user" href="http://www.arriendas.cl/profile/publicprofile/id/'+dataCar.userid+'">'+dataCar.firstname+' '+dataCar.lastname+'</a></li>';
@@ -849,8 +871,17 @@ $('#day_to').change(function() {
             //doSearch();
         });
 	
-        $('#price').change(function() {
-            //doSearch();
+        $('input[type=radio][name=price]').change(function() {		
+            doSearch();
+        });
+
+		
+		$('input[name=transmision]').click(function() {		
+            doSearch();
+        });
+	
+		$('input[name=tipo]').click(function() {		
+            doSearch();
         });
 
 
@@ -1120,6 +1151,8 @@ $('#day_to').change(function() {
 <input type="hidden" id="hour_from_hidden" />
 <input type="hidden" id="hour_to_hidden" />
 <input type="hidden" id="price_hidden" />
+<input type="hidden" id="transmision_hidden" />
+<input type="hidden" id="tipo_hidden" />
 <input type="hidden" id="model_hidden" value="0"  />
 <input type="hidden" id="brand_hidden" />
 <input type="hidden" id="location_hidden" />
@@ -1207,7 +1240,7 @@ $('#day_to').change(function() {
 
 <div class="slogan">
     <div class="slogan_izq"><div class="triangulo_izq"></div></div>
-    <div class="land_slogan_area">
+    <div class="land_slogan_area" style="padding-top: 12px;height: 38px;">
         <?php
         if (stripos($_SERVER['SERVER_NAME'], "arrendas") !== FALSE)
             echo "<h2>Autos en alquiler desde 5.000 pesos la hora, cerca tuyo</h2>";
@@ -1221,7 +1254,13 @@ $('#day_to').change(function() {
                 }
             echo "</div>
                 <div id='tagLineArrendatario'>
-                    <h2>- ARRIENDA UN AUTO VECINO CON SEGURO PREMIUM, ASISTENCIA DE VIAJE Y TAGS INCLUÍDOS -</h2>      
+                    <h2 style='font-family: Helvetica,Arial,sans-serif;font-size: 26px;
+letter-spacing: -1px;
+font-weight: normal;
+display: block;
+color: #303030;
+font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con seguro 1000UF, asistencia y TAGs en el <span class='dest'>precio final</span></h2>
+
                 </div>";
         ?>
 
@@ -1239,7 +1278,7 @@ $('#day_to').change(function() {
         <div class="search_box_1_PrincipalNew">
             <div class="search_box_1_header">    
                 <div class="search_box1_form" style="">
-                	<span style="width: 360px;" class="group_desde"><span class="numberBlue">1</span>Ciudad |</span><span style="width: 222px;" class="group_desde"><span class="numberBlue">2</span>Desde |</span><span style="width: 140px;" class="group_hasta"><span class="numberBlue">3</span>Hasta |</span>
+                	<span style="width: 360px;" class="group_desde"><span class="numberBlue">1</span>Comuna |</span><span style="width: 222px;" class="group_desde"><span class="numberBlue">2</span>Desde |</span><span style="width: 140px;" class="group_hasta"><span class="numberBlue">3</span>Hasta |</span>
                 	<input class="input_f0" id="searchTextField" style="margin-right: 5px;margin-left: 10px;width: 355px;" type="text" size="50" placeholder="Ingrese Ciudad" autocomplete="off"/>
                     <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_from" value="Fecha desde"/>
                     <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="hour_from" value="Hora"/>
@@ -1285,18 +1324,17 @@ $('#day_to').change(function() {
             <div id="opc_filtro">
                 <button id="btn_filtro2" class="btn_filtro"><img class="flechasfiltro2" src="<?php echo image_path('img_search/FlechasFiltro.png'); ?>"/><p class="textofiltro2">ELEGIR FILTROS</p></button>
                 <div class="title_opc_filtro">Transmisión</div>
-                <div class="opc_filtro"><input type="checkbox" name="transmision" value="manual" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Manual</p></div>
-                <div class="opc_filtro"><input type="checkbox" name="transmision" value="automatica" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Automática</p></div>
+                <div class="opc_filtro"><input type="checkbox" name="transmision" value="0" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Manual</p></div>
+                <div class="opc_filtro"><input type="checkbox" name="transmision" value="1" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Automática</p></div>
                 <div class="title_opc_filtro">Tipo</div>
-                <div class="opc_filtro"><input type="checkbox" name="tipo" value="sedan" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Sedan</p></div>
-                <div class="opc_filtro"><input type="checkbox" name="tipo" value="SUV" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">SUV</p></div>
-                <div class="opc_filtro"><input type="checkbox" name="tipo" value="wagon" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Wagon</p></div>
-                <div class="opc_filtro"><input type="checkbox" name="tipo" value="station" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Station</p></div>
-                <div class="opc_filtro"><input type="checkbox" name="tipo" value="pickup" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Pick Up</p></div>
-                <div class="opc_filtro"><input type="checkbox" name="tipo" value="furgon" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Furgón</p></div>
+                <div class="opc_filtro"><input type="checkbox" name="tipo" value="1" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Automóvil</p></div>
+                <div class="opc_filtro"><input type="checkbox" name="tipo" value="39" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">SUV</p></div>
+                <div class="opc_filtro"><input type="checkbox" name="tipo" value="3" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Wagon Station</p></div>
+                <div class="opc_filtro"><input type="checkbox" name="tipo" value="2" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Pick Up</p></div>
+                <div class="opc_filtro"><input type="checkbox" name="tipo" value="4" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Furgón</p></div>
                 <div class="title_opc_filtro">Precio</div>
-                <div class="opc_filtro"><input type="checkbox" name="tipo" value="mintomax" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">De -$ a +$</p></div>
-                <div class="opc_filtro"><input type="checkbox" name="tipo" value="maxtomin" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">De +$ a -$</p></div>
+                <div class="opc_filtro"><input type="radio" name="price"  value="0" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">De -$ a +$</p></div>
+                <div class="opc_filtro"><input type="radio" name="price"  value="1" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">De +$ a -$</p></div>
             </div> 
             <div class="search_box_1_maparea">   
                 <div id="loading">
@@ -1305,7 +1343,7 @@ $('#day_to').change(function() {
             </div><!-- search_box_1_maparea -->   
         <div class="fondo_search_box_2">
             <div class="search_box_2">
-                <div id="title_search_box_2">RESULTADO ( 50 MEJORES )</div>
+                <div id="title_search_box_2">RESULTADO ( 35 AUTOS RECOMENDADOS )</div>
 
                 <div id="loader" style="display:none;margin-left: 105px;margin-top: 30px;"><?php echo image_tag("ajax-loader.gif", array("width" => "80px", "height" => "80px")); ?></div>  
                 <div class="search_arecomend_window">  

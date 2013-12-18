@@ -325,8 +325,9 @@ input.buton_more_options{
 /* box autos recomendados  items */
 .search_arecomend_window {
 	float: left;
-	width: 100%;
+	width: 97%;
 	height: 463px;
+	padding-right: 10px;
 	overflow-y: visible;
     overflow-x: hidden;
 }
@@ -382,7 +383,7 @@ ul.search_arecomend_info li {
 	font-size: 13px;
 	color: #393939;
 	margin-bottom: 3px;
-	width: 182px;
+	width: 170px;
 }
 ul.search_arecomend_info li.search_arecomend_marca {
 	margin-bottom: 7px;
