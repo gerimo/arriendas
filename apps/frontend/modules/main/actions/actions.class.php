@@ -951,9 +951,12 @@ public function executeNotificacion(sfWebRequest $request) {
 		$brand = $request->getParameter('brand');
         $model = $request->getParameter('model');
 
+        $transmission = $request->getParameter('transmission');
+        $type = $request->getParameter('type');
+				
         $location = $request->getParameter('location');
         $price = $request->getParameter('price');
-
+        
         $lat_centro = $request->getParameter('clat');
         $lng_centro = $request->getParameter('clng');
 
@@ -999,6 +1002,7 @@ $query = Doctrine_Query::create()
 				ca.velocidad_contesta_pedidos velocidad_contesta_pedidos,
 				greatest(1440,ca.velocidad_contesta_pedidos)/greatest(0.1,ca.contesta_pedidos) carrank,
 				mo.name modelo, 
+				mo.id_tipo_vehiculo id_tipo_vehiculo,
 				br.name brand, 
 				')
                 ->from('Car ca')
@@ -1061,6 +1065,19 @@ $query = Doctrine_Query::create()
             $q = $q->andWhere('mo.id = ?', $model);
         }
 
+        if ($transmission != "") {
+			$transmission=explode(",",$transmission); 
+            $q = $q->andWhereIn('ca.transmission', $transmission);
+        }
+
+
+        if ($type != "") {
+			$type=explode(",",$type); 
+			$q = $q->andWhereIn('mo.id_tipo_vehiculo', $type);
+        }
+		
+		
+		
         if ($location != "") {
 //            $q = $q->andWhere('co.id = ?', $location);
         }
@@ -1249,7 +1266,14 @@ $this->logMessage($has_reserve, 'err');
             $newRow[$key] = $row;
         }
 
-        asort($position); //Se comenta porque no se utilizará el orden por ubicación, sino que por precio por dia
+        if ($price != "") {
+			if ($price == 0) {
+				asort($position); 
+			}else{
+				arsort($position);
+			}
+		}
+
 	    $returnArray = array();
 
         foreach ($position as $key => $pos) {

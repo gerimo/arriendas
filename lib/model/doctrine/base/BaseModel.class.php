@@ -62,6 +62,15 @@ abstract class BaseModel extends sfDoctrineRecord
              'autoincrement' => false,
              'length' => 4,
              ));
+        $this->hasColumn('id_tipo_vehiculo', 'integer', 4, array(
+             'type' => 'integer',
+             'fixed' => 0,
+             'unsigned' => false,
+             'primary' => false,
+             'notnull' => true,
+             'autoincrement' => false,
+             'length' => 4,
+             ));
         $this->hasColumn('price', 'integer', 4, array(
              'type' => 'integer',
              'fixed' => 0,
