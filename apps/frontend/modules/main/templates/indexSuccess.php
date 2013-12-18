@@ -150,7 +150,8 @@ if (sfContext::getInstance()->getUser()->getAttribute("logged")){
 		if (stripos($_SERVER['SERVER_NAME'], "arrendas") !== FALSE)
 		    echo "var center = new google.maps.LatLng(-34.59, -58.401604);";
 		else
-		    echo "var center = new google.maps.LatLng(-33.427224, -70.605558);";
+//		    echo "var center = new google.maps.LatLng(-33.427224, -70.605558);";
+		    echo "var center = new google.maps.LatLng(-33.436024, -70.632858);";
 		?> 
     	if(geolocalizacion){    
             center = new google.maps.LatLng(latitud,longitud);
@@ -177,7 +178,7 @@ center = new google.maps.LatLng(-33.0,-71.3);
 <?php endif; ?>
  
         map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 12,
+            zoom: 14,
             center: center,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             scrollwheel: false

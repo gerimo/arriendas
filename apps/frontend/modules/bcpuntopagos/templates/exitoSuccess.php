@@ -56,13 +56,13 @@ var google_conversion_value = 0;
 <center>
             <b style="color:#EC008C;font-size:16px;text-align:center;">TU PAGO SE RECIBIÓ EXITOSAMENTE!</b></center>
             <br>
-            <p>Antes y despu&eacute;s de realizar la reserva, debes firmar el <a href='http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/tokenReserve/<?php echo $tokenReserva; ?>' target='_blank'>informe de da&ntilde;os impreso</a>, o <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/<?php echo $idReserva; ?>' target='_blank'>completarlo desde tu celular</a>.</p>
+            <p>Antes y despu&eacute;s de realizar la reserva, debes firmar el <a href='http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/tokenReserve/<?php echo $tokenReserve; ?>' target='_blank'>informe de da&ntilde;os impreso</a>, o <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/<?php echo $idReserva; ?>' target='_blank'>completarlo desde tu celular</a>.</p>
             <br>
 			<br>
 
 			<p style="font-size: 15px;"><center style="font-size: 15px;"><b style="color:#EC008C;font-size: 15px">Datos del due&ntilde;o del auto</b><br><br>Nombre: <?php echo $nameOwner ?> <?php echo $lastnameOwner ?><br>Teléfono: <?php echo $telephoneOwner ?><br>Correo: <?php echo $emailOwner ?></p>
 			</center><br> <br>
-			<p style="font-size: 15px;">Te hemos enviado estos datos a tu correo.</p>
+			<p style="font-size: 15px;font-weight:bold;">Te hemos enviado estos datos a tu correo.</p>
  			<p><a href="<?php echo url_for("main/index")?>" class="botonSiguiente" title="Volver al Home"></a>
 			</div>
       	</div> 

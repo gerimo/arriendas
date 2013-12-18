@@ -78,6 +78,8 @@ class Car extends BaseCar
       }
   }
 
+  
+  
   public function getPhotoFile($type)
   {
 
@@ -191,13 +193,48 @@ class Car extends BaseCar
         }
         if($i==0) $direccionAprox = $exp_frase[$i];
         else $direccionAprox = $direccionAprox." ".$exp_frase[$i];
-      }
+      }	
       return $direccionAprox;
     }
 
 
+    public function getCarPercentile(){
+        $carId = $this->getId();
+        $query = "
+		
+		SELECT 
+    c.id, c.score, ((100-ROUND(((@rank - rank) / @rank) * 100, 2))/100)*5 AS percentile_rank
+FROM
+    (SELECT 
+    *,
+        @prev:=@curr,
+        @curr:=a.score,
+        @rank:=IF(@prev = @curr, @rank, @rank + 1) AS rank
+    FROM
+        (SELECT id, greatest(1,velocidad_contesta_pedidos)/greatest(0.1,contesta_pedidos) as score FROM Car
+        where activo=1 and (seguro_ok=3 or seguro_ok=4)) AS a,
+        (SELECT @curr:= null, @prev:= null, @rank:= 0) AS b
+ORDER BY score DESC) AS c
+where c.id=
+
+		".$carId;
+		
+		$rs = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAssoc($query);
+      
+
+
+		return $rs[0]['percentile_rank'];
+    }
+
+
+	
+	
+	
 		public function save(Doctrine_Connection $conn = null)	{
 		
+		
+				
+				
  	  if (!$this->getId() || $this->getCustomerio()<=0)
 	  {
 
@@ -236,8 +273,25 @@ curl_close($session);
 		
 	  }
 
-	  return parent::save($conn);
-	}
+  $ret = parent::save($conn);
+
+  
+			$car = Doctrine_Core::getTable('car')->findOneById($this->getId());	
+			$user = Doctrine_Core::getTable('user')->findOneById($car->getUserId());	
+			$ownerUserId=$user->getId();
+			
+				$percTotalContestadas=$user->getPercReservasContestadas();
+				$velocidadContestaPedidos = $user->getVelocidadRespuesta('0');
+				$CantReservasAprobadas= $user->getCantReservasAprobadasTotalOwner();
+				$q = Doctrine_Manager::getInstance()->getCurrentConnection();
+				$query = "update Car set Cant_Reservas_Aprobadas='$CantReservasAprobadas', contesta_pedidos='$percTotalContestadas', velocidad_contesta_pedidos='$velocidadContestaPedidos' where user_id='$ownerUserId'";
+//				$query = "update Car set Cant_Reservas_Aprobadas= $CantReservasAprobadas where user_id='$ownerUserId'";
+				$result = $q->execute($query);
+				
+				
+  return $ret;
+
+  }
 	
 	
 }

@@ -193,6 +193,17 @@ input{
 	display: none;
 }
 
+.mensajeIngresoDatos3{
+	color: #EC008C;
+	float: left;
+	margin-left: 70px;
+	margin-top: 40px;
+	width: 400px;
+	font-size: 15px;
+	display: none;
+}
+
+
 /* PASO 3 */
 
 .subtituloDer{
@@ -263,7 +274,7 @@ input{
 	display: none;
 }
 
-.mensajeIngresoDatos3{
+.mensajeIngresoDatos4{
 	color: #EC008C;
 	float: left;
 	margin-left: 80px;

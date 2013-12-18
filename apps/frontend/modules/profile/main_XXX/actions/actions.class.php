@@ -1260,6 +1260,11 @@ El equipo de Arriendas.cl
 	                $this->getUser()->setAttribute("logged", true);
 	                $this->getUser()->setAttribute("userid", $user->getId());
 					$this->getUser()->setAttribute("fecha_registro", $user->getFechaRegistro());
+					$this->getUser()->setAttribute("firstname", $user->getFirstName());
+
+
+					
+
 					$this->getUser()->setAttribute("email", $user->getEmail());
 					$this->getUser()->setAttribute("telephone", $user->getTelephone());
 					$this->getUser()->setAttribute("comuna", $user->getComuna());

@@ -29,7 +29,7 @@ class rutinasActions extends sfActions
 		$users = Doctrine_Core::getTable('Reserve')
                         ->createQuery('s')
                         ->select('*')
-						->where('s.customerio < 1')
+//						->where('s.contesta_pedidos = 1')
                         ->execute();
 
                 foreach($users as $user) {
@@ -64,7 +64,10 @@ class rutinasActions extends sfActions
                 $cars = Doctrine_Core::getTable('Car')
                         ->createQuery('s')
                         ->select('*')
-						->where('s.customerio < 1')
+//						->where('s.cant_reservas_aprobadas < 1')
+//						->where('s.user_id = 1724')
+//s						->where('s.customerio < 1')
+						->orderBy('s.id desc')
                         ->execute();
 
                 foreach($cars as $car) {
