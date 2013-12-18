@@ -1239,7 +1239,7 @@ $('#day_to').change(function() {
                     <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_from" value="Fecha desde"/>
                     <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="hour_from" value="Hora"/>
                     <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_to" value="Fecha hasta"/>
-                    <input class="input_f1b" style="width: 95px;margin-right: 0px;padding-left:5px" readonly="readonly" type="text" id="hour_to"  value="Hora" />
+                    <input class="input_f1b" style="width: 95px;" readonly="readonly" type="text" id="hour_to"  value="Hora" />
                     <button id="btn_buscar" title="Buscar autos"></button>
                 </div>
 
