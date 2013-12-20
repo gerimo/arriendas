@@ -340,8 +340,7 @@
                     
                     <?php if (!sfContext::getInstance()->getUser()->isAuthenticated()): ?>
 		    
-                        <a class="item_thm" href="<?php echo url_for('main/login') ?>">
-						            <button class="arriendas_pink_btn arriendas_big_btn right" name="save" onclick="submitFrom()"> Finalizar </button>        
+                        <a class="item_thm" href="<?php echo url_for('main/login') ?>"><div class="top_login"></div>
 
 									</a>  
 
