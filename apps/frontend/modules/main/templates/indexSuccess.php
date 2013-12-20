@@ -1,7 +1,7 @@
-<?php use_stylesheet('search.css') ?>
-<?php use_stylesheet('landing.css') ?>
-<?php use_stylesheet('registro.css') ?>
-<?php use_stylesheet('comparaprecios.css') ?>
+<?php use_stylesheet('search.css?v=20122013') ?>
+<?php use_stylesheet('landing.css?v=20122013') ?>
+<?php use_stylesheet('registro.css?v=20122013') ?>
+<?php use_stylesheet('comparaprecios.css?v=20122013') ?>
 
 <?php
 $useragent=$_SERVER['HTTP_USER_AGENT'];
