@@ -821,13 +821,20 @@ markerCluster.clearMarkers();
         });	
 	
         $('#hour_from').change(function() {
-            //doSearch();
+            doSearch();
         });
 	
         $('#hour_to').change(function() {
-            //doSearch();
+            doSearch();
         });
 
+		$('#btn_buscar').click(function() {
+            doSearch();
+        });
+
+		
+		
+		
 		var date = new Date();
 
 		if( date.getMinutes() < 30 ){
