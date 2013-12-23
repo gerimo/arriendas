@@ -257,6 +257,11 @@ center = new google.maps.LatLng(-33.0,-71.3);
 
           infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
           infowindow.open(map, marker);
+		  
+            searchMarkers();
+//		              doSearch();
+
+					  
         });
 
 		//Fin Autocomplete
@@ -611,7 +616,10 @@ markerCluster.clearMarkers();
                     nodes +=            'Hora: <b>$'+dataCar.price_per_hour+'</b></li>';
                     //numStars = dataCar.stars por ejemplo
                     var numStars = (dataCar.carPercentile); //función temporal
-                    nodes +=             '<li class="stars">'+ generarBarraEstrellas(numStars) +'</li>'
+                    //nodes +=             '<li class="stars">'+ generarBarraEstrellas(numStars) +'</li>'
+					
+					var ContestaPedidos = (( (dataCar.userContestaPedidos*100)>100) ? 100 :  dataCar.userContestaPedidos*100) ;
+                    nodes +=            '<li><span style="font-size: 10px;">Porcentaje de Respuesta: '+ContestaPedidos+'%</span></li>';
                     <?php if (sfContext::getInstance()->getUser()->getAttribute("logged")){?>
                     //nodes +=            '<li class="sep">Usuario: <a target="_blank" title="Ir al perfil de '+dataCar.firstname+'" class="link_user" href="http://www.arriendas.cl/profile/publicprofile/id/'+dataCar.userid+'">'+dataCar.firstname+' '+dataCar.lastname+'</a></li>';
                     <?php } ?>
@@ -832,6 +840,11 @@ markerCluster.clearMarkers();
             doSearch();
         });
 
+
+//$('#searchTextField').keypress(function (e) {
+//  if (e.which == 13) {
+//  }
+//});
 		
 		
 		

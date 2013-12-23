@@ -1187,7 +1187,7 @@ $this->logMessage('fullenddate '.$fullenddate, 'err');
    //         $user = $car->getUser();
   //          $reservasRespondidas = $user->getReservasContestadas_aLaFecha();
             $velocidad = $car->getVelocidadContestaPedidos();
-			
+			$porcentaje = $car->getContestaPedidos();
 			
 			if($velocidad < 1){
 				$velocidad="Menos de un minuto";
@@ -1250,6 +1250,7 @@ $this->logMessage($has_reserve, 'err');
 //                    'userPhoto' => $urlUser,
                     'typeTransmission' => $transmision,
                     'userVelocidadRespuesta' => $velocidad,
+                    'userContestaPedidos' => $porcentaje,
                     'cantidadCalificacionesPositivas' => '0',
 //                    'cantidadCalificacionesPositivas' => $car->getCantidadCalificacionesPositivas(),
 //                    'reservasRespondidas' => $reservasRespondidas,
