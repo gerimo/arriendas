@@ -1182,12 +1182,12 @@ $this->logMessage('fullenddate '.$fullenddate, 'err');
 
 
 //$this->logMessage($this->getUser()->getAttribute("logged"), 'err');
+			$porcentaje = $car->getContestaPedidos();
 
 	if ($this->getUser()->getAttribute("logged")){
    //         $user = $car->getUser();
   //          $reservasRespondidas = $user->getReservasContestadas_aLaFecha();
             $velocidad = $car->getVelocidadContestaPedidos();
-			$porcentaje = $car->getContestaPedidos();
 			
 			if($velocidad < 1){
 				$velocidad="Menos de un minuto";
