@@ -175,44 +175,44 @@ padding: 10px 0;float: left;width: 940px;"> Arriendas.cl En las Noticias </div>
 <div class="divTable">
         <div class="divTableRow" style="padding-top:20px">
             <div class="divTableCell">
-			<?php echo link_to(image_tag("/images/logos_canais_canais/LogoTerra.png"), 'http://www.terra.cl/economia/emprendimiento/?pagina=noticias&id_reg=1793372','target=_blank') ?>
+			<?php echo link_to(image_tag("/images/logos_canais/LogoTerra.png"), 'http://www.terra.cl/economia/emprendimiento/?pagina=noticias&id_reg=1793372','target=_blank') ?>
             </div>
             <div class="divTableCell ">
-                <?php echo image_tag("/images/logos_canais_canais/LogoPulso.png") ?>
+                <?php echo image_tag("/images/logos_canais/LogoPulso.png") ?>
             </div>
             <div class="divTableCell ">
-			<?php echo link_to(image_tag("/images/logos_canais_canais/13.png"), 'http://www.13.cl/t13/sociedad/arrienda-tu-auto-es-la-nueva-tendencia-entre-los-chilenos','target=_blank') ?>
+			<?php echo link_to(image_tag("/images/logos_canais/13.png"), 'http://www.13.cl/t13/sociedad/arrienda-tu-auto-es-la-nueva-tendencia-entre-los-chilenos','target=_blank') ?>
             </div>
             <div class="divTableCell ">
-			<?php echo link_to(image_tag("/images/logos_canais_canais/LogoLUN.png","size=175x27"), 'http://www.lun.com/lunmobile//pages/NewsDetailMobile.aspx?IsNPHR=1&dt=2012-10-23&NewsID=0&BodyId=0&PaginaID=6&Name=6&PagNum=0&SupplementId=0&Anchor=20121023_6_0_0','target=_blank') ?>
+			<?php echo link_to(image_tag("/images/logos_canais/LogoLUN.png","size=175x27"), 'http://www.lun.com/lunmobile//pages/NewsDetailMobile.aspx?IsNPHR=1&dt=2012-10-23&NewsID=0&BodyId=0&PaginaID=6&Name=6&PagNum=0&SupplementId=0&Anchor=20121023_6_0_0','target=_blank') ?>
             </div>
         </div>
         <div class="divTableRow">
             <div class="divTableCell">
-			<?php echo link_to(image_tag("/images/logos_canais_canais/LogoPublimetro.png"), 'http://www.tacometro.cl/prontus_tacometro/site/artic/20121030/pags/20121030152946.html','target=_blank') ?>
+			<?php echo link_to(image_tag("/images/logos_canais/LogoPublimetro.png"), 'http://www.tacometro.cl/prontus_tacometro/site/artic/20121030/pags/20121030152946.html','target=_blank') ?>
             </div>
             <div class="divTableCell ">
-            <?php echo image_tag("/images/logos_canais_canais/logo caras.png") ?>
+            <?php echo image_tag("/images/logos_canais/logo caras.png") ?>
             </div>
             <div class="divTableCell ">
-			<?php echo link_to(image_tag("/images/logos_canais_canais/LogoEmol.png"), 'http://www.emol.com/noticias/economia/2012/07/27/552815/emprendedor-estrenara-primer-sistema-de-arriendo-de-vehiculos-por-hora-de-chile.html','target=_blank') ?>
+			<?php echo link_to(image_tag("/images/logos_canais/LogoEmol.png"), 'http://www.emol.com/noticias/economia/2012/07/27/552815/emprendedor-estrenara-primer-sistema-de-arriendo-de-vehiculos-por-hora-de-chile.html','target=_blank') ?>
             </div>
             <div class="divTableCell ">
-			<?php echo link_to(image_tag("/images/logos_canais_canais/LogoLaSegunda.png","size=150x25"), 'http://www.lasegunda.com/Noticias/CienciaTecnologia/2012/08/774751/arriendascl-sistema-de-alquiler-de-autos-por-horas-debuta-en-septiembre','target=_blank') ?>
+			<?php echo link_to(image_tag("/images/logos_canais/LogoLaSegunda.png","size=150x25"), 'http://www.lasegunda.com/Noticias/CienciaTecnologia/2012/08/774751/arriendascl-sistema-de-alquiler-de-autos-por-horas-debuta-en-septiembre','target=_blank') ?>
             </div>
         </div>            
         <div class="divTableRow">
             <div class="divTableCell">
-			<?php echo link_to(image_tag("/images/logos_canais_canais/LogoLaCuarta.png"), 'http://www.lacuarta.com/noticias/cronica/2013/08/63-157571-9-ahora-puedes-arrendar-el-automovil-de-tu-vecino.shtml','target=_blank') ?>
+			<?php echo link_to(image_tag("/images/logos_canais/LogoLaCuarta.png"), 'http://www.lacuarta.com/noticias/cronica/2013/08/63-157571-9-ahora-puedes-arrendar-el-automovil-de-tu-vecino.shtml','target=_blank') ?>
             </div>
             <div class="divTableCell ">
-                <?php echo image_tag("/images/logos_canais_canais/Logo_LaTercera.png","size=175x30") ?>
+                <?php echo image_tag("/images/logos_canais/Logo_LaTercera.png","size=175x30") ?>
             </div>
             <div class="divTableCell ">
-			<?php echo link_to(image_tag("/images/logos_canais_canais/LogoDiarioPyme.png","size=150x25"), 'http://www.diariopyme.cl/arrienda-tu-auto-y-gana-dinero-extra-a-fin-de-mes/prontus_diariopyme/2013-06-23/212000.html','target=_blank') ?>
+			<?php echo link_to(image_tag("/images/logos_canais/LogoDiarioPyme.png","size=150x25"), 'http://www.diariopyme.cl/arrienda-tu-auto-y-gana-dinero-extra-a-fin-de-mes/prontus_diariopyme/2013-06-23/212000.html','target=_blank') ?>
             </div>
             <div class="divTableCell ">
- 			<?php echo link_to(image_tag("/images/logos_canais_canais/logotvn2.png"), 'http://www.24horas.cl/nacional/rent-a-car-vecino-la-nueva-forma-de-viajar-906946','target=_blank') ?>
+ 			<?php echo link_to(image_tag("/images/logos_canais/logotvn2.png"), 'http://www.24horas.cl/nacional/rent-a-car-vecino-la-nueva-forma-de-viajar-906946','target=_blank') ?>
             </div>
         </div>		
         </div>
