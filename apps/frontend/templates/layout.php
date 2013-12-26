@@ -426,7 +426,7 @@
                                 echo "_in";
                             }
                         ?>" title="Arriendas.cl En Los Medios">
-                            <span>EN LOS MEDIOS</span></a></li>    
+                            <span>EN LAS NOTICIAS</span></a></li>    
 
     
 <!--                <li><a href="https://arriendascl.zendesk.com/anonymous_requests/new"
