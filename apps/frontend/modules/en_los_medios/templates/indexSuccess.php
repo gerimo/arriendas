@@ -212,7 +212,7 @@ padding: 10px 0;float: left;width: 940px;"> Arriendas.cl En las Noticias </div>
 			<?php echo link_to(image_tag("/images/logos/LogoDiarioPyme.png","size=150x25"), 'http://www.diariopyme.cl/arrienda-tu-auto-y-gana-dinero-extra-a-fin-de-mes/prontus_diariopyme/2013-06-23/212000.html','target=_blank') ?>
             </div>
             <div class="divTableCell ">
- 			<?php echo link_to(image_tag("/images/logos/logotvn.png"), 'http://www.24horas.cl/nacional/rent-a-car-vecino-la-nueva-forma-de-viajar-906946','target=_blank') ?>
+ 			<?php echo link_to(image_tag("/images/logos/logotvn2.png"), 'http://www.24horas.cl/nacional/rent-a-car-vecino-la-nueva-forma-de-viajar-906946','target=_blank') ?>
             </div>
         </div>		
         </div>
