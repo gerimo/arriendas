@@ -832,7 +832,7 @@ function cambiarImgEstado(id,accion){
 			texto = 'Pre aprobado<br>(Falta pago)';
 		}else if(accion=='rechazar'){
 			url[url.length-1] = 'IconoRechazado.png';
-			texto = 'Rechazado';
+			texto = 'Cancelado';
 		}
 
 		url = url.join('/');

@@ -618,7 +618,7 @@ markerCluster.clearMarkers();
                     var numStars = (dataCar.carPercentile); //función temporal
                     //nodes +=             '<li class="stars">'+ generarBarraEstrellas(numStars) +'</li>'
 					
-					var ContestaPedidos = (( (dataCar.userContestaPedidos*100)>100) ? 100 :  dataCar.userContestaPedidos*100) ;
+					var ContestaPedidos = (( (dataCar.carPercentile*20)>100) ? 100 :  (dataCar.carPercentile*20).toFixed(0)) ;
                     nodes +=            '<li><span style="font-size: 10px;">Porcentaje de Respuesta: '+ContestaPedidos+'%</span></li>';
                     <?php if (sfContext::getInstance()->getUser()->getAttribute("logged")){?>
                     //nodes +=            '<li class="sep">Usuario: <a target="_blank" title="Ir al perfil de '+dataCar.firstname+'" class="link_user" href="http://www.arriendas.cl/profile/publicprofile/id/'+dataCar.userid+'">'+dataCar.firstname+' '+dataCar.lastname+'</a></li>';
@@ -1371,9 +1371,8 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
                 </div><!-- search_arecomend_window -->   
 
 
-
             </div><!-- search_box_2 -->
-            <button id="footer_search_box_2" title="Ver todos los autos">VER TODO</button>
+            <button id="footer_search_box_2"  onclick="window.open('<?=url_for('main/arriendo?autos=santiago');?>')" title="Ver todos los autos" >VER TODOS</button>
         </div>
     </div><!-- search_box_1new -->
 
