@@ -93,8 +93,6 @@ Car:
       type: integer(4)
     description:
       type: string(45)
-<<<<<<< HEAD
-=======
     seguro_ok:
       type: integer(4)
     patente:
@@ -211,7 +209,6 @@ Car:
       type: timestamp
     fecha_validacion:
       type: timestamp
->>>>>>> 51c885deb874035d496df5e146ba05eac848c3b2
   relations:
     User:
       class: User
@@ -278,6 +275,46 @@ City:
       fields: [State_idt]
     id_UNIQUE:
       fields: [id]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+Comuna:
+  tableName: Comuna
+  columns:
+    codigointerno:
+      type: integer(20)
+      primary: true
+      notnull: true
+      autoincrement: true
+    nombre:
+      type: string(255)
+    padre:
+      type: integer(20)
+  indexes:
+    id_UNIQUE:
+      fields: [codigointerno]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+Comunas:
+  tableName: Comunas
+  columns:
+    codigointerno:
+      type: integer(20)
+      primary: true
+      notnull: true
+      autoincrement: true
+    nombre:
+      type: string(255)
+    padre:
+      type: integer(20)
+  indexes:
+    id_UNIQUE:
+      fields: [codigointerno]
       type: unique
   options:
     charset: utf8
@@ -535,6 +572,24 @@ Rating:
     charset: utf8
     type: InnoDB
 
+Region:
+  tableName: Region
+  columns:
+    codigo:
+      type: integer(20)
+      primary: true
+      notnull: true
+      autoincrement: true
+    nombre:
+      type: string(255)
+  indexes:
+    id_UNIQUE:
+      fields: [codigo]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
 Report:
   tableName: Report
   columns:
@@ -626,8 +681,6 @@ Reserve:
       type: boolean
       notnull: true
       default: 0
-<<<<<<< HEAD
-=======
     visible_owner:
       type: boolean
       notnull: true
@@ -677,13 +730,9 @@ Reserve:
       notnull: true
     montoLiberacion:
       type: decimal(10,2)
-<<<<<<< HEAD
->>>>>>> 60b601d9a31f98057c922e1d46052569d4f39038
-=======
     cambioEstadoRapido:
       type: boolean
       notnull: true
->>>>>>> 725fd68aa812c5bc262311b6be1802d5b4b183f1
   relations:
     User:
       class: User
@@ -885,6 +934,10 @@ User:
       type: boolean
       notnull: true
       default: false
+    customerio:
+      type: boolean
+      notnull: true
+      default: false
     autoconfirm:
       type: boolean
       notnull: true
@@ -917,7 +970,30 @@ User:
       type: date
     credito:
       type: integer
+    Comuna_codigointerno:
+      type: integer(20)
+    Region_codigo:
+      type: integer(20)
+  relations:
+    Region:
+      class: Region
+      local: Region_codigo
+      foreign: codigo
+      foreignAlias: Users
+      onDelete: no action
+      onUpdate: no action
+    Comuna:
+      class: Comuna
+      local: Comuna_codigointerno
+      foreign: codigointerno
+      foreignAlias: Users
+      onDelete: no action
+      onUpdate: no action
   indexes:
+    fk_User_Comuna1:
+      fields: [Comuna_codigointerno]
+    fk_User_Region1:
+      fields: [Region_codigo]
     id_UNIQUE:
       fields: [id]
       type: unique
@@ -949,15 +1025,13 @@ UserAdmin:
     charset: utf8
     type: InnoDB
 
-<<<<<<< HEAD
-=======
 SecurityTokens:
   tableName: security_tokens
   columns:
     id:
       type: varchar(10)
       primary: true
-      notnull:true
+      notnull: true
     secret:
       type: varchar(30)
     valid:
@@ -968,7 +1042,7 @@ puntaje_mapa:
   columns:
     car_id:
       type: integer(11)
-      primary:true
+      primary: true
     user_id:
       type:integer(11)
     porcentaje_respuesta:
@@ -1011,9 +1085,6 @@ mail_calificaciones:
   options:
     charset: utf8
     type: InnoDB
-<<<<<<< HEAD
->>>>>>> 51c885deb874035d496df5e146ba05eac848c3b2
-=======
 
 LiberacionDeposito:
   tableName: LiberacionDeposito
@@ -1024,4 +1095,3 @@ LiberacionDeposito:
       notnull: true
     monto:
       type: decimal(10,2)
->>>>>>> 60b601d9a31f98057c922e1d46052569d4f39038

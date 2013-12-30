@@ -347,19 +347,27 @@ class profileActions extends sfActions {
             $this->executeConfirmReserve($idReserve);
 
             //envía mail de preaprobación al arrendatario
-            require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
+//            require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
             //al arrendatario
             $mail = new Email();
-            $mail->setSubject('Se ha aprobado tu reserva! (Falta pagar)');
-            $mail->setBody("<p>Hola $nameRenter:</p><p>Se ha aprobado tu reserva!</p><p>Para acceder a los datos entrega del vehículo debes pagar $$precio.- CLP.</p><p>Si tu arriendo no se concreta, Arriendas.cl no le pagará al dueño del auto y te daremos un auto a elección.</p><p>Has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a> para pagar.</p><p><a href='http://www.arriendas.cl/main/generarReporte/idAuto/$idCar'>Datos del arriendo</a><br><a href='http://www.arriendas.cl/api.php/contrato/generarContrato/tokenReserva/$tokenReserve'>Ver contrato</a></p>");
-            $mail->setTo($correoRenter);
-            echo $mail->submit();
+            $mailer = $mail->getMailer();
 
-            $mail = new Email();
-            $mail->setSubject('Se ha aprobado una reserva');
-            $mail->setBody("<p>Dueño: $nameOwner $lastName ($telephone) - $correoOwner</p><p>Arrendatario: $nameRenter $lastNameRenter ($telephoneRenter) - $correoRenter</p><p>Precio: $precio</p>");
-            $mail->setTo('soporte@arriendas.cl');
-            echo $mail->submit();
+            $message = $mail->getMessage();
+            $message->setSubject('Se ha aprobado tu reserva! (Falta pagar)');
+            $message->setBody('<p>Hola ivan:</p><p>Se ha aprobado tu reserva!</p><p>Para acceder a los datos entrega del vehículo debes pagar 1000.- CLP.</p><p>Si tu arriendo no se concreta, Arriendas.cl no le pagará al dueño del auto y te daremos un auto a elección.</p><p>Has click <a href="http://www.arriendas.cl/profile/pedidos">aquí</a> para pagar.</p><p>Los datos del arriendo y el contrato se encuentran adjuntos en formato PDF.</p>', 'text/html');
+            $message->setTo($correoRenter);
+            $functions = new Functions;
+            $contrato = $functions->generarContrato($tokenReserve);
+            $reporte = $functions->generarReporte($idCar, true);
+            $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+            $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+            $mailer->send($message);
+            
+            $message = $mail->getMessage();
+            $message->setSubject('Se ha aprobado una reserva');
+            $message->setBody("<p>Dueño: $nameOwner $lastName ($telephone) - $correoOwner</p><p>Arrendatario: $nameRenter $lastNameRenter ($telephoneRenter) - $correoRenter</p><p>Precio: $precio</p>", 'text/html');
+            $message->setTo('soporte@arriendas.cl');
+            $mailer->send($message);
 
             if($reserve->getConfirmedSMSRenter()==1){
                 $texto = "Se ha aprobado tu reserva! Debes pagar en Arriendas.cl - Si tu arriendo no se concreta, no le pagaremos al propietario del auto y te daremos un auto a eleccion";
@@ -367,16 +375,35 @@ class profileActions extends sfActions {
             }
 
             //al propietario
-            $mail2 = new Email();
-            $mail2->setSubject('Has aprobado una reserva!');
-            $mail2->setBody("<p>Hola $nameOwner:</p><p>Has aprobado una reserva!</p><p>Recuerda que puedes aprobar varios pedidos de reserva para la misma fecha. El primer arrendatario que pague, ganará el arriendo.</p><p>El contrato de arriendo se emitirá una vez que el arrendatario haya pagado. <a href='http://www.arriendas.cl/api.php/contrato/generarContrato/tokenReserva/$tokenReserve'>Esta es la versión preliminar</a>.</p><p>Su pago se te informará por este medio y verás el cambio en la pestaña 'Reservas' del sitio.</p>");
-            $mail2->setTo($correoOwner);
-            echo $mail2->submit();
+            $message = $mail->getMessage();
+            $message->setSubject('Has aprobado una reserva!');
+            $message->setBody("<p>Hola $nameOwner:</p><p>Has aprobado una reserva!</p><p>Recuerda que puedes aprobar varios pedidos de reserva para la misma fecha. El primer arrendatario que pague, ganará el arriendo.</p><p>El contrato de arriendo se emitirá una vez que el arrendatario haya pagado. La versión preliminar se encuentra adjunta en formato PDF.</p><p>Su pago se te informará por este medio y verás el cambio en la pestaña 'Reservas' del sitio.</p>", 'text/html');
+            $message->setTo($correoOwner);
+            $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+            $mailer->send($message);
         }
 
         die();
     }
 
+    public function executeTestMail(sfWebRequest $request)
+    {
+        $mail = new Email();
+        $mailer = $mail->getMailer();
+        $mail = $mail->getMessage();
+        $mail->setSubject('Se ha aprobado tu reserva! (Falta pagar)');
+        $mail->setBody("<p>Hola ivan:</p><p>El arrendatario ha pagado la reserva!</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>Puedes llenar el formulario <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/$idReserve'>desde tu celular</a> o puedes firmar la <a href='http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/tokenReserve/$tokenReserve'>versión impresa</a>.</p><p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameRenter $lastnameRenter<br>Teléfono: $telephoneRenter<br>Correo: $emailRenter</p><p>Los datos del arriendo se encuentran adjuntos en formato PDF.</p>");
+        //$mail->setBody('<p>Hola ivan:</p><p>Se ha aprobado tu reserva!</p><p>Para acceder a los datos entrega del vehículo debes pagar 1000.- CLP.</p><p>Si tu arriendo no se concreta, Arriendas.cl no le pagará al dueño del auto y te daremos un auto a elección.</p><p>Has click <a href="http://www.arriendas.cl/profile/pedidos">aquí</a> para pagar.</p><p><a href="http://www.arriendas.cl/main/generarReporte/idAuto/">Datos del arriendo</a><br>El contrato se encuentra adjunto en formato PDF.</p>', 'text/html');
+        $mail->setTo('ikleimans@gmail.com');
+        $functions = new Functions;
+        //$contrato = $functions->generarContrato('0ae0444ab5971b18c22f576f55b027f3d7debd98');
+        $formulario = $functions->generarFormulario(NULL, '0ae0444ab5971b18c22f576f55b027f3d7debd98');
+        $reporte = $functions->generarReporte('221');
+        $mail->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
+        $mail->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+        $mailer->send($mail);
+    }
+    
     public function enviarSMS($telefono,$texto){
 
         if(substr($telefono,0,1)=="0") {

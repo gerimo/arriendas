@@ -102,6 +102,26 @@ class Email{
         }  
 
 	}
+        
+        public function getMailer()
+        {
+            $transport = Swift_SmtpTransport::newInstance('smtp.sendgrid.net', 465, 'ssl')
+            ->setUsername('german@arriendas.cl')
+             ->setPassword('Holahello00@');
+            $mailer = Swift_Mailer::newInstance($transport);
+            
+            return $mailer;
+        }
+        
+        public function getMessage()
+        {
+            $mail = Swift_Message::newInstance();
+            $mail->setContentType('text/html');
+            $mail->setFrom(array('soporte@arriendas.cl' => 'Soporte Arriendas'));
+
+            return $mail;
+        }
+        
 
 }
 
