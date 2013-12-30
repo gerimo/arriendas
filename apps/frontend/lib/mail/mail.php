@@ -122,7 +122,9 @@ class Email{
             return $mail;
         }
         
-
+        public function addFooter($html){
+		return $html."<p><br><br>Gracias,<br>El equipo de <a href='http://www.arriendas.cl'>Arriendas.cl</a></p><p><i>Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</i></p>";
+	}
 }
 
 ?>
