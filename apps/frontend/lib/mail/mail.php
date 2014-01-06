@@ -93,8 +93,13 @@ class Email{
 					    'username' => $this->username,
 					    'password' => $this->password));
 		
-		$recipients = $this->to.", ".$this->bcc;
+		$recipients = strtolower($this->to.", ".$this->bcc);
 
+		sfContext::getInstance()->getLogger()->info('$recipients '.$recipients);
+		sfContext::getInstance()->getLogger()->info('$headers '.$headers);
+		sfContext::getInstance()->getLogger()->info('$body '.$body);
+
+		
         if($smtp->send($recipients, $headers, $body)){
         	return true;
         }else{

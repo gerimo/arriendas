@@ -2142,7 +2142,9 @@ $this->logMessage(date('h:i:s'), 'err');
         $url = str_replace('https://', '', $url);
         $url = 'http://www.arriendas.cl/main/recover?email=' . $user->getEmail() . "&hash=" . $user->getHash();
 
-        $correo = $user->getUsername();
+		sfContext::getInstance()->getLogger()->info($url);
+
+        $correo = $user->getEmail();
 
         require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
         $mail = new Email();
@@ -2150,6 +2152,10 @@ $this->logMessage(date('h:i:s'), 'err');
         $mail->setBody("<p>Hola:</p><p>Para generar una nueva contraseña, haz click <a href='$url'>aqu&iacute;</a></p>");
         $mail->setTo($correo);
         $mail->submit();
+
+		sfContext::getInstance()->getLogger()->info("<p>Hola:</p><p>Para generar una nueva contraseña, haz click <a href='$url'>aqu&iacute;</a></p>");
+
+		sfContext::getInstance()->getLogger()->info('mail sent');
 
         /*
         $to = $user->getEmail();

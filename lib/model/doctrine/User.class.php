@@ -1505,7 +1505,14 @@ class User extends BaseUser {
 		public function save(Doctrine_Connection $conn = null)	{
 
 		sfContext::getInstance()->getLogger()->err($this->getFechaRegistro());
-		
+
+		$car = Doctrine_Core::getTable('car')->findOneByUserId($this->getId());	
+
+		if ($car)
+		{
+			$this->setPropietario(true);	  
+		}
+			
 	if (!$this->getFechaRegistro())
 	  {
 		$this->setFechaRegistro(date('Y-m-d H:i:s'));
