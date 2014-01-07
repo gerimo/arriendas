@@ -1725,7 +1725,7 @@ class profileActions extends sfActions {
 						die();
                 }
                 
-                $this->getUser()->setFlash('msg', 'Ya hay una reserva confirmada para ese horario');
+                $this->getUser()->setFlash('msg', 'Ya hay un pedido de reserva para ese mismo auto en la misma fecha y horario');
                 $this->getRequest()->setParameter('carid', $carid);
                 $this->getRequest()->setParameter('idreserve', $reserve_id);
                 

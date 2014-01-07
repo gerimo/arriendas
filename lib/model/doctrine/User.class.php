@@ -1506,12 +1506,6 @@ class User extends BaseUser {
 
 		sfContext::getInstance()->getLogger()->err($this->getFechaRegistro());
 
-		$car = Doctrine_Core::getTable('car')->findOneByUserId($this->getId());	
-
-		if ($car)
-		{
-			$this->setPropietario(true);	  
-		}
 			
 	if (!$this->getFechaRegistro())
 	  {

@@ -95,9 +95,9 @@ class Email{
 		
 		$recipients = strtolower($this->to.", ".$this->bcc);
 
-		sfContext::getInstance()->getLogger()->info('$recipients '.$recipients);
-		sfContext::getInstance()->getLogger()->info('$headers '.$headers);
-		sfContext::getInstance()->getLogger()->info('$body '.$body);
+//		sfContext::getInstance()->getLogger()->info('$recipients '.$recipients);
+//		sfContext::getInstance()->getLogger()->info('$headers '.$headers);
+//		sfContext::getInstance()->getLogger()->info('$body '.$body);
 
 		
         if($smtp->send($recipients, $headers, $body)){
