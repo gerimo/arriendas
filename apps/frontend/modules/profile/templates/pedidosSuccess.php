@@ -2,7 +2,7 @@
 <?php use_stylesheet('registro.css') ?>
 <?php use_stylesheet('mis_arriendos.css') ?>
 <?php use_stylesheet('comunes.css') ?>
-<?php use_javascript('pedidos.js?v=26122013') ?>
+<?php use_javascript('pedidos.js?v=08012013') ?>
 <?php use_stylesheet('cupertino/jquery-ui.css') ?>
 <?php
 $useragent=$_SERVER['HTTP_USER_AGENT'];
