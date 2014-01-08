@@ -302,9 +302,15 @@ class profileActions extends sfActions {
         //$idReserve = 663;
 
         $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+        $car = Doctrine_Core::getTable('car')->findOneById($reserve->getCarId());
 
         if($accion == 'preaprobar'){
             //echo "pre aprobar";
+			if($car->getSeguroOk() !=4 ){
+				echo "error:seguro4" ;
+                die();
+			};
+					
             $reserve->setConfirmed(1);
             $reserve->setCanceled(0);
             $reserve->setFechaConfirmacion($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
@@ -1547,16 +1553,14 @@ class profileActions extends sfActions {
 						};
 					
                 //END comprueba que no haya una reserva PAGA para la fecha y hora señalada, al mismo auto, a cualquier usuario			
-
-
-				
+		
                 //comprueba que no haya una reserva vigente(fecha mayor a la actual) para la fecha y hora señalada, al mismo auto, al mismo usuario
                 $reservas = Doctrine_Core::getTable("reserve")->findByUserId($idUsuario);
                 $reservaPrevia = false;
 
-//                foreach ($reservas as $reserva) {
+                foreach ($reservas as $reserva) {
 //                    //comprueba que sea el mismo auto
-//                    if($carid == $reserva->getCarId()){
+                    if($carid == $reserva->getCarId() && $startDate == $reserva->getDate() && $durationReserva == $reserva->getDuration()){
 //
 //                        //comprueba que la reserva no esté eliminada o cancelada
 //                        if(!$reserva->getCanceled()){
@@ -1579,13 +1583,13 @@ class profileActions extends sfActions {
 
        //                         $date = $date+$duration*3600;
        //                         if($date>=$dateInicio && $date<=$dateFin){
-       //                             $reservaPrevia = true;
+                                    $reservaPrevia = true;
         //                        }
           //                  }
             //            }
 
-              //      }
-               // }
+                    }
+                }
 
                 if(!$reservaPrevia){
 

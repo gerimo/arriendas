@@ -167,7 +167,7 @@ $(document).on('ready',function(){
         }
         //$('.informeDanios').attr('href','http://www.arriendas.cl/main/generarReporte/idAuto/'+idCar);
         //$('.informeDanios').attr('href','http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/idReserve/'+id);
-        $('.informeDanios').attr('href','http://arriendas.cl/frontend_dev.php/main/generarReporteDanios/idAuto/'+idCar);
+        $('.informeDanios').attr('href','http://arriendas.cl/main/generarReporteDanios/idAuto/'+idCar);
 
 
 		if(accion != 'none'){
@@ -801,9 +801,13 @@ function cambiarEstado(id,accion){
 		}
 	}).done(function(data){
 		//alert(data)
-		$('#bloque_'+id+' .eventoReserva .der .cargando').hide();
-		cambiarImgEstado(id,accion);
 
+		$('#bloque_'+id+' .eventoReserva .der .cargando').hide();
+		if (data=='error:seguro4'){
+			alert("Tu auto se encuentra en proceso de verificación para recibir un seguro. Si todavía no has recibido al inspector, contáctate cuanto antes a soporte@arriendas.cl para solicitar su visita.");
+		}else{
+			cambiarImgEstado(id,accion);
+		};
 		//recarga la página
 		if(accion == 'preaprobar'){
 		//	window.location.href = urlPedidos;

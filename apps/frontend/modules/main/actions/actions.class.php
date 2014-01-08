@@ -2498,7 +2498,7 @@ El equipo de Arriendas.cl
 
     public function executeUploadLicence(sfWebRequest $request) {
 
-        $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
+//        $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
 
         if (isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST") {
             $name = $_FILES[$request->getParameter('file')]['name'];
@@ -2506,8 +2506,10 @@ El equipo de Arriendas.cl
 			$tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
             if (strlen($name)) {
                 list($txt, $ext) = explode(".", $name);
-                if (in_array($ext, $valid_formats) || 1==1) {
-                    if ($size < (5 * 1024 * 1024)) { // Image size max 1 MB
+//                if (in_array($ext, $valid_formats) || 1==1) {
+                if (1==1) {
+					if (1==1) {
+                    //if ($size < (5 * 1024 * 1024)) { // Image size max 1 MB
                     
                         $sizewh = getimagesize($tmp);
 						//echo($sizewh[1]);
