@@ -159,15 +159,10 @@ a{text-decoration:none;}
 </style>
 
 <style>
-    input[type=text], input[type=password]{
-        border: 1px solid #CECECE;
-        background-color: white;
-        width: 256px;
-        height: 30px;
-        -webkit-border-radius: 10px;
-        -moz-border-radius: 10px;
-        border-radius: 10px;
-        padding-left: 10px;
+    input[type=password]{
+        width: 150px;
+        height: 32px;
+        padding-left: 42px;
     }
     .c1 label { 
         display:table; 
@@ -227,6 +222,9 @@ a{text-decoration:none;}
 
 
     .ui-widget { font-family: Lucida Grande, Lucida Sans, Arial, sans-serif; font-size: 0.8em; }
+    textarea[placeholder]{
+        font-style: italic;
+    }
 </style>
 
 
@@ -595,52 +593,63 @@ function restarHoras(hora_desde, hora_hasta) {
                 <p><?php if(count($reserve) > 0) echo "EXTENDER"; else echo "REALIZAR";?> RESERVA</p>
             </div>
 
-            <div class="regis_formulario">  
+            <div class="regis_formulario" style="margin-top: 10px;">  
 
                 <div class="calen_box_3">
-                    <div style="padding-top:20px; padding-left:20px;font-size:12px;width:505px;">
+                    <div style="padding-left:10px;font-size:12px;width:505px;">
 
                         <?php echo form_tag('profile/doReserve', array('method' => 'post', 'id' => 'frm1')); ?>	
 
-						<?php if( $sf_user->getFlash('msg') ): ?>
-                        <span class="mensaje_alerta"><?php echo html_entity_decode($sf_user->getFlash('msg')); ?></span>
-						<?php endif;?>
-						
+						<?php //if( $sf_user->getFlash('msg') ): ?>
+                        <!-- <span class="mensaje_alerta"><?php //echo html_entity_decode($sf_user->getFlash('msg')); ?></span>-->
+						<?php //endif;?>
+                        <div id="titleReserve"><label><span>AGENDAR Y RESERVAR</span> (<?php echo strtoupper($car->getModel()->getBrand());?>, <?php echo strtoupper($car->getModel());?>)</label></div>
 						<?php if(count($reserve) > 0) {?>
-						<?php foreach ($reserve as $r) { ?>
-                        <div class="c1 height">
-                            <label>Desde</label>
-                            <input id="datefrom" name="datefrom" type="text" class="datepicker" readonly="readonly" value="<?php echo date('d-m-Y',strtotime($r['fechafin']))?>" /><br/><br/>
-                            <input readonly="readonly" type="text" id="hour_from" name="hour_from" readonly="readonly" value=""/>
-                        </div><!-- /c1 -->
-                        <?php } ?>
+    						<?php foreach ($reserve as $r) { ?>
+                            <div class="c3" style="margin-left:18px;">
+                            <label>DESDE <span>*</span></label>
+                            <div class="lineL" style="top:119px;"></div>
+                            <div class="lineL" style="top:165px;"></div>
+                                <input id="datefrom" name="datefrom" type="text" class="datepicker calendar" readonly="readonly" value="<?php echo date('d-m-Y',strtotime($r['fechafin']))?>" /><br/><br/>
+                                <input readonly="readonly" type="text" id="hour_from" class="hora_calendar" name="hour_from" readonly="readonly" value=""/>
+                            </div>
+                            <?php } ?>
 						<?php } else {?>
                         <!-- muestra la última fecha ingresada vigente, si es que existe -->
                         <?php
                         //echo $ultimaFechaValida." ".$ultimaHoraValida;
                         ?>
-                        <div class="c1 height">
-                            <label>Desde</label>
-                            <input id="datefrom" name="datefrom" type="text" class="datepicker" readonly="readonly" value="<?php if(isset($ultimaFechaValidaDesde)) echo $ultimaFechaValidaDesde; else echo "Día de inicio";?>" /><br/><br/>
-                            <input readonly="readonly" type="text" id="hour_from" name="hour_from" readonly="readonly" value="<?php if(isset($ultimaHoraValidaDesde)) echo date("g:i A", strtotime($ultimaHoraValidaDesde)); else echo "Hora de inicio"; ?>"/>
-                        </div><!-- /c1 -->
+                        <div class="c3" style="margin-left:18px;">
+                        <label>DESDE <span>*</span></label>
+                        <div class="lineL" style="top:119px;"></div>
+                        <div class="lineL" style="top:165px;"></div>
+                            <input id="datefrom" name="datefrom" type="text" class="datepicker calendar" readonly="readonly" value="<?php if(isset($ultimaFechaValidaDesde)) echo $ultimaFechaValidaDesde; else echo "Día de inicio";?>" /><br/><br/>
+                            <input readonly="readonly" type="text" id="hour_from" class="hora_calendar" name="hour_from" readonly="readonly" value="<?php if(isset($ultimaHoraValidaDesde)) echo date("g:i A", strtotime($ultimaHoraValidaDesde)); else echo "Hora de inicio"; ?>"/>
+                        </div>
 						<?php } ?>
 
-                        <div class="c1 height">
-                            <label>Hasta</label>
-                            <input id="dateto" name="dateto" type="text" class="datepicker" readonly="readonly" value="<?php if(isset($ultimaFechaValidaHasta)) echo $ultimaFechaValidaHasta; else echo "Día de entrega";?>"/><br/><br/>
-                            <input readonly="readonly" type="text" id="hour_to" name="hour_to" value="<?php if(isset($ultimaHoraValidaHasta)) echo date("g:i A", strtotime($ultimaHoraValidaHasta)); else echo "Hora de entrega"; ?>" />
-                        </div><!-- /c1 -->
+                        <div class="c3">
+                            <label>HASTA <span>*</span></label>
+                            <div class="lineR" style="top:119px;"></div>
+                            <div class="lineR" style="top:165px;"></div>
+                            <input id="dateto" name="dateto" type="text" class="datepicker calendar" readonly="readonly" value="<?php if(isset($ultimaFechaValidaHasta)) echo $ultimaFechaValidaHasta; else echo "Día de entrega";?>"/><br/><br/>
+                            <input readonly="readonly" type="text" id="hour_to" class="hora_calendar" name="hour_to" value="<?php if(isset($ultimaHoraValidaHasta)) echo date("g:i A", strtotime($ultimaHoraValidaHasta)); else echo "Hora de entrega"; ?>" />
+                        </div>
+                        <div class="lineaBoxSeleccion"></div>
 			
-                        <div class="c1 height" style="width:256px;">
-                            <label>Valor de la Reserva</label>
-                			    <label id="valor_reserva">$0</label>
-                                            <!--
-                			    <input id="dateto" name="dateto" type="text" class="datepicker" readonly="readonly" value="Día de entrega"/><br/><br/>
-                                            <input readonly="readonly" type="text" id="hour_to" name="hour_to" value="Hora de entrega" />
-			                     -->
-			             </div><!-- /c1 -->
-						
+                        <div class="c4">
+                            <label id="valor_reserva">$0</label>
+                            <label>VALOR</label>
+			            </div><!-- /c1 -->
+                        
+                        <div id="boxKmsUtilizados">
+                            <label>Ingresa los kilómetros estimados que vas a utilizar <span>*</span></label><input type="text" name="kmsUtilizados" class="inputKmsUtilizados" />
+                        </div>						
+                        <div id="boxUsoDelAuto">
+                            <label>¿Para qué vas a utilizar el auto?</label>
+                            <textarea name="usoDelAuto" class="inputUsoDelAuto" placeholder="Responder esto aumenta la velocidad de respuesta y tu porcentaje de aprobación."></textarea> 
+                        </div>   
+
                         <!--
 						<div class="c1 height"><label><input type="checkbox" name="chkcontrato" id="chkcontrato" value="1" style="width: auto; height: auto;"> Declaro estar de acuerdo con los terminos del <a href="contratopdf" id="generatepdf">Contrato</a> asociado a los servicios de Arriendas.cl.</label></div>
                         -->
@@ -657,8 +666,11 @@ function restarHoras(hora_desde, hora_hasta) {
 
                         <div class="clear"></div>
 
-                        <input type="submit" value="Confirmar" class="btnAmarillo">
-
+                        <!-- <input type="submit" value="Confirmar" class="btnAmarillo">-->
+                        <button id="btnConfirmarReserva" type="submit"></button>
+                        <div class="boxCamposObligatorios">
+                            <span>*</span> <p>Campos obligatorios</p>
+                        </div>
                         </form>  
 
                     </div>

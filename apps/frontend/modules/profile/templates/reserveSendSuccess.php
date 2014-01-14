@@ -5,11 +5,22 @@
 width:100%;
 margin:20px;
 }
-
-
 </style>
+<script type="text/javascript">
+	function generarBarraEstrellas(num){
+        var gris = "<?php echo image_path('img_search/EstrellaGris.png'); ?>";
+        var rosa = "<?php echo image_path('img_search/EstrellaRosada'); ?>";
 
+        var cadena = "";
+        for(var i=0;i<5;i++){
+            if(num>0) cadena = cadena +'<img width="10px" height="9px" style="margin-right: 4px;" src="'+rosa+'" />';
+            else cadena = cadena +'<img width="10px" height="9px" style="margin-right: 4px;" src="'+gris+'" />';
 
+            num--;
+        }
+        return cadena;
+    }
+</script>
 <div class="main_box_1">
 <div class="main_box_2">
 
@@ -22,9 +33,62 @@ margin:20px;
 	<p>RESERVA ENVIADA</p>
 </div>
 
-<div style="border:1px solid #00FF00; background: #97F79A; width:435px; display:table;margin:auto;margin-top:20px; padding:20px;font-size:14px;">
+<div id="contenedorMsjReserveSend">
 	<?php echo html_entity_decode($sf_user->getFlash('msg')); ?>
 </div>
+
+<div id="contenedorTitleReservas">
+	<div id="titleMasReservas">RECOMENDACIONES PARA MÚLTIPLES RESERVAS</div>
+	<div id="periodoReserva"><?php echo $reserveDateFrom." a ".$reserveDateTo;?></div>
+</div>
+
+<div id="contenedorRecomenderCarsR">
+	<form>
+	<?php $i = 1; ?>
+	<?php foreach ($cars as $c): ?>
+	    <div class="div_car_recomenderR" id="<?=$c["id"]; ?>">
+	        <div class="marcador_car_recomenderR">
+	        	<input class= "marcadorR" type="checkbox" name="carRecomender" value="car_<?=$c["id"]; ?>" />
+	        </div>
+	        <div class="photo_car_recomenderR">
+	            <?php   if ($c["photo"] != NULL){ 
+	                        if($c["photoType"] == 1) {
+	            ?> 
+	                            <img class="photoR" width="84px" height="64px" src="<?php echo url_for('main/s3thumb').'?alto=64&ancho=64&urlFoto='.urlencode($c['photo']) ?>"/>
+	                        <?php }else{ ?>
+	                            <img class="photoR" width="84px" height="64px" src="<?php echo image_path('../uploads/cars/thumbs/'.urlencode($c['photo'])); ?>"/>
+
+	            <?php       }
+	                    }else{ ?>
+	                <?= image_tag('default.png', 'size=84x64', 'class=photoR') ?>  
+	            <?php } ?>
+
+	        </div><!-- search_arecomend_frame -->
+
+	        <ul class="info_car_recomenderR">
+	            <input type="hidden" class="linkR" value="<?php echo url_for('auto/economico?chile='.$c["comuna"] .'?id=' . $c["id"]) ?>"/>
+	            <li class="marca_modeloR"><?= '<a target="_blank" title="Ir al perfil del auto" href="'.url_for('auto/economico?chile=' . $c["comuna"].'&id='. $c["id"]).'">';?><?= $c["brand"] ?>, <?= $c["model"] ?> </a>
+	            </li>
+	            <li class="starsR">
+	            <script type="text/javascript">
+	            var numStars = Math.floor((Math.random()*5)+1); //función temporal
+	            document.write(generarBarraEstrellas(numStars));
+	            </script>
+	            </li>
+	            <li class="direccionR"><?= ucwords(strtolower($c["comuna"])).", Santiago"; ?></li>
+	        </ul>
+	        <ul class="valor_car_recomenderR">
+	        	<li class="valorR">$30.000</li>
+	        	<li class="tiempoAseguradoR">(1 día y 5 horas asegurado)</li>
+	        </ul>
+	    </div>
+	    <?php $i++; ?>
+	<?php endforeach; ?>
+</form><!--fin formulario-->
+<button id="btnVerMasAutosR" title="Ver más autos disponibles"></button>
+<button id="btnReservarTodosR" title="Reservar todos los autos"></button>
+</div><!-- fin contenedorRecomenderCars -->
+
 
 </div><!-- main_contenido -->
 
@@ -55,4 +119,22 @@ var google_conversion_value = 0;
 <div class="clear"></div>
 </div><!-- main_box_1 -->
 
+<script type="text/javascript">
+	
+function generarBarraEstrellas(num){
+    var gris = "<?php echo image_path('img_search/EstrellaGris.png'); ?>";
+    var rosa = "<?php echo image_path('img_search/EstrellaRosada'); ?>";
+
+    var cadena = "";
+    for(var i=0;i<5;i++){
+        if(num>0) cadena = cadena +'<img width="10px" height="9px" src="'+rosa+'" />';
+        else cadena = cadena +'<img width="10px" height="9px" src="'+gris+'" />';
+
+        num--;
+    }
+    return cadena;
+}
+
+
+</script>
 
