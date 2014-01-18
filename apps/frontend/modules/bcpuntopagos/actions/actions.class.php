@@ -44,7 +44,7 @@ class bcpuntopagosActions extends sfActions
   	$this->montoDeposito = 0;
   	if($this->deposito == "depositoGarantia"){
 		//$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(2);
-		$this->montoDeposito = 122330;
+		$this->montoDeposito = 180000;
   		$this->enviarCorreoTransferenciaBancaria();
   	}else if($this->deposito == "pagoPorDia"){
 		//$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(1);
