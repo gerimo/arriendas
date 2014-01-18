@@ -353,19 +353,29 @@ class profileActions extends sfActions {
             $this->executeConfirmReserve($idReserve);
 
             //envía mail de preaprobación al arrendatario
-            require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
+//            require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
             //al arrendatario
             $mail = new Email();
-            $mail->setSubject('Se ha aprobado tu reserva! (Falta pagar)');
-            $mail->setBody("<p>Hola $nameRenter:</p><p>Se ha aprobado tu reserva!</p><p>Para acceder a los datos entrega del vehículo debes pagar $$precio.- CLP.</p><p>Si tu arriendo no se concreta, Arriendas.cl no le pagará al dueño del auto y te daremos un auto a elección.</p><p>Has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a> para pagar.</p><p><a href='http://www.arriendas.cl/main/generarReporte/idAuto/$idCar'>Datos del arriendo</a><br><a href='http://www.arriendas.cl/api.php/contrato/generarContrato/tokenReserva/$tokenReserve'>Ver contrato</a></p>");
-            $mail->setTo($correoRenter);
-            echo $mail->submit();
+            $mailer = $mail->getMailer();
 
-            $mail = new Email();
-            $mail->setSubject('Se ha aprobado una reserva');
-            $mail->setBody("<p>Dueño: $nameOwner $lastName ($telephone) - $correoOwner</p><p>Arrendatario: $nameRenter $lastNameRenter ($telephoneRenter) - $correoRenter</p><p>Precio: $precio</p>");
-            $mail->setTo('soporte@arriendas.cl');
-            echo $mail->submit();
+            $message = $mail->getMessage();
+            $message->setSubject('Se ha aprobado tu reserva! (Falta pagar)');
+            $body = '<p>Hola '.$nameRenter.':</p><p>Se ha aprobado tu reserva!</p><p>Para acceder a los datos entrega del vehículo debes pagar 1000.- CLP.</p><p>Si tu arriendo no se concreta, Arriendas.cl no le pagará al dueño del auto y te daremos un auto a elección.</p><p>Has click <a href="http://www.arriendas.cl/profile/pedidos">aquí</a> para pagar.</p><p>Los datos del arriendo y el contrato se encuentran adjuntos en formato PDF.</p>';
+            $message->setBody($mail->addFooter($body), 'text/html');
+            $message->setTo($correoRenter);
+            $functions = new Functions;
+            $contrato = $functions->generarContrato($tokenReserve);
+            $reporte = $functions->generarReporte($idCar, true);
+            $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+            $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+            $mailer->send($message);
+            
+            $message = $mail->getMessage();
+            $message->setSubject('Se ha aprobado una reserva');
+            $body = "<p>Dueño: $nameOwner $lastName ($telephone) - $correoOwner</p><p>Arrendatario: $nameRenter $lastNameRenter ($telephoneRenter) - $correoRenter</p><p>Precio: $precio</p>";
+            $message->setBody($mail->addFooter($body), 'text/html');
+            $message->setTo('soporte@arriendas.cl');
+            $mailer->send($message);
 
             if($reserve->getConfirmedSMSRenter()==1){
                 $texto = "Se ha aprobado tu reserva! Debes pagar en Arriendas.cl - Si tu arriendo no se concreta, no le pagaremos al propietario del auto y te daremos un auto a eleccion";
@@ -373,16 +383,42 @@ class profileActions extends sfActions {
             }
 
             //al propietario
-            $mail2 = new Email();
-            $mail2->setSubject('Has aprobado una reserva!');
-            $mail2->setBody("<p>Hola $nameOwner:</p><p>Has aprobado una reserva!</p><p>Recuerda que puedes aprobar varios pedidos de reserva para la misma fecha. El primer arrendatario que pague, ganará el arriendo.</p><p>El contrato de arriendo se emitirá una vez que el arrendatario haya pagado. <a href='http://www.arriendas.cl/api.php/contrato/generarContrato/tokenReserva/$tokenReserve'>Esta es la versión preliminar</a>.</p><p>Su pago se te informará por este medio y verás el cambio en la pestaña 'Reservas' del sitio.</p>");
-            $mail2->setTo($correoOwner);
-            echo $mail2->submit();
+            $message = $mail->getMessage();
+            $message->setSubject('Has aprobado una reserva!');
+            $body = "<p>Hola $nameOwner:</p><p>Has aprobado una reserva!</p><p>Recuerda que puedes aprobar varios pedidos de reserva para la misma fecha. El primer arrendatario que pague, ganará el arriendo.</p><p>El contrato de arriendo se emitirá una vez que el arrendatario haya pagado. La versión preliminar se encuentra adjunta en formato PDF.</p><p>Su pago se te informará por este medio y verás el cambio en la pestaña 'Reservas' del sitio.</p>";
+            $message->setBody($mail->addFooter($body), 'text/html');
+            $message->setTo($correoOwner);
+            $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+            $mailer->send($message);
         }
 
         die();
     }
 
+    public function executeTestMail(sfWebRequest $request)
+    {
+        $mail = new Email();
+        $mailer = $mail->getMailer();
+        $message = $mail->getMessage();
+        $message->setSubject('El arrendatario ha pagado la reserva!');
+        $body = "<p>Hola $nameOwner:</p><p>El arrendatario ha pagado la reserva!</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>Puedes llenar el formulario <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/$idReserve'>desde tu celular</a>.</p><p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameRenter $lastnameRenter<br>Teléfono: $telephoneRenter<br>Correo: $emailRenter</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
+        $message->setBody($mail->addFooter($body), 'text/html');
+        $message->setTo('ikleiman@uc.cl');
+        $functions = new Functions;
+        $formulario = $functions->generarFormulario(NULL, '0ae0444ab5971b18c22f576f55b027f3d7debd98');
+        $reporte = $functions->generarReporte('221');
+        $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
+        $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+        $mailer->send($message);
+
+        //$mail->setSubject('Se ha aprobado tu reserva! (Falta pagar)');
+        //$mail->setBody("<p>Hola ivan:</p><p>El arrendatario ha pagado la reserva!</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>Puedes llenar el formulario <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/$idReserve'>desde tu celular</a> o puedes firmar la <a href='http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/tokenReserve/$tokenReserve'>versión impresa</a>.</p><p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameRenter $lastnameRenter<br>Teléfono: $telephoneRenter<br>Correo: $emailRenter</p><p>Los datos del arriendo se encuentran adjuntos en formato PDF.</p>");
+        //$mail->setBody('<p>Hola ivan:</p><p>Se ha aprobado tu reserva!</p><p>Para acceder a los datos entrega del vehículo debes pagar 1000.- CLP.</p><p>Si tu arriendo no se concreta, Arriendas.cl no le pagará al dueño del auto y te daremos un auto a elección.</p><p>Has click <a href="http://www.arriendas.cl/profile/pedidos">aquí</a> para pagar.</p><p><a href="http://www.arriendas.cl/main/generarReporte/idAuto/">Datos del arriendo</a><br>El contrato se encuentra adjunto en formato PDF.</p>', 'text/html');
+
+        //$contrato = $functions->generarContrato('0ae0444ab5971b18c22f576f55b027f3d7debd98');
+
+    }
+    
     public function enviarSMS($telefono,$texto){
 
         if(substr($telefono,0,1)=="0") {
@@ -1553,7 +1589,7 @@ class profileActions extends sfActions {
 						};
 					
                 //END comprueba que no haya una reserva PAGA para la fecha y hora señalada, al mismo auto, a cualquier usuario			
-		
+
                 //comprueba que no haya una reserva vigente(fecha mayor a la actual) para la fecha y hora señalada, al mismo auto, al mismo usuario
                 $reservas = Doctrine_Core::getTable("reserve")->findByUserId($idUsuario);
                 $reservaPrevia = false;
@@ -1729,7 +1765,7 @@ class profileActions extends sfActions {
 						die();
                 }
                 
-                $this->getUser()->setFlash('msg', 'Ya has emitido un pedido de reserva para ese mismo auto en la misma fecha y horario');
+                $this->getUser()->setFlash('msg', 'Ya hay un pedido de reserva para ese mismo auto en la misma fecha y horario');
                 $this->getRequest()->setParameter('carid', $carid);
                 $this->getRequest()->setParameter('idreserve', $reserve_id);
                 
@@ -2563,7 +2599,7 @@ public function executeAgreePdf2(sfWebRequest $request)
                 $this->montoDiaUnico = 5800;
                 //$depo = Doctrine_Core::getTable("liberacionDeposito")->findById(2);
                 //$this->garantia = $depo[0]['monto'];
-                $this->garantia = 180000;
+                $this->garantia = 122330;
 
                 $idArrendatario = $this->reserve->getUserId();
                 $arrendatario = Doctrine_Core::getTable('user')->find($idArrendatario);
@@ -2619,13 +2655,13 @@ public function executeAgreePdf2(sfWebRequest $request)
                 $this->montoDiaUnico = 5800;
                 //$depo = Doctrine_Core::getTable("liberacionDeposito")->findById(2);
                 //$this->garantia = $depo[0]['monto'];
-                $this->garantia = 180000;
+                $this->garantia = 122330;
 
 				$this->deposito = $request->getParameter("deposito");
 				$this->montoDeposito = 0;
 				if($this->deposito == "depositoGarantia"){
 					//$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(2);
-					$this->montoDeposito = 180000;
+					$this->montoDeposito = 122330;
 					$this->enviarCorreoTransferenciaBancaria();
 				}else if($this->deposito == "pagoPorDia"){
 					//$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(1);
@@ -4721,4 +4757,3 @@ public function executeSubeTuAuto(sfWebRequest $request) {
 }
     
 }
-
