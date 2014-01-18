@@ -1729,7 +1729,7 @@ class profileActions extends sfActions {
 						die();
                 }
                 
-                $this->getUser()->setFlash('msg', 'Ya hay un pedido de reserva para ese mismo auto en la misma fecha y horario');
+                $this->getUser()->setFlash('msg', 'Ya has emitido un pedido de reserva para ese mismo auto en la misma fecha y horario');
                 $this->getRequest()->setParameter('carid', $carid);
                 $this->getRequest()->setParameter('idreserve', $reserve_id);
                 
@@ -2563,7 +2563,7 @@ public function executeAgreePdf2(sfWebRequest $request)
                 $this->montoDiaUnico = 5800;
                 //$depo = Doctrine_Core::getTable("liberacionDeposito")->findById(2);
                 //$this->garantia = $depo[0]['monto'];
-                $this->garantia = 122330;
+                $this->garantia = 180000;
 
                 $idArrendatario = $this->reserve->getUserId();
                 $arrendatario = Doctrine_Core::getTable('user')->find($idArrendatario);
@@ -2619,13 +2619,13 @@ public function executeAgreePdf2(sfWebRequest $request)
                 $this->montoDiaUnico = 5800;
                 //$depo = Doctrine_Core::getTable("liberacionDeposito")->findById(2);
                 //$this->garantia = $depo[0]['monto'];
-                $this->garantia = 122330;
+                $this->garantia = 180000;
 
 				$this->deposito = $request->getParameter("deposito");
 				$this->montoDeposito = 0;
 				if($this->deposito == "depositoGarantia"){
 					//$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(2);
-					$this->montoDeposito = 122330;
+					$this->montoDeposito = 180000;
 					$this->enviarCorreoTransferenciaBancaria();
 				}else if($this->deposito == "pagoPorDia"){
 					//$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(1);

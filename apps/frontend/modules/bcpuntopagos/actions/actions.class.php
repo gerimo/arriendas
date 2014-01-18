@@ -25,7 +25,7 @@ class bcpuntopagosActions extends sfActions
     require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
     $mail = new Email();
     $mail->setSubject('Realizar Depósito en Garantía');
-    $mail->setBody("<p>Hola $name</p><p>Realiza el depósito en garantía por transferecia bancaria:</p><p><ul><li><b>Banco BCI</b></li><li>Cuenta Corriente: <b>70107459</b></li><li>Rut: <b>76208249-7</b></li><li><b>Rimoldi SPA</b></li><li><b>soporte@arriendas.cl</b></li></ul></p>");
+    $mail->setBody("<p>Hola $name</p><p>Realiza el depósito en garantía de <b>$180.000</b> por transferecia bancaria:</p><p><ul><li><b>Banco BCI</b></li><li>Cuenta Corriente: <b>70107459</b></li><li>Rut: <b>76208249-7</b></li><li><b>Rimoldi SPA</b></li><li><b>soporte@arriendas.cl</b></li></ul></p>");
     $mail->setTo($correo);
     $mail->setCc('soporte@arriendas.cl');
     $mail->submit();
@@ -44,7 +44,7 @@ class bcpuntopagosActions extends sfActions
   	$this->montoDeposito = 0;
   	if($this->deposito == "depositoGarantia"){
 		//$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(2);
-		$this->montoDeposito = 122330;
+		$this->montoDeposito = 180000;
   		$this->enviarCorreoTransferenciaBancaria();
   	}else if($this->deposito == "pagoPorDia"){
 		//$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(1);

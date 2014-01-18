@@ -318,7 +318,7 @@
             <?php endif; ?>
 
                 <div id="eleccionDeposito">
-                    <div class="titulo">Deducible <?=number_format($garantia, 0, ',', '.');?> UF y Depósito en Garantía</div>
+                    <div class="titulo">Deducible <b><?=number_format($garantia, 0, ',', '.');?></b> UF y Depósito en Garantía</div>
                         <div id="eleccion1"><div class="selector"><input type="radio" name="deposito" value="depositoGarantia"></div><p>"Realizaré el Depósito en Garantía por <span><?=number_format($garantia, 0, ',', '.');?> CLP</span> Mediante Transferencia" (Este será devuelto en caso de que no se registren Daños)</p>
                         </div>
                         <div id="eleccion2"><div class="selector"><input type="radio" name="deposito" value="pagoPorDia"></div><p>"Pagaré <span><?=number_format($monto, 0, ',', '.');?> CLP</span> por Eliminar el Depósito en Garantía y Reducir el deducible a una 1UF (<span><?=number_format($monto, 0, ',', '.');?> CLP</span> por día adicional)."</p>
