@@ -93,8 +93,13 @@ class Email{
 					    'username' => $this->username,
 					    'password' => $this->password));
 		
-		$recipients = $this->to.", ".$this->bcc;
+		$recipients = strtolower($this->to.", ".$this->bcc);
 
+//		sfContext::getInstance()->getLogger()->info('$recipients '.$recipients);
+//		sfContext::getInstance()->getLogger()->info('$headers '.$headers);
+//		sfContext::getInstance()->getLogger()->info('$body '.$body);
+
+		
         if($smtp->send($recipients, $headers, $body)){
         	return true;
         }else{
@@ -102,7 +107,29 @@ class Email{
         }  
 
 	}
+        
+        public function getMailer()
+        {
+            $transport = Swift_SmtpTransport::newInstance('smtp.sendgrid.net', 465, 'ssl')
+            ->setUsername('german@arriendas.cl')
+             ->setPassword('Holahello00@');
+            $mailer = Swift_Mailer::newInstance($transport);
+            
+            return $mailer;
+        }
+        
+        public function getMessage()
+        {
+            $mail = Swift_Message::newInstance();
+            $mail->setContentType('text/html');
+            $mail->setFrom(array('soporte@arriendas.cl' => 'Soporte Arriendas'));
 
+            return $mail;
+        }
+        
+        public function addFooter($html){
+		return $html."<p><br><br>Gracias,<br>El equipo de <a href='http://www.arriendas.cl'>Arriendas.cl</a></p><p><i>Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</i></p>";
+	}
 }
 
 ?>

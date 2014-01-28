@@ -1,0 +1,207 @@
+@import url(http://fonts.googleapis.com/css?family=Pontano+Sans|Oleo+Script);
+
+	
+	.overlay-container {
+		display: none;
+		content: " ";
+		width: 100%;
+		position: absolute;
+		left: 0;
+		top: 0;
+		background: -moz-radial-gradient(center, ellipse cover,  rgba(127,127,127,0) 0%, rgba(43, 43, 43, 0.9) 100%);
+		background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(127,127,127,0)), color-stop(100%,rgba(43, 43, 43, 0.9)));
+		background: -webkit-radial-gradient(center, ellipse cover,  rgba(127,127,127,0) 0%,rgba(43, 43, 43, 0.9) 100%);
+		background: -o-radial-gradient(center, ellipse cover,  rgba(127,127,127,0) 0%,rgba(43, 43, 43, 0.9) 100%);
+		background: -ms-radial-gradient(center, ellipse cover,  rgba(127,127,127,0) 0%,rgba(43, 43, 43, 0.9) 100%);
+		background: radial-gradient(center, ellipse cover,  rgba(127,127,127,0) 0%,rgba(43, 43, 43, 0.9) 100%);
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#007f7f7f', endColorstr='#e67f7f7f',GradientType=1 );
+	}
+	
+	.window-container {
+		display: block;
+		background: #fcfcfc;
+		margin: 8em auto;
+		width: 500px;
+		padding: 10px 20px 20px;
+		text-align: left;
+		z-index: 3;
+		box-shadow: 0px 0px 30px rgba(0,0,0,0.2);
+		-webkit-transition: 0.4s ease-out;
+		-moz-transition: 0.4s ease-out;
+		-ms-transition: 0.4s ease-out;
+		-o-transition: 0.4s ease-out;
+		transition: 0.4s ease-out;
+		opacity: 0;
+	}
+	
+	.zoomin {
+		-webkit-transform:  scale(1.2);
+		-moz-transform:  scale(1.2);
+		-ms-transform:  scale(1.2);
+		transform:  scale(1.2);
+	}
+	
+	.window-container-visible {
+		opacity: 1;
+	}
+		
+		span.close {
+			float: right;
+			font-size: 28px;
+			cursor: pointer;
+			margin-right: -12px;
+			margin-top: -6px;
+		}
+
+		.contenedorPopup{
+			min-height: 380px;
+			height: auto;
+			width: 380px;
+			margin-left: 58px;
+		}
+		.titlePopup{
+			color: #ec008c;
+			font-size: 13px;
+			font-weight: bold;
+			margin-top: 15px;
+		}
+		.detallesPopup{
+			font-size: 11px;
+			margin-top: 20px;
+			font-weight: bold;
+		}
+			.datosDetalles{
+				background-color: #d7d7d7;
+				margin-top: 5px;
+				font-size: 10px;
+				font-weight: normal;
+				width: 380px;
+				height: 20px;
+				padding-top: 10px;
+			}
+				.datosDetalles .nombre{
+					width: 150px;
+					height: 20px;
+					float: left;
+					margin-left: 6px;
+				}
+				.datosDetalles .nombre span{
+					border-bottom: 1px solid black;
+				}
+				.datosDetalles .rut{
+					width: 90px;
+					height: 20px;
+					float: left;
+					text-align: center;
+				}
+				.datosDetalles .comuna{
+					width: 125px;
+					height: 20px;
+					float: left;
+					text-align: right;
+				}
+		.kmsPopup{
+			margin-top: 20px;
+			height: 30px;
+		}
+			.kmsPopup p{
+				float: left;
+				font-size: 11px;
+				font-weight: bold;
+			}
+			.kilometros{
+				float: left;
+				margin-left: 5px;
+			}
+			.kilometros span{
+				background-color: black;
+				-webkit-border-radius: 20px;
+				-moz-border-radius: 20px;
+				border-radius: 20px;
+				margin-left: 4px;
+				font-weight: bold;
+				color: white;
+				padding-left: 2px;
+				padding-right: 2px;
+				padding-top: 1px;
+			}
+		.motivosPopup{
+			float: left;
+			margin-top: 10px;
+			min-height: 30px;
+		}
+			.motivosPopup p{
+				float: left;
+				font-size: 10px;
+				line-height: normal;
+			}
+			.motivosPopup span{
+				float: left;
+				font-size: 11px;
+				font-weight: bold;
+				margin-right: 4px;
+				margin-top: -1px;
+			}
+		.arriendoPopup{
+			margin-top: 20px;
+			float: left;
+			padding-bottom: 10px;
+			border-bottom: 1px solid #d7d7d7;
+		}
+			.arriendoPopup p{
+				font-size: 11px;
+				font-weight: bold;
+			}
+			.arriendoPopup .datosArriendo{
+				background-color: #d7d7d7;
+				width: 380px;
+				height: 20px;
+				float: left;
+				font-size: 10px;
+				padding-top: 10px;
+				margin-top: 6px;
+			}
+				.datosArriendo .desde{
+					float: left;
+					margin-left: 5px;
+				}
+				.datosArriendo .hasta{
+					float: right;
+					margin-right: 5px;
+				}
+		.valorPopup{
+			margin-top: 20px;
+			float: right;
+			height: 20px;
+		}
+			.valorPopup p{
+				font-size: 13px;
+				font-weight: bold;
+			}
+			.valorPopup p span.pequeno{
+				font-size: 8px;
+				margin-left: 2px;
+			}
+			.valorPopup p span.celeste{
+				color: #00aef1;
+				margin-left: 4px;
+			}
+		.preaprobarPopup{
+			margin-top: 20px;
+			width: 380px;
+			height: 80px;
+			float: left;
+		}
+			.preaprobarPopup .btn_preAprobar{
+				margin: 0px;
+				border: 0px;
+				padding: 0px;
+				cursor: pointer;
+				background-image: url("../images/img_search/RecomedarTodos.png");
+				background-color: white;
+				width: 190px;
+    			height: 71px;
+    			float: left;
+    			margin-left: 92px;
+				margin-top: -20px;
+			}

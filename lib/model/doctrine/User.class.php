@@ -1505,7 +1505,8 @@ class User extends BaseUser {
 		public function save(Doctrine_Connection $conn = null)	{
 
 		sfContext::getInstance()->getLogger()->err($this->getFechaRegistro());
-		
+
+			
 	if (!$this->getFechaRegistro())
 	  {
 		$this->setFechaRegistro(date('Y-m-d H:i:s'));

@@ -129,8 +129,17 @@ h3 a{
     margin-left: -10px;
     padding: 5px;
     text-align: center;
-    width: 67px;
+    width: 90px;
 }
+    .pagoBoton a.detallereserva{
+        color: #ec008c;
+        text-decoration: none;
+        border-bottom: 1px solid #ec008c;
+        font-size: 8px;
+        margin-top: 8px;
+        position: absolute;
+        margin-left: -31px;
+    }
 
 .eventoReserva {
     float: left;

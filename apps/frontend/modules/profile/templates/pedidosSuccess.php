@@ -2,7 +2,9 @@
 <?php use_stylesheet('registro.css') ?>
 <?php use_stylesheet('mis_arriendos.css') ?>
 <?php use_stylesheet('comunes.css') ?>
-<?php use_javascript('pedidos.js?v=26122013') ?>
+<?php use_stylesheet('popup.css') ?>
+<?php use_javascript('pedidos.js?v=08012013') ?>
+<?php use_javascript('popup.js') ?>
 <?php use_stylesheet('cupertino/jquery-ui.css') ?>
 <?php
 $useragent=$_SERVER['HTTP_USER_AGENT'];
@@ -290,6 +292,7 @@ function generarBarraEstrellas(num){
                         echo"</div>";
                         echo"<div class='pagoBoton'>";
                                 echo "<a href='#'>".image_tag('img_pedidos/BotonPagar.png','class=botonPagar duracion_'.$reserva['duracion'].' id=pagar_'.$reserva['idReserve'])."</a>";
+                                echo "<a href='#'' class='detallereserva' data-type='zoomin'>[DETALLE RESERVA]</a>";
                         echo "</div>";
                     echo"</div>";
 
@@ -798,4 +801,69 @@ function generarBarraEstrellas(num){
 
         <div class="clear"></div>
     </div><!-- main_box_2 -->
+</div>
+
+<?php
+
+
+//TAREA A IMPLEMENTAR:
+// GENERAR EL POPUP DE FORMA DINAMICA PARA CADA RESERVA
+
+// EL POPUP SE PUEDE GENERAR "MAS ARRIBA" EN LA GENERACION DE LISTA DE RESERVAS
+
+//variables
+$numReserva = "8738";
+$nombreArrendatario = "Francisca Cofré";
+$rutArrendatario = "16367816-0";
+$comunaArrendatario = "Las Condes";
+$kms = 40;
+$divKms = generarDivKms($kms);
+$cadenaMotivo = "Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto....";
+$fechaDesde = "19/12/2013";
+$horaDesde = "10:00";
+$fechaHasta = "19/12/2013";
+$horaHasta = "21:00";
+$horasArriendo = 11;
+$valorArriendo = 20000;
+
+
+// funcion generadora del div formato para kilometros aproximados
+function generarDivKms($valor){
+$kmsApp = $valor."";
+$cadenakms = "";
+    for($i=0;$i<5;$i++){
+        if($kmsApp == "") $kmsApp = NULL;
+        if(!is_null($kmsApp)){
+            $cifra = substr($kmsApp, -1, 1); //obtener cifra
+            $cadenakms = "<span>".$cifra."</span>".$cadenakms;
+            $kmsApp = substr($kmsApp,0,-1); //quitar cifra
+        }else{
+            $cadenakms = "<span>0</span>".$cadenakms;
+        }
+    }
+    return $cadenakms;
+}
+
+?>
+
+<!-- VENTANA POPUP -->
+<div class='overlay-container'>
+    <div class='window-container zoomin'>
+        <span title='Cerrar Ventana' class='close'>X</span>
+        <div class='contenedorPopup'>
+            <div class='titlePopup'>DETALLES PETICIÓN DE RESERVA Nº <?=$numReserva;?></div>
+            <div class='detallesPopup'>DETALLE AUTO |</div>
+                <div class='datosDetalles'><div class='nombre'>Nombre: <span><?=$nombreArrendatario;?></span></div><div class='rut'>RUT: <?=$rutArrendatario;?></div><div class='comuna'>Comuna: <?=$comunaArrendatario;?></div></div>
+            <div class='kmsPopup'><p>KMS APRÓX |</p><div class='kilometros'><?=$divKms;?></div></div>
+            <div class='motivosPopup'><p><span>MOTIVO DE ARRIENDO |</span><?=$cadenaMotivo;?></p></div>
+            <div class='arriendoPopup'><p>ARRIENDO |</p>
+                <div class='datosArriendo'>
+                    <div class='desde'>DESDE: <?=$fechaDesde;?> - <?=$horaDesde;?></div>
+                    <div class='hasta'>HASTA: <?=$fechaHasta;?> - <?=$horaHasta;?></div>
+                </div>
+            </div>
+            <div class='valorPopup'><p><?=$horasArriendo;?><span class='pequeno'>HRS</span> = <span class='celeste'>VALOR $<?=$valorArriendo;?></span></p></div>
+            <div class='preaprobarPopup'><button class='btn_preAprobar'></button></div>
+        </div>
+    </div>
 </div>
