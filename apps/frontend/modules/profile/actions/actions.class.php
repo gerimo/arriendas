@@ -294,22 +294,60 @@ class profileActions extends sfActions {
         die();
     }
 
+    public function executeEliminarPedidosAjax(sfWebRequest $request){
+        $idReserve = $request ->getPostParameter('idReserve');
+
+        $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+
+        $reserve->setConfirmed(0);
+        $reserve->setCanceled(1);   
+        
+        $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+        if($reserve->getUserId() == $idUsuario){//es arrendatario
+            $reserve->setVisibleRenter(0);
+        }else{//es propietario
+            $reserve->setVisibleOwner(0);
+        }
+
+        $reserve->save();
+
+        die();
+    }
+    
     public function executeCambiarEstadoPedidoAjax(sfWebRequest $request){
         $idReserve = $request ->getPostParameter('idReserve');
         $accion = $request ->getPostParameter('accion');
-
+        
         //$accion = 'preaprobar';
         //$idReserve = 663;
 
-        $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
-        $car = Doctrine_Core::getTable('car')->findOneById($reserve->getCarId());
-
-        if($accion == 'preaprobar'){
+        if(strpos($accion, 'oportunidad') !== false){
+            $oReserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+            $reserve = new Reserve();
+            $reserve->setDate($oReserve->getDate());
+            $reserve->setDuration($oReserve->getDuration());
+            $reserve->setUser($oReserve->getUser());
+            
+            $idCar = explode('-', $accion);
+            $car = Doctrine_Core::getTable('Car')->find($idCar[1]);
+            $reserve->setCar($car);
+            $reserve->setPrice( number_format( $this->calcularMontoTotal($reserve->getDuration(), $car->getPricePerHour(), $car->getPricePerDay(), $car->getPricePerWeek(), $car->getPricePerMonth()) , 2, '.', '') );
+            $reserve->setFechaReserva($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
+        }
+        else{
+            $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+            $car = Doctrine_Core::getTable('car')->findOneById($reserve->getCarId());
+        }
+        if($accion == 'preaprobar' || strpos($accion, 'oportunidad') !== false){
             //echo "pre aprobar";
-			if($car->getSeguroOk() !=4 ){
-				echo "error:seguro4" ;
+            if($car->getSeguroOk() !=4 ){
+                echo "error:seguro4" ;
                 die();
-			};
+            }
+            else if($reserve->getUser()->getRut() == ""){
+                echo "error:rutdueñonulo" ;
+                die();
+            }
 					
             $reserve->setConfirmed(1);
             $reserve->setCanceled(0);
@@ -343,14 +381,14 @@ class profileActions extends sfActions {
         $precio = number_format($precio, 0, ',', '.');
         $idCar = $reserve->getCarId();
 
-		$lastName = $reserve->getLastnameOwner();
-		$telephone = $reserve->getTelephoneOwner();
-		$lastNameRenter = $reserve->getLastNameRenter();
-		$telephoneRenter = $reserve->getTelephoneRenter();
+        $lastName = $reserve->getLastnameOwner();
+        $telephone = $reserve->getTelephoneOwner();
+        $lastNameRenter = $reserve->getLastNameRenter();
+        $telephoneRenter = $reserve->getTelephoneRenter();
 
-        if($accion == 'preaprobar'){
+        if($accion == 'preaprobar' || strpos($accion, 'oportunidad') !== false){
             //crea la fila en la tabla transaction
-            $this->executeConfirmReserve($idReserve);
+            $this->executeConfirmReserve($reserve->getId());
 
             //envía mail de preaprobación al arrendatario
 //            require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
@@ -2678,7 +2716,7 @@ public function executeAgreePdf2(sfWebRequest $request)
     }
 
 
-		public function executePedidos(sfWebRequest $request){
+        public function executePedidos(sfWebRequest $request){
         //id del usuario actual
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
         //$idUsuario = 885;
@@ -3028,6 +3066,117 @@ public function executeAgreePdf2(sfWebRequest $request)
         $this->fechaReservasRealizadas = $fechaReservasRealizadas;
         $this->reservasRealizadas = $reservasRealizadasAux;
         $this->reservasRecibidas = $reservasRecibidasAux;
+    }
+    
+    public function executeOportunidades(sfWebRequest $request){
+        $cars = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")))->getCars();
+        $maxPrice = 0;
+        $minPrice = 9999999999;
+        $mKey = 0;
+        $minKey = 0;
+        $cities = array();
+        foreach($cars as $key => $car){
+            if($car->getPricePerDay() > $maxPrice){
+                $maxPrice = $car->getPricePerDay();
+                $mKey = $key;
+            }
+            if($car->getPricePerDay() <= $minPrice){
+                $minPrice = $car->getPricePerDay();
+                $minKey = $key;
+            }
+            if(!in_array($car->getCity()->getId(), $cities)){
+                array_push($cities, $car->getCity()->getId());
+            }
+        }
+        $maxPrice *= 1.2;
+        $minPrice *= 0.5;
+        $reservasRecibidas = null;
+        
+        $q = "SELECT r.id FROM reserve r JOIN r.Car c WHERE r.date > NOW() AND r.confirmed = 0 AND r.canceled = 0 AND DATE_ADD(r.fecha_reserva, INTERVAL 24 HOUR) < NOW() AND c.price_per_day <= ? AND c.price_per_day >= ? GROUP BY r.user_id, r.date AND c.city_id IN (?)";
+        $query = Doctrine_Query::create()->query($q, array($maxPrice, $minPrice, implode(',', $cities)));
+        $reserve = $query->toArray();
+
+        foreach ($reserve as $i => $reserva) {
+            $reserva = Doctrine_Core::getTable('reserve')->findOneById($reserva['id']);
+            
+            //obtiene el id de la reserva
+            $reservasRecibidas[$i]['idReserve'] = $reserva->getId();
+            $reservasRecibidas[$i]['estado'] = 0;
+            //fecha y hora de inicio y término
+            $reservasRecibidas[$i]['posicion'] = $reserva->getDate();
+            $reservasRecibidas[$i]['fechaInicio'] = $reserva->getFechaInicio();
+            $reservasRecibidas[$i]['horaInicio'] = $reserva->getHoraInicio();
+            $reservasRecibidas[$i]['fechaTermino'] = $reserva->getFechaTermino();
+            $reservasRecibidas[$i]['horaTermino'] = $reserva->getHoraTermino();
+            $reservasRecibidas[$i]['tiempoArriendo'] = $reserva->getTiempoArriendoTexto();
+            $reservasRecibidas[$i]['duracion'] = $reserva->getDuration();
+            $reservasRecibidas[$i]['token'] = $reserva->getToken();
+            //obtiene valor
+            $carId = $reserva->getCarId();
+            $carClass = Doctrine_Core::getTable('car')->findOneById($carId);
+            if($carClass->getPricePerDay() < $cars[$mKey]->getPricePerDay()){
+                $car = $carClass;
+            }
+            else{
+                $car = $cars[$mKey];
+            }
+            $ownPrice = $this->calcularMontoTotal($reserva->getDuration(), $car->getPricePerHour(), $car->getPricePerDay(), $car->getPricePerWeek(), $car->getPricePerMonth());
+            $reservasRecibidas[$i]['valor'] = number_format(intval($ownPrice),0,'','.');
+            
+            $propietarioId = $reserva->getUserId();
+            $reservasRecibidas[$i]['carId'] = $carId;
+            $propietarioClass = Doctrine_Core::getTable('user')->findOneById($propietarioId);
+            $reservasRecibidas[$i]['contraparteId'] = $propietarioId;
+            $reservasRecibidas[$i]['nombre'] = $propietarioClass->getFirstname();
+            $reservasRecibidas[$i]['apellido'] = $propietarioClass->getLastname();
+            $reservasRecibidas[$i]['telefono'] = $propietarioClass->getTelephone();
+            $reservasRecibidas[$i]['direccion'] = $propietarioClass->getAddress();
+            $reservasRecibidas[$i]['facebook'] = $propietarioClass->getFacebookId();
+            $reservasRecibidas[$i]['urlFoto'] = $propietarioClass->getPictureFile();
+            $reservasRecibidas[$i]['apellidoCorto'] = $reservasRecibidas[$i]['apellido'][0].".";
+            $reservasRecibidas[$i]['comuna'] = $car->getNombreComuna();
+        }
+
+        $reservasRecibidasAux = array();
+        //quita los arreglos null
+        if(isset($reservasRecibidas)){
+            $reservasRecibidas = array_filter($reservasRecibidas);
+        }
+
+        //ordena las reservas recibidas
+        if(isset($reservasRecibidas)){
+            $j = 0;
+
+            do{
+                $menor = 0;
+                for ($i=0; $i < count($reservasRecibidas); $i++) {
+
+                    if(isset($reservasRecibidas[$menor]['posicion'])){
+                        if(isset($reservasRecibidas[$i]) && $reservasRecibidas[$i]['posicion']<$reservasRecibidas[$menor]['posicion']){
+                            $menor = $i;
+                        }
+                    }else{
+                        if(isset($reservasRecibidas[$i])){
+                            $menor = $i;
+                        }
+                    }
+
+                }
+                if(isset($reservasRecibidas[$menor])){
+                    $reservasRecibidasAux[$j] = $reservasRecibidas[$menor];
+                }
+
+                //elimina la posicion del array
+                unset($reservasRecibidas[$menor]);
+                if($reservasRecibidas){
+                    $reservasRecibidas = array_values($reservasRecibidas);
+                }
+                $j++;
+
+            }while($reservasRecibidas);
+        }
+        $this->reservasRecibidas = $reservasRecibidasAux;
+        $this->cars = $cars;
     }
 
     public function executeAddCarExito(sfWebRequest $request){
@@ -3898,6 +4047,8 @@ public function executeAgreePdf2(sfWebRequest $request)
 
         if($request->getParameter('redirect') && $request->getParameter('idRedirect')){
             $this->redirect('profile/'.$request->getParameter('redirect')."?id=".$request->getParameter('idRedirect'));
+        }if($request->getParameter('redirect')){
+            $this->redirect('profile/'.$request->getParameter('redirect'));
         }else{
             $this->redirect('profile/cars');
         }

@@ -687,6 +687,56 @@ public function executeNotificacion(sfWebRequest $request) {
         } elseif ($this->getUser()->getAttribute('geolocalizacion') == true) {
             $this->getUser()->setAttribute('geolocalizacion', false);
         }
+        
+        $day_from = $this->getUser()->getAttribute('day_from');
+        $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+        if($idUsuario && $day_from == '12-11-2013')
+        {
+            $reservas = Doctrine_Core::getTable("Reserve")->findByUserId($idUsuario);
+            $ultimaFecha = null;
+            $ultimoId = null;
+            $duracion = null;
+            foreach ($reservas as $reserva) 
+            {
+                if(!$ultimaFecha)
+                {
+                    $ultimoId = $reserva->getId();
+                    $ultimaFecha = strtotime($reserva->getDate());
+                    $duracion = $reserva->getDuration();
+                }
+                else
+                {
+                    if($ultimoId < $reserva->getId())
+                    {
+                        $ultimoId = $reserva->getId();
+                        $ultimaFecha = strtotime($reserva->getDate());
+                        $duracion = $reserva->getDuration();
+                    }
+                }
+            }
+            if($ultimaFecha)
+            {
+                $fechaActual = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"));
+                $fechaAlmacenadaDesde = date("YmdHis",$ultimaFecha);
+                if($fechaActual < $fechaAlmacenadaDesde)
+                {
+                    $day_from = date("d-m-Y",$ultimaFecha);
+                    $hour_from = date("H:i",$ultimaFecha);
+                    $day_to = date("d-m-Y",$ultimaFecha+$duracion*3600);
+                    $hour_to = date("H:i",$ultimaFecha+$duracion*3600);
+                    
+                    $this->getUser()->setAttribute('day_from', $day_from);
+                    $this->getUser()->setAttribute('day_to', $day_to);
+                    $this->getUser()->setAttribute('hour_from', $hour_from);
+                    $this->getUser()->setAttribute('hour_to', $hour_to);
+                }
+            }
+        }
+        
+        $this->day_from = $this->getUser()->getAttribute('day_from');
+        $this->day_to = $this->getUser()->getAttribute('day_to');
+        $this->hour_from = $this->getUser()->getAttribute('hour_from');
+        $this->hour_to = $this->getUser()->getAttribute('hour_to');
 
         $cityname = $request->getParameter('c');
 
@@ -915,40 +965,41 @@ public function executeNotificacion(sfWebRequest $request) {
 
         $day_from = $request->getParameter('day_from');
         $day_to = $request->getParameter('day_to');
-
-		$startTime = strtotime($day_from);
-		$endTime = strtotime($day_to);
-		
-		$timeHasWorkday=false;
-		$timeHasWeekend=false;
-		
-		for ($i = $startTime; $i <= $endTime; $i = $i + 86400) {
-		  $thisDate = date('Y-m-d', $i); // 2010-05-01, 2010-05-02, etc
-		  $dw = date( "w", $i);
-			if ($dw==6 || $dw==0){
-				$timeHasWeekend=true;
-				break;
-			}
-		}
-
-		for ($i = $startTime; $i <= $endTime; $i = $i + 86400) {
-		  $thisDate = date('Y-m-d', $i); // 2010-05-01, 2010-05-02, etc
-		  $dw = date( "w", $i);
-			if ($dw>0 && $dw<5){
-				$timeHasWorkday=true;
-				break;
-			}
-		}
-
-		$this->logMessage('day_from '.$day_from, 'err');
-					
         $hour_from = date("H:i", strtotime($request->getParameter('hour_from')));
         $hour_to = date("H:i", strtotime($request->getParameter('hour_to')));
-
-
-		
         
-		$brand = $request->getParameter('brand');
+        $this->getUser()->setAttribute('day_from', $day_from);
+        $this->getUser()->setAttribute('day_to', $day_to);
+        $this->getUser()->setAttribute('hour_from', $hour_from);
+        $this->getUser()->setAttribute('hour_to', $hour_to);
+
+        $startTime = strtotime($day_from);
+        $endTime = strtotime($day_to);
+
+        $timeHasWorkday=false;
+        $timeHasWeekend=false;
+
+        for ($i = $startTime; $i <= $endTime; $i = $i + 86400) {
+          $thisDate = date('Y-m-d', $i); // 2010-05-01, 2010-05-02, etc
+          $dw = date( "w", $i);
+                if ($dw==6 || $dw==0){
+                        $timeHasWeekend=true;
+                        break;
+                }
+        }
+
+        for ($i = $startTime; $i <= $endTime; $i = $i + 86400) {
+          $thisDate = date('Y-m-d', $i); // 2010-05-01, 2010-05-02, etc
+          $dw = date( "w", $i);
+                if ($dw>0 && $dw<5){
+                        $timeHasWorkday=true;
+                        break;
+                }
+        }
+
+        $this->logMessage('day_from '.$day_from, 'err');
+
+        $brand = $request->getParameter('brand');
         $model = $request->getParameter('model');
 
         $transmission = $request->getParameter('transmission');
@@ -1301,6 +1352,12 @@ $this->logMessage(date('h:i:s'), 'err');
         return $this->renderText(json_encode($carsArray));
         //$this->carsArray=renderText(json_encode($carsArray));
     }
+    
+    public function formatearHoraChilena($fecha){
+        $horaChilena = strftime("%Y-%m-%d %H:%M:%S",strtotime('-4 hours',strtotime($fecha)));
+        return $horaChilena;
+    }
+    
     public function transformarPrecioAPuntos($precio){
         $precioMillones = intval($precio/1000000);
         $precioMiles = $precio - ($precioMillones*1000000);
