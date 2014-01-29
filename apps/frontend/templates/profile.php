@@ -213,8 +213,10 @@
                         <?php } ?>
 <!--                        <li><a href="https://arriendascl.zendesk.com/anonymous_requests/new" class="item_2<?php if (inModuleAndAction("main", "contact")) { echo "_in"; } ?>" target="_blank" title="Contacto"><span>CONTACTO</span></a>
                         </li>-->
-                        <li class="item_ayuda"><a href="https://arriendascl.zendesk.com/forums" target="_blank" class="item_2"><span>AYUDA</span></a>
-                        </li>
+                        <li class="item_ayuda"><a href="https://arriendascl.zendesk.com/forums" target="_blank" class="item_2"><span>AYUDA</span></a></li>
+                        <?php  if(sfContext::getInstance()->getUser()->getAttribute("propietario")) {  ?>
+                            <li><a href="<?php echo url_for('profile/oportunidades') ?>" class="item_5<?php if (inModuleAndAction("profile", "oportunidades")) { echo "_in"; }?>" title="Oportunidades"><span>OPORTUNIDADES</span></a></li>                                
+                        <?php } ?>
                         </ul><!-- menu_1 -->
                     </div><!-- header_menu -->
 
