@@ -363,7 +363,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                                 echo "<div class='der'>";
                                 echo "<div class='cargando'>".image_tag('../images/ajax-loader.gif')."</div>";
                                     echo "<div class='img'>".image_tag('img_pedidos/IconoEnEspera.png')."</div>";
-                                    echo "En espera de confirmaci&oacute;n";
+                                    echo "<div class='texto'>En espera de confirmaci&oacute;n</div>";
                                 echo "</div>";
                             echo"</div>";
                             echo"</div>";
