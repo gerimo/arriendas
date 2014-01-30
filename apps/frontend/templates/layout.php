@@ -451,8 +451,10 @@
                             <li><a href="<?php echo url_for("profile/addCar"); ?>" class="item_2<?php if (inModuleAndAction("profile", "index")) { echo "_in";} ?>" title="Sube un auto"><span>SUBE UN AUTO</span></a>
                         </li>
                         <?php } ?>
-                        <li class="item_ayuda"><a href="https://arriendascl.zendesk.com/" target="_blank" class="item_2"><span>AYUDA</span></a> 
-                        </li>
+                        <li class="item_ayuda"><a href="https://arriendascl.zendesk.com/" target="_blank" class="item_2"><span>AYUDA</span></a></li>
+                        <?php  if(sfContext::getInstance()->getUser()->getAttribute("propietario")) {  ?>
+                            <li><a href="<?php echo url_for('profile/oportunidades') ?>" class="item_5<?php if (inModuleAndAction("profile", "oportunidades")) { echo "_in"; }?>" title="Oportunidades"><span>OPORTUNIDADES</span></a></li>                                
+                        <?php } ?>
                     </ul><!-- menu_1 -->  
                 </div><!-- header_menu -->
             <?php endif; ?>							

@@ -14,7 +14,7 @@ class Reserve extends BaseReserve
 {
 	public function calcularIVA() {
 		//Variable que define el IVA actual
-		//TODO: modificar la obtenci—n de la variable IVA
+		//TODO: modificar la obtenciï¿½n de la variable IVA
 		$iva= 1.19;	
 	}
 
@@ -59,9 +59,9 @@ class Reserve extends BaseReserve
         if($dias==0){
         	$dias = "";
         }elseif($dias==1){
-        	$dias = $dias." día";
+        	$dias = $dias." dï¿½a";
         }else{
-        	$dias = $dias." días";
+        	$dias = $dias." dï¿½as";
         }
 
         if($horas==0){
@@ -81,11 +81,11 @@ class Reserve extends BaseReserve
         return utf8_encode($dias." y ".$horas);
 	}
 	
-	//Metodo utilizado para crear un registro de calificacion dentro de nuestra tabla, que se habilitar‡
+	//Metodo utilizado para crear un registro de calificacion dentro de nuestra tabla, que se habilitarï¿½
 	//una vez que la reserva sea pagada
 	public function habilitarCalificacion() {
-		//Obtenemos la fecha de la reserva y su duraci—n para determinar la fecha desde que estar‡ habilitada
-		//la calificacion. La regla es que esta estar‡ disponible 2 horas tras el termino de la reserva
+		//Obtenemos la fecha de la reserva y su duraciï¿½n para determinar la fecha desde que estarï¿½ habilitada
+		//la calificacion. La regla es que esta estarï¿½ disponible 2 horas tras el termino de la reserva
 		$fecha_reserva= $this->getDate();
 		$duracion= $this->getDuration();
 		//Convertimos la fecha a timestamp
@@ -220,6 +220,13 @@ class Reserve extends BaseReserve
         $query = Doctrine_Query::create()->query($q);
         $owner = $query->toArray();
         return $owner[0]['lastname'];
+	}
+        
+        public function getRutOwner(){
+		$q = "SELECT u.rut FROM user u, car c, reserve r WHERE u.id=c.user_id and c.id=r.car_id and r.id=".$this->getId();
+        $query = Doctrine_Query::create()->query($q);
+        $owner = $query->toArray();
+        return $owner[0]['rut'];
 	}
 
 	public function getAddressCar(){
