@@ -48,37 +48,40 @@ class Reserve extends BaseReserve
         return $horaDevolucion;
 	}
 
-	public function getTiempoArriendoTexto(){
-        $duracion = $this->getDuration();
+	public function getTiempoArriendoTexto()
+        {
+            $duracion = $this->getDuration();
 
-        $dias = floor($duracion/24);
-        $horas = $duracion%24;
+            $dias = floor($duracion/24);
+            $horas = $duracion%24;
 
-        //echo $dias." ".$horas."<br>";
+            //echo $dias." ".$horas."<br>";
 
-        if($dias==0){
-        	$dias = "";
-        }elseif($dias==1){
-        	$dias = $dias." d�a";
-        }else{
-        	$dias = $dias." d�as";
-        }
+            if($dias==0){
+                    $dias = "";
+            }elseif($dias==1){
+                    $dias = $dias." día";
+            }else{
+                    $dias = $dias." días";
+            }
+            //$dias = mb_convert_encoding($dias, 'utf-8');
 
-        if($horas==0){
-        	$horas = "";
-        }elseif($horas==1){
-        	$horas = $horas." hora";
-        }else{
-        	$horas = $horas." horas";
-        }
+            if($horas==0){
+                    $horas = "";
+            }elseif($horas==1){
+                    $horas = $horas." hora";
+            }else{
+                    $horas = $horas." horas";
+            }
 
-        if($dias==""){
-        	return utf8_encode($horas);
-        }
-        if($horas==""){
-        	return utf8_encode($dias);
-        }
-        return utf8_encode($dias." y ".$horas);
+            if($dias==""){
+                    return $horas;
+            }
+            if($horas==""){
+                    return $dias;
+            }
+
+            return $dias." y ".$horas;
 	}
 	
 	//Metodo utilizado para crear un registro de calificacion dentro de nuestra tabla, que se habilitar�

@@ -327,11 +327,22 @@ class profileActions extends sfActions {
             $reserve->setDate($oReserve->getDate());
             $reserve->setDuration($oReserve->getDuration());
             $reserve->setUser($oReserve->getUser());
+            $reserve->setComentario('Reserva oportunidad');
             
             $idCar = explode('-', $accion);
             $car = Doctrine_Core::getTable('Car')->find($idCar[1]);
             $reserve->setCar($car);
-            $reserve->setPrice( number_format( $this->calcularMontoTotal($reserve->getDuration(), $car->getPricePerHour(), $car->getPricePerDay(), $car->getPricePerWeek(), $car->getPricePerMonth()) , 2, '.', '') );
+            
+            $carId = $oReserve->getCarId();
+            $oCar = Doctrine_Core::getTable('car')->findOneById($carId);
+            if($oCar->getPricePerDay() < $car->getPricePerDay()){
+                $vCar = $oCar;
+            }
+            else{
+                $vCar = $car;
+            }
+            
+            $reserve->setPrice( number_format( $this->calcularMontoTotal($reserve->getDuration(), $vCar->getPricePerHour(), $vCar->getPricePerDay(), $vCar->getPricePerWeek(), $vCar->getPricePerMonth()) , 2, '.', '') );
             $reserve->setFechaReserva($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
         }
         else{
@@ -3092,15 +3103,18 @@ public function executeAgreePdf2(sfWebRequest $request)
         $minPrice *= 0.5;
         $reservasRecibidas = null;
         
-        $q = "SELECT r.id, SUM(r.confirmed) FROM reserve r JOIN r.Car c WHERE r.date > NOW() AND r.canceled = 0 AND DATE_ADD(r.fecha_reserva, INTERVAL 24 HOUR) < NOW() AND c.price_per_day <= ? AND c.price_per_day >= ? AND c.comuna_id IN (?) GROUP BY r.user_id, r.date";
+        $q = "SELECT r.id FROM reserve r JOIN r.Car c WHERE r.date > NOW() AND r.confirmed = 0 AND r.canceled = 0 AND DATE_ADD(r.fecha_reserva, INTERVAL 0 HOUR) < NOW() AND c.price_per_day <= ? AND c.price_per_day >= ? AND c.comuna_id IN (?) GROUP BY r.user_id, r.date";
         $query = Doctrine_Query::create()->query($q, array($maxPrice, $minPrice, implode(',', $cities)));
         $reserve = $query->toArray();
         
         foreach ($reserve as $i => $reserva) {
-            if($reserva['SUM'] == 0)
+            $reserva = Doctrine_Core::getTable('reserve')->findOneById($reserva['id']);
+            $q = "SELECT SUM(r.confirmed) as SUM FROM reserve r WHERE r.date = ? AND r.user_id = ? AND r.comentario != ?";
+            $query = Doctrine_Query::create()->query($q, array($reserva->getDate(), $reserva->getUserId(), 'Reserva oportunidad'));
+            $sum = $query->toArray();
+            $sum = array_pop($sum);
+            if($sum['SUM'] == 0)
             {
-                $reserva = Doctrine_Core::getTable('reserve')->findOneById($reserva['id']);
-
                 //obtiene el id de la reserva
                 $reservasRecibidas[$i]['idReserve'] = $reserva->getId();
                 $reservasRecibidas[$i]['estado'] = 0;

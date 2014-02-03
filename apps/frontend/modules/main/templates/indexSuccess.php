@@ -1185,7 +1185,7 @@ $('#day_to').change(function() {
     
     $(document).ready(function() {
         $(".btn_filtro").click(function () {     
-            $('oggle("slow");
+            $('#opc_filtro').toggle("slow");
         });
         $("#btn_filtro1").click(function () {     
             $('#btn_filtro1').css("display","none");
@@ -1361,6 +1361,7 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
                 </div>
                 <div id="map"></div>
             </div><!-- search_box_1_maparea -->   
+            
         <div class="fondo_search_box_2">
             <div class="search_box_2">
                 <div id="title_search_box_2">RESULTADO ( 35 AUTOS RECOMENDADOS )</div>
