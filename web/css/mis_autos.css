@@ -17,6 +17,13 @@ h1.misautos_titulo_seccion {
 	margin: 0px 10px;
 	padding: 10px;
 }
+.misautos_box #lineaSuperior{ /*NEW*/
+	float: left;
+	width: 100%;
+	height: 2px;
+	border-top: 1px solid #d1d1d1;
+	margin-bottom: 5px;
+}
 .misautos_box_header {
 	margin-bottom: 20px;
 }
@@ -27,15 +34,19 @@ h1.misautos_titulo_seccion {
 
 /* msg user items */
 .misautos_user_item {
-	margin-bottom: 40px;
+	float: left;
+	margin-bottom: 10px;
 	height:116px;
-	border-bottom:1px dashed #D1D1D1;
+	width: 100%;
+	border-bottom:1px solid #d1d1d1;
 }
 .misautos_user_frame {
-	/*background-image: url('../images/img_mensajes/msg_user_frame_bg.png');*/
-	border:1px solid #d5d5d5;
-	width: 92px;
-	height: 92px;
+	float: left;
+	width: 128px;
+	height: 108px;
+	-webkit-box-shadow: 0px 0px 9px rgba(50,50,50,0.32);
+	-moz-box-shadow: 0px 0px 9px rgba(50,50,50,0.32);
+	box-shadow: 0px 0px 9px rgba(50,50,50,0.32);
 }
 .misautos_user_frame img {
 	margin-top: 4px;
@@ -45,14 +56,71 @@ h1.misautos_titulo_seccion {
 .misautos_user_post {
 	position: relative;
 	float: right;
-	width: 360px;
-	font-size: 13px;
-	height: 106px;
+	width: 340px;
+	font-size: 11px;
+	height: 90px;
 	color: #FFFFFF;
+	padding-top: 10px;
 }
-.misautos_user_post span {
+.activo{
+	position: relative;
+	float: right;
+	width: 90px;
+	height: 20px;
+	margin-top: -12px;
+}
+.activo .imgActivo{
+	width: 14px;
+	height: 14px;
+	float: left;
+	margin-top: 2px;
+}
+.circuloActivo { 
+	display: block; 
+	width: 8px; 
+	height: 8px; 
+	background: #12b312; 
+	-webkit-border-radius: 4px; 
+	-moz-border-radius: 4px; 
+	border-radius: 4px;
+	float: right;
+	margin-top: 3px;
+	margin-right: 2px;
+}
+.circuloInactivo { 
+	display: none; 
+	width: 8px; 
+	height: 8px; 
+	background: #d1d1d1; 
+	-webkit-border-radius: 4px; 
+	-moz-border-radius: 4px; 
+	border-radius: 4px;
+	float: right;
+	margin-top: 3px;
+	margin-right: 2px;
+} 
+.activo .selectorActivo{
+	width: 75px;
+	font-size: 10px;
+	float: right;
+}
+.misautos_user_post .misautos_marca p a span.name {
 	display: block;
 	margin-left: 10px;
+	color: #05a4e7;
+	font-size: 13px;
+	float: left;
+}
+.misautos_user_post p a span.editar {
+	display: block;
+	margin-left: 5px;
+	font-size: 8px;
+	color: black;
+	float: left;
+	margin-top: 3px;
+}
+.misautos_user_post p a span.editar span.sub {
+	border-bottom: 1px solid black;
 }
 .misautos_user_post a {
 	text-decoration: none;
@@ -68,27 +136,34 @@ p.misautos_info {
 .misautos_marca {
 	margin-bottom: 6px;
 	left: 6px;
-	width:auto;
+	width: 240px;
 	height: 25px;
 	font-weight: bold;
 }
-.misautos_user_item_flecha {
-	position: absolute;
-	top: 2px;
-	left: -6px;
-	width: 6px;
-	height: 11px;
-	background-image: url('../images/img_mensajes/msg_user_post_flecha.png');
-}
 .misautos_btn_sector {
 	position: absolute;
- 	left: 10px; 	
+ 	left: 10px;
+ 	top: 46px; 	
 }
 .misautos_btn_sector a {
-	display: block;
-	float: left;
+	float: right;
 	margin-right: 10px;
 	height: 32px;
+}
+.misautos_btn_sector .linePrecio{
+	display: block;
+	float: left;
+	color: black;
+	height: 32px;
+}
+.misautos_btn_sector .lineRecibirPedidos{
+	display: block;
+	float: left;
+	color: black;
+}
+.misautos_btn_sector .lineRecibirPedidos .selectorRP{
+	width: 96px;
+	font-size: 10px;
 }
 .misautos_btn_sector a.misautos_btn_disp {
 	width: 112px; 

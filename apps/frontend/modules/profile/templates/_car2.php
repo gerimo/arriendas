@@ -456,30 +456,39 @@ padding-right: 8px;">4</div> pasos</h3>
 			}
 		?>
 	</div>
-	<div class="izqMitad" style="height: 70px;">
-		<label for="precioSemanal" id="precioSemanaLabel">Precio por semana (Opcional)</label><br>
+	<div class="mitad">
+		<label for="reservasSemanales" id="reservasSemanalesLabel">¿Cu&aacute;ndo puedes recibir reservas?</label><br>
+		<select id="reservasSemanalesSelect" style="margin: 0 auto;width: 110px;margin-top: 15px;">
+			<option value="1" selected>Todos los d&iacute;as</option>
+			<option value="2">Los fines de semana</option>
+			<option value="3">Lunes a viernes</option>
+		</select>
 		<?php
-			if((isset($car)) && ($car[0]['price_per_week'] != 0)){
-				echo "<input type='text' id='precioSemana' name='precioSemana' value='".intval($car[0]['price_per_week'])."'>";
-			}else{
-				echo "<input type='text' id='precioSemana' name='precioSemana'>";
-			}
+			//if((isset($car)) && ($car[0]['price_per_week'] != 0)){
+			//	echo "<input type='text' id='precioSemana' name='precioSemana' value='".intval($car[0]['price_per_week'])."'>";
+			//}else{
+			//	echo "<input type='text' id='precioSemana' name='precioSemana'>";
+			//}
 		?>
 	</div>
-	<div class="derMitad" style="height: 70px;">
-		<label for="precioMensual" id="precioMesLabel">Precio por mes (Opcional)</label><br>
+	<div class="mitad">
+		<label for="demoraAlContestar" id="demoraAlContestarLabel">¿Cu&aacute;nto te demoras en contestar?</label><br>
+		<select id="demoraAlContestarSelect" style="margin: 0 auto;width: 110px;margin-top: 15px;">
+			<option value="1" selected>En el d&iacute;a</option>
+			<option value="2">6 horas aprox</option>
+			<option value="3">De inmediato</option>
+		</select>
 		<?php
-			if((isset($car)) && ($car[0]['price_per_month'] != 0)){
-				echo "<input type='text' id='precioMes' name='precioMes' value='".intval($car[0]['price_per_month'])."'>";
-			}else{
-				echo "<input type='text' id='precioMes' name='precioMes'>";
-			}
+			//if((isset($car)) && ($car[0]['price_per_month'] != 0)){
+			//	echo "<input type='text' id='precioMes' name='precioMes' value='".intval($car[0]['price_per_month'])."'>";
+			//}else{
+			//	echo "<input type='text' id='precioMes' name='precioMes'>";
+			//}
 		?>
 	</div>
 
 	
-	<p class="msjPromocion1">GANA <span class="msjPromocion2" id="precioTotal"></span> ARRENDANDO ESTE AUTO</p>
-	<p class="msjPromocion1 msjPromocion3">LOS FINES DE SEMANA, AL <span class="msjPromocion2" style="font-size:100%">MES</span></p>
+	<p class="msjPromocion1" style="border-top: 1px solid #d1d1d1;padding-top: 24px;margin-top: 140px;">GANA <span class="msjPromocion2" id="precioTotal"></span> AL MES ARRENDANDO ESTE AUTO</p>
 
 	<div class="mensajeIngresoDatos2">
 		<p>(*) Debe ingresar todos los campos</p>
