@@ -6,10 +6,10 @@ default:
     content-type: text/html
 
   metas:
-    title:        Arriendas
-    #description:  symfony project
+    #title:        Arriendas
+    description:  Arrienda un auto vecino con seguro premium, asistencia de viaje y TAGs incluídos. Busca un auto por ubicación o por precio. Rent a car Vecino.
     #keywords:     symfony, project
-    #language:     en
+    language:     es
     #robots:       index, follow
     
   stylesheets:    [http://cdn1.arriendas.cl/css/ui-lightness/jquery-ui-1.8.18.custom.css?v=26122013, http://cdn2.arriendas.cl/css/style_ui.css?v=26122013, http://cdn3.arriendas.cl/css/jquery.timepicker-1.2.2.css?v=26122013,http://cdn1.arriendas.cl/css/timePicker.css?v=26122013, http://cdn2.arriendas.cl/css/jquery.weekcalendar.css?v=26122013,  http://cdn3.arriendas.cl/css/default.css?v=26122013, http://cdn1.arriendas.cl/css/demo.css?v=26122013, http://cdn2.arriendas.cl/css/main.css?v=26122013, http://cdn3.arriendas.cl/css/trickbox.css?v=26122013, http://cdn1.arriendas.cl/fancybox/source/jquery.fancybox.css?v=26122013]

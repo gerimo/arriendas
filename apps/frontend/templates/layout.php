@@ -2,35 +2,30 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
     <head>
 	<meta name="google-site-verification" content="HxfRs3eeO-VFQdT1_QX7j8hfHPNMh-EIxA7BOyNtHiU" />
-	
+	<?php echo  (stripos($_SERVER['SERVER_NAME'], "arrendas") !== FALSE)? "<title>Arrendas</title>":"<title>Arriendas.cl | Rent a car vecino en Chile</title>";?>
+        
+        <?php include_metas() ?>
 	<link href="http://arriendas.assets.s3.amazonaws.com/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-        <meta name="description" content="Arrienda un auto vecino con seguro premium, asistencia de viaje y TAGs incluídos. Busca un auto por ubicación o por precio. Rent a car Vecino.">
-        <meta property="og:description" content="Arrienda un auto vecino con seguro premium, asistencia de viaje y TAGs incluídos. Busca un auto por ubicación o por precio. Rent a car Vecino.">
-		<meta property="og:title" content="Arriendas.cl - Arrienda un auto vecino, cerca de ti" />
-		<meta property="og:type" content="website" />
-        <meta property="og:image" content="<?php echo image_path('Home/logo_arriendas3.jpg', 'absolute=true');?>">
-		<meta property="og:url" content="http://arriendas.cl<?php echo sfContext::getInstance()->getController()->genUrl(sfContext::getInstance()->getRouting()->getCurrentInternalUri());?>" />
-		<meta property="og:site_name" content="Arriendas.cl - Arrienda un auto vecino, cerca de ti" />
-		<meta property="fb:admins" content="germanrimo" />
-		<meta property="og:description" content="Arrienda un auto por horas o Gana dinero todos los meses arrendando tu auto, con seguro." />
-		<meta name="google-site-verification" content="Y0Lya1N8r_8QIRxeyg3ht2lcwxR2B0VmBLAgopF2lgQ" />        
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+        <meta property="og:description" content="Arrienda un auto vecino con seguro premium, asistencia de viaje y TAGs incluídos. Busca un auto por ubicación o por precio. Rent a car Vecino."/>
+        <meta property="og:title" content="Arriendas.cl - Arrienda un auto vecino, cerca de ti" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="<?php echo image_path('Home/logo_arriendas3.jpg', 'absolute=true');?>" />
+        <meta property="og:url" content="http://arriendas.cl<?php echo sfContext::getInstance()->getController()->genUrl(sfContext::getInstance()->getRouting()->getCurrentInternalUri());?>" />
+        <meta property="og:site_name" content="Arriendas.cl - Arrienda un auto vecino, cerca de ti" />
+        <meta property="fb:admins" content="germanrimo" />
+        <meta property="og:description" content="Arrienda un auto por horas o Gana dinero todos los meses arrendando tu auto, con seguro." />
+        <meta name="google-site-verification" content="Y0Lya1N8r_8QIRxeyg3ht2lcwxR2B0VmBLAgopF2lgQ" />        
             <?php /* include_http_metas() */ ?>
-            <?php include_metas() ?>
-            <?php
-			if (stripos($_SERVER['SERVER_NAME'], "arrendas") !== FALSE)
-				echo "<title>Arrendas</title>";
-			else
-				echo "<title>Arriendas.cl | Rent a car vecino en Chile</title>";
-            ?>
+            
         	<?php if (sfContext::getInstance()->getModuleName()=='main' && sfContext::getInstance()->getActionName()=='index'): ?>
-			<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+			<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;sensor=false"></script>
             <?php endif ?>
 
 			<?php include_stylesheets() ?>
 			
 		
-			<script src="//cdn.optimizely.com/js/241768225.js"></script>
+			<script type="text/javascript" src="//cdn.optimizely.com/js/241768225.js"></script>
 
             <?php include_javascripts() ?>
 			<script type="text/javascript">
@@ -54,7 +49,7 @@
      //           });
 			</script>
 			
-			<style>
+                        <style type="text/css">
 				
 				.footer_social p { width: 22px; height: 22px; background-color: transparent; }
 			</style>
@@ -84,7 +79,7 @@
         -->
         <!-- login facebook -->
         <div id="fb-root"></div>
-        <script>
+        <script type="text/javascript">
         <?php if (inModuleAndAction("main", "login")): ?>
 			window.fbAsyncInit = function() {
 				FB.init({

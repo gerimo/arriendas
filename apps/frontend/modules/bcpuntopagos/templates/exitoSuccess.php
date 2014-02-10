@@ -63,7 +63,7 @@ var google_conversion_value = 0;
 			<p style="font-size: 15px;"><center style="font-size: 15px;"><b style="color:#EC008C;font-size: 15px">Datos del due&ntilde;o del auto</b><br><br>Nombre: <?php echo $nameOwner ?> <?php echo $lastnameOwner ?><br>Teléfono: <?php echo $telephoneOwner ?><br>Correo: <?php echo $emailOwner ?></p>
 			</center><br> <br>
 			<p style="font-size: 15px;font-weight:bold;">Te hemos enviado estos datos a tu correo.</p>
- 			<p><a href="<?php echo url_for("main/index")?>" class="botonSiguiente" title="Volver al Home"></a>
+ 			<p><a href="<?php echo url_for("profile/pedidos")?>" class="botonSiguiente" title="Ver Reservas"></a>
 			</div>
       	</div> 
 
