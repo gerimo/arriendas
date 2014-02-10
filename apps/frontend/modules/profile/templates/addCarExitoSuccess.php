@@ -58,7 +58,7 @@
 	
 <p style="text-align: center;margin-top: 35px;font-style: italic;color:#EC008C;font-size:26px;">¡Su auto se ha guardado exitosamente!</p>
 
-<p style="text-align: center;margin-top: 25px; margin-bottom:30px; ;font-size: 17px;">Un inspector te contactará para agendar la verificación de tu auto. Responde el correo enviado a <?=$emailUser;?> para inicial al proceso.</p>
+<p style="text-align: center;margin-top: 25px; margin-bottom:30px; ;font-size: 17px;">Un inspector se contactará contigo al <?=$telephone;?> para agendar la inspección en tu domicilio.</p>
 
 <p style="text-align: center;margin-top: 25px; margin-bottom:30px; ;font-size: 17px;">Ahora debes subir al menos 4 fotos para que el auto se vea <b>publicado</b> en el sítio.</p>
 

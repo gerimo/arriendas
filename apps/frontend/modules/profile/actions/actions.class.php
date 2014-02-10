@@ -3236,6 +3236,7 @@ public function executeAgreePdf2(sfWebRequest $request)
         $this->emailUser = $correo;
         $this->partes = $this->partesAuto();
         $this->nombresPartes = $this->nombrePartesAuto();
+        $this->telephone = $telephone;
         $this->id = $idCar;
 
     }
@@ -4256,7 +4257,7 @@ public function executeAgreePdf2(sfWebRequest $request)
 
             //actualiza los datos asociados al vehículo, por medio de la $idCar
             $q = Doctrine_Manager::getInstance()->getCurrentConnection();
-            $query = "update arriendas.Car set address='$ubicacion', comuna_id='$comuna',
+            $query = "update Car set address='$ubicacion', comuna_id='$comuna',
 			    model_id='$modelo', year='$anio', doors='$puertas', transmission='$transmision', photoS3='0',
 			    tipoBencina='$tipoBencina', uso_vehiculo_id='$usosVehiculo', price_per_hour='$precioHora',price_per_week='$precioSemana',price_per_month='$precioMes',
 			    disponibilidad_semana='$disponibilidadSemana' , disponibilidad_finde='$disponibilidadFinde', price_per_day='$precioDia' ,lat=$lat, lng=$lng, patente='$patente', color='$color', seguro_ok='$ok' where id=$idCar";
@@ -4309,7 +4310,7 @@ public function executeAgreePdf2(sfWebRequest $request)
             
 
             $q = Doctrine_Manager::getInstance()->getCurrentConnection();
-            $query = "update arriendas.Car set doors='$puertas', transmission='$transmision', uso_vehiculo_id='$usosVehiculo
+            $query = "update Car set doors='$puertas', transmission='$transmision', uso_vehiculo_id='$usosVehiculo
             ' where id=$idCar";
 
             $result = $q->execute($query);
