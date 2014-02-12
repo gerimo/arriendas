@@ -1810,15 +1810,17 @@ class profileActions extends sfActions {
                             ->andwhere('r.user_id = ?', $reserve->getUserId())
                             ;
         $reserves_that_day_by_that_user = count($qb->fetchArray());
-        if($reserves_that_day_by_that_user<=1){
+        
+        if(count($reserves_that_day_by_that_user)<=1){
             //avisamos por mail a los dueños de autos de esta nueva oportunidad
             if(strtotime($from)>time()+(60*60*24)){//partimos con los radios medios porque se multiplican por dos
                 $radio = 8;
             }else{
                 $radio = 2;
             }
-            //obtenemos los dueños de autos que se encuentren en el radio y que su auto no se encuentra ya reservado para 
-                            //ese lapso
+            //obtenemos los dueños de autos que se encuentren en el radio y 
+            //que su auto no se encuentra ya reservado para 
+            //ese lapso
             $q = Doctrine_Query::create()
                                 ->select('r.car_id')
                                 ->from('reserve r')
@@ -1866,11 +1868,10 @@ class profileActions extends sfActions {
                 }
                 $radio= $radio * 2;
             }while(count($notifiable_cars)<=0 and $radio<10);
-            
+            var_dump(count($notifiable_cars));
             //enviamos los correos a los dueño de los notifiable_cars
             foreach ($notifiable_cars as $notifiable_car){
                 $owner = Doctrine_Core::getTable('user')->find($notifiable_car['User_id']);
-
                 $mail = new Email();
                 $mail->setSubject('Hay un oportunidad para arrendar tu auto!');
                 $mail->setBody("
