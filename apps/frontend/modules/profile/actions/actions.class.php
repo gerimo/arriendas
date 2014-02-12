@@ -1835,7 +1835,7 @@ class profileActions extends sfActions {
             $car_lat = $car->getLat();
             $car_lng = $car->getLng();
             $maxPrice = $car->getPricePerDay() * 1.3;
-            $minPrice = $car->getPricePerDay() * 0.6;
+            $minPrice = $car->getPricePerDay() * 0.5;
             do{
                 $q = "
                     SELECT c.*
@@ -1866,6 +1866,7 @@ class profileActions extends sfActions {
                 }
                 $radio= $radio * 2;
             }while(count($notifiable_cars)<=0 and $radio<10);
+            
             //enviamos los correos a los dueño de los notifiable_cars
             foreach ($notifiable_cars as $notifiable_car){
                 $owner = Doctrine_Core::getTable('user')->find($notifiable_car['User_id']);
@@ -3135,8 +3136,7 @@ public function executeAgreePdf2(sfWebRequest $request)
     
     public function executeOportunidades(sfWebRequest $request){
         $cars = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")))->getCars();
-        $maxPrice = 0;
-        $minPrice = 9999999999;
+        
         $mKey = 0;
         $minKey = 0;
         $cities = array();
@@ -3164,14 +3164,15 @@ public function executeAgreePdf2(sfWebRequest $request)
             $car_lat = $car->getLat();
             $car_lng = $car->getLng();
             $maxPrice = $car->getPricePerDay() * 1.3;
-            $minPrice = $car->getPricePerDay() * 0.7;
+            $minPrice = $car->getPricePerDay() * 0.5;
             
             $q = "
                 SELECT r.id FROM reserve r 
                 JOIN r.Car c 
                 WHERE r.date > NOW() 
                 AND r.confirmed = 0 
-                AND r.canceled = 0 
+                AND c.seguro_ok=4
+                AND c.activo=1
                 AND r.fecha_reserva < NOW() 
                 AND c.price_per_day <= ? 
                 AND c.price_per_day >= ? 
@@ -3190,15 +3191,24 @@ public function executeAgreePdf2(sfWebRequest $request)
                     );
             $reserve = $query->toArray();
             $auxReserves = array_merge($auxReserves, $reserve);
+            
         }
-        $auxReserves = array_unique($auxReserves);
+        $auxIdsIncluidos = array();
+        $reservasAConsiderar = array();
+        foreach($auxReserves as $r){
+            if(!in_array($r['id'], $auxIdsIncluidos)){
+                $reservasAConsiderar[] = $r;                
+                $auxIdsIncluidos[]=$r['id'];
+            }
+        }
         //$q = "SELECT r.id FROM reserve r JOIN r.Car c WHERE r.date > NOW() AND r.confirmed = 0 AND r.canceled = 0 AND DATE_ADD(r.fecha_reserva, INTERVAL 0 HOUR) < NOW() AND c.price_per_day <= ? AND c.price_per_day >= ? AND c.comuna_id IN (?) AND c.uso_vehiculo_id IN (?) GROUP BY r.user_id, r.date";
         //$query = Doctrine_Query::create()->query($q, array($maxPrice, $minPrice, implode(',', $cities), implode(',', $usos)));
         
         $reservasRecibidas = null;
-        foreach ($reserve as $i => $reserva) {
+        foreach ($reservasAConsiderar as $i => $reserva) {
             $reserva = Doctrine_Core::getTable('reserve')->findOneById($reserva['id']);
-            $q = "SELECT SUM(r.confirmed) as SUM FROM reserve r WHERE r.date = ? AND r.user_id = ? AND r.comentario != ?";
+            $q = "SELECT SUM(r.confirmed) as SUM FROM reserve r 
+                WHERE r.date = ? AND r.user_id = ? AND r.comentario != ?";
             $query = Doctrine_Query::create()->query($q, array($reserva->getDate(), $reserva->getUserId(), 'Reserva oportunidad'));
             $sum = $query->toArray();
             $sum = array_pop($sum);
