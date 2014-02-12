@@ -1676,7 +1676,8 @@ class profileActions extends sfActions {
                     }
                 }
 
-                if(!$reservaPrevia){
+                //if(!$reservaPrevia){
+                if(true){
 
                     //if (count($reservasEnEspera) < 5) {
                         
@@ -1700,117 +1701,16 @@ class profileActions extends sfActions {
                         
                         $reserve->setFechaReserva($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
                         $reserve->save();
+                         
                         //var_dump($reserve->getPrice());die();
-
+                       
                         //envía correo al propietario del auto
-                        $fechaInicio = $reserve->getFechaInicio();
-                        $horaInicio = $reserve->getHoraInicio();
-                        $fechaTermino = $reserve->getFechaTermino();
-                        $horaTermino = $reserve->getHoraTermino();
-                        $marcaModelo = $reserve->getMarcaModelo();
-                        $price = $reserve->getPrice();
-                        $price=number_format(($price),0,',','.');
-						$correo = $reserve->getEmailOwner();
-                        $correoEmail = $reserve->getEmailOwnerCorreo();
-                        $correoRenter = $reserve->getCorreoRenter();
-                        $name = $reserve->getNameOwner();
-                        $lastName = $reserve->getLastnameOwner();
-                        $telephone = $reserve->getTelephoneOwner();
-                        $nameRenter = $reserve->getNameRenter();
-                        $lastNameRenter = $reserve->getLastNameRenter();
-                        $telephoneRenter = $reserve->getTelephoneRenter();
-
-                        require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
-                        $mail = new Email();
-                        $mail->setSubject('Has recibido un pedido de reserva!');
-                        $mail->setBody("<p>Hola $name:</p><p>Has recibido un pedido de reserva por $$price por tu $marcaModelo desde <b>$fechaInicio $horaInicio</b> hasta <b>$fechaTermino $horaTermino</b> cuando te habrán devuelto el auto.</p><p>Para ver la reserva has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a></p>");
-                        $mail->setTo($correo);
-                        if($correo != $correoEmail) $mail->setCc($correoEmail);
-                        $mail->submit();
-						
-                        $mail = new Email();
-                        $mail->setSubject('Nuevo pedido de reserva!');
-                        $mail->setBody("<p>Dueño: $name $lastName ($telephone) - $correoEmail</p><p>Arrendatario: $nameRenter $lastNameRenter ($telephoneRenter) - $correoRenter</p><p>----------------------</p><p></p><p>Has recibido un pedido de reserva por el monto de $price por tu $marcaModelo desde el día <b>$fechaInicio</b> a las <b>$horaInicio</b> hasta el día <b>$fechaTermino</b> a las <b>$horaTermino</b> cuando te habrán devuelto el auto.</p><p>Para ver la reserva has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a></p>");
-                        $mail->setTo('soporte@arriendas.cl');
-                        $mail->submit();
-						
-                        if($reserve->getConfirmedSMSOwner()==1){
-                            $this->enviarReservaSMS($reserve->getTelephoneOwner(),$fechaInicio);
-                        }
-
-                        $tipoVehiculo = $reserve->getTypeCar();
-                        $precioPorDia = $reserve->getPricePerDayCar();
-
-                        $ciudad = "santiago";
-                        $objeto_ciudad = Doctrine_Core::getTable("city")->findOneByName($ciudad);
-
-                        $q = Doctrine_Query::create()
-                            ->select('ca.id, mo.name model, br.name brand, ca.uso_vehiculo_id tipo_vehiculo, ca.year year, ca.transmission trans, ci.name city, st.name state, co.name country, ca.price_per_day priceday, ca.price_per_hour pricehour')
-                            ->from('Car ca')
-                            ->innerJoin('ca.Model mo')
-                            ->innerJoin('ca.User owner')
-                            ->innerJoin('mo.Brand br')
-                            ->innerJoin('ca.City ci')
-                            ->innerJoin('ci.State st')
-                            ->innerJoin('st.Country co')
-                            ->where('ca.activo = ?', 1)
-                            ->andWhere('ca.seguro_ok = ?', 4)
-                            ->andWhere('uso_vehiculo_id = ?', $tipoVehiculo)
-                            ->andWhere('ca.city_id = ?', $objeto_ciudad->getId())
-                            ->orderBy('ca.price_per_day asc');
-                        $cars = $q->fetchArray();
-
-                        $correoRenter = $reserve->getCorreoRenter();
-                        $correoRenter2 = $reserve->getEmailRenter();
-                        $nameRenter = $reserve->getNameRenter();
-                        $mail2 = new Email();
-                        $mail2->setSubject('Has realizado una reserva!');
-                        $stringVar = "<p>Hola $nameRenter:</p><p>Has realizado un pedido de reserva al vehículo $marcaModelo desde <b>$fechaInicio $horaInicio</b> hasta <b>$fechaTermino $horaTermino</b>.</p><p>El precio es final e incluye Seguro de daños, robo y destrucción, TAGs y Asistencia.</p><p><u><b>Esta es una lista de otros autos disponibles en esta categoría:</b></u></p><ul>";
-                        $cantidad = count($cars);
-                        if($cantidad>=5) $cantidad = 5;
-                        else $cantidad = count($cars);
-                        for($i=0;$i<$cantidad;$i++){
-                            if($tipoVehiculo == 1 && $precioPorDia < 24900){
-                                $stringVar = $stringVar."<li>".$cars[$i]['brand']." ".$cars[$i]['model']." ";
-                                if($cars[$i]['trans']==0) $stringVar = $stringVar."Manual ";
-                                else $stringVar = $stringVar."Automático ";
-                                $stringVar = $stringVar.$cars[$i]['year'].": <a href='http://www.arriendas.cl/cars/car/id/".$cars[$i]['id']."'>Ir a su perfil</a></li>";
-                            }else if($tipoVehiculo == 1 && $precioPorDia >= 24900){
-                                $stringVar = $stringVar."<p>".$cars[$i]['brand']." ".$cars[$i]['model']." ";
-                                if($cars[$i]['trans']==0) $stringVar = $stringVar."Manual ";
-                                else $stringVar = $stringVar."Automático ";
-                                $stringVar = $stringVar.$cars[$i]['year'].": <a href='http://www.arriendas.cl/cars/car/id/".$cars[$i]['id']."'>Ir a su perfil</a></li>";
-                            }else{
-                                $stringVar = $stringVar."<p>".$cars[$i]['brand']." ".$cars[$i]['model']." ";
-                                if($cars[$i]['trans']==0) $stringVar = $stringVar."Manual ";
-                                else $stringVar = $stringVar."Automático ";
-                                $stringVar = $stringVar.$cars[$i]['year'].": <a href='http://www.arriendas.cl/cars/car/id/".$cars[$i]['id']."'>Ir a su perfil</a></li>";
-                            }
-                        }
-                        $stringVar = $stringVar."</ul><p>Haz click en el link para ver el auto</p>";
-
-                        $mail2->setBody($stringVar);
-                        $mail2->setTo($correoRenter);
-                        if($correoRenter != $correoRenter2) $mail2->setCc($correoRenter2);
-                        $mail2->submit();
-
-                        //Enviando SMS si es es la primera reserva que realiza dentro de la ultima semana
-                        $user = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")));
-                        if(!$user->getSendReserveLastWeek($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")))){
-                            if($user->getConfirmedSms()==1){
-                                $texto = "Has emitido tu primera reserva de la semana en Arriendas.cl - Ante cualquier duda llamanos al 2 2333-3714 o escribenos a soporte@arriendas.cl";
-                                $this->enviarSMS($user->getTelephone(),$texto);
-                            }
-                        }
-                        if($user->getFirstReserve() == intval("1") && $user->getDriverLicenseFile() == NULL){
-                            $mail3 = new Email();
-                            $mail3->setSubject('Servicio al Cliente - Tu reserva en Arriendas.cl');
-                            $mail3->setBody("<p>Hola $nameRenter:</p><p>Recuerda completar tu perfil y subir la imagen de tu licencia (arriba a la derecha, opción 'Mi Perfil').</p><p>Ante cualquier pregunta llámanos al 2 2333-3714.</p>");
-                            $mail3->setTo($correoRenter);
-                            $mail3->submit();
-                        }
-                            
-                        $this->redirect('profile/reserveSend');
+                        /*
+                         * El envío de correo de movió a la función executeReserveCallback
+                         * que se llama por ajax una vez la página se haya cargado 
+                         *  
+                         */
+                        $this->redirect('profile/reserveSend?id='.$reserve->getId());
 						die();
                 }
                 
@@ -1830,14 +1730,168 @@ class profileActions extends sfActions {
             $this->redirect('profile/reserve?id=' . $request->getParameter('id'));
         }
     }
+    
+    public function executeReserveCallback(sfWebRequest $request) {
+        $idReserve = $request->getParameter('id');
+        $reserve = Doctrine_Core::getTable('reserve')->find($idReserve);
+        $car = Doctrine_Core::getTable('car')->find($reserve->getCarId());
+        $from = $reserve->getDate();
+        $to = $reserve->getFechaTermino();
+        $rangeDates = array($from, $to,$from, $to,$from, $to);
+        //envía correo al propietario del auto
+        $fechaInicio = $reserve->getFechaInicio();
+        $horaInicio = $reserve->getHoraInicio();
+        $fechaTermino = $reserve->getFechaTermino();
+        $horaTermino = $reserve->getHoraTermino();
+        $marcaModelo = $reserve->getMarcaModelo();
+        $price = $reserve->getPrice();
+        $price=number_format(($price),0,',','.');
+        $correo = $reserve->getEmailOwner();
+        $correoEmail = $reserve->getEmailOwnerCorreo();
+        $correoRenter = $reserve->getCorreoRenter();
+        $name = $reserve->getNameOwner();
+        $lastName = $reserve->getLastnameOwner();
+        $telephone = $reserve->getTelephoneOwner();
+        $nameRenter = $reserve->getNameRenter();
+        $lastNameRenter = $reserve->getLastNameRenter();
+        $telephoneRenter = $reserve->getTelephoneRenter();
+        
+        if($reserve->getConfirmedSMSOwner()==1){
+            $this->enviarReservaSMS($reserve->getTelephoneOwner(),$fechaInicio);
+        }
+        
+        require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
+        $mail = new Email();
+        $mail->setSubject('Has recibido un pedido de reserva!');
+        $mail->setBody("<p>Hola $name:</p>
+            <p>Has recibido un pedido de reserva por 
+            $$price por tu $marcaModelo desde <b>$fechaInicio $horaInicio</b> 
+                hasta <b>$fechaTermino $horaTermino</b> 
+                cuando te habrán devuelto el auto.</p><p>Para ver la reserva 
+                has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a></p>");
+        $mail->setTo($correo);
+        if($correo != $correoEmail) $mail->setCc($correoEmail);
+        $mail->submit();
+
+        $mail = new Email();
+        $mail->setSubject('Nuevo pedido de reserva!');
+        $mail->setBody("<p>Dueño: $name $lastName ($telephone) - $correoEmail</p>
+            <p>Arrendatario: $nameRenter $lastNameRenter ($telephoneRenter) - $correoRenter</p>
+            <p>----------------------</p>
+            <p></p>
+            <p>Has recibido un pedido de reserva por el monto de $price por tu $marcaModelo desde el día <b>$fechaInicio</b> a las <b>$horaInicio</b> hasta el día <b>$fechaTermino</b> a las <b>$horaTermino</b> cuando te habrán devuelto el auto.</p>
+            <p>Para ver la reserva has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a></p>");
+        $mail->setTo('soporte@arriendas.cl');
+        $mail->submit();
+        //
+        //Enviando SMS si es es la primera reserva que realiza dentro de la ultima semana
+        $user = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")));
+        if(!$user->getSendReserveLastWeek($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")))){
+            if($user->getConfirmedSms()==1){
+                $texto = "Has emitido tu primera reserva de la semana en Arriendas.cl - Ante cualquier duda llamanos al 2 2333-3714 o escribenos a soporte@arriendas.cl";
+                $this->enviarSMS($user->getTelephone(),$texto);
+            }
+        }
+        if($user->getFirstReserve() == intval("1") && $user->getDriverLicenseFile() == NULL){
+            $mail3 = new Email();
+            $mail3->setSubject('Servicio al Cliente - Tu reserva en Arriendas.cl');
+            $mail3->setBody("<p>Hola $nameRenter:</p>
+                <p>Recuerda completar tu perfil y subir la imagen de tu licencia (arriba a la derecha, opción 'Mi Perfil').</p>
+                <p>Ante cualquier pregunta llámanos al 2 2333-3714.</p>");
+            $mail3->setTo($correoRenter);
+            $mail3->submit();
+        }
+        
+        $today = new \DateTime('now');
+        $qb = Doctrine_Query::create()
+                            ->select('r.*')
+                            ->from('reserve r')
+                            ->where('date(r.fecha_reserva) = ?', $today->format('Y-m-d'))
+                            ->andwhere('r.user_id = ?', $reserve->getUserId())
+                            ;
+        $reserves_that_day_by_that_user = count($qb->fetchArray());
+        if($reserves_that_day_by_that_user<=1){
+            //avisamos por mail a los dueños de autos de esta nueva oportunidad
+            if(strtotime($from)>time()+(60*60*24)){//partimos con los radios medios porque se multiplican por dos
+                $radio = 8;
+            }else{
+                $radio = 2;
+            }
+            //obtenemos los dueños de autos que se encuentren en el radio y que su auto no se encuentra ya reservado para 
+                            //ese lapso
+            $q = Doctrine_Query::create()
+                                ->select('r.car_id')
+                                ->from('reserve r')
+                                ->leftJoin('r.Transaction t')
+                                ->where('t.completed = ?', true)
+                                //->andwhere('r.car_id = ?', $carid)
+                                ->andwhere('? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) 
+                                    OR ? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) 
+                                    OR r.date BETWEEN ? AND ? 
+                                    OR DATE_ADD(r.date, INTERVAL r.duration HOUR) BETWEEN ? AND ?', 
+                                        $rangeDates);
+            $payed_cars = $q->fetchArray();
+        
+            $car_lat = $car->getLat();
+            $car_lng = $car->getLng();
+            $maxPrice = $car->getPricePerDay() * 1.3;
+            $minPrice = $car->getPricePerDay() * 0.6;
+            do{
+                $q = "
+                    SELECT c.*
+                    from Car c 
+                    WHERE c.seguro_ok=4
+                    AND c.activo=1
+                    AND c.price_per_day <= ? 
+                    AND c.price_per_day >= ? 
+                    AND distancia (?,?,c.lat,c.lng) < ?
+                    AND c.uso_vehiculo_id = ?";
+                $query = Doctrine_Query::create()->query($q, 
+                        array(
+                            $maxPrice, 
+                            $minPrice,
+                            $car_lat,
+                            $car_lng,
+                            $radio,
+                            $car->getUsoVehiculoId()
+                        )
+                        );
+                $available_cars = $query->toArray();
+
+                $notifiable_cars = array();
+                foreach($available_cars as $available_car){
+                    if(!in_array($available_car['id'],$payed_cars) && $available_car['id']!=$car->getId()){
+                        $notifiable_cars[]=$available_car;
+                    }
+                }
+                $radio= $radio * 2;
+            }while(count($notifiable_cars)<=0 and $radio<10);
+            //enviamos los correos a los dueño de los notifiable_cars
+            foreach ($notifiable_cars as $notifiable_car){
+                $owner = Doctrine_Core::getTable('user')->find($notifiable_car['User_id']);
+
+                $mail = new Email();
+                $mail->setSubject('Hay un oportunidad para arrendar tu auto!');
+                $mail->setBody("
+                        <p>Hola ".$owner->getFirstname().":</p>
+                        <p>La oportunidad es por $$price desde <b>$fechaInicio $horaInicio</b> hasta <b>$fechaTermino $horaTermino</b>.</p>
+                        <p><b>Ingresa en la pestaña oportunidades y apruébala ahora mismo.</b></p>
+                        ");
+                $mail->setTo($owner->getEmail());
+                $mail->submit();
+            }
+        }
+        exit;
+    }
 
     public function executeReserveConfirmed(sfWebRequest $request) {
         $this->getUser()->setFlash('msg', 'Tu reserva ha sido confirmada. No olvides llevar tu tarjeta de crédito para retirar el auto.');
     }
 
     public function executeReserveSend(sfWebRequest $request) {
-		$url = $this->generateUrl('homepage');
+        $url = $this->generateUrl('homepage');
         $this->getUser()->setFlash('msg', 'Reserva enviada. Realiza multiples reservas hasta recibir una aprobación. <a href="'.$url.'">Siguiente</a>');
+        $this->idReserve = $idReserve = $request->getParameter('id');;
     }
 
 	 
@@ -3086,7 +3140,11 @@ public function executeAgreePdf2(sfWebRequest $request)
         $mKey = 0;
         $minKey = 0;
         $cities = array();
+        $usos = array();
+        $auxReserves = array();
+        $radio = 4;
         foreach($cars as $key => $car){
+            /*
             if($car->getPricePerDay() > $maxPrice){
                 $maxPrice = $car->getPricePerDay();
                 $mKey = $key;
@@ -3098,15 +3156,46 @@ public function executeAgreePdf2(sfWebRequest $request)
             if(!in_array($car->getComunaId(), $cities)){
                 array_push($cities, $car->getComunaId());
             }
+            if(!in_array($car->getUsoVehiculoId(), $usos)){
+                $usos[] = $car->getUsoVehiculoId();
+            }
+             * 
+             */
+            $car_lat = $car->getLat();
+            $car_lng = $car->getLng();
+            $maxPrice = $car->getPricePerDay() * 1.3;
+            $minPrice = $car->getPricePerDay() * 0.7;
+            
+            $q = "
+                SELECT r.id FROM reserve r 
+                JOIN r.Car c 
+                WHERE r.date > NOW() 
+                AND r.confirmed = 0 
+                AND r.canceled = 0 
+                AND r.fecha_reserva < NOW() 
+                AND c.price_per_day <= ? 
+                AND c.price_per_day >= ? 
+                AND distancia (?,?,c.lat,c.lng) < ?
+                AND c.uso_vehiculo_id = ? 
+                GROUP BY r.user_id, r.date";
+            $query = Doctrine_Query::create()->query($q, 
+                    array(
+                        $maxPrice, 
+                        $minPrice,
+                        $car_lat,
+                        $car_lng,
+                        $radio,
+                        $car->getUsoVehiculoId()
+                    )
+                    );
+            $reserve = $query->toArray();
+            $auxReserves = array_merge($auxReserves, $reserve);
         }
-        $maxPrice *= 1.2;
-        $minPrice *= 0.5;
+        $auxReserves = array_unique($auxReserves);
+        //$q = "SELECT r.id FROM reserve r JOIN r.Car c WHERE r.date > NOW() AND r.confirmed = 0 AND r.canceled = 0 AND DATE_ADD(r.fecha_reserva, INTERVAL 0 HOUR) < NOW() AND c.price_per_day <= ? AND c.price_per_day >= ? AND c.comuna_id IN (?) AND c.uso_vehiculo_id IN (?) GROUP BY r.user_id, r.date";
+        //$query = Doctrine_Query::create()->query($q, array($maxPrice, $minPrice, implode(',', $cities), implode(',', $usos)));
+        
         $reservasRecibidas = null;
-        
-        $q = "SELECT r.id FROM reserve r JOIN r.Car c WHERE r.date > NOW() AND r.confirmed = 0 AND r.canceled = 0 AND DATE_ADD(r.fecha_reserva, INTERVAL 0 HOUR) < NOW() AND c.price_per_day <= ? AND c.price_per_day >= ? AND c.comuna_id IN (?) GROUP BY r.user_id, r.date";
-        $query = Doctrine_Query::create()->query($q, array($maxPrice, $minPrice, implode(',', $cities)));
-        $reserve = $query->toArray();
-        
         foreach ($reserve as $i => $reserva) {
             $reserva = Doctrine_Core::getTable('reserve')->findOneById($reserva['id']);
             $q = "SELECT SUM(r.confirmed) as SUM FROM reserve r WHERE r.date = ? AND r.user_id = ? AND r.comentario != ?";

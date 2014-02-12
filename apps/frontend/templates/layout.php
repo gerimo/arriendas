@@ -383,7 +383,7 @@
                             </div>
                             
                             <ul class="menu_social" >
-                                <li><?php include_component("messages", "alerts", array("color" => $colors[$number][0])); ?></li>
+                                <li><?php //include_component("messages", "alerts", array("color" => $colors[$number][0])); ?></li>
     						<!-- <li><a href="<?php echo url_for('main/logout') ?>" style="color: white;font-weight: bold;text-decoration: none;text-shadow: 0px 1px 0px #0873CE;font-size: 14px;"  id="logout" name="logout" >Logout</a></li>-->
                             </ul>
                         </div><!-- fin fondoOscuro -->
