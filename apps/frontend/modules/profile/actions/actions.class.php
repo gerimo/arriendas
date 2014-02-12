@@ -3168,7 +3168,8 @@ public function executeAgreePdf2(sfWebRequest $request)
             $minPrice = $car->getPricePerDay() * 0.5;
             
             $q = "
-                SELECT r.id FROM reserve r 
+                SELECT * 
+                FROM reserve r 
                 JOIN r.Car c 
                 WHERE r.date > NOW() 
                 AND r.confirmed = 0 
@@ -3197,7 +3198,7 @@ public function executeAgreePdf2(sfWebRequest $request)
         $auxIdsIncluidos = array();
         $reservasAConsiderar = array();
         foreach($auxReserves as $r){
-            if(!in_array($r['id'], $auxIdsIncluidos)){
+            if(!in_array($r['id'], $auxIdsIncluidos) && $r['User_id']!=$this->getUser()->getAttribute("userid")){
                 $reservasAConsiderar[] = $r;                
                 $auxIdsIncluidos[]=$r['id'];
             }
