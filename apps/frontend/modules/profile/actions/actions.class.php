@@ -1849,10 +1849,12 @@ class profileActions extends sfActions {
                                     OR DATE_ADD(r.date, INTERVAL r.duration HOUR) BETWEEN ? AND ?', 
                                         $rangeDates);
             $payed_cars = $q->fetchArray();
+            
             $auxPayedCars_id = array();
             foreach($payed_cars as $payed_car){
                 $auxPayedCars_id[] = $payed_car['Car_id'];
             }
+            
             $car_lat = $car->getLat();
             $car_lng = $car->getLng();
             $maxPrice = $car->getPricePerDay() * 2;
@@ -3168,24 +3170,28 @@ public function executeAgreePdf2(sfWebRequest $request)
         $auxReserves = array();
         $radio1 = 8;
         $radio2 = 4;
+        
         foreach($cars as $key => $car){
-            /*
-            if($car->getPricePerDay() > $maxPrice){
-                $maxPrice = $car->getPricePerDay();
-                $mKey = $key;
+            //mostramos solo las oportunidades cuando un auto no está ya arrendado
+            $q = Doctrine_Query::create()
+                ->select('r.date, date_add(r.date, INTERVAL r.duration HOUR) as endingDate')
+                ->from('reserve r')
+                ->leftJoin('r.Transaction t')
+                ->leftJoin('r.Car c')
+                ->where('t.completed = ?', true)
+                ->andwhere('date_add(r.date, INTERVAL r.duration HOUR)>NOW()')
+                ->andwhere('c.id =?',$car->getId());
+                //->andwhere('r.date >= NOW()');
+            $payed_dates = $q->fetchArray();
+            
+            $dateRestriction =array();
+            foreach($payed_dates as $payed_date){
+                $dateRestriction[] = "'".$payed_date['date']."' NOT BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) 
+                                    AND '".$payed_date['endingDate']."' NOT BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) 
+                                    AND r.date NOT BETWEEN '".$payed_date['date']."' AND '".$payed_date['endingDate']."' 
+                                    AND DATE_ADD(r.date, INTERVAL r.duration HOUR) NOT BETWEEN '".$payed_date['date']."' AND '".$payed_date['endingDate']."'";
             }
-            if($car->getPricePerDay() <= $minPrice){
-                $minPrice = $car->getPricePerDay();
-                $minKey = $key;
-            }
-            if(!in_array($car->getComunaId(), $cities)){
-                array_push($cities, $car->getComunaId());
-            }
-            if(!in_array($car->getUsoVehiculoId(), $usos)){
-                $usos[] = $car->getUsoVehiculoId();
-            }
-             * 
-             */
+           
             $car_lat = $car->getLat();
             $car_lng = $car->getLng();
             $maxPrice = $car->getPricePerDay() * 1.3;
@@ -3201,7 +3207,6 @@ public function executeAgreePdf2(sfWebRequest $request)
                 AND r.confirmed = 0 
                 AND c.seguro_ok=4
                 AND c.activo=1
-                AND r.fecha_reserva < NOW() 
                 AND c.price_per_day <= ? 
                 AND c.price_per_day >= ? 
                 AND c.uso_vehiculo_id = ? 
@@ -3209,8 +3214,10 @@ public function executeAgreePdf2(sfWebRequest $request)
                         (r.date <= DATE_ADD(NOW(),INTERVAL 2 DAY) AND distancia (?,?,c.lat,c.lng) < ?)
                         OR
                         (r.date > DATE_ADD(NOW(),INTERVAL 2 DAY) AND distancia (?,?,c.lat,c.lng) < ?)
-                    )
+                    ) 
+                AND ".implode(" AND ", $dateRestriction)." 
                 GROUP BY r.user_id, r.date";
+            
             $query = Doctrine_Query::create()->query($q, 
                     array(
                         $maxPrice, 
