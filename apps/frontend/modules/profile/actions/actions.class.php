@@ -1908,8 +1908,8 @@ class profileActions extends sfActions {
     public function executeReserveSend(sfWebRequest $request) {
         $url = $this->generateUrl('homepage');
         $this->getUser()->setFlash('msg', 'Reserva enviada. 
-            Realiza múltiples reservas hasta recibir una aprobación,  
-            además recibirás ofertas de otros dueños. <a href="'.$url.'">Siguiente</a>');
+            Realiza múltiples reservas hasta recibir una aprobación.  
+            Además, recibirás ofertas de otros dueños. <a href="'.$url.'">Siguiente</a>');
         $this->idReserve = $idReserve = $request->getParameter('id');;
     }
 
