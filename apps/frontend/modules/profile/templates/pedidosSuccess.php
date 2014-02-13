@@ -96,6 +96,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                 </div>
 
                 <div id='confirmarContratosArrendatario'>
+                    <input type="checkbox" name="contratoArrendatario0" id="contratoArrendatario1" class='checkboxContrato'><p> En caso de siniestro, dejaré constancia en carabineros INMEDIATAMENTE.</p>
                     <input type="checkbox" name="contratoArrendatario1" id="contratoArrendatario1" class='checkboxContrato'><p> He visto el <a href='' class='informeDanios' target='_blank'>Informe de daños del veh&iacute;culo</a>.</p>
                     <input type="checkbox" name="contratoArrendatario2" id="contratoArrendatario2" class='checkboxContrato'><p> Entiendo ser responsable por daños producidos durante el arriendo por debajo del deducible de 5UF.</p>
                     <input type="checkbox" name="contratoArrendatario3" id="contratoArrendatario3" class='checkboxContrato'><p> <span id='textoBencinaArrendatario'>Si el arriendo es por menos de un día, pagaré por la bencina utilizada en efectivo según los kilómetros manejados. Si el arriendo es por un día o más, devolveré el veh&iacute;culo con el marcador de bencina en el mismo nivel con el que me fue entregado.</span></p>

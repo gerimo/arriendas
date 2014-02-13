@@ -391,7 +391,12 @@ class profileActions extends sfActions {
         $precio = $reserve->getPrice();
         $precio = number_format($precio, 0, ',', '.');
         $idCar = $reserve->getCarId();
-
+        $car = $reserve->getCar();
+        $model = $car->getModel();
+        $brand = $model->getBrand();
+        $reserveComuna = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($car->getComunaId());
+        $reserveComunaName = ucfirst(strtolower($reserveComuna->getNombre()));
+        
         $lastName = $reserve->getLastnameOwner();
         $telephone = $reserve->getTelephoneOwner();
         $lastNameRenter = $reserve->getLastNameRenter();
@@ -408,15 +413,25 @@ class profileActions extends sfActions {
             $mailer = $mail->getMailer();
 
             $message = $mail->getMessage();
-            $message->setSubject('Se ha aprobado tu reserva! (Falta pagar)');
-            $body = '<p>Hola '.$nameRenter.':</p><p>Se ha aprobado tu reserva!</p><p>Para acceder a los datos entrega del vehículo debes pagar 1000.- CLP.</p><p>Si tu arriendo no se concreta, Arriendas.cl no le pagará al dueño del auto y te daremos un auto a elección.</p><p>Has click <a href="http://www.arriendas.cl/profile/pedidos">aquí</a> para pagar.</p><p>Los datos del arriendo y el contrato se encuentran adjuntos en formato PDF.</p>';
+            if($reserve->getComentario()=='Reserva oportunidad'){
+                $message->setSubject('Otro dueño te ofrece su auto! (Reserva aprobada, falta pagar)');
+                $body = '<p>Hola '.$nameRenter.':</p>
+                    <p><b>Otro dueño de auto</b>, ha aprobado tu reserva.</p>
+                    <p>Es un'.$brand->getName().' '.$model->getName().' y está en $reserveComunaName.</p>
+                    <p>Para acceder a los datos del vehículo debes pagar $precio.- CLP.</p>
+                    <p>Has click <a href="http://www.arriendas.cl/profile/pedidos">aquí</a> para pagar.</p>
+                    <p>Los datos del arriendo y el contrato se encuentran adjuntos en formato PDF.</p>';
+            }else{
+                $message->setSubject('Se ha aprobado tu reserva! (Falta pagar)');
+                $body = '<p>Hola '.$nameRenter.':</p><p>Se ha aprobado tu reserva!</p><p>Para acceder a los datos del vehículo debes pagar $precio.- CLP.</p><p>Si tu arriendo no se concreta, Arriendas.cl no le pagará al dueño del auto y te daremos un auto a elección.</p><p>Has click <a href="http://www.arriendas.cl/profile/pedidos">aquí</a> para pagar.</p><p>Los datos del arriendo y el contrato se encuentran adjuntos en formato PDF.</p>';
+            }
             $message->setBody($mail->addFooter($body), 'text/html');
             $message->setTo($correoRenter);
             $functions = new Functions;
             $contrato = $functions->generarContrato($tokenReserve);
-            $reporte = $functions->generarReporte($idCar, true);
+            //$reporte = $functions->generarReporte($idCar, true);
             $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
-            $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+            //$message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
             $mailer->send($message);
             
             $message = $mail->getMessage();
@@ -1892,7 +1907,9 @@ class profileActions extends sfActions {
 
     public function executeReserveSend(sfWebRequest $request) {
         $url = $this->generateUrl('homepage');
-        $this->getUser()->setFlash('msg', 'Reserva enviada. Realiza multiples reservas hasta recibir una aprobación. <a href="'.$url.'">Siguiente</a>');
+        $this->getUser()->setFlash('msg', 'Reserva enviada. 
+            Realiza múltiples reservas hasta recibir una aprobación,  
+            además recibirás ofertas de otros dueños. <a href="'.$url.'">Siguiente</a>');
         $this->idReserve = $idReserve = $request->getParameter('id');;
     }
 
