@@ -1773,7 +1773,7 @@ class profileActions extends sfActions {
         $telephoneRenter = $reserve->getTelephoneRenter();
         
         if($reserve->getConfirmedSMSOwner()==1){
-            //$this->enviarReservaSMS($reserve->getTelephoneOwner(),$fechaInicio);
+            $this->enviarReservaSMS($reserve->getTelephoneOwner(),$fechaInicio);
         }
         
         require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
@@ -1866,7 +1866,9 @@ class profileActions extends sfActions {
                     AND c.price_per_day <= ? 
                     AND c.price_per_day >= ? 
                     AND distancia (?,?,c.lat,c.lng) < ?
-                    AND c.uso_vehiculo_id = ?";
+                    AND c.uso_vehiculo_id = ?
+                    ORDER BY c.contesta_pedidos DESC
+                    LIMIT 15";
                 $query = Doctrine_Query::create()->query($q, 
                         array(
                             $maxPrice, 
@@ -3164,7 +3166,8 @@ public function executeAgreePdf2(sfWebRequest $request)
         $cities = array();
         $usos = array();
         $auxReserves = array();
-        $radio = 8;
+        $radio1 = 8;
+        $radio2 = 4;
         foreach($cars as $key => $car){
             /*
             if($car->getPricePerDay() > $maxPrice){
@@ -3188,6 +3191,8 @@ public function executeAgreePdf2(sfWebRequest $request)
             $maxPrice = $car->getPricePerDay() * 1.3;
             $minPrice = $car->getPricePerDay() * 0.5;
             
+            //la consulta considera dos radios. Si es para hoy o mañana 8 kms, 
+            //si es para otra fecha solo 4kms
             $q = "
                 SELECT * 
                 FROM reserve r 
@@ -3199,23 +3204,31 @@ public function executeAgreePdf2(sfWebRequest $request)
                 AND r.fecha_reserva < NOW() 
                 AND c.price_per_day <= ? 
                 AND c.price_per_day >= ? 
-                AND distancia (?,?,c.lat,c.lng) < ?
                 AND c.uso_vehiculo_id = ? 
+                AND (
+                        (r.date <= DATE_ADD(NOW(),INTERVAL 2 DAY) AND distancia (?,?,c.lat,c.lng) < ?)
+                        OR
+                        (r.date > DATE_ADD(NOW(),INTERVAL 2 DAY) AND distancia (?,?,c.lat,c.lng) < ?)
+                    )
                 GROUP BY r.user_id, r.date";
             $query = Doctrine_Query::create()->query($q, 
                     array(
                         $maxPrice, 
                         $minPrice,
+                        $car->getUsoVehiculoId(),
                         $car_lat,
                         $car_lng,
-                        $radio,
-                        $car->getUsoVehiculoId()
+                        $radio1,
+                        $car_lat,
+                        $car_lng,
+                        $radio2
                     )
                     );
             $reserve = $query->toArray();
             $auxReserves = array_merge($auxReserves, $reserve);
             
         }
+        //var_dump($auxReserves);exit;
         $auxIdsIncluidos = array();
         $reservasAConsiderar = array();
         foreach($auxReserves as $r){
@@ -3224,6 +3237,7 @@ public function executeAgreePdf2(sfWebRequest $request)
                 $auxIdsIncluidos[]=$r['id'];
             }
         }
+        
         //$q = "SELECT r.id FROM reserve r JOIN r.Car c WHERE r.date > NOW() AND r.confirmed = 0 AND r.canceled = 0 AND DATE_ADD(r.fecha_reserva, INTERVAL 0 HOUR) < NOW() AND c.price_per_day <= ? AND c.price_per_day >= ? AND c.comuna_id IN (?) AND c.uso_vehiculo_id IN (?) GROUP BY r.user_id, r.date";
         //$query = Doctrine_Query::create()->query($q, array($maxPrice, $minPrice, implode(',', $cities), implode(',', $usos)));
         
