@@ -792,7 +792,7 @@ class profileActions extends sfActions {
         $user = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")));
         //echo $reserve->getSendReserveLastWeek($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
         //var_dump($user->getSendReserveLastWeek($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"))));
-        var_dump($user->getFirstReserve());
+        //var_dump($user->getFirstReserve());
         die();
     }
 
@@ -3216,7 +3216,6 @@ public function executeAgreePdf2(sfWebRequest $request)
             $auxReserves = array_merge($auxReserves, $reserve);
             
         }
-        var_dump($auxReserves);exit;
         $auxIdsIncluidos = array();
         $reservasAConsiderar = array();
         foreach($auxReserves as $r){
