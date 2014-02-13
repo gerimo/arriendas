@@ -1747,6 +1747,7 @@ class profileActions extends sfActions {
     }
     
     public function executeReserveCallback(sfWebRequest $request) {
+        
         $idReserve = $request->getParameter('id');
         $reserve = Doctrine_Core::getTable('reserve')->find($idReserve);
         $car = Doctrine_Core::getTable('car')->find($reserve->getCarId());
@@ -1772,7 +1773,7 @@ class profileActions extends sfActions {
         $telephoneRenter = $reserve->getTelephoneRenter();
         
         if($reserve->getConfirmedSMSOwner()==1){
-            $this->enviarReservaSMS($reserve->getTelephoneOwner(),$fechaInicio);
+            //$this->enviarReservaSMS($reserve->getTelephoneOwner(),$fechaInicio);
         }
         
         require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
@@ -1848,11 +1849,14 @@ class profileActions extends sfActions {
                                     OR DATE_ADD(r.date, INTERVAL r.duration HOUR) BETWEEN ? AND ?', 
                                         $rangeDates);
             $payed_cars = $q->fetchArray();
-        
+            $auxPayedCars_id = array();
+            foreach($payed_cars as $payed_car){
+                $auxPayedCars_id[] = $payed_car['Car_id'];
+            }
             $car_lat = $car->getLat();
             $car_lng = $car->getLng();
-            $maxPrice = $car->getPricePerDay() * 1.3;
-            $minPrice = $car->getPricePerDay() * 0.5;
+            $maxPrice = $car->getPricePerDay() * 2;
+            $minPrice = $car->getPricePerDay() * 0.7;
             do{
                 $q = "
                     SELECT c.*
@@ -1877,13 +1881,13 @@ class profileActions extends sfActions {
 
                 $notifiable_cars = array();
                 foreach($available_cars as $available_car){
-                    if(!in_array($available_car['id'],$payed_cars) && $available_car['id']!=$car->getId()){
+                    if(!in_array($available_car['id'],$auxPayedCars_id) && $available_car['id']!=$car->getId()){
                         $notifiable_cars[]=$available_car;
                     }
                 }
                 $radio= $radio * 2;
             }while(count($notifiable_cars)<=0 and $radio<10);
-            var_dump(count($notifiable_cars));
+            //var_dump($notifiable_cars);exit;
             //enviamos los correos a los dueño de los notifiable_cars
             foreach ($notifiable_cars as $notifiable_car){
                 $owner = Doctrine_Core::getTable('user')->find($notifiable_car['User_id']);
@@ -3160,7 +3164,7 @@ public function executeAgreePdf2(sfWebRequest $request)
         $cities = array();
         $usos = array();
         $auxReserves = array();
-        $radio = 4;
+        $radio = 8;
         foreach($cars as $key => $car){
             /*
             if($car->getPricePerDay() > $maxPrice){
@@ -3212,6 +3216,7 @@ public function executeAgreePdf2(sfWebRequest $request)
             $auxReserves = array_merge($auxReserves, $reserve);
             
         }
+        var_dump($auxReserves);exit;
         $auxIdsIncluidos = array();
         $reservasAConsiderar = array();
         foreach($auxReserves as $r){
