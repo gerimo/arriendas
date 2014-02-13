@@ -3170,69 +3170,77 @@ public function executeAgreePdf2(sfWebRequest $request)
         $auxReserves = array();
         $radio1 = 8;
         $radio2 = 4;
+        $activeCars = array();
         
         foreach($cars as $key => $car){
-            //mostramos solo las oportunidades cuando un auto no está ya arrendado
-            $q = Doctrine_Query::create()
-                ->select('r.date, date_add(r.date, INTERVAL r.duration HOUR) as endingDate')
-                ->from('reserve r')
-                ->leftJoin('r.Transaction t')
-                ->leftJoin('r.Car c')
-                ->where('t.completed = ?', true)
-                ->andwhere('date_add(r.date, INTERVAL r.duration HOUR)>NOW()')
-                ->andwhere('c.id =?',$car->getId());
-                //->andwhere('r.date >= NOW()');
-            $payed_dates = $q->fetchArray();
-            
-            $dateRestriction =array();
-            foreach($payed_dates as $payed_date){
-                $dateRestriction[] = "'".$payed_date['date']."' NOT BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) 
-                                    AND '".$payed_date['endingDate']."' NOT BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) 
-                                    AND r.date NOT BETWEEN '".$payed_date['date']."' AND '".$payed_date['endingDate']."' 
-                                    AND DATE_ADD(r.date, INTERVAL r.duration HOUR) NOT BETWEEN '".$payed_date['date']."' AND '".$payed_date['endingDate']."'";
+            if($car->getActivo()==1){
+                $activeCars[] = $car;
+                //mostramos solo las oportunidades cuando un auto no está ya arrendado
+                $q = Doctrine_Query::create()
+                    ->select('r.date, date_add(r.date, INTERVAL r.duration HOUR) as endingDate')
+                    ->from('reserve r')
+                    ->leftJoin('r.Transaction t')
+                    ->leftJoin('r.Car c')
+                    ->where('t.completed = ?', true)
+                    ->andwhere('date_add(r.date, INTERVAL r.duration HOUR)>NOW()')
+                    ->andwhere('c.id =?',$car->getId());
+                    //->andwhere('r.date >= NOW()');
+                $payed_dates = $q->fetchArray();
+
+                $dateRestriction =array();
+                foreach($payed_dates as $payed_date){
+                    $dateRestriction[] = "'".$payed_date['date']."' NOT BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) 
+                                        AND '".$payed_date['endingDate']."' NOT BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) 
+                                        AND r.date NOT BETWEEN '".$payed_date['date']."' AND '".$payed_date['endingDate']."' 
+                                        AND DATE_ADD(r.date, INTERVAL r.duration HOUR) NOT BETWEEN '".$payed_date['date']."' AND '".$payed_date['endingDate']."'";
+                }
+                //si no tiene reservas, creo una restricción 
+                //inocua para que no caiga la consulta
+                if(count($dateRestriction)==0){
+                    $dateRestriction[] = '1=1';
+                }
+                $car_lat = $car->getLat();
+                $car_lng = $car->getLng();
+                $maxPrice = $car->getPricePerDay() * 1.3;
+                $minPrice = $car->getPricePerDay() * 0.5;
+
+                //la consulta considera dos radios. Si es para hoy o mañana 8 kms, 
+                //si es para otra fecha solo 4kms
+                $q = "
+                    SELECT * 
+                    FROM reserve r 
+                    JOIN r.Car c 
+                    WHERE r.date > NOW() 
+                    AND r.confirmed = 0 
+                    AND c.seguro_ok=4
+                    AND c.activo=1
+                    AND c.price_per_day <= ? 
+                    AND c.price_per_day >= ? 
+                    AND c.uso_vehiculo_id = ? 
+                    AND (
+                            (r.date <= DATE_ADD(NOW(),INTERVAL 2 DAY) AND distancia (?,?,c.lat,c.lng) < ?)
+                            OR
+                            (r.date > DATE_ADD(NOW(),INTERVAL 2 DAY) AND distancia (?,?,c.lat,c.lng) < ?)
+                        ) 
+                    AND ".implode(" AND ", $dateRestriction)." 
+                    GROUP BY r.user_id, r.date";
+
+                $query = Doctrine_Query::create()->query($q, 
+                        array(
+                            $maxPrice, 
+                            $minPrice,
+                            $car->getUsoVehiculoId(),
+                            $car_lat,
+                            $car_lng,
+                            $radio1,
+                            $car_lat,
+                            $car_lng,
+                            $radio2
+                        )
+                        );
+                $reserve = $query->toArray();
+                $auxReserves = array_merge($auxReserves, $reserve);
             }
-           
-            $car_lat = $car->getLat();
-            $car_lng = $car->getLng();
-            $maxPrice = $car->getPricePerDay() * 1.3;
-            $minPrice = $car->getPricePerDay() * 0.5;
-            
-            //la consulta considera dos radios. Si es para hoy o mañana 8 kms, 
-            //si es para otra fecha solo 4kms
-            $q = "
-                SELECT * 
-                FROM reserve r 
-                JOIN r.Car c 
-                WHERE r.date > NOW() 
-                AND r.confirmed = 0 
-                AND c.seguro_ok=4
-                AND c.activo=1
-                AND c.price_per_day <= ? 
-                AND c.price_per_day >= ? 
-                AND c.uso_vehiculo_id = ? 
-                AND (
-                        (r.date <= DATE_ADD(NOW(),INTERVAL 2 DAY) AND distancia (?,?,c.lat,c.lng) < ?)
-                        OR
-                        (r.date > DATE_ADD(NOW(),INTERVAL 2 DAY) AND distancia (?,?,c.lat,c.lng) < ?)
-                    ) 
-                AND ".implode(" AND ", $dateRestriction)." 
-                GROUP BY r.user_id, r.date";
-            
-            $query = Doctrine_Query::create()->query($q, 
-                    array(
-                        $maxPrice, 
-                        $minPrice,
-                        $car->getUsoVehiculoId(),
-                        $car_lat,
-                        $car_lng,
-                        $radio1,
-                        $car_lat,
-                        $car_lng,
-                        $radio2
-                    )
-                    );
-            $reserve = $query->toArray();
-            $auxReserves = array_merge($auxReserves, $reserve);
             
         }
         //var_dump($auxReserves);exit;
@@ -3336,7 +3344,7 @@ public function executeAgreePdf2(sfWebRequest $request)
             }while($reservasRecibidas);
         }
         $this->reservasRecibidas = $reservasRecibidasAux;
-        $this->cars = $cars;
+        $this->cars = $activeCars;
     }
 
     public function executeAddCarExito(sfWebRequest $request){
