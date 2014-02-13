@@ -3226,7 +3226,7 @@ public function executeAgreePdf2(sfWebRequest $request)
                             (r.date > DATE_ADD(NOW(),INTERVAL 2 DAY) AND distancia (?,?,c.lat,c.lng) < ?)
                         ) 
                     AND ".implode(" AND ", $dateRestriction)." 
-                    GROUP BY r.user_id, r.date";
+                    GROUP BY r.user_id, DATE(r.date)";
 
                 $query = Doctrine_Query::create()->query($q, 
                         array(
