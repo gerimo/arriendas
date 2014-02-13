@@ -3173,8 +3173,11 @@ public function executeAgreePdf2(sfWebRequest $request)
         $activeCars = array();
         
         foreach($cars as $key => $car){
-            if($car->getActivo()==1){
+            //autos para que postule a la oportunidad
+            if($car->getSeguroOk()==4){
                 $activeCars[] = $car;
+            }
+            if($car->getActivo()==1){
                 //mostramos solo las oportunidades cuando un auto no está ya arrendado
                 $q = Doctrine_Query::create()
                     ->select('r.date, date_add(r.date, INTERVAL r.duration HOUR) as endingDate')
