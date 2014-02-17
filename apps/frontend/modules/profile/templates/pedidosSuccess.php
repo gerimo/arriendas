@@ -17,6 +17,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     var urlEditarFecha = <?php echo "'".url_for("profile/editarFechaPedidosAjax")."';" ?>
     var urlPedidos = <?php echo "'".url_for("profile/pedidos")."';" ?>
     var urlPago = <?php echo "'".url_for("profile/fbDiscount")."';" ?>
+    var urlPagoValidar = <?php echo "'".url_for("profile/checkCanPay")."';" ?>
     var urlExtenderReserva = <?php echo "'".url_for("profile/extenderReservaAjax")."';" ?>
 </script>
 
