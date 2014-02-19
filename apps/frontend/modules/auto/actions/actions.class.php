@@ -118,12 +118,12 @@ class autoActions extends sfActions {
             if ($id_comuna) {
                 $comuna = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($id_comuna);
                 if ($comuna->getNombre() == null) {
-                    $this->nombreComunaAuto = ", " . $auto->getCity() . ".";
+                    $this->nombreComunaAuto = $auto->getCity() . ".";
                     $nombreComuna = $auto->getCity();
                 } else {
                     $comuna = strtolower($comuna->getNombre());
                     $comuna = ucwords($comuna);
-                    $this->nombreComunaAuto = ", " . $comuna . ", " . $auto->getCity();
+                    $this->nombreComunaAuto = $comuna . ", " . $auto->getCity();
                     $nombreComuna = $comuna . ", " . $auto->getCity();
                 }
             } else {

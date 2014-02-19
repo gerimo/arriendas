@@ -264,7 +264,7 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                         <a href="<?php echo url_for('profile/reserve?id=' . $car->getId()) ?>" style="float:right; margin-right:25px;" title="Realizar una Reserva"><?php echo image_tag('BotonRealizarReserva.png', "class=boton"); ?></a>
 
                     </div>
-                    <h1>Arriendo <?php echo $car->getModel()->getBrand() . " " . $car->getModel() . $nombreComunaAuto; ?><?php if ($car->autoVerificado()): ?><?php echo image_tag("verificado.png", "class=img_verificado title='Auto Asegurado' size=18x18"); ?><?php endif; ?>
+                    <h1>Arriendo <?php echo $car->getModel() . " " . $car->getModel()->getBrand(). " en " . $nombreComunaAuto; ?><?php if ($car->autoVerificado()): ?><?php echo image_tag("verificado.png", "class=img_verificado title='Auto Asegurado' size=18x18"); ?><?php endif; ?>
                     </h1>
                     <input type="hidden" id="Pagetitle" value="Arriendo <?php echo $car->getModel()->getBrand() . " " . $car->getModel() . $nombreComunaAuto; ?>"/>
 
