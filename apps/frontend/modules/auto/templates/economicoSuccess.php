@@ -20,7 +20,7 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
     });
 
     $(document).ready(function() {
-        document.title = $("#Pagetitle").val();
+        //document.title = $("#Pagetitle").val();
     });
 
 </script>

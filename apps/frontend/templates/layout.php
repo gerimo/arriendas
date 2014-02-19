@@ -4,6 +4,7 @@
 	<meta name="google-site-verification" content="HxfRs3eeO-VFQdT1_QX7j8hfHPNMh-EIxA7BOyNtHiU" />
         
         <?php include_metas() ?>
+        <?php include_title() ?>
 	<link href="http://arriendas.assets.s3.amazonaws.com/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
         <meta property="og:description" content="Arrienda un auto vecino con seguro premium, asistencia de viaje y TAGs incluídos. Busca un auto por ubicación o por precio. Rent a car Vecino."/>

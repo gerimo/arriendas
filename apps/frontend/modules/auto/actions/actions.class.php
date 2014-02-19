@@ -119,10 +119,12 @@ class autoActions extends sfActions {
                 $comuna = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($id_comuna);
                 if ($comuna->getNombre() == null) {
                     $this->nombreComunaAuto = ", " . $auto->getCity() . ".";
+                    $nombreComuna = $auto->getCity();
                 } else {
                     $comuna = strtolower($comuna->getNombre());
                     $comuna = ucwords($comuna);
                     $this->nombreComunaAuto = ", " . $comuna . ", " . $auto->getCity();
+                    $nombreComuna = $comuna . ", " . $auto->getCity();
                 }
             } else {
                 $this->nombreComunaAuto = "";
@@ -191,6 +193,10 @@ class autoActions extends sfActions {
                 $comentariosOrd[$y] = $misComentarios[(count($misComentarios) - 1) - $y];
             }
             $this->comentarios = $comentariosOrd;
+            
+            $title = "Arriendo ".$this->car->getModel() . " " . $this->car->getModel()->getBrand()." en " . $nombreComuna . " - Rent a Car Vecino";
+            $this->getResponse()->setTitle($title);
+            
         } else {
             $this->redirect('auto/error?tipo=1');
         }
