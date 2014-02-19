@@ -1,0 +1,22 @@
+settings:
+  enviroment: dev 
+  dev:
+   url: https://www.sandbox.paypal.com
+   mode: sandbox
+   accountid: juanma.aguero-facilitator@gmail.com
+   username: juanma.aguero-facilitator_api1.gmail.com
+   password: 1392660975
+   signature: AjfCRVl7GLvJg2qEHG10zJIx.DZ.Axy9ERMI3-4mGtU-BYqcG8OevY44
+   status_success: Success
+   status_success_warning: SuccessWithWarning
+   status_failure: Failure
+   status_failure_warning: FailureWithWarning
+  prod:
+   accountid: juanma.aguero-facilitator@gmail.com
+   username: juanma.aguero-facilitator_api1.gmail.com
+   password: 1392660975
+   signature: AjfCRVl7GLvJg2qEHG10zJIx.DZ.Axy9ERMI3-4mGtU-BYqcG8OevY44
+   status_success: Success
+   status_success_warning: SuccessWithWarning
+   status_failure: Failure
+   status_failure_warning: FailureWithWarning
