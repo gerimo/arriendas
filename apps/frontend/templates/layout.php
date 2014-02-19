@@ -2,7 +2,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
     <head>
 	<meta name="google-site-verification" content="HxfRs3eeO-VFQdT1_QX7j8hfHPNMh-EIxA7BOyNtHiU" />
-	<?php echo  (stripos($_SERVER['SERVER_NAME'], "arrendas") !== FALSE)? "<title>Arrendas</title>":"<title>Arriendas.cl | Rent a car vecino en Chile</title>";?>
         
         <?php include_metas() ?>
 	<link href="http://arriendas.assets.s3.amazonaws.com/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
