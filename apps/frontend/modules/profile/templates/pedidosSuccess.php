@@ -211,6 +211,69 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                 //echo "<p class='alerta'>No registra pedidos aprobados</p>";
             }
 
+            /* oportunidades */
+            $mostrarOportunidades = false;
+            if(count($reservasRecibidasOportunidades) > 0){
+                $mostrarOportunidades = true;
+            }
+            if($mostrarOportunidades){
+                echo "<h3>OFERTAS APROBADAS PARA TI";
+                echo "<a href='#'>".image_tag('img_pedidos/BotonCancelar.png','id=eliminarResultadosRealizados class=botonHerramientas')."</a>";
+                echo "</h3>";
+                echo "<p class='textoAyuda'>Hasta no realizar el pago no se confirmará la reserva, ni recibirás la cobertura de seguros durante el arriendo.</p>";
+
+                foreach ($reservasRecibidasOportunidades as $reserva) {
+                    if(isset($reserva['idReserve']) && $reserva['estado']==2){
+
+                        echo"<div class='bloqueEstado idCar_".$reserva['carId']."' id='bloque_".$reserva['idReserve']."'>";
+                            echo "<div class='checkboxOpcion'>";
+                                echo "<input type='checkbox' class='checkbox checkboxResultadosRealizados' id='checkbox_".$reserva['idReserve']."'>";
+                            echo "</div>";
+                            echo "<div class='fechaReserva'>";
+                                echo "<div class='izq'>";
+                                    echo $reserva['fechaInicio']."<br>".$reserva['fechaTermino'];
+                                echo "</div>";
+                                echo "<div class='der'>";
+                                    echo $reserva['horaInicio']."<br>".$reserva['horaTermino'];
+                                echo "</div>";
+                            echo "</div>";
+                            echo "<div class='infoUsuario ocultarWeb'>";
+                                echo "<div class='izq'>";
+                                    echo "<a href='".url_for('cars/car?id='.$reserva['carId'])."' title='Ver Auto'>";
+                                        if($reserva['photoType'] == 0) echo image_tag("../uploads/cars/thumbs/".$reserva['fotoCar'],'class=img_usuario');
+                                            else echo image_tag($reserva['fotoCar'],'class=img_usuario');
+                                    echo "</a>";
+                                echo "</div>";
+                                echo "<div class='der'>";
+                                    echo "<span class='textoMediano'>".$reserva['marca'].", ".$reserva['modelo']."</span><br><a href='".url_for('profile/publicprofile?id='.$reserva['contraparteId'])."'>".$reserva['nombre']." ".$reserva['apellidoCorto']."</a>";
+                                echo "</div>";
+                            echo "</div>";
+                            echo "<div class='precio'>";
+                                echo "<span class='textoMediano nombreMovil'>".$reserva['marca'].", ".$reserva['modelo']."<br></span><a class='nombreMovil' href='".url_for('profile/publicprofile?id='.$reserva['contraparteId'])."'>".$reserva['nombre']." ".$reserva['apellidoCorto']."</a>";
+                                echo "<span class='textoGrande2'>$".$reserva['valor']."</span> CLP<br>(".$reserva['tiempoArriendo']." - asegurado)";
+                            echo "</div>";
+                            echo"<div class='eventoReserva'>";
+                                echo "<div class='der'>";
+                                    echo "<div class='cargando'>".image_tag('../images/ajax-loader.gif')."</div>";
+                                    echo "<div class='img'>".image_tag('img_pedidos/IconoPreAprobado.png')."</div>";
+                                    echo "Pre aprobado<br>(Falta pago)";
+                                echo "</div>";
+                            echo"</div>";
+                            echo"<div class='pagoBoton'>";
+                                    echo "<a href='#'>".image_tag('img_pedidos/BotonPagar.png','class=botonPagar duracion_'.$reserva['duracion'].' id=pagar_'.$reserva['idReserve'])."</a>";
+                            echo "</div>";
+                        echo"</div>";
+
+                    }
+                }
+
+                echo"<div class='bloqueEstado'>";
+                    echo"<div class='herramientas'>";
+                    echo "</div>";
+                echo"</div>";
+
+            }
+            
             
             $mostrar = false;
 
@@ -224,6 +287,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                 }
             }
             
+                       
             if($mostrar){
 
             echo "<h3>PRE APROBADOS (PENDIENTE DE PAGO)";

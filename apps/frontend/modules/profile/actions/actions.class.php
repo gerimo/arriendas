@@ -2798,6 +2798,8 @@ class profileActions extends sfActions {
                     $reservasRealizadas[$i]['tiempoArriendo'] = $reserva->getTiempoArriendoTexto();
                     $reservasRealizadas[$i]['duracion'] = $reserva->getDuration();
                     $reservasRealizadas[$i]['token'] = $reserva->getToken();
+                    $reservasRealizadas[$i]['confirmed'] = $reserva->getConfirmed();
+                    $reservasRealizadas[$i]['comentario'] = $reserva->getComentario();
 
                     //obtiene valor
                     $reservasRealizadas[$i]['valor'] = number_format(intval($reserva->getPrice()), 0, '', '.');
@@ -3074,10 +3076,22 @@ class profileActions extends sfActions {
           }
           die();
          */
+        
+        /* separo las oprtunidades de las reservas realizadas */
+        $oportunidades = array();
+        $reservasRealizadasNoOportunidadesAux = array();
+        foreach ($reservasRealizadasAux as $key => $reserva) {
+            if($reserva["confirmed"] == "1" && $reserva["comentario"] == "Reserva Oportunidad"){
+                $oportunidades[$key] = $reserva;
+            }else{
+                $reservasRealizadasNoOportunidadesAux[$key] = $reserva;
+            }
+        }
 
         $this->fechaReservasRealizadas = $fechaReservasRealizadas;
-        $this->reservasRealizadas = $reservasRealizadasAux;
+        $this->reservasRealizadas = $reservasRealizadasNoOportunidadesAux;
         $this->reservasRecibidas = $reservasRecibidasAux;
+        $this->reservasRecibidasOportunidades = $oportunidades;
     }
 
     public function executeOportunidades(sfWebRequest $request) {
