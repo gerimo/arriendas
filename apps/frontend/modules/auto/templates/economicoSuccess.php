@@ -68,7 +68,15 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
         color:#00AEEF;
         font-size: 24px;
     }
-
+    h2.subtitulos.punteado{
+        border-bottom: 1px solid #BDBDBD;
+        margin: 20px 20px 20px 20px;
+        padding: 0px 0px 4px 0px;
+        height: 15px;
+        background-color: transparent;
+        text-align: left;
+        font-weight: normal;
+    }
     .punteado {
         border-bottom: solid;
         border-bottom-width: 1px;
@@ -268,7 +276,7 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                     </h1>
                     <input type="hidden" id="Pagetitle" value="Arriendo <?php echo $car->getModel()->getBrand() . " " . $car->getModel() . $nombreComunaAuto; ?>"/>
 
-                    <div class="subtitulos punteado">Precio Final</div>
+                    <h2 class="subtitulos punteado">Precio Final</h2>
                     <div class="texto_normal precios">Precio por Hora | <span class="texto_magenta"><strong><?php echo "$" . number_format(floor($car->getPricePerHour()), 0, ',', '.'); ?></strong></span></div>
                     <div class="texto_normal precios">Precio por D&iacute;a | <span class="texto_magenta"><strong><?php echo "$" . number_format(floor($car->getPricePerDay()), 0, ',', '.'); ?></strong></span></div>
 
@@ -285,17 +293,17 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                             <?php endif; ?></div>		
                         <?php endif; ?>
 
-                    <div class="subtitulos punteado">Precio sin Depósito en Garantía</div>
+                    <h2 class="subtitulos punteado">Precio sin Depósito en Garantía</h2>
                     <div class="texto_normal precios">Precio por Hora | <span class="texto_magenta"><strong><?php echo "$" . number_format(floor($car->getPricePerHour()) + 967, 0, ',', '.'); ?></strong></span></div>
                     <div class="texto_normal precios">Precio por D&iacute;a | <span class="texto_magenta"><strong><?php echo "$" . number_format(floor($car->getPricePerDay()) + 5800, 0, ',', '.'); ?></strong></span></div>
 
-                    <div class="subtitulos punteado">Datos del Auto</div>
+                    <h2 class="subtitulos punteado">Datos del Auto</h2>
                     <div class="texto_normal precios"><div class="interlineado">Ubicaci&oacute;n |</div><div class="interlineado2"><strong><?php echo ucwords(strtolower($car->getAddressAprox())) . "" . $nombreComunaAuto ?></strong></div></div>
                     <div class="texto_normal precios">A&ntilde;o | <strong><?php echo $car->getYear(); ?></strong></div>
                     <div class="texto_normal precios">Tipo de Bencina | <strong><?php echo strtoupper($car->getTipoBencina()); ?></strong></div>
                     <div class="texto_normal precios">Transmisión | <strong><?php echo $sf_data->getRaw('transmision'); ?></strong></div>
 
-                    <div class="subtitulos punteado espaciado"><p>Due&ntilde;o - <a class="colorSub" href="<?php echo url_for('profile/publicprofile?id=' . $user->getId()) ?>" title="Ir al perfil de <?= $primerNombre ?>"><?= $primerNombre . " " . $inicialApellido; ?></a></p><a href="<?php echo url_for('messages/new?id=' . $user->getId()) ?>" style="" title="Enviar e-mail a <?php echo ucwords($user->getFirstname()) . ' ' . ucwords($user->getLastname()); ?>"><?php echo image_tag('img_msj/EnviarMsjSinSombraChico.png', "class=boton2"); ?></a></div>
+                    <h2 class="subtitulos punteado espaciado"><p>Due&ntilde;o - <a class="colorSub" href="<?php echo url_for('profile/publicprofile?id=' . $user->getId()) ?>" title="Ir al perfil de <?= $primerNombre ?>"><?= $primerNombre . " " . $inicialApellido; ?></a></p><a href="<?php echo url_for('messages/new?id=' . $user->getId()) ?>" style="" title="Enviar e-mail a <?php echo ucwords($user->getFirstname()) . ' ' . ucwords($user->getLastname()); ?>"><?php echo image_tag('img_msj/EnviarMsjSinSombraChico.png', "class=boton2"); ?></a></h2>
                     <div class="texto_normal precios">Calificaciones Positivas | <strong><?= $aprobacionDuenio['porcentaje']; ?>%</strong></div>
                     <div class="texto_normal precios">Velocidad de Respuesta | <strong><?php if ($velocidadMensajes == "") {
                         echo "<span style='font-style: italic; color:#BCBEB0;'>No tiene mensajes</span>";
@@ -304,14 +312,14 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                     } ?></strong></div>
                     <div class="texto_normal precios"><a class="colorSub" href="<?php echo url_for('profile/publicprofile?id=' . $user->getId()) ?>" title="Ver calificaciones hechas a <?= $primerNombre ?>">Ver Calificaciones</a></div>
 <?php if ($car->getDescription() != null) { ?>
-                        <div class="subtitulos punteado espaciado">Breve Descripci&oacute;n del auto</div>
+                        <h2 class="subtitulos punteado espaciado">Breve Descripci&oacute;n del auto</h2>
                         <div class="texto_normal precios"><?php echo $car->getDescription(); ?></div>
                     <?php } ?>
 
                     <?php
                     if ($car->autoVerificado()) {
                         ?>
-                        <div class="subtitulos punteado">Seguro<?php echo image_tag("verificado.png", "class=img_verificado title='Seguro Activo' size=14x14"); ?></div>
+                        <h2 class="subtitulos punteado">Seguro<?php echo image_tag("verificado.png", "class=img_verificado title='Seguro Activo' size=14x14"); ?></h2>
                         <div class="texto_normal precios"><div class="img_s1"></div> <strong>Seguro contra da&ntilde;os</strong></div>
                         <div class="texto_normal precios"><div class="img_s2"></div> <strong>Seguro destrucci&oacute;n total</strong></div>
                         <div class="texto_normal precios"><div class="img_s3"></div> <strong>Seguro de terceros</strong></div>
@@ -321,7 +329,7 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                     }
                     ?>
 
-                    <div class="subtitulos punteado espaciado">Da&ntilde;os del auto</div>
+                    <h2 class="subtitulos punteado espaciado">Da&ntilde;os del auto</h2>
                     <?php
                     if ($arrayFotosDanios) {
                         ?>
