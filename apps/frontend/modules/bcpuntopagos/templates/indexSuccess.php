@@ -98,7 +98,9 @@
                         <input type="hidden" name="idReserva" value="<?php echo $ppIdReserva ?>" />
                         <input type="hidden" name="duracionReservaPagoPorDia" value="<?php echo $montoTotalPagoPorDia ?>" />
                         <div>
+                            <?php if($deposito == "pagoPorDia"):?>
                             <a href="<?php echo url_for("paypal/confirmPayment?id=" . $ppId) ?>" class="botonPayPal" style="margin-top: 20px;float: left;" title="Pagar con PayPal"><img src="https://www.paypal.com/es_ES/i/btn/btn_xpressCheckout.gif"></a>
+                            <?php endif;?>
                             <input class="botonPagar" type="submit" value=""/>
                         </div>
                     </div>
