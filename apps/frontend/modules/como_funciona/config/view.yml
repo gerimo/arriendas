@@ -18,3 +18,7 @@ formularioEntregaSuccess:
     
 upload2S3Success:
     layout: basic
+    
+indexSuccess:
+    metas:
+        description:  ¿Cómo funciona Arriendas.cl? Arrienda un auto vecino con seguro premium, asistencia de viaje y TAGs incluídos. Busca un auto por ubicación o por precio. Rent a car Vecino.
