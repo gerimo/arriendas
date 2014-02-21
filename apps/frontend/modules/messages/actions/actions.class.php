@@ -110,6 +110,7 @@ class messagesActions extends sfActions
     $mail->setSubject('Mensaje nuevo');
     $mail->setBody("<p>Hola $userTo:</p><p>$userFrom te ha enviado un mensaje:</p><p>\"$mensajeNuevo\"</p><p>Para contestarlo ingresa <a href='http://www.arriendas.cl/messages/inbox'>aquí</a></p>");
     $mail->setTo($userTo->getEmail());
+    $mail->setFrom($userFrom->getRmail());
     $mail->submit();
 
     //Copia de mensaje a Germán
