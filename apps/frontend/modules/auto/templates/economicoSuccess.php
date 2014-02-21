@@ -1,6 +1,7 @@
 <?php use_stylesheet('comunes.css') ?>
 <?php use_stylesheet('subi_tu_auto.css') ?>
 <?php use_stylesheet('registro.css') ?>
+<?php use_stylesheet('calificaciones_profile.css') ?>
 <?php use_stylesheet('jquery.lightbox-0.5.css') ?>
 <?php
 $useragent = $_SERVER['HTTP_USER_AGENT'];

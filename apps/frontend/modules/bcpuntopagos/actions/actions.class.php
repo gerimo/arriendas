@@ -134,6 +134,9 @@ class bcpuntopagosActions extends sfActions {
                     $this->getUser()->setFlash('error', 'Debe especificar un medio de pago');
                     $this->redirect("bcpuntopagos/index?id=" . $request->getParameter("idReserva"));
                 }
+                if($request->getParameter("pp_medio_pago") == "20"){
+                    $this->forward("paypal","confirmPayment");
+                }
 
                 $order = Doctrine_Core::getTable("Transaction")->getTransaction($request->getParameter('id'));
                 $idReserve = $order->getReserveId();
@@ -350,7 +353,7 @@ class bcpuntopagosActions extends sfActions {
                     //pedidos de reserva pagado (arrendatario)
                     $message = $mail->getMessage();
                     $message->setSubject('La reserva ha sido pagada!');
-                    $body = "<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>Puedes llenar el formulario <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/$idReserve'>desde tu celular</a>.</p><pNo des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
+                    $body = "<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><pNo des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
                     $message->setBody($mail->addFooter($body), 'text/html');
                     $message->setTo($emailRenter);
                     $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
@@ -361,7 +364,7 @@ class bcpuntopagosActions extends sfActions {
                     //mail Soporte
                     $message = $mail->getMessage();
                     $message->setSubject('Nueva reserva paga ' . idReserve . '');
-                    $body = "<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>Puedes llenar el formulario <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/$idReserve'>desde tu celular</a>.</p><pNo des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
+                    $body = "<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><pNo des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
                     $message->setBody($mail->addFooter($body), 'text/html');
                     $message->setTo("soporte@arriendas.cl");
                     $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));

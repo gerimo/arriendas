@@ -54,7 +54,6 @@
                                 <td class="bordeDerGris"></td>
                                 <th class="bordeDerGris">Valor Total a pagar por PayPal</th>
                                 <?php if ($montoDeposito == 0) echo "<th class='bordeDerGris'>ERROR</th>";else { ?>
-                                    <?php if ($deposito == "depositoGarantia") $montoDeposito = 0; ?>
                                     <th class="bordeDerGris"><?= number_format($finalPrice, 0, ',', '.'); ?> CLP</th>
                                 <?php } ?>
                             </tr>

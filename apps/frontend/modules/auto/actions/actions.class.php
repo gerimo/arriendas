@@ -193,6 +193,8 @@ class autoActions extends sfActions {
                 $comentariosOrd[$y] = $misComentarios[(count($misComentarios) - 1) - $y];
             }
             $this->comentarios = $comentariosOrd;
+            $this->puntualidad = $this->user->getScorePuntualidad();
+            $this->limpieza = $this->user->getScoreLimpieza();
             
             $title = "Arriendo ".$this->car->getModel() . " " . $this->car->getModel()->getBrand()." en " . $nombreComuna . " - Rent a Car Vecino";
             $this->getResponse()->setTitle($title);

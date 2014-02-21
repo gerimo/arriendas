@@ -3081,7 +3081,7 @@ class profileActions extends sfActions {
         $oportunidades = array();
         $reservasRealizadasNoOportunidadesAux = array();
         foreach ($reservasRealizadasAux as $key => $reserva) {
-            if($reserva["confirmed"] == "1" && $reserva["comentario"] == "Reserva Oportunidad"){
+            if($reserva["confirmed"] == 1 && strtolower($reserva["comentario"]) == "reserva oportunidad"){
                 $oportunidades[$key] = $reserva;
             }else{
                 $reservasRealizadasNoOportunidadesAux[$key] = $reserva;

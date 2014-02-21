@@ -83,24 +83,22 @@
                         </table>
                         <table id="tablePP2">
                             <tr>
-                                <td style="width:33%;"><input type="radio" name="pp_medio_pago" value="6"/> <?php echo image_tag('puntopagos/mp6.gif') ?></td>
-                                <td style="width:33%;"><input type="radio" name="pp_medio_pago" value="7"/> <?php echo image_tag('puntopagos/mp7.gif') ?></td>
-                                <td style="width:33%;"><input type="radio" name="pp_medio_pago" value="10"/> <?php echo image_tag('puntopagos/mp10.gif') ?></td>
+                                <td style="width:24%;"><input type="radio" name="pp_medio_pago" value="6"/> <?php echo image_tag('puntopagos/mp6.gif') ?></td>
+                                <td style="width:27%;"><input type="radio" name="pp_medio_pago" value="7"/> <?php echo image_tag('puntopagos/mp7.gif') ?></td>
+                                <td style="width:24%;"><input type="radio" name="pp_medio_pago" value="10"/> <?php echo image_tag('puntopagos/mp10.gif') ?></td>
+                                <td style="width:30%;"><input type="radio" name="pp_medio_pago" value="20" style="margin-top: 0px;"/><img src="https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png" border="0" alt="PayPal Logo"></td>
                             </tr>
                         </table>
 
 
                     </div>
-                        <div class="contenedorBotonPagar" style="width: 400px;">
+                    <div class="contenedorBotonPagar" style="width: 400px;">
                         <input type="hidden" name="carMarcaModel" value="<?php echo $carMarcaModel ?>"/>
                         <input type="hidden" name="duracionReserva" value="<?php echo $duracionReserva ?>"/>
                         <input type="hidden" name="deposito" value="<?php echo $deposito ?>"/>
                         <input type="hidden" name="idReserva" value="<?php echo $ppIdReserva ?>" />
                         <input type="hidden" name="duracionReservaPagoPorDia" value="<?php echo $montoTotalPagoPorDia ?>" />
                         <div>
-                            <?php if($deposito == "pagoPorDia"):?>
-                            <a href="<?php echo url_for("paypal/confirmPayment?id=" . $ppId) ?>" class="botonPayPal" style="margin-top: 20px;float: left;" title="Pagar con PayPal"><img src="https://www.paypal.com/es_ES/i/btn/btn_xpressCheckout.gif"></a>
-                            <?php endif;?>
                             <input class="botonPagar" type="submit" value=""/>
                         </div>
                     </div>

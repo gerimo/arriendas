@@ -215,7 +215,49 @@ class paypalActions extends sfActions {
                                     $order->save();
 
                                     //envío de mail
-                                    /* necesita merge con branch master */
+                                    require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
+
+
+                                    //pedidos de reserva pagado (propietario)
+                                    $mail = new Email();
+                                    $mailer = $mail->getMailer();
+
+                                    $message = $mail->getMessage();
+                                    $message->setSubject('El arrendatario ha pagado la reserva!');
+                                    $body = "<p>Hola $nameOwner:</p><p>El arrendatario ha pagado la reserva!</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>Puedes llenar el formulario <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/$idReserve'>desde tu celular</a>.</p><p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameRenter $lastnameRenter<br>Teléfono: $telephoneRenter<br>Correo: $emailRenter</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
+                                    $message->setBody($mail->addFooter($body), 'text/html');
+                                    $message->setTo($emailOwner);
+                                    $functions = new Functions;
+                                    $formulario = $functions->generarFormulario(NULL, $tokenReserve);
+                                    $reporte = $functions->generarReporte($idCar);
+                                    $contrato = $functions->generarContrato($tokenReserve);
+                                    $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+                                    $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
+                                    $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+                                    $mailer->send($message);
+
+
+                                    //pedidos de reserva pagado (arrendatario)
+                                    $message = $mail->getMessage();
+                                    $message->setSubject('La reserva ha sido pagada!');
+                                    $body = "<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>Puedes llenar el formulario <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/$idReserve'>desde tu celular</a>.</p><pNo des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
+                                    $message->setBody($mail->addFooter($body), 'text/html');
+                                    $message->setTo($emailRenter);
+                                    $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+                                    $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
+                                    $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+                                    $mailer->send($message);
+
+                                    //mail Soporte
+                                    $message = $mail->getMessage();
+                                    $message->setSubject('Nueva reserva paga ' . idReserve . '');
+                                    $body = "<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>Puedes llenar el formulario <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/$idReserve'>desde tu celular</a>.</p><pNo des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
+                                    $message->setBody($mail->addFooter($body), 'text/html');
+                                    $message->setTo("soporte@arriendas.cl");
+                                    $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+                                    $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
+                                    $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+                                    $mailer->send($message);
 
                                     //crea la fila calificaciones habilitada para la fecha de término de reserva + 2 horas (solo si no es una extension de otra reserva)
                                     if (!$reserve->getIdPadre()) {
@@ -238,7 +280,7 @@ class paypalActions extends sfActions {
                                     }
 
                                     //almacena $idReserve en la tabla mail calificaciones
-                                    //$reserve->encolarMailCalificaciones();
+                                    $reserve->encolarMailCalificaciones();
                                 }
                             } else {
                                 echo "No hay compras hechas para ser pagadas (Error de monto invalido)";
