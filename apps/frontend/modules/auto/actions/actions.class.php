@@ -53,12 +53,13 @@ class autoActions extends sfActions {
     public function executeEconomico(sfWebRequest $request) {
 
 
-        $nombreComunaURL = $request->getParameter('chile');
-        $comunaURL = Doctrine_Core::getTable('comunas')->findOneByNombre($nombreComunaURL);
-        if (!$comunaURL)
+        $this->nombreComunaUrl = $request->getParameter('chile');
+        $comunaURL = Doctrine_Core::getTable('comunas')->findOneByNombre($this->nombreComunaUrl);
+        if (!$comunaURL){
             $this->redirect('auto/error?tipo=2');
-        else
+        } else{
             $codigoInterno_comunaURL = $comunaURL->getCodigoInterno();
+        }
 
         $this->car = Doctrine_Core::getTable('car')->find(array($request->getParameter('id')));
 

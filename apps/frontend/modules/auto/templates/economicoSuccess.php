@@ -167,32 +167,32 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
     .img_verificado{
         margin-left: 8px;
     }
-.evaluaciones{
-	float: left;
-	width: 480px;
-	margin-left: 4px;
-	margin-top: 40px;
-	margin-bottom: 30px;
-}
-#evaluacionesPublicProfile{
-	float: left;
-	width: 490px;
-	margin-left: 9px;
-	margin-top: 40px;
-	margin-bottom: 30px;
-}
-.conten_opcion3 .evaluaciones, .conten_opcion2 .evaluaciones{
-	margin-top: 10px;
-}
+    .evaluaciones{
+        float: left;
+        width: 480px;
+        margin-left: 4px;
+        margin-top: 40px;
+        margin-bottom: 30px;
+    }
+    #evaluacionesPublicProfile{
+        float: left;
+        width: 490px;
+        margin-left: 9px;
+        margin-top: 40px;
+        margin-bottom: 30px;
+    }
+    .conten_opcion3 .evaluaciones, .conten_opcion2 .evaluaciones{
+        margin-top: 10px;
+    }
 
-#evaluacionesPublicProfile h3{
-	margin-left: 10px;
-	border-bottom: 1px solid #00AEEF;
-	padding-bottom: 10px;
-	font-size: 14px;
-	color: #00AEEF; /* celeste */
-	margin-bottom: 10px;
-}
+    #evaluacionesPublicProfile h3{
+        margin-left: 10px;
+        border-bottom: 1px solid #00AEEF;
+        padding-bottom: 10px;
+        font-size: 14px;
+        color: #00AEEF; /* celeste */
+        margin-bottom: 10px;
+    }
 </style>
 <?php if (sfContext::getInstance()->getUser()->getAttribute("logged")) { ?>
     <div class="main_box_1">
@@ -213,11 +213,13 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                 <div class="ladoIzquierdo">
                     <div id="imagenPerfil">
                         <?php
+                        $image_alt = "arriendoautos/rentacar/" . $car->getModel()->getBrand() . $car->getModel() . "/" . $nombreComunaUrl . "/" . $car->getId();
+                        $image_title = "arriendoauto/" . $car->getId();
                         if ($car->getPhotoS3() == 1) {
-                            echo image_tag("http://www.arriendas.cl/main/s3thumb?alto=185&ancho=185&urlFoto=" . $car->getFoto(), array("width" => "185", "height" => "185"));
+                            echo image_tag("http://www.arriendas.cl/main/s3thumb?alto=185&ancho=185&urlFoto=" . $car->getFoto(), array("width" => "185", "height" => "185", "alt" => $image_alt, "title" => $image_title));
                         } else {
 //						echo image_tag("../uploads/cars/".$car->getFoto(),array("width"=>"185","height"=>"185"));
-                            echo "<img src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_185,h_185,c_fill,g_center/http://arriendas.cl/uploads/cars/" . $car->getFoto() . "'/>";
+                            echo "<img src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_185,h_185,c_fill,g_center/http://arriendas.cl/uploads/cars/" . $car->getFoto() . "' alt='" . $image_alt . "' title='" . $image_title . "' />";
                         }
                         ?>
                     </div>
@@ -233,38 +235,38 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                                         ?>
                                         <li>
                                             <a title="<?= $arrayDescripcionFotos[$i]; ?>" href="http://www.arriendas.cl/main/s3thumb?alto=600&ancho=600&urlFoto=<?= $arrayFotos[$i]; ?>">
-                                                <img title="<?= $arrayDescripcionFotos[$i]; ?>" src="http://www.arriendas.cl/main/s3thumb?alto=40&ancho=40&urlFoto=<?= $arrayFotos[$i]; ?>" width="40" height="40">
+                                                <img title="<?= $arrayDescripcionFotos[$i]; ?>" src="http://www.arriendas.cl/main/s3thumb?alto=40&ancho=40&urlFoto=<?= $arrayFotos[$i]; ?>" width="40" height="40" alt="<?=$image_alt?>">
                                             </a>
                                         </li>
-            <?php
-        }
-        ?>
+                                        <?php
+                                    }
+                                    ?>
                                 </ul>
                             </div>
-        <?php
-    } else {
-        ?>
+                            <?php
+                        } else {
+                            ?>
                             <div id="gallery">
                                 <ul>
-        <?php
-        $cantidadFotos = count($arrayFotos);
-        for ($i = 0; $i < $cantidadFotos; $i++) {
-            ?>
+                                    <?php
+                                    $cantidadFotos = count($arrayFotos);
+                                    for ($i = 0; $i < $cantidadFotos; $i++) {
+                                        ?>
                                         <li>
                                             <a title="<?= $arrayDescripcionFotos[$i]; ?>" href="<?= image_path('../uploads/verificaciones/' . $arrayFotos[$i]); ?>">
-                                                <img title="<?= $arrayDescripcionFotos[$i]; ?>" src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_40,h_40,c_fill,g_center/http://arriendas.cl/<?= image_path('../uploads/verificaciones/thumbs/' . $arrayFotos[$i]); ?>" width="40" height="40">
+                                                <img title="<?= $arrayDescripcionFotos[$i]; ?>" src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_40,h_40,c_fill,g_center/http://arriendas.cl/<?= image_path('../uploads/verificaciones/thumbs/' . $arrayFotos[$i]); ?>" width="40" height="40" alt="<?=$image_alt?>" >
                                             </a>
                                         </li>
-            <?php
-        }
-        ?>
+                                        <?php
+                                    }
+                                    ?>
                                 </ul>
                             </div>
 
-        <?php
-    }
-}
-?>
+                            <?php
+                        }
+                    }
+                    ?>
                 </div><!-- izquierda -->
 
                 <div style="width: 256px;margin-bottom:50px; float: right;margin-left:0px;margin-right:30px;padding-right:10px;font-size:12px;">
@@ -273,7 +275,7 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                         <a href="<?php echo url_for('profile/reserve?id=' . $car->getId()) ?>" style="float:right; margin-right:25px;" title="Realizar una Reserva"><?php echo image_tag('BotonRealizarReserva.png', "class=boton"); ?></a>
 
                     </div>
-                    <h1>Arriendo <?php echo $car->getModel() . " " . $car->getModel()->getBrand(). " en " . $nombreComunaAuto; ?><?php if ($car->autoVerificado()): ?><?php echo image_tag("verificado.png", "class=img_verificado title='Auto Asegurado' size=18x18"); ?><?php endif; ?>
+                    <h1>Arriendo <?php echo $car->getModel() . " " . $car->getModel()->getBrand() . " en " . $nombreComunaAuto; ?><?php if ($car->autoVerificado()): ?><?php echo image_tag("verificado.png", "class=img_verificado title='Auto Asegurado' size=18x18"); ?><?php endif; ?>
                     </h1>
                     <input type="hidden" id="Pagetitle" value="Arriendo <?php echo $car->getModel()->getBrand() . " " . $car->getModel() . $nombreComunaAuto; ?>"/>
 
@@ -281,10 +283,10 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                     <div class="texto_normal precios">Precio por Hora | <span class="texto_magenta"><strong><?php echo "$" . number_format(floor($car->getPricePerHour()), 0, ',', '.'); ?></strong></span></div>
                     <div class="texto_normal precios">Precio por D&iacute;a | <span class="texto_magenta"><strong><?php echo "$" . number_format(floor($car->getPricePerDay()), 0, ',', '.'); ?></strong></span></div>
 
-<?php if ($car->getDisponibilidadSemana() == 1 && $car->getDisponibilidadFinde() == 1): ?>
+                    <?php if ($car->getDisponibilidadSemana() == 1 && $car->getDisponibilidadFinde() == 1): ?>
                         <div class="texto_normal precios">Precio por Semana | 
-                        <?php if ($car->getPricePerWeek() > 0): ?><span class="texto_magenta"><strong><?php echo "$" . number_format(floor($car->getPricePerWeek()), 0, ',', '.'); ?></strong></span>
-                        <?php else: ?>
+                            <?php if ($car->getPricePerWeek() > 0): ?><span class="texto_magenta"><strong><?php echo "$" . number_format(floor($car->getPricePerWeek()), 0, ',', '.'); ?></strong></span>
+                            <?php else: ?>
                                 <a href="<?php echo url_for('messages/new?id=' . $user->getId() . '&comentarios=Consulta arriendo Semanal ' . $car->getModel()->getBrand() . " " . $car->getModel()) ?>" title="Consultar arriendo Semanal de <?php echo $car->getModel()->getBrand() . " " . $car->getModel(); ?>"><span class="texto_magenta"><strong>Consultar</strong></span></a>
                             <?php endif; ?></div>
                         <div class="texto_normal precios">Precio por Mes | 
@@ -292,7 +294,7 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                             <?php else: ?>
                                 <a href="<?php echo url_for('messages/new?id=' . $user->getId() . '&comentarios=Consulta arriendo Mensual ' . $car->getModel()->getBrand() . " " . $car->getModel()) ?>" title="Consultar arriendo Mensual de <?php echo $car->getModel()->getBrand() . " " . $car->getModel(); ?>"><span class="texto_magenta"><strong>Consultar</strong></span></a>
                             <?php endif; ?></div>		
-                        <?php endif; ?>
+                    <?php endif; ?>
 
                     <h2 class="subtitulos punteado">Precio sin Depósito en Garantía</h2>
                     <div class="texto_normal precios">Precio por Hora | <span class="texto_magenta"><strong><?php echo "$" . number_format(floor($car->getPricePerHour()) + 967, 0, ',', '.'); ?></strong></span></div>
@@ -306,13 +308,15 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
 
                     <h2 class="subtitulos punteado espaciado"><p>Due&ntilde;o - <a class="colorSub" href="<?php echo url_for('profile/publicprofile?id=' . $user->getId()) ?>" title="Ir al perfil de <?= $primerNombre ?>"><?= $primerNombre . " " . $inicialApellido; ?></a></p><a href="<?php echo url_for('messages/new?id=' . $user->getId()) ?>" style="" title="Enviar e-mail a <?php echo ucwords($user->getFirstname()) . ' ' . ucwords($user->getLastname()); ?>"><?php echo image_tag('img_msj/EnviarMsjSinSombraChico.png', "class=boton2"); ?></a></h2>
                     <div class="texto_normal precios">Calificaciones Positivas | <strong><?= $aprobacionDuenio['porcentaje']; ?>%</strong></div>
-                    <div class="texto_normal precios">Velocidad de Respuesta | <strong><?php if ($velocidadMensajes == "") {
-                        echo "<span style='font-style: italic; color:#BCBEB0;'>No tiene mensajes</span>";
-                    } else {
-                        echo $velocidadMensajes;
-                    } ?></strong></div>
+                    <div class="texto_normal precios">Velocidad de Respuesta | <strong><?php
+                            if ($velocidadMensajes == "") {
+                                echo "<span style='font-style: italic; color:#BCBEB0;'>No tiene mensajes</span>";
+                            } else {
+                                echo $velocidadMensajes;
+                            }
+                            ?></strong></div>
                     <div class="texto_normal precios"><a class="colorSub" href="<?php echo url_for('profile/publicprofile?id=' . $user->getId()) ?>" title="Ver calificaciones hechas a <?= $primerNombre ?>">Ver Calificaciones</a></div>
-<?php if ($car->getDescription() != null) { ?>
+                    <?php if ($car->getDescription() != null) { ?>
                         <h2 class="subtitulos punteado espaciado">Breve Descripci&oacute;n del auto</h2>
                         <div class="texto_normal precios"><?php echo $car->getDescription(); ?></div>
                     <?php } ?>
@@ -343,7 +347,7 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                                     <li>
 
                                         <a title="<?= $arrayDescripcionesDanios[$i]; ?>" href="http://www.arriendas.cl/main/s3thumb?alto=600&ancho=600&urlFoto=http://www.arriendas.cl/uploads/damages/<?= $arrayFotosDanios[$i]; ?>">
-                                            <img title="<?= $arrayDescripcionesDanios[$i]; ?>" src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_40,h_40,c_fill,g_center/http://arriendas.cl/uploads/damages/<?= $arrayFotosDanios[$i]; ?>" width="40" height="40">
+                                            <img title="<?= $arrayDescripcionesDanios[$i]; ?>" src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_40,h_40,c_fill,g_center/http://arriendas.cl/uploads/damages/<?= $arrayFotosDanios[$i]; ?>" width="40" height="40" alt="<?=$image_alt?>" >
                                         </a>
                                     </li>
                                     <?php
@@ -376,7 +380,7 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                             <h3>CALIFICACIONES (<?= $cantidadDeComentariosSobreMi; ?>)</h3>   
                             <div class="calificacionEstrellas">
                                 <div class="puntualidad">
-                                    <?php echo image_tag('img_evaluaciones/IconoPuntualidad.png', 'class=img_IconoPuntualidad') ?>
+                                        <?php echo image_tag('img_evaluaciones/IconoPuntualidad.png', 'class=img_IconoPuntualidad') ?>
                                     <p><span>Puntualidad</span></p>
                                     <div class="estrellas">
                                         <?php
@@ -391,7 +395,7 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                                     </div>
                                 </div>
                                 <div class="limpieza">
-                                    <?php echo image_tag('img_evaluaciones/IconoLimpieza.png', 'class=img_IconoLimpieza') ?>
+                                        <?php echo image_tag('img_evaluaciones/IconoLimpieza.png', 'class=img_IconoLimpieza') ?>
                                     <p><span>Limpieza</span></p>
                                     <div class="estrellas">
                                         <?php
@@ -414,7 +418,7 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                                 <div class="comentario">
                                     <div class="usuario">
 
-                                        <?php echo "<a href='" . url_for('profile/publicprofile?id=' . $comentarios[$i]['idEvaluador']) . "'>"; ?>
+                                            <?php echo "<a href='" . url_for('profile/publicprofile?id=' . $comentarios[$i]['idEvaluador']) . "'>"; ?>
                                         <div class="fotoPosteador">
                                             <?php
                                             if ($comentarios[$i]['facebookEvaluador'] != null && $comentarios[$i]['facebookEvaluador'] != "") {
@@ -444,9 +448,9 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                                                         <span>|</span><?php echo image_tag('img_evaluaciones/IconoLimpieza.png', 'class=img_det_limp') ?>
                                                         <p>Limpieza</p>
                                                         <p><?= $comentarios[$i]['limpio']; ?>/5</p>
-        <?php
-        if ($comentarios[$i]['limpio'] > 2) {
-            ?>
+                                                        <?php
+                                                        if ($comentarios[$i]['limpio'] > 2) {
+                                                            ?>
                                                             <?php echo image_tag('img_evaluaciones/IconoDedoArriba.png', 'class=img_dedo_arriba') ?>
                                                             <?php
                                                         } else {
@@ -459,9 +463,9 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                                                     </div>
                                                     <div class="punt">
                                                         <span>|</span><?php echo image_tag('img_evaluaciones/IconoPuntualidad.png', 'class=img_det_punt') ?>
-        <?php
-        if ($comentarios[$i]['puntual'] == 1) {
-            ?>
+                                                        <?php
+                                                        if ($comentarios[$i]['puntual'] == 1) {
+                                                            ?>
                                                             <p>Puntual</p><?php echo image_tag('img_evaluaciones/IconoDedoArriba.png', 'class=img_dedo_arriba') ?>
                                                             <?php
                                                         } else {
@@ -472,7 +476,7 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                                                         ?>
                                                     </div>
                                                     <div class="reco">
-        <?php echo image_tag('img_evaluaciones/IconoUsuario.png', 'class=img_det_reco') ?>
+                                                        <?php echo image_tag('img_evaluaciones/IconoUsuario.png', 'class=img_det_reco') ?>
                                                         <?php
                                                         if ($comentarios[$i]['recomendado'] == 1) {
                                                             ?>
@@ -491,10 +495,10 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                                     </div>
                                 </div>
 
-        <?php
-    }
-}
-?>
+                                <?php
+                            }
+                        }
+                        ?>
                     </div>
                 </div>
 
