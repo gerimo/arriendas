@@ -1,5 +1,6 @@
-$(document).on('ready', function() {
 
+
+function bindEventsAll(){
     $("#confirmarEditarHora").dialog({
         resizable: false,
         width: 550,
@@ -88,7 +89,7 @@ $(document).on('ready', function() {
                 }
             } else {
                 /* se valido que puede pagar */
-                
+
                 //alert(duracion[1]);
                 duracion = obtenerId(duracion[1]);
                 if (duracion > 23) {
@@ -812,7 +813,7 @@ $(document).on('ready', function() {
     })
 
 
-});
+}
 
 function obtenerId(idCompleta) {
     idCompleta = idCompleta.split('_');
@@ -1263,10 +1264,15 @@ function ingresarExtension(id) {
             fechaHasta: fechaHasta,
             horaHasta: horaHasta
         }
-    }).done(function() {
-        //recargar la página
-        //	window.location.href = urlPedidos;
-
+    }).success(function() {
+        $.ajax({
+            type: 'get',
+            url: urlRefreshPedidos,
+            success: function(data){
+                $("#pedidos").html(data);
+                bindEventsAll();
+            }
+        });
     }).fail(function() {
         alert('Ha ocurrido un error al extender la reserva, inténtelo nuevamente');
     });
@@ -1275,3 +1281,7 @@ function ingresarExtension(id) {
 function masDeUnDia() {
 
 }
+
+$(document).on('ready', function() {
+    bindEventsAll();
+});

@@ -2733,6 +2733,366 @@ class profileActions extends sfActions {
             }
         }
     }
+    
+    public function executePedidosAjax(sfWebRequest $request){
+        //id del usuario actual
+        $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+        //$idUsuario = 885;
+        //$idUsuario = 79;
+        //ARRENDATARIO
+        $reserve = Doctrine_Core::getTable('reserve')->findByUserId($idUsuario);
+
+        $reservasRealizadas = null;
+
+        foreach ($reserve as $i => $reserva) {
+
+            if ($reserva->getVisibleRenter()) {
+
+                //obtiene completed de transaction
+                $q = "SELECT completed FROM transaction WHERE reserve_id=" . $reserva->getId();
+                $query = Doctrine_Query::create()->query($q);
+                $transaction = $query->toArray();
+
+                $fechaReserva = strtotime($reserva->getDate());
+                $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
+                $duracion = $reserva->getDuration();
+
+                //obtiene en que estado se encuentra (pagada(3), preaprobada(2), rechazada(1) y espera(0))
+                if (isset($transaction[0]) && $transaction[0]['completed'] == 1) { //la reserva está pagada
+                    //$reservasRealizadas[$i]['estado'] = 3;
+                    $estado = 3;
+                } else if ($reserva->getConfirmed()) {//la reserva no está pagada
+                    //$reservasRealizadas[$i]['estado'] = 2;
+                    $estado = 2;
+                } else if ($reserva->getCanceled()) {
+                    //$reservasRealizadas[$i]['estado'] = 1;
+                    $estado = 1;
+                } else {
+                    //$reservasRealizadas[$i]['estado'] = 0;
+                    $estado = 0;
+                }
+
+                //comprueba si muestra o no la reserva, dependiendo del estado
+                if (($estado == 3 && ($duracion * 3600) + $fechaReserva > $fechaActual) || ($estado == 2 && $fechaReserva > $fechaActual) || (($estado == 1 || $estado == 0) && $fechaReserva > $fechaActual)) {
+
+                    //obtiene el id de la reserva
+                    $reservasRealizadas[$i]['idReserve'] = $reserva->getId();
+
+                    //establece el estado
+                    if ($estado == 3) {
+                        $reservasRealizadas[$i]['estado'] = 3;
+                    } elseif ($estado == 2) {
+                        $reservasRealizadas[$i]['estado'] = 2;
+                    } elseif ($estado == 1) {
+                        $reservasRealizadas[$i]['estado'] = 1;
+                    } else {
+                        $reservasRealizadas[$i]['estado'] = 0;
+                    }
+
+                    //fecha y hora de inicio y término
+                    $reservasRealizadas[$i]['posicion'] = $reserva->getDate();
+                    $reservasRealizadas[$i]['fechaInicio'] = $reserva->getFechaInicio();
+                    $reservasRealizadas[$i]['horaInicio'] = $reserva->getHoraInicio();
+                    $reservasRealizadas[$i]['fechaTermino'] = $reserva->getFechaTermino();
+                    $reservasRealizadas[$i]['horaTermino'] = $reserva->getHoraTermino();
+                    $reservasRealizadas[$i]['tiempoArriendo'] = $reserva->getTiempoArriendoTexto();
+                    $reservasRealizadas[$i]['duracion'] = $reserva->getDuration();
+                    $reservasRealizadas[$i]['token'] = $reserva->getToken();
+                    $reservasRealizadas[$i]['confirmed'] = $reserva->getConfirmed();
+                    $reservasRealizadas[$i]['comentario'] = $reserva->getComentario();
+
+                    //obtiene valor
+                    $reservasRealizadas[$i]['valor'] = number_format(intval($reserva->getPrice()), 0, '', '.');
+
+
+                    $carId = $reserva->getCarId();
+
+                    $carClass = Doctrine_Core::getTable('car')->findOneById($carId);
+
+                    $propietarioId = $carClass->getUserId();
+
+                    $reservasRealizadas[$i]['carId'] = $carId;
+                    $reservasRealizadas[$i]['marca'] = $carClass->getModel()->getBrand();
+                    $reservasRealizadas[$i]['modelo'] = $carClass->getModel();
+                    $reservasRealizadas[$i]['patente'] = $carClass->getPatente();
+                    $reservasRealizadas[$i]['photoType'] = $carClass->getPhotoS3();
+                    $typeFoto = $carClass->getPhotoS3();
+                    if ($typeFoto == 0) {
+                        $reservasRealizadas[$i]['fotoCar'] = $carClass->getFotoPerfil();
+                    } else {
+                        $reservasRealizadas[$i]['fotoCar'] = $carClass->getFoto();
+                    }
+                    $reservasRealizadas[$i]['lat'] = $carClass->getLat();
+                    $reservasRealizadas[$i]['lng'] = $carClass->getLng();
+                    $reservasRealizadas[$i]['direccion'] = $carClass->getAddress();
+                    $reservasRealizadas[$i]['comuna'] = $carClass->getNombreComuna();
+
+                    $propietarioClass = Doctrine_Core::getTable('user')->findOneById($propietarioId);
+
+                    $reservasRealizadas[$i]['contraparteId'] = $propietarioId;
+                    $reservasRealizadas[$i]['nombre'] = $propietarioClass->getFirstname();
+                    $reservasRealizadas[$i]['apellido'] = $propietarioClass->getLastname();
+                    $reservasRealizadas[$i]['telefono'] = $propietarioClass->getTelephone();
+                    $reservasRealizadas[$i]['facebook'] = $propietarioClass->getFacebookId();
+                    $reservasRealizadas[$i]['urlFoto'] = $propietarioClass->getPictureFile();
+                    $reservasRealizadas[$i]['apellidoCorto'] = $reservasRealizadas[$i]['apellido'][0] . ".";
+                }//end if
+            }
+        }
+
+        //PROPIETARIO $idUsuario
+
+        $reservasRecibidas = null;
+
+        $q = "SELECT r.id FROM reserve r, car c WHERE c.id=r.car_id and c.user_id=$idUsuario";
+        $query = Doctrine_Query::create()->query($q);
+        $reserve = $query->toArray();
+
+        foreach ($reserve as $i => $reserva) {
+            $reserva = Doctrine_Core::getTable('reserve')->findOneById($reserva['id']);
+
+            if ($reserva->getVisibleOwner()) {
+
+                //obtiene completed de transaction
+                $q = "SELECT completed FROM transaction WHERE reserve_id=" . $reserva->getId();
+                $query = Doctrine_Query::create()->query($q);
+                $transaction = $query->toArray();
+
+                //obtiene en que estado se encuentra (pagada(3), preaprobada(2), rechazada(1) y espera(0))
+                if (isset($transaction[0]) && $transaction[0]['completed'] == 1) { //la reserva está pagada
+                    //$reservasRealizadas[$i]['estado'] = 3;
+                    $estado = 3;
+                } else if ($reserva->getConfirmed()) {//la reserva no está pagada
+                    //$reservasRealizadas[$i]['estado'] = 2;
+                    $estado = 2;
+                } else if ($reserva->getCanceled()) {
+                    //$reservasRealizadas[$i]['estado'] = 1;
+                    $estado = 1;
+                } else {
+                    //$reservasRealizadas[$i]['estado'] = 0;
+                    $estado = 0;
+                }
+
+                //comprueba si muestra o no la reserva, dependiendo del estado
+                // 3 -> muestra hasta 1 hora después del término
+                // 2 -> muestra hasta 1 hora después del inicio
+                // 1 -> muestra hasta la hora de inicio
+                // 0 -> muestra hasta la hora de inicio
+
+                $fechaReserva = strtotime($reserva->getDate());
+                $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
+
+                $duracion = $reserva->getDuration();
+
+                if (($estado == 3 && ($duracion * 3600) + $fechaReserva > $fechaActual) || ($estado == 2 && $fechaReserva > $fechaActual) || (($estado == 1 || $estado == 0) && $fechaReserva > $fechaActual)) {
+
+                    //obtiene el id de la reserva
+                    $reservasRecibidas[$i]['idReserve'] = $reserva->getId();
+
+                    //establece el estado
+                    if ($estado == 3) {
+                        $reservasRecibidas[$i]['estado'] = 3;
+                    } elseif ($estado == 2) {
+                        $reservasRecibidas[$i]['estado'] = 2;
+                    } elseif ($estado == 1) {
+                        $reservasRecibidas[$i]['estado'] = 1;
+                    } else {
+                        $reservasRecibidas[$i]['estado'] = 0;
+                    }
+
+                    //fecha y hora de inicio y término
+                    $reservasRecibidas[$i]['posicion'] = $reserva->getDate();
+                    $reservasRecibidas[$i]['fechaInicio'] = $reserva->getFechaInicio();
+                    $reservasRecibidas[$i]['horaInicio'] = $reserva->getHoraInicio();
+                    $reservasRecibidas[$i]['fechaTermino'] = $reserva->getFechaTermino();
+                    $reservasRecibidas[$i]['horaTermino'] = $reserva->getHoraTermino();
+                    $reservasRecibidas[$i]['tiempoArriendo'] = $reserva->getTiempoArriendoTexto();
+                    $reservasRecibidas[$i]['duracion'] = $reserva->getDuration();
+                    $reservasRecibidas[$i]['token'] = $reserva->getToken();
+
+                    //obtiene valor
+                    $reservasRecibidas[$i]['valor'] = number_format(intval($reserva->getPrice()), 0, '', '.');
+
+
+                    $carId = $reserva->getCarId();
+
+                    $carClass = Doctrine_Core::getTable('car')->findOneById($carId);
+
+                    $propietarioId = $reserva->getUserId();
+
+                    $reservasRecibidas[$i]['carId'] = $carId;
+                    $reservasRecibidas[$i]['marca'] = $carClass->getModel()->getBrand();
+                    $reservasRecibidas[$i]['modelo'] = $carClass->getModel();
+                    $reservasRecibidas[$i]['patente'] = $carClass->getPatente();
+                    $reservasRecibidas[$i]['photoType'] = $carClass->getPhotoS3();
+                    $typeFoto = $carClass->getPhotoS3();
+                    if ($typeFoto == 0) {
+                        $reservasRecibidas[$i]['fotoCar'] = $carClass->getFotoPerfil();
+                    } else {
+                        $reservasRecibidas[$i]['fotoCar'] = $carClass->getFoto();
+                    }
+                    //$reservasRecibidas[$i]['lat'] = $carClass->getLat();
+                    //$reservasRecibidas[$i]['lng'] = $carClass->getLng();
+                    //$reservasRecibidas[$i]['direccion'] = $carClass->getAddress();
+
+                    $propietarioClass = Doctrine_Core::getTable('user')->findOneById($propietarioId);
+
+                    $reservasRecibidas[$i]['contraparteId'] = $propietarioId;
+                    $reservasRecibidas[$i]['nombre'] = $propietarioClass->getFirstname();
+                    $reservasRecibidas[$i]['apellido'] = $propietarioClass->getLastname();
+                    $reservasRecibidas[$i]['telefono'] = $propietarioClass->getTelephone();
+                    $reservasRecibidas[$i]['direccion'] = $propietarioClass->getAddress();
+                    $reservasRecibidas[$i]['facebook'] = $propietarioClass->getFacebookId();
+                    $reservasRecibidas[$i]['urlFoto'] = $propietarioClass->getPictureFile();
+                    $reservasRecibidas[$i]['apellidoCorto'] = $reservasRecibidas[$i]['apellido'][0] . ".";
+                    $reservasRecibidas[$i]['comuna'] = $propietarioClass->getNombreComuna();
+                }//end if
+            }
+        }
+
+        //quita los arreglos null
+        if (isset($reservasRealizadas)) {
+            $reservasRealizadas = array_values($reservasRealizadas);
+        }
+
+        $reservasRealizadasAux = array();
+        //ordena los array por fecha
+        if (isset($reservasRealizadas)) {
+            $j = 0;
+
+            do {
+                $menor = 0;
+                for ($i = 1; $i < count($reservasRealizadas); $i++) {
+                    if (isset($reservasRealizadas[$i]['posicion'])) {
+                        if ($reservasRealizadas[$i]['posicion'] < $reservasRealizadas[$menor]['posicion']) {
+                            $menor = $i;
+                        }
+                    }
+                }
+                $reservasRealizadasAux[$j] = $reservasRealizadas[$menor];
+
+                //elimina la posicion del array
+                unset($reservasRealizadas[$menor]);
+                if ($reservasRealizadas) {
+                    $reservasRealizadas = array_values($reservasRealizadas);
+                }
+
+                $j++;
+            } while ($reservasRealizadas);
+        }
+
+        $reservasRecibidasAux = array();
+
+
+        //quita los arreglos null
+        if (isset($reservasRecibidas)) {
+            $reservasRecibidas = array_filter($reservasRecibidas);
+        }
+
+        //ordena las reservas recibidas
+        if (isset($reservasRecibidas)) {
+            $j = 0;
+
+            do {
+                $menor = 0;
+                for ($i = 0; $i < count($reservasRecibidas); $i++) {
+
+                    if (isset($reservasRecibidas[$menor]['posicion'])) {
+                        if (isset($reservasRecibidas[$i]) && $reservasRecibidas[$i]['posicion'] < $reservasRecibidas[$menor]['posicion']) {
+                            $menor = $i;
+                        }
+                    } else {
+                        if (isset($reservasRecibidas[$i])) {
+                            $menor = $i;
+                        }
+                    }
+                }
+                if (isset($reservasRecibidas[$menor]))
+                    $reservasRecibidasAux[$j] = $reservasRecibidas[$menor];
+
+                //elimina la posicion del array
+                unset($reservasRecibidas[$menor]);
+                if ($reservasRecibidas) {
+                    $reservasRecibidas = array_values($reservasRecibidas);
+                }
+
+                $j++;
+            } while ($reservasRecibidas);
+        }
+
+        //obtiene las fechas de pedidos de arrendatario que se encuentren en espera (estado=0)
+        $fechaReservasRealizadas = array();
+        if (isset($reservasRealizadasAux)) {
+            foreach ($reservasRealizadasAux as $i => $reservasRealizadas) {
+                if (isset($reservasRealizadas['estado']) && $reservasRealizadas['estado'] == 0) {
+                    //almacena las distintas fechas y las almacena en un array con la posicion igual a la de $reservasRealizadasAux
+
+                    if (!$fechaReservasRealizadas) { //no hay elemento
+                        $fechaReservasRealizadas[$i]['fechaInicio'] = $reservasRealizadas['fechaInicio'];
+                        $fechaReservasRealizadas[$i]['horaInicio'] = $reservasRealizadas['horaInicio'];
+                        $fechaReservasRealizadas[$i]['fechaTermino'] = $reservasRealizadas['fechaTermino'];
+                        $fechaReservasRealizadas[$i]['horaTermino'] = $reservasRealizadas['horaTermino'];
+                        $fechaReservasRealizadas[$i]['cantCar'] = 0;
+                    }
+
+                    //verifica que la fecha y hora no se encuentren almacenadas
+                    $existe = false;
+                    foreach ($fechaReservasRealizadas as $reserva) {
+                        if (isset($reserva['fechaInicio'])) {
+                            if ($reserva['fechaInicio'] == $reservasRealizadas['fechaInicio'] && $reserva['horaInicio'] == $reservasRealizadas['horaInicio'] && $reserva['fechaTermino'] == $reservasRealizadas['fechaTermino'] && $reserva['horaTermino'] == $reservasRealizadas['horaTermino']) {
+                                $existe = true;
+                            }
+                        }
+                    }
+
+                    if (!$existe) {
+                        $fechaReservasRealizadas[$i]['fechaInicio'] = $reservasRealizadas['fechaInicio'];
+                        $fechaReservasRealizadas[$i]['horaInicio'] = $reservasRealizadas['horaInicio'];
+                        $fechaReservasRealizadas[$i]['fechaTermino'] = $reservasRealizadas['fechaTermino'];
+                        $fechaReservasRealizadas[$i]['horaTermino'] = $reservasRealizadas['horaTermino'];
+                        $fechaReservasRealizadas[$i]['cantCar'] = 0;
+                    }
+                }
+            }
+        }
+
+        foreach ($fechaReservasRealizadas as $i => $fechaReserva) {
+            if (isset($fechaReserva['fechaInicio'])) {
+                foreach ($reservasRealizadasAux as $reserva) {
+                    if (isset($fechaReserva['fechaInicio']) && isset($reserva['fechaInicio']) && $fechaReserva['fechaInicio'] == $reserva['fechaInicio'] && $fechaReserva['horaInicio'] == $reserva['horaInicio'] && $fechaReserva['fechaTermino'] == $reserva['fechaTermino'] && $fechaReserva['horaTermino'] == $reserva['horaTermino']) {
+                        if (!isset($fechaReserva['cantCar'])) {
+                            $fechaReservasRealizadas[$i]['cantCar'] = 1;
+                        } else {
+                            $fechaReservasRealizadas[$i]['cantCar'] ++;
+                        }
+                    }
+                }
+            }
+        }
+
+        /*
+          foreach ($reservasRealizadasAux as $reserva) {
+          echo $reserva['idReserve']." ".$reserva['estado']."<br>";
+          }
+          die();
+         */
+        
+        /* separo las oprtunidades de las reservas realizadas */
+        $oportunidades = array();
+        $reservasRealizadasNoOportunidadesAux = array();
+        foreach ($reservasRealizadasAux as $key => $reserva) {
+            if($reserva["confirmed"] == 1 && strtolower($reserva["comentario"]) == "reserva oportunidad"){
+                $oportunidades[$key] = $reserva;
+            }else{
+                $reservasRealizadasNoOportunidadesAux[$key] = $reserva;
+            }
+        }
+
+        $this->fechaReservasRealizadas = $fechaReservasRealizadas;
+        $this->reservasRealizadas = $reservasRealizadasNoOportunidadesAux;
+        $this->reservasRecibidas = $reservasRecibidasAux;
+        $this->reservasRecibidasOportunidades = $oportunidades;
+    }
 
     public function executePedidos(sfWebRequest $request) {
         //id del usuario actual
