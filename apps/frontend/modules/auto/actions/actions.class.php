@@ -55,9 +55,9 @@ class autoActions extends sfActions {
 
         $this->nombreComunaUrl = $request->getParameter('chile');
         $comunaURL = Doctrine_Core::getTable('comunas')->findOneByNombre($this->nombreComunaUrl);
-        if (!$comunaURL){
+        if (!$comunaURL) {
             $this->redirect('auto/error?tipo=2');
-        } else{
+        } else {
             $codigoInterno_comunaURL = $comunaURL->getCodigoInterno();
         }
 
@@ -196,10 +196,12 @@ class autoActions extends sfActions {
             $this->comentarios = $comentariosOrd;
             $this->puntualidad = $this->user->getScorePuntualidad();
             $this->limpieza = $this->user->getScoreLimpieza();
-            
-            $title = "Arriendo ".$this->car->getModel() . " " . $this->car->getModel()->getBrand()." en " . $nombreComuna . " - Rent a Car Vecino";
+
+            $title = "Arriendo " . $this->car->getModel() . " " . $this->car->getModel()->getBrand() . " en " . $nombreComuna . " - Rent a Car Vecino";
+            $metaDescription = "Arriendo de " . $this->car->getModel()->getBrand() . " " . $this->car->getModel() . ".  Rent a car en " . $nombreComuna . ".";
+            /* seo settings */
             $this->getResponse()->setTitle($title);
-            
+            $this->getResponse()->addMeta('description', $metaDescription);
         } else {
             $this->redirect('auto/error?tipo=1');
         }
