@@ -847,7 +847,7 @@ $cadenakms = "";
 ?>
 
 <!-- VENTANA POPUP -->
-<div class='overlay-container'>
+<div class='F'>
     <div class='window-container zoomin'>
         <span title='Cerrar Ventana' class='close'>X</span>
         <div class='contenedorPopup'>

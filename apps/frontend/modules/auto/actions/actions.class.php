@@ -67,7 +67,7 @@ class autoActions extends sfActions {
 		$this->ht = ''; if($request->getParameter('ht')) $this->df = $request->getParameter('ht');
 
         /*
-        //si el dueño del auto lo ve, es redireccionado
+        //si el dueï¿½o del auto lo ve, es redireccionado
         if ($this->car->getUser()->getId() == $this->getUser()->getAttribute("userid")) {
             $this->forward('profile', 'cars');
         }
@@ -81,7 +81,7 @@ class autoActions extends sfActions {
         $this->nombreAcortado =	$this->recortar_texto($this->user->getFirstname()." ". $this->user->getLastname(), 15);*/
         $this->primerNombre = ucwords(current(explode(' ' ,$this->user->getFirstname())));
         $this->inicialApellido = ucwords(substr($this->user->getLastName(), 0, 1)).".";
-    	//Modificaci—n para llevar el conteo de la cantidad de consulas que recibe el perfil del auto
+    	//Modificaciï¿½n para llevar el conteo de la cantidad de consulas que recibe el perfil del auto
 
     	$q= Doctrine_Query::create()
     	    ->update("car")
@@ -111,7 +111,7 @@ class autoActions extends sfActions {
                 }else{
                     $comuna=strtolower($comuna->getNombre());
                     $comuna=ucwords($comuna);
-                    $this->nombreComunaAuto =", ".$comuna.", ".$auto->getCity();
+                    $this->nombreComunaAuto =", ".$comuna.'.';
                 }
             }else{
                 $this->nombreComunaAuto = "";

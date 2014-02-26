@@ -115,6 +115,13 @@ var google_conversion_value = 0;
 </div>
 </noscript>
 
+<script>
+    $(function(){
+        console.log('');
+        jQuery.get('<?php echo url_for('profile/reserveCallback?id=' . $idReserve) ?>')
+    });
+</script>
+
 
 <div class="clear"></div>
 </div><!-- main_box_1 -->

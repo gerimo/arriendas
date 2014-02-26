@@ -131,13 +131,13 @@ $(document).on('ready',function(){
     //evento de select (en espera-propietario)
 	$('.select').on('change',function(){
 
-		//alert('cambio de estado');
+//		console.log('cambio de estado');
 
 		var select_id = $(this).attr('id');
 		var id = obtenerId(select_id);
 
 		var accion = $('#'+select_id+' option:selected').attr('name');
-
+                
 		var duracion = $(this).attr('class').split(' ');
 		
 		if(duracion[0].indexOf('_') != -1){
@@ -172,11 +172,11 @@ $(document).on('ready',function(){
 
 		if(accion != 'none'){
 
-//			alert('change event reserva');
-		
-			if(accion == 'preaprobar'){ //debe aprobar los contratos
+//			console.log('change event reserva');
+                        
+			if(accion == 'preaprobar' || accion.indexOf('oportunidad') !== -1){ //debe aprobar los contratos
 
-	//			alert('aprobar reserva');			
+//				console.log('aprobar reserva');			
 			
 				$("#confirmarContratosPropietario").dialog({
 			        resizable: false,
@@ -190,7 +190,9 @@ $(document).on('ready',function(){
 			        buttons: {
 			            "Aceptar": function() {
 			            	if(contratosSeleccionados('Propietario')){
-
+                                                if(accion === 'oportunidad'){
+                                                    accion = accion+'-'+$('#carsSelect option:selected').attr('name');
+                                                }
 			            		cambiarEstado(id,accion);
 
 				            	//limpiar checkbox
@@ -326,15 +328,17 @@ $(document).on('ready',function(){
 						data:{
 							idReserve:eliminar[i]
 						}
-					}).done(function(id){
-						$('#bloque_'+eliminar[i]+' .eventoReserva .der .cargando').hide();
-						ocultarBloque(id);
+					}).done(function(){
+                                                var del = this.data.split('=')[1];
+						$('#bloque_'+del+' .eventoReserva .der .cargando').hide();
+//						ocultarBloque(id);
+                                                cambiarImgEstado(del,'rechazar');
 					}).fail(function(){
-						$('#bloque_'+eliminar[i]+' .eventoReserva .der .cargando').hide();
+                                                var del = this.data.split('=')[1];
+						$('#bloque_'+del+' .eventoReserva .der .cargando').hide();
 						alert('Ha ocurrido un error al eliminar algunos pedidos, inténtelo nuevamente');
 					});
 				};
-
 			}else{
 				quitarChecked('.checkboxResultadosRealizados');
 			}
@@ -361,8 +365,7 @@ $(document).on('ready',function(){
 		}else{
 			var opcion = confirm('Los pedidos eliminados no podrán ser recuperados');
 			if(opcion){
-
-				for (var i = 0; i < eliminar.length; i++) {
+                            for (var i = 0; i < eliminar.length; i++) {
 					$('#bloque_'+eliminar[i]+' .eventoReserva .der .cargando').show();
 					$.ajax({
 						type:'post',
@@ -370,15 +373,17 @@ $(document).on('ready',function(){
 						data:{
 							idReserve:eliminar[i]
 						}
-					}).done(function(id){
-						$('#bloque_'+eliminar[i]+' .eventoReserva .der .cargando').hide();
-						ocultarBloque(id);
+					}).done(function(){
+                                                var del = this.data.split('=')[1];
+						$('#bloque_'+del+' .eventoReserva .der .cargando').hide();
+//						ocultarBloque(id);
+                                                cambiarImgEstado(del,'rechazar');
 					}).fail(function(){
-						$('#bloque_'+eliminar[i]+' .eventoReserva .der .cargando').hide();
+                                                var del = this.data.split('=')[1];
+						$('#bloque_'+del+' .eventoReserva .der .cargando').hide();
 						alert('Ha ocurrido un error al eliminar algunos pedidos, inténtelo nuevamente');
 					});
 				};
-
 			}else{
 				quitarChecked('.checkboxEnEsperaRealizados');
 			}
@@ -413,15 +418,17 @@ $(document).on('ready',function(){
 						data:{
 							idReserve:eliminar[i]
 						}
-					}).done(function(id){
-						$('#bloque_'+eliminar[i]+' .eventoReserva .der .cargando').hide();
-						ocultarBloque(id);
+					}).done(function(){
+                                                var del = this.data.split('=')[1];
+						$('#bloque_'+del+' .eventoReserva .der .cargando').hide();
+//						ocultarBloque(id);
+                                                cambiarImgEstado(del,'rechazar');
 					}).fail(function(){
-						$('#bloque_'+eliminar[i]+' .eventoReserva .der .cargando').hide();
+                                                var del = this.data.split('=')[1];
+						$('#bloque_'+del+' .eventoReserva .der .cargando').hide();
 						alert('Ha ocurrido un error al eliminar algunos pedidos, inténtelo nuevamente');
 					});
 				};
-
 			}else{
 				quitarChecked('.checkboxEnEsperaRecibidos');
 			}
@@ -491,7 +498,6 @@ $(document).on('ready',function(){
 		}else{
 			var opcion = confirm('Los pedidos eliminados no podrán ser recuperados');
 			if(opcion){
-
 				for (var i = 0; i < eliminar.length; i++) {
 					$('#bloque_'+eliminar[i]+' .eventoReserva .der .cargando').show();
 					$.ajax({
@@ -500,16 +506,17 @@ $(document).on('ready',function(){
 						data:{
 							idReserve:eliminar[i]
 						}
-					}).done(function(id){
-						$('#bloque_'+eliminar[i]+' .eventoReserva .der .cargando').hide();
-						ocultarBloque(id);
-
+					}).done(function(){
+                                                var del = this.data.split('=')[1];
+						$('#bloque_'+del+' .eventoReserva .der .cargando').hide();
+//						ocultarBloque(id);
+                                                cambiarImgEstado(del,'rechazar');
 					}).fail(function(){
-						$('#bloque_'+eliminar[i]+' .eventoReserva .der .cargando').hide();
+                                                var del = this.data.split('=')[1];
+						$('#bloque_'+del+' .eventoReserva .der .cargando').hide();
 						alert('Ha ocurrido un error al eliminar algunos pedidos, inténtelo nuevamente');
 					});
 				};
-
 			}else{
 				quitarChecked('.checkboxEnEsperaRecibidos');
 			}
@@ -803,8 +810,12 @@ function cambiarEstado(id,accion){
 		//alert(data)
 
 		$('#bloque_'+id+' .eventoReserva .der .cargando').hide();
-		if (data=='error:seguro4'){
+		if (data === 'error:seguro4'){
 			alert("Tu auto se encuentra en proceso de verificación para recibir un seguro. Si todavía no has recibido al inspector, contáctate cuanto antes a soporte@arriendas.cl para solicitar su visita.");
+		}
+                else if (data === 'error:rutdueñonulo'){
+			alert("No has ingresado tu RUT. Te redireccionaremos para que puedas continuar con la aprobación");
+                        setTimeout("redireccion()",2);
 		}else{
 			cambiarImgEstado(id,accion);
 		};
@@ -821,7 +832,7 @@ function cambiarEstado(id,accion){
 
 function cambiarImgEstado(id,accion){
 	//accion: preaprobar - rechazar
-
+        
 	var url = $('#bloque_'+id+' .eventoReserva .der .img img').attr('src');
 	if(url!=''){
 		url = url.split('/');
@@ -831,7 +842,7 @@ function cambiarImgEstado(id,accion){
 		//IconoPreAprobado.png
 		//IconoRechazado.png
 
-		if(accion=='preaprobar'){
+		if(accion=='preaprobar' || accion.indexOf('oportunidad') !== -1){
 			url[url.length-1] = 'IconoPreAprobado.png';
 			texto = 'Pre aprobado<br>(Falta pago)';
 		}else if(accion=='rechazar'){
@@ -840,9 +851,10 @@ function cambiarImgEstado(id,accion){
 		}
 
 		url = url.join('/');
-
 		$('#bloque_'+id+' .eventoReserva .der .img img').attr('src',url);
 		$('#bloque_'+id+' .eventoReserva .der .texto').html(texto);
+                console.log(texto);
+                console.log($('#bloque_'+id+' .eventoReserva .der .texto'));
 	}
 
 }

@@ -1,7 +1,7 @@
-<?php use_stylesheet('search.css?v=20122013') ?>
-<?php use_stylesheet('landing.css?v=20122013') ?>
-<?php use_stylesheet('registro.css?v=20122013') ?>
-<?php use_stylesheet('comparaprecios.css?v=20122013') ?>
+<?php use_stylesheet('search.css?v=25022014') ?>
+<?php use_stylesheet('landing.css?v=25022014') ?>
+<?php use_stylesheet('registro.css?v=25022014') ?>
+<?php use_stylesheet('comparaprecios.css?v=25022014') ?>
 
 <?php
 $useragent=$_SERVER['HTTP_USER_AGENT'];
@@ -302,12 +302,12 @@ center = new google.maps.LatLng(-33.0,-71.3);
 
     function doSearch()
     {
-		console.log('doSearch')
+		//console.log('doSearch')
 	
         $('.search_arecomend_window').fadeOut('fast');
       	$("#loader").fadeIn("fast");
   	
-  	 console.log(        $('input[name=transmision]:checked').map(function(){return $(this).val() }).get().join()           );
+  	 //console.log(        $('input[name=transmision]:checked').map(function(){return $(this).val() }).get().join()           );
 	 
         document.getElementById("hour_from_hidden").value = document.getElementById("hour_from").value;
         document.getElementById("hour_to_hidden").value = document.getElementById("hour_to").value;
@@ -401,7 +401,7 @@ center = new google.maps.LatLng(-33.0,-71.3);
 			$("#loader").fadeIn("fast");		   
   	    });
   
-		console.log('load markers');
+		//console.log('load markers');
 		//$('.search_arecomend_window').css("visibility", "hidden");
         //$("#loader").fadeIn("slow");
 	
@@ -448,7 +448,7 @@ center = new google.maps.LatLng(-33.0,-71.3);
         //document.write(var_dump(url,'html'));
 
         $.getJSON(url, function(data){
-	    	console.log(markers);
+	    	//console.log(markers);
 			
         //    if (markers) {
         //        for (i in markers) {
@@ -462,7 +462,7 @@ center = new google.maps.LatLng(-33.0,-71.3);
 
             if (markers) {		
 			// Unset all markers
-console.log('clearMarkers');
+//console.log('clearMarkers');
 
 
 var i = 0, l = markers.length;
@@ -474,7 +474,7 @@ markers = [];
 };
 
 if (markersLength>0) {
-console.log('clearMarkersCluster');
+//console.log('clearMarkersCluster');
   //          if (markerCluster) {
 //markerCluster.clearMarkers();
 markerCluster.clearMarkers();
@@ -1168,16 +1168,16 @@ $('#day_to').change(function() {
 
 </style>
 
-<input type="hidden" id="hour_from_hidden" />
-<input type="hidden" id="hour_to_hidden" />
+<input type="hidden" id="hour_from_hidden"<?php if($hour_from && $hour_from != '01:00'){echo ' value="'.$hour_from.'"';}?> />
+<input type="hidden" id="hour_to_hidden"<?php if($hour_to && $hour_to != '01:00'){echo ' value="'.$hour_to.'"';}?> />
 <input type="hidden" id="price_hidden" />
 <input type="hidden" id="transmision_hidden" />
 <input type="hidden" id="tipo_hidden" />
 <input type="hidden" id="model_hidden" value="0"  />
 <input type="hidden" id="brand_hidden" />
 <input type="hidden" id="location_hidden" />
-<input type="hidden" id="day_from_hidden" value="12-11-2013" />
-<input type="hidden" id="day_to_hidden" />
+<input type="hidden" id="day_from_hidden" value="<?php if($day_from && $day_from != '12-11-2013'){echo $day_from;}else{echo "12-11-2013";}?>" />
+<input type="hidden" id="day_to_hidden"<?php if($day_to){echo ' value="'.$day_to.'"';}?> />
 
 <script>
     
@@ -1300,10 +1300,10 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
                 <div class="search_box1_form" style="">
                 	<span style="width: 360px;" class="group_desde"><span class="numberBlue">1</span>Comuna |</span><span style="width: 222px;" class="group_desde"><span class="numberBlue">2</span>Desde |</span><span style="width: 140px;" class="group_hasta"><span class="numberBlue">3</span>Hasta |</span>
                 	<input class="input_f0" id="searchTextField" style="margin-right: 5px;margin-left: 10px;width: 355px;" type="text" size="50" placeholder="Ingrese Ciudad" autocomplete="off"/>
-                    <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_from" value="Fecha desde"/>
-                    <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="hour_from" value="Hora"/>
-                    <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_to" value="Fecha hasta"/>
-                    <input class="input_f1b" style="width: 95px;" readonly="readonly" type="text" id="hour_to"  value="Hora" />
+                    <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_from" value="<?php if($day_from && $day_from != '12-11-2013'){echo $day_from;}else{echo "Fecha desde";}?>"/>
+                    <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="hour_from" value="<?php if($hour_from && $hour_from != '01:00'){echo $hour_from;}else{echo "Hora";}?>"/>
+                    <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_to" value="<?php if($day_to){echo $day_to;}else{echo "Fecha hasta";}?>"/>
+                    <input class="input_f1b" style="width: 95px;" readonly="readonly" type="text" id="hour_to"  value="<?php if($hour_to && $hour_to != '01:00'){echo $hour_to;}else{echo "Hora";}?>" />
                     <button id="btn_buscar" title="Buscar autos"></button>
                 </div>
 
@@ -1361,6 +1361,7 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
                 </div>
                 <div id="map"></div>
             </div><!-- search_box_1_maparea -->   
+            
         <div class="fondo_search_box_2">
             <div class="search_box_2">
                 <div id="title_search_box_2">RESULTADO ( 35 AUTOS RECOMENDADOS )</div>
