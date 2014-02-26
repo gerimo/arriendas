@@ -2,9 +2,7 @@
 <?php use_stylesheet('registro.css') ?>
 <?php use_stylesheet('mis_arriendos.css') ?>
 <?php use_stylesheet('comunes.css') ?>
-<?php use_stylesheet('popup.css') ?>
-<?php use_javascript('pedidos.js?v=08012013') ?>
-<?php use_javascript('popup.js') ?>
+<?php use_javascript('pedidos.js?v=28012013') ?>
 <?php use_stylesheet('cupertino/jquery-ui.css') ?>
 <?php
 $useragent=$_SERVER['HTTP_USER_AGENT'];
@@ -12,26 +10,6 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
   use_stylesheet('moviles.css');
 }
 ?>
-<script type="text/javascript">
-    
-function generarBarraEstrellas(num){
-    var gris = "<?php echo image_path('img_search/EstrellaGris.png'); ?>";
-    var rosa = "<?php echo image_path('img_search/EstrellaRosada'); ?>";
-
-    var cadena = "";
-    for(var i=0;i<5;i++){
-        if(num>0){
-            cadena = cadena +'<img width="10px" height="9px" style="margin-right: 3px;" src="'+rosa+'" />';
-        }else{
-            cadena = cadena +'<img width="10px" height="9px" style="margin-right: 3px;" src="'+gris+'" />';
-        }
-
-        num--;
-    }
-    document.write(cadena);
-}
-
-</script>
 
 <script type="text/javascript">
     var urlEliminarPedidosAjax = <?php echo "'".url_for("profile/eliminarPedidosAjax")."';" ?>
@@ -68,7 +46,6 @@ function generarBarraEstrellas(num){
                     $mostrarReservasRecibidas = true;
                 }
             }
-
             if(!$mostrarReservasRealizadas && !$mostrarReservasRecibidas){
                 echo "<div class='barraSuperior'><p>PEDIDOS</p></div>";
             }else if($mostrarReservasRealizadas && !$mostrarReservasRecibidas){
@@ -119,6 +96,7 @@ function generarBarraEstrellas(num){
                 </div>
 
                 <div id='confirmarContratosArrendatario'>
+                    <input type="checkbox" name="contratoArrendatario0" id="contratoArrendatario1" class='checkboxContrato'><p> En caso de siniestro, dejaré constancia en carabineros INMEDIATAMENTE.</p>
                     <input type="checkbox" name="contratoArrendatario1" id="contratoArrendatario1" class='checkboxContrato'><p> He visto el <a href='' class='informeDanios' target='_blank'>Informe de daños del veh&iacute;culo</a>.</p>
                     <input type="checkbox" name="contratoArrendatario2" id="contratoArrendatario2" class='checkboxContrato'><p> Entiendo ser responsable por daños producidos durante el arriendo por debajo del deducible de 5UF.</p>
                     <input type="checkbox" name="contratoArrendatario3" id="contratoArrendatario3" class='checkboxContrato'><p> <span id='textoBencinaArrendatario'>Si el arriendo es por menos de un día, pagaré por la bencina utilizada en efectivo según los kilómetros manejados. Si el arriendo es por un día o más, devolveré el veh&iacute;culo con el marcador de bencina en el mismo nivel con el que me fue entregado.</span></p>
@@ -292,7 +270,6 @@ function generarBarraEstrellas(num){
                         echo"</div>";
                         echo"<div class='pagoBoton'>";
                                 echo "<a href='#'>".image_tag('img_pedidos/BotonPagar.png','class=botonPagar duracion_'.$reserva['duracion'].' id=pagar_'.$reserva['idReserve'])."</a>";
-                                echo "<a href='#'' class='detallereserva' data-type='zoomin'>[DETALLE RESERVA]</a>";
                         echo "</div>";
                     echo"</div>";
 
@@ -387,67 +364,13 @@ function generarBarraEstrellas(num){
                                 echo "<div class='der'>";
                                 echo "<div class='cargando'>".image_tag('../images/ajax-loader.gif')."</div>";
                                     echo "<div class='img'>".image_tag('img_pedidos/IconoEnEspera.png')."</div>";
-                                    echo "En espera de confirmaci&oacute;n";
+                                    echo "<div class='texto'>En espera de confirmaci&oacute;n</div>";
                                 echo "</div>";
                             echo"</div>";
                             echo"</div>";
                         }
                     }
-                    echo "<div class='masArriendos'>";
-                        echo "<div class='titleMasAutos'>";
-                            echo "<div class='subtitle1'><p>¿AÚN SIN RESPUESTAS?</p></div>";
-                            echo "<div class='subtitle2'><p><span>TE RECOMENDAMOS AUTOS PARA LA</span> MISMA FECHA Y HORA</p></div>";
-                        echo "</div>";
-
-//Comienzo autos recomendados
-
-    echo "<div id='contenedorRecomenderCars'>";
-        echo "<form>";
-        $i = 1;
-        foreach ($cars as $c):
-            
-            echo "<div class='div_car_recomender' id='".$c["id"]."'>";
-                echo "<div class='marcador_car_recomender'>";
-                    echo "<input class= 'marcador' type='checkbox' name='carRecomender' value='car_".$c["id"]."'/>";
-                echo "</div>";
-                echo "<div class='photo_car_recomender'>";
-                        if ($c["photo"] != NULL){ 
-                            if($c["photoType"] == 1) {
-                                echo "<img class='photo' width='74px' height='56px' src='".url_for('main/s3thumb')."'?alto=64&ancho=64&urlFoto='".urlencode($c['photo'])."'/>";
-                            }else{
-                                echo "<img class='photo' width='74px' height='56px' src='".image_path('../uploads/cars/thumbs/'.urlencode($c['photo']))."'/>";
-
-                            }
-                        }else{
-                            echo image_tag('default.png', 'size=74x56', 'class=photo');
-                        }
-                echo "</div>";
-                echo "<ul class='info_car_recomender'>";
-                    echo "<input type='hidden' class='link' value='".url_for('auto/economico?chile='.$c["comuna"] .'?id=' . $c["id"])."'/>";
-                    echo "<li class='marca_modelo'>".'<a target="_blank" title="Ir al perfil del auto" href="'.url_for('auto/economico?chile=' . $c["comuna"].'&id='. $c["id"]).'">'.$c["brand"].", ".$c["model"]."</a>";
-                    echo "</li>";
-                    echo "<li class='stars'>";
-                    echo "<script type='text/javascript'>
-                            var numStars = Math.floor((Math.random()*5)+1);
-                            generarBarraEstrellas(numStars);
-                          </script>";
-                    echo "</li>";
-                    echo "<li class='direccionCar'>".ucwords(strtolower($c["comuna"])).", Santiago</li>";
-                echo "</ul>";
-                echo "<ul class='valor_car_recomender'>";
-                    echo "<li class='valor'>$30.000</li>";
-                    echo "<li class='tiempoAsegurado'>(1 día y 5 horas asegurado)</li>";
-                echo "</ul>";
-            echo "</div>";
-            $i++;
-        endforeach;
-        echo "</form>";
-    echo "</div>";
-    echo "<div id='contenedorBtnReservarTodos'><button id='btnReservarTodos' title='Reservar todos los autos'></button></div>";
-
-//Fin autos recomendados
-
-                    echo "</div>";
+                    echo "<div class='masArriendos'>".image_tag('MasAgregar.png','class=img_masArriendos')." Agrega m&aacute;s reservas</div>";
                     ?>
                     <!-- fin contenido del acordeón -->
                 </div>
@@ -471,7 +394,72 @@ function generarBarraEstrellas(num){
                 //echo "<h3>EN ESPERA</h3>";
                 //echo "<p class='alerta' style='margin-bottom: 30px;'>No registra pedidos en espera de confirmaci&oacute;n";
             }
+            
+            $mostrar = false;
 
+            if($reservasRealizadas){
+                foreach ($reservasRealizadas as $reserva) {
+                    if(isset($reserva['estado']) && $reserva['estado']==1){
+                        $mostrar = true;
+			            $checkMostrar++;	
+                    }
+                }
+            }
+            
+            if($mostrar){
+
+            echo "<h3>CANCELADOS</h3>";
+
+            foreach ($reservasRealizadas as $reserva) {
+                if(isset($reserva['estado']) && $reserva['estado']==1){
+
+                    echo"<div class='bloqueEstado idCar_".$reserva['carId']."' id='bloque_".$reserva['idReserve']."'>";
+                        echo "<div class='checkboxOpcion'>";
+                        echo "</div>";
+                        echo "<div class='fechaReserva'>";
+                            echo "<div class='izq'>";
+                                echo $reserva['fechaInicio']."<br>".$reserva['fechaTermino'];
+                            echo "</div>";
+                            echo "<div class='der'>";
+                                echo $reserva['horaInicio']."<br>".$reserva['horaTermino'];
+                            echo "</div>";
+                        echo "</div>";
+                        echo "<div class='infoUsuario ocultarWeb'>";
+                            echo "<div class='izq'>";
+                                echo "<a href='".url_for('profile/publicprofile?id='.$reserva['contraparteId'])."' title='Ver perfil'>";
+                                if($reserva['facebook']!=null && $reserva['facebook']!=""){
+                                    echo "<img src='".$reserva['urlFoto']."' class='img_usuario'/>";
+                                }else{
+                                    if($reserva['urlFoto']!=""){
+                                        $filename = explode("/", $reserva['urlFoto']);
+                                        echo image_tag("users/".$filename[Count($filename) - 1], 'class=img_usuario');
+                                    }else{
+                                        echo image_tag('img_registro/tmp_user_foto.jpg', 'class=img_usuario');
+                                    }
+                                }
+                                echo "</a>";
+                            echo "</div>";
+                            echo "<div class='der'>";
+                                echo "<a href='".url_for('profile/publicprofile?id='.$reserva['contraparteId'])."'><span class='textoMediano'>".$reserva['nombre']." ".$reserva['apellidoCorto']."</span></a>";
+                            echo "</div>";
+                        echo "</div>";
+                        echo "<div class='precio'>";
+                            echo "<a class='nombreMovil' href='".url_for('profile/publicprofile?id='.$reserva['contraparteId'])."'><span class='textoMediano nombreMovil'>".$reserva['nombre']." ".$reserva['apellidoCorto']."</span></a>";
+                            echo "<span class='textoGrande2'>$".$reserva['valor']."</span> CLP<br>(".$reserva['tiempoArriendo']." - asegurado)";
+                        echo "</div>";
+                        echo"<div class='eventoReserva'>";
+                            echo "<div class='der'>";
+                                echo "<div class='img'>".image_tag('img_pedidos/IconoRechazado.png')."</div>";
+                                echo "<div class='texto'>Cancelado</div>";
+                            echo "</div>";
+                        echo"</div>";
+                        echo"<div class='pagoCheckbox'>";
+                        echo "</div>";
+                    echo"</div>";
+
+                }
+            }
+            }
 				if ($checkMostrar==0){
 //					echo "<p class='alerta' style='margin-bottom: 30px;'>No existen pedidos de reserva.";
 				};
@@ -783,6 +771,78 @@ function generarBarraEstrellas(num){
                 //echo "<h3>EN ESPERA</h3>";
                 //echo "<p class='alerta'>No registra pedidos en espera de confirmaci&oacute;n";
             }
+            
+            $mostrar = false;
+
+            if($reservasRecibidas){
+                foreach ($reservasRecibidas as $reserva) {
+                    if(isset($reserva['estado']) && $reserva['estado']==1){
+                        $mostrar = true;
+			            $checkMostrar++;	
+                    }
+                }
+            }
+            
+            if($mostrar){
+
+            echo "<h3>CANCELADOS</h3>";
+
+            foreach ($reservasRecibidas as $reserva) {
+                if(isset($reserva['estado']) && $reserva['estado']==1){
+
+                    echo"<div class='bloqueEstado idCar_".$reserva['carId']."' id='bloque_".$reserva['idReserve']."'>";
+                        echo "<div class='checkboxOpcion'>";
+                        echo "</div>";
+                        echo "<div class='fechaReserva'>";
+                            echo "<div class='izq'>";
+                                echo $reserva['fechaInicio']."<br>".$reserva['fechaTermino'];
+                            echo "</div>";
+                            echo "<div class='der'>";
+                                echo $reserva['horaInicio']."<br>".$reserva['horaTermino'];
+                            echo "</div>";
+                        echo "</div>";
+                        echo "<div class='infoUsuario ocultarWeb'>";
+                            echo "<div class='izq'>";
+                                echo "<a href='".url_for('profile/publicprofile?id='.$reserva['contraparteId'])."' title='Ver perfil'>";
+                                if($reserva['facebook']!=null && $reserva['facebook']!=""){
+                                    echo "<img src='".$reserva['urlFoto']."' class='img_usuario'/>";
+                                }else{
+                                    if($reserva['urlFoto']!=""){
+                                        $filename = explode("/", $reserva['urlFoto']);
+                                        echo image_tag("users/".$filename[Count($filename) - 1], 'class=img_usuario');
+                                    }else{
+                                        echo image_tag('img_registro/tmp_user_foto.jpg', 'class=img_usuario');
+                                    }
+                                }
+                                echo "</a>";
+                            echo "</div>";
+                            echo "<div class='der'>";
+                                echo "<a href='".url_for('profile/publicprofile?id='.$reserva['contraparteId'])."'><span class='textoMediano'>".$reserva['nombre']." ".$reserva['apellidoCorto']."</span></a>";
+                            echo "</div>";
+                        echo "</div>";
+                        echo "<div class='precio'>";
+                            echo "<a class='nombreMovil' href='".url_for('profile/publicprofile?id='.$reserva['contraparteId'])."'><span class='textoMediano nombreMovil'>".$reserva['nombre']." ".$reserva['apellidoCorto']."</span></a>";
+                            echo "<span class='textoGrande2'>$".$reserva['valor']."</span> CLP<br>(".$reserva['tiempoArriendo']." - asegurado)";
+                        echo "</div>";
+                        echo"<div class='eventoReserva'>";
+                            echo "<div class='der'>";
+                                echo "<div class='img'>".image_tag('img_pedidos/IconoRechazado.png')."</div>";
+                                echo "<div class='texto'>Cancelado</div>";
+                            echo "</div>";
+                        echo"</div>";
+                        echo"<div class='pagoCheckbox'>";
+                        echo "</div>";
+                    echo"</div>";
+
+                }
+            }
+
+            echo"<div class='bloqueEstado'>";
+                echo"<div class='herramientas'>";
+                echo "</div>";
+            echo"</div>";
+
+            }
 
 			if ($checkMostrar==0){
 				echo "<p class='alerta' style='margin-bottom: 30px;'>No existen pedidos de reserva.";
@@ -802,68 +862,8 @@ function generarBarraEstrellas(num){
         <div class="clear"></div>
     </div><!-- main_box_2 -->
 </div>
-
-<?php
-
-
-//TAREA A IMPLEMENTAR:
-// GENERAR EL POPUP DE FORMA DINAMICA PARA CADA RESERVA
-
-// EL POPUP SE PUEDE GENERAR "MAS ARRIBA" EN LA GENERACION DE LISTA DE RESERVAS
-
-//variables
-$numReserva = "8738";
-$nombreArrendatario = "Francisca Cofré";
-$rutArrendatario = "16367816-0";
-$comunaArrendatario = "Las Condes";
-$kms = 40;
-$divKms = generarDivKms($kms);
-$cadenaMotivo = "Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto....";
-$fechaDesde = "19/12/2013";
-$horaDesde = "10:00";
-$fechaHasta = "19/12/2013";
-$horaHasta = "21:00";
-$horasArriendo = 11;
-$valorArriendo = 20000;
-
-
-// funcion generadora del div formato para kilometros aproximados
-function generarDivKms($valor){
-$kmsApp = $valor."";
-$cadenakms = "";
-    for($i=0;$i<5;$i++){
-        if($kmsApp == "") $kmsApp = NULL;
-        if(!is_null($kmsApp)){
-            $cifra = substr($kmsApp, -1, 1); //obtener cifra
-            $cadenakms = "<span>".$cifra."</span>".$cadenakms;
-            $kmsApp = substr($kmsApp,0,-1); //quitar cifra
-        }else{
-            $cadenakms = "<span>0</span>".$cadenakms;
-        }
-    }
-    return $cadenakms;
+<script>
+function redireccion() {
+    document.location.href="<?php echo url_for('profile/edit?redirect=pedidos'); ?>";
 }
-
-?>
-
-<!-- VENTANA POPUP -->
-<div class='F'>
-    <div class='window-container zoomin'>
-        <span title='Cerrar Ventana' class='close'>X</span>
-        <div class='contenedorPopup'>
-            <div class='titlePopup'>DETALLES PETICIÓN DE RESERVA Nº <?=$numReserva;?></div>
-            <div class='detallesPopup'>DETALLE AUTO |</div>
-                <div class='datosDetalles'><div class='nombre'>Nombre: <span><?=$nombreArrendatario;?></span></div><div class='rut'>RUT: <?=$rutArrendatario;?></div><div class='comuna'>Comuna: <?=$comunaArrendatario;?></div></div>
-            <div class='kmsPopup'><p>KMS APRÓX |</p><div class='kilometros'><?=$divKms;?></div></div>
-            <div class='motivosPopup'><p><span>MOTIVO DE ARRIENDO |</span><?=$cadenaMotivo;?></p></div>
-            <div class='arriendoPopup'><p>ARRIENDO |</p>
-                <div class='datosArriendo'>
-                    <div class='desde'>DESDE: <?=$fechaDesde;?> - <?=$horaDesde;?></div>
-                    <div class='hasta'>HASTA: <?=$fechaHasta;?> - <?=$horaHasta;?></div>
-                </div>
-            </div>
-            <div class='valorPopup'><p><?=$horasArriendo;?><span class='pequeno'>HRS</span> = <span class='celeste'>VALOR $<?=$valorArriendo;?></span></p></div>
-            <div class='preaprobarPopup'><button class='btn_preAprobar'></button></div>
-        </div>
-    </div>
-</div>
+</script>
