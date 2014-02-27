@@ -412,8 +412,9 @@ class profileActions extends sfActions {
                 $message->setSubject('Otro dueño te ofrece su auto! (Reserva aprobada, falta pagar)');
                 $body = '<p>Hola ' . $nameRenter . ':</p>
                     <p><b>Otro dueño de auto</b>, ha aprobado tu reserva.</p>
-                    <p>Es un' . $brand->getName() . ' ' . $model->getName() . ' y está en $reserveComunaName.</p>
-                    <p>Para acceder a los datos del vehículo debes pagar $precio.- CLP.</p>
+                    <p>Es un' . $brand->getName() . ' ' . $model->getName() . ' en la misma comuna y con el mismo precio que solicitaste.</p>
+                    <p>Para acceder a los datos del vehículo debes pagar a través del sitio.</p>
+                    <p>Contra tu pago se emitirá la póliza para los horarios declarados y los contratos.</p>
                     <p>Has click <a href="http://www.arriendas.cl/profile/pedidos">aquí</a> para pagar.</p>
                     <p>Los datos del arriendo y el contrato se encuentran adjuntos en formato PDF.</p>';
             } else {
