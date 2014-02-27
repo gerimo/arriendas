@@ -83,105 +83,105 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                  if(isset($reserva['estado'])){
                      switch ($reserva['estado']) {
                          case 0:
-                        echo"<div class='bloqueEstado idCar_".$reserva['carId']."' id='bloque_".$reserva['idReserve']."'>";
-                        echo "<div class='checkboxOpcion'>";
-                            echo "<input type='checkbox' class='checkbox checkboxEnEsperaRecibidos' id='checkbox_".$reserva['idReserve']."'>";
-                        echo "</div>";
-                        echo "<div class='fechaReserva'>";
-                            echo "<div class='izq'>";
-                                echo $reserva['fechaInicio']."<br>".$reserva['fechaTermino'];
-                            echo "</div>";
-                            echo "<div class='der'>";
-                                echo $reserva['horaInicio']."<br>".$reserva['horaTermino'];
-                            echo "</div>";
-                        echo "</div>";
-                        echo "<div class='infoUsuario ocultarWeb'>";
-                            echo "<div class='izq'>";
-                                echo "<a href='".url_for('profile/publicprofile?id='.$reserva['contraparteId'])."' title='Ver perfil'>";
-                                if($reserva['facebook']!=null && $reserva['facebook']!=""){
-                                    echo "<img src='".$reserva['urlFoto']."' class='img_usuario'/>";
-                                }else{
-                                    if($reserva['urlFoto']!=""){
-                                        $filename = explode("/", $reserva['urlFoto']);
-                                        echo image_tag("users/".$filename[Count($filename) - 1], 'class=img_usuario');
-                                    }else{
-                                        echo image_tag('img_registro/tmp_user_foto.jpg', 'class=img_usuario');
-                                    }
-                                }
-                                echo "</a>";
-                            echo "</div>";
-                            echo "<div class='der'>";
-                                echo "<a href='".url_for('profile/publicprofile?id='.$reserva['contraparteId'])."'><span class='textoMediano'>".$reserva['nombre']." ".$reserva['apellidoCorto']."</span></a>";
-                            echo "<br>".$reserva['comuna'];
-                            echo "</div>";
-                        echo "</div>";
-                        echo "<div class='precio'>";
-                            echo "<a class='nombreMovil' href='".url_for('profile/publicprofile?id='.$reserva['contraparteId'])."'><span class='textoMediano nombreMovil'>".$reserva['nombre']." ".$reserva['apellidoCorto']."</span></a>";
-                            echo "<span class='textoGrande2'>$".$reserva['valor']."</span> CLP<br>(".$reserva['tiempoArriendo']." - asegurado)";
-                        echo "</div>";
-                        echo"<div class='eventoReserva'>";
-                            echo "<div class='der'>";
-                                echo "<div class='cargando'>".image_tag('../images/ajax-loader.gif')."</div>";
-                                echo "<div class='img'>".image_tag('img_pedidos/IconoEnEspera.png')."</div>";
-                                echo "<div class='texto'>En espera de confirmaci&oacute;n</div>";
-                            echo "</div>";
-                        echo"</div>";
-                        echo"<div class='pagoCheckbox'>";
-                                echo "<select class='select enEspera duracion_".$reserva['duracion']."' id='select_".$reserva['idReserve']."'><option name='none' selected>Acci&oacute;n</option><option name='oportunidad'>Pre aprobar</option></select>";
-                        echo "</div>";
-                    echo"</div>";
+                                echo"<div class='bloqueEstado idCar_".$reserva['carId']."' id='bloque_".$reserva['idReserve']."'>";
+                                echo "<div class='checkboxOpcion'>";
+                                    echo "<input type='checkbox' class='checkbox checkboxEnEsperaRecibidos' id='checkbox_".$reserva['idReserve']."'>";
+                                echo "</div>";
+                                echo "<div class='fechaReserva'>";
+                                    echo "<div class='izq'>";
+                                        echo $reserva['fechaInicio']."<br>".$reserva['fechaTermino'];
+                                    echo "</div>";
+                                    echo "<div class='der'>";
+                                        echo $reserva['horaInicio']."<br>".$reserva['horaTermino'];
+                                    echo "</div>";
+                                echo "</div>";
+                                echo "<div class='infoUsuario ocultarWeb'>";
+                                    echo "<div class='izq'>";
+                                        echo "<a href='".url_for('profile/publicprofile?id='.$reserva['contraparteId'])."' title='Ver perfil'>";
+                                        if($reserva['facebook']!=null && $reserva['facebook']!=""){
+                                            echo "<img src='".$reserva['urlFoto']."' class='img_usuario'/>";
+                                        }else{
+                                            if($reserva['urlFoto']!=""){
+                                                $filename = explode("/", $reserva['urlFoto']);
+                                                echo image_tag("users/".$filename[Count($filename) - 1], 'class=img_usuario');
+                                            }else{
+                                                echo image_tag('img_registro/tmp_user_foto.jpg', 'class=img_usuario');
+                                            }
+                                        }
+                                        echo "</a>";
+                                    echo "</div>";
+                                    echo "<div class='der'>";
+                                        echo "<a href='".url_for('profile/publicprofile?id='.$reserva['contraparteId'])."'><span class='textoMediano'>".$reserva['nombre']." ".$reserva['apellidoCorto']."</span></a>";
+                                    echo "<br>".$reserva['comuna'];
+                                    echo "</div>";
+                                echo "</div>";
+                                echo "<div class='precio'>";
+                                    echo "<a class='nombreMovil' href='".url_for('profile/publicprofile?id='.$reserva['contraparteId'])."'><span class='textoMediano nombreMovil'>".$reserva['nombre']." ".$reserva['apellidoCorto']."</span></a>";
+                                    echo "<span class='textoGrande2'>$".$reserva['valor']."</span> CLP<br>(".$reserva['tiempoArriendo']." - asegurado)";
+                                echo "</div>";
+                                echo"<div class='eventoReserva'>";
+                                    echo "<div class='der'>";
+                                        echo "<div class='cargando'>".image_tag('../images/ajax-loader.gif')."</div>";
+                                        echo "<div class='img'>".image_tag('img_pedidos/IconoEnEspera.png')."</div>";
+                                        echo "<div class='texto'>En espera de confirmaci&oacute;n</div>";
+                                    echo "</div>";
+                                echo"</div>";
+                                echo"<div class='pagoCheckbox'>";
+                                        echo "<select class='select enEspera duracion_".$reserva['duracion']."' id='select_".$reserva['idReserve']."'><option name='none' selected>Acci&oacute;n</option><option name='oportunidad'>Pre aprobar</option></select>";
+                                echo "</div>";
+                                echo"</div>";
 
                              break;
 
                          case 1:
                              echo"<div class='bloqueEstado idCar_".$reserva['carId']."' id='bloque_".$reserva['idReserve']."'>";
-                        echo "<div class='checkboxOpcion'>";
-                            echo "<input type='checkbox' class='checkbox checkboxEnEsperaRecibidos' id='checkbox_".$reserva['idReserve']."'>";
-                        echo "</div>";
-                        echo "<div class='fechaReserva'>";
-                            echo "<div class='izq'>";
-                                echo $reserva['fechaInicio']."<br>".$reserva['fechaTermino'];
-                            echo "</div>";
-                            echo "<div class='der'>";
-                                echo $reserva['horaInicio']."<br>".$reserva['horaTermino'];
-                            echo "</div>";
-                        echo "</div>";
-                        echo "<div class='infoUsuario ocultarWeb'>";
-                            echo "<div class='izq'>";
-                                echo "<a href='".url_for('profile/publicprofile?id='.$reserva['contraparteId'])."' title='Ver perfil'>";
-                                if($reserva['facebook']!=null && $reserva['facebook']!=""){
-                                    echo "<img src='".$reserva['urlFoto']."' class='img_usuario'/>";
-                                }else{
-                                    if($reserva['urlFoto']!=""){
-                                        $filename = explode("/", $reserva['urlFoto']);
-                                        echo image_tag("users/".$filename[Count($filename) - 1], 'class=img_usuario');
-                                    }else{
-                                        echo image_tag('img_registro/tmp_user_foto.jpg', 'class=img_usuario');
-                                    }
-                                }
-                                echo "</a>";
-                            echo "</div>";
-                            echo "<div class='der'>";
-                                echo "<a href='".url_for('profile/publicprofile?id='.$reserva['contraparteId'])."'><span class='textoMediano'>".$reserva['nombre']." ".$reserva['apellidoCorto']."</span></a>";
-                            echo "<br>".$reserva['comuna'];
-                            echo "</div>";
-                        echo "</div>";
-                        echo "<div class='precio'>";
-                            echo "<a class='nombreMovil' href='".url_for('profile/publicprofile?id='.$reserva['contraparteId'])."'><span class='textoMediano nombreMovil'>".$reserva['nombre']." ".$reserva['apellidoCorto']."</span></a>";
-                            echo "<span class='textoGrande2'>$".$reserva['valor']."</span> CLP<br>(".$reserva['tiempoArriendo']." - asegurado)";
-                        echo "</div>";
-                        echo"<div class='eventoReserva'>";
-                            echo "<div class='der'>";
-                                echo "<div class='cargando'>".image_tag('../images/ajax-loader.gif')."</div>";
-                                echo "<div class='img'>".image_tag('img_pedidos/IconoRechazado.png')."</div>";
-                                echo "<div class='texto'>Ya no disponible</div>";
-                            echo "</div>";
-                        echo"</div>";
-                        echo"<div class='pagoCheckbox'>";
-//                                echo "<select class='select enEspera duracion_".$reserva['duracion']."' id='select_".$reserva['idReserve']."'><option name='none' selected>Acci&oacute;n</option><option name='oportunidad'>Pre aprobar</option></select>";
-                        echo "</div>";
-                    echo"</div>";
-                    break;
+                                echo "<div class='checkboxOpcion'>";
+                                    echo "<input type='checkbox' class='checkbox checkboxEnEsperaRecibidos' id='checkbox_".$reserva['idReserve']."'>";
+                                echo "</div>";
+                                echo "<div class='fechaReserva'>";
+                                    echo "<div class='izq'>";
+                                        echo $reserva['fechaInicio']."<br>".$reserva['fechaTermino'];
+                                    echo "</div>";
+                                    echo "<div class='der'>";
+                                        echo $reserva['horaInicio']."<br>".$reserva['horaTermino'];
+                                    echo "</div>";
+                                echo "</div>";
+                                echo "<div class='infoUsuario ocultarWeb'>";
+                                    echo "<div class='izq'>";
+                                        echo "<a href='".url_for('profile/publicprofile?id='.$reserva['contraparteId'])."' title='Ver perfil'>";
+                                        if($reserva['facebook']!=null && $reserva['facebook']!=""){
+                                            echo "<img src='".$reserva['urlFoto']."' class='img_usuario'/>";
+                                        }else{
+                                            if($reserva['urlFoto']!=""){
+                                                $filename = explode("/", $reserva['urlFoto']);
+                                                echo image_tag("users/".$filename[Count($filename) - 1], 'class=img_usuario');
+                                            }else{
+                                                echo image_tag('img_registro/tmp_user_foto.jpg', 'class=img_usuario');
+                                            }
+                                        }
+                                        echo "</a>";
+                                    echo "</div>";
+                                    echo "<div class='der'>";
+                                        echo "<a href='".url_for('profile/publicprofile?id='.$reserva['contraparteId'])."'><span class='textoMediano'>".$reserva['nombre']." ".$reserva['apellidoCorto']."</span></a>";
+                                    echo "<br>".$reserva['comuna'];
+                                    echo "</div>";
+                                echo "</div>";
+                                echo "<div class='precio'>";
+                                    echo "<a class='nombreMovil' href='".url_for('profile/publicprofile?id='.$reserva['contraparteId'])."'><span class='textoMediano nombreMovil'>".$reserva['nombre']." ".$reserva['apellidoCorto']."</span></a>";
+                                    echo "<span class='textoGrande2'>$".$reserva['valor']."</span> CLP<br>(".$reserva['tiempoArriendo']." - asegurado)";
+                                echo "</div>";
+                                echo"<div class='eventoReserva'>";
+                                    echo "<div class='der'>";
+                                        echo "<div class='cargando'>".image_tag('../images/ajax-loader.gif')."</div>";
+                                        echo "<div class='img'>".image_tag('img_pedidos/IconoRechazado.png')."</div>";
+                                        echo "<div class='texto'>Ya no disponible</div>";
+                                    echo "</div>";
+                                echo"</div>";
+                                echo"<div class='pagoCheckbox'>";
+        //                                echo "<select class='select enEspera duracion_".$reserva['duracion']."' id='select_".$reserva['idReserve']."'><option name='none' selected>Acci&oacute;n</option><option name='oportunidad'>Pre aprobar</option></select>";
+                                echo "</div>";
+                            echo"</div>";
+                            break;
                          case 2:
                              echo"<div class='bloqueEstado idCar_".$reserva['carId']."' id='bloque_".$reserva['idReserve']."'>";
                         echo "<div class='checkboxOpcion'>";
@@ -228,6 +228,55 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                         echo"</div>";
                         echo"<div class='pagoCheckbox'>";
 //                                echo "<select class='select enEspera duracion_".$reserva['duracion']."' id='select_".$reserva['idReserve']."'><option name='none' selected>Acci&oacute;n</option><option name='oportunidad'>Pre aprobar</option></select>";
+                        echo "</div>";
+                    echo"</div>";
+                    break;
+                         case 3:
+                             echo"<div class='bloqueEstado idCar_".$reserva['carId']."' id='bloque_".$reserva['idReserve']."'>";
+                        echo "<div class='checkboxOpcion'>";
+                            echo "<input type='checkbox' class='checkbox checkboxEnEsperaRecibidos' id='checkbox_".$reserva['idReserve']."'>";
+                        echo "</div>";
+                        echo "<div class='fechaReserva'>";
+                            echo "<div class='izq'>";
+                                echo $reserva['fechaInicio']."<br>".$reserva['fechaTermino'];
+                            echo "</div>";
+                            echo "<div class='der'>";
+                                echo $reserva['horaInicio']."<br>".$reserva['horaTermino'];
+                            echo "</div>";
+                        echo "</div>";
+                        echo "<div class='infoUsuario ocultarWeb'>";
+                            echo "<div class='izq'>";
+                                echo "<a href='".url_for('profile/publicprofile?id='.$reserva['contraparteId'])."' title='Ver perfil'>";
+                                if($reserva['facebook']!=null && $reserva['facebook']!=""){
+                                    echo "<img src='".$reserva['urlFoto']."' class='img_usuario'/>";
+                                }else{
+                                    if($reserva['urlFoto']!=""){
+                                        $filename = explode("/", $reserva['urlFoto']);
+                                        echo image_tag("users/".$filename[Count($filename) - 1], 'class=img_usuario');
+                                    }else{
+                                        echo image_tag('img_registro/tmp_user_foto.jpg', 'class=img_usuario');
+                                    }
+                                }
+                                echo "</a>";
+                            echo "</div>";
+                            echo "<div class='der'>";
+                                echo "<a href='".url_for('profile/publicprofile?id='.$reserva['contraparteId'])."'><span class='textoMediano'>".$reserva['nombre']." ".$reserva['apellidoCorto']."</span></a>";
+                            echo "<br>".$reserva['comuna'];
+                            echo "</div>";
+                        echo "</div>";
+                        echo "<div class='precio'>";
+                            echo "<a class='nombreMovil' href='".url_for('profile/publicprofile?id='.$reserva['contraparteId'])."'><span class='textoMediano nombreMovil'>".$reserva['nombre']." ".$reserva['apellidoCorto']."</span></a>";
+                            echo "<span class='textoGrande2'>$".$reserva['valor']."</span> CLP<br>(".$reserva['tiempoArriendo']." - asegurado)";
+                        echo "</div>";
+                        echo"<div class='eventoReserva'>";
+                            echo "<div class='der'>";
+                                echo "<div class='cargando'>".image_tag('../images/ajax-loader.gif')."</div>";
+                                echo "<div class='img'>" . image_tag('img_pedidos/IconoPreAprobado.png') . "</div>";
+                                echo "<div class='texto'>Pre aprobado<br>(Falta pago)</div>";
+                            echo "</div>";
+                        echo"</div>";
+                        echo"<div class='pagoCheckbox'>";
+                                echo "<select class='select enEspera duracion_".$reserva['duracion']."' id='select_".$reserva['idReserve']."'><option name='oportunidad' selected >Pre aprobada</option></select>";
                         echo "</div>";
                     echo"</div>";
                     break;

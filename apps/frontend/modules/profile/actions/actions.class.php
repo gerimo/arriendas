@@ -3619,15 +3619,13 @@ class profileActions extends sfActions {
             }
         }
 
-        //$q = "SELECT r.id FROM reserve r JOIN r.Car c WHERE r.date > NOW() AND r.confirmed = 0 AND r.canceled = 0 AND DATE_ADD(r.fecha_reserva, INTERVAL 0 HOUR) < NOW() AND c.price_per_day <= ? AND c.price_per_day >= ? AND c.comuna_id IN (?) AND c.uso_vehiculo_id IN (?) GROUP BY r.user_id, r.date";
-        //$query = Doctrine_Query::create()->query($q, array($maxPrice, $minPrice, implode(',', $cities), implode(',', $usos)));
-
         $reservasRecibidas = null;
         foreach ($reservasAConsiderar as $i => $reserva) {
             $reserva = Doctrine_Core::getTable('reserve')->findOneById($reserva['id']);
             $q = "SELECT SUM(r.confirmed) as SUM FROM reserve r 
-                WHERE r.date = ? AND r.user_id = ? AND r.comentario != ?";
-            $query = Doctrine_Query::create()->query($q, array($reserva->getDate(), $reserva->getUserId(), 'Reserva oportunidad'));
+                WHERE r.date = ? AND r.user_id = ?";
+            
+            $query = Doctrine_Query::create()->query($q, array($reserva->getDate(), $reserva->getUserId()));
             $sum = $query->toArray();
             $sum = array_pop($sum);
             //obtiene el id de la reserva
@@ -3645,6 +3643,11 @@ class profileActions extends sfActions {
                     /* reserva ganada por otro */
                     $reservasRecibidas[$i]['estado'] = 2;
                 }
+                if($reserva->getComentario() == sfConfig::get('app_comment_oportunidad')){
+                    /* reserva pre aprobada */
+                    $reservasRecibidas[$i]['estado'] = 3;
+                }
+                
             }
             //fecha y hora de inicio y término
             $reservasRecibidas[$i]['posicion'] = $reserva->getDate();
