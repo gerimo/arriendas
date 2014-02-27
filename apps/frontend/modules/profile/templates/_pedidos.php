@@ -369,7 +369,12 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                         <!-- contenido del acordeón -->
                         <?php
                         foreach ($reservasRealizadas as $reserva) {
-                            if (isset($fechaReserva['fechaInicio']) && isset($reserva['fechaInicio']) && $fechaReserva['fechaInicio'] == $reserva['fechaInicio'] && $fechaReserva['horaInicio'] == $reserva['horaInicio'] && $fechaReserva['fechaTermino'] == $reserva['fechaTermino'] && $fechaReserva['horaTermino'] == $reserva['horaTermino']) {
+                            if ( $reserva['estado'] == 0  && isset($fechaReserva['fechaInicio']) 
+                                    && isset($reserva['fechaInicio']) 
+                                    && $fechaReserva['fechaInicio'] == $reserva['fechaInicio'] 
+                                    && $fechaReserva['horaInicio'] == $reserva['horaInicio'] 
+                                    && $fechaReserva['fechaTermino'] == $reserva['fechaTermino'] 
+                                    && $fechaReserva['horaTermino'] == $reserva['horaTermino']) {
 
                                 echo"<div class='bloqueEstado' id='bloque_" . $reserva['idReserve'] . "'>";
                                 echo "<div class='checkboxOpcion'>";
