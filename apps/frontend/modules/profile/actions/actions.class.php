@@ -1708,7 +1708,6 @@ class profileActions extends sfActions {
                 $this->getUser()->setFlash('msg', 'Ya hay un pedido de reserva para ese mismo auto en la misma fecha y horario');
                 $this->getRequest()->setParameter('carid', $carid);
                 $this->getRequest()->setParameter('idreserve', $reserve_id);
-                
             } else {
 
                 $this->getUser()->setFlash('msg', 'Fecha de entrega debe ser mayor a fecha inicial');
@@ -3581,7 +3580,6 @@ class profileActions extends sfActions {
                     FROM reserve r 
                     JOIN r.Car c 
                     WHERE r.date > NOW() 
-                    AND r.confirmed = 0 
                     AND c.seguro_ok=4
                     AND c.activo=1
                     AND c.price_per_day <= ? 
@@ -3632,43 +3630,54 @@ class profileActions extends sfActions {
             $query = Doctrine_Query::create()->query($q, array($reserva->getDate(), $reserva->getUserId(), 'Reserva oportunidad'));
             $sum = $query->toArray();
             $sum = array_pop($sum);
+            //obtiene el id de la reserva
+            $reservasRecibidas[$i]['idReserve'] = $reserva->getId();
             if ($sum['SUM'] == 0) {
-                //obtiene el id de la reserva
-                $reservasRecibidas[$i]['idReserve'] = $reserva->getId();
+                /* oportunidad disponible */
                 $reservasRecibidas[$i]['estado'] = 0;
-                //fecha y hora de inicio y término
-                $reservasRecibidas[$i]['posicion'] = $reserva->getDate();
-                $reservasRecibidas[$i]['fechaInicio'] = $reserva->getFechaInicio();
-                $reservasRecibidas[$i]['horaInicio'] = $reserva->getHoraInicio();
-                $reservasRecibidas[$i]['fechaTermino'] = $reserva->getFechaTermino();
-                $reservasRecibidas[$i]['horaTermino'] = $reserva->getHoraTermino();
-                $reservasRecibidas[$i]['tiempoArriendo'] = $reserva->getTiempoArriendoTexto();
-                $reservasRecibidas[$i]['duracion'] = $reserva->getDuration();
-                $reservasRecibidas[$i]['token'] = $reserva->getToken();
-                //obtiene valor
-                $carId = $reserva->getCarId();
-                $carClass = Doctrine_Core::getTable('car')->findOneById($carId);
-                if ($carClass->getPricePerDay() < $cars[$mKey]->getPricePerDay()) {
-                    $car = $carClass;
-                } else {
-                    $car = $cars[$mKey];
+            } else {
+                /* oportunidad ya no disponible */
+                if (date('Y-m-d', strtotime($reserva->getFechaConfirmacion())) == date("Y-m-d")) {
+                    /* reserva no disponible */
+                    $reservasRecibidas[$i]['estado'] = 1;
                 }
-                $ownPrice = $this->calcularMontoTotal($reserva->getDuration(), $car->getPricePerHour(), $car->getPricePerDay(), $car->getPricePerWeek(), $car->getPricePerMonth());
-                $reservasRecibidas[$i]['valor'] = number_format(intval($ownPrice), 0, '', '.');
-
-                $propietarioId = $reserva->getUserId();
-                $reservasRecibidas[$i]['carId'] = $carId;
-                $propietarioClass = Doctrine_Core::getTable('user')->findOneById($propietarioId);
-                $reservasRecibidas[$i]['contraparteId'] = $propietarioId;
-                $reservasRecibidas[$i]['nombre'] = $propietarioClass->getFirstname();
-                $reservasRecibidas[$i]['apellido'] = $propietarioClass->getLastname();
-                $reservasRecibidas[$i]['telefono'] = $propietarioClass->getTelephone();
-                $reservasRecibidas[$i]['direccion'] = $propietarioClass->getAddress();
-                $reservasRecibidas[$i]['facebook'] = $propietarioClass->getFacebookId();
-                $reservasRecibidas[$i]['urlFoto'] = $propietarioClass->getPictureFile();
-                $reservasRecibidas[$i]['apellidoCorto'] = $reservasRecibidas[$i]['apellido'][0] . ".";
-                $reservasRecibidas[$i]['comuna'] = $carClass->getNombreComuna();
+                if(date('Y-m-d', strtotime($reserva->getFechaReserva())) == date("Y-m-d")){
+                    /* reserva ganada por otro */
+                    $reservasRecibidas[$i]['estado'] = 2;
+                }
             }
+            //fecha y hora de inicio y término
+            $reservasRecibidas[$i]['posicion'] = $reserva->getDate();
+            $reservasRecibidas[$i]['fechaInicio'] = $reserva->getFechaInicio();
+            $reservasRecibidas[$i]['horaInicio'] = $reserva->getHoraInicio();
+            $reservasRecibidas[$i]['fechaTermino'] = $reserva->getFechaTermino();
+            $reservasRecibidas[$i]['horaTermino'] = $reserva->getHoraTermino();
+            $reservasRecibidas[$i]['tiempoArriendo'] = $reserva->getTiempoArriendoTexto();
+            $reservasRecibidas[$i]['duracion'] = $reserva->getDuration();
+            $reservasRecibidas[$i]['token'] = $reserva->getToken();
+            //obtiene valor
+            $carId = $reserva->getCarId();
+            $carClass = Doctrine_Core::getTable('car')->findOneById($carId);
+            if ($carClass->getPricePerDay() < $cars[$mKey]->getPricePerDay()) {
+                $car = $carClass;
+            } else {
+                $car = $cars[$mKey];
+            }
+            $ownPrice = $this->calcularMontoTotal($reserva->getDuration(), $car->getPricePerHour(), $car->getPricePerDay(), $car->getPricePerWeek(), $car->getPricePerMonth());
+            $reservasRecibidas[$i]['valor'] = number_format(intval($ownPrice), 0, '', '.');
+
+            $propietarioId = $reserva->getUserId();
+            $reservasRecibidas[$i]['carId'] = $carId;
+            $propietarioClass = Doctrine_Core::getTable('user')->findOneById($propietarioId);
+            $reservasRecibidas[$i]['contraparteId'] = $propietarioId;
+            $reservasRecibidas[$i]['nombre'] = $propietarioClass->getFirstname();
+            $reservasRecibidas[$i]['apellido'] = $propietarioClass->getLastname();
+            $reservasRecibidas[$i]['telefono'] = $propietarioClass->getTelephone();
+            $reservasRecibidas[$i]['direccion'] = $propietarioClass->getAddress();
+            $reservasRecibidas[$i]['facebook'] = $propietarioClass->getFacebookId();
+            $reservasRecibidas[$i]['urlFoto'] = $propietarioClass->getPictureFile();
+            $reservasRecibidas[$i]['apellidoCorto'] = $reservasRecibidas[$i]['apellido'][0] . ".";
+            $reservasRecibidas[$i]['comuna'] = $carClass->getNombreComuna();
         }
 
         $reservasRecibidasAux = array();
