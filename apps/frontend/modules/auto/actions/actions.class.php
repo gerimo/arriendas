@@ -78,21 +78,21 @@ class autoActions extends sfActions {
             $this->df = $request->getParameter('ht');
 
         /*
-          //si el due�o del auto lo ve, es redireccionado
-          if ($this->car->getUser()->getId() == $this->getUser()->getAttribute("userid")) {
-          $this->forward('profile', 'cars');
-          }
-         */
+        //si el due�o del auto lo ve, es redireccionado
+        if ($this->car->getUser()->getId() == $this->getUser()->getAttribute("userid")) {
+            $this->forward('profile', 'cars');
+        }
+        */
         $this->user = $this->car->getUser();
         //$idDuenioCar = $this->user->getId();
         $this->aprobacionDuenio = $this->user->getPorcentajeAprobacion();
         $this->velocidadMensajes = $this->user->getVelocidadRespuesta_mensajes();
 
         /*
-          $this->nombreAcortado =	$this->recortar_texto($this->user->getFirstname()." ". $this->user->getLastname(), 15); */
-        $this->primerNombre = ucwords(current(explode(' ', $this->user->getFirstname())));
-        $this->inicialApellido = ucwords(substr($this->user->getLastName(), 0, 1)) . ".";
-        //Modificaci�n para llevar el conteo de la cantidad de consulas que recibe el perfil del auto
+        $this->nombreAcortado =	$this->recortar_texto($this->user->getFirstname()." ". $this->user->getLastname(), 15);*/
+        $this->primerNombre = ucwords(current(explode(' ' ,$this->user->getFirstname())));
+        $this->inicialApellido = ucwords(substr($this->user->getLastName(), 0, 1)).".";
+    	//Modificaci�n para llevar el conteo de la cantidad de consulas que recibe el perfil del auto
 
         $q = Doctrine_Query::create()
                 ->update("car")
@@ -118,14 +118,15 @@ class autoActions extends sfActions {
         if ($id_comuna == $codigoInterno_comunaURL) { //Si las comunas del auto y de la URL son las mismas
             if ($id_comuna) {
                 $comuna = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($id_comuna);
-                if ($comuna->getNombre() == null) {
-                    $this->nombreComunaAuto = $auto->getCity() . ".";
+
+                if($comuna->getNombre() == null){
+                    $this->nombreComunaAuto = ", ".$auto->getCity().".";
                     $nombreComuna = $auto->getCity();
-                } else {
-                    $comuna = strtolower($comuna->getNombre());
-                    $comuna = ucwords($comuna);
-                    $this->nombreComunaAuto = $comuna . ", " . $auto->getCity();
-                    $nombreComuna = $comuna . ", " . $auto->getCity();
+                }else{
+                    $comuna=strtolower($comuna->getNombre());
+                    $comuna=ucwords($comuna);
+                    $this->nombreComunaAuto =", ".$comuna.'.';
+                    $nombreComuna = $comuna;
                 }
             } else {
                 $this->nombreComunaAuto = "";
