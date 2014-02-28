@@ -356,65 +356,31 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 
 <div class="main_box_1_anterior">
 <div class="main_box_2_anterior">
-    <h1>Editar perfil</h1>
-
     <!-- sector usuario -->
+    <div class="regis_box_usuarioNew">
 
-    <div class="regis_box_usuario">
+    	<h1>MI PERFIL</h1>
 
-        <div class="titulolteral">Foto perfil</div>
-
-        <div class="regis_foto_frame">
-
+        <div class="regis_foto_frameNew">
             <div id="previewmain">
-
-
                 <?php if ($user->getPictureFile() == null): ?>
 
-                    <?php echo image_tag('img_registro/tmp_user_foto.png', 'size=194x204') ?>  
+                    <?php echo image_tag('img_registro/tmp_user_foto.png', 'size=100x100') ?>  
 
                 <?php else: ?>
                 
                     <?php if($user->getFacebookId()!=null):?>
-						<img src="http://res.cloudinary.com/arriendas-cl/image/facebook/w_194,h_204,c_fill,g_face/<?php echo $user->getFacebookId();?>.jpg"/>
+						<img src="http://res.cloudinary.com/arriendas-cl/image/facebook/w_100,h_100,c_fill,g_face/<?php echo $user->getFacebookId();?>.jpg"/>
                     <?php else: ?>
-						<img src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_194,h_204,c_fill,g_face/http://arriendas.cl/<?php echo "images/users/".$user->getFileName() ?>" />
+						<img src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_100,h_100,c_fill,g_face/http://arriendas.cl/<?php echo "images/users/".$user->getFileName() ?>" />
                     <?php endif;?>
 
                 <?php endif; ?>
             </div> 
+            <a href="#" id="linkmain"><?php echo image_tag('img_subi_tu_auto/botonSubir.png',array("title"=>"Cambiar Foto Perfil","width"=>"28","height"=>"28","style"=>"position: absolute;top: 182px;left:132px;")) ?></a>
+        </div><!-- fin regis_foto_frameNew -->
 
-            <a href="#" id="linkmain"><?php echo image_tag('img_subi_tu_auto/upcar_ico_agrega_foto.png') ?></a>
-			<br />
-			<span style="font-size: 12px">Dimensiones imagen 194x204 pix.</span>
-
-
-        </div>
-        <br/>
-        <div class="titulolteral">Licencia de conducir</div>
-
-        <div class="regis_foto_frame">
-
-            <div id="previewlicence">
-
-                <?php
-                if ($user->getDriverLicenseFile() == null):
-                    echo image_tag('img_asegura_tu_auto/foto_padron_reverso.png', 'size=194x204');
-                else:
-                    echo image_tag('licence/'.$user->getLicenceFileName(), 'size=194x204');
-                endif;
-                ?>
-
-            </div> 
-
-            <a href="#" id="linklicence"><?php echo image_tag('img_subi_tu_auto/upcar_ico_agrega_foto.png') ?></a>
-
-			<br />
-			<span style="font-size: 12px">Dimensiones imagen 194x204 pix.</span>
-
-        </div>
-
-
+	<!--
        <br/>
         <div class="titulolteral">Foto de Carnet</div>
 
@@ -440,6 +406,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 
 
         </div>
+        -->
 
         <!--  <h2 class="regis_usuario">Katia Dolizniak</h2>-->
 
@@ -452,114 +419,139 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
          
         -->
 
-    </div><!-- regis_box_usuario -->
+    </div><!-- regis_box_usuarioNew -->
+
+    <div class="regis_box_usuarioNew2">
+    	<button class="regis_btn_formularioNew2" name="save" onclick="submitFrom()"><?php echo image_tag('img_subi_tu_auto/btnGuardarCambios.png',array("width"=>"180","height"=>"32","style"=>"cursor: pointer;display: block;margin-right: 18px;")) ?></button>   
+    	<h1>Foto licencia de conducir (frente)</h1>
+    	<div class="regis_foto_frameNew2">
+            <div id="previewlicence">
+
+                <?php
+                if ($user->getDriverLicenseFile() == null):
+                    echo image_tag('img_asegura_tu_auto/foto_padron_reverso.png', 'size=310x140');
+                else:
+                    echo image_tag('licence/'.$user->getLicenceFileName(), 'size=310x140');
+                endif;
+                ?>
+
+            </div> 
+
+            <a href="#" id="linklicence"><?php echo image_tag('img_subi_tu_auto/botonSubir.png',array("title"=>"Cambiar Foto de Licencia","width"=>"28","height"=>"28","style"=>"position: absolute;top: 254px;right:58px;")) ?></a>
+        </div> <!-- fin regis_foto_frameNew2 -->
+    </div><!-- regis_box_usuarioNew2 -->
 
 
     <!-- sector datos de usuario -->
-    <div class="regis_box_info">     
-
-        <div class="regis_titulo_1">Datos de usuario</div>
-
-
-
-        <div class="regis_formulario">  
-
+    <div class="regis_box_infoNew">     
+        <div class="regis_formulario">
+        <h1>Datos de usuario</h1>
             <?php if ($sf_user->getFlash('show')): ?>
-
-                <div style="border:1px solid #FF0000; background: #fcdfff; 	width:360px; display:table;margin-bottom:20px; padding:20px;font-size:14px;">
+                <div style="border:1px solid #FF0000; background: #fcdfff; display:table;margin-bottom:20px; padding:20px;font-size:14px;">
                     <?php echo $sf_user->getFlash('msg'); ?>
                 </div>
             <?php endif; ?>
-
+            <!--
             <div class="c1" style="display:none;">
                 <label class="input">
                     <span>Nombre de usuario</span>
-                    <input type="text" id="username" name="username" value="<?php echo $user->getUsername(); ?>" >
+                    <input type="text" id="username" placeholder="NOMBRE USUARIO" name="username" value="<?php echo $user->getUsername(); ?>" >
                 </label>
-            </div><!-- /c1 -->
-
+            </div>
+            -->
             <div class="c1">
                 <label class="input">
                     <span>Nombres</span>
-                    <input id="firstname" name="firstname" type="text" value="<?php if($user->getFirstName()) echo $user->getFirstName(); ?>" style="width: 566px;" >
+                    <input id="firstname" name="firstname" placeholder="NOMBRE" type="text" value="<?php if($user->getFirstName()) echo $user->getFirstName(); ?>">
 					</label>
             </div><!-- /c1 -->  
-
             <div class="c1">
                 <label class="input">
                     <span>Apellido Paterno</span>
-                    <input id="lastname" name="lastname" type="text" value="<?php if($user->getLastName()) echo $user->getLastName(); ?>" >
+                    <input id="lastname" name="lastname" placeholder="APELLIDO PATERNO" type="text" value="<?php if($user->getLastName()) echo $user->getLastName(); ?>" >
                 </label>
             </div><!-- /c1 -->    
-         
             <div class="c1">
                 <label class="input">
                     <span>Apellido Materno</span>
-                    <input id="apellidoMaterno" name="apellidoMaterno" type="text" value="<?php if($user->getApellidoMaterno()) echo $user->getApellidoMaterno(); ?>" >
+                    <input id="apellidoMaterno" name="apellidoMaterno"  placeholder="APELLIDO MATERNO" type="text" value="<?php if($user->getApellidoMaterno()) echo $user->getApellidoMaterno(); ?>" >
                 </label>
             </div><!-- /c1 --> 
-            
+            <h1 style="margin-top:20px;">Confirmación de Identidad</h1>
+                <div class="c1">
+                <label class="input">
+                    <span>RUT</span>
+                    <input type="text" placeholder="RUT" name="run" id="run" value="<?php if ($user->getRut() != null) echo $user->getRut(); ?>" />
+                </label>
+            	</div><!-- /c1 -->
+		        <div class="c1">
+                    <label class="input" style="margin-bottom: 5px;width: 375px;">
+                        <span>Nº Serie del RUT</span>
+                        <input type="text"  placeholder="Nº DE SERIE CARNET DE IDENTIDAD" name="serie_run" id="serie_run" value="<?php if ($user->getSerieRut() != null) echo $user->getSerieRut(); ?>" />
+                        <a href='http://www.dicom.cl/dcom/pag/p.com.000.pag-cedula.htm#uno' target='_blank' title="¿Qué es el nº de serie del rut?"><?php echo image_tag('img_subi_tu_auto/sigInterrogacion.png', array('width'=>'20px','height'=>'20px')) ?></a>
+                    </label>
+            	</div><!-- /c1 -->
+            	<div class="c1">
+            		<button class="btnConfirmar" name="saveIdentidad" onclick="submitFrom()"><?php echo image_tag('img_subi_tu_auto/btnConfirmar.png',array("title"=>"Confirmar Identidad","width"=>"110","height"=>"28","style"=>"cursor: pointer;display: block;margin-left: 239px")) ?></button>
+            	</div><!-- /c1 -->
+            <h1 style="margin-top:25px;">Contacto</h1>
+            <!--
             <?php if ($user->getFacebookId() == null): ?>  
                 <div class="c1">
                     <label class="input">
                         <span>Email</span>
                         <input type="text" id="email" name="email" value="<?php if($user->getEmail()) echo $user->getEmail();?>" />
                     </label>
-                </div><!-- /c1 -->    
+                </div> 
 
-				<!--
+
                 <div class="c1">
                     <label class="input">
                         <span>Confirma tu Email</span>
                         <input type="text" id="emailAgain" name="emailAgain" >
                     </label>
-                </div><!-- /c1 -->
+                </div>
 
             <?php else:?>
                 <input type="hidden" id="email" name="email" value="<?php if($user->getEmail()) echo $user->getEmail();?>" />
                 <input type="hidden" id="emailAgain" name="emailAgain" value="<?php if($user->getEmail()) echo $user->getEmail();?>"/>
             <?php endif; ?>
-
-                <div class="c1">
-                <label class="input">
-                    <span>RUT</span>
-                    <input type="text" name="run" id="run" value="<?php if ($user->getRut() != null) echo $user->getRut(); ?>" />
-                </label>
-            	</div><!-- /c1 -->
-		
-		        <div class="c1">
-                    <label class="input">
-                        <span>Nº Serie del RUT</span>
-                        <input type="text" name="serie_run" id="serie_run" value="<?php if ($user->getSerieRut() != null) echo $user->getSerieRut(); ?>" style="width:234px;" />
-                        <a href='http://www.dicom.cl/dcom/pag/p.com.000.pag-cedula.htm#uno' target='_blank' title="¿Qué es el nº de serie del rut?"><?php echo image_tag('img_registro/dudaNSerie1.png', array('width'=>'25px','height'=>'25px')) ?></a>
-                    </label>
-            	</div><!-- /c1 -->
-            <?php if($user->getConfirmedSms() == 0){ ?>    
+           	-->
+            <?php if($user->getConfirmedSms() == 0){ ?><!-- SI EL TELEFONO NO ESTÁ CONFIRMADO, ENTONCES:-->
                 <div class="c1">
                 <label class="input" id="espacio">
                     <p class="fono">98765432</p>
-                    <input title="Celular" type="text" name="telephone" id="telephone" value="<?php if ($user->getTelephone() != null) echo $user->getTelephone();?>" />
-		    <?php echo image_tag("http://arriendas.assets.s3.amazonaws.com/images/BotonConfimarTelef.png",array("style"=>"margin-top: -37px; margin-bottom: -30px; cursor: pointer;","onclick"=>"enviarSMS();","class"=>"codigo_telephone","title"=>"Enviar SMS para Confirmar Teléfono")); ?>
-            <?php echo image_tag("img_registro/BotonConfimarTelefGris.png",array("style"=>"margin-top: -37px; margin-bottom: -30px; display:none","title"=>"Teléfono Verificado","id"=>"img_tel_verificado")); ?>
-                </label>
+                    <input title="Celular" placeholder="NÚMERO DE TELÉFONO" type="text" name="telephone" id="telephone" value="<?php if ($user->getTelephone() != null) echo $user->getTelephone();?>" />
+				    <!--<?php echo image_tag("http://arriendas.assets.s3.amazonaws.com/images/BotonConfimarTelef.png",array("style"=>"margin-top: -37px; margin-bottom: -30px; cursor: pointer;","onclick"=>"enviarSMS();","class"=>"codigo_telephone","title"=>"Enviar SMS para Confirmar Teléfono")); ?>-->
+		           
+		            <!--<?php echo image_tag("img_registro/BotonConfimarTelefGris.png",array("style"=>"margin-top: -37px; margin-bottom: -30px; display:none","title"=>"Teléfono Verificado","id"=>"img_tel_verificado")); ?> -->
+		                </label>
             	</div><!-- /c1 -->
-
-                <div class="c1 codigo_telephone" id="ingreso_codigo" style="border-style: solid; border-width: 1px; border-color: #FF0000; padding-left: 10px; margin-left: -10px; padding-top: 5px; display: none;">
-                <label class="input">
-                    <span>Ingresa el c&oacute;digo que te enviamos por SMS</span>
-                    <input type="text" name="codigo" id="codigo"/>
-		    <?php echo image_tag("http://arriendas.assets.s3.amazonaws.com/images/BotonConfimarTelef.png",array("style"=>"margin-top: -37px; margin-bottom: -30px; cursor: pointer;","onclick"=>"confirmarCodigo();","title"=>"Enviar Código")); ?>
-                </label>
-            	</div><!-- /c1 -->
-            <?php }else{ ?>
+            	<div class="c1">
+            		<button class="btnConfirmar" name="saveTelefono"><?php echo image_tag('img_subi_tu_auto/btnConfirmar.png',array("onclick"=>"enviarSMS();","class"=>"codigo_telephone","title"=>"Enviar SMS para Confirmar Teléfono","width"=>"110","height"=>"28","style"=>"cursor: pointer;display: block;margin-left: 239px")) ?></button>
+            	</div>
+            	<!-- CAPA OCULTA: BOTON E IMPUT PARA INGRESAR CODIGO SMS -->
+            	<div class="codigo_telephone" id="ingreso_codigo" style="display: none;">
+	                <div class="c1">
+		                <label class="input">
+		                    <input type="text" placeholder="Ingresa el código que te enviamos por SMS" name="codigo" id="codigo"/>
+				    <!--<?php echo image_tag("http://arriendas.assets.s3.amazonaws.com/images/BotonConfimarTelef.png",array("style"=>"margin-top: -37px; margin-bottom: -30px; cursor: pointer;","onclick"=>"confirmarCodigo();","title"=>"Enviar Código")); ?>-->
+		                </label>
+	            	</div><!-- /c1 -->
+	            	<div class="c1">
+	            		<button class="btnConfirmar" name="confirmarSMS" onclick="submitFrom()"><?php echo image_tag('img_subi_tu_auto/btnConfirmar.png',array("onclick"=>"confirmarCodigo();","title"=>"Enviar Código","width"=>"110","height"=>"28","style"=>"cursor: pointer;display: block;margin-left: 239px")) ?></button>
+	            	</div>
+	            </div><!-- fin codigo_telefono-->
+            <?php }else{ ?><!-- SI TELEFONO ESTÁ CONFIRMADO, SÓLO SE MUESTRA EL TELEFONO, NO EL BOTON DE CONFIRMACIÓN (CONSULTAR A GERMÁN) -->
             <div class="c1">
                 <label class="input" style="margin-right:100px;">
                     <p class="fono">98765432</p>
-                    <input title="Celular" type="text" name="telephone" id="telephone" value="<?php if ($user->getTelephone() != null) echo $user->getTelephone();?>" />
-                    <?php echo image_tag("img_registro/BotonConfimarTelefGris.png",array("style"=>"margin-top: -37px; margin-bottom: -30px;","title"=>"Teléfono Verificado")); ?>
+                    <input title="Celular" placeholder="NÚMERO DE TELÉFONO" type="text" name="telephone" id="telephone" value="<?php if ($user->getTelephone() != null) echo $user->getTelephone();?>" />
+                    <!--<?php echo image_tag("img_registro/BotonConfimarTelefGris.png",array("style"=>"margin-top: -37px; margin-bottom: -30px;","title"=>"Teléfono Verificado")); ?>-->
                 </label>
             </div><!-- /c1 -->
             <?php } ?>
+            <!--
             <?php if ($user->getFacebookId() == null): ?>  
             <div class="c1">
                 <label class="input">
@@ -567,32 +559,16 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                     <input type="text" id="birth" name="birth" class="datepicker" value="<?php if ($user->getBirthdate() != null)
                             echo $user->getBirthdate(); ?>" >
                 </label>
-            </div><!-- /c1 -->
+            </div>
             <?php else:?>
                 <input type="hidden" id="birth" name="birth" class="datepicker" value="<?php if ($user->getBirthdate() != null)
                             echo $user->getBirthdate(); ?>" />
             <?php endif;?>
-
-            <div class="c1">
+            -->
+            <div class="c1" style="margin-top:25px;">
                 <label class="input">
                     <span>Direcci&oacute;n #1111</span>
-                    <input type="text" name="address" id="address" value="<?php if ($user->getAddress() != null) echo $user->getAddress();?>" style="width:566px;" >
-                </label>
-            </div><!-- /c1 -->
-
-            <div class="c1">
-                <label>
-                    <select name="region" id="region" onChange="cargarComunas(this.value)">
-                        <?php
-                        foreach ($regiones as $r) {
-                            if ($r["codigo"] == $userRegion) {
-                                echo '<option value="' . $r["codigo"] . '" selected>' . $r["nombre"] . '</option>';
-                            } else {
-                                echo '<option value="' . $r["codigo"] . '">' . $r["nombre"] . '</option>';
-                            }
-                        }
-                        ?>
-                    </select>
+                    <input type="text" placeholder="DIRECCIÓN" name="address" id="address" value="<?php if ($user->getAddress() != null) echo $user->getAddress();?>" >
                 </label>
             </div><!-- /c1 -->
 
@@ -612,6 +588,46 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                 </label>
             </div><!-- /c1 -->
 
+            <div class="c1">
+                <label>
+                    <select name="region" id="region" onChange="cargarComunas(this.value)">
+                        <?php
+                        foreach ($regiones as $r) {
+                            if ($r["codigo"] == $userRegion) {
+                                echo '<option value="' . $r["codigo"] . '" selected>' . $r["nombre"] . '</option>';
+                            } else {
+                                echo '<option value="' . $r["codigo"] . '">' . $r["nombre"] . '</option>';
+                            }
+                        }
+                        ?>
+                    </select>
+                </label>
+            </div><!-- /c1 -->
+            <h1 style="margin-top:25px;">Datos cuenta de Banco <span style="font-size:12px;">(para depósitos de garantía)</span></h1>
+            <div class="c1">
+	            <label>
+	            	<select>
+	            		<option value="">BANCO</option>
+	            		<!-- PHP CODE -->
+	            	</select>
+	            </label>
+            </div>
+            <div class="c1">
+	            <label>
+	            	<select>
+	            		<option value="">TIPO DE CUENTA</option>
+	            		<!-- PHP CODE -->
+	            	</select>
+	            </label>
+            </div>
+            <div class="c1" style="margin-bottom: 27px;">
+                <label class="input">
+                    <input type="text" placeholder="NÚMERO DE CUENTA" name="numCuenta" id="numCuenta" value="<?php //PHP CODE ?>" >
+                </label>
+            </div><!-- /c1 -->
+
+
+
             <div class="regis_term" style="display: none;">
                 <p>Terminos y Condiciones:</p>
                 <div style="width:400px; height:200px; overflow:auto; border: 1px solid #CCC;"><?php include_component('main', 'terminosycondiciones') ?></div>
@@ -620,19 +636,8 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                     <input type="checkbox" id="tandc" name="tandc" style="width:12px;height:12px; vertical-align: middle; " /> Acepto terminos y condiciones
                 </div>
             </div><!-- /c1 -->
-
-
-
         </div><!-- regis_formulario -->
-
-        <div class="regis_botones posit">     
-
-            <button class="regis_btn_formulario" name="save" onclick="submitFrom()"> Guardar </button>        
-
-        </div><!-- regis_botones -->
-
-
-    </div><!-- regis_box_info -->
+    </div><!-- fin regis_box_infoNew -->
 
     <input type="hidden" name="redirect" value="<?=$redirect;?>">
     <input type="hidden" name="idRedirect" value="<?=$idRedirect;?>">
