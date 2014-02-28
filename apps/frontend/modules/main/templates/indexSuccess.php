@@ -870,9 +870,9 @@ else
             doSearch();
         });
 
-        $('#btn_buscar').click(function() {
-            doSearch();
-        });
+//        $('#btn_buscar').click(function() {
+//            doSearch();
+//        });
 
 
 //$('#searchTextField').keypress(function (e) {
@@ -1232,7 +1232,7 @@ else
         $(".btn_filtro").click(function() {
             $('#opc_filtro').toggle("slow");
         });
-        $("#btn_filtro1").click(function() {
+        $("#btn_filtro1, #btn_buscar").click(function() {
             $('#btn_filtro1').css("display", "none");
             $('#map').css("width", "509px");
             $('.search_box_1_maparea').css("width", "511px");
