@@ -3635,17 +3635,8 @@ class profileActions extends sfActions {
                 $reservasRecibidas[$i]['estado'] = 0;
             } else {
                 /* oportunidad ya no disponible */
-                if (date('Y-m-d', strtotime($reserva->getFechaConfirmacion())) == date("Y-m-d")) {
-                    /* reserva no disponible */
+                if(date('Y-m-d', strtotime($reserva->getFechaReserva())) == date("Y-m-d") && $reserva->getComentario() == null){
                     $reservasRecibidas[$i]['estado'] = 1;
-                }
-                if(date('Y-m-d', strtotime($reserva->getFechaReserva())) == date("Y-m-d")){
-                    /* reserva ganada por otro */
-                    $reservasRecibidas[$i]['estado'] = 2;
-                }
-                if($reserva->getComentario() == sfConfig::get('app_comment_oportunidad')){
-                    /* reserva pre aprobada */
-                    $reservasRecibidas[$i]['estado'] = 3;
                 }
                 
             }
