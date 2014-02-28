@@ -2,38 +2,32 @@
 
 class profileComponents extends sfComponents {
 
-
     public function executeCredito() {
-	$usuario= Doctrine_Core::getTable('user')->findOneById($this->getUser()->getAttribute("userid"));
-	$this->credito= $usuario->getCredito();
+        $usuario = Doctrine_Core::getTable('user')->findOneById($this->getUser()->getAttribute("userid"));
+        $this->credito = $usuario->getCredito();
     }
 
-    public function executeAlerta(){
+    public function executeAlerta() {
         //obtener la próxima reserva pagada y obtener idReserve y fecha
         $user = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")));
+        $this->reserva = null;
+        if ($user) {
+            $reserva = $user->obtenerUltimaReservaAprobada();
 
-        if($user && $user->getCantReservasAprobadas()){
-            $reserva =  $user->obtenerUltimaReservaAprobada();
-            //var_dump($reserva);
-            //die();
-
-            $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
-            $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+            $dias = array("Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sábado");
+            $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
 
             $fecha = strtotime($reserva['date']);
-            $reserva['date'] = $dias[date('w',$fecha)]." ".date('d',$fecha)." de ".$meses[date('n',$fecha)-1];
-//            $reserva['date'] = $reserva
+            $reserva['date'] = $dias[date('w', $fecha)] . " " . date('d', $fecha) . " de " . $meses[date('n', $fecha) - 1];
             $this->reserva = $reserva;
-        }else{
-            $this->reserva = null;
         }
     }
 
-    public function executePublico(){
-
+    public function executePublico() {
+        
     }
 
-    public function executeColDer(){
+    public function executeColDer() {
         
     }
 
@@ -47,7 +41,7 @@ class profileComponents extends sfComponents {
 
         //obtiene cantidad de mensajes no leidos        
         $claseUsuario = Doctrine_Core::getTable('user')->findOneById($idUsuario);
-        
+
         $this->cantMensajes = $claseUsuario->getCantidadMensajes();
 
         //obtiene la cantidad de pedidos de reserva
@@ -61,39 +55,37 @@ class profileComponents extends sfComponents {
 
         //telefono confirmado
         $this->telefonoConfirmado = $claseUsuario->getTelefonoConfirmado();
-        if($this->telefonoConfirmado){
+        if ($this->telefonoConfirmado) {
             $this->telefono = $claseUsuario->getTelefono();
-        }else{
+        } else {
             $this->telefono = null;
         }
-        
+
         //facebook confirmado
         $this->facebookConfirmado = $claseUsuario->getFacebookConfirmado();
 
         //email confirmado
         $this->emailConfirmado = $claseUsuario->getEmailConfirmado();
-        if($this->emailConfirmado){
+        if ($this->emailConfirmado) {
             $this->email = $claseUsuario->getEmail();
         }
-
     }
 
-    public function executePreguntasFrecuentes(){
+    public function executePreguntasFrecuentes() {
+        
     }
 
-    public function executeAutos(){
+    public function executeAutos() {
         $this->user = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")));
         $autos = $this->user->getCars();
         $cars = null;
         foreach ($autos as $auto) {
-            if($auto->getActivo()){
+            if ($auto->getActivo()) {
                 $cars[] = $auto;
             }
         }
         $this->cars = $cars;
     }
-
-
 
     public function executeUserinfo() {
         /* $c = new Criteria();
@@ -110,14 +102,14 @@ class profileComponents extends sfComponents {
 
         //$data[] = array(false, "Scan de documento");
         $data[] = array(($user->getDriverLicenseFile() != null), "Scan de licencia");
-	//$data[] = array(($user->getRutFile() != null), "Scan de Foto de Rut");
+        //$data[] = array(($user->getRutFile() != null), "Scan de Foto de Rut");
         $data[] = array(($user->getConfirmed()), "Email confirmado");
         $data[] = array(($user->getConfirmedFb()), "Facebook confirmado");
         $data[] = array(($user->getConfirmedSms()), "Telefono confirmado");
         $data[] = array(($user->getFriendInvite()), "Invita a tus amigos");
 
         //$data[] = array( false , "Identidad verificada");
-       // $data[] = array(($user->getPaypalId() != null), "Medios de pagos");
+        // $data[] = array(($user->getPaypalId() != null), "Medios de pagos");
 
         $this->userdata = $data;
         $this->user = $user;
@@ -129,16 +121,15 @@ class profileComponents extends sfComponents {
 
     public function executePictureFile() {
 //        $this->params = (!$this->params ) ? "" : $this->params;
-		
-		$toStringParams = explode(" ", $this->params);
 
-		 preg_match( '/(?<==).*?(?=p)/', $toStringParams[0],$width );
-		preg_match( '/(?<==).*?(?=p)/', $toStringParams[1],$height);
+        $toStringParams = explode(" ", $this->params);
 
-		
-		$this->width=$width[0];
-		$this->height=$height[0];
-		
+        preg_match('/(?<==).*?(?=p)/', $toStringParams[0], $width);
+        preg_match('/(?<==).*?(?=p)/', $toStringParams[1], $height);
+
+
+        $this->width = $width[0];
+        $this->height = $height[0];
     }
 
     public function executeMyreserves() {
@@ -200,12 +191,12 @@ class profileComponents extends sfComponents {
 
     public function executeNewsfeed() {
 
-		//Datos faltantes perfil
+        //Datos faltantes perfil
         $user = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")));
 
         //$data[] = array(false, "Scan de documento");
         $data[] = array(($user->getDriverLicenseFile() != null), "Scan de licencia");
-	//$data[] = array(($user->getRutFile() != null), "Scan de Foto de Rut");
+        //$data[] = array(($user->getRutFile() != null), "Scan de Foto de Rut");
         $data[] = array(($user->getConfirmed()), "Email confirmado");
         $data[] = array(($user->getConfirmedFb()), "Facebook confirmado");
         $data[] = array(($user->getConfirmedSms()), "Telefono confirmado");
@@ -215,33 +206,33 @@ class profileComponents extends sfComponents {
         //$data[] = array(($user->getPaypalId() != null), "Medios de pagos");
 
         $this->userdata = $data;
-		
-		//Mensajes nuevos
-		$this->messages  = Doctrine_Core::getTable("Message")->findOpenToUserId($this->getUser()->getAttribute("userid"));
-		
-		//Reservas por confirmar
-		$q = Doctrine_Query::create()
-                    ->select('r.id , ca.id idcar , mo.name model, 
+
+        //Mensajes nuevos
+        $this->messages = Doctrine_Core::getTable("Message")->findOpenToUserId($this->getUser()->getAttribute("userid"));
+
+        //Reservas por confirmar
+        $q = Doctrine_Query::create()
+                ->select('r.id , ca.id idcar , mo.name model, 
 	  br.name brand, ca.year year, 
 	  ca.address address, ci.name city, 
 	  st.name state, co.name country, 
 	  user.firstname firstname, user.lastname lastname,
 	  r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin '
-                    )
-                    ->from('Reserve r')
-                    ->innerJoin('r.Car ca')
-                    ->innerJoin('ca.Model mo')
-                    ->innerJoin('ca.User owner')
-                    ->innerJoin('r.User user')
-                    ->innerJoin('mo.Brand br')
-                    ->innerJoin('ca.City ci')
-                    ->innerJoin('ci.State st')
-                    ->innerJoin('st.Country co')
-                    ->where('owner.id = ?', $this->getUser()->getAttribute("userid"))
-                    ->andWhere('r.confirmed = ?', false)
-                    ->andWhere('r.complete = ?', false)
-                    ->andWhere('r.canceled = ?', false);
-		$this->toconfirm = $q->execute();
+                )
+                ->from('Reserve r')
+                ->innerJoin('r.Car ca')
+                ->innerJoin('ca.Model mo')
+                ->innerJoin('ca.User owner')
+                ->innerJoin('r.User user')
+                ->innerJoin('mo.Brand br')
+                ->innerJoin('ca.City ci')
+                ->innerJoin('ci.State st')
+                ->innerJoin('st.Country co')
+                ->where('owner.id = ?', $this->getUser()->getAttribute("userid"))
+                ->andWhere('r.confirmed = ?', false)
+                ->andWhere('r.complete = ?', false)
+                ->andWhere('r.canceled = ?', false);
+        $this->toconfirm = $q->execute();
     }
 
     public function executeUserdocsvalidation() {
@@ -249,18 +240,20 @@ class profileComponents extends sfComponents {
 
         //$data[] = array(false, "Scan de documento");
         $data[] = array(($user->getDriverLicenseFile() != null), "Scan de licencia");
-	//$data[] = array(($user->getRutFile() != null), "Scan de Foto de Rut");
+        //$data[] = array(($user->getRutFile() != null), "Scan de Foto de Rut");
         $data[] = array(($user->getConfirmed()), "Email confirmado");
         $data[] = array(($user->getConfirmedFb()), "Facebook confirmado");
         $data[] = array(($user->getConfirmedSms()), "Telefono confirmado");
         $data[] = array(($user->getFriendInvite()), "Invita a tus amigos");
 
         //$data[] = array( false , "Identidad verificada");
-      //  $data[] = array(($user->getPaypalId() != null), "Medios de pagos");
+        //  $data[] = array(($user->getPaypalId() != null), "Medios de pagos");
 
         $this->userdata = $data;
     }
 
-	public function executeTerminosycondiciones() {}
+    public function executeTerminosycondiciones() {
+        
+    }
 
 }

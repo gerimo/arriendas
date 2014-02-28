@@ -16,46 +16,4 @@ class UserTable extends Doctrine_Table {
         return Doctrine_Core::getTable('User');
     }
 
-    public function getCantReservasAprobadasById($id) {
-        $connection = Doctrine_Manager::connection();
-        $query = "SELECT COUNT(*) as cantidad FROM Reserve r ";
-        $query .= "JOIN Transaction t ON t.reserve_id = r.id ";
-        $query .= "LEFT JOIN Car c ON r.car_id=c.id ";
-        $query .= "WHERE t.completed = 1 ";
-        $query .= "AND (c.user_id = $id OR r.user_id = $id) ";
-        $query .= "AND (date_add(r.date, INTERVAL r.duration HOUR) > NOW()) ";
-        $statement = $connection->execute($query);
-        $statement->execute();
-        $resultset = $statement->fetch(PDO::FETCH_OBJ);
-        return $resultset->cantidad;
-    }
-
-    public function getCantReservasPreaprobadasById($id) {
-        $connection = Doctrine_Manager::connection();
-        $query = "SELECT COUNT(*) as cantidad FROM Reserve r ";
-        $query .= "INNER JOIN Transaction t ON t.reserve_id = r.id ";
-        $query .= "LEFT JOIN Car c ON r.car_id=c.id ";
-        $query .= "WHERE t.completed = 0 ";
-        $query .= "AND r.confirmed = 1 ";
-        $query .= "AND (c.user_id = $id OR r.user_id = $id) ";
-        $query .= "AND (date_add(r.date, INTERVAL 1 HOUR) > NOW()) ";
-        $statement = $connection->execute($query);
-        $statement->execute();
-        $resultset = $statement->fetch(PDO::FETCH_OBJ);
-        return $resultset->cantidad;
-    }
-
-    public function getCantReservasPendientesById($id) {
-        $connection = Doctrine_Manager::connection();
-        $query = "SELECT COUNT(*) as cantidad FROM Reserve r ";
-        $query .= "LEFT JOIN Car c ON r.car_id=c.id ";
-        $query .= "WHERE r.confirmed = 0 ";
-        $query .= "AND (c.user_id = $id OR r.user_id = $id) ";
-        $query .= "AND (r.date > NOW()) ";
-        $statement = $connection->execute($query);
-        $statement->execute();
-        $resultset = $statement->fetch(PDO::FETCH_OBJ);
-        return $resultset->cantidad;
-    }
-
 }

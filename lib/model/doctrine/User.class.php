@@ -12,94 +12,102 @@
  */
 class User extends BaseUser {
 
-	//inicio public profile
+    //inicio public profile
 
-    public function getSendReserveLastWeek($fechaActual){
-        if($this->getLastReserve()){
-            $horaLimite = strftime("%Y-%m-%d %H:%M:%S",strtotime('+7 days',strtotime($this->getLastReserve())));
-            if(strtotime($fechaActual) <= strtotime($horaLimite)){
+    public function getSendReserveLastWeek($fechaActual) {
+        if ($this->getLastReserve()) {
+            $horaLimite = strftime("%Y-%m-%d %H:%M:%S", strtotime('+7 days', strtotime($this->getLastReserve())));
+            if (strtotime($fechaActual) <= strtotime($horaLimite)) {
                 return TRUE;
-            }else{
+            } else {
                 return FALSE;
             }
-        }else{
+        } else {
             return FALSE;
         }
     }
-    public function getLastReserve(){
-        $q = "SELECT fecha_reserva FROM reserve WHERE user_id=".$this->getId()." ORDER BY fecha_reserva DESC";
+
+    public function getLastReserve() {
+        $q = "SELECT fecha_reserva FROM reserve WHERE user_id=" . $this->getId() . " ORDER BY fecha_reserva DESC";
         $query = Doctrine_Query::create()->query($q);
         $reservas = $query->toArray();
-        if($reservas == NULL || $reservas[1]['fecha_reserva'] == NULL){
+        if ($reservas == NULL || $reservas[1]['fecha_reserva'] == NULL) {
             return NULL;
-        }else{
+        } else {
             return $reservas[1]['fecha_reserva'];
         }
     }
 
-    public function getPorcentajeAprobacion(){
+    public function getPorcentajeAprobacion() {
 
-        $q = "SELECT op_recom_owner, idOwner FROM rating WHERE state_renter=1 and idOwner=".$this->getId();
+        $q = "SELECT op_recom_owner, idOwner FROM rating WHERE state_renter=1 and idOwner=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $recomencionesComoOwner = $query->toArray();
 
-        $q2 = "SELECT op_recom_renter, idRenter FROM rating WHERE state_owner=1 and idRenter=".$this->getId();
+        $q2 = "SELECT op_recom_renter, idRenter FROM rating WHERE state_owner=1 and idRenter=" . $this->getId();
         $query2 = Doctrine_Query::create()->query($q2);
         $recomencionesComoRenter = $query2->toArray();
-        $i=0;
+        $i = 0;
         $cantidadPositivas = 0;
-        for($i=0;$i<count($recomencionesComoOwner);$i++){
-            if($recomencionesComoOwner[$i]['op_recom_owner'] == 1){
+        for ($i = 0; $i < count($recomencionesComoOwner); $i++) {
+            if ($recomencionesComoOwner[$i]['op_recom_owner'] == 1) {
                 $cantidadPositivas++;
             }
         }
-        $k=$i;
-        for($j=0;$j<count($recomencionesComoRenter);$j++){
-            if($recomencionesComoRenter[$j]['op_recom_renter'] == 1){
+        $k = $i;
+        for ($j = 0; $j < count($recomencionesComoRenter); $j++) {
+            if ($recomencionesComoRenter[$j]['op_recom_renter'] == 1) {
                 $cantidadPositivas++;
             }
             $k++;
         }
-        if($k == 0){
+        if ($k == 0) {
             $porcentajeAprobacion['porcentaje'] = 0;
             $porcentajeAprobacion['cantidad'] = 0;
             return $porcentajeAprobacion;
-        }else{
-            $porcentajeAprobacion['porcentaje'] = (($cantidadPositivas*100)/$k);
+        } else {
+            $porcentajeAprobacion['porcentaje'] = (($cantidadPositivas * 100) / $k);
             $porcentajeAprobacion['cantidad'] = $k;
             return $porcentajeAprobacion;
         }
     }
 
-    public function diferenciaEntreFechas($fecha_principal, $fecha_secundaria, $obtener, $redondear){
+    public function diferenciaEntreFechas($fecha_principal, $fecha_secundaria, $obtener, $redondear) {
         $f0 = strtotime($fecha_principal);
         $f1 = strtotime($fecha_secundaria);
-        if ($f0 < $f1){
-            $tmp = $f1; $f1 = $f0; $f0 = $tmp;
+        if ($f0 < $f1) {
+            $tmp = $f1;
+            $f1 = $f0;
+            $f0 = $tmp;
         }
         $resultado = ($f0 - $f1);
         switch ($obtener) {
             default: break;
-            case "MINUTOS"   :   $resultado = $resultado / 60;   break;
-            case "HORAS"     :   $resultado = $resultado / 60 / 60;   break;
-            case "DIAS"      :   $resultado = $resultado / 60 / 60 / 24;   break;
-            case "SEMANAS"   :   $resultado = $resultado / 60 / 60 / 24 / 7;   break;
+            case "MINUTOS" : $resultado = $resultado / 60;
+                break;
+            case "HORAS" : $resultado = $resultado / 60 / 60;
+                break;
+            case "DIAS" : $resultado = $resultado / 60 / 60 / 24;
+                break;
+            case "SEMANAS" : $resultado = $resultado / 60 / 60 / 24 / 7;
+                break;
         }
-        if($redondear) $resultado = round($resultado);
+        if ($redondear)
+            $resultado = round($resultado);
         return $resultado;
     }
 
-    public function getVelocidadRespuesta_mensajes(){
-        $q = "SELECT date, date_answered FROM Message, Conversation WHERE Conversation.id=Message.conversation_id AND (Conversation.user_to_id=".$this->getId()." OR Conversation.user_from_id=".$this->getId().") AND Message.user_id!=".$this->getId()." AND Message.answered=1";
+    public function getVelocidadRespuesta_mensajes() {
+        $q = "SELECT date, date_answered FROM Message, Conversation WHERE Conversation.id=Message.conversation_id AND (Conversation.user_to_id=" . $this->getId() . " OR Conversation.user_from_id=" . $this->getId() . ") AND Message.user_id!=" . $this->getId() . " AND Message.answered=1";
         $query = Doctrine_Query::create()->query($q);
         $mensajes = $query->toArray();
 
-        if($mensajes){
+        if ($mensajes) {
             $tiempoEnviadoMensaje = null;
             $tiempoDemoraMensaje = null;
-            for($i=0,$k=0;$i<count($mensajes);$i++){ //Itero por cada mensaje
-                $tiempoEnviadoMensaje = date('Y-m-d H:i:s',strtotime($mensajes[$i]['date']));
-                $tiempoDemoraMensaje = date('Y-m-d H:i:s',strtotime($mensajes[$i]['date_answered']));
+            for ($i = 0, $k = 0; $i < count($mensajes); $i++) { //Itero por cada mensaje
+                $tiempoEnviadoMensaje = date('Y-m-d H:i:s', strtotime($mensajes[$i]['date']));
+                $tiempoDemoraMensaje = date('Y-m-d H:i:s', strtotime($mensajes[$i]['date_answered']));
 
                 $minutos = $this->diferenciaEntreFechas($tiempoEnviadoMensaje, $tiempoDemoraMensaje, "MINUTOS", TRUE);
                 $tiempoDemora[$k]['tiempoEnMinutos'] = $minutos;
@@ -107,239 +115,236 @@ class User extends BaseUser {
             }//fin for
 
             $suma = 0;
-            for($i=0;$i<count($tiempoDemora);$i++){
+            for ($i = 0; $i < count($tiempoDemora); $i++) {
                 $suma = $suma + $tiempoDemora[$i]['tiempoEnMinutos'];
             }
-            if(count($tiempoDemora)>0){
-                $promedio = $suma/$i;
-                if($promedio<60){
+            if (count($tiempoDemora) > 0) {
+                $promedio = $suma / $i;
+                if ($promedio < 60) {
                     $minutos = intval($promedio);
-                    $tiempoDemoraFinal = $minutos." min(s)";
-                }else if($promedio>=60 && $promedio<10080){
-                    $horas = intval($promedio/60);
-                    $minutos = intval($promedio - (60*$horas));
-                    $tiempoDemoraFinal = $horas." hr(s) - ".$minutos." min(s)";
-                }else if($promedio>=1440){
-                    $dias = intval($promedio/1440);
-                    $horas = intval(($promedio - (1440*$dias))/60);
-                    $tiempoDemoraFinal = $dias."dia(s) - ".$horas." hr(s)";
-                }else if($promedio>=10080){
-                    $semanas = intval($promedio/10080);
-                    $dias = intval(($promedio - (10080*$semanas))/1440);
-                    $tiempoDemoraFinal = $semanas."semana(s) - ".$dias." dia(s)";
+                    $tiempoDemoraFinal = $minutos . " min(s)";
+                } else if ($promedio >= 60 && $promedio < 10080) {
+                    $horas = intval($promedio / 60);
+                    $minutos = intval($promedio - (60 * $horas));
+                    $tiempoDemoraFinal = $horas . " hr(s) - " . $minutos . " min(s)";
+                } else if ($promedio >= 1440) {
+                    $dias = intval($promedio / 1440);
+                    $horas = intval(($promedio - (1440 * $dias)) / 60);
+                    $tiempoDemoraFinal = $dias . "dia(s) - " . $horas . " hr(s)";
+                } else if ($promedio >= 10080) {
+                    $semanas = intval($promedio / 10080);
+                    $dias = intval(($promedio - (10080 * $semanas)) / 1440);
+                    $tiempoDemoraFinal = $semanas . "semana(s) - " . $dias . " dia(s)";
                 }
                 return $tiempoDemoraFinal;
-            }else{
+            } else {
                 return "Error";
             }
-        }else{
+        } else {
             return "";
         }
-    }//fin getVelocidadRespuesta_mensajes()
+    }
 
-    public function getReservasContestadas_aLaFecha(){
+//fin getVelocidadRespuesta_mensajes()
+
+    public function getReservasContestadas_aLaFecha() {
         $idUser = $this->getId();
         $fechaHoraActual = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"));
         $q = Doctrine_Query::create()
-        ->from("Reserve r, r.Car ")
-        ->leftJoin("r.Car c")
-        ->where("c.user_id=$idUser")
-        ->andWhere("c.id=r.car_id")
-        ->andWhere("r.confirmed=1 OR r.canceled=1")
-        ->andWhere("r.date<'$fechaHoraActual'");
-      $reserve = $q->execute();
+                ->from("Reserve r, r.Car ")
+                ->leftJoin("r.Car c")
+                ->where("c.user_id=$idUser")
+                ->andWhere("c.id=r.car_id")
+                ->andWhere("r.confirmed=1 OR r.canceled=1")
+                ->andWhere("r.date<'$fechaHoraActual'");
+        $reserve = $q->execute();
 
-      return $reserve->count();
+        return $reserve->count();
     }
 
-    public function getReservasContestadas(){
+    public function getReservasContestadas() {
         $idUser = $this->getId();
         $q = Doctrine_Query::create()
-        ->from("Reserve r, r.Car ")
-        ->leftJoin("r.Car c")
-        ->where("c.user_id=$idUser")
-        ->andWhere("c.id=r.car_id")
-        ->andWhere("r.confirmed=1 OR r.canceled=1");
-      $reserve = $q->execute();
+                ->from("Reserve r, r.Car ")
+                ->leftJoin("r.Car c")
+                ->where("c.user_id=$idUser")
+                ->andWhere("c.id=r.car_id")
+                ->andWhere("r.confirmed=1 OR r.canceled=1");
+        $reserve = $q->execute();
 
-      return $reserve->count();
+        return $reserve->count();
     }
 
-	
-    public function getPercReservasContestadas(){
+    public function getPercReservasContestadas() {
         $idUser = $this->getId();
 //        $q = Doctrine_Manager::getInstance()->getCurrentConnection();
         $query = "SELECT ((SUM(confirmed))+(SUM(canceled))-(SUM(cancel_reason)/2))/(count(total)) as perc, count(total) as total FROM (SELECT r.confirmed as confirmed, r.canceled as canceled, r.cancel_reason as cancel_reason, r.id as total FROM Reserve r LEFT JOIN Car c ON c.id=r.car_id where c.user_id = $idUser ORDER BY r.id DESC LIMIT 10) listperc";
-		$rs = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAssoc($query);
-      
-	  //$result = $q->execute($query);
-  //      $result->fetchOne();
-        
-		$pedidosContestados=$rs[0]['perc'];
-		$pedidosTotal=$rs[0]['total'];
-		$pedidosnoContestados=1-$pedidosContestados;
+        $rs = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAssoc($query);
 
-		$factorInicial=1;
+        //$result = $q->execute($query);
+        //      $result->fetchOne();
 
-		if ($pedidosTotal<=2 ){
-			$factor=1;
-		}else{
-			$factor=$pedidosContestados;
-		}
-		
-		return $factor;
+        $pedidosContestados = $rs[0]['perc'];
+        $pedidosTotal = $rs[0]['total'];
+        $pedidosnoContestados = 1 - $pedidosContestados;
+
+        $factorInicial = 1;
+
+        if ($pedidosTotal <= 2) {
+            $factor = 1;
+        } else {
+            $factor = $pedidosContestados;
+        }
+
+        return $factor;
     }
 
-
-
-    public function getReservasNOContestadas_aLaFecha(){
+    public function getReservasNOContestadas_aLaFecha() {
         $idUser = $this->getId();
         $fechaHoraActual = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"));
         $q = Doctrine_Query::create()
-        ->from("Reserve r, r.Car ")
-        ->leftJoin("r.Car c")
-        ->where("c.user_id=$idUser")
-        ->andWhere("c.id=r.car_id")
-        ->andWhere("r.confirmed=0 OR r.canceled=0")
-        ->andWhere("r.date<'$fechaHoraActual'");
-      $reserve = $q->execute();
+                ->from("Reserve r, r.Car ")
+                ->leftJoin("r.Car c")
+                ->where("c.user_id=$idUser")
+                ->andWhere("c.id=r.car_id")
+                ->andWhere("r.confirmed=0 OR r.canceled=0")
+                ->andWhere("r.date<'$fechaHoraActual'");
+        $reserve = $q->execute();
 
-      return $reserve->count();
+        return $reserve->count();
     }
 
-
-    public function getReservasNOContestadas(){
+    public function getReservasNOContestadas() {
         $idUser = $this->getId();
         $q = Doctrine_Query::create()
-        ->from("Reserve r, r.Car ")
-        ->leftJoin("r.Car c")
-        ->where("c.user_id=$idUser")
-        ->andWhere("c.id=r.car_id")
-        ->andWhere("r.confirmed=0 OR r.canceled=0");
-      $reserve = $q->execute();
+                ->from("Reserve r, r.Car ")
+                ->leftJoin("r.Car c")
+                ->where("c.user_id=$idUser")
+                ->andWhere("c.id=r.car_id")
+                ->andWhere("r.confirmed=0 OR r.canceled=0");
+        $reserve = $q->execute();
 
-      return $reserve->count();
+        return $reserve->count();
     }
 
-	//TODO
-	public function getScorePuntualidad() {
+    //TODO
+    public function getScorePuntualidad() {
 
-		//es propietario
-		$q = "SELECT time_delay_start_owner, time_delay_end_owner FROM rating WHERE state_owner=1 and idOwner=".$this->getId();
+        //es propietario
+        $q = "SELECT time_delay_start_owner, time_delay_end_owner FROM rating WHERE state_owner=1 and idOwner=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $puntualidadOwner = $query->toArray();
 
-	    //es arrendador
-	    $q = "SELECT time_delay_start_renter, time_delay_end_renter FROM rating WHERE state_renter=1 and idRenter=".$this->getId();
+        //es arrendador
+        $q = "SELECT time_delay_start_renter, time_delay_end_renter FROM rating WHERE state_renter=1 and idRenter=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $puntualidadRenter = $query->toArray();
 
-        for ($i=0; $i < count($puntualidadOwner); $i++) {
-        	//echo $i."<br>";
-        	$puntualidad[$i] = $puntualidadOwner[$i]['time_delay_end_owner']+$puntualidadOwner[$i]['time_delay_start_owner'];
+        for ($i = 0; $i < count($puntualidadOwner); $i++) {
+            //echo $i."<br>";
+            $puntualidad[$i] = $puntualidadOwner[$i]['time_delay_end_owner'] + $puntualidadOwner[$i]['time_delay_start_owner'];
         }
 
-        for ($j=0; $j < count($puntualidadRenter); $j++) {
-        	//echo $i+$j."<br>";
-        	$puntualidad[$i+$j] = $puntualidadRenter[$j]['time_delay_end_renter']+$puntualidadRenter[$j]['time_delay_start_renter'];
+        for ($j = 0; $j < count($puntualidadRenter); $j++) {
+            //echo $i+$j."<br>";
+            $puntualidad[$i + $j] = $puntualidadRenter[$j]['time_delay_end_renter'] + $puntualidadRenter[$j]['time_delay_start_renter'];
         }
 
         //obtener promedio
         $suma = 0;
 
-        if(!isset($puntualidad)){
-        	return 0;
+        if (!isset($puntualidad)) {
+            return 0;
         }
 
-        for ($i=0; $i <count($puntualidad) ; $i++) { 
-        	$suma+=$puntualidad[$i];
+        for ($i = 0; $i < count($puntualidad); $i++) {
+            $suma+=$puntualidad[$i];
         }
 
 
-        $promedio = $suma/count($puntualidad);
+        $promedio = $suma / count($puntualidad);
         $promedio = round($promedio);
 
-        if($promedio<5){
-        	return 5;
+        if ($promedio < 5) {
+            return 5;
         }
-        if($promedio<10){
-        	return 4;
+        if ($promedio < 10) {
+            return 4;
         }
-        if($promedio<15){
-        	return 3;
+        if ($promedio < 15) {
+            return 3;
         }
-        if($promedio<25){
-        	return 2;
+        if ($promedio < 25) {
+            return 2;
         }
 
         return 1;
+    }
 
-	}
-
-	//TODO
-	public function getScoreLimpieza() {
-		//es propietario
-		$q = "SELECT op_cleaning_about_renter FROM rating WHERE state_owner=1 and idOwner=".$this->getId();
+    //TODO
+    public function getScoreLimpieza() {
+        //es propietario
+        $q = "SELECT op_cleaning_about_renter FROM rating WHERE state_owner=1 and idOwner=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $limpiezaOwner = $query->toArray();
 
-    
-	    //es arrendador
-	    $q = "SELECT op_cleaning_about_owner FROM rating WHERE state_renter=1 and idRenter=".$this->getId();
+
+        //es arrendador
+        $q = "SELECT op_cleaning_about_owner FROM rating WHERE state_renter=1 and idRenter=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $limpiezaRenter = $query->toArray();
 
-        for ($i=0; $i < count($limpiezaOwner); $i++) {
-        	//echo $i."<br>";
-        	$limpieza[$i] = $limpiezaOwner[$i]['op_cleaning_about_renter'];
+        for ($i = 0; $i < count($limpiezaOwner); $i++) {
+            //echo $i."<br>";
+            $limpieza[$i] = $limpiezaOwner[$i]['op_cleaning_about_renter'];
         }
 
-        for ($j=0; $j < count($limpiezaRenter); $j++) {
-        	//echo $i+$j."<br>";
-        	$limpieza[$i+$j] = $limpiezaRenter[$j]['op_cleaning_about_owner'];
+        for ($j = 0; $j < count($limpiezaRenter); $j++) {
+            //echo $i+$j."<br>";
+            $limpieza[$i + $j] = $limpiezaRenter[$j]['op_cleaning_about_owner'];
         }
 
         //$limpieza almacena el puntaje para el usuario
         //obtener promedio
         $suma = 0;
 
-        if(!isset($limpieza)){
-        	return 0;
+        if (!isset($limpieza)) {
+            return 0;
         }
 
-        for ($i=0; $i <count($limpieza) ; $i++) { 
-        	$suma+=$limpieza[$i];
+        for ($i = 0; $i < count($limpieza); $i++) {
+            $suma+=$limpieza[$i];
         }
 
-        if(count($limpieza)>0){
-        	$promedio = $suma/count($limpieza);
-        }else{
-        	$promedio = 0;
+        if (count($limpieza) > 0) {
+            $promedio = $suma / count($limpieza);
+        } else {
+            $promedio = 0;
         }
 
         return round($promedio);
-	}
+    }
 
-	//TODO
-	public function getListaRentersPendientes_comoOwner() {
-		
-		$q = "SELECT id, idRenter, state_owner, fecha_habilitada_desde FROM rating WHERE idOwner=".$this->getId();
+    //TODO
+    public function getListaRentersPendientes_comoOwner() {
+
+        $q = "SELECT id, idRenter, state_owner, fecha_habilitada_desde FROM rating WHERE idOwner=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $resultados_comoDuenio = $query->toArray();
 
         $pendientes = null;
         //Si el usuario es Duenio de un auto:
-        if($resultados_comoDuenio){
+        if ($resultados_comoDuenio) {
             //Obtener Calificaciones Pendientes, Hechas por mi, y sobre mi
             //echo "RESULTADOS COMO DUEÑO:";
-            for($i=0,$j=0;$i<count($resultados_comoDuenio);$i++){
+            for ($i = 0, $j = 0; $i < count($resultados_comoDuenio); $i++) {
 
                 $fechaHabilitadaDesde = strtotime($resultados_comoDuenio[$i]['fecha_habilitada_desde']);
                 $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
 
-                if($fechaActual>$fechaHabilitadaDesde){
+                if ($fechaActual > $fechaHabilitadaDesde) {
                     $idArrendadorAuto[$i] = $resultados_comoDuenio[$i]['idRenter']; //Seleccionando las id(s) del arrendador del vehiculo que se arrendó y los almacenamos en un array
-                    if($resultados_comoDuenio[$i]['state_owner'] == 0){ //solo si tiene calificaciones pendientes
+                    if ($resultados_comoDuenio[$i]['state_owner'] == 0) { //solo si tiene calificaciones pendientes
                         $pendientes[$j] = Doctrine_Core::getTable('user')->find(array($idArrendadorAuto[$i]));
                         $j++;
                     }
@@ -347,33 +352,32 @@ class User extends BaseUser {
             }
         }
         return $pendientes; //lista de arrendadores pendientes por calificar, como Duenio del Auto
-        
-	}
+    }
 
-	public function getIDsCalificaciones_deRentersPendientes_comoOwner() {
-		
-		$q = "SELECT id, idRenter, state_owner, fecha_habilitada_desde FROM rating WHERE idOwner=".$this->getId();
+    public function getIDsCalificaciones_deRentersPendientes_comoOwner() {
+
+        $q = "SELECT id, idRenter, state_owner, fecha_habilitada_desde FROM rating WHERE idOwner=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $resultados_comoDuenio = $query->toArray();
 
         $idRating = null;
         //Si el usuario es Duenio de un auto:
-        if($resultados_comoDuenio){
+        if ($resultados_comoDuenio) {
             //Obtener Calificaciones Pendientes, Hechas por mi, y sobre mi
             //echo "RESULTADOS COMO DUEÑO:";
-            for($i=0,$j=0;$i<count($resultados_comoDuenio);$i++){
+            for ($i = 0, $j = 0; $i < count($resultados_comoDuenio); $i++) {
 
                 $fechaHabilitadaDesde = strtotime($resultados_comoDuenio[$i]['fecha_habilitada_desde']);
                 $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
 
-                if($fechaActual>$fechaHabilitadaDesde){
+                if ($fechaActual > $fechaHabilitadaDesde) {
                     $idArrendadorAuto[$i] = $resultados_comoDuenio[$i]['idRenter']; //Seleccionando las id(s) del arrendador del vehiculo que se arrendó y los almacenamos en un array
-                    if($resultados_comoDuenio[$i]['state_owner'] == 0){ //solo si tiene calificaciones pendientes
+                    if ($resultados_comoDuenio[$i]['state_owner'] == 0) { //solo si tiene calificaciones pendientes
                         $idRating[$j]['id'] = $resultados_comoDuenio[$i]['id'];
 
                         $fecha = $resultados_comoDuenio[$i]['fecha_habilitada_desde'];
                         $fecha = strtotime($fecha);
-                        $fechaModificada = date("d-m-Y",$fecha);
+                        $fechaModificada = date("d-m-Y", $fecha);
                         $idRating[$j]['fecha'] = $fechaModificada;
                         $j++;
                     }
@@ -382,26 +386,26 @@ class User extends BaseUser {
         }
 
         return $idRating; //Calificiones Pendientes, como Duenio del Auto
-	}
+    }
 
-	public function getListaOwnersPendientes_comoRenter() {
-		$q = "SELECT id, idOwner, state_renter, fecha_habilitada_desde FROM rating WHERE idRenter=".$this->getId(); 
+    public function getListaOwnersPendientes_comoRenter() {
+        $q = "SELECT id, idOwner, state_renter, fecha_habilitada_desde FROM rating WHERE idRenter=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $resultados_comoAlquiler = $query->toArray();
 
         $pendientes = null;
         //Si el usuario es Alquiler de un auto:
 
-        if($resultados_comoAlquiler){
+        if ($resultados_comoAlquiler) {
             //Obtener Calificaciones Pendientes, Hechas por mi, y sobre mi
-            for($i=0,$j=0;$i<count($resultados_comoAlquiler);$i++){
+            for ($i = 0, $j = 0; $i < count($resultados_comoAlquiler); $i++) {
 
                 $fechaHabilitadaDesde = strtotime($resultados_comoAlquiler[$i]['fecha_habilitada_desde']);
                 $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
 
-                if($fechaActual>$fechaHabilitadaDesde){
+                if ($fechaActual > $fechaHabilitadaDesde) {
                     $idDuenioAuto[$i] = $resultados_comoAlquiler[$i]['idOwner']; //Seleccionando las id(s) del propietario del vehiculo que él arrendó y almacenandolas en un array
-                    if($resultados_comoAlquiler[$i]['state_renter'] == 0){ //solo si tiene calificaciones pendientes
+                    if ($resultados_comoAlquiler[$i]['state_renter'] == 0) { //solo si tiene calificaciones pendientes
                         $pendientes[$j] = Doctrine_Core::getTable('user')->find(array($idDuenioAuto[$i]));
                         $j++;
                     }
@@ -409,33 +413,33 @@ class User extends BaseUser {
             }
         }
 
-        return $pendientes;//lista de duenios pendientes por calificar, como Alquiler de un Auto
-	}
+        return $pendientes; //lista de duenios pendientes por calificar, como Alquiler de un Auto
+    }
 
-	public function getIDsCalificaciones_deOwnersPendientes_comoRenter() {
-		$q = "SELECT id, idOwner, state_renter, fecha_habilitada_desde FROM rating WHERE idRenter=".$this->getId(); 
+    public function getIDsCalificaciones_deOwnersPendientes_comoRenter() {
+        $q = "SELECT id, idOwner, state_renter, fecha_habilitada_desde FROM rating WHERE idRenter=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $resultados_comoAlquiler = $query->toArray();
 
 
         $idRating = null;
         //Si el usuario es Alquiler de un auto:
-        if($resultados_comoAlquiler){
+        if ($resultados_comoAlquiler) {
             //Obtener Calificaciones Pendientes, Hechas por mi, y sobre mi
-            for($i=0,$j=0;$i<count($resultados_comoAlquiler);$i++){
+            for ($i = 0, $j = 0; $i < count($resultados_comoAlquiler); $i++) {
 
                 $fechaHabilitadaDesde = strtotime($resultados_comoAlquiler[$i]['fecha_habilitada_desde']);
                 $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
 
-                if($fechaActual>$fechaHabilitadaDesde){
+                if ($fechaActual > $fechaHabilitadaDesde) {
 
                     $idDuenioAuto[$i] = $resultados_comoAlquiler[$i]['idOwner']; //Seleccionando las id(s) del propietario del vehiculo que él arrendó y almacenandolas en un array
-                    if($resultados_comoAlquiler[$i]['state_renter'] == 0){ //solo si tiene calificaciones pendientes
+                    if ($resultados_comoAlquiler[$i]['state_renter'] == 0) { //solo si tiene calificaciones pendientes
                         $idRating[$j]['id'] = $resultados_comoAlquiler[$i]['id'];
 
                         $fecha = $resultados_comoAlquiler[$i]['fecha_habilitada_desde'];
                         $fecha = strtotime($fecha);
-                        $fechaModificada = date("d-m-Y",$fecha);
+                        $fechaModificada = date("d-m-Y", $fecha);
                         $idRating[$j]['fecha'] = $fechaModificada;
                         $j++;
                     }
@@ -443,573 +447,559 @@ class User extends BaseUser {
             }
         }
 
-        return $idRating;//Calificiones Pendientes, como Alquiler del Auto
-	}
+        return $idRating; //Calificiones Pendientes, como Alquiler del Auto
+    }
 
-	//Funcion que devuelve los comentarios HECHOS POR MI
-	public function getMyComments_AsOwner_and_AsRenter() {
+    //Funcion que devuelve los comentarios HECHOS POR MI
+    public function getMyComments_AsOwner_and_AsRenter() {
 
-		$comentarios = null;
-		//mis comentarios como renter
-	    $q = "SELECT fecha_calificacion_renter, idOwner, opinion_about_owner, op_recom_owner, op_cleaning_about_owner, op_puntual_about_owner, time_delay_start_owner, time_delay_end_owner FROM rating WHERE state_renter=1 and idRenter=".$this->getId();
+        $comentarios = null;
+        //mis comentarios como renter
+        $q = "SELECT fecha_calificacion_renter, idOwner, opinion_about_owner, op_recom_owner, op_cleaning_about_owner, op_puntual_about_owner, time_delay_start_owner, time_delay_end_owner FROM rating WHERE state_renter=1 and idRenter=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $alquiler = $query->toArray();
 
         //mis comentarios como owner
-        $q = "SELECT fecha_calificacion_owner, idRenter, opinion_about_renter, op_recom_renter, op_cleaning_about_renter, op_puntual_about_renter, time_delay_start_renter, time_delay_end_renter FROM rating WHERE state_owner=1 and idOwner=".$this->getId();
+        $q = "SELECT fecha_calificacion_owner, idRenter, opinion_about_renter, op_recom_renter, op_cleaning_about_renter, op_puntual_about_renter, time_delay_start_renter, time_delay_end_renter FROM rating WHERE state_owner=1 and idOwner=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $duenio = $query->toArray();
 
-        for ($i=0; $i < count($alquiler); $i++) {
-        	$id = $alquiler[$i]['idOwner']; //obtiendo el id de la persona a la cual califiqué como Alquiler de su auto
+        for ($i = 0; $i < count($alquiler); $i++) {
+            $id = $alquiler[$i]['idOwner']; //obtiendo el id de la persona a la cual califiqué como Alquiler de su auto
 
-        	$q = "SELECT firstname, lastname, picture_file, facebook_id FROM user WHERE id=".$id;
-	        $query = Doctrine_Query::create()->query($q);
-	        $user = $query->toArray();
+            $q = "SELECT firstname, lastname, picture_file, facebook_id FROM user WHERE id=" . $id;
+            $query = Doctrine_Query::create()->query($q);
+            $user = $query->toArray();
 
-	        $comentarios[$i]['nombrePersonaEvaluada'] = $user[0]['firstname'];
-	        $comentarios[$i]['apellidoPersonaEvaluada'] = $user[0]['lastname'];
+            $comentarios[$i]['nombrePersonaEvaluada'] = $user[0]['firstname'];
+            $comentarios[$i]['apellidoPersonaEvaluada'] = $user[0]['lastname'];
 
-	        if($user[0]['facebook_id']!=null){
-	        	$comentarios[$i]['facebookPersonaEvaluada'] = true;
-	    	}else{
-	        	$comentarios[$i]['facebookPersonaEvaluada'] = false;
-	    	}
+            if ($user[0]['facebook_id'] != null) {
+                $comentarios[$i]['facebookPersonaEvaluada'] = true;
+            } else {
+                $comentarios[$i]['facebookPersonaEvaluada'] = false;
+            }
 
-	        $comentarios[$i]['urlFotoPersonaEvaluada'] = $user[0]['picture_file'];
+            $comentarios[$i]['urlFotoPersonaEvaluada'] = $user[0]['picture_file'];
 
-	        $fecha = $alquiler[$i]['fecha_calificacion_renter'];
-	        $fecha = strtotime($fecha);
-	        $comentarios[$i]['posicion'] = $fecha;
-	        $fecha = date("d-m-Y",$fecha);
+            $fecha = $alquiler[$i]['fecha_calificacion_renter'];
+            $fecha = strtotime($fecha);
+            $comentarios[$i]['posicion'] = $fecha;
+            $fecha = date("d-m-Y", $fecha);
 
-        	$comentarios[$i]['fechaEvaluacion'] = $fecha;
-        	$comentarios[$i]['idEvaluado'] = $alquiler[$i]['idOwner']; //IMPORTANTE, atención con 'idEvaluador' != 'idEvaluado'
-        	$comentarios[$i]['comentarioEvaluacion'] = $alquiler[$i]['opinion_about_owner'];
-        	$comentarios[$i]['evaluadoRecomendado'] = $alquiler[$i]['op_recom_owner'];
-        	$comentarios[$i]['evaluadoLimpieza'] = $alquiler[$i]['op_cleaning_about_owner'];
-        	$comentarios[$i]['evaluadoPuntual'] = $alquiler[$i]['op_puntual_about_owner'];
-        	$comentarios[$i]['evaluadoImpunt'] = $alquiler[$i]['time_delay_start_owner']+$alquiler[$i]['time_delay_end_owner'];
-        }
-        
-        for ($j=0; $j < count($duenio); $j++) {
-
-        	$id = $duenio[$j]['idRenter'];//obtiendo el id de la persona a la cual califiqué como Duenios
-
-        	$q = "SELECT firstname, lastname, picture_file, facebook_id FROM user WHERE id=".$id;
-	        $query = Doctrine_Query::create()->query($q);
-	        $user = $query->toArray();
-
-	        $comentarios[$i+$j]['nombrePersonaEvaluada'] = $user[0]['firstname'];
-	        $comentarios[$i+$j]['apellidoPersonaEvaluada'] = $user[0]['lastname'];
-	        $comentarios[$i+$j]['urlFotoPersonaEvaluada'] = $user[0]['picture_file'];
-
-	        if($user[0]['facebook_id']!=null){
-	        	$comentarios[$i+$j]['facebookPersonaEvaluada'] = true;
-	    	}else{
-	        	$comentarios[$i+$j]['facebookPersonaEvaluada'] = false;
-	    	}
-
-	        $fecha = $duenio[$j]['fecha_calificacion_owner'];
-	        $fecha = strtotime($fecha);
-
-	        $comentarios[$i+$j]['posicion'] = $fecha;
-
-	        $fecha = date("d-m-Y",$fecha);
-
-        	$comentarios[$i+$j]['fechaEvaluacion'] = $fecha;
-        	$comentarios[$i+$j]['idEvaluado'] = $duenio[$j]['idRenter']; //IMPORTANTE, atención con 'idEvaluado' != 'idEvaluador'
-        	$comentarios[$i+$j]['comentarioEvaluacion'] = $duenio[$j]['opinion_about_renter'];
-        	$comentarios[$i+$j]['evaluadoRecomendado'] = $duenio[$j]['op_recom_renter'];
-        	$comentarios[$i+$j]['evaluadoLimpieza'] = $duenio[$j]['op_cleaning_about_renter'];
-        	$comentarios[$i+$j]['evaluadoPuntual'] = $duenio[$j]['op_puntual_about_renter'];
-        	$comentarios[$i+$j]['evaluadoImpunt'] = $duenio[$j]['time_delay_start_renter']+$duenio[$j]['time_delay_end_renter'];
-
+            $comentarios[$i]['fechaEvaluacion'] = $fecha;
+            $comentarios[$i]['idEvaluado'] = $alquiler[$i]['idOwner']; //IMPORTANTE, atención con 'idEvaluador' != 'idEvaluado'
+            $comentarios[$i]['comentarioEvaluacion'] = $alquiler[$i]['opinion_about_owner'];
+            $comentarios[$i]['evaluadoRecomendado'] = $alquiler[$i]['op_recom_owner'];
+            $comentarios[$i]['evaluadoLimpieza'] = $alquiler[$i]['op_cleaning_about_owner'];
+            $comentarios[$i]['evaluadoPuntual'] = $alquiler[$i]['op_puntual_about_owner'];
+            $comentarios[$i]['evaluadoImpunt'] = $alquiler[$i]['time_delay_start_owner'] + $alquiler[$i]['time_delay_end_owner'];
         }
 
-		//ordena los comentarios por fecha
-		$comentariosAux = array();
-		$j = 0;
-		do{
-			$menor = 0;
-			for ($i=1; $i < count($comentarios); $i++) {
+        for ($j = 0; $j < count($duenio); $j++) {
 
-				if($comentarios[$i]['posicion']<$comentarios[$menor]['posicion']){
-					$menor = $i;
-				}
-			}
-			$comentariosAux[$j] = $comentarios[$menor];
-			//elimina la posicion del array $comentarios
-			unset($comentarios[$menor]);
-			if($comentarios) $comentarios = array_values($comentarios);
-			$j++;
+            $id = $duenio[$j]['idRenter']; //obtiendo el id de la persona a la cual califiqué como Duenios
 
-		}while($comentarios);
+            $q = "SELECT firstname, lastname, picture_file, facebook_id FROM user WHERE id=" . $id;
+            $query = Doctrine_Query::create()->query($q);
+            $user = $query->toArray();
 
-    return $comentariosAux;
-	}
+            $comentarios[$i + $j]['nombrePersonaEvaluada'] = $user[0]['firstname'];
+            $comentarios[$i + $j]['apellidoPersonaEvaluada'] = $user[0]['lastname'];
+            $comentarios[$i + $j]['urlFotoPersonaEvaluada'] = $user[0]['picture_file'];
 
-	//Funcion que devuelve los comentarios SOBRE MI
-	public function getMyComments_aboutMe() {
+            if ($user[0]['facebook_id'] != null) {
+                $comentarios[$i + $j]['facebookPersonaEvaluada'] = true;
+            } else {
+                $comentarios[$i + $j]['facebookPersonaEvaluada'] = false;
+            }
 
-		$comentarios = null;
-		//comentarios sobre mi como renter
-	    $q = "SELECT fecha_calificacion_owner, idOwner, opinion_about_renter, op_recom_renter, op_cleaning_about_renter, op_puntual_about_renter, time_delay_start_renter, time_delay_end_renter FROM rating WHERE state_owner=1 and idRenter=".$this->getId();
+            $fecha = $duenio[$j]['fecha_calificacion_owner'];
+            $fecha = strtotime($fecha);
+
+            $comentarios[$i + $j]['posicion'] = $fecha;
+
+            $fecha = date("d-m-Y", $fecha);
+
+            $comentarios[$i + $j]['fechaEvaluacion'] = $fecha;
+            $comentarios[$i + $j]['idEvaluado'] = $duenio[$j]['idRenter']; //IMPORTANTE, atención con 'idEvaluado' != 'idEvaluador'
+            $comentarios[$i + $j]['comentarioEvaluacion'] = $duenio[$j]['opinion_about_renter'];
+            $comentarios[$i + $j]['evaluadoRecomendado'] = $duenio[$j]['op_recom_renter'];
+            $comentarios[$i + $j]['evaluadoLimpieza'] = $duenio[$j]['op_cleaning_about_renter'];
+            $comentarios[$i + $j]['evaluadoPuntual'] = $duenio[$j]['op_puntual_about_renter'];
+            $comentarios[$i + $j]['evaluadoImpunt'] = $duenio[$j]['time_delay_start_renter'] + $duenio[$j]['time_delay_end_renter'];
+        }
+
+        //ordena los comentarios por fecha
+        $comentariosAux = array();
+        $j = 0;
+        do {
+            $menor = 0;
+            for ($i = 1; $i < count($comentarios); $i++) {
+
+                if ($comentarios[$i]['posicion'] < $comentarios[$menor]['posicion']) {
+                    $menor = $i;
+                }
+            }
+            $comentariosAux[$j] = $comentarios[$menor];
+            //elimina la posicion del array $comentarios
+            unset($comentarios[$menor]);
+            if ($comentarios)
+                $comentarios = array_values($comentarios);
+            $j++;
+        }while ($comentarios);
+
+        return $comentariosAux;
+    }
+
+    //Funcion que devuelve los comentarios SOBRE MI
+    public function getMyComments_aboutMe() {
+
+        $comentarios = null;
+        //comentarios sobre mi como renter
+        $q = "SELECT fecha_calificacion_owner, idOwner, opinion_about_renter, op_recom_renter, op_cleaning_about_renter, op_puntual_about_renter, time_delay_start_renter, time_delay_end_renter FROM rating WHERE state_owner=1 and idRenter=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $alquiler = $query->toArray();
 
         //comentarios sobre mi como owner
-        $q = "SELECT fecha_calificacion_renter, idRenter, opinion_about_owner, op_recom_owner, op_cleaning_about_owner, op_puntual_about_owner, time_delay_start_owner, time_delay_end_owner FROM rating WHERE state_renter=1 and idOwner=".$this->getId();
+        $q = "SELECT fecha_calificacion_renter, idRenter, opinion_about_owner, op_recom_owner, op_cleaning_about_owner, op_puntual_about_owner, time_delay_start_owner, time_delay_end_owner FROM rating WHERE state_renter=1 and idOwner=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $duenio = $query->toArray();
 
-        for ($i=0; $i < count($alquiler); $i++) {
-        	$id = $alquiler[$i]['idOwner'];
+        for ($i = 0; $i < count($alquiler); $i++) {
+            $id = $alquiler[$i]['idOwner'];
 
-        	$q = "SELECT firstname, lastname, picture_file, facebook_id FROM user WHERE id=".$id;
-	        $query = Doctrine_Query::create()->query($q);
-	        $user = $query->toArray();
+            $q = "SELECT firstname, lastname, picture_file, facebook_id FROM user WHERE id=" . $id;
+            $query = Doctrine_Query::create()->query($q);
+            $user = $query->toArray();
 
-	        $comentarios[$i]['nombreEvaluador'] = $user[0]['firstname'];
-	        $comentarios[$i]['apellidoEvaluador'] = $user[0]['lastname'];
+            $comentarios[$i]['nombreEvaluador'] = $user[0]['firstname'];
+            $comentarios[$i]['apellidoEvaluador'] = $user[0]['lastname'];
 
-	        if($user[0]['facebook_id']!=null){
-	        	$comentarios[$i]['facebookEvaluador'] = true;
-	    	}else{
-	        	$comentarios[$i]['facebookEvaluador'] = false;
-	    	}
+            if ($user[0]['facebook_id'] != null) {
+                $comentarios[$i]['facebookEvaluador'] = true;
+            } else {
+                $comentarios[$i]['facebookEvaluador'] = false;
+            }
 
-	        $comentarios[$i]['urlFotoEvaluador'] = $user[0]['picture_file'];
+            $comentarios[$i]['urlFotoEvaluador'] = $user[0]['picture_file'];
 
-	        $fecha = $alquiler[$i]['fecha_calificacion_owner'];
-	        $fecha = strtotime($fecha);
-	        $comentarios[$i]['posicion'] = $fecha;
-	        $fecha = date("d-m-Y",$fecha);
+            $fecha = $alquiler[$i]['fecha_calificacion_owner'];
+            $fecha = strtotime($fecha);
+            $comentarios[$i]['posicion'] = $fecha;
+            $fecha = date("d-m-Y", $fecha);
 
-        	$comentarios[$i]['fechaEvaluacion'] = $fecha;
-        	$comentarios[$i]['idEvaluador'] = $alquiler[$i]['idOwner'];
-        	$comentarios[$i]['comentarioEvaluacion'] = $alquiler[$i]['opinion_about_renter'];
-        	$comentarios[$i]['recomendado'] = $alquiler[$i]['op_recom_renter'];
-        	$comentarios[$i]['limpio'] = $alquiler[$i]['op_cleaning_about_renter'];
-        	$comentarios[$i]['puntual'] = $alquiler[$i]['op_puntual_about_renter'];
-        	$comentarios[$i]['impunt'] = $alquiler[$i]['time_delay_start_renter']+$alquiler[$i]['time_delay_end_renter'];
+            $comentarios[$i]['fechaEvaluacion'] = $fecha;
+            $comentarios[$i]['idEvaluador'] = $alquiler[$i]['idOwner'];
+            $comentarios[$i]['comentarioEvaluacion'] = $alquiler[$i]['opinion_about_renter'];
+            $comentarios[$i]['recomendado'] = $alquiler[$i]['op_recom_renter'];
+            $comentarios[$i]['limpio'] = $alquiler[$i]['op_cleaning_about_renter'];
+            $comentarios[$i]['puntual'] = $alquiler[$i]['op_puntual_about_renter'];
+            $comentarios[$i]['impunt'] = $alquiler[$i]['time_delay_start_renter'] + $alquiler[$i]['time_delay_end_renter'];
         }
 
-        for ($j=0; $j < count($duenio); $j++) {
+        for ($j = 0; $j < count($duenio); $j++) {
 
-        	$id = $duenio[$j]['idRenter'];
+            $id = $duenio[$j]['idRenter'];
 
-        	$q = "SELECT firstname, lastname, picture_file, facebook_id FROM user WHERE id=".$id;
-	        $query = Doctrine_Query::create()->query($q);
-	        $user = $query->toArray();
+            $q = "SELECT firstname, lastname, picture_file, facebook_id FROM user WHERE id=" . $id;
+            $query = Doctrine_Query::create()->query($q);
+            $user = $query->toArray();
 
-	        $comentarios[$i+$j]['nombreEvaluador'] = $user[0]['firstname'];
-	        $comentarios[$i+$j]['apellidoEvaluador'] = $user[0]['lastname'];
-	        $comentarios[$i+$j]['urlFotoEvaluador'] = $user[0]['picture_file'];
+            $comentarios[$i + $j]['nombreEvaluador'] = $user[0]['firstname'];
+            $comentarios[$i + $j]['apellidoEvaluador'] = $user[0]['lastname'];
+            $comentarios[$i + $j]['urlFotoEvaluador'] = $user[0]['picture_file'];
 
-	        if($user[0]['facebook_id']!=null){
-	        	$comentarios[$i+$j]['facebookEvaluador'] = true;
-	    	}else{
-	        	$comentarios[$i+$j]['facebookEvaluador'] = false;
-	    	}
+            if ($user[0]['facebook_id'] != null) {
+                $comentarios[$i + $j]['facebookEvaluador'] = true;
+            } else {
+                $comentarios[$i + $j]['facebookEvaluador'] = false;
+            }
 
-	        $fecha = $duenio[$j]['fecha_calificacion_renter'];
-	        $fecha = strtotime($fecha);
+            $fecha = $duenio[$j]['fecha_calificacion_renter'];
+            $fecha = strtotime($fecha);
 
-	        $comentarios[$i+$j]['posicion'] = $fecha;
+            $comentarios[$i + $j]['posicion'] = $fecha;
 
-	        $fecha = date("d-m-Y",$fecha);
+            $fecha = date("d-m-Y", $fecha);
 
-        	$comentarios[$i+$j]['fechaEvaluacion'] = $fecha;
-        	$comentarios[$i+$j]['idEvaluador'] = $duenio[$j]['idRenter'];
-        	$comentarios[$i+$j]['comentarioEvaluacion'] = $duenio[$j]['opinion_about_owner'];
-        	$comentarios[$i+$j]['recomendado'] = $duenio[$j]['op_recom_owner'];
-        	$comentarios[$i+$j]['limpio'] = $duenio[$j]['op_cleaning_about_owner'];
-        	$comentarios[$i+$j]['puntual'] = $duenio[$j]['op_puntual_about_owner'];
-        	$comentarios[$i+$j]['impunt'] = $duenio[$j]['time_delay_start_owner']+$duenio[$j]['time_delay_end_owner'];
+            $comentarios[$i + $j]['fechaEvaluacion'] = $fecha;
+            $comentarios[$i + $j]['idEvaluador'] = $duenio[$j]['idRenter'];
+            $comentarios[$i + $j]['comentarioEvaluacion'] = $duenio[$j]['opinion_about_owner'];
+            $comentarios[$i + $j]['recomendado'] = $duenio[$j]['op_recom_owner'];
+            $comentarios[$i + $j]['limpio'] = $duenio[$j]['op_cleaning_about_owner'];
+            $comentarios[$i + $j]['puntual'] = $duenio[$j]['op_puntual_about_owner'];
+            $comentarios[$i + $j]['impunt'] = $duenio[$j]['time_delay_start_owner'] + $duenio[$j]['time_delay_end_owner'];
         }
 
 
-		//ordena los comentarios por fecha
-		$comentariosAux = array();
-		$j = 0;
-		do{
-			$menor = 0;
-			for ($i=1; $i < count($comentarios); $i++) {
-				if($comentarios[$i]['posicion']<$comentarios[$menor]['posicion']){
-					$menor = $i;
-				}
-			}
-			$comentariosAux[$j] = $comentarios[$menor];
-			//elimina la posicion del array $comentarios
-			unset($comentarios[$menor]);
-			if($comentarios) $comentarios = array_values($comentarios);
-			$j++;
+        //ordena los comentarios por fecha
+        $comentariosAux = array();
+        $j = 0;
+        do {
+            $menor = 0;
+            for ($i = 1; $i < count($comentarios); $i++) {
+                if ($comentarios[$i]['posicion'] < $comentarios[$menor]['posicion']) {
+                    $menor = $i;
+                }
+            }
+            $comentariosAux[$j] = $comentarios[$menor];
+            //elimina la posicion del array $comentarios
+            unset($comentarios[$menor]);
+            if ($comentarios)
+                $comentarios = array_values($comentarios);
+            $j++;
+        }while ($comentarios);
 
-		}while($comentarios);
+        return $comentariosAux;
+    }
 
-    return $comentariosAux;
-	}
-	
-	//obtiene un array con texto, nombre, fecha, fotoPerfil
-	public function getMyComments() {
+    //obtiene un array con texto, nombre, fecha, fotoPerfil
+    public function getMyComments() {
 
-		//arrendador
-	    $q = "SELECT fecha_calificacion_owner, idOwner, opinion_about_renter FROM rating WHERE state_owner=1 and idRenter=".$this->getId();
+        //arrendador
+        $q = "SELECT fecha_calificacion_owner, idOwner, opinion_about_renter FROM rating WHERE state_owner=1 and idRenter=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $arrendador = $query->toArray();
 
         //arrendatario(propietario)
-        $q = "SELECT fecha_calificacion_renter, idRenter, opinion_about_owner FROM rating WHERE state_renter=1 and idOwner=".$this->getId();
+        $q = "SELECT fecha_calificacion_renter, idRenter, opinion_about_owner FROM rating WHERE state_renter=1 and idOwner=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $arrendatario = $query->toArray();
 
-        for ($i=0; $i < count($arrendador); $i++) {
-        	$id = $arrendador[$i]['idOwner'];
+        for ($i = 0; $i < count($arrendador); $i++) {
+            $id = $arrendador[$i]['idOwner'];
 
-        	$q = "SELECT firstname, lastname, picture_file, facebook_id FROM user WHERE id=".$id;
-	        $query = Doctrine_Query::create()->query($q);
-	        $user = $query->toArray();
+            $q = "SELECT firstname, lastname, picture_file, facebook_id FROM user WHERE id=" . $id;
+            $query = Doctrine_Query::create()->query($q);
+            $user = $query->toArray();
 
-	        $comentarios[$i]['nombre'] = $user[0]['firstname'];
-	        $comentarios[$i]['apellido'] = $user[0]['lastname'];
+            $comentarios[$i]['nombre'] = $user[0]['firstname'];
+            $comentarios[$i]['apellido'] = $user[0]['lastname'];
 
-	        if($user[0]['facebook_id']!=null){
-	        	$comentarios[$i]['facebook'] = true;
-	    	}else{
-	        	$comentarios[$i]['facebook'] = false;
-	    	}
+            if ($user[0]['facebook_id'] != null) {
+                $comentarios[$i]['facebook'] = true;
+            } else {
+                $comentarios[$i]['facebook'] = false;
+            }
 
-	        $comentarios[$i]['urlFoto'] = $user[0]['picture_file'];
+            $comentarios[$i]['urlFoto'] = $user[0]['picture_file'];
 
-	        $fecha = $arrendador[$i]['fecha_calificacion_owner'];
-	        $fecha = strtotime($fecha);
-	        $comentarios[$i]['posicion'] = $fecha;
-	        $fecha = date("d-m-Y",$fecha);
+            $fecha = $arrendador[$i]['fecha_calificacion_owner'];
+            $fecha = strtotime($fecha);
+            $comentarios[$i]['posicion'] = $fecha;
+            $fecha = date("d-m-Y", $fecha);
 
-        	$comentarios[$i]['fecha'] = $fecha;
-        	$comentarios[$i]['idEvaluador'] = $arrendador[$i]['idOwner'];
-        	$comentarios[$i]['texto'] = $arrendador[$i]['opinion_about_renter'];
+            $comentarios[$i]['fecha'] = $fecha;
+            $comentarios[$i]['idEvaluador'] = $arrendador[$i]['idOwner'];
+            $comentarios[$i]['texto'] = $arrendador[$i]['opinion_about_renter'];
         }
-        
-        for ($j=0; $j < count($arrendatario); $j++) {
 
-        	$id = $arrendatario[$j]['idRenter'];
+        for ($j = 0; $j < count($arrendatario); $j++) {
 
-        	$q = "SELECT firstname, lastname, picture_file, facebook_id FROM user WHERE id=".$id;
-	        $query = Doctrine_Query::create()->query($q);
-	        $user = $query->toArray();
+            $id = $arrendatario[$j]['idRenter'];
 
-	        $comentarios[$i+$j]['nombre'] = $user[0]['firstname'];
-	        $comentarios[$i+$j]['apellido'] = $user[0]['lastname'];
-	        $comentarios[$i+$j]['urlFoto'] = $user[0]['picture_file'];
+            $q = "SELECT firstname, lastname, picture_file, facebook_id FROM user WHERE id=" . $id;
+            $query = Doctrine_Query::create()->query($q);
+            $user = $query->toArray();
 
-	        if($user[0]['facebook_id']!=null){
-	        	$comentarios[$i+$j]['facebook'] = true;
-	    	}else{
-	        	$comentarios[$i+$j]['facebook'] = false;
-	    	}
+            $comentarios[$i + $j]['nombre'] = $user[0]['firstname'];
+            $comentarios[$i + $j]['apellido'] = $user[0]['lastname'];
+            $comentarios[$i + $j]['urlFoto'] = $user[0]['picture_file'];
 
-	        $fecha = $arrendatario[$j]['fecha_calificacion_renter'];
-	        $fecha = strtotime($fecha);
+            if ($user[0]['facebook_id'] != null) {
+                $comentarios[$i + $j]['facebook'] = true;
+            } else {
+                $comentarios[$i + $j]['facebook'] = false;
+            }
 
-	        $comentarios[$i+$j]['posicion'] = $fecha;
+            $fecha = $arrendatario[$j]['fecha_calificacion_renter'];
+            $fecha = strtotime($fecha);
 
-	        $fecha = date("d-m-Y",$fecha);
+            $comentarios[$i + $j]['posicion'] = $fecha;
 
-        	$comentarios[$i+$j]['fecha'] = $fecha;
-        	$comentarios[$i+$j]['idEvaluador'] = $arrendatario[$j]['idRenter'];
-        	$comentarios[$i+$j]['texto'] = $arrendatario[$j]['opinion_about_owner'];
+            $fecha = date("d-m-Y", $fecha);
 
+            $comentarios[$i + $j]['fecha'] = $fecha;
+            $comentarios[$i + $j]['idEvaluador'] = $arrendatario[$j]['idRenter'];
+            $comentarios[$i + $j]['texto'] = $arrendatario[$j]['opinion_about_owner'];
         }
 
         //$comentarios = array_multisort($comentarios[0]['posicion'],$comentarios);
-        
         //$comentarios = usort($comentarios, '$this->ordenDesc');
         //var_dump($comentarios);
-		//die();
+        //die();
+        //ordena los comentarios por fecha
+        $comentariosAux = array();
+        $j = 0;
 
-		//ordena los comentarios por fecha
-		$comentariosAux = array();
-		$j = 0;
+        do {
+            $menor = 0;
 
-		do{
-			$menor = 0;
+            for ($i = 1; $i < count($comentarios); $i++) {
 
-			for ($i=1; $i < count($comentarios); $i++) {
+                if ($comentarios[$i]['posicion'] < $comentarios[$menor]['posicion']) {
+                    $menor = $i;
+                }
+            }
 
-				if($comentarios[$i]['posicion']<$comentarios[$menor]['posicion']){
-					$menor = $i;
-				}
+            $comentariosAux[$j] = $comentarios[$menor];
+            //elimina la posicion del array $comentarios
+            unset($comentarios[$menor]);
+            $comentarios = array_values($comentarios);
+            $j++;
+        } while ($comentarios);
 
-			}
-
-			$comentariosAux[$j] = $comentarios[$menor];
-			//elimina la posicion del array $comentarios
-			unset($comentarios[$menor]);
-			$comentarios = array_values($comentarios);
-			$j++;
-
-		}while($comentarios);
-
-		//var_dump($comentariosAux);
-		//die();
+        //var_dump($comentariosAux);
+        //die();
 
         return $comentariosAux;
-	}
+    }
 
+    public function getAntiguedad() {
 
-	public function getAntiguedad(){
-
-		$q = "SELECT fecha_registro FROM user WHERE id=".$this->getId();
+        $q = "SELECT fecha_registro FROM user WHERE id=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $fecha = $query->toArray();
-        
-        if($fecha[0]['fecha_registro'] != null){
-	        $fecha = $fecha[0]['fecha_registro'];
 
-			//$fecha = "2012-11-18 08:00:00"; //formato en que se obtiene de la base de datos
+        if ($fecha[0]['fecha_registro'] != null) {
+            $fecha = $fecha[0]['fecha_registro'];
 
-			$meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+            //$fecha = "2012-11-18 08:00:00"; //formato en que se obtiene de la base de datos
 
-			$fecha = strtotime($fecha);
-			//$primerIngreso = $fecha('d')." de ".$meses[$fecha('n')-1]. ", ".$fecha('Y');
-			$primerIngreso = date('d',$fecha)." de ".$meses[date('n',$fecha)-1]. ", ".date('Y',$fecha);
+            $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
 
-		}else{
-			$primerIngreso = "Desconocido";
-		}
+            $fecha = strtotime($fecha);
+            //$primerIngreso = $fecha('d')." de ".$meses[$fecha('n')-1]. ", ".$fecha('Y');
+            $primerIngreso = date('d', $fecha) . " de " . $meses[date('n', $fecha) - 1] . ", " . date('Y', $fecha);
+        } else {
+            $primerIngreso = "Desconocido";
+        }
 
-		return $primerIngreso;
-	}
+        return $primerIngreso;
+    }
 
-	//la obtiene a través de la fecha_reserva, fecha_confirmacion y fecha_pago de la tabla Reserve
-	public function getVelocidadRespuesta($texto=1){
+    //la obtiene a través de la fecha_reserva, fecha_confirmacion y fecha_pago de la tabla Reserve
+    public function getVelocidadRespuesta($texto = 1) {
 
-		//ARRENDADOR
-		//si es el que arrienda: fecha_pago - fecha_confirmacion
-		$q = "SELECT fecha_pago, fecha_confirmacion FROM reserve WHERE (confirmed=1 or canceled=1) and user_id=".$this->getId();
+        //ARRENDADOR
+        //si es el que arrienda: fecha_pago - fecha_confirmacion
+        $q = "SELECT fecha_pago, fecha_confirmacion FROM reserve WHERE (confirmed=1 or canceled=1) and user_id=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $arrendador = $query->toArray();
 
-  //      if(count($arrendador)>0){
-	        $tiempo = 0;
-	        $count = 0;
-			
-			for ($i=0; $i < count($arrendador); $i++) { 
-				if($arrendador[$i]['fecha_pago'] != null){
-					$tiempo+= strtotime($arrendador[$i]['fecha_pago']) - strtotime($arrendador[$i]['fecha_confirmacion']);
-					$count++;
-				}
-			}
-//			}
+        //      if(count($arrendador)>0){
+        $tiempo = 0;
+        $count = 0;
 
+        for ($i = 0; $i < count($arrendador); $i++) {
+            if ($arrendador[$i]['fecha_pago'] != null) {
+                $tiempo+= strtotime($arrendador[$i]['fecha_pago']) - strtotime($arrendador[$i]['fecha_confirmacion']);
+                $count++;
+            }
+        }
+//			}
 //		$car = Doctrine_Core::getTable('car')->findByUserId($this->getId())->toArray();	
 //		$q = "SELECT (timestampdiff(MINUTE,r.fecha_reserva ,r.fecha_confirmacion))/count(r.id) as diferencia FROM reserve left join car c on c.user_id=".$this->getId()." WHERE  r.fecha_confirmacion<>'' order by r.fecha_reserva desc Limit 1";
-  //      $query = Doctrine_Query::create()->query($q);
-    //    $arrendatario = $query->toArray();
+        //      $query = Doctrine_Query::create()->query($q);
+        //    $arrendatario = $query->toArray();
 
 
-	$q = Doctrine_Manager::getInstance()->getCurrentConnection();
-	$query = "SELECT (timestampdiff(MINUTE,r.fecha_reserva ,r.fecha_confirmacion)) as diferencia FROM Reserve r inner join  Car c on r.car_id=c.id  WHERE  c.user_id=".$this->getId()." and r.fecha_confirmacion<>'' order by r.fecha_reserva desc limit 7";
-	$stmt= $q->prepare($query);
-	$stmt->execute();
-	$arrendatario= $stmt->fetchAll();
-    
-	
-  sfContext::getInstance()->getLogger()->info('count($arrendatario) '.count($arrendatario));
-  sfContext::getInstance()->getLogger()->info('$arrendatario[0][diferencia] '.$arrendatario[0]['diferencia']);
+        $q = Doctrine_Manager::getInstance()->getCurrentConnection();
+        $query = "SELECT (timestampdiff(MINUTE,r.fecha_reserva ,r.fecha_confirmacion)) as diferencia FROM Reserve r inner join  Car c on r.car_id=c.id  WHERE  c.user_id=" . $this->getId() . " and r.fecha_confirmacion<>'' order by r.fecha_reserva desc limit 7";
+        $stmt = $q->prepare($query);
+        $stmt->execute();
+        $arrendatario = $stmt->fetchAll();
+
+
+        sfContext::getInstance()->getLogger()->info('count($arrendatario) ' . count($arrendatario));
+        sfContext::getInstance()->getLogger()->info('$arrendatario[0][diferencia] ' . $arrendatario[0]['diferencia']);
 //$i=0;  
-			for ($i=0; $i < count($arrendatario); $i++) { 
+        for ($i = 0; $i < count($arrendatario); $i++) {
 //				if($arrendatario[$i]['fecha_confirmacion'] != null){
-					$tiempo+=($arrendatario[$i]['diferencia']);
-					$count++;
-	//			}
-			}
-		
-		$tiempo=($tiempo/$count);
-//		$tiempo=$tiempo;
-		
-  sfContext::getInstance()->getLogger()->info('$tiempo '.$tiempo);
+            $tiempo+=($arrendatario[$i]['diferencia']);
+            $count++;
+            //			}
+        }
 
-			if($count == 0){
-				if ($texto==1){
-					return $tiempo = "No determinado";
-				}else{
-					return $tiempo = 0;
-				}
-			}else{
+        $tiempo = ($tiempo / $count);
+//		$tiempo=$tiempo;
+
+        sfContext::getInstance()->getLogger()->info('$tiempo ' . $tiempo);
+
+        if ($count == 0) {
+            if ($texto == 1) {
+                return $tiempo = "No determinado";
+            } else {
+                return $tiempo = 0;
+            }
+        } else {
 //				$tiempo = round($tiempo);
 //				$tiempo = intval($tiempo/$count);
-			}
+        }
 
-	//	}else{
-		//	if ($texto==1){
-	//			return $tiempo = "No determinado";
+        //	}else{
+        //	if ($texto==1){
+        //			return $tiempo = "No determinado";
 //			}else{
 //				return $tiempo = 0;
 //			}
 //		}
 
-		if ($texto==1){
-			if($tiempo < 1){
-				return "Menos de un minuto";
-			}elseif($tiempo < 10){
-				return "Menos de 10 minutos";
-			}elseif($tiempo < 60){
-				return "Menos de una hora";
-			}elseif($tiempo < 1440){
-				return floor($tiempo/60)." horas";
-			}else{
-				return floor($tiempo/60/24)." dias";
-			}
-		}else{
-			return $tiempo;
-		}
+        if ($texto == 1) {
+            if ($tiempo < 1) {
+                return "Menos de un minuto";
+            } elseif ($tiempo < 10) {
+                return "Menos de 10 minutos";
+            } elseif ($tiempo < 60) {
+                return "Menos de una hora";
+            } elseif ($tiempo < 1440) {
+                return floor($tiempo / 60) . " horas";
+            } else {
+                return floor($tiempo / 60 / 24) . " dias";
+            }
+        } else {
+            return $tiempo;
+        }
+    }
 
-	}
-
-	//lo obtiene de la tabla Transaction
-	public function getCantidadTransacciones(){
-		$q = "SELECT * FROM transaction WHERE completed=1 and user_id=".$this->getId();
+    //lo obtiene de la tabla Transaction
+    public function getCantidadTransacciones() {
+        $q = "SELECT * FROM transaction WHERE completed=1 and user_id=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $transacciones = $query->toArray();
 
         $cantidad = count($transacciones);
 
-    //    $q = "SELECT * FROM transaction t, car c WHERE t.completed=1 and c.id=t.car and t.user_id=".$this->getId();
-
-		
-  //      $query = Doctrine_Query::create()->query($q);
+        //    $q = "SELECT * FROM transaction t, car c WHERE t.completed=1 and c.id=t.car and t.user_id=".$this->getId();
+        //      $query = Doctrine_Query::create()->query($q);
 //        $transacciones = $query->toArray();
 
-		
-		$q = Doctrine_Manager::getInstance()->getCurrentConnection();
-	$query = "SELECT t.id FROM Transaction t left join  Reserve r on t.reserve_id=r.id inner join Car c on r.car_id=c.id  WHERE  c.user_id=".$this->getId()." and t.completed='1'";
-	$stmt= $q->prepare($query);
-	$stmt->execute();
-	$transacciones= $stmt->fetchAll();
 
-	
+        $q = Doctrine_Manager::getInstance()->getCurrentConnection();
+        $query = "SELECT t.id FROM Transaction t left join  Reserve r on t.reserve_id=r.id inner join Car c on r.car_id=c.id  WHERE  c.user_id=" . $this->getId() . " and t.completed='1'";
+        $stmt = $q->prepare($query);
+        $stmt->execute();
+        $transacciones = $stmt->fetchAll();
+
+
         $cantidad+= count($transacciones);
 
-		return $cantidad;
-	}
+        return $cantidad;
+    }
 
-    public function getTransaccionesWithOwner(){
+    public function getTransaccionesWithOwner() {
         $idUser = $this->getId();
         $q = Doctrine_Query::create()
-            ->from('Transaction tr, tr.Reserve')
-            ->leftJoin("tr.Reserve re")
-            ->leftJoin("re.Car ca")
-            ->where('re.car_id = ca.id')
-            ->andWhere("ca.user_id=$idUser");
+                ->from('Transaction tr, tr.Reserve')
+                ->leftJoin("tr.Reserve re")
+                ->leftJoin("re.Car ca")
+                ->where('re.car_id = ca.id')
+                ->andWhere("ca.user_id=$idUser");
         //echo $q;
         //die();
         $transacciones = $q->execute();
         return $transacciones;
     }
 
-	//TODO
-	public function ingresarCalificacion($idUsuario,$recomienda,$comentarioRecomienda,$puntual,$atraso) {
-	    
-	}
-	
-	//obtiene el id del auto, el modelo, la marca  y seguro ok
-	public function getModeloAutoYVerificado(){
+    //TODO
+    public function ingresarCalificacion($idUsuario, $recomienda, $comentarioRecomienda, $puntual, $atraso) {
+        
+    }
 
-		$q = "SELECT c.id, c.model_id, c.seguro_ok FROM car c, model m, brand b WHERE c.activo=1 and c.user_id=".$this->getId();
+    //obtiene el id del auto, el modelo, la marca  y seguro ok
+    public function getModeloAutoYVerificado() {
+
+        $q = "SELECT c.id, c.model_id, c.seguro_ok FROM car c, model m, brand b WHERE c.activo=1 and c.user_id=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $autos = $query->toArray();
 
         $verificacionAutos = null;
- 
-        for($i=0; $i<count($autos); $i++){
 
-	        $verificacionAutos[$i]['idCar'] = $autos[$i]['id'];
-	        $verificacionAutos[$i]['estadoVerificacion'] = $autos[$i]['seguro_ok'];
-	        
-	        $model_id = $autos[$i]['Model_id'];
+        for ($i = 0; $i < count($autos); $i++) {
 
-	        $q = "select brand_id, name from model where id=$model_id";
-	        $query = Doctrine_Query::create()->query($q);
-	        $modelo = $query->toArray();
-	        $brand_id = $modelo[0]['brand_id'];
-	        $verificacionAutos[$i]['modelo'] = $modelo[0]['name'];
+            $verificacionAutos[$i]['idCar'] = $autos[$i]['id'];
+            $verificacionAutos[$i]['estadoVerificacion'] = $autos[$i]['seguro_ok'];
 
-	        $q = "select name from brand where id=$brand_id";
-	        $query = Doctrine_Query::create()->query($q);
-	        $marca = $query->toArray();
+            $model_id = $autos[$i]['Model_id'];
 
-	        $verificacionAutos[$i]['marca'] = $marca[0]['name'];
+            $q = "select brand_id, name from model where id=$model_id";
+            $query = Doctrine_Query::create()->query($q);
+            $modelo = $query->toArray();
+            $brand_id = $modelo[0]['brand_id'];
+            $verificacionAutos[$i]['modelo'] = $modelo[0]['name'];
 
-    	}
-    	/*
-    	for($i=0;$i<count($verificacionAutos);$i++){
-    		echo "id:".$verificacionAutos[$i]['idCar']." estado:".$verificacionAutos[$i]['estadoVerificacion']." marca:".$verificacionAutos[$i]['marca']." modelo:".$verificacionAutos[$i]['modelo'];
-    	}
-		*/
-		return $verificacionAutos;
-	}
+            $q = "select name from brand where id=$brand_id";
+            $query = Doctrine_Query::create()->query($q);
+            $marca = $query->toArray();
 
-	public function getFacebookConfirmado(){
-		$q = "SELECT confirmed_fb FROM user WHERE id=".$this->getId();
-		//echo $q;
+            $verificacionAutos[$i]['marca'] = $marca[0]['name'];
+        }
+        /*
+          for($i=0;$i<count($verificacionAutos);$i++){
+          echo "id:".$verificacionAutos[$i]['idCar']." estado:".$verificacionAutos[$i]['estadoVerificacion']." marca:".$verificacionAutos[$i]['marca']." modelo:".$verificacionAutos[$i]['modelo'];
+          }
+         */
+        return $verificacionAutos;
+    }
+
+    public function getFacebookConfirmado() {
+        $q = "SELECT confirmed_fb FROM user WHERE id=" . $this->getId();
+        //echo $q;
         $query = Doctrine_Query::create()->query($q);
         $confirmacion = $query->toArray();
 
         return $confirmacion[0]['confirmed_fb'];
+    }
 
-	}
-
-	public function getEmailConfirmado(){
-		$q = "SELECT confirmed FROM user WHERE id=".$this->getId();
-		//echo $q;
+    public function getEmailConfirmado() {
+        $q = "SELECT confirmed FROM user WHERE id=" . $this->getId();
+        //echo $q;
         $query = Doctrine_Query::create()->query($q);
         $confirmacion = $query->toArray();
 
         return $confirmacion[0]['confirmed'];
-	}
+    }
 
-	public function getTelefonoConfirmado(){
-		$q = "SELECT confirmed_sms FROM user WHERE id=".$this->getId();
-		//echo $q;
+    public function getTelefonoConfirmado() {
+        $q = "SELECT confirmed_sms FROM user WHERE id=" . $this->getId();
+        //echo $q;
         $query = Doctrine_Query::create()->query($q);
         $confirmacion = $query->toArray();
 
         return $confirmacion[0]['confirmed_sms'];
-	}
+    }
 
-    public function formatearHoraChilena($fecha){
-        $horaChilena = strftime("%Y-%m-%d %H:%M:%S",strtotime('-4 hours',strtotime($fecha)));
+    public function formatearHoraChilena($fecha) {
+        $horaChilena = strftime("%Y-%m-%d %H:%M:%S", strtotime('-4 hours', strtotime($fecha)));
         return $horaChilena;
     }
-    public function getFirstReserve(){
+
+    public function getFirstReserve() {
 
         $reserve = Doctrine_Core::getTable('reserve')->findByUserId($this->getId());
-    
+
         return count($reserve);
     }
 
-	public function getCantidadPedidosReserva(){
+    public function getCantidadPedidosReserva() {
 
         $total = 0;
 
-		//reservas que realicé (arrendatario)
-		$reserve = Doctrine_Core::getTable('reserve')->findByUserId($this->getId());
+        //reservas que realicé (arrendatario)
+        $reserve = Doctrine_Core::getTable('reserve')->findByUserId($this->getId());
         foreach ($reserve as $reserva) {
 
             $fechaReserva = strtotime($reserva->getDate());
             $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
 
-            if($reserva->getVisibleRenter() && $fechaReserva>$fechaActual && $reserva->getConfirmed()){
+            if ($reserva->getVisibleRenter() && $fechaReserva > $fechaActual && $reserva->getConfirmed()) {
                 $total++;
             }
-
         }
 
-		//reservas que me realizaron (propietario)
-        $q = "SELECT r.id FROM reserve r, car c WHERE c.id=r.car_id and c.user_id=".$this->getId();
+        //reservas que me realizaron (propietario)
+        $q = "SELECT r.id FROM reserve r, car c WHERE c.id=r.car_id and c.user_id=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $reserve = $query->toArray();
 
@@ -1019,38 +1009,38 @@ class User extends BaseUser {
             $fechaReserva = strtotime($reserva->getDate());
             $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
 
-            if($reserva->getVisibleOwner() && $fechaReserva>$fechaActual){
-                if(!$reserva->getConfirmed() && !$reserva->getCanceled()){
+            if ($reserva->getVisibleOwner() && $fechaReserva > $fechaActual) {
+                if (!$reserva->getConfirmed() && !$reserva->getCanceled()) {
                     $total++;
                 }
 
-                $q = "SELECT completed FROM transaction WHERE reserve_id=".$reserva->getId();
+                $q = "SELECT completed FROM transaction WHERE reserve_id=" . $reserva->getId();
                 $query = Doctrine_Query::create()->query($q);
                 $transaction = $query->toArray();
-                if(isset($transaction[0]) && $transaction[0]['completed']==1){
+                if (isset($transaction[0]) && $transaction[0]['completed'] == 1) {
                     $total++;
                 }
             }
         }
 
-		return $total;
-	}
+        return $total;
+    }
 
-	public function getCantidadMensajes(){
-		$q = Doctrine_Query::create()
-            ->select('m.received')
-            ->from('message m,conversation c')
-            ->where('c.user_from_id = m.user_id')
-            ->andWhere('c.id=m.conversation_id')
-            ->andWhere('c.user_to_id=?',$this->getId())
-            ->andWhere('m.received=0');
+    public function getCantidadMensajes() {
+        $q = Doctrine_Query::create()
+                ->select('m.received')
+                ->from('message m,conversation c')
+                ->where('c.user_from_id = m.user_id')
+                ->andWhere('c.id=m.conversation_id')
+                ->andWhere('c.user_to_id=?', $this->getId())
+                ->andWhere('m.received=0');
         //echo $q;
         //die();
         $mensajes = $q->execute();
         return count($mensajes);
-	}
+    }
 
-    public function getCantidadCalificaciones(){
+    public function getCantidadCalificaciones() {
         return count($this->getListaRentersPendientes_comoOwner()) + count($this->getListaOwnersPendientes_comoRenter());
     }
 
@@ -1059,53 +1049,53 @@ class User extends BaseUser {
     }
 
     public function getAutosPendientesVerificar() {
-	$cars= Doctrine_Query::create()
-		->select("c.id")
-		->from("Car c")
-		->where("c.user_id = ?",$this->getId())
-		->andWhere("c.seguro_ok = ?",2);
-	$result= $cars->fetchArray();
-	
-	if(count($result)>= 1) {
-	    return true;
-	} else {
-	    return false;
-	}
-    }    
-    
-    public function getAutosSinVerificar() {
-	$cars= Doctrine_Query::create()
-		->select("c.id")
-		->from("Car c")
-		->where("c.user_id = ?",$this->getId())
-		->andWhere("c.seguro_ok = ?",0);
-	$result= $cars->fetchArray();
-	if(count($result)>= 1) {
-	    return true;
-	} else {
-	    return false;
-	}
+        $cars = Doctrine_Query::create()
+                ->select("c.id")
+                ->from("Car c")
+                ->where("c.user_id = ?", $this->getId())
+                ->andWhere("c.seguro_ok = ?", 2);
+        $result = $cars->fetchArray();
+
+        if (count($result) >= 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
-    
+
+    public function getAutosSinVerificar() {
+        $cars = Doctrine_Query::create()
+                ->select("c.id")
+                ->from("Car c")
+                ->where("c.user_id = ?", $this->getId())
+                ->andWhere("c.seguro_ok = ?", 0);
+        $result = $cars->fetchArray();
+        if (count($result) >= 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function getEstadoVerificacion() {
-	$cars= Doctrine_Query::create()
-		->select("c.id")
-		->from("Car c")
-		->where("c.user_id = ?",$this->getId())
-		->andWhere("c.seguro_ok = ?",1);
-	$result= $cars->fetchArray();
-	if(count($result)>= 1) {
-	    return true;
-	} else {
-	    return false;
-	}
+        $cars = Doctrine_Query::create()
+                ->select("c.id")
+                ->from("Car c")
+                ->where("c.user_id = ?", $this->getId())
+                ->andWhere("c.seguro_ok = ?", 1);
+        $result = $cars->fetchArray();
+        if (count($result) >= 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function getFileName() {
         $filename = explode("/", $this->getPictureFile());
         return $filename[Count($filename) - 1];
     }
-	
+
     public function getRutFileName() {
         $filename = explode("/", $this->getRutFile());
         return $filename[Count($filename) - 1];
@@ -1143,11 +1133,11 @@ class User extends BaseUser {
 
         $comuna = $q->fetchOne();
 
-    	if(!is_object($comuna)) {
-    	    return"Las Condes";
-    	} else { 
-    	 return ucwords(strtolower($comuna->getNombre()));
-    	}
+        if (!is_object($comuna)) {
+            return"Las Condes";
+        } else {
+            return ucwords(strtolower($comuna->getNombre()));
+        }
     }
 
     public function getNombreRegion() {
@@ -1156,56 +1146,55 @@ class User extends BaseUser {
 
         $region = $q->fetchOne();
 
-	if(!is_object($region)) {
-	    return "Región Metropolitana";
-	} else {
-	    return $region->getNombre();
-	}
+        if (!is_object($region)) {
+            return "Región Metropolitana";
+        } else {
+            return $region->getNombre();
+        }
     }
 
-    public function getTelefono(){
-    	$q = Doctrine_Query::create()
-    		->select('u.telephone')
-    		->from('User u')
-            ->where('u.id = ?', $this->getId());
+    public function getTelefono() {
+        $q = Doctrine_Query::create()
+                ->select('u.telephone')
+                ->from('User u')
+                ->where('u.id = ?', $this->getId());
         //echo $q;
         $telefono = $q->fetchArray();
 
         return $telefono[0]['telephone'];
     }
 
-    public function getEmail(){
-    	$q = Doctrine_Query::create()
-    		->select('u.email')
-    		->from('User u')
-            ->where('u.id = ?', $this->getId());
+    public function getEmail() {
+        $q = Doctrine_Query::create()
+                ->select('u.email')
+                ->from('User u')
+                ->where('u.id = ?', $this->getId());
         //echo $q;
         $email = $q->fetchArray();
 
         return $email[0]['email'];
-
     }
-    
+
     public function isPropietario() {
-    	$q= Doctrine_Query::create()->from("Car")
-    	    ->where("Car.user_id = ?",$this->getId());
-    	$result= $q->execute();
-    	if(count($result)>=1) {
-    	    return true;
-    	} else {
-    	    return false;
-    	}
+        $q = Doctrine_Query::create()->from("Car")
+                ->where("Car.user_id = ?", $this->getId());
+        $result = $q->execute();
+        if (count($result) >= 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
-    
-    public function getCantReservasPendientesOwner(){
+
+    public function getCantReservasPendientesOwner() {
         $reservas = $this->getReservasOwner();
         $total = 0;
-        if(isset($reservas)){
-            foreach ($reservas as $reserva){
+        if (isset($reservas)) {
+            foreach ($reservas as $reserva) {
 
-                if($reserva->getConfirmed()==0 && $reserva->getCanceled()==0){ //la reserva está pagada
+                if ($reserva->getConfirmed() == 0 && $reserva->getCanceled() == 0) { //la reserva está pagada
                     //la reserva aun no ha expirado
-                    if($this->reservaPendiente($reserva,0)){
+                    if ($this->reservaPendiente($reserva, 0)) {
                         $total++;
                     }
                 }
@@ -1214,15 +1203,15 @@ class User extends BaseUser {
         return $total;
     }
 
-    public function getCantReservasPendientesRenter(){
+    public function getCantReservasPendientesRenter() {
         $reservas = $this->getReservasRenter();
         $total = 0;
-        if(isset($reservas)){
-            foreach ($reservas as $reserva){
+        if (isset($reservas)) {
+            foreach ($reservas as $reserva) {
 
-                if($reserva->getConfirmed()==0 && $reserva->getCanceled()==0){ //la reserva está pagada
+                if ($reserva->getConfirmed() == 0 && $reserva->getCanceled() == 0) { //la reserva está pagada
                     //la reserva aun no ha expirado
-                    if($this->reservaPendiente($reserva,0)){
+                    if ($this->reservaPendiente($reserva, 0)) {
                         $total++;
                     }
                 }
@@ -1231,19 +1220,19 @@ class User extends BaseUser {
         return $total;
     }
 
-    public function getCantReservasPreaprobadasOwner(){
+    public function getCantReservasPreaprobadasOwner() {
         $reservas = $this->getReservasOwner();
         $total = 0;
-        if(isset($reservas)){
-            foreach ($reservas as $reserva){
+        if (isset($reservas)) {
+            foreach ($reservas as $reserva) {
                 //obtiene completed de transaction
-                $q = "SELECT completed FROM transaction WHERE reserve_id=".$reserva->getId();
+                $q = "SELECT completed FROM transaction WHERE reserve_id=" . $reserva->getId();
                 $query = Doctrine_Query::create()->query($q);
                 $transaction = $query->toArray();
 
-                if(isset($transaction[0]) && $transaction[0]['completed']==0 && $reserva->getConfirmed()==1){ //la reserva está pagada
+                if (isset($transaction[0]) && $transaction[0]['completed'] == 0 && $reserva->getConfirmed() == 1) { //la reserva está pagada
                     //la reserva aun no ha expirado
-                    if($this->reservaPendiente($reserva,2)){
+                    if ($this->reservaPendiente($reserva, 2)) {
                         $total++;
                     }
                 }
@@ -1252,19 +1241,19 @@ class User extends BaseUser {
         return $total;
     }
 
-    public function getCantReservasPreaprobadasRenter(){
+    public function getCantReservasPreaprobadasRenter() {
         $reservas = $this->getReservasRenter();
         $total = 0;
-        if(isset($reservas)){
-            foreach ($reservas as $reserva){
+        if (isset($reservas)) {
+            foreach ($reservas as $reserva) {
                 //obtiene completed de transaction
-                $q = "SELECT completed FROM transaction WHERE reserve_id=".$reserva->getId();
+                $q = "SELECT completed FROM transaction WHERE reserve_id=" . $reserva->getId();
                 $query = Doctrine_Query::create()->query($q);
                 $transaction = $query->toArray();
 
-                if(isset($transaction[0]) && $transaction[0]['completed']==0 && $reserva->getConfirmed()==1){ //la reserva está pagada
+                if (isset($transaction[0]) && $transaction[0]['completed'] == 0 && $reserva->getConfirmed() == 1) { //la reserva está pagada
                     //la reserva aun no ha expirado
-                    if($this->reservaPendiente($reserva,2)){
+                    if ($this->reservaPendiente($reserva, 2)) {
                         $total++;
                     }
                 }
@@ -1273,19 +1262,19 @@ class User extends BaseUser {
         return $total;
     }
 
-    public function getCantReservasAprobadasOwner(){
+    public function getCantReservasAprobadasOwner() {
         $reservas = $this->getReservasOwner();
         $total = 0;
-        if(isset($reservas)){
-            foreach ($reservas as $reserva){
+        if (isset($reservas)) {
+            foreach ($reservas as $reserva) {
                 //obtiene completed de transaction
-                $q = "SELECT completed FROM transaction WHERE reserve_id=".$reserva->getId();
+                $q = "SELECT completed FROM transaction WHERE reserve_id=" . $reserva->getId();
                 $query = Doctrine_Query::create()->query($q);
                 $transaction = $query->toArray();
 
-                if(isset($transaction[0]) && $transaction[0]['completed']==1){ //la reserva está pagada
+                if (isset($transaction[0]) && $transaction[0]['completed'] == 1) { //la reserva está pagada
                     //la reserva aun no ha expirado
-                    if($this->reservaPendiente($reserva,3)){
+                    if ($this->reservaPendiente($reserva, 3)) {
                         $total++;
                     }
                 }
@@ -1294,40 +1283,38 @@ class User extends BaseUser {
         return $total;
     }
 
-	
-	    public function getCantReservasAprobadasTotalOwner(){
+    public function getCantReservasAprobadasTotalOwner() {
 
 
 //        $q = "SELECT r.id FROM reserve r INNR JOIN car c on reserve.car_id = c.id WHERE (r.confirmed>0 or r.canceled>0) and c.user_id=".$this->getId();
 //        $query = Doctrine_Query::create()->query($q);
- //       $reserve = $query->toArray();
-  //      $reservasRecibidas = null;
+        //       $reserve = $query->toArray();
+        //      $reservasRecibidas = null;
 
-		$q2 = Doctrine_Manager::getInstance()->getCurrentConnection();
-		$query2 = "SELECT r.id FROM Reserve r INNER JOIN Car c on r.car_id = c.id WHERE (r.confirmed>0 or r.canceled>0) and c.user_id=".$this->getId();
-		$stmt2= $q2->prepare($query2);
-		$stmt2->execute();
-		$reserve= $stmt2->fetchAll();
-	
-		$total_reserves= count($reserve);
-		
+        $q2 = Doctrine_Manager::getInstance()->getCurrentConnection();
+        $query2 = "SELECT r.id FROM Reserve r INNER JOIN Car c on r.car_id = c.id WHERE (r.confirmed>0 or r.canceled>0) and c.user_id=" . $this->getId();
+        $stmt2 = $q2->prepare($query2);
+        $stmt2->execute();
+        $reserve = $stmt2->fetchAll();
+
+        $total_reserves = count($reserve);
+
         return $total;
     }
 
-	
-    public function getCantReservasAprobadasRenter(){
+    public function getCantReservasAprobadasRenter() {
         $reservas = $this->getReservasRenter();
         $total = 0;
-        if(isset($reservas)){
-            foreach ($reservas as $reserva){
+        if (isset($reservas)) {
+            foreach ($reservas as $reserva) {
                 //obtiene completed de transaction
-                $q = "SELECT completed FROM transaction WHERE reserve_id=".$reserva->getId();
+                $q = "SELECT completed FROM transaction WHERE reserve_id=" . $reserva->getId();
                 $query = Doctrine_Query::create()->query($q);
                 $transaction = $query->toArray();
 
-                if(isset($transaction[0]) && $transaction[0]['completed']==1){ //la reserva está pagada
+                if (isset($transaction[0]) && $transaction[0]['completed'] == 1) { //la reserva está pagada
                     //la reserva aun no ha expirado
-                    if($this->reservaPendiente($reserva,3)){
+                    if ($this->reservaPendiente($reserva, 3)) {
                         $total++;
                     }
                 }
@@ -1337,8 +1324,8 @@ class User extends BaseUser {
     }
 
     //obtiene un array de reservas owner
-    public function getReservasOwner(){
-        $q = "SELECT r.id FROM reserve r, car c WHERE c.id=r.car_id and c.user_id=".$this->getId();
+    public function getReservasOwner() {
+        $q = "SELECT r.id FROM reserve r, car c WHERE c.id=r.car_id and c.user_id=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $reserve = $query->toArray();
         $reservasRecibidas = null;
@@ -1346,7 +1333,7 @@ class User extends BaseUser {
         foreach ($reserve as $i => $reserva) {
             $reserva = Doctrine_Core::getTable('reserve')->findOneById($reserva['id']);
 
-            if($reserva->getVisibleOwner()){
+            if ($reserva->getVisibleOwner()) {
                 $reservasRecibidas[$i] = $reserva;
             }
         }
@@ -1355,13 +1342,13 @@ class User extends BaseUser {
     }
 
     //obtiene un array de reservas renter
-    public function getReservasRenter(){
+    public function getReservasRenter() {
         $reserve = Doctrine_Core::getTable('reserve')->findByUserId($this->getId());
         $reservasRealizadas = null;
 
         foreach ($reserve as $i => $reserva) {
 
-            if($reserva->getVisibleRenter()){
+            if ($reserva->getVisibleRenter()) {
                 $reservasRealizadas[$i] = $reserva;
             }
         }
@@ -1370,197 +1357,140 @@ class User extends BaseUser {
     }
 
     //comprueba si la reserva tiene una fecha de entrega posterior + $tiempo (en horas), a la actual
-    public function reservaPendiente($reserva,$estado){
+    public function reservaPendiente($reserva, $estado) {
         $fechaReserva = strtotime($reserva->getDate());
         $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
         $duracion = $reserva->getDuration();
 
         //añade un margen de horas dependiendo del estado de la reserva
-        if($estado==3){
+        if ($estado == 3) {
             $duracion++;
-        }elseif ($estado==2) {
+        } elseif ($estado == 2) {
             $duracion = 1;
-        }elseif($estado==1 || $estado==0){
+        } elseif ($estado == 1 || $estado == 0) {
             $duracion = 0;
         }
 
-        if(($fechaReserva+$duracion*3600)>$fechaActual){
+        if (($fechaReserva + $duracion * 3600) > $fechaActual) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public function getCantReservasAprobadas(){
+    public function getCantReservasAprobadas() {
         return $this->getCantReservasAprobadasOwner() + $this->getCantReservasAprobadasRenter();
     }
 
-    public function getCantReservasPreaprobadas(){
+    public function getCantReservasPreaprobadas() {
         return $this->getCantReservasPreaprobadasOwner() + $this->getCantReservasPreaprobadasRenter();
     }
 
-    public function getCantReservasPendientes(){
+    public function getCantReservasPendientes() {
         return $this->getCantReservasPendientesOwner() + $this->getCantReservasPendientesRenter();
     }
 
     //obtiene la ultima reserva aprobada pendiente o hasta 2 horas despues de vencida
-    public function obtenerUltimaReservaAprobada(){
-        $reservasOwner = $this->getReservasOwner();
-        $reservasRenter = $this->getReservasRenter();
+    public function obtenerUltimaReservaAprobada() {
         $proximaReserva = null;
+        $ultimasReservas = Doctrine_Core::getTable('reserve')->obtenerUltimasReservasAprobadaByUserId($this->getId());
 
-        if(isset($reservasOwner)){
-            foreach ($reservasOwner as $reserva){
-                //obtiene completed de transaction
-                $q = "SELECT completed FROM transaction WHERE reserve_id=".$reserva->getId();
-                $query = Doctrine_Query::create()->query($q);
-                $transaction = $query->toArray();
+        if (isset($ultimasReservas)) {
+            foreach ($ultimasReservas as $reserva) {
+                if (!$this->formularioEntregaCompleto($reserva)) {
+                    if ($proximaReserva) {
+                        //comprueba que la fecha sea menor que la fecha almacenada (se debe obtener la fecha más cercana)
+                        $fechaAlmacenada = strtotime($proximaReserva['date']);
+                        $fechaPropuesta = strtotime($reserva->getDate());
 
-                if(isset($transaction[0]) && $transaction[0]['completed']==1){ //la reserva está pagada
-                    //la reserva aun no ha expirado
-                    if($this->reservaPendiente($reserva,3)){
-
-                        if(!$this->formularioEntregaCompleto($reserva)){
-                            if($proximaReserva){
-
-                                //comprueba que la fecha sea menor que la fecha almacenada (se debe obtener la fecha más cercana)
-                                $fechaAlmacenada = strtotime($proximaReserva['date']);
-                                $fechaPropuesta = strtotime($reserva->getDate());
-
-                                if($fechaPropuesta<$fechaAlmacenada){
-                                    $proximaReserva['id'] = $reserva->getId();
-                                    $proximaReserva['date'] = $reserva->getDate();
-                                    $proximaReserva['token'] = $reserva->getToken();
-                                }
-
-                            }else{
-                                $proximaReserva['id'] = $reserva->getId();
-                                $proximaReserva['date'] = $reserva->getDate();
-                                $proximaReserva['token'] = $reserva->getToken();
-                            }
+                        if ($fechaPropuesta < $fechaAlmacenada) {
+                            $proximaReserva['id'] = $reserva->getId();
+                            $proximaReserva['date'] = $reserva->getDate();
+                            $proximaReserva['token'] = $reserva->getToken();
                         }
+                    } else {
+                        $proximaReserva['id'] = $reserva->getId();
+                        $proximaReserva['date'] = $reserva->getDate();
+                        $proximaReserva['token'] = $reserva->getToken();
                     }
                 }
             }
         }
-
-        if(isset($reservasRenter)){
-            foreach ($reservasRenter as $reserva){
-                //obtiene completed de transaction
-                $q = "SELECT completed FROM transaction WHERE reserve_id=".$reserva->getId();
-                $query = Doctrine_Query::create()->query($q);
-                $transaction = $query->toArray();
-
-                if(isset($transaction[0]) && $transaction[0]['completed']==1){ //la reserva está pagada
-                    //la reserva aun no ha expirado
-                    if($this->reservaPendiente($reserva,3)){
-
-                        if(!$this->formularioEntregaCompleto($reserva)){
-                            if($proximaReserva){
-
-                                //comprueba que la fecha sea menor que la fecha almacenada (se debe obtener la fecha más cercana)
-                                $fechaAlmacenada = strtotime($proximaReserva['date']);
-                                $fechaPropuesta = strtotime($reserva->getDate());
-
-                                if($fechaPropuesta<$fechaAlmacenada){
-                                    $proximaReserva['id'] = $reserva->getId();
-                                    $proximaReserva['date'] = $reserva->getDate();
-                                    $proximaReserva['token'] = $reserva->getToken();
-                                }
-
-                            }else{
-                                $proximaReserva['id'] = $reserva->getId();
-                                $proximaReserva['date'] = $reserva->getDate();
-                                $proximaReserva['token'] = $reserva->getToken();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         return $proximaReserva;
-
     }
 
     //verifica que el formulario de entrega esté completo, dependiendo si es owner o renter
-    public function formularioEntregaCompleto($reserva){
-        
-        if($reserva->getUserId() == $this->getId()){ //es renter
-            if($reserva->getDocumentosRenter() && $reserva->getKminicial() && $reserva->getDeclaracionDanios()){
+    public function formularioEntregaCompleto($reserva) {
+
+        if ($reserva->getUserId() == $this->getId()) { //es renter
+            if ($reserva->getDocumentosRenter() && $reserva->getKminicial() && $reserva->getDeclaracionDanios()) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
-        }else{ //es owner
-            if($reserva->getDocumentosOwner() && $reserva->getKmfinal() && $reserva->getHoraDevolucion() && $reserva->getDeclaracionDevolucion()){
+        } else { //es owner
+            if ($reserva->getDocumentosOwner() && $reserva->getKmfinal() && $reserva->getHoraDevolucion() && $reserva->getDeclaracionDevolucion()) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }
-        
     }
 
-		public function save(Doctrine_Connection $conn = null)	{
+    public function save(Doctrine_Connection $conn = null) {
 
-		sfContext::getInstance()->getLogger()->err($this->getFechaRegistro());
+        sfContext::getInstance()->getLogger()->err($this->getFechaRegistro());
 
-			
-	if (!$this->getFechaRegistro())
-	  {
-		$this->setFechaRegistro(date('Y-m-d H:i:s'));
+
+        if (!$this->getFechaRegistro()) {
+            $this->setFechaRegistro(date('Y-m-d H:i:s'));
 //		$this->setFechaRegistro(strftime("11/27/2013"));
-		sfContext::getInstance()->getLogger()->err('setou!');
-
-		}
+            sfContext::getInstance()->getLogger()->err('setou!');
+        }
 
 //	  	$this->logMessage(strftime("11/27/2013"), 'err');
-		sfContext::getInstance()->getLogger()->err(strftime("%Y/%m/%d %H:%i:%s"));
+        sfContext::getInstance()->getLogger()->err(strftime("%Y/%m/%d %H:%i:%s"));
 
-		
- 	  if (!$this->getHash())
-	  {
-		$this->setHash(sha1($this->getFacebookId().rand(11111, 99999)));
-	  }
 
-	  
-   	  if ($this->getCustomerio()<=0)
-	  {
-			
-	  $session = curl_init();
+        if (!$this->getHash()) {
+            $this->setHash(sha1($this->getFacebookId() . rand(11111, 99999)));
+        }
 
-$customer_id = 'a_'.$this->getId(); // You'll want to set this dynamically to the unique id of the user
-$customerio_url = 'https://track.customer.io/api/v1/customers/';
-$site_id = '3a9fdc2493ced32f26ee';
-$api_key = '4f191ca12da03c6edca4';
 
-sfContext::getInstance()->getLogger()->err($customerio_url);
+        if ($this->getCustomerio() <= 0) {
 
-$data = array("email" => $this->getEmail(), "created_at" => strtotime($this->getFechaRegistro()),"name" => htmlentities($this->getFirstName()),"propietario" => $this->getPropietario(),"telephone" => $this->getTelephone(),"comuna" => htmlentities($this->getNombreComuna()),"region" => htmlentities($this->getNombreRegion()), );						
-			
-curl_setopt($session, CURLOPT_URL, $customerio_url.$customer_id);
-curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-curl_setopt($session, CURLOPT_HEADER, false);
-curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($session, CURLOPT_VERBOSE, 1);
-curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'PUT');
-curl_setopt($session, CURLOPT_POSTFIELDS,http_build_query($data));
+            $session = curl_init();
 
-curl_setopt($session,CURLOPT_USERPWD,$site_id . ":" . $api_key);
+            $customer_id = 'a_' . $this->getId(); // You'll want to set this dynamically to the unique id of the user
+            $customerio_url = 'https://track.customer.io/api/v1/customers/';
+            $site_id = '3a9fdc2493ced32f26ee';
+            $api_key = '4f191ca12da03c6edca4';
+
+            sfContext::getInstance()->getLogger()->err($customerio_url);
+
+            $data = array("email" => $this->getEmail(), "created_at" => strtotime($this->getFechaRegistro()), "name" => htmlentities($this->getFirstName()), "propietario" => $this->getPropietario(), "telephone" => $this->getTelephone(), "comuna" => htmlentities($this->getNombreComuna()), "region" => htmlentities($this->getNombreRegion()),);
+
+            curl_setopt($session, CURLOPT_URL, $customerio_url . $customer_id);
+            curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($session, CURLOPT_HEADER, false);
+            curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($session, CURLOPT_VERBOSE, 1);
+            curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'PUT');
+            curl_setopt($session, CURLOPT_POSTFIELDS, http_build_query($data));
+
+            curl_setopt($session, CURLOPT_USERPWD, $site_id . ":" . $api_key);
 
 //if(ereg("^(https)",$request)) 
-curl_setopt($session,CURLOPT_SSL_VERIFYPEER,false);
+            curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
 
-curl_exec($session);
-curl_close($session);
+            curl_exec($session);
+            curl_close($session);
 
-	$this->setCustomerio(true);
-		
-	  }
+            $this->setCustomerio(true);
+        }
 
 
-	  return parent::save($conn);
-	}
-	
+        return parent::save($conn);
+    }
+
 }
