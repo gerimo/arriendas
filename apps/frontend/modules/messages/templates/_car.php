@@ -1,9 +1,9 @@
 <?php
-    $cont = 0;
-    $aprobadas = $user->getCantReservasAprobadas();
-    $preaprobadas = $user->getCantReservasPreaprobadas();
-    $pendientes = $user->getCantReservasPendientes();
-    $cont = $cont + $aprobadas + $preaprobadas + $pendientes;
+//    $cont = 0;
+//    $aprobadas = $user->getCantReservasAprobadas();
+//    $preaprobadas = $user->getCantReservasPreaprobadas();
+//    $pendientes = $user->getCantReservasPendientes();
+//    $cont = $cont + $aprobadas + $preaprobadas + $pendientes;
 ?>
 <ul class="notif_validado">
     <?php
