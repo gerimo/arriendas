@@ -3,7 +3,7 @@ settings:
   dev:
    url: https://www.sandbox.paypal.com
    mode: sandbox
-   accountid: juanma.aguero-facilitator@gmail.com
+   accountid: german-facilitator@arriendas.cl 
    username: german-facilitator_api1.arriendas.cl
    password: 1393252897
    signature: An5ns1Kso7MWUdW4ErQKJJJ4qi4-A-SrinBigkhBBcE9C4ov-x6wgP0q
