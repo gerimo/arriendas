@@ -3639,11 +3639,6 @@ class profileActions extends sfActions {
 
                 /* oportunidad disponible */
                 if ($reserva->getConfirmed() == 0) {
-                    $reservasRecibidas[$i]['estado'] = 0;
-                }
-
-                /* oportunidad disponible */
-                if ($reserva->getConfirmed() == 1 && $reserva->getComentario() == sfConfig::get("app_comment_oportunidad")) {
                     $q = "SELECT SUM(r.confirmed) as SUM FROM reserve r INNER JOIN r.Car c ON  c.id = r.car_id ";
                     $q .= "WHERE r.date = ? AND r.user_id = ? AND c.user_id = ?";
                     $query = Doctrine_Query::create()->query($q, array($reserva->getDate(), $reserva->getUserId(), $this->getUser()->getAttribute("userid")));
@@ -3653,6 +3648,11 @@ class profileActions extends sfActions {
                     if($sum['SUM'] == 0){
                         $reservasRecibidas[$i]['estado'] = 0;
                     }
+                }
+
+                /* oportunidad disponible */
+                if ($reserva->getConfirmed() == 1 && $reserva->getComentario() == sfConfig::get("app_comment_oportunidad")) {
+                        $reservasRecibidas[$i]['estado'] = 0;
                 }
 
                 /* oportunidad ya no disponible */
