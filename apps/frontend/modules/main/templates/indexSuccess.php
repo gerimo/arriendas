@@ -1229,7 +1229,7 @@ else
 
 
     $(document).ready(function() {
-        $(".btn_filtro").click(function() {
+        $(".btn_filtro, #btn_buscar").click(function() {
             $('#opc_filtro').toggle("slow");
         });
         $("#btn_filtro1, #btn_buscar").click(function() {
