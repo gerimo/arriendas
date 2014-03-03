@@ -3160,7 +3160,7 @@ class profileActions extends sfActions {
         $oportunidades = array();
         $reservasRealizadasNoOportunidadesAux = array();
         foreach ($reservasRealizadasAux as $key => $reserva) {
-            if ($reserva["confirmed"] == 1 && strtolower($reserva["comentario"]) == "reserva oportunidad") {
+            if ($reserva["confirmed"] == 1 && strtolower($reserva["comentario"]) == "reserva oportunidad" && $reserva["estado"] == 2) {
                 $oportunidades[$key] = $reserva;
             } else {
                 $reservasRealizadasNoOportunidadesAux[$key] = $reserva;
@@ -3520,7 +3520,7 @@ class profileActions extends sfActions {
         $oportunidades = array();
         $reservasRealizadasNoOportunidadesAux = array();
         foreach ($reservasRealizadasAux as $key => $reserva) {
-            if ($reserva["confirmed"] == 1 && strtolower($reserva["comentario"]) == "reserva oportunidad") {
+            if ($reserva["confirmed"] == 1 && strtolower($reserva["comentario"]) == "reserva oportunidad" && $reserva["estado"] == 2) {
                 $oportunidades[$key] = $reserva;
             } else {
                 $reservasRealizadasNoOportunidadesAux[$key] = $reserva;
@@ -3632,13 +3632,13 @@ class profileActions extends sfActions {
             $reserva = Doctrine_Core::getTable('reserve')->findOneById($reserva['id']);
 
             /* el usuario que hizo la reserva no tiene que estar blockeado */
-            if (!$reserva->getUser()->getBlocked()) {
+            if (!$reserva->getUser()->getBlocked() && $reserva->getCar()->getUserId() != $this->getUser()->getAttribute("userid") ) {
                 //obtiene el id de la reserva
                 $reservasRecibidas[$i]['idReserve'] = $reserva->getId();
                 $this->logMessage("reserva recibida a considerar:" . $reservasRecibidas[$i]['idReserve']);
 
-                /* oportunidad disponible */
-                if ($reserva->getConfirmed() == 0) {
+                /* es una oportunidad y esta disponible */
+                if ($reserva->getConfirmed() == false) {
                     $q = "SELECT SUM(r.confirmed) as SUM FROM reserve r INNER JOIN r.Car c ON  c.id = r.car_id ";
                     $q .= "WHERE r.date = ? AND r.user_id = ? AND c.user_id = ?";
                     $query = Doctrine_Query::create()->query($q, array($reserva->getDate(), $reserva->getUserId(), $this->getUser()->getAttribute("userid")));
@@ -3651,15 +3651,16 @@ class profileActions extends sfActions {
                 }
 
                 /* oportunidad disponible */
-                if ($reserva->getConfirmed() == 1 && $reserva->getComentario() == sfConfig::get("app_comment_oportunidad")) {
+                if ($reserva->getConfirmed() == true && $reserva->getComentario() == sfConfig::get("app_comment_oportunidad")) {
                         $reservasRecibidas[$i]['estado'] = 0;
                 }
 
                 /* oportunidad ya no disponible */
-                if ($reserva->getConfirmed() == 1 && date('Y-m-d', strtotime($reserva->getFechaReserva())) == date("Y-m-d") && is_null($reserva->getComentario()) || trim($reserva->getComentario()) == "null") {
+                if ($reserva->getConfirmed() == true 
+                        && date('Y-m-d', strtotime($reserva->getFechaReserva())) == date("Y-m-d") 
+                        && (is_null($reserva->getComentario()) || trim($reserva->getComentario()) == "null")) {
                     $reservasRecibidas[$i]['estado'] = 1;
                 }
-
 
 
                 //fecha y hora de inicio y término

@@ -1227,12 +1227,21 @@ else
 <script>
 
 
-
+    var openFilters = false;
     $(document).ready(function() {
-        $(".btn_filtro, #btn_buscar").click(function() {
+        $(".btn_filtro").click(function() {
             $('#opc_filtro').toggle("slow");
         });
-        $("#btn_filtro1, #btn_buscar").click(function() {
+        $("#btn_buscar").click(function() {
+            if(openFilters){
+                $("#btn_filtro2").click();
+                openFilters = false;
+            }else{
+                $("#btn_filtro1").click();
+                openFilters = true;
+            }
+        });
+        $("#btn_filtro1").click(function() {
             $('#btn_filtro1').css("display", "none");
             $('#map').css("width", "509px");
             $('.search_box_1_maparea').css("width", "511px");
