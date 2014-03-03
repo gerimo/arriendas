@@ -1352,7 +1352,7 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
                 <div class="search_box_1_PrincipalNew">
                     <div class="search_box_1_header">    
                         <div class="search_box1_form" style="">
-                            <span style="width: 360px;" class="group_desde"><span class="numberBlue">1</span>Comuna |</span><span style="width: 222px;" class="group_desde"><span class="numberBlue">2</span>Desde |</span><span style="width: 140px;" class="group_hasta"><span class="numberBlue">3</span>Hasta |</span>
+                            <span style="width: 360px;" class="group_desde"><span class="numberBlue">1</span>Comuna |</span><span style="width: 222px;" class="group_desde"><span class="numberBlue">2</span>Desde |</span><span style="width: 227px;" class="group_hasta"><span class="numberBlue">3</span>Hasta |</span><span style="width: 51px;" class="group_hasta"><span class="numberBlue">4</span>Filtros |</span></span>
                             <input class="input_f0" id="searchTextField" style="margin-right: 5px;margin-left: 10px;width: 355px;" type="text" size="50" placeholder="Ingrese Ciudad" autocomplete="off"/>
                             <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_from" value="<?php if ($day_from && $day_from != '12-11-2013') {
                             echo $day_from;
