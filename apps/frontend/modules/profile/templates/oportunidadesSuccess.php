@@ -67,9 +67,9 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
             if($reservasRecibidas){
                 foreach ($reservasRecibidas as $reserva) {
                     //if(isset($reserva['estado']) && ($reserva['estado']==0 || $reserva['estado']==1)){
-                    if(isset($reserva['estado']) && ($reserva['estado']==0 || $reserva['estado']==1 || $reserva['estado']==2 || $reserva['estado']==3)){
+                    if(isset($reserva['estado']) && ($reserva['estado']==0 || $reserva['estado']==1)){
                         $mostrar = true;
-						$checkMostrar++;
+			$checkMostrar++;
                     }
                 }
             }

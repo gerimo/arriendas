@@ -3630,27 +3630,38 @@ class profileActions extends sfActions {
         $reservasRecibidas = null;
         foreach ($reservasAConsiderar as $i => $reserva) {
             $reserva = Doctrine_Core::getTable('reserve')->findOneById($reserva['id']);
-            $q = "SELECT SUM(r.confirmed) as SUM FROM reserve r 
-                WHERE r.date = ? AND r.user_id = ?";
 
-            $query = Doctrine_Query::create()->query($q, array($reserva->getDate(), $reserva->getUserId()));
-            $sum = $query->toArray();
-            $sum = array_pop($sum);
-            //obtiene el id de la reserva
-            $reservasRecibidas[$i]['idReserve'] = $reserva->getId();
-            if ($sum['SUM'] == 0) {
-                /* oportunidad disponible */
-                $reservasRecibidas[$i]['estado'] = 0;
-            } else {
-                /* oportunidad ya no disponible */
-                if (date('Y-m-d', strtotime($reserva->getFechaReserva())) == date("Y-m-d") && $reserva->getComentario() == null) {
-                    $reservasRecibidas[$i]['estado'] = 1;
-                }
-            }
             /* el usuario que hizo la reserva no tiene que estar blockeado */
             if (!$reserva->getUser()->getBlocked()) {
-                
-                
+                //obtiene el id de la reserva
+                $reservasRecibidas[$i]['idReserve'] = $reserva->getId();
+                $this->logMessage("reserva recibida a considerar:" . $reservasRecibidas[$i]['idReserve']);
+
+                /* oportunidad disponible */
+                if ($reserva->getConfirmed() == 0) {
+                    $reservasRecibidas[$i]['estado'] = 0;
+                }
+
+                /* oportunidad disponible */
+                if ($reserva->getConfirmed() == 1 && $reserva->getComentario() == sfConfig::get("app_comment_oportunidad")) {
+                    $q = "SELECT SUM(r.confirmed) as SUM FROM reserve r INNER JOIN r.Car c ON  c.id = r.car_id ";
+                    $q .= "WHERE r.date = ? AND r.user_id = ? AND c.user_id = ?";
+                    $query = Doctrine_Query::create()->query($q, array($reserva->getDate(), $reserva->getUserId(), $this->getUser()->getAttribute("userid")));
+                    $sum = $query->toArray();
+                    $sum = array_pop($sum);
+                    /* no aprobo la reserva antes */
+                    if($sum['SUM'] == 0){
+                        $reservasRecibidas[$i]['estado'] = 0;
+                    }
+                }
+
+                /* oportunidad ya no disponible */
+                if ($reserva->getConfirmed() == 1 && date('Y-m-d', strtotime($reserva->getFechaReserva())) == date("Y-m-d") && is_null($reserva->getComentario()) || trim($reserva->getComentario()) == "null") {
+                    $reservasRecibidas[$i]['estado'] = 1;
+                }
+
+
+
                 //fecha y hora de inicio y término
                 $reservasRecibidas[$i]['posicion'] = $reserva->getDate();
                 $reservasRecibidas[$i]['fechaInicio'] = $reserva->getFechaInicio();
