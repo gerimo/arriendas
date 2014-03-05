@@ -34,7 +34,7 @@ class messagesActions extends sfActions {
         $horaFechaActual = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"));
 
         $claseUsuario = Doctrine_Core::getTable('user')->findOneById($idUserFrom);
-        if ($claseUsuario->getBlocked()) {
+        if ($claseUsuario->getBlocked() == 1) {
             /* los usuarios blockeados no pueden mandar mensajes */
             die();
         }
@@ -112,7 +112,7 @@ class messagesActions extends sfActions {
         $mail->setSubject('Mensaje nuevo');
         $mail->setBody("<p>Hola $userTo:</p><p>$userFrom te ha enviado un mensaje:</p><p>\"$mensajeNuevo\"</p><p>Para contestarlo ingresa <a href='http://www.arriendas.cl/messages/inbox'>aquí</a></p>");
         $mail->setTo($userTo->getEmail());
-        $mail->setFrom($userFrom->getRmail());
+        $mail->setFrom($userFrom->getEmail());
         $mail->submit();
 
         //Copia de mensaje a Germán
