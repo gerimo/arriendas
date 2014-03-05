@@ -205,3 +205,63 @@
     			margin-left: 92px;
 				margin-top: -20px;
 			}
+
+/************************************** CSS LOGIN **********************************************/
+	.overlay-containerLogin {
+		display: none;
+		content: " ";
+		width: 100%;
+		position: absolute;
+		left: 0;
+		top: 0;
+		z-index: 300;
+		background: -moz-radial-gradient(center, ellipse cover,  rgba(127,127,127,0) -100%, rgba(0, 0, 0, 1) 100%);
+		background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(-100%,rgba(127,127,127,0)), color-stop(100%,rgba(0, 0, 0, 1)));
+		background: -webkit-radial-gradient(center, ellipse cover, rgba(127,127,127,0) -100%,rgba(0, 0, 0, 1) 100%);
+		background: -o-radial-gradient(center, ellipse cover,  rgba(127,127,127,0) -100%,rgba(0, 0, 0, 1) 100%);
+		background: -ms-radial-gradient(center, ellipse cover,  rgba(127,127,127,0) -100%,rgba(0, 0, 0, 1) 100%);
+		background: radial-gradient(center, ellipse cover,  rgba(127,127,127,0) -100%,rgba(0, 0, 0, 1) 100%);
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#007f7f7f', endColorstr='#e67f7f7f',GradientType=1 );
+	}
+	.overlay-containerLogin span.close {
+		float: right;
+		font-size: 37px;
+		font-family: cursive;
+		cursor: pointer;
+		z-index: 100;
+		color: white;
+		margin-right: 26px;
+		margin-top: 14px;
+	}
+		.window-containerLogin {
+			display: block;
+			background: #fcfcfc;
+			margin: 6em auto;
+			width: 400px;
+			text-align: left;
+			z-index: 3;
+			box-shadow: 0px 0px 30px rgba(0,0,0,0.2);
+			-webkit-transition: 0.4s ease-out;
+			-moz-transition: 0.4s ease-out;
+			-ms-transition: 0.4s ease-out;
+			-o-transition: 0.4s ease-out;
+			transition: 0.4s ease-out;
+			opacity: 0;
+		}
+		.window-containerLogin-visible {
+			opacity: 1;
+		}
+		.window-containerLogin .title{
+			background-color: #D1D1D1;
+			width: 100%;
+			text-align: center;
+			padding-top: 6px;
+			padding-bottom: 6px;
+			font-weight: bold;
+		}
+			.contenedorPopupLogin{
+				min-height: 380px;
+				height: auto;
+				width: 100%;
+			}
+/* gris: #d7d7d7; */
