@@ -1,0 +1,45 @@
+ErrorDocument 500 error500.html
+
+Header add Access-Control-Allow-Origin "http://maps.googleapis.com"
+Header add Access-Control-Allow-Origin "http://www.arriendas.cl"
+
+# For security reasons, Option followsymlinks cannot be overridden.
+Options +FollowSymLinks +ExecCGI
+#php_flag display_errors on
+Options +SymLinksIfOwnerMatch +ExecCGI
+
+<FilesMatch "\.(ico|pdf|gif|jpg|jpeg|png|css|js)$">
+Header set Cache-Control "max-age=2903400, public"
+</FilesMatch>
+<FilesMatch "^.*amazonaws.*$">
+Header set Cache-Control "max-age=2903400, public"
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # uncomment the following line, if you are having trouble
+  # getting no_script_name to work
+  #RewriteBase /frontend/web/
+
+  #RewriteRule ^images/(.*)$ http://arriendas.assets.s3-website-sa-east-1.amazonaws.com/images/$1 [L,R=301]
+  #RewriteRule ^css/(.*)$ http://arriendas.assets.s3-website-sa-east-1.amazonaws.com/css/$1 [L,R=301]
+  #RewriteRule ^js/(.*)$ http://arriendas.assets.s3-website-sa-east-1.amazonaws.com/js/$1 [L,R=301]
+  #RewriteRule ^json/(.*)$ http://arriendas.assets.s3-website-sa-east-1.amazonaws.com/json/$1 [L,R=301]
+  
+  # we skip all files with .something
+  RewriteCond %{REQUEST_URI} \..+$
+  RewriteCond %{REQUEST_URI} !\.html$
+  RewriteRule .* - [L]
+
+  # we check if the .html version is here (caching)
+  RewriteRule ^$ index.html [QSA]
+  RewriteRule ^([^.]+)$ $1.html [QSA]
+  RewriteCond %{REQUEST_FILENAME} !-d
+
+  # no, so we redirect to our front web controller
+  RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
+<files *.js>
+SetOutputFilter DEFLATE
+</files>

@@ -192,7 +192,7 @@ padding: 10px 0;float: left;width: 940px;"> Arriendas.cl En las Noticias </div>
 			<?php echo link_to(image_tag("/images/logos_canais/LogoPublimetro.png"), 'http://www.tacometro.cl/prontus_tacometro/site/artic/20121030/pags/20121030152946.html','target=_blank') ?>
             </div>
             <div class="divTableCell ">
-            <?php echo image_tag("/images/logos_canais/logo caras.png") ?>
+                        <?php echo link_to(image_tag("/images/logos_canais/LogoCNN.png"),'http://cnnchile.com/noticia/2014/01/10/arriendas-el-emprendimiento-que-permite-arrendar-tu-propio-auto','target=_blank') ?>
             </div>
             <div class="divTableCell ">
 			<?php echo link_to(image_tag("/images/logos_canais/LogoEmol.png"), 'http://www.emol.com/noticias/economia/2012/07/27/552815/emprendedor-estrenara-primer-sistema-de-arriendo-de-vehiculos-por-hora-de-chile.html','target=_blank') ?>

@@ -4,6 +4,10 @@
 index_by_city:
   url:    /c/:c
   param:  { module: main, action: index }
+  
+perfil_auto:
+    url:  /arriendoautos/rentacar/*/:chile/:id
+    param:  { module: auto, action: economico }
  
 # default rules
 homepage:

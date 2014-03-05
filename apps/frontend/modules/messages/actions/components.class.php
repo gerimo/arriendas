@@ -51,6 +51,10 @@ class messagesComponents extends sfComponents {
     public function executeCar() {
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
         $this->user= Doctrine_Core::getTable("user")->findOneById($idUsuario);
+        $this->aprobadas = Doctrine_Core::getTable("reserve")->getCantReservasAprobadasByUserId($idUsuario);
+        $this->preaprobadas = Doctrine_Core::getTable("reserve")->getCantReservasPreaprobadasByUserId($idUsuario);
+        $this->pendientes = Doctrine_Core::getTable("reserve")->getCantReservasPendientesByUserId($idUsuario);
+        $this->cont = $this->aprobadas + $this->preaprobadas + $this->pendientes;
        
     }
 

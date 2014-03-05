@@ -18,3 +18,7 @@ formularioEntregaSuccess:
     
 upload2S3Success:
     layout: basic
+    
+indexSuccess:
+    metas:
+        description:  Noticias de Arriendas.cl en los medios de comunicación mas importantes del ámbito nacional e internacional.

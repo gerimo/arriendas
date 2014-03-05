@@ -18,3 +18,7 @@ formularioEntregaSuccess:
     
 upload2S3Success:
     layout: basic
+
+companiaSuccess:
+    metas:
+        description:  Creemos en el valor de compartir y en poder acceder a un auto sin la necesidad de comprarlo.

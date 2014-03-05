@@ -1,9 +1,13 @@
 addCarSuccess:
   stylesheets: [maps.css]
   javascripts: [jquery.gomap.js]
+
 carSuccess:
   stylesheets: [maps.css]
   javascripts: [jquery.gomap.js]
+
+pedidosAjaxSuccess:
+    has_layout: false
 all:
   layout: profile
 

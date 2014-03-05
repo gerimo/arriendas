@@ -93,8 +93,6 @@ Car:
       type: integer(4)
     description:
       type: string(45)
-<<<<<<< HEAD
-=======
     seguro_ok:
       type: integer(4)
     patente:
@@ -211,7 +209,6 @@ Car:
       type: timestamp
     fecha_validacion:
       type: timestamp
->>>>>>> 51c885deb874035d496df5e146ba05eac848c3b2
   relations:
     User:
       class: User
@@ -882,6 +879,10 @@ User:
     hash:
       type: string(45)
     confirmed:
+      type: boolean
+      notnull: true
+      default: false
+    blocked:
       type: boolean
       notnull: true
       default: false

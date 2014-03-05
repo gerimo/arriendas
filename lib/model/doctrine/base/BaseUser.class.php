@@ -26,6 +26,7 @@
  * @property boolean $confirmed
  * @property boolean $autoconfirm
  * @property boolean $deleted
+ * @property boolean $blocked
  * @property boolean $confirmed_fb
  * @property boolean $confirmed_sms
  * @property boolean $friend_invite
@@ -61,6 +62,7 @@
  * @method boolean             getConfirmed()             Returns the current record's "confirmed" value
  * @method boolean             getAutoconfirm()           Returns the current record's "autoconfirm" value
  * @method boolean             getDeleted()               Returns the current record's "deleted" value
+ * @method boolean             getBlocked()               Returns the current record's "blocked" value
  * @method boolean             getConfirmedFb()           Returns the current record's "confirmed_fb" value
  * @method boolean             getConfirmedSms()          Returns the current record's "confirmed_sms" value
  * @method boolean             getFriendInvite()          Returns the current record's "friend_invite" value
@@ -93,6 +95,7 @@
  * @method User                setConfirmed()             Sets the current record's "confirmed" value
  * @method User                setAutoconfirm()           Sets the current record's "autoconfirm" value
  * @method User                setDeleted()               Sets the current record's "deleted" value
+ * @method User                setBlocked()               Sets the current record's "blocked" value
  * @method User                setConfirmedFb()           Sets the current record's "confirmed_fb" value
  * @method User                setConfirmedSms()          Sets the current record's "confirmed_sms" value
  * @method User                setFriendInvite()          Sets the current record's "friend_invite" value
@@ -212,6 +215,11 @@ abstract class BaseUser extends sfDoctrineRecord {
             'default' => false,
         ));
         $this->hasColumn('deleted', 'boolean', null, array(
+            'type' => 'boolean',
+            'notnull' => true,
+            'default' => false,
+        ));
+        $this->hasColumn('blocked', 'boolean', null, array(
             'type' => 'boolean',
             'notnull' => true,
             'default' => false,

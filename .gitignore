@@ -14,6 +14,8 @@
 /web/uploads/verificaciones/
 /config/databases.yml
 /config/ProjectConfiguration.class.php
+/nbproject/private/
+
 .DS_Store
 /nbproject/
 /nbproject/private/
