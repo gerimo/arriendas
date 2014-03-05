@@ -1,5 +1,4 @@
 settings:
-  enviroment: prod 
   dev:
    url: https://www.sandbox.paypal.com
    mode: sandbox
@@ -13,6 +12,7 @@ settings:
    status_failure_warning: FailureWithWarning
   prod:
    url: https://www.paypal.com
+   mode: live
    accountid: german@arriendas.cl
    username: german_api1.arriendas.cl
    password: JJKXEZAGQAGZ8N2N

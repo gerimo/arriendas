@@ -8,6 +8,14 @@ index_by_city:
 perfil_auto:
     url:  /arriendoautos/rentacar/*/:chile/:id
     param:  { module: auto, action: economico }
+    
+paypalReturn:
+    url:  /paypal/processPayment
+    param:  { module: paypal, action: processPayment }
+
+paypalCancel:
+    url:  /paypal/processPaymentCanceled
+    param:  { module: paypal, action: processPaymentCanceled }
  
 # default rules
 homepage:

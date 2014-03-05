@@ -69,9 +69,10 @@ class paypalActions extends sfActions {
                     $paypalSettings = $this->getSettings();
                     /* details */
                     $setExpressCheckoutRequestDetails = new SetExpressCheckoutRequestDetailsType();
-                    $setExpressCheckoutRequestDetails->ReturnURL = "http://www.magnetico.com.ar/jaguero/arriendas/frontend_dev.php/paypal/processPayment";
-                    $setExpressCheckoutRequestDetails->CancelURL = "http://www.magnetico.com.ar/jaguero/arriendas/frontend_dev.php/paypal/processPaymentCanceled";
-
+                    $this->logMessage("la ruta uri actual es:".sfContext::getInstance()->getRouting()->getCurrentInternalUri());
+                    $setExpressCheckoutRequestDetails->ReturnURL = $this->generateUrl("paypalReturn", array(), true);
+                    $setExpressCheckoutRequestDetails->CancelURL = $this->generateUrl("paypalCancel", array(), true);
+                    
                     /* items */
                     $paymentDetailsArray = array();
 
@@ -658,7 +659,7 @@ class paypalActions extends sfActions {
      */
     protected function getSettings() {
         $rawSettings = sfYaml::load(dirname(dirname(__FILE__)) . "/config/paypal.yml");
-        $env = $rawSettings["settings"]["enviroment"];
+        $env = sfConfig::get('sf_environment');
         return $rawSettings["settings"][$env];
     }
 

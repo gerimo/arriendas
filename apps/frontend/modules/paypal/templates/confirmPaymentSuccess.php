@@ -84,7 +84,7 @@
                     <input type="hidden" name="idReserva" value="<?php echo $ppIdReserva ?>" />
                     <div>
                         <img src="https://www.paypal.com/en_US/i/logo/PayPal_mark_37x23.gif" alt="paypal" style="padding-top: 18px;"/>
-                        <a class="botonPagar" href="<?php echo $checkOutUrl ?>" ></a>
+                        <a class="botonPagar" style="width: 159px;" href="<?php echo $checkOutUrl ?>" ></a>
                     </div>
                 </div>
                 <div class="recordatorio">
