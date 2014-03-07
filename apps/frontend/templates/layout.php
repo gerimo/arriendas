@@ -5,6 +5,8 @@
         
         <?php include_metas() ?>
         <?php include_title() ?>
+        <?php use_stylesheet('popup.css') ?>
+        <?php use_javascript('popup.js') ?>
 	<link href="http://arriendas.assets.s3.amazonaws.com/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
         <meta property="og:description" content="Arrienda un auto vecino con seguro premium, asistencia de viaje y TAGs incluídos. Busca un auto por ubicación o por precio. Rent a car Vecino."/>
@@ -335,7 +337,7 @@
                     
                     <?php if (!sfContext::getInstance()->getUser()->isAuthenticated()): ?>
 		    
-                        <a class="item_thm" href="<?php echo url_for('main/login') ?>"><div class="top_login"></div>
+                        <a class="item_thm detallereserva" href="#" data-type="zoomin"><div class="top_login"></div>
 
 									</a>  
 
@@ -565,7 +567,61 @@ var google_conversion_value = 0;
 		  });
 		</script>		
 <?php }?>
+
+
+<!-- nuevo login -->
+<script>
+    function submitFrom() {
+        document.forms["frm1"].submit();
+    }
+
+    function checkclear(what) {
+        if (!what._haschanged) {
+            what.value = ''
+        };
+        what._haschanged = true;
+    }
+</script>
+<div class='overlay-containerLogin'>
+    <span title='Cerrar Ventana' class='close'>x</span>
+    <div class='window-containerLogin zoomin'>
+        <div class="title">INGRESAR</div>
+        <?php echo form_tag('main/doLogin', array('method' => 'post', 'id' => 'frm1')); ?>
+            <div class='contenedorPopupLogin'>
+            <!-- A desarrollar: Caso en que el usuario no introduzca la data correcta, mostrar el mensaje en el popup -->
+                <?php if($sf_user->getFlash('show')): ?>
+                <div class="error_log" >
+                    <?php echo html_entity_decode($sf_user -> getFlash('msg')); ?>
+                </div>
+                <?php endif; ?>
+                <div class="loginFB">
+                    <div class="tagTitle">Iniciar sesión con Facebook</div>
+                    <a href="<?php echo url_for("main/loginFacebook")?>" id="facebook-login"><?php echo image_tag('img_login/btnFacebook.png', array("width"=>"334","height"=>"64","style"=>"float: left;margin-top: 20px;margin-left: 33px;","title"=>"Haz click para ingresar con Facebook")) ?></a>
+                </div>
+                <div class="separadorLogin">
+                    <div class="lineaIzq" style="margin-left: 25px;"></div>
+                    <div class="letraO" style="float:left;"><?php echo image_tag('img_login/O_Registro.png') ?></div>
+                    <div class="lineaDer" style="width: 160px;"></div>
+                </div>
+                <div class="loginCuenta">
+                    <div class="tagTitle">Iniciar sesión con tu Usuario</div>
+                    <input type="text" placeholder="USUARIO" name="username" value="USUARIO" onfocus="checkclear(this)"/>
+                    <input type="password" placeholder="CONTRASEÑA" name="password" value="CONTRASEÑA" onfocus="checkclear(this)" style="margin-top: 13px;" />
+                    <button class="opt_reg_btn">
+                        <?php echo image_tag('img_login/btnEntrar.png', array("width"=>"104","height"=>"28","class"=>"login_btn_conectar","title"=>"Haz click para logear con tu cuenta","onclick"=>"submitFrom()")) ?>
+                    </button>
+                    <div class="opt_reg">
+                        <a href="<?php echo url_for('main/forgot')?>" class="login_olvidar">&iquest;Olvidaste tu contraseña?</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="pieDePopup">
+            <a class="enlaceEresNuevo" href="<?php echo url_for('main/register')?>" >&iquest;ERES NUEVO? REGÍSTRATE AQUÍ</a>
+        </div>
+    </div>
+</div>
+<!-- fin nuevo login -->
+
 </body>
 </html>
-
-

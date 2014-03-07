@@ -777,11 +777,11 @@ class profileActions extends sfActions {
         //$this->fechaServidor = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"));
         //$accion = 'preaprobar';
         //$idReserve = 663;
-        $user = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")));
+        //$user = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")));
         //echo $reserve->getSendReserveLastWeek($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
         //var_dump($user->getSendReserveLastWeek($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"))));
         //var_dump($user->getFirstReserve());
-        die();
+        //die();
     }
 
     public function formatearHoraChilena($fecha) {
