@@ -24,7 +24,7 @@
 		width: 500px;
 		padding: 10px 20px 20px;
 		text-align: left;
-		z-index: 3;
+		z-index: 11000;
 		box-shadow: 0px 0px 30px rgba(0,0,0,0.2);
 		-webkit-transition: 0.4s ease-out;
 		-moz-transition: 0.4s ease-out;
