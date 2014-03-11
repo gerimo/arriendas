@@ -231,7 +231,7 @@ class ReserveTable extends Doctrine_Table {
                 ->andWhere('EXISTS (SELECT t.id FROM Transaction t WHERE r.id = t.reserve_id and t.completed = ?)', 1);
         return $q->execute();
     }
-    
+
     /**
      * Cantidad de Reservas aprobadas por id de usuario.
      * @param type $id
@@ -277,6 +277,18 @@ class ReserveTable extends Doctrine_Table {
         $statement->execute();
         $resultset = $statement->fetch(PDO::FETCH_OBJ);
         return $resultset->cantidad;
+    }
+
+    /**
+     * Obtiene las reservas activas del dia de la fecha, que esten pagas y listas para iniciar.
+     * @param type $userId
+     * @return type
+     */
+    public function getTodayReservesIds($userId) {
+        $q = self::getInstance()->createQuery("r")
+                ->where('r.user_id = ?', $userId)
+                ->andWhere('DATE(r.date) = CURDATE()');
+        return $q->execute();
     }
 
 }

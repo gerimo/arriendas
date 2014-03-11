@@ -1,6 +1,45 @@
 # You can find more information about this file on the symfony website:
 # http://www.symfony-project.org/reference/1_4/en/10-Routing
 
+userLogin:
+    url: /user/login
+    param: { module: user, action: login }
+
+userCurrentReserve:
+    url: /user/:user_id/reserve/current
+    param: { module: user, action: currentReserve }
+
+userCurrentReservePostVideo:
+    url: /user/:user_id/reserve/:reserve_id/video
+    param: { module: user, action: currentReservePostVideo }
+    requirements:
+        sf_method: [POST]
+
+userCurrentReservePostLicenceImage:
+    url: /user/:user_id/reserve/:reserve_id/licence_image
+    param: { module: user, action: currentReservePostLicenceImage }
+    requirements:
+        sf_method: [POST]
+
+userCurrentReservePostCarPanelImage:
+    url: /user/:user_id/reserve/:reserve_id/car_panel_image
+    param: { module: user, action: currentReservePostCarPanelImage }
+    requirements:
+        sf_method: [POST]
+
+userCurrentReserveGetVideo:
+    url: /user/:user_id/reserve/:reserve_id/video
+    param: { module: user, action: currentReserveGetVideo }
+    requirements:
+        sf_method: [GET]
+    
+userOne:
+    url: /user/:id
+    param: { module: user, action: one }
+    requirements:
+        sf_method: [GET]
+    
+
 # default rules
 homepage:
   url:   /
