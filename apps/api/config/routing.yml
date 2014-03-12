@@ -9,35 +9,58 @@ userCurrentReserve:
     url: /user/:user_id/reserve/current
     param: { module: user, action: currentReserve }
 
-userCurrentReservePostVideo:
-    url: /user/:user_id/reserve/:reserve_id/video
-    param: { module: user, action: currentReservePostVideo }
-    requirements:
-        sf_method: [POST]
+userCurrentReserveInitialized:
+    url: /user/:user_id/reserve/current_initialized
+    param: { module: user, action: currentReserveInitialized }
 
-userCurrentReservePostLicenceImage:
-    url: /user/:user_id/reserve/:reserve_id/licence_image
-    param: { module: user, action: currentReservePostLicenceImage }
-    requirements:
-        sf_method: [POST]
-
-userCurrentReservePostCarPanelImage:
-    url: /user/:user_id/reserve/:reserve_id/car_panel_image
-    param: { module: user, action: currentReservePostCarPanelImage }
-    requirements:
-        sf_method: [POST]
-
-userCurrentReserveGetVideo:
-    url: /user/:user_id/reserve/:reserve_id/video
-    param: { module: user, action: currentReserveGetVideo }
-    requirements:
-        sf_method: [GET]
-    
 userOne:
     url: /user/:id
     param: { module: user, action: one }
     requirements:
+        sf_method: [GET]    
+
+reserveInitializePostVideo:
+    url: /reserve/:reserve_id/initialize/video
+    param: { module: reserve, action: initializePostVideo }
+    requirements:
+        sf_method: [POST]
+
+reserveFinalizePostVideo:
+    url: /reserve/:reserve_id/finalize/video
+    param: { module: reserve, action: finalizePostVideo }
+    requirements:
+        sf_method: [POST]
+
+reservePostLicenceImage:
+    url: /reserve/:reserve_id/licence_image
+    param: { module: reserve, action: postLicenceImage }
+    requirements:
+        sf_method: [POST]
+
+reserveInitializePostCarPanelImage:
+    url: /reserve/:reserve_id/initialize/car_panel_image
+    param: { module: reserve, action: initializePostCarPanelImage }
+    requirements:
+        sf_method: [POST]
+
+reserveFinalizePostCarPanelImage:
+    url: /reserve/:reserve_id/finalize/car_panel_image
+    param: { module: reserve, action: finalizePostCarPanelImage }
+    requirements:
+        sf_method: [POST]
+
+reserveOwner:
+    url: /reserve/:id/owner
+    param: { module: reserve, action: owner }
+    requirements:
         sf_method: [GET]
+
+reserveOne:
+    url: /reserve/:id
+    param: { module: reserve, action: one }
+    requirements:
+        sf_method: [GET]
+
     
 
 # default rules

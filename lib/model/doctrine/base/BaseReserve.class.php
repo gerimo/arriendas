@@ -15,10 +15,13 @@
  * @property integer $Car_id
  * @property integer $Rating_id
  * @property boolean $complete
+ * @property boolean $inicioArriendoOk
+ * @property boolean $finArriendoOk
  * @property User $User
  * @property Car $Car
  * @property Rating $Rating
  * @property Doctrine_Collection $Reports
+ * @property Doctrine_Collection $ReserveFiles
  * @property Transaction $Transaction
  * @property decimal $price
  * @property integer $Extend
@@ -31,11 +34,14 @@
  * @method integer             getCarId()       Returns the current record's "Car_id" value
  * @method integer             getRatingId()    Returns the current record's "Rating_id" value
  * @method boolean             getComplete()    Returns the current record's "complete" value
+ * @method boolean             getInicioArriendoOk()    Returns the current record's "inicio_arriendo_ok" value
+ * @method boolean             getFinArriendoOk()    Returns the current record's "fin_arriendo_ok" value
  * @method integer             getSancion()     Returns the current record's "Sancion" value
  * @method User                getUser()        Returns the current record's "User" value
  * @method Car                 getCar()         Returns the current record's "Car" value
  * @method Rating              getRating()      Returns the current record's "Rating" value
  * @method Doctrine_Collection getReports()     Returns the current record's "Reports" collection
+ * @method Doctrine_Collection getReserveFiles()     Returns the current record's "ReserveFiles" collection
  * @method Transaction         getTransaction() Returns the current record's "Transaction" value
  * @method Reserve             getCanceled()    Returns the current record's "Canceled" value
  * @method Reserve             getKminicial()   Return the current record's "Kminicial" value
@@ -50,11 +56,14 @@
  * @method Reserve             setCarId()       Sets the current record's "Car_id" value
  * @method Reserve             setRatingId()    Sets the current record's "Rating_id" value
  * @method Reserve             setComplete()    Sets the current record's "complete" value
+ * @method Reserve             setInicioArriendoOk()    Sets the current record's "inicio_arriendo_ok" value
+ * @method Reserve             setFinArriendoOk()    Sets the current record's "fin_arriendo_ok" value
  * @method Reserve             setSancion()     Sets the current record's "Sancion" value
  * @method Reserve             setUser()        Sets the current record's "User" value
  * @method Reserve             setCar()         Sets the current record's "Car" value
  * @method Reserve             setRating()      Sets the current record's "Rating" value
  * @method Reserve             setReports()     Sets the current record's "Reports" collection
+ * @method Reserve             setReserveFiles()        Returns the current record's "ReserveFiles" collection
  * @method Reserve             setTransaction() Sets the current record's "Transaction" value
  * @method Reserve             setCanceled()    Sets the current record's "Canceled" value
  * @method Reserve             setIniKmConfirmed() Sets the current record's "ini_km_confirmed" value
@@ -260,6 +269,16 @@ abstract class BaseReserve extends sfDoctrineRecord
             'notnull' => '0',
             'default' => 0,
             ));
+        $this->hasColumn('inicio_arriendo_ok', 'boolean', null, array(
+            'type' => 'boolean',
+            'notnull' => '0',
+            'default' => 0,
+            ));
+        $this->hasColumn('fin_arriendo_ok', 'boolean', null, array(
+            'type' => 'boolean',
+            'notnull' => '0',
+            'default' => 0,
+            ));
         $this->index('fk_Reserve_User1', array(
              'fields' => 
              array(
@@ -311,6 +330,10 @@ abstract class BaseReserve extends sfDoctrineRecord
              'onUpdate' => 'no action'));
 
         $this->hasMany('Report as Reports', array(
+             'local' => 'id',
+             'foreign' => 'Reserve_id'));
+        
+        $this->hasMany('ReserveFile as ReserveFiles', array(
              'local' => 'id',
              'foreign' => 'Reserve_id'));
 

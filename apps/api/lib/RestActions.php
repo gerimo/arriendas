@@ -44,4 +44,19 @@ class RestActions extends sfActions {
         }
     }
 
+    public function setResponse($status = null, $code = null, $message = null) {
+        $restResponse = array();
+        if (!is_null($status)) {
+            $restResponse["status"] = $status;
+        }
+        if (!is_null($code)) {
+            $restResponse["code"] = $code;
+        }
+        if (!is_null($message)) {
+            $restResponse["message"] = $message;
+        }
+        $this->object = $restResponse;
+        $this->setTemplate('object');
+    }
+
 }

@@ -284,10 +284,25 @@ class ReserveTable extends Doctrine_Table {
      * @param type $userId
      * @return type
      */
-    public function getTodayReservesIds($userId) {
+    public function getTodayReserves($userId) {
         $q = self::getInstance()->createQuery("r")
                 ->where('r.user_id = ?', $userId)
                 ->andWhere('DATE(r.date) = CURDATE()');
+        return $q->execute();
+    }
+    
+    /**
+     * 
+     * @param type $userId
+     * @param type $status
+     * @return type
+     */
+    public function findInitializedByUser($userId) {
+        $q = self::getInstance()->createQuery("r")
+                ->where('r.user_id = ?', $userId)
+                ->andWhere('r.date <= NOW()')
+                ->andWhere('date_add(r.date, INTERVAL r.duration HOUR) >= NOW()')
+                ->andWhere('r.inicio_arriendo_ok = ?', true);
         return $q->execute();
     }
 

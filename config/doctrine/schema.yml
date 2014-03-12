@@ -1026,3 +1026,36 @@ LiberacionDeposito:
     monto:
       type: decimal(10,2)
 >>>>>>> 60b601d9a31f98057c922e1d46052569d4f39038
+
+ReserveFile:
+  tableName: ReserveFiles
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    path:
+      type: string(90)
+    type:
+      type: string(45)
+    Reserve_id:
+      type: integer(4)
+      notnull: true
+  relations:
+    Reserve:
+      class: Reserve
+      local: Reserve_id
+      foreign: id
+      foreignAlias: ReserveFiles
+      onDelete: no action
+      onUpdate: no action
+  indexes:
+    fk_ReserveFiles_Car1:
+      fields: [Reserve_id]
+    id_UNIQUE:
+      fields: [id]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB

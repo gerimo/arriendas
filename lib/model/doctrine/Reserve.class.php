@@ -10,477 +10,502 @@
  * @author     Your name here
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
-class Reserve extends BaseReserve
-{
-	public function calcularIVA() {
-		//Variable que define el IVA actual
-		//TODO: modificar la obtenci�n de la variable IVA
-		$iva= 1.19;	
-	}
+class Reserve extends BaseReserve {
+    
+    public function calcularIVA() {
+        //Variable que define el IVA actual
+        //TODO: modificar la obtenci�n de la variable IVA
+        $iva = 1.19;
+    }
 
-	public function getFechaInicio(){
-		$entrega = $this->getDate();
-		$entrega = strtotime($entrega);
-        $fechaEntrega = date("d/m/y",$entrega);
+    public function getFechaInicio() {
+        $entrega = $this->getDate();
+        $entrega = strtotime($entrega);
+        $fechaEntrega = date("d/m/y", $entrega);
         return $fechaEntrega;
-	}
+    }
 
-	public function getHoraInicio(){
-		$entrega = $this->getDate();
-		$entrega = strtotime($entrega);
-        $horaEntrega = date("H:i",$entrega);
+    public function getHoraInicio() {
+        $entrega = $this->getDate();
+        $entrega = strtotime($entrega);
+        $horaEntrega = date("H:i", $entrega);
         return $horaEntrega;
-	}
+    }
 
-	public function getFechaTermino(){
-		$entrega = $this->getDate();
+    public function getFechaTermino() {
+        $entrega = $this->getDate();
         $duracion = $this->getDuration();
         $entrega = strtotime($entrega);
-        $fechaDevolucion = date("d/m/y",$entrega+($duracion*60*60));
+        $fechaDevolucion = date("d/m/y", $entrega + ($duracion * 60 * 60));
         return $fechaDevolucion;
-	}
+    }
 
-	public function getHoraTermino(){
-		$entrega = $this->getDate();
+    public function getHoraTermino() {
+        $entrega = $this->getDate();
         $duracion = $this->getDuration();
         $entrega = strtotime($entrega);
-        $horaDevolucion = date("H:i",$entrega+($duracion*60*60));
+        $horaDevolucion = date("H:i", $entrega + ($duracion * 60 * 60));
         return $horaDevolucion;
-	}
+    }
 
-	public function getTiempoArriendoTexto()
-        {
-            $duracion = $this->getDuration();
+    public function getTiempoArriendoTexto() {
+        $duracion = $this->getDuration();
 
-            $dias = floor($duracion/24);
-            $horas = $duracion%24;
+        $dias = floor($duracion / 24);
+        $horas = $duracion % 24;
 
-            //echo $dias." ".$horas."<br>";
+        //echo $dias." ".$horas."<br>";
 
-            if($dias==0){
-                    $dias = "";
-            }elseif($dias==1){
-                    $dias = $dias." día";
-            }else{
-                    $dias = $dias." días";
-            }
-            //$dias = mb_convert_encoding($dias, 'utf-8');
+        if ($dias == 0) {
+            $dias = "";
+        } elseif ($dias == 1) {
+            $dias = $dias . " día";
+        } else {
+            $dias = $dias . " días";
+        }
+        //$dias = mb_convert_encoding($dias, 'utf-8');
 
-            if($horas==0){
-                    $horas = "";
-            }elseif($horas==1){
-                    $horas = $horas." hora";
-            }else{
-                    $horas = $horas." horas";
-            }
+        if ($horas == 0) {
+            $horas = "";
+        } elseif ($horas == 1) {
+            $horas = $horas . " hora";
+        } else {
+            $horas = $horas . " horas";
+        }
 
-            if($dias==""){
-                    return $horas;
-            }
-            if($horas==""){
-                    return $dias;
-            }
+        if ($dias == "") {
+            return $horas;
+        }
+        if ($horas == "") {
+            return $dias;
+        }
 
-            return $dias." y ".$horas;
-	}
-	
-	//Metodo utilizado para crear un registro de calificacion dentro de nuestra tabla, que se habilitar�
-	//una vez que la reserva sea pagada
-	public function habilitarCalificacion() {
-		//Obtenemos la fecha de la reserva y su duraci�n para determinar la fecha desde que estar� habilitada
-		//la calificacion. La regla es que esta estar� disponible 2 horas tras el termino de la reserva
-		$fecha_reserva= $this->getDate();
-		$duracion= $this->getDuration();
-		//Convertimos la fecha a timestamp
-		$timestamp= strtotime($fecha_reserva);
-		$timestamp= 60*60*($duracion+2);
-		$rating = new Rating();
-		$rating->setIdRenter($this->getUserId());
-		//Obtenemos el ID del propietario
-		$car= Doctrine_Core::getTable("car")->findOneById($this->getCarId());
-		$rating->setIdOwner($car->getUserId());
-		$rating->setFechaHabilitadaDesde($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")),$timestamp);
-		$rating->save();
-		$this->setRatingId($rating->getId());
-		$this->save();
-	}
+        return $dias . " y " . $horas;
+    }
 
-	public function formatearHoraChilena($fecha){
-        $horaChilena = strftime("%Y-%m-%d %H:%M:%S",strtotime('-4 hours',strtotime($fecha)));
+    //Metodo utilizado para crear un registro de calificacion dentro de nuestra tabla, que se habilitar�
+    //una vez que la reserva sea pagada
+    public function habilitarCalificacion() {
+        //Obtenemos la fecha de la reserva y su duraci�n para determinar la fecha desde que estar� habilitada
+        //la calificacion. La regla es que esta estar� disponible 2 horas tras el termino de la reserva
+        $fecha_reserva = $this->getDate();
+        $duracion = $this->getDuration();
+        //Convertimos la fecha a timestamp
+        $timestamp = strtotime($fecha_reserva);
+        $timestamp = 60 * 60 * ($duracion + 2);
+        $rating = new Rating();
+        $rating->setIdRenter($this->getUserId());
+        //Obtenemos el ID del propietario
+        $car = Doctrine_Core::getTable("car")->findOneById($this->getCarId());
+        $rating->setIdOwner($car->getUserId());
+        $rating->setFechaHabilitadaDesde($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")), $timestamp);
+        $rating->save();
+        $this->setRatingId($rating->getId());
+        $this->save();
+    }
+
+    public function formatearHoraChilena($fecha) {
+        $horaChilena = strftime("%Y-%m-%d %H:%M:%S", strtotime('-4 hours', strtotime($fecha)));
         return $horaChilena;
     }
 
-	public function encolarMailCalificaciones(){
-		$mailCalificaciones = new MailCalificaciones();
-		$mailCalificaciones->setReserveId($this->getId());
-		$mailCalificaciones->setDate($this->getFechaHabilitacionRating());
-		$mailCalificaciones->save();
-	}
+    public function encolarMailCalificaciones() {
+        $mailCalificaciones = new MailCalificaciones();
+        $mailCalificaciones->setReserveId($this->getId());
+        $mailCalificaciones->setDate($this->getFechaHabilitacionRating());
+        $mailCalificaciones->save();
+    }
 
-	//si es el que arrienda: fecha_pago - fecha_confirmacion
-	public function getTiempoRespuestaArrendador(){
+    //si es el que arrienda: fecha_pago - fecha_confirmacion
+    public function getTiempoRespuestaArrendador() {
 
-		$q = "SELECT fecha_confirmacion, fecha_pago FROM reserve WHERE id=".$this->getId();
+        $q = "SELECT fecha_confirmacion, fecha_pago FROM reserve WHERE id=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $autos = $query->toArray();
 
-		$fechaPago = $autos[0]['fecha_pago'];
-		$fechaConfirmacion = $autos[0]['fecha_confirmacion'];
+        $fechaPago = $autos[0]['fecha_pago'];
+        $fechaConfirmacion = $autos[0]['fecha_confirmacion'];
 
-		if($fechaPago==null || $fechaConfirmacion==null){
-			return 0;
-		}
+        if ($fechaPago == null || $fechaConfirmacion == null) {
+            return 0;
+        }
 
-		$fechaPago = strtotime($fechaPago);
-		$fechaConfirmacion = strtotime($fechaConfirmacion);
+        $fechaPago = strtotime($fechaPago);
+        $fechaConfirmacion = strtotime($fechaConfirmacion);
 
-		//echo $fechaPago - $fechaConfirmacion;
-		//tiempo en minutos
-		$duracion = $fechaPago - $fechaConfirmacion;
+        //echo $fechaPago - $fechaConfirmacion;
+        //tiempo en minutos
+        $duracion = $fechaPago - $fechaConfirmacion;
 
-		return $duracion;
-	}
+        return $duracion;
+    }
 
-	//si el al que le arriendan: fecha_confirmacion - fecha_reserva
-	public function getTiempoRespuestaArrendatario($idCar){
+    //si el al que le arriendan: fecha_confirmacion - fecha_reserva
+    public function getTiempoRespuestaArrendatario($idCar) {
 
-		$q = "SELECT fecha_confirmacion, fecha_reserva FROM reserve WHERE car_id=".$idCar;
+        $q = "SELECT fecha_confirmacion, fecha_reserva FROM reserve WHERE car_id=" . $idCar;
         $query = Doctrine_Query::create()->query($q);
         $autos = $query->toArray();
 
         $duracion[0] = 0;
 
-        for($i=0;$i<count($autos);$i++){
-        	$fechaReseva = $autos[0]['fecha_reserva'];
-			$fechaConfirmacion = $autos[0]['fecha_confirmacion'];
+        for ($i = 0; $i < count($autos); $i++) {
+            $fechaReseva = $autos[0]['fecha_reserva'];
+            $fechaConfirmacion = $autos[0]['fecha_confirmacion'];
 
-			if($fechaReseva==null || $fechaConfirmacion==null){
-				return 0;
-			}
+            if ($fechaReseva == null || $fechaConfirmacion == null) {
+                return 0;
+            }
 
-			$fechaReseva = strtotime($fechaReseva);
-			$fechaConfirmacion = strtotime($fechaConfirmacion);
+            $fechaReseva = strtotime($fechaReseva);
+            $fechaConfirmacion = strtotime($fechaConfirmacion);
 
-			$duracion[$i] = $fechaConfirmacion - $fechaReseva;
-	    }
+            $duracion[$i] = $fechaConfirmacion - $fechaReseva;
+        }
 
-		return $duracion;
-	}
+        return $duracion;
+    }
 
-	public function getMarcaModelo(){
-		$car = Doctrine_Core::getTable('car')->findOneById($this->getCarId());
-		return $car->getMarcaModelo();
-	}
+    public function getMarcaModelo() {
+        $car = Doctrine_Core::getTable('car')->findOneById($this->getCarId());
+        return $car->getMarcaModelo();
+    }
 
-	public function getEmailRenter(){
-		$user = Doctrine_Core::getTable('user')->findOneById($this->getUserId());
-		return $user->getUsername();
-	}
-	public function getCorreoRenter(){
-		$user = Doctrine_Core::getTable('user')->findOneById($this->getUserId());
-		return $user->getEmail();
-	}
-	public function getTypeCar(){
-		$car = Doctrine_Core::getTable('car')->findOneById($this->getCarId());
-		return $car->getUsoVehiculoId();
-	}
-	public function getPricePerDayCar(){
-		$car = Doctrine_Core::getTable('car')->findOneById($this->getCarId());
-		return $car->getPricePerDay();
-	}
-	public function getNameRenter(){
-		$user = Doctrine_Core::getTable('user')->findOneById($this->getUserId());
-		return $user->getFirstname();
-	}
+    public function getEmailRenter() {
+        $user = Doctrine_Core::getTable('user')->findOneById($this->getUserId());
+        return $user->getUsername();
+    }
 
-	public function getLastNameRenter(){
-		$user = Doctrine_Core::getTable('user')->findOneById($this->getUserId());
-		return $user->getLastname();		
-	}
+    public function getCorreoRenter() {
+        $user = Doctrine_Core::getTable('user')->findOneById($this->getUserId());
+        return $user->getEmail();
+    }
 
-	public function getEmailOwner(){
-		$q = "SELECT u.username FROM user u, car c, reserve r WHERE u.id=c.user_id and c.id=r.car_id and r.id=".$this->getId();
+    public function getTypeCar() {
+        $car = Doctrine_Core::getTable('car')->findOneById($this->getCarId());
+        return $car->getUsoVehiculoId();
+    }
+
+    public function getPricePerDayCar() {
+        $car = Doctrine_Core::getTable('car')->findOneById($this->getCarId());
+        return $car->getPricePerDay();
+    }
+
+    public function getNameRenter() {
+        $user = Doctrine_Core::getTable('user')->findOneById($this->getUserId());
+        return $user->getFirstname();
+    }
+
+    public function getLastNameRenter() {
+        $user = Doctrine_Core::getTable('user')->findOneById($this->getUserId());
+        return $user->getLastname();
+    }
+
+    public function getEmailOwner() {
+        $q = "SELECT u.username FROM user u, car c, reserve r WHERE u.id=c.user_id and c.id=r.car_id and r.id=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $owner = $query->toArray();
         return $owner[0]['username'];
-	}
-	public function getEmailOwnerCorreo(){
-		$q = "SELECT u.email FROM user u, car c, reserve r WHERE u.id=c.user_id and c.id=r.car_id and r.id=".$this->getId();
+    }
+
+    public function getEmailOwnerCorreo() {
+        $q = "SELECT u.email FROM user u, car c, reserve r WHERE u.id=c.user_id and c.id=r.car_id and r.id=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $owner = $query->toArray();
         return $owner[0]['email'];
-	}
+    }
 
-	public function getNameOwner(){
-		$q = "SELECT u.firstname, u.lastname FROM user u, car c, reserve r WHERE u.id=c.user_id and c.id=r.car_id and r.id=".$this->getId();
+    public function getNameOwner() {
+        $q = "SELECT u.firstname, u.lastname FROM user u, car c, reserve r WHERE u.id=c.user_id and c.id=r.car_id and r.id=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $owner = $query->toArray();
         return $owner[0]['firstname'];
-	}
+    }
 
-	public function getLastnameOwner(){
-		$q = "SELECT u.firstname, u.lastname FROM user u, car c, reserve r WHERE u.id=c.user_id and c.id=r.car_id and r.id=".$this->getId();
+    public function getLastnameOwner() {
+        $q = "SELECT u.firstname, u.lastname FROM user u, car c, reserve r WHERE u.id=c.user_id and c.id=r.car_id and r.id=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $owner = $query->toArray();
         return $owner[0]['lastname'];
-	}
-        
-        public function getRutOwner(){
-		$q = "SELECT u.rut FROM user u, car c, reserve r WHERE u.id=c.user_id and c.id=r.car_id and r.id=".$this->getId();
+    }
+
+    public function getRutOwner() {
+        $q = "SELECT u.rut FROM user u, car c, reserve r WHERE u.id=c.user_id and c.id=r.car_id and r.id=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $owner = $query->toArray();
         return $owner[0]['rut'];
-	}
+    }
 
-	public function getAddressCar(){
-		$car = Doctrine_Core::getTable('car')->findOneById($this->getCarId());
-		return $car->getAddress();
-	}
+    public function getAddressCar() {
+        $car = Doctrine_Core::getTable('car')->findOneById($this->getCarId());
+        return $car->getAddress();
+    }
 
-	public function getTelephoneRenter(){
-		$user = Doctrine_Core::getTable('user')->findOneById($this->getUserId());
-		return $user->getTelephone();
-	}
-	public function getConfirmedSMSRenter(){
-		$user = Doctrine_Core::getTable('user')->findOneById($this->getUserId());
-		return $user->getConfirmedSms();
-	}
+    public function getTelephoneRenter() {
+        $user = Doctrine_Core::getTable('user')->findOneById($this->getUserId());
+        return $user->getTelephone();
+    }
 
-	public function getTelephoneOwner(){
-		$q = "SELECT u.telephone FROM user u, car c, reserve r WHERE u.id=c.user_id and c.id=r.car_id and r.id=".$this->getId();
+    public function getConfirmedSMSRenter() {
+        $user = Doctrine_Core::getTable('user')->findOneById($this->getUserId());
+        return $user->getConfirmedSms();
+    }
+
+    public function getTelephoneOwner() {
+        $q = "SELECT u.telephone FROM user u, car c, reserve r WHERE u.id=c.user_id and c.id=r.car_id and r.id=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $owner = $query->toArray();
         return $owner[0]['telephone'];
-	}
-	public function getConfirmedSMSOwner(){
-		$q = "SELECT u.confirmed_sms FROM user u, car c, reserve r WHERE u.id=c.user_id and c.id=r.car_id and r.id=".$this->getId();
+    }
+
+    public function getConfirmedSMSOwner() {
+        $q = "SELECT u.confirmed_sms FROM user u, car c, reserve r WHERE u.id=c.user_id and c.id=r.car_id and r.id=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $owner = $query->toArray();
         return $owner[0]['confirmed_sms'];
-	}
+    }
 
-	public function getIdOwner(){
-		$q = "SELECT u.id FROM user u, car c, reserve r WHERE u.id=c.user_id and c.id=r.car_id and r.id=".$this->getId();
+    public function getIdOwner() {
+        $q = "SELECT u.id FROM user u, car c, reserve r WHERE u.id=c.user_id and c.id=r.car_id and r.id=" . $this->getId();
         $query = Doctrine_Query::create()->query($q);
         $owner = $query->toArray();
         return $owner[0]['id'];
-	}
+    }
 
-	public function getIdRenter(){
-		$user = Doctrine_Core::getTable('user')->findOneById($this->getUserId());
-		return $user->getId();
-	}
+    public function getIdRenter() {
+        $user = Doctrine_Core::getTable('user')->findOneById($this->getUserId());
+        return $user->getId();
+    }
 
-	public function getFechaHabilitacionRating(){
-		$entrega = $this->getDate();
+    public function getFechaHabilitacionRating() {
+        $entrega = $this->getDate();
         $duracion = $this->getDuration();
-        $entrega = strtotime($entrega)+($duracion+2)*60*60;
-        return date("Y-m-d H:i:s",$entrega);
-	}
+        $entrega = strtotime($entrega) + ($duracion + 2) * 60 * 60;
+        return date("Y-m-d H:i:s", $entrega);
+    }
 
-	public function save(Doctrine_Connection $conn = null)	{
+    /**
+     * Check if the reserve is ready for initialize.
+     * @return boolean isReady.
+     */
+    public function isReadyForInitialize() {
+        $isReady = TRUE;
+        $transaction = $this->getTransaction();
+        if (is_null($transaction)) {
+            $isReady = FALSE;
+        } elseif (date("Y-m-d", strtotime ($this->getDate())) != date("Y-m-d")) {
+            $isReady = FALSE;
+        } elseif (!$transaction->getCompleted()) {
+            $isReady = FALSE;
+        }
+
+        return $isReady;
+    }
+    
+    /**
+     * Check if the reserve is ready for finalize.
+     * @return boolean isReady.
+     */
+    public function isReadyForFinalize() {
+        $isReady = TRUE;
+        
+        if (!$this->getInicioArriendoOk()) {
+            $isReady = FALSE;
+        }
+
+        return $isReady;
+    }
+
+    public function save(Doctrine_Connection $conn = null) {
 
 
-				$car = Doctrine_Core::getTable('car')->findOneById($this->getCarId());	
-			$user = Doctrine_Core::getTable('user')->findOneById($car->getUserId());	
-			$ownerUserId=$user->getId();
+        $car = Doctrine_Core::getTable('car')->findOneById($this->getCarId());
+        $user = Doctrine_Core::getTable('user')->findOneById($car->getUserId());
+        $ownerUserId = $user->getId();
 
-			
-			
-	if (!$this->getToken())
-	  {
-		$this->setToken(sha1($this->getDuration().rand(11111, 99999)));
-	  }
 
-	  
-	  
- 	  if (!$this->getId() )
-	  {
-			//event to renter
-			$session = curl_init();
-			$customer_id = 'a_'.$this->getUserId(); // You'll want to set this dynamically to the unique id of the user
-			$customerio_url = 'https://track.customer.io/api/v1/customers/'.$customer_id.'/events';
-			$site_id = '3a9fdc2493ced32f26ee';
-			$api_key = '4f191ca12da03c6edca4';
-			sfContext::getInstance()->getLogger()->err($customerio_url);
-			$data = array("name" => "hizo_pedido_reserva", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId());
 
-			curl_setopt($session, CURLOPT_URL, $customerio_url);
-			curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-			curl_setopt($session, CURLOPT_HEADER, false);
-			curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($session, CURLOPT_VERBOSE, 1);
-			curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
-			curl_setopt($session, CURLOPT_POSTFIELDS,http_build_query($data));
+        if (!$this->getToken()) {
+            $this->setToken(sha1($this->getDuration() . rand(11111, 99999)));
+        }
 
-			curl_setopt($session,CURLOPT_USERPWD,$site_id . ":" . $api_key);
 
-			curl_setopt($session,CURLOPT_SSL_VERIFYPEER,false);
 
-			curl_exec($session);
-			curl_close($session);
+        if (!$this->getId()) {
+            //event to renter
+            $session = curl_init();
+            $customer_id = 'a_' . $this->getUserId(); // You'll want to set this dynamically to the unique id of the user
+            $customerio_url = 'https://track.customer.io/api/v1/customers/' . $customer_id . '/events';
+            $site_id = '3a9fdc2493ced32f26ee';
+            $api_key = '4f191ca12da03c6edca4';
+            sfContext::getInstance()->getLogger()->err($customerio_url);
+            $data = array("name" => "hizo_pedido_reserva", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId());
 
-			///event to owner
-			$session = curl_init();
-			$customer_id = 'a_'.$ownerUserId; // You'll want to set this dynamically to the unique id of the user
-			$customerio_url = 'https://track.customer.io/api/v1/customers/'.$customer_id.'/events';
-			$site_id = '3a9fdc2493ced32f26ee';
-			$api_key = '4f191ca12da03c6edca4';
-			sfContext::getInstance()->getLogger()->err($customerio_url);
-			$data = array("name" => "recibio_pedido_reserva", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId());
+            curl_setopt($session, CURLOPT_URL, $customerio_url);
+            curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($session, CURLOPT_HEADER, false);
+            curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($session, CURLOPT_VERBOSE, 1);
+            curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
+            curl_setopt($session, CURLOPT_POSTFIELDS, http_build_query($data));
 
-			curl_setopt($session, CURLOPT_URL, $customerio_url);
-			curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-			curl_setopt($session, CURLOPT_HEADER, false);
-			curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($session, CURLOPT_VERBOSE, 1);
-			curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
-			curl_setopt($session, CURLOPT_POSTFIELDS,http_build_query($data));
+            curl_setopt($session, CURLOPT_USERPWD, $site_id . ":" . $api_key);
 
-			curl_setopt($session,CURLOPT_USERPWD,$site_id . ":" . $api_key);
+            curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
 
-			curl_setopt($session,CURLOPT_SSL_VERIFYPEER,false);
+            curl_exec($session);
+            curl_close($session);
 
-			curl_exec($session);
-			curl_close($session);
+            ///event to owner
+            $session = curl_init();
+            $customer_id = 'a_' . $ownerUserId; // You'll want to set this dynamically to the unique id of the user
+            $customerio_url = 'https://track.customer.io/api/v1/customers/' . $customer_id . '/events';
+            $site_id = '3a9fdc2493ced32f26ee';
+            $api_key = '4f191ca12da03c6edca4';
+            sfContext::getInstance()->getLogger()->err($customerio_url);
+            $data = array("name" => "recibio_pedido_reserva", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId());
+
+            curl_setopt($session, CURLOPT_URL, $customerio_url);
+            curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($session, CURLOPT_HEADER, false);
+            curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($session, CURLOPT_VERBOSE, 1);
+            curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
+            curl_setopt($session, CURLOPT_POSTFIELDS, http_build_query($data));
+
+            curl_setopt($session, CURLOPT_USERPWD, $site_id . ":" . $api_key);
+
+            curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
+
+            curl_exec($session);
+            curl_close($session);
 
 //						$this->setCustomerio(true);
+        }
 
-						}
+        if ($this->getCustomerio() <= 0) {
 
-			if ( $this->getCustomerio()<=0)
-	  {
-						
-			  if ($this->getConfirmed() )
-	  {
+            if ($this->getConfirmed()) {
 
-			///event to renter
-			$session = curl_init();
-			$customer_id = 'a_'.$this->getUserId(); // You'll want to set this dynamically to the unique id of the user
-			$customerio_url = 'https://track.customer.io/api/v1/customers/'.$customer_id.'/events';
-			$site_id = '3a9fdc2493ced32f26ee';
-			$api_key = '4f191ca12da03c6edca4';
-			sfContext::getInstance()->getLogger()->err($customerio_url);
-			$data = array("name" => "pedido_reserva_aprovado", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId());
+                ///event to renter
+                $session = curl_init();
+                $customer_id = 'a_' . $this->getUserId(); // You'll want to set this dynamically to the unique id of the user
+                $customerio_url = 'https://track.customer.io/api/v1/customers/' . $customer_id . '/events';
+                $site_id = '3a9fdc2493ced32f26ee';
+                $api_key = '4f191ca12da03c6edca4';
+                sfContext::getInstance()->getLogger()->err($customerio_url);
+                $data = array("name" => "pedido_reserva_aprovado", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId());
 
-			curl_setopt($session, CURLOPT_URL, $customerio_url);
-			curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-			curl_setopt($session, CURLOPT_HEADER, false);
-			curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($session, CURLOPT_VERBOSE, 1);
-			curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
-			curl_setopt($session, CURLOPT_POSTFIELDS,http_build_query($data));
+                curl_setopt($session, CURLOPT_URL, $customerio_url);
+                curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                curl_setopt($session, CURLOPT_HEADER, false);
+                curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($session, CURLOPT_VERBOSE, 1);
+                curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
+                curl_setopt($session, CURLOPT_POSTFIELDS, http_build_query($data));
 
-			curl_setopt($session,CURLOPT_USERPWD,$site_id . ":" . $api_key);
+                curl_setopt($session, CURLOPT_USERPWD, $site_id . ":" . $api_key);
 
-			curl_setopt($session,CURLOPT_SSL_VERIFYPEER,false);
+                curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
 
-			curl_exec($session);
-			curl_close($session);
- 
-			///event to owner
-			$session = curl_init();
-			$customer_id = 'a_'.$ownerUserId; // You'll want to set this dynamically to the unique id of the user
-			$customerio_url = 'https://track.customer.io/api/v1/customers/'.$customer_id.'/events';
-			$site_id = '3a9fdc2493ced32f26ee';
-			$api_key = '4f191ca12da03c6edca4';
-			sfContext::getInstance()->getLogger()->err($customerio_url);
-			$data = array("name" => "aprobo_pedido_reserva", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId(), "data[cambioEstadoRapido]" => $this->getCambioEstadoRapido());
+                curl_exec($session);
+                curl_close($session);
 
-			curl_setopt($session, CURLOPT_URL, $customerio_url);
-			curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-			curl_setopt($session, CURLOPT_HEADER, false);
-			curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($session, CURLOPT_VERBOSE, 1);
-			curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
-			curl_setopt($session, CURLOPT_POSTFIELDS,http_build_query($data));
+                ///event to owner
+                $session = curl_init();
+                $customer_id = 'a_' . $ownerUserId; // You'll want to set this dynamically to the unique id of the user
+                $customerio_url = 'https://track.customer.io/api/v1/customers/' . $customer_id . '/events';
+                $site_id = '3a9fdc2493ced32f26ee';
+                $api_key = '4f191ca12da03c6edca4';
+                sfContext::getInstance()->getLogger()->err($customerio_url);
+                $data = array("name" => "aprobo_pedido_reserva", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId(), "data[cambioEstadoRapido]" => $this->getCambioEstadoRapido());
 
-			curl_setopt($session,CURLOPT_USERPWD,$site_id . ":" . $api_key);
+                curl_setopt($session, CURLOPT_URL, $customerio_url);
+                curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                curl_setopt($session, CURLOPT_HEADER, false);
+                curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($session, CURLOPT_VERBOSE, 1);
+                curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
+                curl_setopt($session, CURLOPT_POSTFIELDS, http_build_query($data));
 
-			curl_setopt($session,CURLOPT_SSL_VERIFYPEER,false);
+                curl_setopt($session, CURLOPT_USERPWD, $site_id . ":" . $api_key);
 
-			curl_exec($session);
-			curl_close($session);
-						$this->setCustomerio(true);
-	  
-	}	  
+                curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
 
-	 	  if ($this->getCanceled() )
-	  {
+                curl_exec($session);
+                curl_close($session);
+                $this->setCustomerio(true);
+            }
 
-			///event to renter
-			$session = curl_init();
-			$customer_id = 'a_'.$this->getUserId(); // You'll want to set this dynamically to the unique id of the user
-			$customerio_url = 'https://track.customer.io/api/v1/customers/'.$customer_id.'/events';
-			$site_id = '3a9fdc2493ced32f26ee';
-			$api_key = '4f191ca12da03c6edca4';
-			sfContext::getInstance()->getLogger()->err($customerio_url);
-			$data = array("name" => "pedido_reserva_rechazado", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId());
+            if ($this->getCanceled()) {
 
-			curl_setopt($session, CURLOPT_URL, $customerio_url);
-			curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-			curl_setopt($session, CURLOPT_HEADER, false);
-			curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($session, CURLOPT_VERBOSE, 1);
-			curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
-			curl_setopt($session, CURLOPT_POSTFIELDS,http_build_query($data));
+                ///event to renter
+                $session = curl_init();
+                $customer_id = 'a_' . $this->getUserId(); // You'll want to set this dynamically to the unique id of the user
+                $customerio_url = 'https://track.customer.io/api/v1/customers/' . $customer_id . '/events';
+                $site_id = '3a9fdc2493ced32f26ee';
+                $api_key = '4f191ca12da03c6edca4';
+                sfContext::getInstance()->getLogger()->err($customerio_url);
+                $data = array("name" => "pedido_reserva_rechazado", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId());
 
-			curl_setopt($session,CURLOPT_USERPWD,$site_id . ":" . $api_key);
+                curl_setopt($session, CURLOPT_URL, $customerio_url);
+                curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                curl_setopt($session, CURLOPT_HEADER, false);
+                curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($session, CURLOPT_VERBOSE, 1);
+                curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
+                curl_setopt($session, CURLOPT_POSTFIELDS, http_build_query($data));
 
-			curl_setopt($session,CURLOPT_SSL_VERIFYPEER,false);
+                curl_setopt($session, CURLOPT_USERPWD, $site_id . ":" . $api_key);
 
-			curl_exec($session);
-			curl_close($session);
- 
-			///event to owner
-			$session = curl_init();
-			$customer_id = 'a_'.$ownerUserId; // You'll want to set this dynamically to the unique id of the user
-			$customerio_url = 'https://track.customer.io/api/v1/customers/'.$customer_id.'/events';
-			$site_id = '3a9fdc2493ced32f26ee';
-			$api_key = '4f191ca12da03c6edca4';
-			sfContext::getInstance()->getLogger()->err($customerio_url);
-			$data = array("name" => "rechazo_pedido_reserva", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId());
+                curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
 
-			curl_setopt($session, CURLOPT_URL, $customerio_url);
-			curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-			curl_setopt($session, CURLOPT_HEADER, false);
-			curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($session, CURLOPT_VERBOSE, 1);
-			curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
-			curl_setopt($session, CURLOPT_POSTFIELDS,http_build_query($data));
+                curl_exec($session);
+                curl_close($session);
 
-			curl_setopt($session,CURLOPT_USERPWD,$site_id . ":" . $api_key);
+                ///event to owner
+                $session = curl_init();
+                $customer_id = 'a_' . $ownerUserId; // You'll want to set this dynamically to the unique id of the user
+                $customerio_url = 'https://track.customer.io/api/v1/customers/' . $customer_id . '/events';
+                $site_id = '3a9fdc2493ced32f26ee';
+                $api_key = '4f191ca12da03c6edca4';
+                sfContext::getInstance()->getLogger()->err($customerio_url);
+                $data = array("name" => "rechazo_pedido_reserva", "data[auto]" => $this->getCarId(), "data[price]" => $this->getPrice(), "data[id]" => $this->getId());
 
-			curl_setopt($session,CURLOPT_SSL_VERIFYPEER,false);
+                curl_setopt($session, CURLOPT_URL, $customerio_url);
+                curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                curl_setopt($session, CURLOPT_HEADER, false);
+                curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($session, CURLOPT_VERBOSE, 1);
+                curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
+                curl_setopt($session, CURLOPT_POSTFIELDS, http_build_query($data));
 
-			curl_exec($session);
-			curl_close($session);
-						$this->setCustomerio(true);
-	  
-	}
-						
-		
+                curl_setopt($session, CURLOPT_USERPWD, $site_id . ":" . $api_key);
 
-						
-		}
+                curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
+
+                curl_exec($session);
+                curl_close($session);
+                $this->setCustomerio(true);
+            }
+        }
 
 //	  return parent::save($conn);
 
-  $ret = parent::save($conn);
-   
+        $ret = parent::save($conn);
 
-				$percTotalContestadas=$user->getPercReservasContestadas();
-				$velocidadContestaPedidos = $user->getVelocidadRespuesta('0');
-				$CantReservasAprobadas= $user->getCantReservasAprobadasTotalOwner();
-				$q = Doctrine_Manager::getInstance()->getCurrentConnection();
-				$query = "update Car set Cant_Reservas_Aprobadas= '$CantReservasAprobadas', contesta_pedidos='$percTotalContestadas', velocidad_contesta_pedidos='$velocidadContestaPedidos' where user_id='$ownerUserId'";
+
+        $percTotalContestadas = $user->getPercReservasContestadas();
+        $velocidadContestaPedidos = $user->getVelocidadRespuesta('0');
+        $CantReservasAprobadas = $user->getCantReservasAprobadasTotalOwner();
+        $q = Doctrine_Manager::getInstance()->getCurrentConnection();
+        $query = "update Car set Cant_Reservas_Aprobadas= '$CantReservasAprobadas', contesta_pedidos='$percTotalContestadas', velocidad_contesta_pedidos='$velocidadContestaPedidos' where user_id='$ownerUserId'";
 //				$query = "update Car set Cant_Reservas_Aprobadas= $CantReservasAprobadas where user_id='$ownerUserId'";
-				$result = $q->execute($query);
+        $result = $q->execute($query);
 
 //  $this->updateLuceneIndex();
- 
-  return $ret;
 
-  }
+        return $ret;
+    }
 
 }
