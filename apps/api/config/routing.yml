@@ -5,6 +5,10 @@ userLogin:
     url: /user/login
     param: { module: user, action: login }
 
+userForgot:
+    url: /user/forgot
+    param: { module: user, action: forgot }
+
 userCurrentReserve:
     url: /user/:user_id/reserve/current
     param: { module: user, action: currentReserve }

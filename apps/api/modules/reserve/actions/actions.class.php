@@ -19,8 +19,7 @@ class reserveActions extends RestActions {
         $reserve = Doctrine::getTable('Reserve')->findOneById($request->getParameter("id"));
 
         if (!$reserve) {
-            $this->feedback = 'Unable to load the specified resource';
-            $this->setTemplate('error');
+            $this->setResponse(RestResponse::$STATUS_ERROR, RestResponse::$CODE_RESERVE_UNKNOWN, "Unknown reserve");
         } else {
             $this->object = ReserveDTO::getFromInstance($reserve);
             $this->setTemplate('object');
@@ -40,8 +39,7 @@ class reserveActions extends RestActions {
             $this->object = UserDTO::getFromInstance($reserve->getCar()->getUser());
             $this->setTemplate('object');
         } else {
-            $this->feedback = 'Unable to load the specified resource';
-            $this->setTemplate('error');
+            $this->setResponse(RestResponse::$STATUS_ERROR, RestResponse::$CODE_RESERVE_UNKNOWN, "Unknown reserve");
         }
     }
 

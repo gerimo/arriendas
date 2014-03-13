@@ -58,6 +58,19 @@ class userActions extends RestActions {
         }
     }
 
+    public function executeForgot(sfWebRequest $request) {
+        $this->forward404If($request->getMethod() != sfWebRequest::POST);
+        $this->logMessage("email: " . $request->getParameter('email'));
+        $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ?', $request->getParameter('email'));
+        $user = $q->fetchOne();
+        if (!empty($user) && !is_null($user)) {
+            $this->sendRecoverEmail($user);
+            $this->setResponse(RestResponse::$STATUS_SUCCESS, "Mail for recover sent");
+        } else {
+            $this->setResponse(RestResponse::$STATUS_ERROR, RestResponse::$CODE_USER_UNKNOWN, "Unknown user");
+        }
+    }
+
     public function executeCurrentReserve(sfWebRequest $request) {
         $userId = $request->getParameter("user_id");
 
@@ -91,6 +104,27 @@ class userActions extends RestActions {
         } else {
             $this->setResponse(RestResponse::$STATUS_ERROR, RestResponse::$CODE_USER_UNKNOWN, "Unknown user");
         }
+    }
+
+    public function sendRecoverEmail($user) {
+
+        $url = $_SERVER['SERVER_NAME'];
+        $url = str_replace('http://', '', $url);
+        $url = str_replace('https://', '', $url);
+        $url = 'http://www.arriendas.cl/main/recover?email=' . $user->getEmail() . "&hash=" . $user->getHash();
+
+        sfContext::getInstance()->getLogger()->info($url);
+        
+        $body = "<p>Hola:</p><p>Para generar una nueva contraseña, haz click <a href='$url'>aqu&iacute;</a></p>";
+        $message = $this->getMailer()->compose();
+        $message->setSubject("Recuperar Password");
+        $message->setFrom('soporte@arriendas.cl', 'Soporte Arriendas');
+        $message->setTo($user->getEmail());
+        $message->setBody($body, "text/html");
+        $this->getMailer()->send($message);
+
+        sfContext::getInstance()->getLogger()->info($body);
+        sfContext::getInstance()->getLogger()->info('mail sent');
     }
 
 }
