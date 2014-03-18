@@ -886,6 +886,10 @@ User:
       type: boolean
       notnull: true
       default: false
+    moroso:
+      type: boolean
+      notnull: true
+      default: false
     autoconfirm:
       type: boolean
       notnull: true

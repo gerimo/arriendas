@@ -2736,8 +2736,8 @@ class profileActions extends sfActions {
                 $this->garantia = 180000;
 
                 $idArrendatario = $this->reserve->getUserId();
-                $arrendatario = Doctrine_Core::getTable('user')->find($idArrendatario);
-                $this->licenseUp = $arrendatario->getDriverLicenseFile();
+                $this->arrendatario = Doctrine_Core::getTable('user')->find($idArrendatario);
+                $this->licenseUp = $this->arrendatario->getDriverLicenseFile();
             } catch (Exception $e) {
                 die($e);
             }
