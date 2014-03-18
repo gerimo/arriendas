@@ -301,8 +301,8 @@ class ReserveTable extends Doctrine_Table {
         $q = self::getInstance()->createQuery("r")
                 ->where('r.user_id = ?', $userId)
                 ->andWhere('r.date <= NOW()')
-                ->andWhere('date_add(r.date, INTERVAL r.duration HOUR) >= NOW()')
-                ->andWhere('r.inicio_arriendo_ok = ?', true);
+                ->andWhere('r.inicio_arriendo_ok = ?', true)
+                ->andWhere('r.fin_arriendo_ok = ?', false);
         return $q->execute();
     }
 
