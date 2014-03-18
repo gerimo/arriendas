@@ -5,7 +5,7 @@
 all:
   path_reserve_videos: reserve/videos
   path_reserve_images: reserve/images
-  image_size_max: 100000
+  image_size_max: 100000000
   image_size_min: 500
-  video_size_max: 500000
+  video_size_max: 200000000
   video_size_min: 1000
