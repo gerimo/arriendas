@@ -134,6 +134,9 @@ class bcpuntopagosActions extends sfActions {
                     $this->getUser()->setFlash('error', 'Debe especificar un medio de pago');
                     $this->redirect("bcpuntopagos/index?id=" . $request->getParameter("idReserva"));
                 }
+//                if($request->getParameter("pp_medio_pago") == "3"){
+//                    $this->forward("webpay","confirmPayment");
+//                }
                 if($request->getParameter("pp_medio_pago") == "20"){
                     $this->forward("paypal","confirmPayment");
                 }

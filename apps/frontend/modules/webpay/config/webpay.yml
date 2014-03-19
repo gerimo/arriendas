@@ -1,6 +1,6 @@
 settings:
   dev:
-   url: https://www.sandbox.paypal.com
+   url: http://201.238.207.131:7003/WSWebpayTransaction/cxf/WSWebpayService?wsdl
    mode: sandbox
    accountid: german-facilitator@arriendas.cl 
    username: german-facilitator_api1.arriendas.cl
@@ -11,7 +11,7 @@ settings:
    status_failure: Failure
    status_failure_warning: FailureWithWarning
   prod:
-   url: https://www.paypal.com
+   url: http://201.238.207.131:7003/WSWebpayTransaction/cxf/WSWebpayService?wsdl
    mode: live
    accountid: german@arriendas.cl
    username: german_api1.arriendas.cl

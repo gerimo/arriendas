@@ -16,6 +16,14 @@ paypalReturn:
 paypalCancel:
     url:  /paypal/processPaymentCanceled
     param:  { module: paypal, action: processPaymentCanceled }
+
+webpayReturn:
+    url:  /webpay/processPayment
+    param:  { module: webpay, action: processPayment }
+
+webpayCancel:
+    url:  /webpay/processPaymentCanceled
+    param:  { module: webpay, action: processPaymentCanceled }
  
 # default rules
 homepage:
