@@ -243,6 +243,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo"</div>";
                 echo"<div class='pagoBoton'>";
                 echo "<a href='#'>" . image_tag('img_pedidos/BotonPagar.png', 'class=botonPagar duracion_' . $reserva['duracion'] . ' id=pagar_' . $reserva['idReserve']) . "</a>";
+                echo "<a href='#'' class='detallereserva' data-type='zoomin'>[DETALLE RESERVA]</a>";
                 echo "</div>";
                 echo"</div>";
             }
@@ -316,6 +317,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo"</div>";
                 echo"<div class='pagoBoton'>";
                 echo "<a href='#'>" . image_tag('img_pedidos/BotonPagar.png', 'class=botonPagar duracion_' . $reserva['duracion'] . ' id=pagar_' . $reserva['idReserve']) . "</a>";
+                echo "<a href='#'' class='detallereserva' data-type='zoomin'>[DETALLE RESERVA]</a>";
                 echo "</div>";
                 echo"</div>";
             }
@@ -419,7 +421,61 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                                 echo"</div>";
                             }
                         }
-                        echo "<div class='masArriendos'>" . image_tag('MasAgregar.png', 'class=img_masArriendos') . " Agrega m&aacute;s reservas</div>";
+                        //echo "<div class='masArriendos'>" . image_tag('MasAgregar.png', 'class=img_masArriendos') . " Agrega m&aacute;s reservas</div>";
+                        echo "<div class='masArriendos'>";
+                        echo "<div class='titleMasAutos'>";
+                            echo "<div class='subtitle1'><p>¿AÚN SIN RESPUESTAS?</p></div>";
+                            echo "<div class='subtitle2'><p><span>TE RECOMENDAMOS AUTOS PARA LA</span> MISMA FECHA Y HORA</p></div>";
+                        echo "</div>";
+
+//Comienzo autos recomendados
+
+    echo "<div id='contenedorRecomenderCars'>";
+        echo "<form>";
+        $i = 1;
+        foreach ($cars as $c):
+            
+            echo "<div class='div_car_recomender' id='".$c["id"]."'>";
+                echo "<div class='marcador_car_recomender'>";
+                    echo "<input class= 'marcador' type='checkbox' name='carRecomender' value='car_".$c["id"]."'/>";
+                echo "</div>";
+                echo "<div class='photo_car_recomender'>";
+                        if ($c["photo"] != NULL){ 
+                            if($c["photoType"] == 1) {
+                                echo "<img class='photo' width='74px' height='56px' src='".url_for('main/s3thumb')."'?alto=64&ancho=64&urlFoto='".urlencode($c['photo'])."'/>";
+                            }else{
+                                echo "<img class='photo' width='74px' height='56px' src='".image_path('../uploads/cars/thumbs/'.urlencode($c['photo']))."'/>";
+
+                            }
+                        }else{
+                            echo image_tag('default.png', 'size=74x56', 'class=photo');
+                        }
+                echo "</div>";
+                echo "<ul class='info_car_recomender'>";
+                    echo "<input type='hidden' class='link' value='".url_for('auto/economico?chile='.$c["comuna"] .'?id=' . $c["id"])."'/>";
+                    echo "<li class='marca_modelo'>".'<a target="_blank" title="Ir al perfil del auto" href="'.url_for('auto/economico?chile=' . $c["comuna"].'&id='. $c["id"]).'">'.$c["brand"].", ".$c["model"]."</a>";
+                    echo "</li>";
+                    echo "<li class='stars'>";
+                    echo "<script type='text/javascript'>
+                            var numStars = Math.floor((Math.random()*5)+1);
+                            generarBarraEstrellas(numStars);
+                          </script>";
+                    echo "</li>";
+                    echo "<li class='direccionCar'>".ucwords(strtolower($c["comuna"])).", Santiago</li>";
+                echo "</ul>";
+                echo "<ul class='valor_car_recomender'>";
+                    echo "<li class='valor'>$30.000</li>";
+                    echo "<li class='tiempoAsegurado'>(1 día y 5 horas asegurado)</li>";
+                echo "</ul>";
+            echo "</div>";
+            $i++;
+        endforeach;
+        echo "</form>";
+    echo "</div>";
+    echo "<div id='contenedorBtnReservarTodos'><button id='btnReservarTodos' title='Reservar todos los autos'></button></div>";
+
+//Fin autos recomendados
+                        
                         ?>
                         <!-- fin contenido del acordeón -->
                     </div>
@@ -890,3 +946,4 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
     <?php if ($mostrarBarra) { ?>
     </div>
     <?php } ?>
+

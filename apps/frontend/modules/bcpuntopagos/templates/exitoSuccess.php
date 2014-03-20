@@ -35,7 +35,10 @@ var google_conversion_value = 0;
   margin-right: 10px;
 }
 #contenido p{
-  font-size: 15px;
+  font-size: 13px;
+  margin-top: 15px;
+  float: left;
+  width: 100%;
 }
 #contenido a{
   font-size: 15px;
@@ -47,26 +50,60 @@ var google_conversion_value = 0;
 
   	    <?php include_component('profile', 'profile') ?>
 
-        <div class="main_contenido">
+        <div class="main_contenido" style="height: 740px;">
            <div class="barraSuperior">
             <p>PAGO EXITOSO</p>
             </div>
             
             <div id='contenido'>
 <center>
-            <b style="color:#EC008C;font-size:16px;text-align:center;">TU PAGO SE RECIBIÓ EXITOSAMENTE!</b></center>
+            <b style="color:#EC008C;font-size:18px;text-align:center;display: block;margin-top: 30px;">¡TU PAGO SE RECIBIÓ EXITOSAMENTE!</b></center>
+            <div style="width:96%;height:2px;border-bottom:1px solid #EC008C;margin-left:10px;margin-top: 10px;"></div>
+            <!--
             <br>
             <p>Antes y despu&eacute;s de realizar la reserva, debes firmar el <a href='http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/tokenReserve/<?php echo $tokenReserve; ?>' target='_blank'>informe de da&ntilde;os impreso</a>, o <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/<?php echo $idReserva; ?>' target='_blank'>completarlo desde tu celular</a>.</p>
             <br>
+            -->
 			<br>
 
-			<p style="font-size: 15px;"><center style="font-size: 15px;"><b style="color:#EC008C;font-size: 15px">Datos del due&ntilde;o del auto</b><br><br>Nombre: <?php echo $nameOwner ?> <?php echo $lastnameOwner ?><br>Teléfono: <?php echo $telephoneOwner ?><br>Correo: <?php echo $emailOwner ?></p>
-			</center><br> <br>
-			<p style="font-size: 15px;font-weight:bold;">Te hemos enviado estos datos a tu correo.</p>
- 			<p><a href="<?php echo url_for("profile/pedidos")?>" class="botonSiguiente" title="Ver Reservas"></a>
+      <div style="display:block;width: 100%;height: 210px;">
+        <div style="display:block;float: left;margin-left: 40px;margin-top: 40px;">
+          <!-- Imagen de auto sólo utilizada para el desarrollo -->
+          <?php echo image_tag('http://res.cloudinary.com/arriendas-cl/image/fetch/w_185,h_185,c_fill,g_center/http://arriendas.cl/uploads/cars/13941179554095.jpg', array("width"=>"130","height"=>"130")) ?>
+        </div>
+        <div style="display:block;width: 300px;height: 180px;float: left;margin-left: 20px;margin-top: 20px;">
+          <div style="display:block;width: 230px;border-bottom: 1px solid #B7B7B7;color:#27abe2;font-size: 16px;font-style: italic;padding-bottom: 5px;">Datos del dueño</div>
+          <div style="font-size:13px;color:black;">
+            <p>Nombre | <b><?=$nameOwner?> <?=$lastnameOwner?></b></p>
+            <!-- Dirección sólo utilizada para el desarrollo -->
+              <div style="float:left;margin-top: 15px;">Dirección |</div>
+              <div style="float:left;width: 220px;margin-left: 4px;margin-top: 15px;"><b>Los Pescadores del Cardenal Raúl Silva Henríquez 2222,Providencia</b></div>
+            <p>Fono | <b>(+569) <?=$telephoneOwner?></b></p>
+            <p>Correo | <b><?=$emailOwner?></b></p>
+          </div>
+        </div>
+      </div>
+
+			<p style="font-size: 12px;font-weight:bold;color:#a2a2a2;text-align:center;line-height: 1.4em">* Te hemos enviado estos datos a tu correo junto con el contrato<br> y el formulario que deberás firmar para poder retirarlo.</p>
+
+      <div style="display: block;margin: 0 auto;width: 400px;height: 290px;margin-top: 110px;">
+        <?php echo image_tag('puntopagos/20140213 Graf_Pantalla_pago_-02.png', array("width"=>"27","height"=>"27","style"=>"float:left;")) ?>
+        <div style="display:block;width: 90%;border-bottom:1px solid #EC008C;color:#EC008C;font-size: 17px;float: left;margin-top: 3px;font-weight: bold;margin-left: 10px;padding-bottom: 5px;">PARA ACCEDER A TU SEGURO</div>
+
+        <div style="display:block;width: 362px;height: 250px;float:left;margin-top: 20px;margin-left: 10px;">
+
+          <?php echo image_tag('puntopagos/20140213 Graf_Pantalla_pago_-04.png', array("width"=>"17","height"=>"16","style"=>"float:left;margin-top: 7px;")) ?>
+          <div style="float:left;width: 336px;border-bottom:1px solid black;padding-bottom: 10px;margin-left: 8px;font-size: 12px;font-weight: bold;line-height: 1.2em;">En caso de siniestro debes realizar la constancia en Carabineros de inmediato.</div>
+
+          <?php echo image_tag('puntopagos/20140213 Graf_Pantalla_pago_-04.png', array("width"=>"17","height"=>"16","style"=>"float:left;margin-top: 14px;")) ?>
+          <div style="float:left;width: 336px;margin-left: 8px;font-size: 12px;font-weight: bold;margin-top: 10px;line-height: 1.2em;">Al retirar y devolver el auto debes firmar el <span style="color:#00adee">Formulario de Entrega y Devolución.</span></div>
+          <?php echo image_tag('puntopagos/20140213 Graf_Pantalla_pago_-03.png', array("width"=>"295","height"=>"75","title"=>"Haz click para descargar formulario","style"=>"margin-top: 35px;margin-left: 35px;cursor:pointer;")) ?>
+          <a href="<?php echo url_for("profile/pedidos")?>" title="Finalizar" style="color:#00adee;text-decoration:none;font-size: 18px;text-align:center;margin-top: 40px;margin-left: 144px;float: left;">Finalizar</a>
+        </div>
+      </div>
 			</div>
       	</div> 
 
-        <?php include_component('profile', 'colDer') ?>
+        <?php //include_component('profile', 'colDer') ?>
   </div>		
 </div>

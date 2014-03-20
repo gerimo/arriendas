@@ -27,23 +27,21 @@
     </div><!-- main_box_2 -->
 </div>
 
-<div class='overlay-container'>
-    <div class='window-container zoomin'>
-	    <span title='Cerrar Ventana' class='close'>X</span>
-	    <div class='contenedorPopup'>
-	    	<div class='titlePopup'>DETALLES PETICIÓN DE RESERVA NºXXXXXXX</div>
-	    	<div class='detallesPopup'>DETALLE AUTO |</div>
-	    		<div class='datosDetalles'><div class='nombre'>Nombre: <span>Francisca Cofré</span></div><div class='rut'>RUT: 16367816-0</div><div class='comuna'>Comuna: Las Condes</div></div>
-	    	<div class='kmsPopup'><p>KMS APRÓX |</p><div class='kilometros'><span>0</span><span>0</span><span>0</span><span>4</span><span>0</span></div></div>
-	    	<div class='motivosPopup'><p><span>MOTIVO DE ARRIENDO |</span> Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto, Cadena de texto....<p></div>
-	    	<div class='arriendoPopup'><p>ARRIENDO |</p>
-	    		<div class='datosArriendo'>
-	    			<div class='desde'>DESDE: 19/12/2013 - 10:00</div>
-	    			<div class='hasta'>HASTA: 19/12/2013 - 21:00</div>
-	    		</div>
+<div class='overlay-containerLogin'>
+	<span title='Cerrar Ventana' class='close'>x</span>
+    <div class='window-containerLogin zoomin'>
+    	<div class="title">INGRESAR</div>
+	    <div class='contenedorPopupLogin'>
+	    	<div class="loginFB">
+	    		<div class="tagTitle">Iniciar sesión con Facebook</div>
 	    	</div>
-	    	<div class='valorPopup'><p>11<span class='pequeno'>HRS</span> = <span class='celeste'>VALOR $20.000</span></p></div>
-	    	<div class='preaprobarPopup'><button class='btn_preAprobar'></button></div>
+	    	<div class="separadorLogin"></div>
+	    	<div class="loginCuenta">
+	    		<div class="tagTitle">Iniciar sesión con tu Usuario</div>
+	    		<input type="text" placeholder="USUARIO" name="inputUserName" />
+	    		<input type="password" placeholder="CONTRASEÑA" name="inputPass" />
+	    	</div>
 	    </div>
+	    <div class="pieDePopup"></div>
     </div>
 </div>

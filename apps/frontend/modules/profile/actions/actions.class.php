@@ -1903,7 +1903,137 @@ class profileActions extends sfActions {
             Realiza múltiples reservas hasta recibir una aprobación.  
             Además, recibirás ofertas de otros dueños. <a href="' . $url . '">Siguiente</a>');
         $this->idReserve = $idReserve = $request->getParameter('id');
-        ;
+        
+        /////////////////////////// QUERY SÓLO PARA TESTING AUTOS RECOMENDADOS HTML Y CSS
+        $q = Doctrine_Query::create()
+            ->select('DISTINCT ca.id, av.id idav , mo.name modelo, br.name brand, ca.photoS3 photoS3, ca.address address, ci.name city, st.name state, co.name country,ca.price_per_day priceday, ca.price_per_hour pricehour')
+            ->from('Car ca')
+            ->innerJoin('ca.Availabilities av')
+            ->innerJoin('ca.Model mo')
+            ->leftJoin('ca.Reserves re')
+            ->innerJoin('mo.Brand br')
+            ->innerJoin('ca.City ci')
+            ->innerJoin('ci.State st')
+            ->innerJoin('st.Country co')
+            ->where('ca.activo = ?', 1)
+            ->andWhere('ca.id = 396742 OR ca.id = 396929 OR ca.id = 397040 OR ca.id = 396394') //Autos sólo para testeos
+            ->andWhereIn('ca.seguro_ok', array(3,4));
+        $cars = $q->execute();
+        
+        $data = array();
+        $carsid = Array();
+
+        foreach ($cars as $car) {
+
+        sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
+            $photo = $car->getFoto();
+
+            $has_reserve = false;
+
+            $urlUser = $this->getPhotoUser($car->getUser()->getId());
+
+            $user = $car->getUser();
+            $reservasRespondidas = $user->getReservasContestadas_aLaFecha();
+            $velocidad = $user->getVelocidadRespuesta_mensajes();
+            $transmision = "-";
+            $tipoTrans = $car->getTransmission();
+            if($tipoTrans == 1) $transmision = "Manual";
+            if($tipoTrans == 0) $transmision = "Autom&aacute;tica";
+            
+            if (!$has_reserve) {
+                $data[] = array('id' => $car->getId(),
+                    'idav' => $car->getIdav(),
+                    'longitude' => $car->getlng(),
+                    'latitude' => $car->getlat(),
+                    'comuna' => strtolower($car->getNombreComuna()),
+                    'brand' => $car->getBrand(),
+                    'model' => $car->getModelo(),
+                    'address' => $car->getAddress(),
+                    'year' => $car->getYear(),
+                    'photo' => $photo,
+                    'photoType' => $car->getPhotoS3(),
+                    'username' => ucwords(current(explode(' ' , $car->getUser()->getFirstname()))) . " " . ucwords(current(explode(' ' , $car->getUser()->getLastname()))),
+                    'firstname' => ucwords(current(explode(' ' ,$car->getUser()->getFirstname()))),
+                    'lastname' => ucwords(substr($car->getUser()->getLastName(), 0, 1)).".",
+                    'price_per_hour' => $this->transformarPrecioAPuntos(floor($car->getPricePerHour())),
+                    'price_per_day' => $this->transformarPrecioAPuntos(floor($car->getPricePerDay()))
+                );
+            }
+        }//end foreach
+        $this->cars = array_reverse($data); //cars
+        $this->reserveDateFrom = "7/12/2013 10:00"; //date from reserve
+        $this->reserveDateTo = "8/12/2013 15:00"; //date to reserve
+/////////////////////////////////////////////// FIN TESTING AUTOS RECOMENDADOS
+
+        
+    }
+    
+    public function getPhotoUser($idUser){
+        $claseUsuario = Doctrine_Core::getTable('user')->findOneById($idUser);
+        if($claseUsuario->getFacebookId()!=null && $claseUsuario->getFacebookId()!=""){
+          $urlFoto = $claseUsuario->getPictureFile();
+        }else{
+          if($claseUsuario->getPictureFile()!=""){
+            $urlPicture = $claseUsuario->getPictureFile();
+            $urlPicture = explode("/", $urlPicture);
+            $urlPicture = $urlPicture[count($urlPicture)-1];
+            $urlFoto = "http://www.arriendas.cl/images/users/".$urlPicture;
+          }else{
+            $urlFoto = "http://www.arriendas.cl/images/img_calificaciones/tmp_user_foto.jpg";
+          }
+        }
+        return $urlFoto;
+    }
+
+    public function transformarPrecioAPuntos($precio){
+        $precioMillones = intval($precio/1000000);
+        $precioMiles = $precio - ($precioMillones*1000000);
+        $precioMiles = intval($precioMiles/1000);
+        $precioCientos = $precio - ($precioMiles*1000);
+        $precioResultado = "";
+        if($precioMillones == 0){
+            if($precioMiles == 0){
+                $precioResultado = $precioCientos;
+            }else{
+                if($precioCientos == 0){
+                    $precioResultado = $precioMiles.".000";
+                }else{
+                    $cantidadDeCientos = strlen($precioCientos);
+                    if($cantidadDeCientos == 1) $precioResultado = $precioMiles.".00".$precioCientos;
+                    else if($cantidadDeCientos == 2) $precioResultado = $precioMiles.".0".$precioCientos;
+                    else $precioResultado = $precioMiles.".".$precioCientos;
+                }
+            }
+        }else{
+            if($precioMiles == 0){
+                if($precioCientos == 0){
+                    $precioResultado = $precioMillones.".000.000";
+                }else{
+                    $cantidadDeCientos = strlen($precioCientos);
+                    if($cantidadDeCientos == 1) $precioResultado = $precioMillones.".000.00".$precioCientos;
+                    else if($cantidadDeCientos == 2) $precioResultado = $precioMillones.".000.0".$precioCientos;
+                    else $precioResultado = $precioMillones.".000.".$precioCientos;
+                }
+            }else{
+                $cantidadDeMiles = strlen($precioMiles);
+                $cantidadDeCientos = strlen($precioCientos);
+                if($cantidadDeMiles == 1){
+                    if($cantidadDeCientos == 1) $precioResultado = $precioMillones.".00".$precioMiles.".00".$precioCientos;
+                    else if($cantidadDeCientos == 2) $precioResultado = $precioMillones.".00".$precioMiles.".0".$precioCientos;
+                    else $precioResultado = $precioMillones.".00".$precioMiles.".".$precioCientos;
+                }else if($cantidadDeCientos == 2){
+                    if($cantidadDeCientos == 1) $precioResultado = $precioMillones.".0".$precioMiles.".00".$precioCientos;
+                    else if($cantidadDeCientos == 2) $precioResultado = $precioMillones.".0".$precioMiles.".0".$precioCientos;
+                    else $precioResultado = $precioMillones.".0".$precioMiles.".".$precioCientos;
+                }else{
+                    if($cantidadDeCientos == 1) $precioResultado = $precioMillones.".".$precioMiles.".00".$precioCientos;
+                    else if($cantidadDeCientos == 2) $precioResultado = $precioMillones.".".$precioMiles.".0".$precioCientos;
+                    else $precioResultado = $precioMillones.".".$precioMiles.".".$precioCientos;
+                }
+            }
+        }
+
+        return $precioResultado;
     }
 
     public function executeDoSaveCar(sfWebRequest $request) {
@@ -3528,6 +3658,67 @@ class profileActions extends sfActions {
                 $reservasRealizadasNoOportunidadesAux[$key] = $reserva;
             }
         }
+        
+        /////////////////////////// QUERY SÓLO PARA TESTING AUTOS RECOMENDADOS HTML Y CSS
+        $q = Doctrine_Query::create()
+            ->select('DISTINCT ca.id, av.id idav , mo.name modelo, br.name brand, ca.photoS3 photoS3, ca.address address, ci.name city, st.name state, co.name country,ca.price_per_day priceday, ca.price_per_hour pricehour')
+            ->from('Car ca')
+            ->innerJoin('ca.Availabilities av')
+            ->innerJoin('ca.Model mo')
+            ->leftJoin('ca.Reserves re')
+            ->innerJoin('mo.Brand br')
+            ->innerJoin('ca.City ci')
+            ->innerJoin('ci.State st')
+            ->innerJoin('st.Country co')
+            ->where('ca.activo = ?', 1)
+            ->andWhere('ca.id = 396742 OR ca.id = 397040 OR ca.id = 396394') //Autos sólo para testeos
+            ->andWhereIn('ca.seguro_ok', array(3,4));
+        $cars = $q->execute();
+        
+        $data = array();
+        $carsid = Array();
+
+        foreach ($cars as $car) {
+
+        sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
+            $photo = $car->getFoto();
+
+            $has_reserve = false;
+
+            $urlUser = $this->getPhotoUser($car->getUser()->getId());
+
+            $user = $car->getUser();
+            $reservasRespondidas = $user->getReservasContestadas_aLaFecha();
+            $velocidad = $user->getVelocidadRespuesta_mensajes();
+            $transmision = "-";
+            $tipoTrans = $car->getTransmission();
+            if($tipoTrans == 1) $transmision = "Manual";
+            if($tipoTrans == 0) $transmision = "Autom&aacute;tica";
+            
+            if (!$has_reserve) {
+                $data[] = array('id' => $car->getId(),
+                    'idav' => $car->getIdav(),
+                    'longitude' => $car->getlng(),
+                    'latitude' => $car->getlat(),
+                    'comuna' => strtolower($car->getNombreComuna()),
+                    'brand' => $car->getBrand(),
+                    'model' => $car->getModelo(),
+                    'address' => $car->getAddress(),
+                    'year' => $car->getYear(),
+                    'photo' => $photo,
+                    'photoType' => $car->getPhotoS3(),
+                    'username' => ucwords(current(explode(' ' , $car->getUser()->getFirstname()))) . " " . ucwords(current(explode(' ' , $car->getUser()->getLastname()))),
+                    'firstname' => ucwords(current(explode(' ' ,$car->getUser()->getFirstname()))),
+                    'lastname' => ucwords(substr($car->getUser()->getLastName(), 0, 1)).".",
+                    'price_per_hour' => $this->transformarPrecioAPuntos(floor($car->getPricePerHour())),
+                    'price_per_day' => $this->transformarPrecioAPuntos(floor($car->getPricePerDay()))
+                );
+            }
+        }//end foreach
+        $this->cars = array_reverse($data); //cars
+        $this->reserveDateFrom = "7/12/2013 10:00"; //date from reserve
+        $this->reserveDateTo = "8/12/2013 15:00"; //date to reserve
+/////////////////////////////////////////////// FIN TESTING AUTOS RECOMENDADOS
 
         $this->fechaReservasRealizadas = $fechaReservasRealizadas;
         $this->reservasRealizadas = $reservasRealizadasNoOportunidadesAux;
@@ -3811,7 +4002,7 @@ class profileActions extends sfActions {
         $this->partes = $this->partesAuto();
         $this->nombresPartes = $this->nombrePartesAuto();
 
-
+        $this->fotosPartes = array();
         if ($idCar != "") {
 
             sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
@@ -3857,8 +4048,6 @@ class profileActions extends sfActions {
             $this->auto = $claseCar;
 
             //Cargamos las fotos por defecto de los autos
-            $this->fotosPartes = array();
-
             $photoCounter = $this->photoCounter();
         } else {
             $this->car = null;

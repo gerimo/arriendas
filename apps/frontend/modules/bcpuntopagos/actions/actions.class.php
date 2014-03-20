@@ -263,6 +263,14 @@ class bcpuntopagosActions extends sfActions {
                 $last_order_id = $token2;
             }
 
+            //solo para desarrollo, usaré una id_order estatica:
+            //$last_order_id = "b6985da40186ebd1c015e10a53e857a6b94875c6";
+            $last_order_id = '92';
+            $token = '454545';
+            $STATE_SUCCESSFULL = '1';
+
+
+            
             $order = Doctrine_Core::getTable("Transaction")->getTransaction($last_order_id);
 
             $this->idReserva = $order->getReserveId();

@@ -12,39 +12,39 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 ?>
 
 <script type="text/javascript">
-    var urlEliminarPedidosAjax = <?php echo "'".url_for("profile/eliminarPedidosAjax")."';" ?>
-    var urlCambiarEstadoPedido = <?php echo "'".url_for("profile/cambiarEstadoPedidoAjax")."';" ?>
-    var urlEditarFecha = <?php echo "'".url_for("profile/editarFechaPedidosAjax")."';" ?>
-    var urlPedidos = <?php echo "'".url_for("profile/pedidos")."';" ?>
-    var urlPago = <?php echo "'".url_for("profile/fbDiscount")."';" ?>
-    var urlPagoValidar = <?php echo "'".url_for("profile/checkCanPay")."';" ?>
-    var urlExtenderReserva = <?php echo "'".url_for("profile/extenderReservaAjax")."';" ?>
-    var urlRefreshPedidos = <?php echo "'".url_for("profile/pedidosAjax")."';" ?>
+var urlEliminarPedidosAjax = <?php echo "'".url_for("profile/eliminarPedidosAjax")."';" ?>
+var urlCambiarEstadoPedido = <?php echo "'".url_for("profile/cambiarEstadoPedidoAjax")."';" ?>
+var urlEditarFecha = <?php echo "'".url_for("profile/editarFechaPedidosAjax")."';" ?>
+var urlPedidos = <?php echo "'".url_for("profile/pedidos")."';" ?>
+var urlPago = <?php echo "'".url_for("profile/fbDiscount")."';" ?>
+var urlPagoValidar = <?php echo "'".url_for("profile/checkCanPay")."';" ?>
+var urlExtenderReserva = <?php echo "'".url_for("profile/extenderReservaAjax")."';" ?>
+var urlRefreshPedidos = <?php echo "'".url_for("profile/pedidosAjax")."';" ?>
 </script>
 
 <div class="main_box_1">
-    <div class="main_box_2">
+<div class="main_box_2">
 
 
-        <?php include_component('profile', 'profile') ?>
+<?php include_component('profile', 'profile') ?>
 
-        <!--  contenido de la seccion -->
-        <div class="main_contenido" id="pedidos">
-            <?php include_partial('pedidos', array(
+<!-- contenido de la seccion -->
+<div class="main_contenido" id="pedidos">
+<?php include_partial('pedidos', array(
                 'reservasRealizadas' => $reservasRealizadas,
                 'reservasRecibidas' => $reservasRecibidas,
                 'reservasRecibidasOportunidades' => $reservasRecibidasOportunidades,
                 'fechaReservasRealizadas' => $fechaReservasRealizadas)); ?>
 
-        </div><!-- main_contenido -->
+</div><!-- main_contenido -->
 
-        <?php include_component('profile', 'colDer') ?>  
+<?php include_component('profile', 'colDer') ?>
 
-        <div class="clear"></div>
-    </div><!-- main_box_2 -->
+<div class="clear"></div>
+</div><!-- main_box_2 -->
 </div>
 <script>
 function redireccion() {
-    document.location.href="<?php echo url_for('profile/edit?redirect=pedidos'); ?>";
+document.location.href="<?php echo url_for('profile/edit?redirect=pedidos'); ?>";
 }
 </script>

@@ -1,4 +1,3 @@
-
 <?php use_stylesheet('registro.css') ?>
 <?php use_stylesheet('comunes.css') ?>
 
@@ -22,8 +21,6 @@
 
 <!--  contenido de la seccion -->
 <div class="main_contenido">
-
-
 <?php include_partial('profile/car2', array('car' => $car,'brand' => $brand, 'comunas'=>$comunas, 'urlAbsoluta'=>$urlAbsoluta,'rutaArchivo'=>$rutaArchivo, "partes"=>$partes,"nombresPartes"=>$nombresPartes, 'auto' => $auto, "id" => $idAuto, "fotosPartes"=>$fotosPartes)) ?>
 
 
