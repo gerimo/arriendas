@@ -392,3 +392,10 @@ input{
 	font-weight: bold;
 	margin-left: 10px;
 }
+.mitad{
+	float: left;
+	width: 260px;
+	height: 70px;
+	margin-left: 105px;
+	text-align: center;
+}

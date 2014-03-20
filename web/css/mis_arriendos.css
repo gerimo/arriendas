@@ -129,8 +129,17 @@ h3 a{
     margin-left: -10px;
     padding: 5px;
     text-align: center;
-    width: 67px;
+    width: 90px;
 }
+    .pagoBoton a.detallereserva{
+        color: #ec008c;
+        text-decoration: none;
+        border-bottom: 1px solid #ec008c;
+        font-size: 8px;
+        margin-top: 8px;
+        position: absolute;
+        margin-left: -31px;
+    }
 
 .eventoReserva {
     float: left;
@@ -345,18 +354,48 @@ h3 a{
 }
 
 .masArriendos {
-    background-color: #F0D7E6;
+    background-color: #fdf1f7;
     float: right;
-    height: 27px;
+    min-height: 40px;
     margin-right: 10px;
     padding-top: 8px;
-    text-align: center;
+    text-align: left;
     width: 410px;
-    color: #EC008C;
-    font-weight: bold;
-    text-decoration: none;
     font-size: 11px;
 }
+.titleMasAutos{
+    float: left;
+    height: 35px;
+    margin-left: 10px;
+    color: #EC008C;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.subtitle1{
+    float: left;
+    width: 180px;
+    height: 30px;
+    font-size: 14px;
+}
+.subtitle1 p{
+    margin-top: 8px;
+}
+.subtitle2{
+    float: left;
+    width: 214px;
+    height: 30px;
+    margin-left: 5px;
+    font-size: 10px;
+}
+.subtitle2 p{
+    margin-top: 5px;
+}
+.subtitle2 span{
+    font-weight: normal;
+}
+
+
 
 .img_masArriendos {
     vertical-align: -35%;
@@ -503,4 +542,103 @@ div.time-picker{z-index: 1100;}
 }
 .nombreMovil{
     display: none;
+}
+
+#contenedorRecomenderCars{
+    width: 390px;
+    display: table;
+    margin: auto;
+    margin-top: 20px;
+}
+.div_car_recomender{
+    width: 400px;
+    margin-left: 10px;
+    float: left;
+    height: 76px;
+    padding-top: 12px;
+    border-top: 1px solid rgb(180, 177, 177);
+}
+.marcador_car_recomender{
+    float: left;
+}
+.marcador{
+    margin-top: 28px;
+    float: left;
+}
+.photo_car_recomender{
+    float: left;
+    width: 82px;
+    height: 64px;
+    margin-left: 20px;
+    -webkit-box-shadow: 0px 0px 9px rgba(50,50,50,0.32);
+    -moz-box-shadow: 0px 0px 9px rgba(50,50,50,0.32);
+    box-shadow: 0px 0px 9px rgba(50,50,50,0.32);
+}
+.photo{
+    padding-left: 4px;
+    padding-top: 4px;
+}
+.info_car_recomender{
+    float: left;
+    text-align: left;
+    width: 156px;
+    height: 70px;
+    margin-left: 15px;
+}
+.info_car_recomender li{
+    margin-top: 5px;
+}
+.info_car_recomender .marca_modelo a{
+    text-decoration: none;
+    color: #00AEEF;
+    font-weight: bold;
+    font-size: 14px;
+}
+.info_car_recomender .direccionCar{
+    font-size: 11px;
+    font-style: italic;
+}
+li.stars{
+    margin-top: 7px;
+}
+li.direccionCar{
+    margin-top: 8px;
+}
+.valor_car_recomender{
+    float: left;
+    width: 98px;
+    height: 60px;
+    margin-left: 10px;
+    text-align: center;
+    padding-top: 12px;
+}
+li.valor{
+    float: left;
+    width: 90px;
+    height: 25px;
+    font-size: 19px;
+}
+li.tiempoAsegurado{
+    float: left;
+    width: 90px;
+    height: 32px;
+    font-size: 10px;
+    margin-top: 0px;
+}
+div#contenedorBtnReservarTodos{
+    width: 100%;
+    background-color: white;
+    float: left;
+}
+button#btnReservarTodos{
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    width: 190px;
+    height: 71px;
+    background-image: url("../images/img_search/RecomedarTodos.png");
+    cursor: pointer;
+    float: left;
+    margin-left: 108px;
+    background-color: white;
 }

@@ -568,7 +568,186 @@ $html  .='
 ';
 //    $request->setParameter("idAuto",$idAuto);
 //    $html=$controller->getPresentationFor("main","informeDanios");
-    $pdf->WriteHTML($html,0);
+
+    $htmlNew = '<html>
+<head>
+<style>
+#contenidoHeader{
+    float: left;
+    width: 94%;
+    height: 40px;
+    margin-top: 20px;
+    margin-left: 30px;
+}
+    #contenidoHeader #logoArriendas{
+        float: left;
+        width: 245px;
+        height: 55px;
+    }
+    #contenidoHeader #fechaArriendo{
+        float: right;
+        width: 300px;
+        height: 40px;
+        font-size: 19px;
+        text-align: right;
+    }
+#contenido{
+    float: left;
+    width: 100%;
+    height: 1180px;
+}
+    #contenido #capaPresentacion{
+        float: left;
+        width: 90%;
+        height: 110px;
+        margin-left: 30px;
+        margin-top: 20px;
+        font-size: 12px;
+        padding-top: 10px;
+    }
+    #contenido #capaPresentacion p{
+        float: left;
+        width: 100%;
+        text-align: left;
+        font-size: 17px;
+        margin-top: -6px;
+    }
+    #contenido #capaNumeros{
+        float: right;
+        width: 90%;
+        height: 100px;
+        margin-right: 30px;
+    }
+        #contenido #capaNumeros #contenedorCapaNum{
+            float: right;
+            width: 300px;
+            font-size: 20px;
+            text-align: left;
+            padding-top: 20px;
+        }
+            #contenido #capaNumeros #contenedorCapaNum p{
+                float: left;
+                margin-top: -10px;
+            }
+    #contenido #datosUsuarioCorreo{
+        float: left;
+        width: 90%;
+        height: 190px;
+        margin-left: 30px;
+        padding-top: 20px;
+    }
+        #contenido #datosUsuarioCorreo p{
+            float: left;
+            margin-top: -10px;
+            width: 100%;
+            text-align: left;
+            font-size: 20px;
+            margin-left: 20px;
+        }
+    #contenido #personasArriendo{
+        float: left;
+        width: 90%;
+        height: 100px;
+        margin-left: 30px;
+        padding-top: 20px;
+    }
+        #contenido #personasArriendo p{
+            float: left;
+            margin-top: -10px;
+            width: 100%;
+            text-align: left;
+            font-size: 20px;
+            margin-left: 20px;
+        }
+    #contenido #tablaResumenArriendo{
+        float: left;
+        width: 94%;
+        height: 120px;
+        margin-left: 30px;
+        padding-top: 20px;
+        margin-top: 30px;
+    }
+        #contenido #tablaResumenArriendo table#contenidoTablaResumenArriendo{
+            margin: 0px;
+            padding: 0px;
+            border: 0px;
+            font-size: 19px;
+            margin-left: 20px;
+        }
+            #contenido #tablaResumenArriendo table#contenidoTablaResumenArriendo td{
+               width: 172px;
+                height: 40px;
+                border: 2px solid black;
+                padding-left: 10px;
+            }
+#contenidoFooter{
+    float: left;
+    width: 100%;
+    height: 80px;
+}
+</style>
+    
+</head>
+<body>
+<div id="contenedorReporte" style="background-color: white; text-align: center; margin: 0px auto; width: 1020px; margin-top: 10px; /*border:1px solid black;*/height:1320px;font-family:Arial">
+    <div id="contenidoHeader">
+        <div id="logoArriendas"><img src="http://devel.arriendas.cl/blog/wp-content/uploads/2013/02/LogoArriendas1.png" "width=244" "height=71" style="margin-top: -30px;margin-left: -40px;" /></div>
+        <div id="fechaArriendo">Fecha de Emisión | <span style="font-weight:bold">03/01/14</span></div>
+    </div>
+    <div id="contenido">
+        <div id="capaPresentacion">
+            <p>RIMOLDI SPA</p>
+            <p>PROGRAMA DE ARRIENDO DE AUTOS ENTRE PARTICULARES</p>
+            <p>ENCOMENDEROS 253 OF-12, LAS CONDES</p>
+        </div>
+        <div id="capaNumeros">
+            <div id="contenedorCapaNum">
+                <p>Nº RESERVA: <span id="numReserva">XXXXXXXXXX</span></p>
+                <p>Nº TRANSACCIÓN: <span id="numTransaccion">XXXXXXXXX</span></p>
+            </div>
+        </div>
+        <div id="datosUsuarioCorreo">
+            <p>SEÑOR(ES): <span id="nombreUsuario">María Jesús</span> <span id="apellidoUsuario">Dodds Figueroa</span></p>
+            <p>RUT: <span id="rutUsuario">15345754-k</span></p>
+            <p>GIRO: <span id="tipoGiro">Otras Actividades de Servicios Personales</span></p>
+            <p>DIRECCIÓN: <span id="direccionUsuario">El Comendador 276</span></p>
+            <p>COMUNA: <span id="comunaUsuario">Providencia</span>   CIUDAD: <span id="ciudadUsuario">Santiago</span></p>
+        </div>
+        <div id="personasArriendo">
+            <p>DUEÑO DE AUTO: <span id="nombreDuenioAuto">XXXXXX</span> <span id="apellidoDuenioAuto">XXXXXXXX</span></p>
+            <p>ARRENDATARIO: <span id="nombreArrendatario">XXXXXXX XXXXX</span> <span id="apellidoArrendatario">XXXXXXX</span></p>
+        </div>
+        <div id="tablaResumenArriendo">
+            <table BORDER=0 CELLSPACING=0 CELLPADDING=0 id="contenidoTablaResumenArriendo">
+                <tbody>
+                    <tr style="background-color: #d1d1d1;height: 35px;font-style: italic;">
+                        <td style="border-bottom: 0px solid black;border-right: 0px solid black;">Auto</td>
+                        <td style="border-bottom: 0px solid black;border-right: 0px solid black;">Desde</td>
+                        <td style="border-bottom: 0px solid black;border-right: 0px solid black;">Hasta</td>
+                        <td style="border-bottom: 0px solid black;border-right: 0px solid black;">Tiempo Total</td>
+                        <td style="border-bottom: 0px solid black;">Valor Total</td>
+                    </tr>
+                    <tr>
+                        <td style="border-right: 0px solid black;padding-top: 10px;padding-bottom: 5px;"><span id="marcaAuto">XXXXXX</span>,<span id="modeloAuto">XXXXXX</span></td>
+                        <td style="border-right: 0px solid black;padding-top: 10px;padding-bottom: 5px;"><span id="fechaHoraArriendoDesde">26 Dic 2013<br>10.00 AM</span></td>
+                        <td style="border-right: 0px solid black;padding-top: 10px;padding-bottom: 5px;"><span id="fechaHoraArriendoHasta">26 Dic 2013<br>17.00 PM</span></td>
+                        <td style="border-right: 0px solid black;padding-top: 10px;padding-bottom: 5px;"><span id="tiempoTotalArriendo">7 Horas</span></td>
+                        <td style="padding-top: 10px;padding-bottom: 5px;"><span id="valorTotalArriendo">$ 40.000 CLP</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="contenidoFooter">
+        <div id="lineaArriba"><p><span>http://www.arriendas.cl</span><span style="margin-left:20px;">Av. Providencia 229, Piso 2, Providencia</span><span style="margin-left:20px;">soporte@arriendas.cl</span></p></div>
+        <div id="lineaAbajo" style="margin-top: -10px;"><p>Santiago de Chile</p></div>
+    </div>
+</div>
+</body>
+</html>
+';
+    //$pdf->WriteHTML($html,0);
+    $pdf->WriteHTML($htmlNew,0);
     return $pdf->Output("reporte.pdf" ,"S");
   }
 

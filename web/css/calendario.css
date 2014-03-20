@@ -195,17 +195,7 @@ a.calen_reserv_curso_btn {
 
 .calen_box_3 {
 	float: left;
-	background-color: #fff;
-	border: 1px solid #c3c3c3;
-	-webkit-border-radius: 6px;
-	-moz-border-radius: 6px;
-	border-radius: 6px;
 	width: 480px;
-	background-image: url('../images/img_mensajes/msg_box_bg.png');
-	background-repeat: repeat-x;
-	background-position: bottom;
-	padding-bottom: 30px;
-	margin-bottom: 20px;
 	margin-left: 10px;
 }
 .calen_box_3_header {
@@ -258,4 +248,155 @@ a.calen_reserv_curso_btn {
     color: #4380BC;
     font-weight: bold;
 }
+#titleReserve{
+	width: 435px;
+	border-bottom: 1px solid #bdbec0;
+	padding-bottom: 6px;
+	margin-bottom: 20px;
+	padding-left: 20px;
+	font-style: italic;
+	font-size: 11px;
+}
+#titleReserve label span{
+	font-size: 14px;
+	font-style: normal;
+	font-weight: bold;
+}
+.lineaBoxSeleccion{
+	background-color: #bdbec0;
+	width: 414px;
+	height: 1px;
+	float: left;
+	margin-left: 18px;
+	margin-bottom: 15px;
+}
+input.calendar, input.hora_calendar{
+	width: 150px;
+    height: 32px;
+    padding-left: 42px;
+}
+.calendar{
+	margin: 0px;
+	border: 1px solid #bdbec0;
+	padding: 0px;
+	cursor: pointer;
+	background-image: url("../images/img_mis_reservas/Icono_Calendario.png");
+	background-position: 2% 50%;
+	background-repeat: no-repeat;
+}
+.hora_calendar{
+	margin: 0px;
+	border: 1px solid #bdbec0;
+	padding: 0px;
+	cursor: pointer;
+	background-image: url("../images/img_mis_reservas/IconoReloj.png");
+	background-position: 2% 50%;
+	background-repeat: no-repeat;
+}
+.lineL{
+	height: 34px;
+	border-left: 1px solid #bdbec0;
+	position: absolute;
+	left: 302px;
+}
+.lineR{
+	height: 34px;
+	border-left: 1px solid #bdbec0;
+	position: absolute;
+	left: 522px;
+}
+.c3{
+	width: 210px;
+	float: left;
+	height: 115px;
+	margin-left: 10px;
+}
+.c3 label{
+	font-size: 11px;
+	font-style: italic;
+	padding-bottom: 5px;
+	float: left;
+}
+.c3 label span{
+	color: #eb008b;
+}
+.c4{
+	width: 170px;
+	float: right;
+	color: #05a4e7;
+	font-weight: bold;
+	font-size: 16px;
+	margin-right: 72px;
+}
+.c4 label{
+	float: right;
+	margin-left: 5px;
+}
+#boxKmsUtilizados{
+	float: left;
+	width: 416px;
+	margin-top: 25px;
+	margin-left: 18px;
+}
+#boxKmsUtilizados label span{
+	color: #eb008b;
+}
+input.inputKmsUtilizados{
+	margin: 0px;
+	border: 1px solid #bdbec0;
+	padding: 6px;
+	height: 12px;
+	width: 102px;
+	margin-left: 13px;
+}
+#boxUsoDelAuto{
+	float: left;
+	width: 417px;
+	margin-top: 15px;
+	margin-left: 18px;
+}
+textarea.inputUsoDelAuto{
+	resize: none;
+	margin: 0px;
+	border: 1px solid #bdbec0;
+	padding-left: 12px;
+	padding-right: 12px;
+	padding-top: 6px;
+	padding-bottom: 6px;
+	height: 80px;
+	width: 391px;
+	margin-top: 8px;
+	font-family: Arial;
+	font-style: normal;
+}
+button#btnConfirmarReserva{
+	margin: 0px;
+	border: 0px;
+	padding: 0px;
+	background-color: white;
+	background-image: url("../images/img_mis_reservas/Icono_Reservar_Grande.png");
+	background-repeat: no-repeat;
+	float: right;
+	margin-right: 48px;
+	margin-top: 2px;
+	width: 140px;
+	height: 71px;
+	cursor: pointer;
+}
+.boxCamposObligatorios{
+	float: left;
+	width: 400px;
+	margin-left: 20px;
+}
 
+.boxCamposObligatorios p{
+	color: #6C6C6D;
+	font-size: 11px;
+	font-style: italic;
+	float: left;
+}
+.boxCamposObligatorios span{
+	color: #eb008b;
+	float: left;
+	margin-right: 6px;
+}

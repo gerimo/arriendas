@@ -18,6 +18,25 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     	$('.mis_autos_verificado').on('click',function(e){
     		e.preventDefault();
     	});
+
+		$("select").change(function() {
+	    	<?php
+	    	foreach ($cars as $c): 
+			if($c->getActivo()){
+			?>
+				$("option.activo_<?php echo $c->getId(); ?>:selected").each(function() {
+			    	$(".select_<?php echo $c->getId(); ?>").css("display","block");
+			    	$(".unselect_<?php echo $c->getId(); ?>").css("display","none");
+			    });
+			    $("option.inactivo_<?php echo $c->getId(); ?>:selected").each(function() {
+			    	$(".select_<?php echo $c->getId(); ?>").css("display","none");
+			    	$(".unselect_<?php echo $c->getId(); ?>").css("display","block");
+			    });
+		    <?php
+			}//end if 
+			endforeach; 
+			?>
+		}).trigger( "change" );
     });
 </script>
 
@@ -42,6 +61,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
  
 
 <div class="misautos_box">
+<div id="lineaSuperior"></div>
 
 <?php 
 	foreach ($cars as $c): 
@@ -52,45 +72,58 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 	<div class="misautos_user_item" id="item_<?php echo $c->getId() ?>">
 	    
 	<div class="misautos_user_post">
-	<div class="misautos_marca">
-		<a href="<?php echo url_for('profile/addCar?id=' . $c->getId() )?>" ><span><?=$c->getModel()->getBrand()->getName()?> <?=$c->getModel()->getName()?></span></a>
-	</div><!-- misautos_marca -->
+		<div class="activo">
+			<div class="imgActivo">
+				<div class="circuloActivo select_<?php echo $c->getId() ?>"></div>
+				<div class="circuloInactivo unselect_<?php echo $c->getId() ?>"></div>
+			</div>
+			<select class="selectorActivo">
+				<option class="activo_<?php echo $c->getId() ?>">Activo</option>
+				<option class="inactivo_<?php echo $c->getId() ?>">Inactivo</option>
+			</select>
+		</div>
+		<div class="misautos_marca">
+			<p><a href="<?php echo url_for('profile/addCar?id=' . $c->getId() )?>" ><span class="name"><?=$c->getModel()->getBrand()->getName()?> <?=$c->getModel()->getName()?></span></a><a href="#"><span class="editar">(<span class="sub">editar</span>)</span></a><p>
+		</div><!-- misautos_marca -->
 	
 	
-	<div class="misautos_btn_sector">
-	   <!-- <a href="#" class="misautos_btn_disp"></a>
-	   -->
-	    <a href="<?php echo url_for('profile/pedidos') ?>" class="misautos_btn_alqui">Mis Arriendos</a>
-	    
-	    <?php
-	    	//Obtener variable $ok del Auto, rescatandolo de la DB, por mientras se usará de variable
-		    //$ok = 0;
-		    $ok = $c -> getSeguroOk();
-		    if($ok <> 4){
-	    ?>
-	    		<div class="divBotonVerificar" style="backgound-color:#ec008c;">
-	    			<!--
-	   				<a href="<?php echo url_for('profile/aseguraTuAuto?id='.$c->getId() ) ?>" class="misautos_btn_alqui">Verificar</a>
-	   				-->
-	   				<a href="mailto:soporte@arriendas.cl?subject=Reserva%20un%20horario%20para%20que%20verifiquemos%20tu%20auto" class="misautos_btn_alqui">Verificar</a>
-	    		</div>
-	    <?php 
-	    	}else{
-	    ?>
-	    		<div class="divBotonVerificar">
-	    			<!--
-	    			<a href="<?php echo url_for('profile/aseguraTuAuto?id='.$c->getId().'&paso='.$ok ) ?>" class="mis_autos_verificado">Verificado</a>
-	    			-->
-	    			<a href="#" class="mis_autos_verificado">Verificado</a>
-	    		</div>
-	    <?php
-	    	}
-	    ?>
-	</div><!-- misautos_btn_sector -->
+		<div class="misautos_btn_sector">
+		<?php $pDia='17.000'; $pHora='5.000';?>
+
+		<p class="linePrecio">Precio: DÍA $ <?=$pDia;?> / HORA $ <?=$pHora;?><a href="#"><span class="editar" style="margin-top: 0px;">(<span class="sub">editar</span>)</span></a></p>
+
+		<p class="lineRecibirPedidos">Recibir pedidos de reserva: 
+			<select class="selectorRP">
+				<option>Todos los dias</option>
+				<option>Los fines de semana</option>
+				<option>Lunes a Viernes</option>
+			</select>
+		</p>
+
+
+
+		    <!--<a href="<?php echo url_for('profile/pedidos') ?>" class="misautos_btn_alqui">Mis Arriendos</a>-->
+		    
+		    <?php
+			    //$ok = $c -> getSeguroOk();
+			    //if($ok <> 4){
+		    ?>
+		    		<!--<div class="divBotonVerificar" style="backgound-color:#ec008c;">
+		   				<a href="mailto:soporte@arriendas.cl?subject=Reserva%20un%20horario%20para%20que%20verifiquemos%20tu%20auto" class="misautos_btn_alqui">Verificar</a>
+		    		</div> -->
+		    <?php 
+		    	//}else{
+		    ?>
+		    		<!-- <div class="divBotonVerificar">
+		    			<a href="#" class="mis_autos_verificado">Verificado</a>
+		    		</div> -->
+		    <?php
+		    	//}
+		    ?>
+		</div><!-- misautos_btn_sector -->
 	
 	<div class='cargando'><?php echo image_tag('../images/ajax-loader.gif', 'class=img_cargando'); ?></div>
 
-	<div class="misautos_user_item_flecha"></div>
 	</div><!-- misautos_user_post -->
 	
 	<div class="misautos_user_frame">
@@ -98,22 +131,19 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 	<a href="<?php echo url_for('profile/addCar?id=' . $c->getId() )?>" >
 		<?php 
 			if($c->getPhotoS3() == 1){
-				echo image_tag($c->getFoto(),array("width"=>"84px","height"=>"84px"));
+				echo image_tag($c->getFoto(),array("width"=>"120px","height"=>"100px"));
 			}else{
-//				echo image_tag("../uploads/cars/".$c->getFoto(),array("width"=>"84px","height"=>"84px"));
-				echo "<img class='foto' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_84,h_84,c_fill,g_center/http://arriendas.cl/uploads/cars/".$c->getFoto()."'/>";
+				echo "<img class='foto' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_120,h_100,c_fill,g_center/http://arriendas.cl/uploads/cars/".$c->getFoto()."'/>";
 			}
 		?>
 	</a>
 
-	<p class='textoEliminar'><a href="#" class='eliminar' id="<?php echo $c->getId() ?>">(Eliminar)</a></p>
+	<!--<p class='textoEliminar'><a href="#" class='eliminar' id="<?php echo $c->getId() ?>">(Eliminar)</a></p>-->
 
 	</div>
 	
 	<div class="clear"></div>
 	</div><!-- auto_publicado -->
-
-
 <?php
 }//end if 
 endforeach; 

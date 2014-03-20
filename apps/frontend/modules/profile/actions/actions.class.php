@@ -1691,6 +1691,8 @@ class profileActions extends sfActions {
 
                         $reserve->setConfirmed(true);
                     }
+                    
+                    
 
                     $reserve->setPrice(number_format($this->calcularMontoTotal($durationReserva, $car->getPricePerHour(), $car->getPricePerDay(), $car->getPricePerWeek(), $car->getPricePerMonth()), 2, '.', ''));
 
