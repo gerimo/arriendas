@@ -69,31 +69,33 @@ class webpayActions extends sfActions {
                     /* inicio WSWEBPAY */
                     /* Variables de tipo string */
                     $wsInitTransactionInput->wSTransactionType = "TRX_NORMAL_WS";
-                    $wsInitTransactionInput->buyOrder = $order->getId();
-                    $wsInitTransactionInput->returnURL = $this->generateUrl("webpayReturn", array(), true);
-                    $wsInitTransactionInput->finalURL = $this->generateUrl("paypalCancel", array(), true);
+                    $wsInitTransactionInput->commerceId = "597020000019";
+                    $wsInitTransactionInput->buyOrder = "888";
+                    $wsInitTransactionInput->returnURL = "http://magnetico.com.ar/arriendas/frontend_dev.php/webpay/webpayReturn";
+                    $wsInitTransactionInput->finalURL = "http://magnetico.com.ar/arriendas/frontend_dev.php/webpay/paypalCancel";
 
                     $wsTransactionDetail->commerceCode = "597020000019";
-                    $wsTransactionDetail->buyOrder = $order->getId();
-                    $wsTransactionDetail->amount = $finalPrice;
+                    $wsTransactionDetail->buyOrder = "888";
+                    $wsTransactionDetail->amount = floatval("888.22");
 
                     $wsInitTransactionInput->transactionDetails = $wsTransactionDetail;
 
-                    $webpayService = new WebpayService($webpaySettings["url"]);
+                    $webpayService = new WebpayService("http://201.238.207.131:7003/WSWebpayTransaction/cxf/WSWebpayService?wsdl");
 
-                    /* fin WSWEBPAY */
                     $this->checkOutUrl = "#";
 
                     try {
+                        $this->_log("Exception", "Info", "Antes de llamar");
                         $initTransactionResponse = $webpayService->initTransaction(
                                 array("wsInitTransactionInput" => $wsInitTransactionInput)
                         );
+                        $this->_log("Exception", "Info", "Despues de llamar");
 
                         $xmlResponse = $webpayService->soapClient->__getLastResponse();
 
-                        $soapValidation = new SoapValidation($xmlResponse, SERVER_CERT);
+                        $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certifacate_server.pem";
+                        $soapValidation = new SoapValidation($xmlResponse, $SERVER_CERT_PATH);
                         $validationResult = $soapValidation->getValidationResult();
-                        $this->logMessage(">>>>>>>>>>>>>>>>>>>>>>>>>Aca no anduvo Error");
                         if ($validationResult) {
                             /* Invocar sólo sí $validationResult es TRUE */
                             $wsInitTransactionOutput = $initTransactionResponse->return;
