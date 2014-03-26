@@ -140,6 +140,9 @@ class bcpuntopagosActions extends sfActions {
                 if($request->getParameter("pp_medio_pago") == "20"){
                     $this->forward("paypal","confirmPayment");
                 }
+                if($request->getParameter("pp_medio_pago") == "21"){
+                    $this->forward("khipu","confirmPayment");
+                }
 
                 $order = Doctrine_Core::getTable("Transaction")->getTransaction($request->getParameter('id'));
                 $idReserve = $order->getReserveId();

@@ -8,26 +8,6 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
 }
 ?>
 
-<!-- Google Code for Pago de reserva Conversion Page -->
-<script type="text/javascript">
-    /* <![CDATA[ */
-    var google_conversion_id = 996876210;
-    var google_conversion_language = "en";
-    var google_conversion_format = "2";
-    var google_conversion_color = "ffffff";
-    var google_conversion_label = "LLsrCL71swQQsr-s2wM";
-
-    var google_conversion_value = 0;
-    /* ]]> */
-</script>
-<script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js">
-</script>
-<noscript>
-<div style="display:inline;">
-    <img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/996876210/?value=0&amp;label=LLsrCL71swQQsr-s2wM&amp;guid=ON&amp;script=0"/>
-</div>
-</noscript>
-
 <style>
     #contenido{
         margin-left: 10px;
@@ -38,6 +18,13 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
     }
     #contenido a{
         font-size: 15px;
+    }
+    #contenido .bar-container{
+        width: 50%; margin:20px auto auto auto; text-align: center;
+    }
+    #contenido .bar-container small{
+        font-size: 13px;
+        color: #575757;
     }
 </style>
 
@@ -53,11 +40,53 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
 
             <div id='contenido'>
                 <center>
-                    <p><span><?php echo $paymentMsg ?></span></p>
+                    <p><b style="color:#EC008C;font-size:16px;text-align:center;"><?php echo $paymentMsg ?></b></p>
+                    <br/>
+                    <br/>
+                    <p>El pago puede demorarse unos instantes en asentarse, por favor espere que volveremos a comprobar su estado</p>
                 </center>
+                <div class="bar-container">
+                    <span><small>Próxima verificación en...</small></span>
+                    <div id="progressbar" class="progress-striped"></div>
+                </div>
             </div>
         </div> 
+        <script>
+            (function($) {
+                $.fn.arriendasCounter = function() {
+                    var countdown = 0;
+                    var loopProcess = null;
+                    var progbarSelector = "#" + $(this).attr("id");
+                    var methods = {
+                        "updateProgressBar": function() {
+                            $(progbarSelector).progressbar({
+                                value: countdown
+                            });
+                        },
+                        "start": function() {
+                            $(progbarSelector).progressbar({
+                                value: false
+                            });
+                            function loop() {
+                                if (countdown < 100) {
+                                    countdown += 0.6;
+                                    methods.updateProgressBar();
+                                } else {
+                                    clearInterval(loopProcess);
+                                    location.reload();
+                                }
+                            }
+                            loopProcess = setInterval(loop, 50);
+                        }
+                    }
+                    methods.start();
+                }
+            })(jQuery);
+            $(document).ready(function() {
+                $("#progressbar").arriendasCounter();
+            });
 
+        </script>
         <?php include_component('profile', 'colDer') ?>
     </div>		
 </div>

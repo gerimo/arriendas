@@ -23,7 +23,7 @@ class khipuActions extends sfActions {
         $this->montoDeposito = 0;
         if ($this->deposito == "depositoGarantia") {
             $this->montoDeposito = 180000;
-//$this->enviarCorreoTransferenciaBancaria();
+            //$this->enviarCorreoTransferenciaBancaria();
         } else if ($this->deposito == "pagoPorDia") {
             $this->montoDeposito = $montoTotalPagoPorDia;
         }
@@ -31,7 +31,7 @@ class khipuActions extends sfActions {
         if ($customer_in_session) {
 
             if (!$request->hasParameter("id") || $request->getParameter("id") == null) {
-                $this->getUser()->setFlash('error', 'No se ha recibido un codigo de orden para la creacion en Punto Pagos');
+                $this->getUser()->setFlash('error', 'No se ha recibido un codigo de orden para la creacion del pago');
                 $this->error = "";
                 $this->redirect("bcpuntopagos/index");
             } else {
@@ -39,6 +39,20 @@ class khipuActions extends sfActions {
                 $idReserve = $order->getReserveId();
                 $this->ppId = $idReserve;
                 $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+
+                $carClass = $reserve->getCar();
+                $typeFoto = $carClass->getPhotoS3();
+                $baseUrl = $this->generateUrl("homepage", array(), TRUE);
+                $carImageUrl = $baseUrl . "../images/Home/logo_arriendas2.png";
+                if ($typeFoto == 0) {
+                    if (strlen($carClass->getFotoPerfil()) > 0) {
+                        $carImageUrl = $baseUrl . "../uploads/cars/thumbs/" . $carClass->getFotoPerfil();
+                    }
+                } else {
+                    if (strlen($carClass->getFoto()) > 0) {
+                        $carImageUrl = $baseUrl . $carClass->getFoto();
+                    }
+                }
 
                 $opcionLiberacion = $reserve->getLiberadoDeGarantia();
                 if ($opcionLiberacion == 0) {
@@ -60,7 +74,7 @@ class khipuActions extends sfActions {
                     /* la transaccion es valida, inicializo pago */
                     $settings = $this->getSettings();
 
-                    $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["url"]);
+                    $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["create-payment-url"]);
                     $data = array(
                         'receiver_id' => $settings["receiver_id"],
                         'subject' => "Arriendo " . $this->carMarcaModel,
@@ -72,14 +86,19 @@ class khipuActions extends sfActions {
                         'transaction_id' => $request->getParameter('id'),
                         'payer_email' => '',
                         'bank_id' => '',
-                        'picture_url' => '',
+                        'picture_url' => $carImageUrl,
                         'custom' => 'el modelo en color rojo',
                     );
                     $this->checkOutUrl = "#";
                     try {
                         $response = $khipuService->createPaymentURL($data);
                         $this->checkOutUrl = $response->url;
-                        $this->getUser()->setAttribute("khipu-payment-id", $response->id);
+                        $khipuTransaction = array(
+                            "payment-id" => $response->id,
+                            "transaction-id" => $request->getParameter('id'),
+                            "status" => "created"
+                        );
+                        $this->getUser()->setAttribute("khipu-transaction", $khipuTransaction);
                     } catch (Exception $exc) {
                         $msg = " | Exception : " . $ex->getMessage();
                         $this->_log("Exception", "Error", "Usuario: " . $customer_in_session . ". Order ID: " . $order->getId() . $msg);
@@ -113,12 +132,12 @@ class khipuActions extends sfActions {
             "notification_signature" => $_POST['notification_signature']
         );
 
-        $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["url"]);
+        $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["notification-validation-url"]);
         $response = $khipuService->notificationValidation($data);
 
         if ($response == 'VERIFIED' && $data["receiver_id"] == $settings["receiver_id"]) {
             /* Los parametros son correctos, ahora falta verificar que transacion_id, custom, subject y amount correspondan al pedido */
-            $this->_log("NotifyPayment", "INFO", "cobro veiricado");
+            $this->_log("NotifyPayment", "INFO", "cobro verificado");
             $order = Doctrine_Core::getTable("Transaction")->getTransaction($data["transaction_id"]);
             $this->idReserva = $order->getReserveId();
             $reserve = Doctrine_Core::getTable('reserve')->findOneById($this->idReserva);
@@ -261,37 +280,21 @@ class khipuActions extends sfActions {
         if ($customer_in_session) {
 
             $settings = $this->getSettings();
-            $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["url"]);
+            $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["payment-status-url"]);
 
-            $receiver_id = $settings["receiver_id"];
-            $secret = $settings["secret"];
-            $payment_id = $this->getUser()->getAttribute("khipu-payment-id");
+            $khipuTransaction = $this->getUser()->getAttribute("khipu-transaction");
 
-            $concatenated = "receiver_id=$receiver_id&payment_id=$payment_id";
-            $hash = hash_hmac('sha256', $concatenated, $secret);
-
-            $url = 'https://khipu.com/api/1.2/paymentStatus';
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_POST, true);
-
-
-            $data = array('receiver_id' => $receiver_id
-                , 'payment_id' => $payment_id
-                , 'hash' => $hash);
-
-
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-            $output = curl_exec($ch);
-            $info = curl_getinfo($ch);
-            curl_close($ch);
-            $response = json_decode($output);
-            $this->paymentStatus = $response->status;
+            $data = array('receiver_id' => $settings["receiver_id"],
+                'payment_id' => $khipuTransaction["payment-id"]
+            );
+            $response = $khipuService->paymentStatus($data);
             switch ($response->status) {
                 case "done":
                     $this->paymentMsg = "El pago ha sido realizado.";
+                    /* update transaction info */
+                    $khipuTransaction["status"] = "done";
+                    $this->getUser()->setAttribute("khipu-transaction", $khipuTransaction);
+                    $this->forward("khipu", "processPayment");
                     break;
                 case "pending":
                     $this->paymentMsg = "El pago aun no ha sido realizado.";
@@ -299,7 +302,30 @@ class khipuActions extends sfActions {
                 case "verifying":
                     $this->paymentMsg = "El pago esta siendo procesado. Actualiza esta página en unos segundos para volver a verificar.";
                     break;
+                default :
+                    break;
             }
+        } else {
+            /* not session */
+            $this->redirect('@homepage');
+        }
+    }
+
+    public function executeProcessPayment(sfWebRequest $request) {
+        $customer_in_session = $this->getUser()->getAttribute('userid');
+        if ($customer_in_session) {
+
+            $khipuTransaction = $this->getUser()->getAttribute("khipu-transaction");
+            $order = Doctrine_Core::getTable("Transaction")->getTransaction($khipuTransaction["transaction-id"]);
+            $idReserve = $order->getReserveId();
+            $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+
+            $this->getUser()->getAttributeHolder()->remove('khipu-transaction');
+
+            $this->nameOwner = $reserve->getNameOwner();
+            $this->emailOwner = $reserve->getEmailOwner();
+            $this->lastnameOwner = $reserve->getLastnameOwner();
+            $this->telephoneOwner = $reserve->getTelephoneOwner();
         } else {
             /* not session */
             $this->redirect('@homepage');

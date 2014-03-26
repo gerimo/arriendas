@@ -17,6 +17,11 @@ class KhipuService {
         $this->khipuUrl = $khipuUrl;
     }
 
+    /**
+     * 
+     * @param array $data
+     * @return type
+     */
     public function createPaymentURL($data) {
 
         /* build concatenated */
@@ -53,6 +58,11 @@ class KhipuService {
         return json_decode($output);
     }
 
+    /**
+     * 
+     * @param type $data
+     * @return type
+     */
     public function notificationValidation($data) {
 
         $to_send = 'api_version=' . urlencode($data["api_version"]) .
@@ -65,13 +75,36 @@ class KhipuService {
                 '&payer_email=' . urlencode($data["payer_email"]) .
                 '&custom=' . urlencode($data["custom"]);
 
-        $ch = curl_init("https://khipu.com/api/1.2/verifyPaymentNotification");
+        $ch = curl_init($this->khipuUrl);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $to_send . "&notification_signature=" . urlencode($data["notification_signature"]));
         $response = curl_exec($ch);
         curl_close($ch);
+        return $response;
+    }
+
+    /**
+     * 
+     * @param array $data
+     * @return json $result.
+     */
+    public function paymentStatus($data) {
+        $concatenated = "receiver_id=" . $data["receiver_id"] . "&payment_id=" . $data["payment_id"];
+        $hash = hash_hmac('sha256', $concatenated, $this->secret);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->khipuUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, true);
+
+        $data["hash"] = $hash;
+
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        $output = curl_exec($ch);
+        $info = curl_getinfo($ch);
+        curl_close($ch);
+        $response = json_decode($output);
         return $response;
     }
 
