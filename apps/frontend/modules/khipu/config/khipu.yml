@@ -1,0 +1,19 @@
+settings:
+  dev:
+   url: https://khipu.com/api/1.2/createPaymentURL
+   mode: sandbox
+   receiver_id: 8747
+   secret: 16766687c5475c04ae07776e7c7302805c98e429
+   status_success: Success
+   status_success_warning: SuccessWithWarning
+   status_failure: Failure
+   status_failure_warning: FailureWithWarning
+  prod:
+   url: https://khipu.com/api/1.2/createPaymentURL
+   mode: sandbox
+   receiver_id: 8747
+   secret: 16766687c5475c04ae07776e7c7302805c98e429
+   status_success: Success
+   status_success_warning: SuccessWithWarning
+   status_failure: Failure
+   status_failure_warning: FailureWithWarning

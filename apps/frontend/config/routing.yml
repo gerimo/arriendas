@@ -24,6 +24,16 @@ webpayReturn:
 webpayCancel:
     url:  /webpay/processPaymentCanceled
     param:  { module: webpay, action: processPaymentCanceled }
+
+khipuNotify:
+    url:  /khipu/notifyPayment
+    param:  { module: khipu, action: notifyPayment }
+khipuReturn:
+    url:  /khipu/paymentInformation
+    param:  { module: khipu, action: paymentInformation }
+khipuCancel:
+    url:  /khipu/processPaymentCanceled
+    param:  { module: khipu, action: processPaymentCanceled }
  
 # default rules
 homepage:
