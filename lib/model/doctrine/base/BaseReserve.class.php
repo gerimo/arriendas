@@ -25,6 +25,8 @@
  * @property Transaction $Transaction
  * @property decimal $price
  * @property integer $Extend
+ * @property float $KilometrajeEsperado
+ * @property text $RazonViaje
  * 
  * @method integer             getId()          Returns the current record's "id" value
  * @method timestamp           getDate()        Returns the current record's "date" value
@@ -47,6 +49,8 @@
  * @method Reserve             getKminicial()   Return the current record's "Kminicial" value
  * @method Reserve             getKmfinal()     Return the current record's "Kmfinal" value
  * @method decimal         getPrice()              Returns the current record's "price" value
+ * @method float               getKilometrajeEsperado()      Return the current record's "KilometrajeEsperado" value
+ * @method text                getRazonViaje()      Return the current record's "RazonViaje" value
  * @method integer             getExtend()      Return the current record's "Extend" value
  * @method Reserve             setId()          Sets the current record's "id" value
  * @method Reserve             setDate()        Sets the current record's "date" value
@@ -72,6 +76,8 @@
  * @method Reserve             setKmfinal()     Sets the current record's "kmfinal" value
  * @method Reserve             setPrice()       Sets the current record's "price" value
  * @method Integer             setExtend()      Sets the current record's "extend" value
+ * @method float               setKilometrajeEsperado()      Sets the current record's "KilometrajeEsperado" value
+ * @method text                setRazonViaje()      Sets the current record's "RazonViaje" value
  * 
  * @package    CarSharing
  * @subpackage model
@@ -279,6 +285,15 @@ abstract class BaseReserve extends sfDoctrineRecord
             'notnull' => '0',
             'default' => 0,
             ));
+        $this->hasColumn('kilometraje_esperado', 'float', 6, array(
+             'type' => 'float',
+             'length' => 6,
+             'scale' => '2',
+             ));
+        $this->hasColumn('razon_viaje', 'text', null, array(
+             'type' => 'text',
+             'notnull' => true,
+             ));
         $this->index('fk_Reserve_User1', array(
              'fields' => 
              array(

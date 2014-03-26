@@ -1692,7 +1692,8 @@ class profileActions extends sfActions {
                         $reserve->setConfirmed(true);
                     }
                     
-                    
+                    $reserve->setKilometrajeEsperado(floatval($request->getParameter("kmsUtilizados")));
+                    $reserve->setRazonViaje($request->getParameter("usoDelAuto"));
 
                     $reserve->setPrice(number_format($this->calcularMontoTotal($durationReserva, $car->getPricePerHour(), $car->getPricePerDay(), $car->getPricePerWeek(), $car->getPricePerMonth()), 2, '.', ''));
 
