@@ -103,6 +103,12 @@ h3 a{
 .fechaReserva .der {
     float: right;
 }
+.fechaReserva .comuna{
+    color: #212121;
+    font-weight: normal;
+    display: block;
+    text-align: center;
+}
 
 .pago {
     float: left;
