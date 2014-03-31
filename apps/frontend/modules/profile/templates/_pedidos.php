@@ -216,6 +216,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo "<div class='der'>";
                 echo $reserva['horaInicio'] . "<br>" . $reserva['horaTermino'];
                 echo "</div>";
+                echo "<a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' >Contactar</a>";
                 echo "</div>";
                 echo "<div class='infoUsuario ocultarWeb'>";
                 echo "<div class='izq'>";
@@ -289,6 +290,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo "<div class='der'>";
                 echo $reserva['horaInicio'] . "<br>" . $reserva['horaTermino'];
                 echo "</div>";
+                echo "<a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' >Contactar</a>";
                 echo "</div>";
                 echo "<div class='infoUsuario ocultarWeb'>";
                 echo "<div class='izq'>";
@@ -391,6 +393,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                                 echo "<div class='der'>";
                                 echo $reserva['horaInicio'] . "<br>" . $reserva['horaTermino'];
                                 echo "</div>";
+                                echo "<a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' >Contactar</a>";
                                 echo "</div>";
                                 echo "<div class='infoUsuario ocultarWeb'>";
                                 echo "<div class='izq'>";
@@ -472,6 +475,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                     echo "<div class='der'>";
                     echo $reserva['horaInicio'] . "<br>" . $reserva['horaTermino'];
                     echo "</div>";
+                    echo "<a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' >Contactar</a>";
                     echo "</div>";
                     echo "<div class='infoUsuario ocultarWeb'>";
                     echo "<div class='izq'>";
