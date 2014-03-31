@@ -216,7 +216,6 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo "<div class='der'>";
                 echo $reserva['horaInicio'] . "<br>" . $reserva['horaTermino'];
                 echo "</div>";
-                echo "<a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' >Contactar</a>";
                 echo "</div>";
                 echo "<div class='infoUsuario ocultarWeb'>";
                 echo "<div class='izq'>";
@@ -245,6 +244,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo"<div class='pagoBoton'>";
                 echo "<a href='#'>" . image_tag('img_pedidos/BotonPagar.png', 'class=botonPagar duracion_' . $reserva['duracion'] . ' id=pagar_' . $reserva['idReserve']) . "</a>";
                 echo "</div>";
+                echo "<div><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' >Contactar</a></div>";
                 echo"</div>";
             }
         }
@@ -290,7 +290,6 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo "<div class='der'>";
                 echo $reserva['horaInicio'] . "<br>" . $reserva['horaTermino'];
                 echo "</div>";
-                echo "<a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' >Contactar</a>";
                 echo "</div>";
                 echo "<div class='infoUsuario ocultarWeb'>";
                 echo "<div class='izq'>";
@@ -319,6 +318,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo"<div class='pagoBoton'>";
                 echo "<a href='#'>" . image_tag('img_pedidos/BotonPagar.png', 'class=botonPagar duracion_' . $reserva['duracion'] . ' id=pagar_' . $reserva['idReserve']) . "</a>";
                 echo "</div>";
+                echo "<div><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' >Contactar</a></div>";
                 echo"</div>";
             }
         }
@@ -393,7 +393,6 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                                 echo "<div class='der'>";
                                 echo $reserva['horaInicio'] . "<br>" . $reserva['horaTermino'];
                                 echo "</div>";
-                                echo "<a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' >Contactar</a>";
                                 echo "</div>";
                                 echo "<div class='infoUsuario ocultarWeb'>";
                                 echo "<div class='izq'>";
@@ -418,6 +417,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                                 echo "<div class='img'>" . image_tag('img_pedidos/IconoEnEspera.png') . "</div>";
                                 echo "<div class='texto'>En espera de confirmaci&oacute;n</div>";
                                 echo "</div>";
+                                echo "<div><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' >Contactar</a></div>";
                                 echo"</div>";
                                 echo"</div>";
                             }
@@ -475,7 +475,6 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                     echo "<div class='der'>";
                     echo $reserva['horaInicio'] . "<br>" . $reserva['horaTermino'];
                     echo "</div>";
-                    echo "<a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' >Contactar</a>";
                     echo "</div>";
                     echo "<div class='infoUsuario ocultarWeb'>";
                     echo "<div class='izq'>";
@@ -508,6 +507,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                     echo"</div>";
                     echo"<div class='pagoCheckbox'>";
                     echo "</div>";
+                    echo "<div><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' >Contactar</a></div>";
                     echo"</div>";
                 }
             }
