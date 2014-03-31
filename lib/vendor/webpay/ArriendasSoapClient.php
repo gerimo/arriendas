@@ -12,7 +12,6 @@ class ArriendasSoapClient extends SoapClient {
         $PRIVATE_KEY_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/arriendasVentas.key";
         $CERT_FILE_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/arriendasVentas.csr";
 
-        $this->_log("InfoSOAP", "Response", $request . "    " . $location. "   ". $action);
         
         $doc = new DOMDocument('1.0');
         $doc->loadXML($request);
@@ -25,6 +24,7 @@ class ArriendasSoapClient extends SoapClient {
         $objKey = new XMLSecurityKey(XMLSecurityKey::AES256_CBC);
         $objKey->generateSessionKey();
         $retVal = parent::__doRequest($objWSSE->saveXML(), $location, $action, $version, $oneWay);
+        $this->_log("InfoSOAP", "Request", $objWSSE->saveXML() . "    " . $location. "   ". $action);
         
         $this->_log("InfoSOAP", "Response", $retVal . "    " . $location. "   ". $action);
         

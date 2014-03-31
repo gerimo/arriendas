@@ -68,7 +68,7 @@ class webpayActions extends sfActions {
 
                     /* inicio WSWEBPAY */
                     /* Variables de tipo string */
-                    $wsInitTransactionInput->wSTransactionType = "TRX_NORMAL_WS";
+                    $wsInitTransactionInput->wSTransactionType = "TR_NORMAL_WS";
                     $wsInitTransactionInput->commerceId = "597020000019";
                     $wsInitTransactionInput->buyOrder = "888";
                     $wsInitTransactionInput->returnURL = "http://magnetico.com.ar/arriendas/frontend_dev.php/webpay/webpayReturn";
@@ -93,7 +93,7 @@ class webpayActions extends sfActions {
 
                         $xmlResponse = $webpayService->soapClient->__getLastResponse();
 
-                        $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certifacate_server.pem";
+                        $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certifacate_server.crt";
                         $soapValidation = new SoapValidation($xmlResponse, $SERVER_CERT_PATH);
                         $validationResult = $soapValidation->getValidationResult();
                         if ($validationResult) {
