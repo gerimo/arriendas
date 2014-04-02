@@ -13,8 +13,8 @@ settings:
    create-payment-url: https://khipu.com/api/1.2/createPaymentURL
    notification-validation-url: https://khipu.com/api/1.2/verifyPaymentNotification
    payment-status-url: https://khipu.com/api/1.2/paymentStatus
-   receiver_id: 8747
-   secret: 16766687c5475c04ae07776e7c7302805c98e429
+   receiver_id: 9139
+   secret: 28f249db82f364a8f5c59b27558f07876ea4eec0
    status_success: Success
    status_success_warning: SuccessWithWarning
    status_failure: Failure
