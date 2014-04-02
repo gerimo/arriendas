@@ -84,7 +84,10 @@
                     <input type="hidden" name="idReserva" value="<?php echo $ppIdReserva ?>" />
                     <div>
                         <img src="https://www.paypal.com/en_US/i/logo/PayPal_mark_37x23.gif" alt="paypal" style="padding-top: 18px;"/>
-                        <a class="botonPagar" style="width: 159px;" href="<?php echo $checkOutUrl ?>" ></a>
+                        <form action="<?= $checkOutUrl ?>" method="post" id="checkform" >
+                            <input type="hidden" name="token_ws" value="<?= $checkOutToken ?>"/>
+                            <a class="botonPagar" style="width: 159px;" onclick="document.getElementById('checkform').submit()"></a>
+                        </form>
                     </div>
                 </div>
                 <div class="recordatorio">

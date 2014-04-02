@@ -29,14 +29,14 @@ class webpayActions extends sfActions {
         }
 
         if ($customer_in_session) {
+            $transacionId = $request->getParameter('id');
+            if (is_null($transacionId)) {
 
-            if (!$request->hasParameter("id") || $request->getParameter("id") == null) {
-
-                $this->getUser()->setFlash('error', 'No se ha recibido un codigo de orden para la creacion en Punto Pagos');
+                $this->getUser()->setFlash('error', 'No se ha recibido un codigo de orden para la creacion en Webpay');
                 $this->error = "";
                 $this->redirect("bcpuntopagos/index");
             } else {
-                $order = Doctrine_Core::getTable("Transaction")->getTransaction($request->getParameter('id'));
+                $order = Doctrine_Core::getTable("Transaction")->getTransaction($transacionId);
                 $idReserve = $order->getReserveId();
                 $this->ppId = $idReserve;
                 $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
@@ -69,37 +69,33 @@ class webpayActions extends sfActions {
                     /* inicio WSWEBPAY */
                     /* Variables de tipo string */
                     $wsInitTransactionInput->wSTransactionType = "TR_NORMAL_WS";
-                    $wsInitTransactionInput->commerceId = "597020000019";
-                    $wsInitTransactionInput->buyOrder = "888";
-                    $wsInitTransactionInput->returnURL = "http://magnetico.com.ar/arriendas/frontend_dev.php/webpay/webpayReturn";
-                    $wsInitTransactionInput->finalURL = "http://magnetico.com.ar/arriendas/frontend_dev.php/webpay/paypalCancel";
+                    $wsInitTransactionInput->buyOrder = $transacionId;
 
-                    $wsTransactionDetail->commerceCode = "597020000019";
-                    $wsTransactionDetail->buyOrder = "888";
-                    $wsTransactionDetail->amount = floatval("888.22");
+                    $wsInitTransactionInput->returnURL = $this->generateUrl("webpayReturn", array(), true);
+                    $wsInitTransactionInput->finalURL = $this->generateUrl("webpayFinal", array(), true);
+
+                    $wsTransactionDetail->commerceCode = $webpaySettings["commerceCode"];
+                    $wsTransactionDetail->buyOrder = $transacionId;
+                    $wsTransactionDetail->amount = $finalPrice;
 
                     $wsInitTransactionInput->transactionDetails = $wsTransactionDetail;
-
-                    $webpayService = new WebpayService("http://201.238.207.131:7003/WSWebpayTransaction/cxf/WSWebpayService?wsdl");
+                    $webpayService = new WebpayService($webpaySettings["url"]);
 
                     $this->checkOutUrl = "#";
 
                     try {
-                        $this->_log("Exception", "Info", "Antes de llamar");
                         $initTransactionResponse = $webpayService->initTransaction(
                                 array("wsInitTransactionInput" => $wsInitTransactionInput)
                         );
-                        $this->_log("Exception", "Info", "Despues de llamar");
-
                         $xmlResponse = $webpayService->soapClient->__getLastResponse();
-
                         $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certifacate_server.crt";
                         $soapValidation = new SoapValidation($xmlResponse, $SERVER_CERT_PATH);
                         $validationResult = $soapValidation->getValidationResult();
                         if ($validationResult) {
                             /* Invocar sólo sí $validationResult es TRUE */
                             $wsInitTransactionOutput = $initTransactionResponse->return;
-                            $this->checkOutUrl = $wsInitTransactionOutput["url"];
+                            $this->checkOutUrl = $wsInitTransactionOutput->url;
+                            $this->checkOutToken = $wsInitTransactionOutput->token;
                         } else {
                             $msg = " | API Error Message : " . "";
                             $this->_log("Pago", "ApiError", "Usuario: " . $customer_in_session . ". Order ID: " . $order->getId() . $msg);
@@ -122,180 +118,182 @@ class webpayActions extends sfActions {
         if ($customer_in_session) {
             $token = $request->getParameter("token");
             /* paypal init */
-            $paypalSettings = $this->getSettings();
+            $webpaySettings = $this->getSettings();
             /* execute payment */
-            $getExpressCheckoutDetailsReq = new GetExpressCheckoutDetailsReq();
-            $getExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType($token);
-            $getExpressCheckoutDetailsReq->GetExpressCheckoutDetailsRequest = $getExpressCheckoutDetailsRequest;
-            $service = new PayPalAPIInterfaceServiceService($this->getConfig($paypalSettings));
-            $response = $service->GetExpressCheckoutDetails($getExpressCheckoutDetailsReq);
+            $webpayService = new WebpayService();
+            $getTransactionResult = new getTransactionResult();
+            $getTransactionResult->tokenInput = "";
+
+            $initTransactionResponse = $webpayService->getTransactionResult(
+                    array("getTransactionResult" => $getTransactionResult)
+            );
+            $xmlResponse = $webpayService->soapClient->__getLastResponse();
+            $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certifacate_server.crt";
+            $soapValidation = new SoapValidation($xmlResponse, $SERVER_CERT_PATH);
+            $validationResult = $soapValidation->getValidationResult();
+
             $orderId = null;
-            if ($response->Ack == $paypalSettings["status_success"]) {
-                $doExpressCheckoutPaymentReq = new DoExpressCheckoutPaymentReq();
-                $doExpressCheckoutPaymentRequestDetails = new DoExpressCheckoutPaymentRequestDetailsType();
-                $doExpressCheckoutPaymentRequestDetails->Token = $response->GetExpressCheckoutDetailsResponseDetails->Token;
-                $doExpressCheckoutPaymentRequestDetails->PayerID = $response->GetExpressCheckoutDetailsResponseDetails->PayerInfo->PayerID;
-                $doExpressCheckoutPaymentRequestDetails->PaymentDetails = $response->GetExpressCheckoutDetailsResponseDetails->PaymentDetails;
-                $orderId = $response->GetExpressCheckoutDetailsResponseDetails->InvoiceID;
-                $doExpressCheckoutPaymentRequest = new DoExpressCheckoutPaymentRequestType($doExpressCheckoutPaymentRequestDetails);
-                $doExpressCheckoutPaymentReq->DoExpressCheckoutPaymentRequest = $doExpressCheckoutPaymentRequest;
-                try {
-                    $doExpressCheckoutPaymentResponse = $service->DoExpressCheckoutPayment($doExpressCheckoutPaymentReq);
-                    if ($doExpressCheckoutPaymentResponse->Ack == $paypalSettings["status_success"]) {
-                        if ($doExpressCheckoutPaymentResponse->DoExpressCheckoutPaymentResponseDetails->PaymentInfo != null) {
-                            $paymentInfoArray = $doExpressCheckoutPaymentResponse->DoExpressCheckoutPaymentResponseDetails->PaymentInfo;
-                            foreach ($paymentInfoArray as $payInfo) {
-                                $this->transactionId = $payInfo->TransactionID;
-                            }
-
-                            $order = Doctrine_Core::getTable("Transaction")->getTransaction($orderId);
-                            $this->idReserva = $order->getReserveId();
-                            $reserve = Doctrine_Core::getTable('reserve')->findOneById($this->idReserva);
-
-                            //cancel other reserves not paid for the same rental dates
-                            $startDate0 = $reserve->getDate();
-                            $startDate = date("Y-m-d H:i:s", strtotime($startDate0));
-                            $endDate = date("Y-m-d H:i:s", strtotime($startDate0) + ($reserve->getDuration() * 60 * 60));
-
-                            $rangeDates = array($startDate, $endDate, $startDate, $endDate, $startDate, $endDate);
-                            $carid = $reserve->getCarId();
-
-                            $q = Doctrine_Query::create()
-                                    ->update('reserve r')
-                                    ->set('r.canceled', '?', 1)
-                                    ->set('r.visible_renter', '?', 0)
-                                    ->set('r.visible_owner', '?', 0)
-                                    ->set('r.cancel_reason', '?', 2)
-                                    ->where('r.car_id = ?', $carid)
-                                    ->andwhere('r.id <> ?', $reserve->getId())
-                                    ->andwhere('? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR ? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR r.date BETWEEN ? AND ? OR DATE_ADD(r.date, INTERVAL r.duration HOUR) BETWEEN ? AND ?', $rangeDates)
-                                    ->execute();
-
-
-                            $opcionLiberacion = $reserve->getLiberadoDeGarantia();
-                            if ($opcionLiberacion == 0) {
-                                $montoLiberacion = 0;
-                            } else if ($opcionLiberacion == 1) {
-                                $montoLiberacion = $reserve->getMontoLiberacion();
-                            }
-                            $finalPrice = $order->getPrice() + $montoLiberacion;
-                            if ($finalPrice > 0) {
-
-                                $this->_log("Pago", "Exito", "Usuario: " . $customer_in_session . ". Order ID: " . $order->getId());
-                                Doctrine_Core::getTable("Transaction")->successTransaction($orderId, $token, $paypalSettings["status_success"], 1);
-
-                                $idReserve = $order->getReserveId();
-                                $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
-
-                                $tokenReserve = $reserve->getToken();
-                                $this->tokenReserve = $reserve->getToken();
-                                $nameRenter = $reserve->getNameRenter();
-                                $this->nameOwner = $reserve->getNameOwner();
-                                $emailRenter = $reserve->getEmailRenter();
-                                $this->emailOwner = $reserve->getEmailOwner();
-                                $nameOwner = $reserve->getNameOwner();
-                                $emailOwner = $reserve->getEmailOwner();
-                                $lastnameRenter = $reserve->getLastnameRenter();
-                                $this->lastnameOwner = $reserve->getLastnameOwner();
-                                $lastnameOwner = $reserve->getLastnameOwner();
-                                $telephoneRenter = $reserve->getTelephoneRenter();
-                                $this->telephoneOwner = $reserve->getTelephoneOwner();
-                                $telephoneOwner = $reserve->getTelephoneOwner();
-                                $addressCar = $reserve->getAddressCar();
-                                $idCar = $reserve->getCarId();
-
-                                //verifica que la reserva no esté completa
-                                if (!$order->getCompleted()) {
-                                    //actualiza el estado completed
-                                    $order->setCompleted(true);
-                                    $order->save();
-
-                                    //envío de mail
-                                    require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
-
-
-                                    //pedidos de reserva pagado (propietario)
-                                    $mail = new Email();
-                                    $mailer = $mail->getMailer();
-
-                                    $message = $mail->getMessage();
-                                    $message->setSubject('El arrendatario ha pagado la reserva!');
-                                    $body = "<p>Hola $nameOwner:</p><p>El arrendatario ha pagado la reserva!</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>Puedes llenar el formulario <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/$idReserve'>desde tu celular</a>.</p><p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameRenter $lastnameRenter<br>Teléfono: $telephoneRenter<br>Correo: $emailRenter</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
-                                    $message->setBody($mail->addFooter($body), 'text/html');
-                                    $message->setTo($emailOwner);
-                                    $functions = new Functions;
-                                    $formulario = $functions->generarFormulario(NULL, $tokenReserve);
-                                    $reporte = $functions->generarReporte($idCar);
-                                    $contrato = $functions->generarContrato($tokenReserve);
-                                    $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
-                                    $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
-                                    $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
-                                    $mailer->send($message);
-
-
-                                    //pedidos de reserva pagado (arrendatario)
-                                    $message = $mail->getMessage();
-                                    $message->setSubject('La reserva ha sido pagada!');
-                                    $body = "<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
-                                    $message->setBody($mail->addFooter($body), 'text/html');
-                                    $message->setTo($emailRenter);
-                                    $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
-                                    $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
-                                    $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
-                                    $mailer->send($message);
-
-                                    //mail Soporte
-                                    $message = $mail->getMessage();
-                                    $message->setSubject('Nueva reserva paga ' . idReserve . '');
-                                    $body = "<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
-                                    $message->setBody($mail->addFooter($body), 'text/html');
-                                    $message->setTo("soporte@arriendas.cl");
-                                    $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
-                                    $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
-                                    $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
-                                    $mailer->send($message);
-
-                                    //crea la fila calificaciones habilitada para la fecha de término de reserva + 2 horas (solo si no es una extension de otra reserva)
-                                    if (!$reserve->getIdPadre()) {
-
-                                        $fecha = $reserve->getFechaHabilitacionRating();
-                                        $idOwner = $reserve->getIdOwner();
-                                        $idRenter = $reserve->getIdRenter();
-
-                                        $rating = new Rating();
-                                        $rating->setFechaHabilitadaDesde($fecha);
-                                        $rating->setIdOwner($idOwner);
-                                        $rating->setIdRenter($idRenter);
-                                        $rating->save();
-
-                                        //actualiza rating_id en la tabla Reserve
-                                        $ratingId = $rating->getId();
-                                        $reserve->setFechaPago(strftime("%Y-%m-%d %H:%M:%S"));
-                                        $reserve->setRatingId($ratingId);
-                                        $reserve->save();
-                                    }
-
-                                    //almacena $idReserve en la tabla mail calificaciones
-                                    $reserve->encolarMailCalificaciones();
-                                }
-                            } else {
-                                echo "No hay compras hechas para ser pagadas (Error de monto invalido)";
-                                $this->_log("Pago", "Error", "Usuario: " . $customer_in_session . ". Order ID: " . $order->getId());
-                                Doctrine_Core::getTable("Transaction")->successTransaction($orderId, $token, $paypalSettings["status_error"], 1);
-                            }
-                        }
-                    } else {
-                        /* doExpressCheckout Failure */
-                        $msg = " | API Error Message : " . $response->Errors[0]->LongMessage;
-                        $this->_log("Pago", "ApiError", "Usuario: " . $customer_in_session . ". Order ID: " . $orderId . $msg);
-                        $this->redirect("paypal/processPaymentFailure");
-                    }
-                } catch (Exception $ex) {
-                    /* exception on paypal service */
-                    $msg = " | Exception : " . $ex->getMessage();
-                    $this->_log("Exception", "Error", "Usuario: " . $customer_in_session . ". Order ID: " . $orderId . $msg);
-                    $this->redirect("paypal/processPaymentFailure");
-                }
+            if ($validationResult) {
+                $getTransactionResultOutput = $initTransactionResponse->return;
+                $this->_log("API", "success", $getTransactionResultOutput);
+                die("not bad");
+//                try {
+//                    $doExpressCheckoutPaymentResponse = $service->DoExpressCheckoutPayment($doExpressCheckoutPaymentReq);
+//                    if ($doExpressCheckoutPaymentResponse->Ack == $paypalSettings["status_success"]) {
+//                        if ($doExpressCheckoutPaymentResponse->DoExpressCheckoutPaymentResponseDetails->PaymentInfo != null) {
+//                            $paymentInfoArray = $doExpressCheckoutPaymentResponse->DoExpressCheckoutPaymentResponseDetails->PaymentInfo;
+//                            foreach ($paymentInfoArray as $payInfo) {
+//                                $this->transactionId = $payInfo->TransactionID;
+//                            }
+//
+//                            $order = Doctrine_Core::getTable("Transaction")->getTransaction($orderId);
+//                            $this->idReserva = $order->getReserveId();
+//                            $reserve = Doctrine_Core::getTable('reserve')->findOneById($this->idReserva);
+//
+//                            //cancel other reserves not paid for the same rental dates
+//                            $startDate0 = $reserve->getDate();
+//                            $startDate = date("Y-m-d H:i:s", strtotime($startDate0));
+//                            $endDate = date("Y-m-d H:i:s", strtotime($startDate0) + ($reserve->getDuration() * 60 * 60));
+//
+//                            $rangeDates = array($startDate, $endDate, $startDate, $endDate, $startDate, $endDate);
+//                            $carid = $reserve->getCarId();
+//
+//                            $q = Doctrine_Query::create()
+//                                    ->update('reserve r')
+//                                    ->set('r.canceled', '?', 1)
+//                                    ->set('r.visible_renter', '?', 0)
+//                                    ->set('r.visible_owner', '?', 0)
+//                                    ->set('r.cancel_reason', '?', 2)
+//                                    ->where('r.car_id = ?', $carid)
+//                                    ->andwhere('r.id <> ?', $reserve->getId())
+//                                    ->andwhere('? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR ? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR r.date BETWEEN ? AND ? OR DATE_ADD(r.date, INTERVAL r.duration HOUR) BETWEEN ? AND ?', $rangeDates)
+//                                    ->execute();
+//
+//
+//                            $opcionLiberacion = $reserve->getLiberadoDeGarantia();
+//                            if ($opcionLiberacion == 0) {
+//                                $montoLiberacion = 0;
+//                            } else if ($opcionLiberacion == 1) {
+//                                $montoLiberacion = $reserve->getMontoLiberacion();
+//                            }
+//                            $finalPrice = $order->getPrice() + $montoLiberacion;
+//                            if ($finalPrice > 0) {
+//
+//                                $this->_log("Pago", "Exito", "Usuario: " . $customer_in_session . ". Order ID: " . $order->getId());
+//                                Doctrine_Core::getTable("Transaction")->successTransaction($orderId, $token, $paypalSettings["status_success"], 1);
+//
+//                                $idReserve = $order->getReserveId();
+//                                $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+//
+//                                $tokenReserve = $reserve->getToken();
+//                                $this->tokenReserve = $reserve->getToken();
+//                                $nameRenter = $reserve->getNameRenter();
+//                                $this->nameOwner = $reserve->getNameOwner();
+//                                $emailRenter = $reserve->getEmailRenter();
+//                                $this->emailOwner = $reserve->getEmailOwner();
+//                                $nameOwner = $reserve->getNameOwner();
+//                                $emailOwner = $reserve->getEmailOwner();
+//                                $lastnameRenter = $reserve->getLastnameRenter();
+//                                $this->lastnameOwner = $reserve->getLastnameOwner();
+//                                $lastnameOwner = $reserve->getLastnameOwner();
+//                                $telephoneRenter = $reserve->getTelephoneRenter();
+//                                $this->telephoneOwner = $reserve->getTelephoneOwner();
+//                                $telephoneOwner = $reserve->getTelephoneOwner();
+//                                $addressCar = $reserve->getAddressCar();
+//                                $idCar = $reserve->getCarId();
+//
+//                                //verifica que la reserva no esté completa
+//                                if (!$order->getCompleted()) {
+//                                    //actualiza el estado completed
+//                                    $order->setCompleted(true);
+//                                    $order->save();
+//
+//                                    //envío de mail
+//                                    require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
+//
+//
+//                                    //pedidos de reserva pagado (propietario)
+//                                    $mail = new Email();
+//                                    $mailer = $mail->getMailer();
+//
+//                                    $message = $mail->getMessage();
+//                                    $message->setSubject('El arrendatario ha pagado la reserva!');
+//                                    $body = "<p>Hola $nameOwner:</p><p>El arrendatario ha pagado la reserva!</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>Puedes llenar el formulario <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/$idReserve'>desde tu celular</a>.</p><p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameRenter $lastnameRenter<br>Teléfono: $telephoneRenter<br>Correo: $emailRenter</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
+//                                    $message->setBody($mail->addFooter($body), 'text/html');
+//                                    $message->setTo($emailOwner);
+//                                    $functions = new Functions;
+//                                    $formulario = $functions->generarFormulario(NULL, $tokenReserve);
+//                                    $reporte = $functions->generarReporte($idCar);
+//                                    $contrato = $functions->generarContrato($tokenReserve);
+//                                    $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+//                                    $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
+//                                    $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+//                                    $mailer->send($message);
+//
+//
+//                                    //pedidos de reserva pagado (arrendatario)
+//                                    $message = $mail->getMessage();
+//                                    $message->setSubject('La reserva ha sido pagada!');
+//                                    $body = "<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
+//                                    $message->setBody($mail->addFooter($body), 'text/html');
+//                                    $message->setTo($emailRenter);
+//                                    $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+//                                    $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
+//                                    $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+//                                    $mailer->send($message);
+//
+//                                    //mail Soporte
+//                                    $message = $mail->getMessage();
+//                                    $message->setSubject('Nueva reserva paga ' . idReserve . '');
+//                                    $body = "<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
+//                                    $message->setBody($mail->addFooter($body), 'text/html');
+//                                    $message->setTo("soporte@arriendas.cl");
+//                                    $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+//                                    $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
+//                                    $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+//                                    $mailer->send($message);
+//
+//                                    //crea la fila calificaciones habilitada para la fecha de término de reserva + 2 horas (solo si no es una extension de otra reserva)
+//                                    if (!$reserve->getIdPadre()) {
+//
+//                                        $fecha = $reserve->getFechaHabilitacionRating();
+//                                        $idOwner = $reserve->getIdOwner();
+//                                        $idRenter = $reserve->getIdRenter();
+//
+//                                        $rating = new Rating();
+//                                        $rating->setFechaHabilitadaDesde($fecha);
+//                                        $rating->setIdOwner($idOwner);
+//                                        $rating->setIdRenter($idRenter);
+//                                        $rating->save();
+//
+//                                        //actualiza rating_id en la tabla Reserve
+//                                        $ratingId = $rating->getId();
+//                                        $reserve->setFechaPago(strftime("%Y-%m-%d %H:%M:%S"));
+//                                        $reserve->setRatingId($ratingId);
+//                                        $reserve->save();
+//                                    }
+//
+//                                    //almacena $idReserve en la tabla mail calificaciones
+//                                    $reserve->encolarMailCalificaciones();
+//                                }
+//                            } else {
+//                                echo "No hay compras hechas para ser pagadas (Error de monto invalido)";
+//                                $this->_log("Pago", "Error", "Usuario: " . $customer_in_session . ". Order ID: " . $order->getId());
+//                                Doctrine_Core::getTable("Transaction")->successTransaction($orderId, $token, $paypalSettings["status_error"], 1);
+//                            }
+//                        }
+//                    } else {
+//                        /* doExpressCheckout Failure */
+//                        $msg = " | API Error Message : " . $response->Errors[0]->LongMessage;
+//                        $this->_log("Pago", "ApiError", "Usuario: " . $customer_in_session . ". Order ID: " . $orderId . $msg);
+//                        $this->redirect("paypal/processPaymentFailure");
+//                    }
+//                } catch (Exception $ex) {
+//                    /* exception on paypal service */
+//                    $msg = " | Exception : " . $ex->getMessage();
+//                    $this->_log("Exception", "Error", "Usuario: " . $customer_in_session . ". Order ID: " . $orderId . $msg);
+//                    $this->redirect("paypal/processPaymentFailure");
+//                }
             } else {
                 /* getExpressCheckout Failure */
                 $msg = " | API Error Message : " . $response->Errors[0]->LongMessage;
@@ -308,22 +306,17 @@ class webpayActions extends sfActions {
         }
     }
 
-    public function executeProcessPaymentCanceled(sfWebRequest $request) {
+    public function executeProcessPaymentFinal(sfWebRequest $request) {
         $customer_in_session = $this->getUser()->getAttribute('userid');
 
         if ($customer_in_session) {
             $token = $request->getParameter("token");
             /* paypal init */
-            $paypalSettings = $this->getSettings();
+            $webpaySettings = $this->getSettings();
             /* execute payment */
-            $getExpressCheckoutDetailsReq = new GetExpressCheckoutDetailsReq();
-            $getExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType($token);
-            $getExpressCheckoutDetailsReq->GetExpressCheckoutDetailsRequest = $getExpressCheckoutDetailsRequest;
-            $service = new PayPalAPIInterfaceServiceService($this->getConfig($paypalSettings));
-            $response = $service->GetExpressCheckoutDetails($getExpressCheckoutDetailsReq);
+
             $orderId = null;
-            if ($response->Ack == $paypalSettings["status_success"]) {
-                $orderId = $response->GetExpressCheckoutDetailsResponseDetails->InvoiceID;
+            if (true) {
 
                 //$this->notificacion($token);
                 $last_order_id = $orderId;
