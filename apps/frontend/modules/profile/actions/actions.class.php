@@ -2729,11 +2729,11 @@ class profileActions extends sfActions {
                 //die();
                 //$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(1);
                 //$this->monto = $deposito[0]['monto'];
-                $this->monto = 5800;
-                $this->montoDiaUnico = 5800;
+                $this->monto = sfConfig::get("app_monto_garantia_por_dia");
+                $this->montoDiaUnico = sfConfig::get("app_monto_garantia_por_dia");
                 //$depo = Doctrine_Core::getTable("liberacionDeposito")->findById(2);
                 //$this->garantia = $depo[0]['monto'];
-                $this->garantia = 180000;
+                $this->garantia = sfConfig::get("app_monto_garantia");
 
                 $idArrendatario = $this->reserve->getUserId();
                 $this->arrendatario = Doctrine_Core::getTable('user')->find($idArrendatario);
@@ -2786,17 +2786,17 @@ class profileActions extends sfActions {
 
                 //$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(1);
                 //$this->monto = $deposito[0]['monto'];
-                $this->monto = 5800;
-                $this->montoDiaUnico = 5800;
+                $this->monto = sfConfig::get("app_monto_garantia_por_dia");
+                $this->montoDiaUnico = sfConfig::get("app_monto_garantia_por_dia");
                 //$depo = Doctrine_Core::getTable("liberacionDeposito")->findById(2);
                 //$this->garantia = $depo[0]['monto'];
-                $this->garantia = 180000;
+                $this->garantia = sfConfig::get("app_monto_garantia");
 
                 $this->deposito = $request->getParameter("deposito");
                 $this->montoDeposito = 0;
                 if ($this->deposito == "depositoGarantia") {
                     //$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(2);
-                    $this->montoDeposito = 180000;
+                    $this->montoDeposito = sfConfig::get("app_monto_garantia");
                     $this->enviarCorreoTransferenciaBancaria();
                 } else if ($this->deposito == "pagoPorDia") {
                     //$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(1);
