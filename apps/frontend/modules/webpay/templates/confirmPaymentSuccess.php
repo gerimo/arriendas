@@ -1,7 +1,7 @@
 <?php use_stylesheet('pagoReserva.css') ?>
 <div class="main_box_1">
     <div class="main_box_2">
-        <div id="fondoPP">
+        <div id="fondoPP" style="background-image: url('https://webpay3g.transbank.cl/webpayserver/imagenes/background.gif')">
             <?php if ($ppId): ?>
                 <div id="detallesPP"  <?php if ($hasDiscountFB): ?>style="height:200px;"<?php endif; ?>>
                     <table id="tableDetallesPP">
@@ -52,18 +52,9 @@
                             <tr>
                                 <td class="bordeDerGris bordeIzqGris"></td>
                                 <td class="bordeDerGris"></td>
-                                <th class="bordeDerGris">Valor Total a pagar por PayPal</th>
+                                <th class="bordeDerGris">Valor Total a pagar en WebPay</th>
                                 <?php if ($montoDeposito == 0) echo "<th class='bordeDerGris'>ERROR</th>";else { ?>
                                     <th class="bordeDerGris"><?= number_format($finalPrice, 0, ',', '.'); ?> CLP</th>
-                                <?php } ?>
-                            </tr>
-                            <tr>
-                                <td class="bordeDerGris bordeIzqGris"></td>
-                                <td class="bordeDerGris"></td>
-                                <th class="bordeDerGris">Valor en Dolares</th>
-                                <?php if ($montoDeposito == 0) echo "<th class='bordeDerGris'>ERROR</th>";else { ?>
-                                    <?php if ($deposito == "depositoGarantia") $montoDeposito = 0; ?>
-                                    <th class="bordeDerGris"><?= number_format($finalPricePayPal, 2, ',', '.'); ?> USD</th>
                                 <?php } ?>
                             </tr>
                         </tfoot>
@@ -82,11 +73,11 @@
                     <input type="hidden" name="carMarcaModel" value="<?php echo $carMarcaModel ?>"/>
                     <input type="hidden" name="duracionReserva" value="<?php echo $duracionReserva ?>"/>
                     <input type="hidden" name="idReserva" value="<?php echo $ppIdReserva ?>" />
-                    <div>
-                        <img src="https://www.paypal.com/en_US/i/logo/PayPal_mark_37x23.gif" alt="paypal" style="padding-top: 18px;"/>
-                        <form action="<?= $checkOutUrl ?>" method="post" id="checkform" >
+                    <div style="width: 300px">
+                        <?php echo image_tag('puntopagos/mp3.gif', array('alt' => 'WebPay', 'style' => 'padding-top: 15px;', )) ?>
+                        <form action="<?= $checkOutUrl ?>" method="post" id="checkform" style="display: inline-block;">
                             <input type="hidden" name="token_ws" value="<?= $checkOutToken ?>"/>
-                            <a class="botonPagar" style="width: 159px;" onclick="document.getElementById('checkform').submit()"></a>
+                            <a class="botonPagar" style="width: 159px; cursor: pointer;" onclick="document.getElementById('checkform').submit()"></a>
                         </form>
                     </div>
                 </div>
