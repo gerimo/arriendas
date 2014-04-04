@@ -23,7 +23,6 @@ class khipuActions extends sfActions {
         $this->montoDeposito = 0;
         if ($this->deposito == "depositoGarantia") {
             $this->montoDeposito = 180000;
-            //$this->enviarCorreoTransferenciaBancaria();
         } else if ($this->deposito == "pagoPorDia") {
             $this->montoDeposito = $montoTotalPagoPorDia;
         }
@@ -54,12 +53,9 @@ class khipuActions extends sfActions {
                     }
                 }
 
-                $opcionLiberacion = $reserve->getLiberadoDeGarantia();
-                if ($opcionLiberacion == 0) {
-                    $montoLiberacion = 0;
-                } else if ($opcionLiberacion == 1) {
-                    $montoLiberacion = $reserve->getMontoLiberacion();
-                }
+
+                $montoLiberacion = $reserve->getMontoLiberacion();
+
 
                 $this->hasDiscountFB = $order->getDiscountfb();
                 $this->priceMultiply = 1 - (0.05 * $order->getDiscountfb());
