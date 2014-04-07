@@ -138,9 +138,7 @@ class webpayActions extends sfActions {
                 /* informo a webpay que se recibio la notificación de transaccion */
                 $acknowledgeTransaction = new acknowledgeTransaction();
                 $acknowledgeTransaction->tokenInput = $token;
-                $acknowledgeTransactionResponse = $webpayService->getTransactionResult(
-                        array("acknowledgeTransaction" => $acknowledgeTransaction)
-                );
+                $acknowledgeTransactionResponse = $webpayService->acknowledgeTransaction($acknowledgeTransaction);
                 $transactionResultOutput = $getTransactionResultResponse->return;
                 $transactionId = $transactionResultOutput->buyOrder;
                 $this->_log("API", "succesful payment", "transacionId: " . $transactionResultOutput->buyOrder);
@@ -162,8 +160,6 @@ class webpayActions extends sfActions {
                 switch ($wsTransactionDetailOutput->responseCode) {
                     case "0":
                         /* transaccion aprobada */
-                        //                try {
-
                         $order = Doctrine_Core::getTable("Transaction")->getTransaction($transactionId);
                         $this->idReserva = $order->getReserveId();
                         $reserve = Doctrine_Core::getTable('reserve')->findOneById($this->idReserva);
@@ -327,25 +323,15 @@ class webpayActions extends sfActions {
 
     public function executeProcessPaymentFinal(sfWebRequest $request) {
         $customer_in_session = $this->getUser()->getAttribute('userid');
-
         if ($customer_in_session) {
-            $token = $request->getParameter("token");
-            /* paypal init */
-            $webpaySettings = $this->getSettings();
-            /* execute payment */
-
-            $orderId = null;
+            
             if (true) {
-
-                //$this->notificacion($token);
                 $last_order_id = $orderId;
                 $order = Doctrine_Core::getTable("Transaction")->getTransaction($last_order_id);
                 $this->_log("Pago", "Cancelado", "Usuario: " . $customer_in_session . ". Order ID: " . $order->getId());
                 $this->redirect("profile/pedidos");
             } else {
-                /* getExpressCheckout Failure */
-                $msg = " | API Error Message : " . $response->Errors[0]->LongMessage;
-                $this->_log("Pago", "ApiError", "Usuario: " . $customer_in_session . ". Order ID: " . $orderId . $msg);
+                $this->_log("Pago", "ApiError", "Usuario: " . $customer_in_session . " | " . "");
                 $this->redirect("paypal/processPaymentFailure");
             }
         } else {
@@ -354,6 +340,10 @@ class webpayActions extends sfActions {
     }
 
     public function executeProcessPaymentFailure(sfWebRequest $request) {
+        
+    }
+    
+    public function executeProcessPaymentRejected(sfWebRequest $request) {
         
     }
 
