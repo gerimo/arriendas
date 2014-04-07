@@ -504,3 +504,8 @@ div.time-picker{z-index: 1100;}
 .nombreMovil{
     display: none;
 }
+
+.link-contactar{
+    color: #2A2A2A; margin-left: 22px;
+    font-weight: normal;
+}

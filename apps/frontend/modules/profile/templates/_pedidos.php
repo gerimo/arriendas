@@ -163,7 +163,8 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo "<a href='#' id='contrato_" . $reserva['idReserve'] . "_" . $reserva['carId'] . "_" . $reserva['token'] . "' class='descargarContrato'>Descargar Contratos</a>";
                 echo "</div>";
                 echo "<div class='pago'>";
-                echo "<a href='#' id='extender_" . $reserva['idReserve'] . "' class='boton_extender " . $reserva['fechaInicio'] . "_" . $reserva['horaInicio'] . "_" . $reserva['fechaTermino'] . "_" . $reserva['horaTermino'] . "'>" . image_tag('img_pedidos/BotonExtender.png') . "</a>";
+                echo "<a href='#' id='extender_" . $reserva['idReserve'] . "' class='boton_extender " . $reserva['fechaInicio'] . "_" . $reserva['horaInicio'] . "_" . $reserva['fechaTermino'] . "_" . $reserva['horaTermino'] . "'>" . image_tag('img_pedidos/BotonExtender2.png', array("style" => "margin-top: 12px")) . "</a>";
+                echo "<div style='text-align: center; margin-top: 3px;'><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' style='margin: auto' >Contactar</a></div>";
                 echo "</div>";
                 echo "</div>";
             }
@@ -244,6 +245,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo"<div class='pagoBoton'>";
                 echo "<a href='#'>" . image_tag('img_pedidos/BotonPagar.png', 'class=botonPagar duracion_' . $reserva['duracion'] . ' id=pagar_' . $reserva['idReserve']) . "</a>";
                 echo "</div>";
+                echo "<div><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' >Contactar</a></div>";
                 echo"</div>";
             }
         }
@@ -317,6 +319,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo"<div class='pagoBoton'>";
                 echo "<a href='#'>" . image_tag('img_pedidos/BotonPagar.png', 'class=botonPagar duracion_' . $reserva['duracion'] . ' id=pagar_' . $reserva['idReserve']) . "</a>";
                 echo "</div>";
+                echo "<div><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' >Contactar</a></div>";
                 echo"</div>";
             }
         }
@@ -415,6 +418,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                                 echo "<div class='img'>" . image_tag('img_pedidos/IconoEnEspera.png') . "</div>";
                                 echo "<div class='texto'>En espera de confirmaci&oacute;n</div>";
                                 echo "</div>";
+                                echo "<div><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' >Contactar</a></div>";
                                 echo"</div>";
                                 echo"</div>";
                             }
@@ -504,6 +508,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                     echo"</div>";
                     echo"<div class='pagoCheckbox'>";
                     echo "</div>";
+                    echo "<div><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' >Contactar</a></div>";
                     echo"</div>";
                 }
             }
