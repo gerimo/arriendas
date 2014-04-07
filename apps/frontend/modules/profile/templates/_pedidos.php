@@ -163,8 +163,8 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo "<a href='#' id='contrato_" . $reserva['idReserve'] . "_" . $reserva['carId'] . "_" . $reserva['token'] . "' class='descargarContrato'>Descargar Contratos</a>";
                 echo "</div>";
                 echo "<div class='pago'>";
-                echo "<a href='#' id='extender_" . $reserva['idReserve'] . "' class='boton_extender " . $reserva['fechaInicio'] . "_" . $reserva['horaInicio'] . "_" . $reserva['fechaTermino'] . "_" . $reserva['horaTermino'] . "'>" . image_tag('img_pedidos/BotonExtender.png') . "</a>";
-                echo "<div><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' >Contactar</a></div>";
+                echo "<a href='#' id='extender_" . $reserva['idReserve'] . "' class='boton_extender " . $reserva['fechaInicio'] . "_" . $reserva['horaInicio'] . "_" . $reserva['fechaTermino'] . "_" . $reserva['horaTermino'] . "'>" . image_tag('img_pedidos/BotonExtender2.png', array("style" => "margin-top: 12px")) . "</a>";
+                echo "<div style='text-align: center; margin-top: 3px;'><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' style='margin: auto' >Contactar</a></div>";
                 echo "</div>";
                 echo "</div>";
             }
