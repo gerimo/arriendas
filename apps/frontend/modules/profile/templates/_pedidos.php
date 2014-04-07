@@ -555,7 +555,6 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo "<div class='der'>";
                 echo $reserva['horaInicio'] . "<br>" . $reserva['horaTermino'];
                 echo "</div>";
-                echo "<span class='comuna' >".$reserva['comuna']."</span>";
                 echo "</div>";
                 echo "<div class='infoUsuarioPagados ocultarWeb'>";
                 echo "<div class='izq'>";
@@ -636,7 +635,6 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo "<div class='der'>";
                 echo $reserva['horaInicio'] . "<br>" . $reserva['horaTermino'];
                 echo "</div>";
-                echo "<span class='comuna' >".$reserva['comuna']."</span>";
                 echo "</div>";
                 echo "<div class='infoUsuario ocultarWeb'>";
                 echo "<div class='izq'>";
@@ -719,7 +717,6 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo "<div class='der'>";
                 echo $reserva['horaInicio'] . "<br>" . $reserva['horaTermino'];
                 echo "</div>";
-                echo "<span class='comuna' >".$reserva['comuna']."</span>";
                 echo "</div>";
                 echo "<div class='infoUsuario ocultarWeb'>";
                 echo "<div class='izq'>";
@@ -848,7 +845,6 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo "<div class='der'>";
                 echo $reserva['horaInicio'] . "<br>" . $reserva['horaTermino'];
                 echo "</div>";
-                echo "<span class='comuna' >".$reserva['comuna']."</span>";
                 echo "</div>";
                 echo "<div class='infoUsuario ocultarWeb'>";
                 echo "<div class='izq'>";
