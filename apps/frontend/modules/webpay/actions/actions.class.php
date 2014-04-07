@@ -40,12 +40,8 @@ class webpayActions extends sfActions {
                 $this->ppId = $transacionId;
                 $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
 
-                $opcionLiberacion = $reserve->getLiberadoDeGarantia();
-                if ($opcionLiberacion == 0) {
-                    $montoLiberacion = 0;
-                } else if ($opcionLiberacion == 1) {
-                    $montoLiberacion = $reserve->getMontoLiberacion();
-                }
+
+                $montoLiberacion = $reserve->getMontoLiberacion();
 
                 $this->hasDiscountFB = $order->getDiscountfb();
                 $this->priceMultiply = 1 - (0.05 * $order->getDiscountfb());
