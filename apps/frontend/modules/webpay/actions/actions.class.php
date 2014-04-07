@@ -6,9 +6,8 @@ require_once sfConfig::get('sf_lib_dir') . '/vendor/webpay/WebpayService.php';
  * paypal actions.
  *
  * @package    CarSharing
- * @subpackage paypal
+ * @subpackage webpay
  * @author     Your name here
- * @version    SVN: $Id: actions.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
 class webpayActions extends sfActions {
 
@@ -38,7 +37,7 @@ class webpayActions extends sfActions {
             } else {
                 $order = Doctrine_Core::getTable("Transaction")->getTransaction($transacionId);
                 $idReserve = $order->getReserveId();
-                $this->ppId = $idReserve;
+                $this->ppId = $transacionId;
                 $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
 
                 $opcionLiberacion = $reserve->getLiberadoDeGarantia();
@@ -51,7 +50,7 @@ class webpayActions extends sfActions {
                 $this->hasDiscountFB = $order->getDiscountfb();
                 $this->priceMultiply = 1 - (0.05 * $order->getDiscountfb());
                 $this->ppMonto = $order->getPrice(); //reemplazar por metodo getMonto
-                $this->ppIdReserva = $request->getParameter("id");
+                $this->ppIdReserva = $idReserve;
 
                 $finalPrice = $order->getPrice() - $order->getDiscountamount() + $montoLiberacion;
                 $finalPrice = number_format($finalPrice, 0, '.', '');
@@ -117,7 +116,6 @@ class webpayActions extends sfActions {
         $customer_in_session = $this->getUser()->getAttribute('userid');
         if ($customer_in_session) {
             $token = $request->getPostParameter("token_ws");
-            $this->_log("Testing", "token", $token);
             $webpaySettings = $this->getSettings();
 
             /* execute payment */
@@ -141,7 +139,6 @@ class webpayActions extends sfActions {
                 $acknowledgeTransactionResponse = $webpayService->acknowledgeTransaction($acknowledgeTransaction);
                 $transactionResultOutput = $getTransactionResultResponse->return;
                 $transactionId = $transactionResultOutput->buyOrder;
-                $this->_log("API", "succesful payment", "transacionId: " . $transactionResultOutput->buyOrder);
                 $wsTransactionDetailOutput = $transactionResultOutput->detailOutput;
 
                 /*                 * ****** 
@@ -299,12 +296,20 @@ class webpayActions extends sfActions {
 
                     case "-1":
                         /* transaccion rechazada por el medio de pago */
-                        $msg = "API Error Message : " . $validationResult;
-                        $this->_log("Pago", "ApiError", $msg);
-                        $this->redirect("webpay/processPaymentFailure");
+                        $msg = "Transaccion #:" . $transactionId . " fue rechazada.";
+                        $this->_log("Pago", "Transaction Rejected", $msg);
+                        $this->redirect("webpay/processPaymentRejected");
                         break;
+                    case "-2":
+                        /* transaccion rechazada por el medio de pago */
+                        $msg = "Transaccion #:" . $transactionId . " debe reintentarse.";
+                        $this->_log("Pago", "Transaction Rejected", $msg);
+                        $this->redirect("webpay/processPaymentRejected");
+                        break;
+
                     default:
-                        $msg = "API Error Message : " . $validationResult;
+                        /* se produjo un error en el medio de pago */
+                        $msg = "Transaccion #: " . $transactionId . "  Error code:" . $wsTransactionDetailOutput->responseCode;
                         $this->_log("Pago", "ApiError", $msg);
                         $this->redirect("webpay/processPaymentFailure");
                         break;
@@ -324,16 +329,7 @@ class webpayActions extends sfActions {
     public function executeProcessPaymentFinal(sfWebRequest $request) {
         $customer_in_session = $this->getUser()->getAttribute('userid');
         if ($customer_in_session) {
-            
-            if (true) {
-                $last_order_id = $orderId;
-                $order = Doctrine_Core::getTable("Transaction")->getTransaction($last_order_id);
-                $this->_log("Pago", "Cancelado", "Usuario: " . $customer_in_session . ". Order ID: " . $order->getId());
-                $this->redirect("profile/pedidos");
-            } else {
-                $this->_log("Pago", "ApiError", "Usuario: " . $customer_in_session . " | " . "");
-                $this->redirect("paypal/processPaymentFailure");
-            }
+            $this->redirect("profile/pedidos");
         } else {
             $this->redirect('@homepage');
         }
@@ -342,7 +338,7 @@ class webpayActions extends sfActions {
     public function executeProcessPaymentFailure(sfWebRequest $request) {
         
     }
-    
+
     public function executeProcessPaymentRejected(sfWebRequest $request) {
         
     }
