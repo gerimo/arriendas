@@ -52,7 +52,10 @@ class KhipuService {
         /* curl exec */
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         $output = curl_exec($ch);
-        $info = curl_getinfo($ch);
+        if (curl_errno($ch) > 0) {
+            $info = curl_getinfo($ch);
+            throw new Exception("khipu connection error:" . curl_errno($ch) . " info:" . $info);
+        }
         curl_close($ch);
 
         return json_decode($output);
@@ -81,6 +84,10 @@ class KhipuService {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $to_send . "&notification_signature=" . urlencode($data["notification_signature"]));
         $response = curl_exec($ch);
+        if (curl_errno($ch) > 0) {
+            $info = curl_getinfo($ch);
+            throw new Exception("khipu connection error:" . curl_errno($ch) . " info:" . $info);
+        }
         curl_close($ch);
         return $response;
     }
@@ -102,7 +109,10 @@ class KhipuService {
 
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         $output = curl_exec($ch);
-        $info = curl_getinfo($ch);
+        if (curl_errno($ch) > 0) {
+            $info = curl_getinfo($ch);
+            throw new Exception("khipu connection error:" . curl_errno($ch) . " info:" . $info);
+        }
         curl_close($ch);
         $response = json_decode($output);
         return $response;

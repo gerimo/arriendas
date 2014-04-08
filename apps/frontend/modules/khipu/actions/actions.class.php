@@ -36,7 +36,7 @@ class khipuActions extends sfActions {
             } else {
                 $order = Doctrine_Core::getTable("Transaction")->getTransaction($request->getParameter('id'));
                 $idReserve = $order->getReserveId();
-                $this->ppId = $idReserve;
+                $this->ppId = $request->getParameter('id');
                 $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
 
                 $carClass = $reserve->getCar();
@@ -60,7 +60,7 @@ class khipuActions extends sfActions {
                 $this->hasDiscountFB = $order->getDiscountfb();
                 $this->priceMultiply = 1 - (0.05 * $order->getDiscountfb());
                 $this->ppMonto = $order->getPrice(); //reemplazar por metodo getMonto
-                $this->ppIdReserva = $request->getParameter("id");
+                $this->ppIdReserva = $idReserve;
 
                 $finalPrice = $order->getPrice() - $order->getDiscountamount() + $montoLiberacion;
                 $finalPrice = number_format($finalPrice, 0, '.', '');
@@ -69,7 +69,6 @@ class khipuActions extends sfActions {
                 if ($finalPrice > 0) {
                     /* la transaccion es valida, inicializo pago */
                     $settings = $this->getSettings();
-
                     $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["create-payment-url"]);
                     $data = array(
                         'receiver_id' => $settings["receiver_id"],
@@ -87,6 +86,7 @@ class khipuActions extends sfActions {
                     );
                     $this->checkOutUrl = "#";
                     try {
+                        $this->logMessage("Call khipu with url => " . $settings["create-payment-url"] . ", transaction_id:" . $data["transaction_id"]);
                         $response = $khipuService->createPaymentURL($data);
                         $this->checkOutUrl = $response->url;
                         $khipuTransaction = array(
@@ -95,7 +95,7 @@ class khipuActions extends sfActions {
                             "status" => "created"
                         );
                         $this->getUser()->setAttribute("khipu-transaction", $khipuTransaction);
-                    } catch (Exception $exc) {
+                    } catch (Exception $ex) {
                         $msg = " | Exception : " . $ex->getMessage();
                         $this->_log("Exception", "Error", "Usuario: " . $customer_in_session . ". Order ID: " . $order->getId() . $msg);
                         $this->redirect("khipu/processPaymentFailure");
