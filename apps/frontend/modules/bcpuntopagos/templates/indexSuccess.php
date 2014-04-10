@@ -88,9 +88,6 @@
                                 <td style="width:24%;"><input type="radio" name="pp_medio_pago" value="10"/> <?php echo image_tag('puntopagos/mp10.gif') ?></td>
                                 <td style="width:30%;"><input type="radio" name="pp_medio_pago" value="20" style="margin-top: 0px;"/><img src="https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png" border="0" alt="PayPal Logo"></td>
                             </tr>
-                            <tr>
-                                <td style="width:24%;"><input type="radio" name="pp_medio_pago" value="21" /><img src="https://s3.amazonaws.com/static.khipu.com/buttons/50x25.png" border="0" alt="Khipu" style="margin-top: 17px;margin-left: 10px;"></td>
-                            </tr>
                         </table>
                         
 
