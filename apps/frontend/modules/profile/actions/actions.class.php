@@ -1810,38 +1810,38 @@ class profileActions extends sfActions {
             $reserves_that_day_by_that_user = count($qb->fetchArray());
 
             if (count($reserves_that_day_by_that_user) <= 1) {
-                //avisamos por mail a los dueños de autos de esta nueva oportunidad
-                if (strtotime($from) > time() + (60 * 60 * 24)) {//partimos con los radios medios porque se multiplican por dos
-                    $radio = 8;
+                
+                if (strtotime($from) > time() + (60 * 60 * 24)) {
+                    /* radio 4 si la fecha menor a dos dias */
+                    $radio = 4;
                 } else {
-                    $radio = 2;
+                    /* radio 8 para fechas mayores a dos dias */
+                    $radio = 8;
                 }
-                //obtenemos los dueños de autos que se encuentren en el radio y 
-                //que su auto no se encuentra ya reservado para 
-                //ese lapso
+                
+                /* autos ya pagados*/
                 $q = Doctrine_Query::create()
                         ->select('r.car_id')
                         ->from('reserve r')
                         ->leftJoin('r.Transaction t')
                         ->where('t.completed = ?', true)
-                        //->andwhere('r.car_id = ?', $carid)
                         ->andwhere('? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) 
                                     OR ? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) 
                                     OR r.date BETWEEN ? AND ? 
                                     OR DATE_ADD(r.date, INTERVAL r.duration HOUR) BETWEEN ? AND ?', $rangeDates);
                 $payed_cars = $q->fetchArray();
-
+                $this->logMessage(">>>>>>>>> payed cars:".count($payed_cars));
+                $this->logMessage(">>>>>>>>> radio:".$radio);
                 $auxPayedCars_id = array();
                 foreach ($payed_cars as $payed_car) {
                     $auxPayedCars_id[] = $payed_car['Car_id'];
                 }
-
                 $car_lat = $car->getLat();
                 $car_lng = $car->getLng();
-                $maxPrice = $car->getPricePerDay() * 2;
-                $minPrice = $car->getPricePerDay() * 0.7;
-                do {
-                    $q = "
+                $maxPrice = $car->getPricePerDay() * 1.3;
+                $minPrice = $car->getPricePerDay() * 0.5;
+                /* obtengo todos los autos que cumplan con las condiciones */
+                $queryCars = "
                     SELECT c.*
                     from Car c 
                     WHERE c.seguro_ok=4
@@ -1849,41 +1849,42 @@ class profileActions extends sfActions {
                     AND c.price_per_day <= ? 
                     AND c.price_per_day >= ? 
                     AND distancia (?,?,c.lat,c.lng) < ?
-                    AND c.uso_vehiculo_id = ?
+                    AND c.uso_vehiculo_id = ? 
                     ORDER BY c.contesta_pedidos DESC
                     LIMIT 15";
-                    $query = Doctrine_Query::create()->query($q, array(
+                    $query = Doctrine_Query::create()->query($queryCars, array(
                         $maxPrice,
                         $minPrice,
                         $car_lat,
                         $car_lng,
                         $radio,
-                        $car->getUsoVehiculoId()
-                            )
+                        $car->getUsoVehiculoId())
                     );
-                    $available_cars = $query->toArray();
-
-                    $notifiable_cars = array();
-                    foreach ($available_cars as $available_car) {
-                        if (!in_array($available_car['id'], $auxPayedCars_id) && $available_car['id'] != $car->getId()) {
-                            $notifiable_cars[] = $available_car;
-                        }
+                $availableCars = $query->toArray();
+                $this->logMessage(">>>>>>>>> available cars:".count($availableCars));
+                $notifiable_cars = array();
+                foreach ($availableCars as $key => $availCar) {
+                    if (!in_array($availCar['id'], $auxPayedCars_id)) {
+                        $notifiable_cars[] = $availCar;
                     }
-                    $radio = $radio * 2;
-                } while (count($notifiable_cars) <= 0 and $radio < 10);
-                //var_dump($notifiable_cars);exit;
-                //enviamos los correos a los dueño de los notifiable_cars
+                }
+                $this->logMessage(">>>>>>>>> notificable cars:".count($notifiable_cars));
+                //enviamos los correos a los dueños de los notifiable_cars
                 foreach ($notifiable_cars as $notifiable_car) {
+                    $this->logMessage(">>>>>>>>> notificable car id:".$notifiable_car["user_id"]);
                     $owner = Doctrine_Core::getTable('user')->find($notifiable_car['User_id']);
-                    $mail = new Email();
-                    $mail->setSubject('Hay un oportunidad para arrendar tu auto!');
-                    $mail->setBody("
+                    
+                    $messageBody = "
                         <p>Hola " . $owner->getFirstname() . ":</p>
                         <p>La oportunidad es por $$price desde <b>$fechaInicio $horaInicio</b> hasta <b>$fechaTermino $horaTermino</b>.</p>
                         <p><b>Ingresa en la pestaña oportunidades y apruébala ahora mismo.</b></p>
-                        ");
-                    $mail->setTo($owner->getEmail());
-                    $mail->submit();
+                        ";
+                    $message = $this->getMailer()->compose();
+                    $message->setSubject("Hay un oportunidad para arrendar tu auto!");
+                    $message->setFrom('soporte@arriendas.cl', 'Soporte Arriendas');
+                    $message->setTo($owner->getEmail());
+                    $message->setBody($messageBody, "text/html");
+                    $this->getMailer()->send($message);
                 }
             }
         }
