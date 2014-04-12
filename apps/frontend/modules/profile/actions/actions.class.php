@@ -1819,7 +1819,7 @@ class profileActions extends sfActions {
                     $radio = 8;
                 }
                 
-                /* autos ya pagados*/
+                /* autos ya pagados */
                 $q = Doctrine_Query::create()
                         ->select('r.car_id')
                         ->from('reserve r')
@@ -1830,8 +1830,8 @@ class profileActions extends sfActions {
                                     OR r.date BETWEEN ? AND ? 
                                     OR DATE_ADD(r.date, INTERVAL r.duration HOUR) BETWEEN ? AND ?', $rangeDates);
                 $payed_cars = $q->fetchArray();
-                $this->logMessage(">>>>>>>>> payed cars:".count($payed_cars));
-                $this->logMessage(">>>>>>>>> radio:".$radio);
+                $this->logMessage("oportunidad -  payed cars:".count($payed_cars));
+                $this->logMessage("oportunidad -  radio:".$radio);
                 $auxPayedCars_id = array();
                 foreach ($payed_cars as $payed_car) {
                     $auxPayedCars_id[] = $payed_car['Car_id'];
@@ -1861,17 +1861,18 @@ class profileActions extends sfActions {
                         $car->getUsoVehiculoId())
                     );
                 $availableCars = $query->toArray();
-                $this->logMessage(">>>>>>>>> available cars:".count($availableCars));
+                $this->logMessage("oportunidad -  available cars:".count($availableCars));
                 $notifiable_cars = array();
                 foreach ($availableCars as $key => $availCar) {
-                    if (!in_array($availCar['id'], $auxPayedCars_id)) {
+                    /* chequea que el auto no este pago, ni sea el mismo dueño de la reserva */
+                    if (!in_array($availCar['id'], $auxPayedCars_id) && $availCar['User_id'] != $car->getUserId()) {
                         $notifiable_cars[] = $availCar;
                     }
                 }
-                $this->logMessage(">>>>>>>>> notificable cars:".count($notifiable_cars));
+                $this->logMessage("oportunidad -  notificable cars:".count($notifiable_cars));
                 //enviamos los correos a los dueños de los notifiable_cars
                 foreach ($notifiable_cars as $notifiable_car) {
-                    $this->logMessage(">>>>>>>>> notificable car id:".$notifiable_car["user_id"]);
+                    $this->logMessage("oportunidad -  notificable car user id:".$notifiable_car["User_id"]);
                     $owner = Doctrine_Core::getTable('user')->find($notifiable_car['User_id']);
                     
                     $messageBody = "
