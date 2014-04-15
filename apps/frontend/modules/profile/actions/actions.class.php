@@ -1864,9 +1864,19 @@ class profileActions extends sfActions {
                 $this->logMessage("oportunidad -  available cars:".count($availableCars));
                 $notifiable_cars = array();
                 foreach ($availableCars as $key => $availCar) {
+                    
                     /* chequea que el auto no este pago, ni sea el mismo dueño de la reserva */
                     if (!in_array($availCar['id'], $auxPayedCars_id) && $availCar['User_id'] != $car->getUserId()) {
-                        $notifiable_cars[] = $availCar;
+                        
+                        /* chequea que no existan reservas pre aprobadas para ese auto  */
+                        $q = "SELECT SUM(r.confirmed) as SUM FROM Reserve r INNER JOIN r.Car c ON  c.id = r.car_id ";
+                        $q .= "WHERE r.date = ? AND c.id = ?";
+                        $query = Doctrine_Query::create()->query($q, array($from, $availCar['id']));
+                        $sum = $query->toArray();
+                        $sum = array_pop($sum);
+                        if($sum['SUM'] == 0){
+                            $notifiable_cars[] = $availCar;
+                        }
                     }
                 }
                 $this->logMessage("oportunidad -  notificable cars:".count($notifiable_cars));
@@ -3614,7 +3624,7 @@ class profileActions extends sfActions {
 
                 /* es una oportunidad y esta disponible */
                 if ($reserva->getConfirmed() == false) {
-                    $q = "SELECT SUM(r.confirmed) as SUM FROM reserve r INNER JOIN r.Car c ON  c.id = r.car_id ";
+                    $q = "SELECT SUM(r.confirmed) as SUM FROM Reserve r INNER JOIN r.Car c ON  c.id = r.car_id ";
                     $q .= "WHERE r.date = ? AND r.user_id = ? AND c.user_id = ?";
                     $query = Doctrine_Query::create()->query($q, array($reserva->getDate(), $reserva->getUserId(), $this->getUser()->getAttribute("userid")));
                     $sum = $query->toArray();
