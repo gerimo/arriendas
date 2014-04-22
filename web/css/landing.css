@@ -523,12 +523,3 @@ a.altCta2.menor {
     background-position: right -524px;
     display:none;
 }
-
-
-.header_phone{
-    color: white;
-    font-size: 12px;
-    margin-top: 27px;
-    display: inline-block;
-    float: right;
-}

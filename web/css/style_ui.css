@@ -79,6 +79,15 @@ a {
     height: 72px;
     margin-bottom: 15px;
 }
+
+.header_phone{
+    color: white;
+    font-size: 12px;
+    margin-top: 27px;
+    display: inline-block;
+    float: right;
+}
+
 .top_header_menu {
     float: right;
     /*height: 40px;
