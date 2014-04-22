@@ -178,7 +178,7 @@ padding: 10px 0;float: left;width: 940px;"> Arriendas.cl En las Noticias </div>
 			<?php echo link_to(image_tag("/images/logos_canais/LogoTerra.png"), 'http://www.terra.cl/economia/emprendimiento/?pagina=noticias&id_reg=1793372','target=_blank') ?>
             </div>
             <div class="divTableCell ">
-                <?php echo image_tag("/images/logos_canais/LogoPulso.png") ?>
+                        <?php echo link_to(image_tag("/images/logos_canais/LogoPulso.png"),"http://pulsosocial.com/2014/02/26/en-arriendas-cl-puedes-alquilar-un-auto-por-horas-desde-clp5-mil/",'target=_blank') ?>
             </div>
             <div class="divTableCell ">
 			<?php echo link_to(image_tag("/images/logos_canais/13.png"), 'http://www.13.cl/t13/sociedad/arrienda-tu-auto-es-la-nueva-tendencia-entre-los-chilenos','target=_blank') ?>
