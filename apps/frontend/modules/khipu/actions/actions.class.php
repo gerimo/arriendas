@@ -86,7 +86,9 @@ class khipuActions extends sfActions {
                     );
                     $this->checkOutUrl = "#";
                     try {
-                        $this->logMessage("Call khipu with url => " . $settings["create-payment-url"] . ", transaction_id:" . $data["transaction_id"]);
+                        $msg = "Call khipu with url => " . $settings["create-payment-url"] . ", transaction_id:" . $data["transaction_id"] . "   notify_url: " . $data["notify_url"];
+                        $this->logMessage($msg);
+                        $this->_log("Call", "info", $msg);
                         $response = $khipuService->createPaymentURL($data);
                         $this->checkOutUrl = $response->url;
                         $khipuTransaction = array(
@@ -283,6 +285,9 @@ class khipuActions extends sfActions {
             $data = array('receiver_id' => $settings["receiver_id"],
                 'payment_id' => $khipuTransaction["payment-id"]
             );
+            $msg = "Call khipu with url => " . $settings["payment-status-url"] . ", payment_id:" . $data["payment_id"];
+            $this->_log("Call", "info", $msg);
+
             $response = $khipuService->paymentStatus($data);
             switch ($response->status) {
                 case "done":
