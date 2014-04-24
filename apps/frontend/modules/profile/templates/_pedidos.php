@@ -465,7 +465,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
 
         if ($mostrar) {
 
-            echo "<h3>CANCELADOS</h3>";
+            echo "<h3>ANULADOS</h3>";
 
             foreach ($reservasRealizadas as $reserva) {
                 if (isset($reserva['estado']) && $reserva['estado'] == 1) {
@@ -508,7 +508,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                     echo"<div class='eventoReserva'>";
                     echo "<div class='der'>";
                     echo "<div class='img'>" . image_tag('img_pedidos/IconoRechazado.png') . "</div>";
-                    echo "<div class='texto'>Cancelado</div>";
+                    echo "<div class='texto'>Anulado</div>";
                     echo "</div>";
                     echo"</div>";
                     echo"<div class='pagoCheckbox'>";
@@ -835,7 +835,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
 
     if ($mostrar) {
 
-        echo "<h3>CANCELADOS</h3>";
+        echo "<h3>ANULADOS</h3>";
 
         foreach ($reservasRecibidas as $reserva) {
             if (isset($reserva['estado']) && $reserva['estado'] == 1) {
@@ -877,7 +877,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo"<div class='eventoReserva'>";
                 echo "<div class='der'>";
                 echo "<div class='img'>" . image_tag('img_pedidos/IconoRechazado.png') . "</div>";
-                echo "<div class='texto'>Cancelado</div>";
+                echo "<div class='texto'>Anulado</div>";
                 echo "</div>";
                 echo"</div>";
                 echo"<div class='pagoCheckbox'>";
