@@ -184,7 +184,6 @@ else
         });
 
         if (geolocalizacion) {
-
             marker = new google.maps.Marker({
                 position: center,
                 map: map,
@@ -195,7 +194,6 @@ else
         google.maps.event.addListener(map, 'idle', function() {
             google.maps.event.clearListeners(map, 'idle');
             searchMarkers();
-
         });
 
         google.maps.event.addListener(map, 'dragend', function() {
@@ -204,7 +202,6 @@ else
         });
         google.maps.event.addListener(map, 'zoom_changed', function() {
             searchMarkers();
-
         });
 
         //Autocomplete
@@ -415,7 +412,6 @@ else
 
     function searchMarkers() {
 
-
         $('.search_arecomend_window').fadeOut('fast', function() {
             $("#loader").fadeIn("fast");
         });
@@ -449,6 +445,8 @@ else
         var model_hidden = encodeURIComponent(document.getElementById("model_hidden").value);
         var day_from_hidden = encodeURIComponent(document.getElementById("day_from_hidden").value);
         var day_to_hidden = encodeURIComponent(document.getElementById("day_to_hidden").value);
+        var region = $("#chooseRegion").val();
+        var comuna = $("#chooseComuna").val();
 
         if (price_hidden != '-') {
             precio = "&price=" + price_hidden;
@@ -463,27 +461,19 @@ else
 
 
         var url = "<?php echo url_for('main/map') ?>?day_from=" + day_from_hidden + "&day_to=" + day_to_hidden + "&model=" + model_hidden + "&hour_from=" + hour_from + "&hour_to=" + hour_to + "&brand=" + brand_hidden + "&transmission=" + transmision_hidden + "&type=" + tipo_hidden + "&location=" + location_hidden + precio + "&swLat=" + swLat + "&swLng=" + swLng + "&neLat=" + neLat + "&neLng=" + neLng + "";
+        if (region && region.length > 0 && region != 0) {
+            url += "&region=" + region;
+        }
+        if (comuna && comuna.length > 0 && comuna != 0) {
+            url += "&comuna=" + comuna;
+        }
 
         //document.write(var_dump(url,'html'));
 
         $.getJSON(url, function(data) {
-            //console.log(markers);
 
-            //    if (markers) {
-            //        for (i in markers) {
-            //           markers[i].setMap(null);
-            //      }
-            //          markers =  new Array();
-            //            markers.length = 0;
-            //          }
-
-//	    	console.log(markers);
 
             if (markers) {
-                // Unset all markers
-//console.log('clearMarkers');
-
-
                 var i = 0, l = markers.length;
                 var markersLength = markers.length;
                 for (i; i < l; i++) {
@@ -491,15 +481,10 @@ else
                 }
                 markers = [];
             }
-            ;
 
             if (markersLength > 0) {
-//console.log('clearMarkersCluster');
-                //          if (markerCluster) {
-//markerCluster.clearMarkers();
                 markerCluster.clearMarkers();
             }
-            ;
             var contador = 0;
             var nodes = '';
             for (var i = 0; i < data.cars.length; i++) {
@@ -664,17 +649,25 @@ else
 
             var mcOptions = {maxZoom: 10};
 
-
             markerCluster = new MarkerClusterer(map, markers, mcOptions);
-            //alert(markers);
 
-//            $("#loading").css("display","none");
+//            var bounds = new google.maps.LatLngBounds();
+//            for (var i = 0, LtLgLen = markers.length; i < LtLgLen; i++) {
+//              bounds.extend(markers[i].position);
+//            }
+//            map.fitBounds(bounds);
 
 
 
 
-            //tb_show("Thickbox","cartaRec.html?placeValuesBefor eTB_=savedValues&TB_iframe=true&height=500&width=6 00&modal=true","media/loadingAnimation.gif");
-
+//            google.maps.event.addListener(map, 'idle', function() {
+//                google.maps.event.addListener(map, 'dragend', function() {
+//                    searchMarkers();
+//                });
+//                google.maps.event.addListener(map, 'zoom_changed', function() {
+//                    searchMarkers();
+//                });
+//            });
 
         });
 
@@ -965,7 +958,43 @@ else
         });
 
 
+        $("#chooseRegion").change(function() {
+            $.getJSON("<?php echo url_for('main/getComunasSearch') ?>", {codigo: $(this).val(), ajax: 'true'}, function(j) {
+                var options = '';
+                for (var i = 0; i < j.length; i++) {
+                    options += '<option value="' + j[i].optionValue + '" >' + j[i].optionDisplay + '</option>';
+                }
+                $("#chooseComuna").html(options);
+            });
+        });
 
+        $("#chooseComuna").change(function() {
+            var service = new google.maps.places.AutocompleteService();
+            var inputStr = $("#chooseRegion option:selected").text() + " " + $("#chooseComuna option:selected").text();
+            var request = {
+                bounds: map.getBounds(),
+                input: inputStr,
+                componentRestrictions: {country: 'cl'}
+            };
+            service.getPlacePredictions(request, function(predictions, status) {
+                if (status != google.maps.places.PlacesServiceStatus.OK) {
+                    alert(status);
+                    return;
+                }
+                var prediction = predictions[0];
+                console.log(predictions);
+                var placeSrv = new google.maps.places.PlacesService(map);
+                placeSrv.getDetails({reference: prediction.reference}, function(place, status){
+                    console.log(place);
+                    if (place.geometry.viewport) {
+                        map.fitBounds(place.geometry.viewport);
+                    } else {
+                        map.setCenter(place.geometry.location);
+                        map.setZoom(17);
+                    }
+                });
+            });
+        });
 
         $('a.mapcar_btn_detalle').live('click', function(event) {
 
@@ -1203,26 +1232,34 @@ else
 
 </style>
 
-<input type="hidden" id="hour_from_hidden"<?php if ($hour_from && $hour_from != '01:00') {
+<input type="hidden" id="hour_from_hidden"<?php
+if ($hour_from && $hour_from != '01:00') {
     echo ' value="' . $hour_from . '"';
-} ?> />
-<input type="hidden" id="hour_to_hidden"<?php if ($hour_to && $hour_to != '01:00') {
+}
+?> />
+<input type="hidden" id="hour_to_hidden"<?php
+if ($hour_to && $hour_to != '01:00') {
     echo ' value="' . $hour_to . '"';
-} ?> />
+}
+?> />
 <input type="hidden" id="price_hidden" />
 <input type="hidden" id="transmision_hidden" />
 <input type="hidden" id="tipo_hidden" />
 <input type="hidden" id="model_hidden" value="0"  />
 <input type="hidden" id="brand_hidden" />
 <input type="hidden" id="location_hidden" />
-<input type="hidden" id="day_from_hidden" value="<?php if ($day_from && $day_from != '12-11-2013') {
+<input type="hidden" id="day_from_hidden" value="<?php
+if ($day_from && $day_from != '12-11-2013') {
     echo $day_from;
 } else {
     echo "12-11-2013";
-} ?>" />
-<input type="hidden" id="day_to_hidden"<?php if ($day_to) {
+}
+?>" />
+<input type="hidden" id="day_to_hidden"<?php
+if ($day_to) {
     echo ' value="' . $day_to . '"';
-} ?> />
+}
+?> />
 
 <script>
 
@@ -1233,10 +1270,10 @@ else
             $('#opc_filtro').toggle("slow");
         });
         $("#btn_buscar").click(function() {
-            if(openFilters){
+            if (openFilters) {
                 $("#btn_filtro2").click();
                 openFilters = false;
-            }else{
+            } else {
                 $("#btn_filtro1").click();
                 openFilters = true;
             }
@@ -1294,7 +1331,7 @@ else
     
 </script>
 <div id="instrucciones_paso1" style="z-index:1; position: absolute; margin-top: -123px; margin-left: -3px; display: none;">
-            <?php echo image_tag("instrucciones/InstruccionesWeb1.png"); ?>
+<?php echo image_tag("instrucciones/InstruccionesWeb1.png"); ?>
     
 </div>
 <div id="instrucciones_paso2" style="z-index:1; position: absolute; margin-top: -123px; margin-left: -3px; display: none;">
@@ -1315,18 +1352,18 @@ else
     <div class="slogan">
         <div class="slogan_izq"><div class="triangulo_izq"></div></div>
         <div class="land_slogan_area" style="padding-top: 12px;height: 38px;">
-<?php
-if (stripos($_SERVER['SERVER_NAME'], "arrendas") !== FALSE)
-    echo "<h2>Autos en alquiler desde 5.000 pesos la hora, cerca tuyo</h2>";
-else
-    echo "<div id='tagLineArrendador'>
+            <?php
+            if (stripos($_SERVER['SERVER_NAME'], "arrendas") !== FALSE)
+                echo "<h2>Autos en alquiler desde 5.000 pesos la hora, cerca tuyo</h2>";
+            else
+                echo "<div id='tagLineArrendador'>
                     <h2>Arriendas es tu <span class='dest'>propio negocio</span>, empieza a monetizar tu auto ";
-if (sfContext::getInstance()->getUser()->isAuthenticated()) {
-    echo "</h2>";
-} else {
-    echo "<span class='dest'><a href='" . url_for('main/register') . "' title='Ingresa aquí para registrarte' style='color:#00AEEF;'>aquí</a></span></h2>";
-}
-echo "</div>
+            if (sfContext::getInstance()->getUser()->isAuthenticated()) {
+                echo "</h2>";
+            } else {
+                echo "<span class='dest'><a href='" . url_for('main/register') . "' title='Ingresa aquí para registrarte' style='color:#00AEEF;'>aquí</a></span></h2>";
+            }
+            echo "</div>
                 <div id='tagLineArrendatario'>
                     <h2 style='font-family: Helvetica,Arial,sans-serif;font-size: 26px;
 letter-spacing: -1px;
@@ -1336,7 +1373,7 @@ color: #303030;
 font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con seguro 1000UF, asistencia y TAGs en el <span class='dest'>precio final</span></h2>
 
                 </div>";
-?>
+            ?>
 
         </div><!-- land_slogan_area -->
         <div class="slogan_der"><div class="triangulo_der"></div></div>
@@ -1351,30 +1388,64 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
                 </div>
                 <div class="search_box_1_PrincipalNew">
                     <div class="search_box_1_header">    
-                        <div class="search_box1_form" style="">
-                            <span style="width: 360px;" class="group_desde"><span class="numberBlue">1</span>Comuna |</span><span style="width: 222px;" class="group_desde"><span class="numberBlue">2</span>Desde |</span><span style="width: 227px;" class="group_hasta"><span class="numberBlue">3</span>Hasta |</span><span style="width: 51px;" class="group_hasta"><span class="numberBlue">4</span>Filtros |</span></span>
-                            <input class="input_f0" id="searchTextField" style="margin-right: 5px;margin-left: 10px;width: 355px;" type="text" size="50" placeholder="Ingrese Ciudad" autocomplete="off"/>
-                            <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_from" value="<?php if ($day_from && $day_from != '12-11-2013') {
-                            echo $day_from;
-                        } else {
-                            echo "Fecha desde";
-                        } ?>"/>
-                            <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="hour_from" value="<?php if ($hour_from && $hour_from != '01:00') {
-                            echo $hour_from;
-                        } else {
-                            echo "Hora";
-                        } ?>"/>
-                            <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_to" value="<?php if ($day_to) {
-                            echo $day_to;
-                        } else {
-                            echo "Fecha hasta";
-                        } ?>"/>
-                            <input class="input_f1b" style="width: 95px;" readonly="readonly" type="text" id="hour_to"  value="<?php if ($hour_to && $hour_to != '01:00') {
-                            echo $hour_to;
-                        } else {
-                            echo "Hora";
-                        } ?>" />
-                            <button id="btn_buscar" title="Buscar autos"></button>
+                        <div class="search_box1_form">
+                            <div style="width: 100px; display: inline-block" >
+                                <div class="group_desde" style="width: 90px;"><span class="numberBlue">1</span>Región |</span></div>
+                                <select class="input_f0" id="chooseRegion" style="margin-left: 5px;width: 90px;">
+                                    <option value="">Elegir región</option>
+<?php foreach ($regiones as $region): ?>
+                                        <option value="<?= $region->getCodigo() ?>"><?= $region->getNombre() ?></option>
+<?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div style="width: 114px; display: inline-block">
+                                <div class="group_desde" style="width: 104px;"><span class="numberBlue">2</span>Comuna |</span></div>
+                                <select class="input_f0" id="chooseComuna" style="margin-left: 5px;width: 104px;">
+                                    <option value="">Elegir comuna</option>
+                                </select>
+                            </div>
+                            <div style="width: 142px; display: inline-block">
+                                <div class="group_desde" style="width: 100px;"><span class="numberBlue">3</span>Dirección |</span></div>
+                                <input class="input_f0" id="searchTextField" style="margin-left: 5px;width: 114px;" type="text" size="50" placeholder="Ingrese Dirección" autocomplete="off"/>
+                            </div>
+                            <div style="width: 227px; display: inline-block">
+                                <span style="width: 220px;" class="group_desde"><span class="numberBlue">4</span>Desde |</span>
+                                <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_from" value="<?php
+                                if ($day_from && $day_from != '12-11-2013') {
+                                    echo $day_from;
+                                } else {
+                                    echo "Fecha desde";
+                                }
+                                ?>"/>
+                                <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="hour_from" value="<?php
+                                if ($hour_from && $hour_from != '01:00') {
+                                    echo $hour_from;
+                                } else {
+                                    echo "Hora";
+                                }
+                                ?>"/>
+                            </div>
+                            <div style="width: 227px; display: inline-block">
+                                <span style="width: 220px;" class="group_hasta"><span class="numberBlue">5</span>Hasta |</span>
+                                <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_to" value="<?php
+                                if ($day_to) {
+                                    echo $day_to;
+                                } else {
+                                    echo "Fecha hasta";
+                                }
+                                ?>"/>
+                                <input class="input_f1b" style="width: 95px;" readonly="readonly" type="text" id="hour_to"  value="<?php
+                                if ($hour_to && $hour_to != '01:00') {
+                                    echo $hour_to;
+                                } else {
+                                    echo "Hora";
+                                }
+                                ?>" />
+                            </div>
+                            <div style="width: 100px; display: inline-block">
+                                <span style="width: 51px;" class="group_desde"><span class="numberBlue">6</span>Filtros |</span>
+                                <button id="btn_buscar" title="Buscar autos"></button>
+                            </div>
                         </div>
 
                         <!-- buscador avanzado -->
@@ -1390,7 +1461,7 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
                                 <select name="brand" id="brand" style="margin-right:20px;" >
                                     <option value="" selected="selected">Marca</option>	
 <?php foreach ($brand as $b): ?>	
-                                            <option value="<?= $b['id'] ?>" ><?= $b['name'] ?></option> 		
+                                                <option value="<?= $b['id'] ?>" ><?= $b['name'] ?></option> 		
 <?php endforeach; ?>
                                 </select>
         

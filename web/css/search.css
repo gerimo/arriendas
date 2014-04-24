@@ -525,6 +525,7 @@ ul.search_arecomend_info li.tag_comuna_city{
 	position: relative;
 	left: 6px;
 	top: 0px;
+        float: left;
 }
 .search_box_ubica {
 	float: left;
@@ -546,7 +547,7 @@ ul.search_arecomend_info li.tag_comuna_city{
 	color: #909090;
 	font-family: 'MakoRegular', Arial, "MS Trebuchet", sans-serif;
 }
-.search_box1_form input {
+.search_box1_form input, .search_box1_form select {
 	background-image: url("../images/img_search/land_form_input_bg.png");
 	background-repeat: repeat-x;
 	background-color: #FFFFFF;
@@ -674,7 +675,13 @@ margin-right: 18px;
 	float: left;
 	margin-left: 10px;
 }
-
+.group_filter{
+    width: 100px;
+    height:16px;
+    margin-bottom: 10px;
+    margin-top: 2px;
+    margin-left: 12px;
+}
 .group_desde {
 	font-size:11px;
 	text-align:left;
