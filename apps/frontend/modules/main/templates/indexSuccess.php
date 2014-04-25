@@ -966,6 +966,30 @@ else
                 }
                 $("#chooseComuna").html(options);
             });
+            
+            var service = new google.maps.places.AutocompleteService();
+            var inputStr = $("#chooseRegion option:selected").text();
+            var request = {
+                bounds: map.getBounds(),
+                input: inputStr,
+                componentRestrictions: {country: 'cl'}
+            };
+            service.getPlacePredictions(request, function(predictions, status) {
+                if (status != google.maps.places.PlacesServiceStatus.OK) {
+                    return;
+                }
+                var prediction = predictions[0];
+                var placeSrv = new google.maps.places.PlacesService(map);
+                placeSrv.getDetails({reference: prediction.reference}, function(place, status){
+                    if (place.geometry.viewport) {
+                        map.fitBounds(place.geometry.viewport);
+                    } else {
+                        map.setCenter(place.geometry.location);
+                        map.setZoom(17);
+                    }
+                });
+            });
+            
         });
 
         $("#chooseComuna").change(function() {
@@ -978,14 +1002,11 @@ else
             };
             service.getPlacePredictions(request, function(predictions, status) {
                 if (status != google.maps.places.PlacesServiceStatus.OK) {
-                    alert(status);
                     return;
                 }
                 var prediction = predictions[0];
-                console.log(predictions);
                 var placeSrv = new google.maps.places.PlacesService(map);
                 placeSrv.getDetails({reference: prediction.reference}, function(place, status){
-                    console.log(place);
                     if (place.geometry.viewport) {
                         map.fitBounds(place.geometry.viewport);
                     } else {
