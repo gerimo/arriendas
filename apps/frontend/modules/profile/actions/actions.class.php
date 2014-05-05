@@ -2733,13 +2733,16 @@ class profileActions extends sfActions {
             try {
 
                 //check if facebook discount has been used
-                $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
-                $q = Doctrine_Query::create()
-                        ->from('transaction t')
-                        ->where('t.user_id = ?', $idUsuario)
-                        ->andwhere('t.discountfb = ?', true);
-
-                $discountAlready = $q->fetchArray();
+//                $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+//                $q = Doctrine_Query::create()
+//                        ->from('transaction t')
+//                        ->where('t.user_id = ?', $idUsuario)
+//                        ->andwhere('t.discountfb = ?', true);
+//
+//                $discountAlready = $q->fetchArray();
+                
+                /* los descuentos estan deshabilitados por el momento */
+                $discountAlready = TRUE;
 
                 if ($discountAlready) {
                     $this->getRequest()->setParameter('hideNoDiscountLabel', true);
