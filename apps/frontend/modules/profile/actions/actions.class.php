@@ -3562,9 +3562,11 @@ class profileActions extends sfActions {
                     SELECT * 
                     FROM reserve r 
                     JOIN r.Car c 
+                    JOIN c.Model m 
                     WHERE r.date > NOW() 
                     AND c.seguro_ok=4
                     AND c.activo=1
+                    AND m.id_tipo_vehiculo = ? 
                     AND c.price_per_day <= ? 
                     AND c.price_per_day >= ? 
                     AND c.uso_vehiculo_id = ? 
@@ -3577,6 +3579,7 @@ class profileActions extends sfActions {
                     GROUP BY r.user_id, DATE(r.date)";
 
                 $query = Doctrine_Query::create()->query($q, array(
+                    $car->getModel()->getIdTipoVehiculo(),
                     $maxPrice,
                     $minPrice,
                     $car->getUsoVehiculoId(),

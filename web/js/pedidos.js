@@ -203,6 +203,9 @@ function bindEventsAll(){
             if (accion == 'preaprobar' || accion.indexOf('oportunidad') !== -1) { //debe aprobar los contratos
 
 //				console.log('aprobar reserva');			
+                if(accion === 'oportunidad'){
+                    buildCarSelect(id);
+                }
 
                 $("#confirmarContratosPropietario").dialog({
                     resizable: false,
@@ -1277,6 +1280,21 @@ function ingresarExtension(id) {
         alert('Ha ocurrido un error al extender la reserva, inténtelo nuevamente');
     });
 }
+
+function buildCarSelect(reserveId){
+        $("#carsSelect").empty();
+        $.ajax({
+            "url": urlCars+"?reserve_id="+reserveId,
+            "success":function(carsData){
+                for(var i=0; i<carsData.length; i++){
+                    var car = carsData[i];
+                    var optionTmpl = "<option name='"+car.id+"'>"+car.brand+" "+car.model+", patente: "+car.patente+"</option>";
+                    $("#carsSelect").append(optionTmpl);
+                }
+            },
+        });
+        
+    }
 
 function masDeUnDia() {
 
