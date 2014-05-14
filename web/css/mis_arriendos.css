@@ -307,6 +307,10 @@ h3 a{
     color: #00AEEF;
 }
 
+.oportunidades .cabecera .fechaReserva{
+    text-align: left;
+}
+
 .cabecera .eventoReserva{
     float: right;
 }
@@ -326,6 +330,12 @@ h3 a{
 .pedidosEnEspera .pago{
     margin-top: 18px;
     width: 55px;
+}
+
+.pedidosEnEspera.oportunidades .bloqueEstado, .oportunidades .bloqueEstadoCabecera{
+    float: left;
+    margin-left: 10px;
+    width: 100%;
 }
 
 .cabecera .textoChico {

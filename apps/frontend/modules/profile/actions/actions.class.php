@@ -3709,6 +3709,57 @@ class profileActions extends sfActions {
                 $j++;
             } while ($reservasRecibidas);
         }
+        
+        
+        $fechaReservasRealizadas = array();
+        if (isset($reservasRecibidasAux)) {
+            foreach ($reservasRecibidasAux as $i => $reservasRealizadas) {
+                if( $reservasRealizadas[$i]['estado'] == 0  || $reservasRealizadas[$i]['estado'] == 1 ){
+                    if (!$fechaReservasRealizadas) { //no hay elemento
+                        $fechaReservasRealizadas[$i]['fechaInicio'] = $reservasRealizadas['fechaInicio'];
+                        $fechaReservasRealizadas[$i]['horaInicio'] = $reservasRealizadas['horaInicio'];
+                        $fechaReservasRealizadas[$i]['fechaTermino'] = $reservasRealizadas['fechaTermino'];
+                        $fechaReservasRealizadas[$i]['horaTermino'] = $reservasRealizadas['horaTermino'];
+                        $fechaReservasRealizadas[$i]['cantCar'] = 0;
+                    }
+
+                    //verifica que la fecha y hora no se encuentren almacenadas
+                    $existe = false;
+                    foreach ($fechaReservasRealizadas as $reserva) {
+                        if (isset($reserva['fechaInicio'])) {
+                            if ($reserva['fechaInicio'] == $reservasRealizadas['fechaInicio'] && $reserva['horaInicio'] == $reservasRealizadas['horaInicio'] && $reserva['fechaTermino'] == $reservasRealizadas['fechaTermino'] && $reserva['horaTermino'] == $reservasRealizadas['horaTermino']) {
+                                $existe = true;
+                            }
+                        }
+                    }
+
+                    if (!$existe) {
+                        $fechaReservasRealizadas[$i]['fechaInicio'] = $reservasRealizadas['fechaInicio'];
+                        $fechaReservasRealizadas[$i]['horaInicio'] = $reservasRealizadas['horaInicio'];
+                        $fechaReservasRealizadas[$i]['fechaTermino'] = $reservasRealizadas['fechaTermino'];
+                        $fechaReservasRealizadas[$i]['horaTermino'] = $reservasRealizadas['horaTermino'];
+                        $fechaReservasRealizadas[$i]['cantCar'] = 0;
+                    }
+                }
+            }
+        }
+
+        foreach ($fechaReservasRealizadas as $i => $fechaReserva) {
+            if (isset($fechaReserva['fechaInicio'])) {
+                foreach ($reservasRecibidasAux as $reserva) {
+                    if (isset($fechaReserva['fechaInicio']) && isset($reserva['fechaInicio']) && $fechaReserva['fechaInicio'] == $reserva['fechaInicio'] && $fechaReserva['horaInicio'] == $reserva['horaInicio'] && $fechaReserva['fechaTermino'] == $reserva['fechaTermino'] && $fechaReserva['horaTermino'] == $reserva['horaTermino']) {
+                        if (!isset($fechaReserva['cantCar'])) {
+                            $fechaReservasRealizadas[$i]['cantCar'] = 1;
+                        } else {
+                            $fechaReservasRealizadas[$i]['cantCar'] ++;
+                        }
+                    }
+                }
+            }
+        }
+        
+        
+        $this->fechaReservasRealizadas = $fechaReservasRealizadas;
         $this->reservasRecibidas = $reservasRecibidasAux;
         $this->cars = $activeCars;
     }
