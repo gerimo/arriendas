@@ -2511,16 +2511,56 @@ class profileActions extends sfActions {
         if ($this->getUser()->getAttribute("horatermino"))
             $this->fndreserve['horatermino'] = $this->getUser()->getAttribute("horatermino");
 
-        //obtiene la fecha y hora de la última reserva vigente (a cualquier vehículo)
-        $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
-
-        //$reservas = Doctrine_Core::getTable("Reserve")->findByUserId($idUsuario);
-
+        
         $fechaActual = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"));
         $this->ultimaFechaValidaDesde = date("d-m-Y", strtotime($fechaActual));
         $this->ultimaFechaValidaHasta = date("d-m-Y",strtotime("+2 days",strtotime($fechaActual)));
         $this->ultimaHoraValidaDesde = date("H:i",strtotime($fechaActual));
         $this->ultimaHoraValidaHasta = date("H:i",strtotime($fechaActual)+12*3600);
+        $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+        if($idUsuario)
+        {
+            $reservas = Doctrine_Core::getTable("Reserve")->findByUserId($idUsuario);
+            $ultimaFecha = null;
+            $ultimoId = null;
+            $duracion = null;
+            foreach ($reservas as $reserva) 
+            {
+                if(!$ultimaFecha)
+                {
+                    $ultimoId = $reserva->getId();
+                    $ultimaFecha = strtotime($reserva->getDate());
+                    $duracion = $reserva->getDuration();
+                }
+                else
+                {
+                    if($ultimoId < $reserva->getId())
+                    {
+                        $ultimoId = $reserva->getId();
+                        $ultimaFecha = strtotime($reserva->getDate());
+                        $duracion = $reserva->getDuration();
+                    }
+                }
+            }
+            if($ultimaFecha)
+            {
+                $fechaAlmacenadaDesde = date("YmdHis",$ultimaFecha);
+                if( date("YmdHis", strtotime($fechaActual)) < $fechaAlmacenadaDesde)
+                {
+                    $day_from = date("d-m-Y",$ultimaFecha);
+                    $hour_from = date("H:i",$ultimaFecha);
+                    $day_to = date("d-m-Y",$ultimaFecha+$duracion*3600);
+                    $hour_to = date("H:i",$ultimaFecha+$duracion*3600);
+                    $this->ultimaFechaValidaDesde = $day_from;
+                    $this->ultimaFechaValidaHasta = $day_to;
+                    $this->ultimaHoraValidaDesde = $hour_from;
+                    $this->ultimaHoraValidaHasta = $hour_to;
+                    
+                }
+            }
+        }
+
+        
 
 
         /////información del auto
