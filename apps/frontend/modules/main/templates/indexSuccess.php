@@ -175,6 +175,9 @@ else
 <?php if (isset($_GET['ciudad']) && $_GET['ciudad'] == "viña"): ?>
             center = new google.maps.LatLng(-33.0, -71.3);
 <?php endif; ?>
+<?php if (isset($map_clat) && isset($map_clng)): ?>
+            center = new google.maps.LatLng(<?= $map_clat ?>, <?= $map_clng ?>);
+<?php endif; ?>
 
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: 14,
@@ -460,9 +463,12 @@ else
             precio = "&clat=" + lat + "&clng=" + lon + "&price=" + start_price;
         }
 
+            var center = map.getCenter();
+            var map_lat = center.lat();
+            var map_lng = center.lng();
 
 
-        var url = "<?php echo url_for('main/map') ?>?day_from=" + day_from_hidden + "&day_to=" + day_to_hidden + "&model=" + model_hidden + "&hour_from=" + hour_from + "&hour_to=" + hour_to + "&brand=" + brand_hidden + "&transmission=" + transmision_hidden + "&type=" + tipo_hidden + "&location=" + location_hidden + precio + "&swLat=" + swLat + "&swLng=" + swLng + "&neLat=" + neLat + "&neLng=" + neLng + "";
+        var url = "<?php echo url_for('main/map') ?>?day_from=" + day_from_hidden + "&day_to=" + day_to_hidden + "&model=" + model_hidden + "&hour_from=" + hour_from + "&hour_to=" + hour_to + "&brand=" + brand_hidden + "&transmission=" + transmision_hidden + "&type=" + tipo_hidden + "&location=" + location_hidden + precio + "&swLat=" + swLat + "&swLng=" + swLng + "&neLat=" + neLat + "&neLng=" + neLng + "&map_clat=" + map_lat + "&map_clng=" + map_lng + "";
 
         //document.write(var_dump(url,'html'));
 

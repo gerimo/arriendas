@@ -756,6 +756,11 @@ public function executeNotificacion(sfWebRequest $request) {
 
         $q = Doctrine::getTable('City')->createQuery('c')->where('c.name = ? ', array($cityname));
         $city = $q->fetchOne();
+        
+        if ($this->getUser()->getAttribute("map_clat") && $this->getUser()->getAttribute("map_clng")) {
+            $this->map_clat = $this->getUser()->getAttribute("map_clat");
+            $this->map_clng = $this->getUser()->getAttribute("map_clng");
+        }
 
         if ($city != null) {
             $this->lat = $city->getLat();
@@ -1024,7 +1029,10 @@ public function executeNotificacion(sfWebRequest $request) {
         
         $lat_centro = $request->getParameter('clat');
         $lng_centro = $request->getParameter('clng');
-
+        
+        /* remember center */
+        $this->getUser()->setAttribute("map_clat", $request->getParameter('map_clat'));
+        $this->getUser()->setAttribute("map_clng", $request->getParameter('map_clng'));
 		
         /*
           if (
