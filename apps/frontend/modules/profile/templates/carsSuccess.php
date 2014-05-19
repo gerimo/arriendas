@@ -20,27 +20,18 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     		e.preventDefault();
     	});
         
-              
         $(".selectorActivo").change(function() {
-	    	<?php
-	    	foreach ($cars as $c): 
-			if($c->getActivo()){
-			?>
-				$("option.activo_<?php echo $c->getId(); ?>:selected").each(function() {
-			    	$(".select_<?php echo $c->getId(); ?>").css("display","block");
-			    	$(".unselect_<?php echo $c->getId(); ?>").css("display","none");
-			    });
-			    $("option.inactivo_<?php echo $c->getId(); ?>:selected").each(function() {
-			    	$(".select_<?php echo $c->getId(); ?>").css("display","none");
-			    	$(".unselect_<?php echo $c->getId(); ?>").css("display","block");
-			    });
-		    <?php
-			}//end if 
-			endforeach; 
-			?>
-                                    
                 var id = $(this).parent().attr("id").replace("car_", "");
                 var active = $(this).val();
+                var divImgActivo = $(this).parent().children(".imgActivo");
+                if(active == 0){
+                    divImgActivo.children(".circuloActivo").css("display","none");
+                    divImgActivo.children(".circuloInactivo").css("display","block");
+                }else{
+                    divImgActivo.children(".circuloInactivo").css("display","none");
+                    divImgActivo.children(".circuloActivo").css("display","block");
+                }
+                    
                 $('#item_'+id+' .cargando').show();
                 $.ajax({
                         type:'post',
@@ -50,7 +41,6 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                             "active" : active
                         }
                 }).done(function(){
-                        $('#item_'+id).hide();
                         $('#item_'+id+' .cargando').hide();
                 }).fail(function(){
                         alert('Ha ocurrido un error al eliminar el vehículo, inténtelo nuevamente');
@@ -86,7 +76,6 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 
 <?php 
 	foreach ($cars as $c): 
-		if($c->getActivo()){
 ?>
 	
 	<!-- auto_publicado -->
@@ -96,12 +85,12 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
             
             <div class="activo" id="car_<?php echo $c->getId() ?>">
                 <div class="imgActivo">
-                        <div class="circuloActivo select_<?php echo $c->getId() ?>"></div>
-                        <div class="circuloInactivo unselect_<?php echo $c->getId() ?>"></div>
+                        <div class="circuloActivo" style="display: <?= ($c->getActivo() == 1)?"block":"none" ?>"></div>
+                        <div class="circuloInactivo" style="display: <?= ($c->getActivo() == 0)?"block":"none" ?>" ></div>
                 </div>
                 <select class="selectorActivo">
-                    <option class="activo_<?php echo $c->getId() ?>" value="1">Activo</option>
-                    <option class="inactivo_<?php echo $c->getId() ?>" value="0">Inactivo</option>
+                    <option value="1" <?= ($c->getActivo() == 1)?"selected":"" ?>>Activo</option>
+                    <option value="0" <?= ($c->getActivo() == 0)?"selected":"" ?>>Inactivo</option>
                 </select>
             </div>
             
@@ -166,7 +155,6 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 
 
 <?php
-}//end if 
 endforeach; 
 ?>  
     
