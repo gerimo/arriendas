@@ -13,11 +13,52 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 
 <script type="text/javascript">
     var urlEliminarCarAjax = <?php echo "'".url_for("profile/eliminarCarAjax")."';" ?>
+    var toggleActiveCarAjax = <?php echo "'".url_for("profile/toggleActiveCarAjax")."';" ?>
 
     $(document).on('ready',function(){
     	$('.mis_autos_verificado').on('click',function(e){
     		e.preventDefault();
     	});
+        
+              
+        $(".selectorActivo").change(function() {
+	    	<?php
+	    	foreach ($cars as $c): 
+			if($c->getActivo()){
+			?>
+				$("option.activo_<?php echo $c->getId(); ?>:selected").each(function() {
+			    	$(".select_<?php echo $c->getId(); ?>").css("display","block");
+			    	$(".unselect_<?php echo $c->getId(); ?>").css("display","none");
+			    });
+			    $("option.inactivo_<?php echo $c->getId(); ?>:selected").each(function() {
+			    	$(".select_<?php echo $c->getId(); ?>").css("display","none");
+			    	$(".unselect_<?php echo $c->getId(); ?>").css("display","block");
+			    });
+		    <?php
+			}//end if 
+			endforeach; 
+			?>
+                                    
+                var id = $(this).parent().attr("id").replace("car_", "");
+                var active = $(this).val();
+                $('#item_'+id+' .cargando').show();
+                $.ajax({
+                        type:'post',
+                        url: toggleActiveCarAjax,
+                        data:{
+                            "idCar" : id,
+                            "active" : active
+                        }
+                }).done(function(){
+                        $('#item_'+id).hide();
+                        $('#item_'+id+' .cargando').hide();
+                }).fail(function(){
+                        alert('Ha ocurrido un error al eliminar el vehículo, inténtelo nuevamente');
+                        $('#item_'+id+' .cargando').hide();
+                });
+                                    
+        });
+        
     });
 </script>
 
@@ -52,6 +93,18 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 	<div class="misautos_user_item" id="item_<?php echo $c->getId() ?>">
 	    
 	<div class="misautos_user_post">
+            
+            <div class="activo" id="car_<?php echo $c->getId() ?>">
+                <div class="imgActivo">
+                        <div class="circuloActivo select_<?php echo $c->getId() ?>"></div>
+                        <div class="circuloInactivo unselect_<?php echo $c->getId() ?>"></div>
+                </div>
+                <select class="selectorActivo">
+                    <option class="activo_<?php echo $c->getId() ?>" value="1">Activo</option>
+                    <option class="inactivo_<?php echo $c->getId() ?>" value="0">Inactivo</option>
+                </select>
+            </div>
+            
 	<div class="misautos_marca">
 		<a href="<?php echo url_for('profile/addCar?id=' . $c->getId() )?>" ><span><?=$c->getModel()->getBrand()->getName()?> <?=$c->getModel()->getName()?></span></a>
 	</div><!-- misautos_marca -->
@@ -105,8 +158,6 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 			}
 		?>
 	</a>
-
-	<p class='textoEliminar'><a href="#" class='eliminar' id="<?php echo $c->getId() ?>">(Eliminar)</a></p>
 
 	</div>
 	

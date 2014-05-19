@@ -119,6 +119,16 @@ class profileActions extends sfActions {
 
         die();
     }
+    
+    public function executeToggleActiveCarAjax(sfWebRequest $request) {
+        $idCar = $request->getPostParameter('idCar');
+        $active = $request->getPostParameter('active');
+
+        $car = Doctrine_Core::getTable("car")->findOneById($idCar);
+        $car->setActivo($active);
+        $car->save();
+        die();
+    }
 
     public function executePruebaMail(sfWebRequest $request) {
         require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
