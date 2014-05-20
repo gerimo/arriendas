@@ -36,7 +36,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 			<td class='titulo'>COMISI&Oacute;N ARRIENDAS</td>
 			<td class='titulo'>PRECIO SEGURO</td>
 			<td class='titulo'>NETO</td>
-			<td class='titulo'>RESUMEN</td>
+			<td class='titulo'>DEP&Oacute;SITO EN GARANT&Iacute;A</td>
 		</tr>
 		<?php foreach ($transaccionesRenter as $transaccion) {
 
@@ -46,7 +46,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 				echo "<td>$".$transaccion['comisionArriendas']." CLP</td>";
 				echo "<td>$".$transaccion['precioSeguro']." CLP</td>";
 				echo "<td><span class='destacado'>$".$transaccion['neto']." CLP</span><br><span class='textoChico'>Fecha de dep&oacute;sito ".$transaccion['fechaDeposito']."</span></td>";
-				echo "<td>Arriendo exitoso</td>";
+				echo "<td>$".$transaccion['depositoGarantia']." CLP</td>";
 			echo "</tr>";
 
 		}
@@ -68,7 +68,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 			<td class='titulo'>COMISI&Oacute;N ARRIENDAS</td>
 			<td class='titulo'>PRECIO SEGURO</td>
 			<td class='titulo'>NETO</td>
-			<td class='titulo'>RESUMEN</td>
+			<td class='titulo'>DEP&Oacute;SITO EN GARANT&Iacute;A</td>
 		</tr>
 		<?php foreach ($transaccionesOwner as $transacciones) {
 
@@ -78,7 +78,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 				echo "<td>$".$transacciones['comisionArriendas']." CLP</td>";
 				echo "<td>$".$transacciones['precioSeguro']." CLP</td>";
 				echo "<td><span class='destacado'>$".$transacciones['neto']." CLP</span><br><span class='textoChico'>Fecha de dep&oacute;sito ".$transacciones['fechaDeposito']."</span></td>";
-				echo "<td>Arriendo exitoso</td>";
+				echo "<td>$".$transaccion['depositoGarantia']." CLP</td>";
 			echo "</tr>";
 
 		}

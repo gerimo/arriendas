@@ -2228,6 +2228,7 @@ class profileActions extends sfActions {
                 $transaccionesRenter[$i]['comisionArriendas'] = number_format($precio * 0.15, 0, ',', '.');
                 $transaccionesRenter[$i]['precioSeguro'] = number_format($precio * 0.15, 0, ',', '.');
                 $transaccionesRenter[$i]['neto'] = number_format($precio * 0.7, 0, ',', '.');
+                $transaccionesRenter[$i]['depositoGarantia'] = number_format($reserve->getMontoLiberacion(), 0, ',', '.');
             }
         }
         //var_dump($transaccionesRenter);die();
@@ -2255,6 +2256,7 @@ class profileActions extends sfActions {
                 $transaccionesOwner[$i]['comisionArriendas'] = number_format($precio * 0.15, 0, ',', '.');
                 $transaccionesOwner[$i]['precioSeguro'] = number_format($precio * 0.15, 0, ',', '.');
                 $transaccionesOwner[$i]['neto'] = number_format($precio * 0.7, 0, ',', '.');
+                $transaccionesRenter[$i]['depositoGarantia'] = number_format($reserve->getMontoLiberacion(), 0, ',', '.');
             }
         }
         //var_dump($transaccionesOwner);die();
