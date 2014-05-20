@@ -1660,7 +1660,7 @@ require_once "Mail/mime.php";
  
  $host = "smtp.sendgrid.net";
  $username = "german@arriendas.cl";
- $password = "Holahello00@";
+ $password = "whisper00@@__";
  
  $headers = array ('From' => $from,
    'To' => $to,

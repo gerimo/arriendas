@@ -28,7 +28,7 @@ class Email{
 	//private $content_type = "image/jpg";
 	private $host = "smtp.sendgrid.net";
 	private $username = "german@arriendas.cl";
-	private $password = "Holahello00@";
+	private $password = "whisper00@@__";
 
 	function __constructor(){   
 	}
@@ -112,7 +112,7 @@ class Email{
         {
             $transport = Swift_SmtpTransport::newInstance('smtp.sendgrid.net', 465, 'ssl')
             ->setUsername('german@arriendas.cl')
-             ->setPassword('Holahello00@');
+             ->setPassword('whisper00@@__');
             $mailer = Swift_Mailer::newInstance($transport);
             
             return $mailer;
