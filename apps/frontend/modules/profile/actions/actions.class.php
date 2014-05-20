@@ -3790,7 +3790,7 @@ class profileActions extends sfActions {
         $fechaReservasRealizadas = array();
         if (isset($reservasRecibidasAux)) {
             foreach ($reservasRecibidasAux as $i => $reservasRealizadas) {
-                if( $reservasRealizadas[$i]['estado'] == 0  || $reservasRealizadas[$i]['estado'] == 1 ){
+                if( isset($reservasRecibidasAux[$i]['estado']) && ($reservasRecibidasAux[$i]['estado'] == 0  || $reservasRecibidasAux[$i]['estado'] == 1) ){
                     if (!$fechaReservasRealizadas) { //no hay elemento
                         $fechaReservasRealizadas[$i]['fechaInicio'] = $reservasRealizadas['fechaInicio'];
                         $fechaReservasRealizadas[$i]['horaInicio'] = $reservasRealizadas['horaInicio'];

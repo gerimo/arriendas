@@ -9,11 +9,11 @@ class ArriendasSoapClient extends SoapClient {
 
     function __doRequest($request, $location, $action, $version, $oneWay = 0) {
 
-        $PRIVATE_KEY_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/arriendasVentas.key";
-        $CERT_FILE_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/arriendasVentas.csr";
 
-        $this->_log("InfoSOAP", "Response", $request . "    " . $location. "   ". $action);
-        
+        $PRIVATE_KEY_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/arriendasVentas.key";
+        $CERT_FILE_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/arriendasVentas.crt";
+        $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certifacate_server.crt";
+
         $doc = new DOMDocument('1.0');
         $doc->loadXML($request);
         $objWSSE = new WSSESoap($doc);
@@ -25,14 +25,11 @@ class ArriendasSoapClient extends SoapClient {
         $objKey = new XMLSecurityKey(XMLSecurityKey::AES256_CBC);
         $objKey->generateSessionKey();
         $retVal = parent::__doRequest($objWSSE->saveXML(), $location, $action, $version, $oneWay);
-        
-        $this->_log("InfoSOAP", "Response", $retVal . "    " . $location. "   ". $action);
-        
         $doc = new DOMDocument();
         $doc->loadXML($retVal);
         return $doc->saveXML();
     }
-    
+
     protected function _log($step, $status, $msg) {
 
         $logPath = sfConfig::get('sf_log_dir') . '/webpay.log';
