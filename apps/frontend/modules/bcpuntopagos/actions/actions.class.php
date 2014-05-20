@@ -355,6 +355,15 @@ class bcpuntopagosActions extends sfActions {
                     $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
                     $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
                     $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+                    
+                    $renterUser = $reserve->getUser();
+                    if (!is_null($renterUser->getDriverLicenseFile())) {
+                        $filepath = $renterUser->getDriverLicenseFile();
+                        if (is_file($filepath)) {
+                            $message->attach(Swift_Attachment::fromPath($renterUser->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$renterUser->getLicenceFileName()));
+                        }
+                    }
+                    
                     $mailer->send($message);
 
 
