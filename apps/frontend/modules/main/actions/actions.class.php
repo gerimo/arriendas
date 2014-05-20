@@ -2242,43 +2242,18 @@ $this->logMessage(date('h:i:s'), 'err');
         $url = str_replace('http://', '', $url);
         $url = str_replace('https://', '', $url);
         $url = 'http://www.arriendas.cl/main/recover?email=' . $user->getEmail() . "&hash=" . $user->getHash();
+        $this->logMessage($url);
 
-		sfContext::getInstance()->getLogger()->info($url);
+        $body = "<p>Hola:</p><p>Para generar una nueva contraseña, haz click <a href='$url'>aqu&iacute;</a></p>";
+        $message = $this->getMailer()->compose();
+        $message->setSubject("Recuperar Password");
+        $message->setFrom('soporte@arriendas.cl', 'Soporte Arriendas');
+        $message->setTo($user->getEmail());
+        $message->setBody($body, "text/html");
+        $this->getMailer()->send($message);
 
-        $correo = $user->getEmail();
-
-        require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
-        $mail = new Email();
-        $mail->setSubject('Recuperar Password');
-        $mail->setBody("<p>Hola:</p><p>Para generar una nueva contraseña, haz click <a href='$url'>aqu&iacute;</a></p>");
-        $mail->setTo($correo);
-        $mail->submit();
-
-		sfContext::getInstance()->getLogger()->info("<p>Hola:</p><p>Para generar una nueva contraseña, haz click <a href='$url'>aqu&iacute;</a></p>");
-
-		sfContext::getInstance()->getLogger()->info('mail sent');
-
-        /*
-        $to = $user->getEmail();
-        $subject = "Recuperar Password";
-
-        // compose headers
-        $headers = "From: \"Arriendas Reservas\" <no-reply@arriendas.cl>\n";
-        $headers .= "Content-type: text/html\n";
-        $headers .= "X-Mailer: PHP/" . phpversion() . "\n";
-
-
-        //$url = 'http://'.$url . $this->getController()->genUrl('main/recover?email=' . $user->getEmail() . "&hash=" . $user->getPassword());
-        $mail = 'Para generar una nueva contrase&ntilde;a para tu cuenta, haz click <a href="' . $url . '">aqu&iacute;</a>. <br/><br/>
-        
-        Gracias,<br/>
-        El equipo de Arriendas.cl
-        <br><br>
-        <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> ';
-
-        // send email
-        $this->mailSmtp($to, $subject, $mail, $headers);
-        */
+        $this->logMessage($body);
+        $this->logMessage('mail sent');
     }
 
     public function executeRecover(sfWebRequest $request) {
