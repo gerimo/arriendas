@@ -19,9 +19,12 @@ class Functions
     //var_dump($reserva);
 	$confirmed=$transaction->getCompleted();
 		
+    $dateTimeDevolucion = date("Y-m-d H:i:s", strtotime("+".$reserva->getDuration()." hours", strtotime($reserva->getDate())));
 	
     $datosContrato->fecha_arriendo=substr($reserva->getDate(),8,2)."/".substr($reserva->getDate(),5,2)."/".substr($reserva->getDate(),0,4);
     $datosContrato->hora_arriendo=substr($reserva->getDate(),11,5);
+    $datosContrato->fecha_devolucion=substr($dateTimeDevolucion,8,2)."/".substr($dateTimeDevolucion,5,2)."/".substr($dateTimeDevolucion,0,4);
+    $datosContrato->hora_devolucion=substr($dateTimeDevolucion,11,5);
     $datosContrato->duracion_arriendo=$reserva->getDuration()." horas";
     $datosContrato->precio_arriendo="$".number_format($reserva->getPrice(),0,",",".");
     
@@ -78,6 +81,9 @@ class Functions
     
     //Reemplazamos los datos por la informacion del contrato
     $contrato= str_replace("{fecha_arriendo}",utf8_decode($datosContrato->fecha_arriendo),$contrato);
+    $contrato= str_replace("{hora_ariendo}",$datosContrato->hora_arriendo,$contrato);
+    $contrato= str_replace("{fecha_devolucion}",utf8_decode($datosContrato->fecha_devolucion),$contrato);
+    $contrato= str_replace("{hora_devolucion}",$datosContrato->hora_devolucion,$contrato);
     $contrato= str_replace("{nombre_completo_duenio}",utf8_decode($datosContrato->nombre_duenio),$contrato);
     $contrato= str_replace("{rut_duenio}",$datosContrato->rut_duenio,$contrato);
     $contrato= str_replace("{comuna_duenio}",utf8_decode($datosContrato->comuna_duenio),$contrato);
