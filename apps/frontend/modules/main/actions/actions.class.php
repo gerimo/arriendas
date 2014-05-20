@@ -688,10 +688,14 @@ public function executeNotificacion(sfWebRequest $request) {
             $this->getUser()->setAttribute('geolocalizacion', false);
         }
         
-        $day_from = $this->getUser()->getAttribute('day_from');
-        $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+        $fechaActual = $this->formatearHoraChilena(strftime("%Y%m%d%H%M%S"));
+        $this->day_from = date("d-m-Y", strtotime($fechaActual));
+        $this->day_to = date("d-m-Y",strtotime("+2 days",strtotime($fechaActual)));
+        $this->hour_from = date("H:i",strtotime($fechaActual));
+        $this->hour_to = date("H:i",strtotime($fechaActual)+12*3600);
         
-        if($idUsuario && $day_from == '12-11-2013')
+        $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+        if($idUsuario)
         {
             $reservas = Doctrine_Core::getTable("Reserve")->findByUserId($idUsuario);
             $ultimaFecha = null;
@@ -717,9 +721,8 @@ public function executeNotificacion(sfWebRequest $request) {
             }
             if($ultimaFecha)
             {
-                $fechaActual = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"));
                 $fechaAlmacenadaDesde = date("YmdHis",$ultimaFecha);
-                if($fechaActual < $fechaAlmacenadaDesde)
+                if( date("YmdHis", strtotime($fechaActual)) < $fechaAlmacenadaDesde)
                 {
                     $day_from = date("d-m-Y",$ultimaFecha);
                     $hour_from = date("H:i",$ultimaFecha);
@@ -730,28 +733,16 @@ public function executeNotificacion(sfWebRequest $request) {
                     $this->getUser()->setAttribute('day_to', $day_to);
                     $this->getUser()->setAttribute('hour_from', $hour_from);
                     $this->getUser()->setAttribute('hour_to', $hour_to);
+                    
+                    $this->day_from = $day_from;
+                    $this->day_to = $day_to;
+                    $this->hour_from = $hour_from;
+                    $this->hour_to = $hour_to;
+                    
                 }
             }
         }
         
-        $fechaActual = $this->formatearHoraChilena(strftime("%Y%m%d%H%M%S"));
-        $day_to = $this->getUser()->getAttribute('day_to');
-        $hour_from = $this->getUser()->getAttribute('hour_from');
-        $hour_to = $this->getUser()->getAttribute('hour_to');
-        
-        $this->day_from = date("d-m-Y", strtotime($fechaActual));
-        $this->day_to = date("d-m-Y",strtotime("+2 days",strtotime($fechaActual)));
-        $this->hour_from = date("H:i",strtotime($fechaActual));
-        $this->hour_to = date("H:i",strtotime($fechaActual)+12*3600);
-        
-        if(date("Y-m-d H:i:s",strtotime($day_from)) > $fechaActual){
-            $this->day_from = $day_from;
-            $this->day_to = date("d-m-Y",strtotime("+2 days",strtotime($day_from)));
-            $this->hour_from = date("H:i",strtotime($day_from)+6*3600);
-            $this->hour_to = date("H:i",strtotime($day_from)+22*3600);
-        }
-        
-
         $cityname = $request->getParameter('c');
 
         $q = Doctrine::getTable('City')->createQuery('c')->where('c.name = ? ', array($cityname));
