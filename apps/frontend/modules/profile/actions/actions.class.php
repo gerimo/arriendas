@@ -1644,7 +1644,7 @@ class profileActions extends sfActions {
 //                    //comprueba que sea el mismo auto
                     if ($carid == $reserva->getCarId() && $startDate == $reserva->getDate() && $durationReserva == $reserva->getDuration()) {
 //
-//                        //comprueba que la reserva no esté eliminada o cancelada
+//                        //comprueba que la reserva no esté eliminada o anulada
 //                        if(!$reserva->getCanceled()){
 //
                         //                          $date = $reserva->getDate();
@@ -4227,7 +4227,7 @@ class profileActions extends sfActions {
                 ' del usuario ' . $reserve->getCar()->getUser()->getFirstName() . ' ' . $reserve->getCar()->getUser()->getLastName() . ' ha sido confirmada.<br/><br/>
 	
 	Debes retirar el auto el d&iacute;a <b>' . $date_from . '</b> a las <b>' . $hour_from . '</b> y devolverlo el d&iacute;a <b>' . $date_to . '</b> a las <b>' . $hour_to . '</b>.<br/>
-	Recuerda que debes verificar el estado del auto antes de subirte. Si el auto presenta otros daños debes cancelar la reserva. <br /><br />
+	Recuerda que debes verificar el estado del auto antes de subirte. Si el auto presenta otros daños debes anular la reserva. <br /><br />
 	
 	El equipo de Arriendas.cl
 	<br><br>
@@ -4416,7 +4416,7 @@ class profileActions extends sfActions {
         $reserve->save();
 
         $to = $reserve->getUser()->getEmail();
-        $subject = 'Reserva Cancelada';
+        $subject = 'Reserva Anulada';
 
 // compose headers
         $headers = "From: \"Arriendas Reservas\" <no-reply@arriendas.cl>\n";
@@ -4424,7 +4424,7 @@ class profileActions extends sfActions {
         $headers .= "X-Mailer: PHP/" . phpversion() . "\n";
 
         $mail = 'Su reserva para el auto ' . $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
-                ' del usuario ' . $reserve->getCar()->getUser()->getFirstName() . ' ' . $reserve->getCar()->getUser()->getLastName() . ' ha sido cancelada.<br/><br/>
+                ' del usuario ' . $reserve->getCar()->getUser()->getFirstName() . ' ' . $reserve->getCar()->getUser()->getLastName() . ' ha sido anulada.<br/><br/>
 	
 	El equipo de Arriendas.cl
 	<br><br>
