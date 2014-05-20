@@ -60,7 +60,7 @@ class carsActions extends sfActions {
 
         $this->redirect('auto/economico?chile='.$nombreComuna.'&id='.$request->getParameter('id'));
 
-        //Versión anterior: No se ocupa.
+        //Versiï¿½n anterior: No se ocupa.
 
 		$this->df = ''; if($request->getParameter('df')) $this->df = $request->getParameter('df');
 		$this->hf = ''; if($request->getParameter('hf')) $this->df = $request->getParameter('hf');
@@ -68,7 +68,7 @@ class carsActions extends sfActions {
 		$this->ht = ''; if($request->getParameter('ht')) $this->df = $request->getParameter('ht');
 
         /*
-        //si el dueño del auto lo ve, es redireccionado
+        //si el dueï¿½o del auto lo ve, es redireccionado
         if ($this->car->getUser()->getId() == $this->getUser()->getAttribute("userid")) {
             $this->forward('profile', 'cars');
         }
@@ -82,7 +82,7 @@ class carsActions extends sfActions {
         $this->nombreAcortado =	$this->recortar_texto($this->user->getFirstname()." ". $this->user->getLastname(), 15);*/
         $this->primerNombre = ucwords(current(explode(' ' ,$this->user->getFirstname())));
         $this->inicialApellido = ucwords(substr($this->user->getLastName(), 0, 1)).".";
-    	//Modificaci—n para llevar el conteo de la cantidad de consulas que recibe el perfil del auto
+    	//Modificaciï¿½n para llevar el conteo de la cantidad de consulas que recibe el perfil del auto
     	$q= Doctrine_Query::create()
     	    ->update("car")
     	    ->set("consultas","consultas + 1")
@@ -161,6 +161,26 @@ class carsActions extends sfActions {
         }
         $this->arrayFotosDanios = $arrayFotoDanios;
         $this->arrayDescripcionesDanios = $arrayDescripcionDanios;
+    }
+    
+    
+    public function executeGetByReserserVehicleType(sfWebRequest $request) {
+        $availableCars = array();
+        $reserve = Doctrine_Core::getTable('reserve')->find($request->getParameter("reserve_id"));
+        $cars = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")))->getCars();
+        foreach ($cars as $car) {
+            if ($car->getSeguroOk() == 4 && $car->getActivo() == 1 && $car->getActivo() == 1 && $reserve->getCar()->getModel()->getIdTipoVehiculo() == $car->getModel()->getIdTipoVehiculo()) {
+                $carArray = array(
+                  "id" => $car->getId(),
+                  "model" => $car->getModel()->__toString(),
+                  "brand" => $car->getModel()->getBrand()->__toString(),
+                  "patente" => $car->getPatente()
+                );
+                $availableCars[] = $carArray;
+            }
+        }
+        $this->getResponse()->setContentType('application/json');
+        return $this->renderText(json_encode($availableCars));
     }
 
 }

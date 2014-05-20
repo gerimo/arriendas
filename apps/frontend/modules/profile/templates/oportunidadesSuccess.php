@@ -18,6 +18,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     var urlPedidos = <?php echo "'".url_for("profile/pedidos")."';" ?>
     var urlPago = <?php echo "'".url_for("profile/fbDiscount")."';" ?>
     var urlExtenderReserva = <?php echo "'".url_for("profile/extenderReservaAjax")."';" ?>
+    var urlCars = <?php echo "'".url_for("cars/GetByReserserVehicleType")."';" ?>
 </script>
 
 <div class="main_box_1">
@@ -31,12 +32,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
             <div style="display:none">
                 <div id='confirmarContratosPropietario'>
                     <div style="width:100%; float:left">
-                        <select id="carsSelect" style="width: 50%;margin-left: auto;margin-right: auto;display: block;margin-bottom: 10px;">
-                            <!--<option name='none' selected>Selecciona un auto</option>-->
-                        <?php foreach($cars as $car){ 
-                            echo"<option name='".$car->getId()."'>".$car->getModel()->getBrand()." ".$car->getModel()."</option>";
-                         }?>
-                        </select>
+                        <select id="carsSelect" style="width: 50%;margin-left: auto;margin-right: auto;display: block;margin-bottom: 10px;"></select>
                     </div>
                     <input type="checkbox" name="contratoPropietario1" id="contratoPropietario1" class='checkboxContrato'><p> El <a href='' class='informeDanios' target='_blank'>Informe de daños de mi veh&iacute;culo</a> se encuentra completo.</p>
                     <input type="checkbox" name="contratoPropietario2" id="contratoPropietario2" class='checkboxContrato'><p> El arrendatario se hará responsable por daños producidos por debajo del deducible de 5UF.</p>
