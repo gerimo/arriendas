@@ -1697,6 +1697,7 @@ class profileActions extends sfActions {
                     if ($user->getBlocked()) {
                         /* usuario blockeado */
                         $reserve->setVisibleOwner(false);
+                        $reserve->setConfirmed(true);
                     }
 
                     if ($car->getUser()->getAutoconfirm()) {
@@ -1900,6 +1901,11 @@ class profileActions extends sfActions {
                     $this->getMailer()->send($message);
                 }
             }
+        }else{
+            $now = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"));
+            $reserve->setFechaReserva($now);
+            $reserve->setFechaConfirmacion($now);
+            $reserve->save();
         }
         exit;
     }
