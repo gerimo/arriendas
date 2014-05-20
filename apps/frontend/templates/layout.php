@@ -334,10 +334,8 @@
                     </div>
                     
                     <?php if (!sfContext::getInstance()->getUser()->isAuthenticated()): ?>
-		    
-                        <a class="item_thm" href="<?php echo url_for('main/login') ?>"><div class="top_login"></div>
-
-									</a>  
+                        <a class="item_thm" href="<?php echo url_for('main/login') ?>"><div class="top_login"></div></a>  
+                        <span class="header_phone">(02) 2333-3714 <?php echo image_tag("Home/icon_phone_white.png", array("size"=>"12x12")) ?></span>
 
                         <?php else: ?>
                         
