@@ -817,6 +817,7 @@ public function executeNotificacion(sfWebRequest $request) {
         */
 
         $this->country = Doctrine_Core::getTable('Country')->createQuery('a')->execute();
+        $this->regiones = Doctrine_Core::getTable('Regiones')->createQuery('a')->execute();
     }
 
     public function ordenarBrand($brand){
@@ -878,6 +879,19 @@ public function executeNotificacion(sfWebRequest $request) {
         }
         return $this->renderText(json_encode($_output));
         //return $this->renderText(json_encode(array('error'=>'Faltan par?metros para realizar la consulta')));
+    }
+    
+    public function executeGetComunasSearch(sfWebRequest $request) {
+        sfConfig::set('sf_web_debug', false);
+        $_output;
+        $_output[] = array("optionValue" => 0, "optionDisplay" => "Elegir Comuna");
+        if ($request->getParameter('codigo')) {
+            $comunas = Doctrine_Core::getTable('Comunas')->findByPadre($request->getParameter('codigo'));
+            foreach ($comunas as $c) {
+                $_output[] = array("optionValue" => $c->getCodigoInterno(), "optionDisplay" => $c->getNombre());
+            }
+        }
+        return $this->renderText(json_encode($_output));
     }
 
     public function executeIndexOld(sfWebRequest $request) {
@@ -1025,7 +1039,20 @@ public function executeNotificacion(sfWebRequest $request) {
         $lat_centro = $request->getParameter('clat');
         $lng_centro = $request->getParameter('clng');
 
-		
+        $regionCodigo = $request->getParameter("region");
+        $comunaCodigoInterno = $request->getParameter("comuna");
+        $comunas = array();
+        if(!is_null($regionCodigo)){
+            if(is_null($comunaCodigoInterno)){
+                $comunasList = Doctrine::getTable('Comunas')->findByPadre($regionCodigo);
+                foreach ($comunasList as $comuna) {
+                    $comunas[] = $comuna->getCodigoInterno();
+                }
+            }else{
+                $comunas[] = $comunaCodigoInterno;
+            }
+            
+        }
         /*
           if (
           $hour_from != "Hora de inicio" &&
@@ -1080,15 +1107,18 @@ $query = Doctrine_Query::create()
 //                ->innerJoin('ca.City ci')
 //                ->innerJoin('ci.State st')
 //                ->innerJoin('st.Country co')
-                ->where('ca.lat > ?', $boundleft)
-                ->andWhere('ca.activo = ?', 1)
+                ->Where('ca.activo = ?', 1)
                 //->andWhere('ca.comuna_id <> NULL OR ca.comuna_id <> 0')
-                ->andWhereIn('ca.seguro_ok', array(3,4))
-                ->andWhere('ca.lat < ?', $boundright)
-                ->andWhere('ca.lng > ?', $boundtop)
-                ->andWhere('ca.lng < ?', $boundbottom);
+                ->andWhereIn('ca.seguro_ok', array(3,4));
                 //->orderBy('ca.price_per_day asc');
-
+            if(count($comunas) > 0){
+                $q->andWhereIn('ca.comuna_id', $comunas);
+            }else{
+                $q->andWhere('ca.lat < ?', $boundright);
+                $q->andwhere('ca.lat > ?', $boundleft);
+                $q->andWhere('ca.lng > ?', $boundtop);
+                $q->andWhere('ca.lng < ?', $boundbottom);
+            }
 
 				
         if (
