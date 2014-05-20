@@ -1522,9 +1522,11 @@ class profileActions extends sfActions {
     }
 
     public function executeCars(sfWebRequest $request) {
-        $user = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")));
-        $this->cars = $user->getCars();
-        //var_dump($this->cars);die();
+        $cars = Doctrine_Query::create()->from('car c')
+                ->where('c.user_id = ?', $this->getUser()->getAttribute("userid"))
+                ->orderBy('c.activo DESC')
+                ->execute();
+        $this->cars = $cars;
     }
 
     public function executeCar(sfWebRequest $request) {
