@@ -400,6 +400,16 @@ class profileActions extends sfActions {
         if ($accion == 'preaprobar' || strpos($accion, 'oportunidad') !== false) {
             //crea la fila en la tabla transaction
             $this->executeConfirmReserve($reserve->getId());
+            
+            /* verificacion de otra reserva mismo dia */
+            $sendNotifications = true;
+            $reservasOtras = Doctrine_Core::getTable("Reserve")->findByUserId($reserve->getUserId());
+            foreach ($reservasOtras as $reservaUsuario){
+                if($reserve->getDate() == $reservaUsuario->getDate() && $reservaUsuario->getCompleted() == 1){
+                    $sendNotifications = false;
+                    break;
+                }
+            }
 
             //envía mail de preaprobación al arrendatario
             require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
@@ -428,7 +438,9 @@ class profileActions extends sfActions {
             //$reporte = $functions->generarReporte($idCar, true);
             $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
             //$message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
-            $mailer->send($message);
+            if($sendNotifications){
+                $mailer->send($message);
+            }
 
             $message = $mail->getMessage();
             $message->setSubject('Se ha aprobado una reserva');
@@ -437,7 +449,7 @@ class profileActions extends sfActions {
             $message->setTo('soporte@arriendas.cl');
             $mailer->send($message);
 
-            if ($reserve->getConfirmedSMSRenter() == 1) {
+            if ($reserve->getConfirmedSMSRenter() == 1 && $sendNotifications) {
                 $texto = "Se ha aprobado tu reserva! Debes pagar en Arriendas.cl - Si tu arriendo no se concreta, no le pagaremos al propietario del auto y te daremos un auto a eleccion";
                 $this->enviarSMS($reserve->getTelephoneRenter(), $texto);
             }
