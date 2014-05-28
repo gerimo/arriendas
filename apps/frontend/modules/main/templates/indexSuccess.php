@@ -89,6 +89,8 @@ if (sfContext::getInstance()->getUser()->getAttribute("logged")) {
     var longitud;
     var geolocalizacion;
     var _data;
+    var strictBounds = null;
+    var lastValidCenter;
 
     function localizame() {
         if (navigator.geolocation) { /* Si el navegador tiene geolocalizacion */
@@ -154,7 +156,6 @@ else
 ?>
         if (geolocalizacion) {
             center = new google.maps.LatLng(latitud, longitud);
-
         }
 
 <?php if (isset($_GET['ciudad']) && $_GET['ciudad'] == "arica"): ?>
@@ -180,7 +181,7 @@ else
 <?php endif; ?>
 
         map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 14,
+            zoom: 12,
             center: center,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             scrollwheel: false
@@ -193,6 +194,8 @@ else
                 draggable: true,
             });
         }
+        
+        lastValidCenter = center;
 
         google.maps.event.addListener(map, 'idle', function() {
             google.maps.event.clearListeners(map, 'idle');
@@ -200,10 +203,22 @@ else
         });
 
         google.maps.event.addListener(map, 'dragend', function() {
+            if (strictBounds === null || strictBounds.contains(map.getCenter())) {
+                lastValidCenter = map.getCenter();
+            }else{
+                map.panTo(lastValidCenter);
+            }
+            $("#chooseRegion").val("");
+            $("#chooseComuna").val("");
             searchMarkers();
 
         });
         google.maps.event.addListener(map, 'zoom_changed', function() {
+            if (strictBounds === null || strictBounds.contains(map.getCenter())) {
+                lastValidCenter = map.getCenter();
+            }else{
+                map.panTo(lastValidCenter);
+            }
             searchMarkers();
         });
 
@@ -972,7 +987,7 @@ else
                 }
                 $("#chooseComuna").html(options);
             });
-            
+            strictBounds = null;
             var service = new google.maps.places.AutocompleteService();
             var inputStr = $("#chooseRegion option:selected").text();
             var request = {
@@ -989,9 +1004,11 @@ else
                 placeSrv.getDetails({reference: prediction.reference}, function(place, status){
                     if (place.geometry.viewport) {
                         map.fitBounds(place.geometry.viewport);
+                        map.setZoom(9);
+                        strictBounds = place.geometry.viewport;
                     } else {
                         map.setCenter(place.geometry.location);
-                        map.setZoom(17);
+                        map.setZoom(9);
                     }
                 });
             });
