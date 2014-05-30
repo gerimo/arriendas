@@ -223,60 +223,60 @@ else
         });
 
         //Autocomplete
-        var input = document.getElementById('searchTextField');
-        var autocomplete = new google.maps.places.Autocomplete(input);
-
-        autocomplete.bindTo('bounds', map);
-
-        var infowindow = new google.maps.InfoWindow();
-        var marker = new google.maps.Marker({
-            map: map
-        });
-
-        google.maps.event.addListener(autocomplete, 'place_changed', function() {
-            infowindow.close();
-            marker.setVisible(false);
-            input.className = '';
-            var place = autocomplete.getPlace();
-            if (!place.geometry) {
-                // Inform the user that the place was not found and return.
-                input.className = 'notfound';
-                return;
-            }
-
-            // If the place has a geometry, then present it on a map.
-            if (place.geometry.viewport) {
-                map.fitBounds(place.geometry.viewport);
-            } else {
-                map.setCenter(place.geometry.location);
-                map.setZoom(17);  // Why 17? Because it looks good.
-            }
-            var image = new google.maps.MarkerImage(
-                    place.icon,
-                    new google.maps.Size(71, 71),
-                    new google.maps.Point(0, 0),
-                    new google.maps.Point(17, 34),
-                    new google.maps.Size(35, 35));
-            marker.setIcon(image);
-            marker.setPosition(place.geometry.location);
-
-            var address = '';
-            if (place.address_components) {
-                address = [
-                    (place.address_components[0] && place.address_components[0].short_name || ''),
-                    (place.address_components[1] && place.address_components[1].short_name || ''),
-                    (place.address_components[2] && place.address_components[2].short_name || '')
-                ].join(' ');
-            }
-
-            infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
-            infowindow.open(map, marker);
-
-            searchMarkers();
-//		              doSearch();
-
-
-        });
+//        var input = document.getElementById('searchTextField');
+//        var autocomplete = new google.maps.places.Autocomplete(input);
+//
+//        autocomplete.bindTo('bounds', map);
+//
+//        var infowindow = new google.maps.InfoWindow();
+//        var marker = new google.maps.Marker({
+//            map: map
+//        });
+//
+//        google.maps.event.addListener(autocomplete, 'place_changed', function() {
+//            infowindow.close();
+//            marker.setVisible(false);
+//            input.className = '';
+//            var place = autocomplete.getPlace();
+//            if (!place.geometry) {
+//                // Inform the user that the place was not found and return.
+//                input.className = 'notfound';
+//                return;
+//            }
+//
+//            // If the place has a geometry, then present it on a map.
+//            if (place.geometry.viewport) {
+//                map.fitBounds(place.geometry.viewport);
+//            } else {
+//                map.setCenter(place.geometry.location);
+//                map.setZoom(17);  // Why 17? Because it looks good.
+//            }
+//            var image = new google.maps.MarkerImage(
+//                    place.icon,
+//                    new google.maps.Size(71, 71),
+//                    new google.maps.Point(0, 0),
+//                    new google.maps.Point(17, 34),
+//                    new google.maps.Size(35, 35));
+//            marker.setIcon(image);
+//            marker.setPosition(place.geometry.location);
+//
+//            var address = '';
+//            if (place.address_components) {
+//                address = [
+//                    (place.address_components[0] && place.address_components[0].short_name || ''),
+//                    (place.address_components[1] && place.address_components[1].short_name || ''),
+//                    (place.address_components[2] && place.address_components[2].short_name || '')
+//                ].join(' ');
+//            }
+//
+//            infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+//            infowindow.open(map, marker);
+//
+//            searchMarkers();
+////		              doSearch();
+//
+//
+//        });
 
         //Fin Autocomplete
     }
@@ -1433,27 +1433,24 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
                 <div class="search_box_1_PrincipalNew">
                     <div class="search_box_1_header">    
                         <div class="search_box1_form">
-                            <div style="width: 100px; display: inline-block" >
-                                <div class="group_desde" style="width: 90px;"><span class="numberBlue">1</span>Región |</span></div>
-                                <select class="input_f0" id="chooseRegion" style="margin-left: 5px;width: 90px;">
+                            <div style="width: 175px; display: inline-block" >
+                                <div class="group_desde" style="width: 150px;"><span class="numberBlue">1</span>Región |</span></div>
+                                <select class="input_f0" id="chooseRegion" style="margin-left: 5px;width: 167px;">
                                     <option value="">Elegir región</option>
 <?php foreach ($regiones as $region): ?>
                                         <option value="<?= $region->getCodigo() ?>"><?= $region->getNombre() ?></option>
 <?php endforeach; ?>
                                 </select>
                             </div>
-                            <div style="width: 114px; display: inline-block">
-                                <div class="group_desde" style="width: 104px;"><span class="numberBlue">2</span>Comuna |</span></div>
-                                <select class="input_f0" id="chooseComuna" style="margin-left: 5px;width: 104px;">
+                            <div style="width: 180px; display: inline-block">
+                                <div class="group_desde" style="width: 150px;"><span class="numberBlue">2</span>Comuna |</span></div>
+                                <select class="input_f0" id="chooseComuna" style="margin-left: 5px;width: 167px;">
                                     <option value="">Elegir comuna</option>
                                 </select>
                             </div>
-                            <div style="width: 142px; display: inline-block">
-                                <div class="group_desde" style="width: 100px;"><span class="numberBlue">3</span>Dirección |</span></div>
-                                <input class="input_f0" id="searchTextField" style="margin-left: 5px;width: 114px;" type="text" size="50" placeholder="Ingrese Dirección" autocomplete="off"/>
-                            </div>
+
                             <div style="width: 227px; display: inline-block">
-                                <span style="width: 220px;" class="group_desde"><span class="numberBlue">4</span>Desde |</span>
+                                <span style="width: 220px;" class="group_desde"><span class="numberBlue">3</span>Desde |</span>
                                 <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_from" value="<?php
                                 if ($day_from && $day_from != '12-11-2013') {
                                     echo $day_from;
@@ -1470,7 +1467,7 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
                                 ?>"/>
                             </div>
                             <div style="width: 227px; display: inline-block">
-                                <span style="width: 220px;" class="group_hasta"><span class="numberBlue">5</span>Hasta |</span>
+                                <span style="width: 220px;" class="group_hasta"><span class="numberBlue">4</span>Hasta |</span>
                                 <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_to" value="<?php
                                 if ($day_to) {
                                     echo $day_to;
@@ -1487,7 +1484,7 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
                                 ?>" />
                             </div>
                             <div style="width: 100px; display: inline-block">
-                                <span style="width: 51px;" class="group_desde"><span class="numberBlue">6</span>Filtros |</span>
+                                <span style="width: 51px;" class="group_desde"><span class="numberBlue">5</span>Filtros |</span>
                                 <button id="btn_buscar" title="Buscar autos"></button>
                             </div>
                         </div>
