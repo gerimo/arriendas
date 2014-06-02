@@ -53,4 +53,4 @@ all:
           port:       465
           encryption: ssl
           username:   german@arriendas.cl
-          password:   whisper00@@__
+          password:  whisper00@@__
