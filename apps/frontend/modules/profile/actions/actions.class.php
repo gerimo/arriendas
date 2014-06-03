@@ -415,7 +415,7 @@ class profileActions extends sfActions {
             $sendNotifications = true;
             $reservasOtras = Doctrine_Core::getTable("Reserve")->findByUserId($reserve->getUserId());
             foreach ($reservasOtras as $reservaUsuario){
-                if($reserve->getDate() == $reservaUsuario->getDate() && $reservaUsuario->getCompleted() == 1){
+                if($reserve->getDate() == $reservaUsuario->getDate() && $reservaUsuario->getComplete() == 1){
                     $sendNotifications = false;
                     break;
                 }
