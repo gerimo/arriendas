@@ -181,7 +181,7 @@ else
 <?php endif; ?>
 
         map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 12,
+            zoom: 14,
             center: center,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             scrollwheel: false
