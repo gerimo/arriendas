@@ -1709,7 +1709,7 @@ class profileActions extends sfActions {
                     if ($user->getBlocked()) {
                         /* usuario blockeado */
                         $reserve->setVisibleOwner(false);
-                        $reserve->setConfirmed(true);
+                        //$reserve->setConfirmed(true);
                     }
 
                     if ($car->getUser()->getAutoconfirm()) {
