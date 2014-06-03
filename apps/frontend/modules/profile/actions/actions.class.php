@@ -415,7 +415,7 @@ class profileActions extends sfActions {
             $sendNotifications = true;
             $reservasOtras = Doctrine_Core::getTable("Reserve")->findByUserId($reserve->getUserId());
             foreach ($reservasOtras as $reservaUsuario){
-                if($reserve->getDate() == $reservaUsuario->getDate() && $reservaUsuario->getCompleted() == 1){
+                if($reserve->getDate() == $reservaUsuario->getDate() && $reservaUsuario->getComplete() == 1){
                     $sendNotifications = false;
                     break;
                 }
@@ -3281,12 +3281,18 @@ class profileActions extends sfActions {
                     if ($estado == 3) {
                         $reservasRealizadas[$i]['estado'] = 3;
                     } elseif ($estado == 2) {
-                        $reservasRealizadas[$i]['estado'] = 2;
+                        /* manejo de usuarios bloqueados */
+                        if($reserva->getUser()->getBlocked()){
+                            $reservasRealizadas[$i]['estado'] = 0;
+                        }else{
+                            $reservasRealizadas[$i]['estado'] = 2;
+                        }
                     } elseif ($estado == 1) {
                         $reservasRealizadas[$i]['estado'] = 1;
                     } else {
                         $reservasRealizadas[$i]['estado'] = 0;
                     }
+                    
 
                     //fecha y hora de inicio y término
                     $reservasRealizadas[$i]['posicion'] = $reserva->getDate();
@@ -3398,6 +3404,8 @@ class profileActions extends sfActions {
                     } else {
                         $reservasRecibidas[$i]['estado'] = 0;
                     }
+                    
+                    
 
                     //fecha y hora de inicio y término
                     $reservasRecibidas[$i]['posicion'] = $reserva->getDate();

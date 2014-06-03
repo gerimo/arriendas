@@ -1,4 +1,4 @@
-<?php use_stylesheet('search.css?v=03032014') ?>
+<?php use_stylesheet('search.css?v=02062014') ?>
 <?php use_stylesheet('landing.css?v=25022014') ?>
 <?php use_stylesheet('registro.css?v=25022014') ?>
 <?php use_stylesheet('comparaprecios.css?v=25022014') ?>
@@ -181,7 +181,7 @@ else
 <?php endif; ?>
 
         map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 12,
+            zoom: 14,
             center: center,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             scrollwheel: false

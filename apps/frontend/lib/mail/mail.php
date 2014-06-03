@@ -27,6 +27,7 @@ class Email{
 	//private $content_type = "application/octet-stream";
 	//private $content_type = "image/jpg";
 	private $host = "smtp.sendgrid.net";
+//	private $host = "localhost";
 	private $username = "german@arriendas.cl";
 	private $password = "whisper00@@__";
 
@@ -101,7 +102,8 @@ class Email{
 
 		
         if($smtp->send($recipients, $headers, $body)){
-        	return true;
+		sfContext::getInstance()->getLogger()->info('mail send returned true');	        
+		return true;
         }else{
         	return false;
         }  
