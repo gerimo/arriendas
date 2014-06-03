@@ -1,7 +1,7 @@
 
 <?php use_stylesheet('calendario.css') ?>
 <?php use_stylesheet('comunes.css') ?>
-<?php use_stylesheet('mis_autos.css') ?>
+<?php use_stylesheet('mis_autos.css??v=02052014') ?>
 <?php use_stylesheet('registro.css') ?>
 <?php
 $useragent=$_SERVER['HTTP_USER_AGENT'];
