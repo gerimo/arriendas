@@ -52,9 +52,15 @@ class KhipuService {
         /* curl exec */
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         $output = curl_exec($ch);
-        if (curl_errno($ch) > 0) {
+        if ((curl_errno($ch) == 60 || curl_errno($ch) == 77)) {
+        		//curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		 	curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__) . '/cacert.pem');
+		 	$output = curl_exec($ch);
+	}
+        
+	if (curl_errno($ch) > 0) {
             $info = curl_getinfo($ch);
-            throw new Exception("khipu connection error:" . curl_errno($ch) . " info:" . $info);
+            throw new Exception("khipu connection error:" .curl_error($ch)." ". curl_errno($ch) . " info:" . var_dump($info));
         }
         curl_close($ch);
 

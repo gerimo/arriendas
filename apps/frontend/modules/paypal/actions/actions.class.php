@@ -111,7 +111,7 @@ class paypalActions extends sfActions {
                             $this->redirect("paypal/processPaymentFailure");
                         }
                     } catch (Exception $ex) {
-                        $msg = " | Exception : " . $ex->getMessage();
+                        $msg = " | Exception : " . $ex->getMessage(). " ". $ex->getUrl();
                         $this->_log("Exception", "Error", "Usuario: " . $customer_in_session . ". Order ID: " . $order->getId() . $msg);
                         $this->redirect("paypal/processPaymentFailure");
                     }
@@ -658,7 +658,10 @@ class paypalActions extends sfActions {
             'mode' => $settings["mode"],
             "acct1.UserName" => $settings["username"],
             "acct1.Password" => $settings["password"],
-            "acct1.Signature" => $settings["signature"]
+            "acct1.Signature" => $settings["signature"],
+	    "log.FileName" => "/var/www/web/log/PayPalAPI.log",
+	    "log.LogLevel" => "FINE",
+	    "log.LogEnabled" => true
         );
         return $config;
     }

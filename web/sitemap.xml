@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+<url>
+  <loc>http://arriendas.cl/</loc>
+</url>
+<url>
+  <loc>http://arriendas.cl/main/login</loc>
+</url>
+<url>
+  <loc>http://arriendas.cl/como_funciona</loc>
+</url>
+<url>
+  <loc>http://arriendas.cl/en_los_medios</loc>
+</url>
+<url>
+  <loc>http://arriendas.cl/main/register</loc>
+</url>
+<url>
+  <loc>http://arriendas.cl/main/compania</loc>
+</url>
+<url>
+  <loc>http://arriendas.cl/main/terminos</loc>
+</url>
+<url>
+  <loc>http://arriendas.cl/profile/addCar</loc>
+</url>
+<url>
+  <loc>http://arriendas.cl/main/referidos</loc>
+</url>
+<url>
+  <loc>http://arriendas.cl/main/valueyourcar</loc>
+</url>
+<url>
+  <loc>http://arriendas.cl/main/forgot</loc>
+</url>
+</urlset>
