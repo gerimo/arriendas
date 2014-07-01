@@ -28,7 +28,7 @@ EOF;
 
     protected function execute($arguments = array(), $options = array()) {
 
-        $config = ProjectConfiguration::getApplicationConfiguration("frontend", "prod", TRUE);
+        $config = ProjectConfiguration::getApplicationConfiguration("frontend", "dev", TRUE);
         sfContext::createInstance($config);
 
         echo "verificando...\n";
@@ -53,7 +53,7 @@ EOF;
 
             /* only with valid comuna */
             if ($comuna) {
-                $stateId = $comuna->getPadre();
+                $stateId = $comuna->getStateId();
                 $oldStateId = $car->getStateId();
                 //echo "    oldStateId:" . $oldStateId . " | stateId:" . $stateId;
                 if ($oldStateId != $stateId) {

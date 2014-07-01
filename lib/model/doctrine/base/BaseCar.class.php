@@ -33,6 +33,7 @@
  * @method integer             getUserId()         Returns the current record's "User_id" value
  * @method string              getKm()             Returns the current record's "km" value
  * @method integer             getCityId()         Returns the current record's "City_id" value
+ * @method integer             getStateId()         Returns the current record's "State_id" value
  * @method string              getAddress()        Returns the current record's "address" value
  * @method float               getLat()            Returns the current record's "lat" value
  * @method float               getLng()            Returns the current record's "lng" value
@@ -57,6 +58,7 @@
  * @method Car                 setUserId()         Sets the current record's "User_id" value
  * @method Car                 setKm()             Sets the current record's "km" value
  * @method Car                 setCityId()         Sets the current record's "City_id" value
+ * @method Car                 setStateId()         Sets the current record's "State_id" value
  * @method Car                 setAddress()        Sets the current record's "address" value
  * @method Car                 setLat()            Sets the current record's "lat" value
  * @method Car                 setLng()            Sets the current record's "lng" value
@@ -105,6 +107,10 @@ abstract class BaseCar extends sfDoctrineRecord
         $this->hasColumn('City_id', 'integer', 4, array(
              'type' => 'integer',
              'notnull' => true,
+             'length' => 4,
+             ));
+        $this->hasColumn('State_id', 'integer', 4, array(
+             'type' => 'integer',
              'length' => 4,
              ));
         $this->hasColumn('address', 'string', 45, array(
