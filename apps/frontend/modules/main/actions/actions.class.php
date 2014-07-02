@@ -2396,6 +2396,13 @@ El equipo de Arriendas.cl
             if ($user) {
 
 				if($user->getConfirmed() == 1 || $user->getConfirmed() == 0 ) {
+                                    
+                                    /** block users */
+                                    $visitingIp = $request->getRemoteAddress();
+                                    if(Doctrine::getTable('user')->isABlockedIp($visitingIp)){
+                                        $user->setBlocked();
+                                    }
+                                    /**/
 					
 	                $this->getUser()->setFlash('msg', 'Autenticado');
 	                $this->getUser()->setAuthenticated(true);

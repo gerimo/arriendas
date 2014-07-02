@@ -15,5 +15,28 @@ class UserTable extends Doctrine_Table {
     public static function getInstance() {
         return Doctrine_Core::getTable('User');
     }
+    
+    /**
+     * Check if the ip corresponds to a blocked user.
+     * @param type $ip_number
+     * @return boolean
+     */
+    public function isABlockedIp($ip_number) {
+        $isABlockedIp = false;
+        $q = $this->getInstance()->createQuery("u")
+                ->where('u.blocked = ?', 1);
+        $bloquedUsers = $q->execute();
+        foreach ($bloquedUsers as $bloquedUser) {
+            $trackedIps = explode(";", $bloquedUser->getTrackedIps());
+            foreach ($trackedIps as $ip_bloqued) {
+                if($ip_bloqued == $ip_number){
+                    $isABlockedIp = true;
+                    break;
+                }
+            }
+        }
+        
+        return $isABlockedIp;
+    }
 
 }
