@@ -3,16 +3,11 @@
 class AddState2CarTask extends sfBaseTask {
 
     protected function configure() {
-        // // add your own arguments here
-        // $this->addArguments(array(
-        //   new sfCommandArgument('my_arg', sfCommandArgument::REQUIRED, 'My argument'),
-        // ));
 
         $this->addOptions(array(
             new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name'),
             new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
             new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine'),
-                // add your own options here
         ));
 
         $this->namespace = 'arriendas';
@@ -28,7 +23,7 @@ EOF;
 
     protected function execute($arguments = array(), $options = array()) {
 
-        $config = ProjectConfiguration::getApplicationConfiguration("frontend", "dev", TRUE);
+        $config = ProjectConfiguration::getApplicationConfiguration("frontend", "prod", TRUE);
         sfContext::createInstance($config);
 
         echo "verificando...\n";
@@ -44,11 +39,9 @@ EOF;
                 $comuna = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
             }
             if (!$comuna) {
-                /* try comuna by city */
-                $comunaId = $car->getCity()->getCodigoComuna();
-                if ($comunaId) {
-                    $comuna = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
-                }
+                /* si al auto no tiene comuna, le asignamos la de santiago */
+                $santiagoComunaId = "4";
+                $comuna = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($santiagoComunaId);
             }
 
             /* only with valid comuna */
@@ -64,7 +57,7 @@ EOF;
                     $updated++;
                 }
             }
-            echo ". ";
+            echo ".";
             /* processed count */
             $processed++;
         }
