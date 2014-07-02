@@ -1492,5 +1492,26 @@ class User extends BaseUser {
 
         return parent::save($conn);
     }
+    
+    /**
+     * Track the user ip.
+     * @param type $ip_number
+     */
+    public function trackIp($ip_number) {
+        $strIps = $this->getTrackedIps();
+        $ip_queue = explode(";", $strIps);
+        if (!in_array($ip_number, $ip_queue)) {
+            /* FIFO queue */
+            if (count($ip_queue) > 4) {
+                $first = array_shift($ip_queue);
+            }
+            $ip_queue[] = $ip_number;
+            
+            $updatedIps = implode(";", $ip_queue);
+            $this->setTrackedIps($updatedIps);
+            /* persist ips */
+            parent::save();
+        }
+    }
 
 }
