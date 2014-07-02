@@ -1492,5 +1492,38 @@ class User extends BaseUser {
 
         return parent::save($conn);
     }
+    
+    /**
+     * 
+     */
+    public function setBloqueado() {
+
+        /* save status */
+        $this->setBlocked(true);
+        parent::save();
+
+        /* send mail */
+        $messageBody = "</p> user_id: " . $this->getId() . "</p>";
+        $messageBody .= "</p> email: " . $this->getEmail() . "</p>";
+        $messageBody .= "</p> first name: " . $this->getFirstname() . "</p>";
+        $messageBody .= "</p> last name: " . $this->getLastname() . "</p>";
+        if (!is_null($this->getCity())) {
+            $messageBody .= "</p> ciudad: " . $this->getCity()->getName() . "</p>";
+        }
+        if (!is_null($this->getCity()->getComuna())) {
+            $messageBody .= "</p> comuna: " . $this->getCity()->getComuna()->getNombre() . "</p>";
+        }
+        foreach ($this->getCars() as $car) {
+            $messageBody .= "car_id: " . $car->getId();
+        }
+
+        $mailer = sfContext::getInstance()->getMailer();
+        $message = $mailer->compose();
+        $message->setSubject("Se ha bloqueado un usuario");
+        $message->setFrom('notificaciones@arriendas.cl', 'Notificaciones Arriendas');
+        $message->setTo('soporte@arriendas.cl');
+        $message->setBody($messageBody, "text/html");
+        $mailer->send($message);
+    }
 
 }
