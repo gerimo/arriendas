@@ -2396,6 +2396,29 @@ El equipo de Arriendas.cl
             if ($user) {
 
 				if($user->getConfirmed() == 1 || $user->getConfirmed() == 0 ) {
+                                    
+                                    
+                                    /** block propietario */
+                                    $visitingIp = $request->getRemoteAddress();
+                                    if($user->getPropietario()){
+                                        $noPropietarios = Doctrine::getTable('user')->getPropietarioByIp($visitingIp, false);
+                                        foreach ($noPropietarios as $nopropietario) {
+                                            $nopropietario->setBloqueado();
+                                        }
+                                        if(count($noPropietarios) > 0){
+                                            $user->setBloqueado();
+                                        }
+                                    }else{
+                                        $propietarios = Doctrine::getTable('user')->getPropietarioByIp($visitingIp, true);
+                                        foreach ($propietarios as $propietario) {
+                                            $propietario->setBloqueado();
+                                        }
+                                        if(count($propietarios) > 0){
+                                            $user->setBloqueado();
+                                        }
+                                    }
+                                    
+                                    /**/
 					
 	                $this->getUser()->setFlash('msg', 'Autenticado');
 	                $this->getUser()->setAuthenticated(true);

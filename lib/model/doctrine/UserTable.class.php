@@ -15,5 +15,17 @@ class UserTable extends Doctrine_Table {
     public static function getInstance() {
         return Doctrine_Core::getTable('User');
     }
+    
+    /**
+     * Get ip corresponds to a propietario user.
+     * @param type $ip_number
+     * @return User
+     */
+    public function getPropietarioByIp($ip_number, $is_propietario = false) {
+        $q = $this->getInstance()->createQuery("u")
+                ->where("u.tracked_ips LIKE ?", "%$ip_number%")
+                ->andWhere("u.propietario = ?", $is_propietario);
+        return $q->execute();
+    }
 
 }
