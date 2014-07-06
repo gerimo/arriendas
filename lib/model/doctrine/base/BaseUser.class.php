@@ -210,7 +210,7 @@ abstract class BaseUser extends sfDoctrineRecord {
             'type' => 'string',
             'length' => 45,
         ));
-        $this->hasColumn('hash', 'tracked_states', 255, array(
+        $this->hasColumn('tracked_states', 'string', 255, array(
             'type' => 'string',
             'length' => 255,
         ));
