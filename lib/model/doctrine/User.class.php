@@ -1501,17 +1501,24 @@ class User extends BaseUser {
         $strStates = $this->getTrackedStates();
         $state_queue = explode(";", $strStates);
         if (!in_array($state_id, $state_queue)) {
+        	$exceedMax = false;
             /* FIFO queue */
             if (count($state_queue) > 4) {
                 $first = array_shift($state_queue);
+                $exceedMax = true;
             }
             $state_queue[] = $state_id;
 
             $updatedStates = implode(";", $state_queue);
             $this->setTrackedStates($updatedStates);
             
-            /* persist chages */
-            parent::save();
+            /* persist changes */
+            if($exceedMax){
+            	$this->setBloqueado();
+            } else {
+	            parent::save();
+            }
+
         }
     }
 
