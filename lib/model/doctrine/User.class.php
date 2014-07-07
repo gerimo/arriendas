@@ -1503,18 +1503,18 @@ class User extends BaseUser {
         parent::save();
 
         /* send mail */
-        $messageBody = "</p> user_id: " . $this->getId() . "</p>";
-        $messageBody .= "</p> email: " . $this->getEmail() . "</p>";
-        $messageBody .= "</p> first name: " . $this->getFirstname() . "</p>";
-        $messageBody .= "</p> last name: " . $this->getLastname() . "</p>";
+        $messageBody = "<p> user_id: " . $this->getId() . "</p>";
+        $messageBody .= "<p> email: " . $this->getEmail() . "</p>";
+        $messageBody .= "<p> first name: " . $this->getFirstname() . "</p>";
+        $messageBody .= "<p> last name: " . $this->getLastname() . "</p>";
         if (!is_null($this->getCity())) {
-            $messageBody .= "</p> ciudad: " . $this->getCity()->getName() . "</p>";
+            $messageBody .= "<p> ciudad: " . $this->getCity()->getName() . "</p>";
         }
         if (!is_null($this->getCity()->getComuna())) {
-            $messageBody .= "</p> comuna: " . $this->getCity()->getComuna()->getNombre() . "</p>";
+            $messageBody .= "<p> comuna: " . $this->getCity()->getComuna()->getNombre() . "</p>";
         }
         foreach ($this->getCars() as $car) {
-            $messageBody .= "car_id: " . $car->getId();
+            $messageBody .= "<p> car_id: " . $car->getId() . "</p>";
         }
 
         $mailer = sfContext::getInstance()->getMailer();
