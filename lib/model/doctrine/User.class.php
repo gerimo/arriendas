@@ -1032,7 +1032,7 @@ class User extends BaseUser {
                 ->from('message m,conversation c')
                 ->where('c.user_from_id = m.user_id')
                 ->andWhere('c.id=m.conversation_id')
-                ->andWhere('c.user_to_id=?', $this->getId())
+                ->andWhere('c.user_to_id=? && m.looking_user_to = 1', $this->getId())
                 ->andWhere('m.received=0');
         //echo $q;
         //die();
