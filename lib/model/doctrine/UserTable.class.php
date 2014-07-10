@@ -15,7 +15,7 @@ class UserTable extends Doctrine_Table {
     public static function getInstance() {
         return Doctrine_Core::getTable('User');
     }
-    
+
     /**
      * Check if the ip corresponds to a blocked user.
      * @param type $ip_number
@@ -29,14 +29,27 @@ class UserTable extends Doctrine_Table {
         foreach ($bloquedUsers as $bloquedUser) {
             $trackedIps = explode(";", $bloquedUser->getTrackedIps());
             foreach ($trackedIps as $ip_bloqued) {
-                if($ip_bloqued == $ip_number){
+                if ($ip_bloqued == $ip_number) {
                     $isABlockedIp = true;
                     break;
                 }
             }
         }
-        
+
         return $isABlockedIp;
+    }
+
+    /*
+     * Get ip corresponds to a propietario user.
+     * @param type $ip_number
+     * @return User
+     */
+
+    public function getPropietarioByIp($ip_number, $is_propietario = false) {
+        $q = $this->getInstance()->createQuery("u")
+                ->where("u.tracked_ips LIKE ?", "%$ip_number%")
+                ->andWhere("u.propietario = ?", $is_propietario);
+        return $q->execute();
     }
 
 }
