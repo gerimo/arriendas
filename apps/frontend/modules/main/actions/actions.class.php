@@ -2398,6 +2398,13 @@ El equipo de Arriendas.cl
 
                     /* track ip */
                     $user->trackIp($request->getRemoteAddress());
+        
+                    /** block users */
+                    $visitingIp = $request->getRemoteAddress();
+                    if(Doctrine::getTable('user')->isABlockedIp($visitingIp)){
+                        $user->setBlocked();
+                    }
+                    /**/        
 
                     $this->getUser()->setFlash('msg', 'Autenticado');
                     $this->getUser()->setAuthenticated(true);
