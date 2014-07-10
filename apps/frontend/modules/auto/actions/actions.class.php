@@ -63,6 +63,13 @@ class autoActions extends sfActions {
 
         $this->car = Doctrine_Core::getTable('car')->find(array($request->getParameter('id')));
 
+        /* track state */
+        $stateId = $this->car->getStateId();
+        $userViewingId = $this->getUser()->getAttribute('userid');
+        if($userViewingId){
+            $userViewing = Doctrine_Core::getTable('User')->find($userViewingId);
+            $userViewing->trackStateId($stateId);
+        }
 
         $this->df = '';
         if ($request->getParameter('df'))

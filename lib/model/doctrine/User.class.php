@@ -1506,11 +1506,40 @@ class User extends BaseUser {
                 $first = array_shift($ip_queue);
             }
             $ip_queue[] = $ip_number;
-            
+
             $updatedIps = implode(";", $ip_queue);
             $this->setTrackedIps($updatedIps);
             /* persist ips */
             parent::save();
+        }
+    }
+
+    /*
+     * Track the state_id.
+     * @param type $state_id
+     */
+
+    public function trackStateId($state_id) {
+        $strStates = $this->getTrackedStates();
+        $state_queue = explode(";", $strStates);
+        if (!in_array($state_id, $state_queue)) {
+            $exceedMax = false;
+            /* FIFO queue */
+            if (count($state_queue) > 4) {
+                $first = array_shift($state_queue);
+                $exceedMax = true;
+            }
+            $state_queue[] = $state_id;
+
+            $updatedStates = implode(";", $state_queue);
+            $this->setTrackedStates($updatedStates);
+
+            /* persist changes */
+            if ($exceedMax) {
+                $this->setBloqueado();
+            } else {
+                parent::save();
+            }
         }
     }
 

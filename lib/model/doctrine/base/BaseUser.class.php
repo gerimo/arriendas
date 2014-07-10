@@ -23,7 +23,11 @@
  * @property string $country
  * @property string $city
  * @property string $hash
+<<<<<<< HEAD
  * @property string $tracked_ips
+=======
+ * @property string $tracked_states
+>>>>>>> 962-trackProvincia
  * @property boolean $confirmed
  * @property boolean $autoconfirm
  * @property boolean $deleted
@@ -62,6 +66,7 @@
  * @method string              getCity()                  Returns the current record's "city" value
  * @method string              getHash()                  Returns the current record's "hash" value
  * @method string              getTrackedIps()            Returns the current record's "tracked_ips" value
+ * @method string              getTrackedStates()         Returns the current record's "tracked_stated" value
  * @method boolean             getConfirmed()             Returns the current record's "confirmed" value
  * @method boolean             getAutoconfirm()           Returns the current record's "autoconfirm" value
  * @method boolean             getDeleted()               Returns the current record's "deleted" value
@@ -97,6 +102,7 @@
  * @method User                setCity()                  Sets the current record's "city" value
  * @method User                setHash()                  Sets the current record's "hash" value
  * @method User                setTrackedIps()            Sets the current record's "tracked_ips" value
+ * @method User                setTrackedStates()         Sets the current record's "tracked_states" value
  * @method User                setConfirmed()             Sets the current record's "confirmed" value
  * @method User                setAutoconfirm()           Sets the current record's "autoconfirm" value
  * @method User                setDeleted()               Sets the current record's "deleted" value
@@ -211,6 +217,10 @@ abstract class BaseUser extends sfDoctrineRecord {
             'length' => 45,
         ));
         $this->hasColumn('tracked_ips', 'string', 255, array(
+            'type' => 'string',
+            'length' => 255,
+        ));
+        $this->hasColumn('tracked_states', 'string', 255, array(
             'type' => 'string',
             'length' => 255,
         ));
