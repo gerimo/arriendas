@@ -1492,30 +1492,48 @@ class User extends BaseUser {
 
         return parent::save($conn);
     }
-    
+
     /**
-     * 
+     * Set bloqued, and send notifications.
+     * @param string $info motivo por el cual fue bloqueado.
      */
-    public function setBloqueado() {
+    public function setBloqueado($info = null) {
 
         /* save status */
         $this->setBlocked(true);
         parent::save();
 
         /* send mail */
-        $messageBody = "<p> user_id: " . $this->getId() . "</p>";
+        $messageBody = "";
+        if(!is_null($info)){
+            $messageBody .= "<h3>Motivo:</h3>";
+            $messageBody .= "<p>".$info."</p>";
+        }
+        $messageBody .= "<h3>Datos del usuario</h3>";
+        
+        $messageBody .= "<p> user_id: " . $this->getId() . "</p>";
         $messageBody .= "<p> email: " . $this->getEmail() . "</p>";
         $messageBody .= "<p> first name: " . $this->getFirstname() . "</p>";
         $messageBody .= "<p> last name: " . $this->getLastname() . "</p>";
         if (!is_null($this->getCity())) {
             $messageBody .= "<p> ciudad: " . $this->getCity()->getName() . "</p>";
+            if (!is_null($this->getCity()->getComuna())) {
+                $messageBody .= "<p> comuna: " . $this->getCity()->getComuna()->getNombre() . "</p>";
+            }
         }
-        if (!is_null($this->getCity()->getComuna())) {
-            $messageBody .= "<p> comuna: " . $this->getCity()->getComuna()->getNombre() . "</p>";
-        }
+        $messageBody .= "<h4>Autos</h4>";
+        $messageBody .= "<table border='1' style='border-collapse:collapse;border-spacing:0; width: 350px' >";
+        $messageBody .= "   <tr>";
+        $messageBody .= "       <th>Car ID</th>";
+        $messageBody .= "       <th>Comuna ID</th>";
+        $messageBody .= "   </tr>";
         foreach ($this->getCars() as $car) {
-            $messageBody .= "<p> car_id: " . $car->getId() . "</p>";
+            $messageBody .= "   <tr>";
+            $messageBody .= "       <td>" . $car->getId() . "</td>";
+            $messageBody .= "       <td>" . null == $car->getComunaId() ? '' : $car->getComunaId() . "</td>";
+            $messageBody .= "   </tr>";
         }
+        $messageBody .= "</table>";
 
         $mailer = sfContext::getInstance()->getMailer();
         $message = $mailer->compose();
