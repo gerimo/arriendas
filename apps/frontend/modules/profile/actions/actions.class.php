@@ -4828,7 +4828,7 @@ class profileActions extends sfActions {
 
         /* obtiene los datos del formulario */
         $ubicacion = $request->getPostParameter('ubicacion');
-        $comuna = $request->getPostParameter('comunaId');
+        $comunaId = $request->getPostParameter('comunaId');
         $lat = $request->getParameter('lat');
         $lng = $request->getParameter('lng');
         //$marca = $request -> getPostParameter('brand'); //se deduce del modelo del auto
@@ -4843,6 +4843,10 @@ class profileActions extends sfActions {
         $precioSemana = $request->getPostParameter('precioSemana');
         $precioMes = $request->getPostParameter('precioMes');
         $disponibilidad = $request->getPostParameter('disponibilidad');
+        
+        
+        $comuna = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
+        $stateId = $comuna->getStateId();
 
         if ($disponibilidad == 1) {
             $disponibilidadSemana = 1;
@@ -4889,7 +4893,7 @@ class profileActions extends sfActions {
 
             //actualiza los datos asociados al vehículo, por medio de la $idCar
             $q = Doctrine_Manager::getInstance()->getCurrentConnection();
-            $query = "update Car set address='$ubicacion', comuna_id='$comuna',
+            $query = "update Car set address='$ubicacion', comuna_id='$comunaId',state_id='$stateId',
 			    model_id='$modelo', year='$anio', doors='$puertas', transmission='$transmision', photoS3='0',
 			    tipoBencina='$tipoBencina', uso_vehiculo_id='$usosVehiculo', price_per_hour='$precioHora',price_per_week='$precioSemana',price_per_month='$precioMes',
 			    disponibilidad_semana='$disponibilidadSemana' , disponibilidad_finde='$disponibilidadFinde', price_per_day='$precioDia' ,lat=$lat, lng=$lng, patente='$patente', color='$color', seguro_ok='$ok' where id=$idCar";
@@ -4911,7 +4915,7 @@ class profileActions extends sfActions {
             $auto->setLat($lat);
             $auto->setLng($lng);
             $auto->setCityId('27'); //falta ciudad en el formulario
-            $auto->setComunaId($comuna);
+            $auto->setComunaId($comunaId);
             $auto->setSeguroOK('5');
             $auto->setPhotoS3(0); //guardado de photos en servidor local
             $auto->setYear($anio);
@@ -4932,6 +4936,11 @@ class profileActions extends sfActions {
             $auto->setFotoPerfil($fotoPerfilAuto);
 
             $auto->setFechaSubida($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
+            
+            /* seteo de provincia */
+            $comuna = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
+            $stateId = $comuna->getStateId();
+            $auto->setStateId($stateId);
 
             $auto->save();
 
