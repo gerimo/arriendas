@@ -23,6 +23,7 @@
  * @property string $country
  * @property string $city
  * @property string $hash
+ * @property string $tracked_ips
  * @property boolean $confirmed
  * @property boolean $autoconfirm
  * @property boolean $deleted
@@ -60,6 +61,7 @@
  * @method string              getCountry()               Returns the current record's "country" value
  * @method string              getCity()                  Returns the current record's "city" value
  * @method string              getHash()                  Returns the current record's "hash" value
+ * @method string              getTrackedIps()            Returns the current record's "tracked_ips" value
  * @method boolean             getConfirmed()             Returns the current record's "confirmed" value
  * @method boolean             getAutoconfirm()           Returns the current record's "autoconfirm" value
  * @method boolean             getDeleted()               Returns the current record's "deleted" value
@@ -94,6 +96,7 @@
  * @method User                setCountry()               Sets the current record's "country" value
  * @method User                setCity()                  Sets the current record's "city" value
  * @method User                setHash()                  Sets the current record's "hash" value
+ * @method User                setTrackedIps()            Sets the current record's "tracked_ips" value
  * @method User                setConfirmed()             Sets the current record's "confirmed" value
  * @method User                setAutoconfirm()           Sets the current record's "autoconfirm" value
  * @method User                setDeleted()               Sets the current record's "deleted" value
@@ -206,6 +209,10 @@ abstract class BaseUser extends sfDoctrineRecord {
         $this->hasColumn('hash', 'string', 45, array(
             'type' => 'string',
             'length' => 45,
+        ));
+        $this->hasColumn('tracked_ips', 'string', 255, array(
+            'type' => 'string',
+            'length' => 255,
         ));
         $this->hasColumn('confirmed', 'boolean', null, array(
             'type' => 'boolean',
