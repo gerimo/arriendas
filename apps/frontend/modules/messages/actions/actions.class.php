@@ -33,11 +33,12 @@ class messagesActions extends sfActions {
         $myId = $this->getUser()->getAttribute("userid"); //id del que envía el mensaje
         $horaFechaActual = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"));
 
-        $claseUsuario = Doctrine_Core::getTable('user')->findOneById($idUserFrom);
-        if ($claseUsuario->getBlocked() == 1) {
-            /* los usuarios blockeados no pueden mandar mensajes */
-            die();
-        }
+        $claseUsuario = Doctrine_Core::getTable('user')->findOneById($myId);
+//        $looking_user_from = 1;
+//        if ($claseUsuario->getBlocked() == 1) {
+//            /* los usuarios blockeados envian mensajes, pero no son vistos por el destinatario */
+//            $looking_user_from = 0;
+//        }
 
         //validar, que los mensajes no respondidos (mensajes_noRespondidos), sean mas actuales que el ultimo respondido por la contraparte (mensajes_totalesContraparte)
         //si son mas actuales, se ejecuta el codigo, sino.. no se hace nada
@@ -55,6 +56,23 @@ class messagesActions extends sfActions {
             $mess->setDate($horaFechaActual);
             $mess->setConversationId($idConversacion);
             $mess->setUserId($myId);
+            
+            /* default visibility */
+            $looking_user_from = 1;
+            $looking_user_to = 1;
+            
+            /* set visibility */
+            if ($conversacion[0]["user_from_id"] == $claseUsuario->getId() && $claseUsuario->getBlocked() == 1) {
+                $looking_user_to = 0;
+            }
+            if ($conversacion[0]["user_to_id"] == $claseUsuario->getId() && $claseUsuario->getBlocked() == 1) {
+                $looking_user_from = 0;
+            }
+            
+            $mess->setLookingUserFrom($looking_user_from);
+            $mess->setLookingUserTo($looking_user_to);
+            
+            
             $mess->save();
             if ($mensajes_totalesContraparte[0]->getId() && $mensajes_noRespondidos[0]->getId()) {
                 if ($mensajes_totalesContraparte[count($mensajes_totalesContraparte) - 1]->getId() <= $mensajes_noRespondidos[count($mensajes_noRespondidos) - 1]->getId()) {
@@ -75,6 +93,23 @@ class messagesActions extends sfActions {
                 $mess->setDate($horaFechaActual);
                 $mess->setConversationId($idConversacion);
                 $mess->setUserId($myId);
+                
+                /* default visibility */
+                $looking_user_from = 1;
+                $looking_user_to = 1;
+
+                /* set visibility */
+                if ($conversacion2[0]["user_from_id"] == $claseUsuario->getId() && $claseUsuario->getBlocked() == 1) {
+                    $looking_user_to = 0;
+                }
+                if ($conversacion2[0]["user_to_id"] == $claseUsuario->getId() && $claseUsuario->getBlocked() == 1) {
+                    $looking_user_from = 0;
+                }
+
+                $mess->setLookingUserFrom($looking_user_from);
+                $mess->setLookingUserTo($looking_user_to);
+                
+                
                 $mess->save();
 
                 if ($mensajes_totalesContraparte[0]->getId() && $mensajes_noRespondidos[0]->getId()) {
@@ -98,6 +133,16 @@ class messagesActions extends sfActions {
                 $mess->setDate($horaFechaActual);
                 $mess->setConversationId($conv->getId()); //Id nueva creada por el servidor
                 $mess->setUserId($myId);
+                
+                /* default visibility */
+                $looking_user_to = 1;
+
+                /* set visibility */
+                if ($claseUsuario->getBlocked() == 1) {
+                    $looking_user_to = 0;
+                }
+                $mess->setLookingUserTo($looking_user_to);
+                
                 $mess->save();
             }
         }
