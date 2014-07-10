@@ -9,13 +9,20 @@
  * @property integer $codigoInterno
  * @property string $nombre
  * @property integer $padre
+ * @property integer $city
+ * @property integer $state_id
  * @property Doctrine_Collection $Comunas
  * 
  * @method integer             getCodigoInterno()        Returns the current record's "codigoInterno" value
  * @method string              getNombre()               Returns the current record's "nombre" value
  * @method integer             getPadre()                Returns the current record's "padre" value
+ * @method integer             getCodigoBCI()                Returns the current record's "padre" value
+ * @method integer             getCity()                Returns the current record's "padre" value
+ * @method integer             getStateId()                Returns the current record's "padre" value
 
  * @method Comunas              setComunas()                 Sets the current record's "Comunas" collection
+ * @method Comunas              setCity()                 Sets the current record's "Comunas" collection
+ * @method Comunas              setStateId()                 Sets the current record's "Comunas" collection
  * 
  * @package    ComunasSharing
  * @subpackage model
@@ -37,6 +44,21 @@ abstract class BaseComunas extends sfDoctrineRecord
              'length' => 255,
              ));
         $this->hasColumn('padre', 'integer', 11, array(
+             'type' => 'integer',
+             'notnull' => true,
+             'length' => 11,
+             ));
+        $this->hasColumn('codigo_bci', 'string', 4, array(
+             'type' => 'string',
+             'notnull' => true,
+             'length' => 4,
+             ));
+        $this->hasColumn('city', 'integer', 11, array(
+             'type' => 'integer',
+             'notnull' => true,
+             'length' => 11,
+             ));
+        $this->hasColumn('state_id', 'integer', 11, array(
              'type' => 'integer',
              'notnull' => true,
              'length' => 11,
