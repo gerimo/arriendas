@@ -2402,25 +2402,25 @@ El equipo de Arriendas.cl
         
                     /** block users */
                     if(Doctrine::getTable('user')->isABlockedIp($visitingIp)){
-                        $user->setBlocked();
+                        $user->setBlocked("Se loggeo desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario bloqueado.");
                     }
         
                     /** block propietario */
                     if($user->getPropietario()){
                         $noPropietarios = Doctrine::getTable('user')->getPropietarioByIp($visitingIp, false);
                         foreach ($noPropietarios as $nopropietario) {
-                            $nopropietario->setBloqueado();
+                            $nopropietario->setBloqueado("Un usuario propietario se loggeo desde la ip:".$visitingIp. ", desde la cual este usuario NO propietario se habialoggeado.");
                         }
                         if(count($noPropietarios) > 0){
-                            $user->setBloqueado();
+                            $user->setBloqueado("Se loggeo usuario propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario NO propietario.");
                         }
                     }else{
                         $propietarios = Doctrine::getTable('user')->getPropietarioByIp($visitingIp, true);
                         foreach ($propietarios as $propietario) {
-                            $propietario->setBloqueado();
+                            $propietario->setBloqueado("Se loggeo usuario NO propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado este usuario propietario.");
                         }
                         if(count($propietarios) > 0){
-                            $user->setBloqueado();
+                            $user->setBloqueado("Se loggeo este usuario NO propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario propietario.");
                         }
                     }
                     /**/        

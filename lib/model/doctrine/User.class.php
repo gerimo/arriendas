@@ -1536,7 +1536,7 @@ class User extends BaseUser {
 
             /* persist changes */
             if ($exceedMax) {
-                $this->setBloqueado();
+                $this->setBloqueado("Se trackearon mas de 5 provincias.");
             } else {
                 parent::save();
             }
