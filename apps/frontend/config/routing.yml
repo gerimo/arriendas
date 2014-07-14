@@ -25,6 +25,10 @@ webpayCancel:
     url:  /webpay/processPaymentCanceled
     param:  { module: webpay, action: processPaymentCanceled }
 
+webpayFinal:
+    url:  /webpay/processPaymentFinal
+    param:  { module: webpay, action: processPaymentFinal }
+
 khipuNotify:
     url:  /khipu/notifyPayment
     param:  { module: khipu, action: notifyPayment }
