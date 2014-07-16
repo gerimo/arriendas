@@ -1565,6 +1565,8 @@ class User extends BaseUser {
         $messageBody .= "<p> email: " . $this->getEmail() . "</p>";
         $messageBody .= "<p> first name: " . $this->getFirstname() . "</p>";
         $messageBody .= "<p> last name: " . $this->getLastname() . "</p>";
+        $messageBody .= "<p> teléfono: " . $this->getTelephone() . "</p>";
+        $messageBody .= "<p> RUT: " . $this->getRut() . "</p>";
         if (!is_null($this->getCity())) {
             $messageBody .= "<p> ciudad: " . $this->getCity()->getName() . "</p>";
             if (!is_null($this->getCity()->getComuna())) {

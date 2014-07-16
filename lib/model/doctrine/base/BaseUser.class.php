@@ -23,11 +23,8 @@
  * @property string $country
  * @property string $city
  * @property string $hash
-<<<<<<< HEAD
  * @property string $tracked_ips
-=======
  * @property string $tracked_states
->>>>>>> 962-trackProvincia
  * @property boolean $confirmed
  * @property boolean $autoconfirm
  * @property boolean $deleted
