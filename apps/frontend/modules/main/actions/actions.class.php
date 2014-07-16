@@ -881,19 +881,19 @@ public function executeNotificacion(sfWebRequest $request) {
         sfConfig::set('sf_web_debug', false);
         $_output;
         $_output[] = array("optionValue" => 0, "optionDisplay" => "Elegir Comuna");
-        $chooseRegionChangeCount = $this->getUser()->getAttribute("chooseRegionChangeCount");
-        if(is_null($chooseRegionChangeCount)){
-            $chooseRegionChangeCount = 0;
-        }
-        $user_id = $this->getUser()->getAttribute("userid");
-        if($chooseRegionChangeCount > 2 && !is_null($user_id)){
-                $myUser = Doctrine::getTable('User')->findOneById($user_id);
-                $myUser->setBlocked(true);
-                $myUser->save();
-        }elseif ($this->getUser()->isAuthenticated()) {
-            $chooseRegionChangeCount++;
-            $this->getUser()->setAttribute("chooseRegionChangeCount", $chooseRegionChangeCount);
-        }
+//        $chooseRegionChangeCount = $this->getUser()->getAttribute("chooseRegionChangeCount");
+//        if(is_null($chooseRegionChangeCount)){
+//            $chooseRegionChangeCount = 0;
+//        }
+//        $user_id = $this->getUser()->getAttribute("userid");
+//        if($chooseRegionChangeCount > 2 && !is_null($user_id)){
+//                $myUser = Doctrine::getTable('User')->findOneById($user_id);
+//                $myUser->setBlocked(true);
+//                $myUser->save();
+//        }elseif ($this->getUser()->isAuthenticated()) {
+//            $chooseRegionChangeCount++;
+//            $this->getUser()->setAttribute("chooseRegionChangeCount", $chooseRegionChangeCount);
+//        }
         if ($request->getParameter('codigo')) {
             $comunas = Doctrine_Core::getTable('Comunas')->findByPadre($request->getParameter('codigo'));
             foreach ($comunas as $c) {
