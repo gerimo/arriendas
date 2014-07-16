@@ -2812,7 +2812,6 @@ class profileActions extends sfActions {
 
         if ($request->getParameter('id')) {
 
-            try {
 
                 //check if facebook discount has been used
 //                $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
@@ -2867,9 +2866,6 @@ class profileActions extends sfActions {
                 $idArrendatario = $this->reserve->getUserId();
                 $arrendatario = Doctrine_Core::getTable('user')->find($idArrendatario);
                 $this->licenseUp = $arrendatario->getDriverLicenseFile();
-            } catch (Exception $e) {
-                die($e);
-            }
         }
     }
 
