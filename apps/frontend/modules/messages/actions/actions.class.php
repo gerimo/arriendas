@@ -153,12 +153,17 @@ class messagesActions extends sfActions {
         $userTo = Doctrine_Core::getTable('user')->findOneById($idUserTo);
 
         require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
-        $mail = new Email();
-        $mail->setSubject('Mensaje nuevo');
-        $mail->setBody("<p>Hola $userTo:</p><p>$userFrom te ha enviado un mensaje:</p><p>\"$mensajeNuevo\"</p><p>Para contestarlo ingresa <a href='http://www.arriendas.cl/messages/inbox'>aquí</a></p>");
-        $mail->setTo($userTo->getEmail());
-        $mail->setFrom($userFrom->getEmail());
-        $mail->submit();
+        
+        /* el mensaje se envia por mail solo a usuarios no bloqueados */
+        if ($claseUsuario->getBlocked() != 1) {
+            $mail = new Email();
+            $mail->setSubject('Mensaje nuevo');
+            $mail->setBody("<p>Hola $userTo:</p><p>$userFrom te ha enviado un mensaje:</p><p>\"$mensajeNuevo\"</p><p>Para contestarlo ingresa <a href='http://www.arriendas.cl/messages/inbox'>aquí</a></p>");
+            $mail->setTo($userTo->getEmail());
+            $mail->setFrom($userFrom->getEmail());
+            $mail->submit();
+        }
+        
 
         //Copia de mensaje a Germán
         $emailUserFrom = $userFrom->getEmail();
