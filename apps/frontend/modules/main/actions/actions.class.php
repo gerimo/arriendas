@@ -2402,7 +2402,7 @@ El equipo de Arriendas.cl
         
                     /** block users */
                     if(Doctrine::getTable('user')->isABlockedIp($visitingIp)){
-                        $user->setBlocked("Se loggeo desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario bloqueado.");
+                        $user->setBloqueado("Se loggeo desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario bloqueado.");
                     }
         
                     /** block propietario */

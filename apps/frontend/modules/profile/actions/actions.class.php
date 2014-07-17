@@ -3652,6 +3652,7 @@ class profileActions extends sfActions {
                     FROM reserve r 
                     JOIN r.Car c 
                     JOIN c.Model m 
+                    LEFT JOIN r.Transaction t 
                     WHERE r.date > NOW() 
                     AND c.seguro_ok=4
                     AND c.activo=1
@@ -3664,6 +3665,7 @@ class profileActions extends sfActions {
                             OR
                             (r.date > DATE_ADD(NOW(),INTERVAL 2 DAY) AND distancia (?,?,c.lat,c.lng) < ?)
                         ) 
+                    AND t.completed <> 1 
                     AND " . implode(" AND ", $dateRestriction) . " 
                     GROUP BY r.user_id, DATE(r.date)";
 
