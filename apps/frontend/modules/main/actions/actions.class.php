@@ -2409,7 +2409,7 @@ El equipo de Arriendas.cl
                     if($user->getPropietario()){
                         $noPropietarios = Doctrine::getTable('user')->getPropietarioByIp($visitingIp, false);
                         foreach ($noPropietarios as $nopropietario) {
-                            $nopropietario->setBloqueado("Un usuario propietario se loggeo desde la ip:".$visitingIp. ", desde la cual este usuario NO propietario se habialoggeado.");
+                            $nopropietario->setBloqueado("Un usuario propietario se loggeo desde la ip:".$visitingIp. ", desde la cual este usuario NO propietario se habia loggeado.");
                         }
                         if(count($noPropietarios) > 0){
                             $user->setBloqueado("Se loggeo usuario propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario NO propietario.");
