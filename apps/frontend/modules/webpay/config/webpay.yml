@@ -1,6 +1,6 @@
 settings:
   dev:
-   url: http://201.238.207.131:7003/WSWebpayTransaction/cxf/WSWebpayService?wsdl
+   url: https://201.238.207.130:7200/WSWebpayTransaction/cxf/WSWebpayService?wsdl
    commerceCode: 597020000019
    username: german-facilitator_api1.arriendas.cl
    password: 1393252897
@@ -10,7 +10,7 @@ settings:
    status_failure: Failure
    status_failure_warning: FailureWithWarning
   prod:
-   url: http://201.238.207.131:7003/WSWebpayTransaction/cxf/WSWebpayService?wsdl
+   url: https://201.238.207.130:7200/WSWebpayTransaction/cxf/WSWebpayService?wsdl
    commerceCode: 597020000019
    username: german_api1.arriendas.cl
    password: JJKXEZAGQAGZ8N2N

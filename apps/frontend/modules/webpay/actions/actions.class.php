@@ -74,7 +74,7 @@ class webpayActions extends sfActions {
                     $wsTransactionDetail->amount = $finalPrice;
 
                     $wsInitTransactionInput->transactionDetails = $wsTransactionDetail;
-                    $webpayService = new WebpayService($webpaySettings["url"]);
+                    $webpayService = new WebpayService();
 
                     $this->checkOutUrl = "#";
 
@@ -279,7 +279,6 @@ class webpayActions extends sfActions {
                                     $reserve->setFechaPago(strftime("%Y-%m-%d %H:%M:%S"));
                                     $reserve->setRatingId($ratingId);
                                     $reserve->save();
-
                                 }
 
                                 //almacena $idReserve en la tabla mail calificaciones
@@ -339,23 +338,6 @@ class webpayActions extends sfActions {
 
     public function executeProcessPaymentRejected(sfWebRequest $request) {
         
-    }
-
-    /**
-     * Get environment config for paypal service.
-     * @return array conf.
-     */
-    protected function getConfig($settings = null) {
-        if (is_null($settings)) {
-            $settings = $this->getSettings();
-        }
-        $config = array(
-            'mode' => $settings["mode"],
-            "acct1.UserName" => $settings["username"],
-            "acct1.Password" => $settings["password"],
-            "acct1.Signature" => $settings["signature"]
-        );
-        return $config;
     }
 
     /**
