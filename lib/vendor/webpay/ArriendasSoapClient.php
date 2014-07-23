@@ -12,7 +12,7 @@ class ArriendasSoapClient extends SoapClient {
 
         $PRIVATE_KEY_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/arriendasVentas.key";
         $CERT_FILE_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/arriendasVentas.crt";
-        $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certifacate_server.crt";
+        $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certificate_server.crt";
 
         $doc = new DOMDocument('1.0');
         $doc->loadXML($request);
@@ -24,10 +24,10 @@ class ArriendasSoapClient extends SoapClient {
         $objWSSE->addIssuerSerial($CERT_FILE_PATH);
         $objKey = new XMLSecurityKey(XMLSecurityKey::AES256_CBC);
         $objKey->generateSessionKey();
-        $this->_log("__call key", "info", $PRIVATE_KEY_PATH);
-        $this->_log("__call", "info", $objWSSE->saveXML());
+//        $this->_log("__call key", "info", $PRIVATE_KEY_PATH);
+//        $this->_log("__call", "info", $objWSSE->saveXML());
         $retVal = parent::__doRequest($objWSSE->saveXML(), $location, $action, $version, $oneWay);
-        $this->_log("__response", "info", $retVal);
+//        $this->_log("__response", "info", $retVal);
         $doc = new DOMDocument();
         $doc->loadXML($retVal);
         return $doc->saveXML();

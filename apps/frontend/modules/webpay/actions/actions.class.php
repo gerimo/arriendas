@@ -83,7 +83,7 @@ class webpayActions extends sfActions {
                                 array("wsInitTransactionInput" => $wsInitTransactionInput)
                         );
                         $xmlResponse = $webpayService->soapClient->__getLastResponse();
-                        $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certifacate_server.crt";
+                        $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certificate_server.crt";
                         $soapValidation = new SoapValidation($xmlResponse, $SERVER_CERT_PATH);
                         $validationResult = $soapValidation->getValidationResult();
                         if ($validationResult) {
@@ -123,7 +123,7 @@ class webpayActions extends sfActions {
 
             /* validamos respuesta */
             $xmlResponse = $webpayService->soapClient->__getLastResponse();
-            $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certifacate_server.crt";
+            $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certificate_server.crt";
             $soapValidation = new SoapValidation($xmlResponse, $SERVER_CERT_PATH);
             $validationResult = $soapValidation->getValidationResult();
 
