@@ -218,8 +218,8 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                         if ($car->getPhotoS3() == 1) {
                             echo image_tag("http://www.arriendas.cl/main/s3thumb?alto=185&ancho=185&urlFoto=" . $car->getFoto(), array("width" => "185", "height" => "185", "alt" => $image_alt, "title" => $image_title));
                         } else {
-//						echo image_tag("../uploads/cars/".$car->getFoto(),array("width"=>"185","height"=>"185"));
-                            echo "<img src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_185,h_185,c_fill,g_center/http://arriendas.cl/uploads/cars/" . $car->getFoto() . "' alt='" . $image_alt . "' title='" . $image_title . "' />";
+                            $base_url = $sf_request->getUriPrefix().$sf_request->getRelativeUrlRoot();
+                            echo "<img src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_185,h_185,c_fill,g_center/".$base_url."/uploads/cars/" . $car->getFoto() . "' alt='" . $image_alt . "' title='" . $image_title . "' />";
                         }
                         ?>
                     </div>
@@ -254,7 +254,7 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                                         ?>
                                         <li>
                                             <a title="<?= $arrayDescripcionFotos[$i]; ?>" href="<?= image_path('../uploads/verificaciones/' . $arrayFotos[$i]); ?>">
-                                                <img title="<?= $arrayDescripcionFotos[$i]; ?>" src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_40,h_40,c_fill,g_center/http://arriendas.cl/<?= image_path('../uploads/verificaciones/thumbs/' . $arrayFotos[$i]); ?>" width="40" height="40" alt="<?=$image_alt?>" >
+                                                <img title="<?= $arrayDescripcionFotos[$i]; ?>" src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_40,h_40,c_fill,g_center/<?= $base_url ?>/uploads/verificaciones/thumbs/<?= $arrayFotos[$i]?>" width="40" height="40" alt="<?=$image_alt?>" >
                                             </a>
                                         </li>
                                         <?php
