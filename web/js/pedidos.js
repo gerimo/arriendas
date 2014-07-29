@@ -83,6 +83,9 @@ function bindEventsAll(){
                     case 'error:rutnulo':
                         alert("No has ingresado tu RUT, Por favor ingresa tu RUT en tu Perfil para poder realizar el pago.");
                         break;
+                    case 'error:extranjero-sin-facebook':
+                        alert("Siendo extranjero, obligatoriamente tienes que ingresar con facebook para poder pagar.");
+                        break;
                     default:
                         alert('Disculpe, ha ocurrido un error. Por favor inténtelo nuevamente mas tarde.');
                         break;
