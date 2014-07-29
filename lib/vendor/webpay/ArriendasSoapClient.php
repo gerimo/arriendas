@@ -24,10 +24,15 @@ class ArriendasSoapClient extends SoapClient {
         $objWSSE->addIssuerSerial($CERT_FILE_PATH);
         $objKey = new XMLSecurityKey(XMLSecurityKey::AES256_CBC);
         $objKey->generateSessionKey();
-//        $this->_log("__call key", "info", $PRIVATE_KEY_PATH);
-//        $this->_log("__call", "info", $objWSSE->saveXML());
+        $env = sfConfig::get('sf_environment');
+        if ($env == "dev") {
+            $this->_log("__doRequest key", "info", $PRIVATE_KEY_PATH);
+            $this->_log("__doRequest", "info", $objWSSE->saveXML());
+        }
         $retVal = parent::__doRequest($objWSSE->saveXML(), $location, $action, $version, $oneWay);
-//        $this->_log("__response", "info", $retVal);
+        if ($env == "dev") {
+            $this->_log("__response", "info", $retVal);
+        }
         $doc = new DOMDocument();
         $doc->loadXML($retVal);
         return $doc->saveXML();
