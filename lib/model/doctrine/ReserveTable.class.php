@@ -305,5 +305,19 @@ class ReserveTable extends Doctrine_Table {
                 ->andWhere('r.fin_arriendo_ok = ?', false);
         return $q->execute();
     }
+    
+    /**
+     * Find unpayed extended reserves.
+     * 
+     * @param type $userId
+     * @return int result.
+     */
+    public function countExtendedNotPayed($userId){
+        $q = self::getInstance()->createQuery("r")
+                ->where('r.user_id = ?', $userId)
+                ->andWhere('r.comentario = ?', sfConfig::get("app_comment_extension"))
+                ->andWhere('r.confirmed = ?', true);
+        return $q->count();
+    }
 
 }
