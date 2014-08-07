@@ -129,9 +129,23 @@ class WebpayService {
         , 'initTransactionResponse' => 'initTransactionResponse'
         , 'wsInitTransactionOutput' => 'wsInitTransactionOutput'
     );
-    
+
     function __construct($url = 'https://201.238.207.130:7200/WSWebpayTransaction/cxf/WSWebpayService?wsdl') {
-        $this->soapClient = new ArriendasSoapClient($url, array("classmap" => self::$classmap, "trace" => true, "exceptions" => true));
+        $this->soapClient = new ArriendasSoapClient($url, array(
+            "classmap" => self::$classmap,
+            "trace" => true,
+            "exceptions" => true,
+            "stream_context" => stream_context_create(
+                    array(
+                        "ssl" => array(
+                            "verify_peer" => false
+                            , "allow_self_signed" => true
+                            , "cafile" => sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certificate_server.crt"
+                            , "verify_depth" => 5
+                        )
+                    )
+            ))
+        );
     }
 
     function getTransactionResult($getTransactionResult) {
