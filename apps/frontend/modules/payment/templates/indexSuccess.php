@@ -8,11 +8,19 @@
         width: 20%;
         float: left;
         height: 100px;
-        width: 100px;
-        text-align: center;
+        width: 110px;
+        display: table-cell;
+        line-height: 100px;
+        padding: 10px;
+    }
+    .contenedor-medios-pago > div > input{
+        max-width: 10%;
+        vertical-align: middle;
     }
     .contenedor-medios-pago > div > img{
-        max-width: 83%;
+        max-width: 80%;
+        display: inline-block;
+        vertical-align: middle;
     }
 </style>
 <div class="main_box_1">
@@ -91,78 +99,64 @@
                     <div id="contenedorMedios">
                         <div class="contenedor-medios-pago">
                             <div>
-                                <?php echo image_tag('puntopagos/webpay.gif') ?><br/>
                                 <input type="radio" name="pp_medio_pago" value="3"/>
+                                <?php echo image_tag('puntopagos/webpay.gif') ?>
                             </div>
                             <div>
-                                <?php echo image_tag('payment/Banca.png') ?><br/>
                                 <input type="radio" name="pp_medio_pago" value="21"/>
+                                <?php echo image_tag('payment/bancodechile.jpg') ?>
                             </div>
                             <div>
-                                <?php echo image_tag('payment/Logos_servipag_bancos.png') ?><br/>
                                 <input type="radio" name="pp_medio_pago" value="21"/>
+                                <?php echo image_tag('payment/bancoestados.jpg') ?>
                             </div>
                             <div>
-                                <?php echo image_tag('payment/Scot.png') ?><br/>
                                 <input type="radio" name="pp_medio_pago" value="21"/>
+                                <?php echo image_tag('payment/bcobci.jpg') ?>
                             </div>
-                            <div> <?php echo image_tag('payment/bbva.png') ?><br/>
+                            <div> 
                                 <input type="radio" name="pp_medio_pago" value="21"/>
+                                <?php echo image_tag('payment/bice.jpg') ?>
                             </div>
                             <div>
-                                <?php echo image_tag('payment/bci.png') ?><br/>
                                 <input type="radio" name="pp_medio_pago" value="21"/>
+                                <?php echo image_tag('payment/city.jpg') ?>
                             </div>
                             <div>
-                                <?php echo image_tag('payment/bcoBice.png') ?><br/>
                                 <input type="radio" name="pp_medio_pago" value="21"/>
+                                <?php echo image_tag('payment/corpbanca.jpg') ?>
                             </div>
                             <div>
-                                <?php echo image_tag('payment/bcoChile.png') ?><br/>
                                 <input type="radio" name="pp_medio_pago" value="21"/>
+                                <?php echo image_tag('payment/edwars.jpg') ?>
                             </div>
                             <div>
-                                <?php echo image_tag('payment/bcoEdwards.png') ?><br/>
                                 <input type="radio" name="pp_medio_pago" value="21"/>
+                                <?php echo image_tag('payment/fala.jpg') ?>
                             </div>
                             <div>
-                                <?php echo image_tag('payment/bcoEstado.png') ?><br/>
                                 <input type="radio" name="pp_medio_pago" value="21"/>
+                                <?php echo image_tag('payment/internacional.jpg') ?>
                             </div>
                             <div>
-                                <?php echo image_tag('payment/bcoFalabella.png') ?><br/>
                                 <input type="radio" name="pp_medio_pago" value="21"/>
+                                <?php echo image_tag('payment/santander.jpg') ?>
                             </div>
                             <div>
-                                <?php echo image_tag('payment/bcoInternacional.png') ?><br/>
                                 <input type="radio" name="pp_medio_pago" value="21"/>
+                                <?php echo image_tag('payment/scotiabank.jpg') ?>
                             </div>
                             <div>
-                                <?php echo image_tag('payment/bcoj.png') ?><br/>
                                 <input type="radio" name="pp_medio_pago" value="21"/>
+                                <?php echo image_tag('payment/security.jpg') ?>
                             </div>
                             <div>
-                                <?php echo image_tag('payment/bcoSecurity.png') ?><br/>
                                 <input type="radio" name="pp_medio_pago" value="21"/>
+                                <?php echo image_tag('payment/tbanc.jpg') ?>
                             </div>
                             <div>
-                                <?php echo image_tag('payment/chile.png') ?><br/>
                                 <input type="radio" name="pp_medio_pago" value="21"/>
-                            </div>
-                            <div>
-                                <?php echo image_tag('payment/citi.png') ?><br/>
-                                <input type="radio" name="pp_medio_pago" value="21"/></div>
-                            <div>
-                                <?php echo image_tag('payment/t.png') ?><br/>
-                                <input type="radio" name="pp_medio_pago" value="21"/>
-                            </div>
-                            <div>
-                                <img src="https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png" border="0" alt="PayPal Logo"><br/>
-                                <input type="radio" name="pp_medio_pago" value="20"/>
-                            </div>
-                            <div>
-                                <img src="https://s3.amazonaws.com/static.khipu.com/buttons/50x25.png" border="0" alt="Khipu"><br/>
-                                <input type="radio" name="pp_medio_pago" value="21"/>
+                                <img src="https://s3.amazonaws.com/static.khipu.com/buttons/50x25.png" border="0" alt="Khipu">
                             </div>
                         </div>
                     </div>
