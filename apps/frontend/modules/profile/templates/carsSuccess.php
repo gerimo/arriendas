@@ -140,10 +140,10 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 	<a href="<?php echo url_for('profile/addCar?id=' . $c->getId() )?>" >
 		<?php 
 			if($c->getPhotoS3() == 1){
-				echo image_tag($c->getFoto(),array("width"=>"120px","height"=>"98px"));
+				echo image_tag($c->getFoto(),array("width"=>"84px","height"=>"84px"));
 			}else{
                             $base_url = $sf_request->getUriPrefix().$sf_request->getRelativeUrlRoot();
-                            echo "<img class='foto' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_120,h_98,c_fill,g_center/".$base_url."/uploads/cars/".$c->getFoto()."'/>";
+                            echo "<img class='foto' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_84,h_84,c_fill,g_center/".$base_url."/uploads/cars/".$c->getFoto()."'/>";
 			}
 		?>
 	</a>
