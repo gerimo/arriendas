@@ -139,9 +139,6 @@ class WebpayService {
                     array(
                         "ssl" => array(
                             "verify_peer" => false
-                            , "allow_self_signed" => true
-                            , "cafile" => sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certificate_server.crt"
-                            , "verify_depth" => 5
                         )
                     )
             ))
