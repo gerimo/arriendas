@@ -1,6 +1,6 @@
 settings:
   dev:
-   create-payment-url: https://khipu.com/api/1.2/createPaymentURL
+   create-payment-url: https://khipu.com/api/1.2/createAuthenticatedPaymentURL
    notification-validation-url: https://khipu.com/api/1.2/verifyPaymentNotification
    payment-status-url: https://khipu.com/api/1.2/paymentStatus
    receiver_id: 8747
@@ -10,7 +10,7 @@ settings:
    status_failure: Failure
    status_failure_warning: FailureWithWarning
   prod:
-   create-payment-url: https://khipu.com/api/1.2/createPaymentURL
+   create-payment-url: https://khipu.com/api/1.2/createAuthenticatedPaymentURL
    notification-validation-url: https://khipu.com/api/1.2/verifyPaymentNotification
    payment-status-url: https://khipu.com/api/1.2/paymentStatus
    receiver_id: 9139

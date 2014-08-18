@@ -75,12 +75,12 @@ class khipuActions extends sfActions {
                         'subject' => "Arriendo " . $this->carMarcaModel,
                         'body' => "Arriendo " . $this->carMarcaModel,
                         'amount' => $finalPrice,
+                        'payer_username' => 'juanma_aguero@hotmail.com',
+                        'payer_email' => 'juanma_aguero@hotmail.com',
+                        'transaction_id' => $request->getParameter('id'),
                         'notify_url' => $this->generateUrl("khipuNotify", array(), true),
                         'return_url' => $this->generateUrl("khipuReturn", array(), true),
                         'cancel_url' => $this->generateUrl("khipuCancel", array(), true),
-                        'transaction_id' => $request->getParameter('id'),
-                        'payer_email' => '',
-                        'bank_id' => '',
                         'picture_url' => $carImageUrl,
                         'custom' => 'el modelo en color rojo',
                     );
@@ -127,6 +127,7 @@ class khipuActions extends sfActions {
             "custom" => $_POST['custom'],
             "transaction_id" => $_POST['transaction_id'],
             "payer_email" => $_POST['payer_email'],
+            "payer_username" => $_POST['payer_username'],
             "notification_signature" => $_POST['notification_signature']
         );
 
@@ -170,6 +171,7 @@ class khipuActions extends sfActions {
             if ($finalPrice > 0) {
 
                 $this->_log("Pago", "Exito", "Usuario: " . $customer_in_session . ". Order ID: " . $order->getId());
+                $this->_log("Pago", "Info", "Pagador Email: ". $data["payer_email"]. "  pagador username: ". $data["payer_username"]);
                 Doctrine_Core::getTable("Transaction")->successTransaction($orderId, $token, $paypalSettings["status_success"], 1);
 
                 $idReserve = $order->getReserveId();
