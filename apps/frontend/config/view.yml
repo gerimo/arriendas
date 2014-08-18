@@ -12,7 +12,7 @@ default:
     language:     es
     robots:       index, follow
     
-  stylesheets:    [http://cdn1.arriendas.cl/css/ui-lightness/jquery-ui-1.8.18.custom.css?v=25022014, http://cdn2.arriendas.cl/css/style_ui.css?v=02062014, http://cdn3.arriendas.cl/css/jquery.timepicker-1.2.2.css?v=25022014,http://cdn1.arriendas.cl/css/timePicker.css?v=25022014, http://cdn2.arriendas.cl/css/jquery.weekcalendar.css?v=25022014,  http://cdn3.arriendas.cl/css/default.css?v=25022014, http://cdn1.arriendas.cl/css/demo.css?v=25022014, http://cdn2.arriendas.cl/css/main.css?v=25022014, http://cdn3.arriendas.cl/css/trickbox.css?v=25022014, http://cdn1.arriendas.cl/fancybox/source/jquery.fancybox.css?v=25022014]
+  stylesheets:    [http://cdn1.arriendas.cl/css/ui-lightness/jquery-ui-1.8.18.custom.css?v=25022014, http://cdn2.arriendas.cl/css/style_ui.css?v=18082014, http://cdn3.arriendas.cl/css/jquery.timepicker-1.2.2.css?v=25022014,http://cdn1.arriendas.cl/css/timePicker.css?v=25022014, http://cdn2.arriendas.cl/css/jquery.weekcalendar.css?v=25022014,  http://cdn3.arriendas.cl/css/default.css?v=25022014, http://cdn1.arriendas.cl/css/demo.css?v=25022014, http://cdn2.arriendas.cl/css/main.css?v=25022014, http://cdn3.arriendas.cl/css/trickbox.css?v=25022014, http://cdn1.arriendas.cl/fancybox/source/jquery.fancybox.css?v=25022014]
 #  stylesheets:    [ui-lightness/jquery-ui-1.8.18.custom.css?v=20122013, style_ui.css?v=20122013, jquery.timepicker-1.2.2.css?v=20122013,timePicker.css?v=20122013, jquery.weekcalendar.css,  default.css?v=20122013, demo.css?v=20122013, main.css?v=20122013, trickbox.css, http://cdn1.arriendas.cl/fancybox/source/jquery.fancybox.css]
 
 
