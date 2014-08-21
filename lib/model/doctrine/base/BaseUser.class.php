@@ -30,10 +30,12 @@
  * @property boolean $deleted
  * @property boolean $blocked
  * @property boolean $moroso
+ * @property boolean $extranjero
+ * @property boolean $licencia_falsa
+ * @property boolean $chequeo_licencia
  * @property boolean $confirmed_fb
  * @property boolean $confirmed_sms
  * @property boolean $friend_invite
- * @property boolean $extranjero
  * @property Doctrine_Collection $Cars
  * @property Doctrine_Collection $Conversation
  * @property Doctrine_Collection $Message
@@ -74,6 +76,8 @@
  * @method boolean             getConfirmedSms()          Returns the current record's "confirmed_sms" value
  * @method boolean             getFriendInvite()          Returns the current record's "friend_invite" value
  * @method boolean             getExtranjero()            Returns the current record's "extranjero" value
+ * @method boolean             getLicenciaFalsa()         Returns the current record's "licencia_falsa" value
+ * @method boolean             getChequeoLicencia()       Returns the current record's "chequeo_licencia" value
  * @method Doctrine_Collection getCars()                  Returns the current record's "Cars" collection
  * @method Doctrine_Collection getConversation()          Returns the current record's "Conversation" collection
  * @method Doctrine_Collection getMessage()               Returns the current record's "Message" collection
@@ -106,11 +110,13 @@
  * @method User                setAutoconfirm()           Sets the current record's "autoconfirm" value
  * @method User                setDeleted()               Sets the current record's "deleted" value
  * @method User                setBlocked()               Sets the current record's "blocked" value
- * @method User                setMoroso()               Sets the current record's "moroso" value
+ * @method User                setMoroso()                Sets the current record's "moroso" value
  * @method User                setConfirmedFb()           Sets the current record's "confirmed_fb" value
  * @method User                setConfirmedSms()          Sets the current record's "confirmed_sms" value
  * @method User                setFriendInvite()          Sets the current record's "friend_invite" value
  * @method User                setExtranjero()            Sets the current record's "extranjero" value
+ * @method User                setLicenciaFalsa()         Sets the current record's "licencia_falsa" value
+ * @method User                setChequeoLicencia()       Sets the current record's "chequeo_licencia" value
  * @method User                setCars()                  Sets the current record's "Cars" collection
  * @method User                setConversation()          Sets the current record's "Conversation" collection
  * @method User                setMessage()               Sets the current record's "Message" collection
@@ -265,6 +271,16 @@ abstract class BaseUser extends sfDoctrineRecord {
             'default' => false,
         ));
         $this->hasColumn('extranjero', 'boolean', null, array(
+            'type' => 'boolean',
+            'notnull' => true,
+            'default' => false,
+        ));
+        $this->hasColumn('licencia_falsa', 'boolean', null, array(
+            'type' => 'boolean',
+            'notnull' => true,
+            'default' => false,
+        ));
+        $this->hasColumn('chequeo_licencia', 'boolean', null, array(
             'type' => 'boolean',
             'notnull' => true,
             'default' => false,
