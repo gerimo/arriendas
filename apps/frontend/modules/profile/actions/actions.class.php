@@ -2720,8 +2720,12 @@ class profileActions extends sfActions {
         if ($reserve->getUser()->getRut() == "") {
             $errorMessage = "error:rutnulo";
         }
+
         if ($reserve->getUser()->getExtranjero() == 1 && !$reserve->getUser()->getFacebookConfirmado() ) {
             $errorMessage = "error:extranjero-sin-facebook";
+        }
+        if ($reserve->getUser()->getMenor()) {
+            $errorMessage = "error:usermenor";
         }
         echo $errorMessage;
         die();
