@@ -316,7 +316,9 @@ class ReserveTable extends Doctrine_Table {
         $q = self::getInstance()->createQuery("r")
                 ->where('r.user_id = ?', $userId)
                 ->andWhere('r.comentario = ?', sfConfig::get("app_comment_extension"))
-                ->andWhere('r.confirmed = ?', true);
+                ->andWhere('r.confirmed = ?', true)
+                ->andWhere('r.fecha_pago IS NULL')
+                ->andWhere('HOUR(TIMEDIFF(NOW(), DATE_ADD(r.date, INTERVAL r.duration HOUR))) >  ?', sfConfig::get("app_horas_para_moroso"));
         return $q->count();
     }
 

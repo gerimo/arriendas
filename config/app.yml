@@ -4,6 +4,7 @@
 # default values
 all:
   comment_oportunidad: Reserva oportunidad
-  comment_extension: Reserva extension
+  comment_extension: Reserva extendida
+  horas_para_moroso: 48
   monto_garantia: 180000
   monto_garantia_por_dia: 8700
