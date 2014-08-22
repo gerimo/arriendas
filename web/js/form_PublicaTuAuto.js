@@ -360,8 +360,16 @@ function verificaPaso1(){
 		$('#patenteLabel').addClass('faltaValor');
 		var camposIngresados = false;
 	}else{
-		//$('#ubicacionLabel').text('Ubicación del Vehículo');
 		$('#patenteLabel').removeClass('faltaValor');
+                $.ajax({
+                    "url": urlCheckPatente + "?patente=" + patente + "&carid="+$("#idCar").val(),
+                    "success": function(data){
+                        if(data.length <= 0 && data != "1" ){
+                            alert("Ya ha subido este auto. Recién lo podrá ver publicado su auto una vez que lo haya visitado un inspector. Un inspector te llamará esta semana");
+                        }
+                        
+                    }
+                });
 	}
 
 	if(color == ""){
