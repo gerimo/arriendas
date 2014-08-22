@@ -4674,6 +4674,20 @@ class profileActions extends sfActions {
             $profile->setRegion($request->getParameter('region'));
             $profile->setComuna($request->getParameter('comunas'));
             $profile->setAddress($request->getParameter('address'));
+            
+            if($request->getParameter('birth') && ($profile->getBirthdate() !== $request->getParameter('birth'))){
+                $birthDate = explode("/", $request->getParameter('birth'));
+                $year = $birthDate[0];
+                $month = $birthDate[1];
+                $day = $birthDate[2];
+                $age = (date("md", date("U", mktime(0, 0, 0, $month, $day, $year))) > date("md") ? ((date("Y") - $year) - 1) : (date("Y") - $year));
+                if($age <= 24){
+                    $profile->setMenor(true);
+                }  else {
+                    $profile->setMenor(false);
+                }
+            }
+            
             $profile->setBirthdate($request->getParameter('birth'));
             $profile->setExtranjero($request->getParameter('extranjero'));
             $profile->setApellidoMaterno($request->getParameter('apellidoMaterno'));
