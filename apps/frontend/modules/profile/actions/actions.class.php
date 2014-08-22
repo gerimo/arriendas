@@ -2720,6 +2720,9 @@ class profileActions extends sfActions {
         if ($reserve->getUser()->getRut() == "") {
             $errorMessage = "error:rutnulo";
         }
+        if ($reserve->getUser()->getMenor()) {
+            $errorMessage = "error:usermenor";
+        }
         echo $errorMessage;
         die();
     }
