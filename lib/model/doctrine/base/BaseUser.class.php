@@ -20,6 +20,7 @@
  * @property string $telephone
  * @property string $identification
  * @property string $birthdate
+ * @property boolean $menor
  * @property string $country
  * @property string $city
  * @property string $hash
@@ -58,6 +59,7 @@
  * @method string              getTelephone()             Returns the current record's "telephone" value
  * @method string              getIdentification()        Returns the current record's "identification" value
  * @method string              getBirthdate()             Returns the current record's "birthdate" value
+ * @method boolean              getMenor()             Returns the current record's "menor" value
  * @method string              getAddress()               Returns the current record's "address" value
  * @method string              getCountry()               Returns the current record's "country" value
  * @method string              getCity()                  Returns the current record's "city" value
@@ -94,6 +96,7 @@
  * @method User                setTelephone()             Sets the current record's "telephone" value
  * @method User                setIdentification()        Sets the current record's "identification" value
  * @method User                setBirthdate()             Sets the current record's "birthdate" value
+ * @method User                setMenor()             Sets the current record's "menor" value
  * @method User                setAddress()               Sets the current record's "address" value
  * @method User                setCountry()               Sets the current record's "country" value
  * @method User                setCity()                  Sets the current record's "city" value
@@ -200,6 +203,11 @@ abstract class BaseUser extends sfDoctrineRecord {
         $this->hasColumn('birthdate', 'string', 45, array(
             'type' => 'string',
             'length' => 45,
+        ));
+        $this->hasColumn('menor', 'boolean', null, array(
+            'type' => 'boolean',
+            'notnull' => true,
+            'default' => false,
         ));
         $this->hasColumn('country', 'string', 45, array(
             'type' => 'string',
