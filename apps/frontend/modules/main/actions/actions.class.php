@@ -2399,6 +2399,9 @@ El equipo de Arriendas.cl
                     /* track ip */
                     $visitingIp = $request->getRemoteAddress();
                     $user->trackIp($visitingIp);
+                    
+                    /* check moroso */
+                    $user->checkMoroso();
         
                     /** block users */
                     if(Doctrine::getTable('user')->isABlockedIp($visitingIp)){
