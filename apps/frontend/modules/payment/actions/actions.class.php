@@ -134,7 +134,9 @@ class paymentActions extends sfActions {
                     $this->getUser()->setFlash('error', 'Debe especificar un medio de pago');
                     $this->redirect("payment/index?id=" . $request->getParameter("idReserva"));
                 }
-                
+                if ($request->getParameter("pp_medio_pago") == "3") {
+                    $this->forward("bcpuntopagos", "creacion");
+                }
                 if ($request->getParameter("pp_medio_pago") == "3") {
                     $this->forward("webpay", "confirmPayment");
                 }
