@@ -261,7 +261,7 @@
                 <p>DETALLES DEL ARRIENDO</p>
             </div>
 
-            <form name="pago" method="post" action="<?php echo url_for('bcpuntopagos/index') ?>?id=<?= $reserve->getId() ?>" id="pago">
+            <form name="pago" method="post" action="<?php echo url_for('payment/index') ?>?id=<?= $reserve->getId() ?>" id="pago">
 
                 <div id="contenidoPayReserva">
                     <div class="numReserva">Nro. Reserva: <b><?= $reserve->getId() ?></b></div>
@@ -349,7 +349,7 @@
                     </div>
                     <div class="botones">
                         <a href="<?php echo url_for("profile/pedidos") ?>" class="botonVolver" title="Vuelve a pedidos"></a>
-                        <a href="<?php echo url_for("bcpuntopagos/index?id=" . $reserve->getId()) ?>" class="botonSiguiente" title="Ir a punto pago"></a>
+                        <a href="<?php echo url_for("payment/index?id=" . $reserve->getId()) ?>" class="botonSiguiente" title="Ir a punto pago"></a>
                     </div>
                     <div id="mensajePagoGarantia" style="display:none;"><p>En los próximos segundos te enviaremos un e-mail con los datos de la cuenta para hacer la transferencia.<p></div>
                 </div>
