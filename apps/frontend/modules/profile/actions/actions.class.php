@@ -445,9 +445,11 @@ class profileActions extends sfActions {
             $message->setTo($correoRenter);
             $functions = new Functions;
             $contrato = $functions->generarContrato($tokenReserve);
-            //$reporte = $functions->generarReporte($idCar, true);
             $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
-            //$message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+            
+            $pagarePath = sfConfig::get("sf_web_dir")."/pagare_arriendas.pdf";
+            $message->attach(Swift_Attachment::fromPath($pagarePath)->setFilename("pagare_arriendas.pdf"));
+            
             if($sendNotifications){
                 $mailer->send($message);
             }
