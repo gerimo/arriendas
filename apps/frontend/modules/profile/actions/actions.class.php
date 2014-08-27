@@ -3421,7 +3421,7 @@ class profileActions extends sfActions {
                 
                 $horasASumar = $duracion + 36;
                 $fechaReservaParaPagadas = strtotime("+$horasASumar hours", strtotime($reserva->getDate()));
-                if (($estado == 3 && ($duracion * 3600) + $fechaReservaParaPagadas > $fechaActual) || ($estado == 2 && $fechaReserva > $fechaActual) || (($estado == 1 || $estado == 0) && $fechaReserva > $fechaActual)) {
+                if (($estado == 3 && $fechaReservaParaPagadas > $fechaActual) || ($estado == 2 && $fechaReserva > $fechaActual) || (($estado == 1 || $estado == 0) && $fechaReserva > $fechaActual)) {
 
                     //obtiene el id de la reserva
                     $reservasRecibidas[$i]['idReserve'] = $reserva->getId();
