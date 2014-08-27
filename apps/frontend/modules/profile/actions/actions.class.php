@@ -1863,23 +1863,20 @@ class profileActions extends sfActions {
                 }
                 $car_lat = $car->getLat();
                 $car_lng = $car->getLng();
-                $maxPrice = $car->getPricePerDay() * 1.5;
-                $minPrice = $car->getPricePerDay() * 0.5;
+         /*       $maxPrice = $car->getPricePerDay() * 1.5;
+                $minPrice = $car->getPricePerDay() * 0.5;*/
+                
                 /* obtengo todos los autos que cumplan con las condiciones */
                 $queryCars = "
                     SELECT c.*
                     from Car c 
                     WHERE c.seguro_ok=4
                     AND c.activo=1
-                    AND c.price_per_day <= ? 
-                    AND c.price_per_day >= ? 
                     AND distancia (?,?,c.lat,c.lng) < ?
                     AND c.uso_vehiculo_id = ? 
                     ORDER BY c.contesta_pedidos DESC
                     LIMIT 15";
                     $query = Doctrine_Query::create()->query($queryCars, array(
-                        $maxPrice,
-                        $minPrice,
                         $car_lat,
                         $car_lng,
                         $radio,
