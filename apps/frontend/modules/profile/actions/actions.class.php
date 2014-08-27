@@ -4687,8 +4687,6 @@ class profileActions extends sfActions {
                 $age = (date("md", date("U", mktime(0, 0, 0, $month, $day, $year))) > date("md") ? ((date("Y") - $year) - 1) : (date("Y") - $year));
                 if($age <= 24){
                     $profile->setMenor(true);
-                }  else {
-                    $profile->setMenor(false);
                 }
             }
             
