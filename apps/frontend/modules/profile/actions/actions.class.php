@@ -3906,6 +3906,7 @@ class profileActions extends sfActions {
         sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
         $this->urlAbsoluta = url_for('main/priceJson');
         $this->urlCheckPatente = url_for('profile/checkPatente');
+        $this->urlListadoAutos = url_for('profile/cars', true);
 
         $this->partes = $this->partesAuto();
         $this->nombresPartes = $this->nombrePartesAuto();

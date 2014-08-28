@@ -365,7 +365,8 @@ function verificaPaso1(){
                     "url": urlCheckPatente + "?patente=" + patente + "&carid="+$("#idCar").val(),
                     "success": function(data){
                         if(data.length <= 0 && data != "1" ){
-                            alert("Ya ha subido este auto. Recién lo podrá ver publicado su auto una vez que lo haya visitado un inspector. Un inspector te llamará esta semana");
+                            alert("Ya ha subido este auto. Recién lo podrá ver publicado su auto una vez que lo haya visitado un inspector. Un inspector te llamará esta semana.");
+                            window.location = urlListadoAutos;
                         }
                         
                     }
