@@ -83,6 +83,9 @@ function bindEventsAll(){
                     case 'error:rutnulo':
                         alert("No has ingresado tu RUT, Por favor ingresa tu RUT en tu Perfil para poder realizar el pago.");
                         break;
+                    case 'error:usermenor':
+                        alert("Para arrendar debes tener más de 23 años.");
+                        break;
                     default:
                         alert('Disculpe, ha ocurrido un error. Por favor inténtelo nuevamente mas tarde.');
                         break;
