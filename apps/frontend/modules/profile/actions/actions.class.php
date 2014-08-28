@@ -1863,7 +1863,7 @@ class profileActions extends sfActions {
                 }
                 $car_lat = $car->getLat();
                 $car_lng = $car->getLng();
-                $maxPrice = $car->getPricePerDay() * 1.5;
+                $maxPrice = $car->getPricePerDay() * 1.3;
                 $minPrice = $car->getPricePerDay() * 0.5;
                 /* obtengo todos los autos que cumplan con las condiciones */
                 $queryCars = "
@@ -3642,8 +3642,8 @@ class profileActions extends sfActions {
                 }
                 $car_lat = $car->getLat();
                 $car_lng = $car->getLng();
-                $maxPrice = $car->getPricePerDay() * 2;
-                $minPrice = $car->getPricePerDay() * 0.67;
+                $maxPrice = $car->getPricePerDay() * 1.3;
+                $minPrice = $car->getPricePerDay() * 0.5;
 
                 //la consulta considera dos radios. Si es para hoy o mañana 8 kms, 
                 //si es para otra fecha solo 4kms
