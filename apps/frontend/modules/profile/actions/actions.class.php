@@ -2745,6 +2745,9 @@ class profileActions extends sfActions {
         if ($reserve->getUser()->getMenor()) {
             $errorMessage = "error:usermenor";
         }
+        if ($reserve->getUser()->getExtranjero() == 1 && !$reserve->getUser()->getFacebookConfirmado() ) {
+            $errorMessage = "error:extranjero-sin-facebook";
+        }
         echo $errorMessage;
         die();
     }
@@ -4712,6 +4715,7 @@ class profileActions extends sfActions {
             }
             
             $profile->setBirthdate($request->getParameter('birth'));
+            $profile->setExtranjero($request->getParameter('extranjero'));
             $profile->setApellidoMaterno($request->getParameter('apellidoMaterno'));
             $profile->setSerieRut($request->getParameter('serie_run'));
             if ($request->getParameter('password') != '') {

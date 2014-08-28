@@ -86,6 +86,9 @@ function bindEventsAll(){
                     case 'error:usermenor':
                         alert("Para arrendar debes tener más de 23 años.");
                         break;
+                    case 'error:extranjero-sin-facebook':
+                        alert("Siendo extranjero, obligatoriamente tienes que ingresar con facebook para poder pagar.");
+                        break;
                     default:
                         alert('Disculpe, ha ocurrido un error. Por favor inténtelo nuevamente mas tarde.');
                         break;
