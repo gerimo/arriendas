@@ -3936,6 +3936,8 @@ class profileActions extends sfActions {
         //obtener url absoluta
         sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
         $this->urlAbsoluta = url_for('main/priceJson');
+        $this->urlCheckPatente = url_for('profile/checkPatente');
+        $this->urlListadoAutos = url_for('profile/cars', true);
 
         $this->partes = $this->partesAuto();
         $this->nombresPartes = $this->nombrePartesAuto();
@@ -5668,6 +5670,21 @@ class profileActions extends sfActions {
 
     public function executeSubeTuAuto(sfWebRequest $request) {
         
+    }
+    
+    public function executeCheckPatente(sfWebRequest $request) {
+        $valid = true;
+        $patente = $request->getParameter('patente');
+        $id = $request->getParameter('carid');
+        $user = Doctrine_Core::getTable('User')->find($this->getUser()->getAttribute('userid'));
+        foreach ($user->getCars() as $car) {
+            if( $car->getId() != $id && $car->getPatente() == $patente ){
+                $valid = FALSE;
+                break;
+            }
+        }
+        echo $valid;
+        die();
     }
 
 }
