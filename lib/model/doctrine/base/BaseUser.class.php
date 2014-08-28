@@ -33,6 +33,7 @@
  * @property boolean $extranjero
  * @property boolean $licencia_falsa
  * @property boolean $chequeo_licencia
+ * @property boolean $chequeo_judicial
  * @property boolean $confirmed_fb
  * @property boolean $confirmed_sms
  * @property boolean $friend_invite
@@ -78,6 +79,7 @@
  * @method boolean             getExtranjero()            Returns the current record's "extranjero" value
  * @method boolean             getLicenciaFalsa()         Returns the current record's "licencia_falsa" value
  * @method boolean             getChequeoLicencia()       Returns the current record's "chequeo_licencia" value
+ * @method boolean             getChequeoJudicial()       Returns the current record's "chequeo_judicial" value
  * @method Doctrine_Collection getCars()                  Returns the current record's "Cars" collection
  * @method Doctrine_Collection getConversation()          Returns the current record's "Conversation" collection
  * @method Doctrine_Collection getMessage()               Returns the current record's "Message" collection
@@ -117,6 +119,7 @@
  * @method User                setExtranjero()            Sets the current record's "extranjero" value
  * @method User                setLicenciaFalsa()         Sets the current record's "licencia_falsa" value
  * @method User                setChequeoLicencia()       Sets the current record's "chequeo_licencia" value
+ * @method User                setChequeoJudicial()       Sets the current record's "chequeo_judicial" value
  * @method User                setCars()                  Sets the current record's "Cars" collection
  * @method User                setConversation()          Sets the current record's "Conversation" collection
  * @method User                setMessage()               Sets the current record's "Message" collection
@@ -281,6 +284,11 @@ abstract class BaseUser extends sfDoctrineRecord {
             'default' => false,
         ));
         $this->hasColumn('chequeo_licencia', 'boolean', null, array(
+            'type' => 'boolean',
+            'notnull' => true,
+            'default' => false,
+        ));
+        $this->hasColumn('chequeo_judicial', 'boolean', null, array(
             'type' => 'boolean',
             'notnull' => true,
             'default' => false,
