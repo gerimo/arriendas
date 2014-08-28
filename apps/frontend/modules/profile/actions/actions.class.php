@@ -189,6 +189,8 @@ class profileActions extends sfActions {
 
     public function executeExtenderReservaAjax(sfWebRequest $request) {
 
+        $user = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")));
+        
         $id = $request->getPostParameter('id');
         $fechaHasta = $request->getPostParameter('fechaHasta');
         $horaHasta = $request->getPostParameter('horaHasta');
@@ -228,6 +230,9 @@ class profileActions extends sfActions {
         //echo $duracionAnterior." ".$duracion."<br>";
         //echo $precioCompleto." ".$precioNuevo;
         //almacena la extensión de la reserva
+        
+        
+        
         $reserve = new Reserve();
         $reserve->setDate($date);
         $reserve->setDuration($duracion);
@@ -236,8 +241,23 @@ class profileActions extends sfActions {
         $reserve->setPrice($precioNuevo);
         $reserve->setIdPadre($id);
         $reserve->setComentario('Reserva extendida');
-        $reserve->setFechaReserva($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
+        $reserve->setExtendUserId($user->getId());
+                
+        $fechaHoy = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"));
+        /* si extiende el duenio */
+        $extendioDuenio = false;
+        if($user->getId() == $car->getUser()->getId()){
+            $reserve->setConfirmed(true);
+            $reserve->setFechaConfirmacion($fechaHoy);
+            $extendioDuenio = true;
+        }
+        $reserve->setFechaReserva($fechaHoy);
+        
         $reserve->save();
+        
+        if($extendioDuenio){
+            $this->executeConfirmReserve($reserve->getId());
+        }
 
         //$nameOwner
         //$nameRenter
@@ -3273,7 +3293,12 @@ class profileActions extends sfActions {
                 }
 
                 //comprueba si muestra o no la reserva, dependiendo del estado
-                if (($estado == 3 && ($duracion * 3600) + $fechaReserva > $fechaActual) || ($estado == 2 && $fechaReserva > $fechaActual) || (($estado == 1 || $estado == 0) && $fechaReserva > $fechaActual)) {
+                $horasASumar = $duracion + 36;
+                $fechaReservaParaPagadas = strtotime("+$horasASumar hours", strtotime($reserva->getDate()));
+                if (
+                        ($estado == 3 && $fechaReservaParaPagadas > $fechaActual) 
+                        || ($estado == 2 && $fechaReserva > $fechaActual) 
+                        || (($estado == 1 || $estado == 0) && $fechaReserva > $fechaActual)) {
 
                     //obtiene el id de la reserva
                     $reservasRealizadas[$i]['idReserve'] = $reserva->getId();
@@ -3387,10 +3412,11 @@ class profileActions extends sfActions {
 
                 $fechaReserva = strtotime($reserva->getDate());
                 $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
-
                 $duracion = $reserva->getDuration();
-
-                if (($estado == 3 && ($duracion * 3600) + $fechaReserva > $fechaActual) || ($estado == 2 && $fechaReserva > $fechaActual) || (($estado == 1 || $estado == 0) && $fechaReserva > $fechaActual)) {
+                
+                $horasASumar = $duracion + 36;
+                $fechaReservaParaPagadas = strtotime("+$horasASumar hours", strtotime($reserva->getDate()));
+                if (($estado == 3 && $fechaReservaParaPagadas > $fechaActual) || ($estado == 2 && $fechaReserva > $fechaActual) || (($estado == 1 || $estado == 0) && $fechaReserva > $fechaActual)) {
 
                     //obtiene el id de la reserva
                     $reservasRecibidas[$i]['idReserve'] = $reserva->getId();
