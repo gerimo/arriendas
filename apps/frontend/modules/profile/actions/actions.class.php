@@ -245,13 +245,19 @@ class profileActions extends sfActions {
                 
         $fechaHoy = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"));
         /* si extiende el duenio */
+        $extendioDuenio = false;
         if($user->getId() == $car->getUser()->getId()){
             $reserve->setConfirmed(true);
             $reserve->setFechaConfirmacion($fechaHoy);
+            $extendioDuenio = true;
         }
         $reserve->setFechaReserva($fechaHoy);
         
         $reserve->save();
+        
+        if($extendioDuenio){
+            $this->executeConfirmReserve($reserve->getId());
+        }
 
         //$nameOwner
         //$nameRenter
