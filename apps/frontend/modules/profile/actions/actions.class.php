@@ -1870,8 +1870,8 @@ class profileActions extends sfActions {
                 $q = Doctrine_Query::create()
                         ->select('r.car_id')
                         ->from('reserve r')
-                        ->leftJoin('r.Transaction t')
-                        ->where('t.completed = ?', true)
+                      //  ->leftJoin('r.Transaction t')
+                        ->where('r.confirmed = ?', true)
                         ->andwhere('? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) 
                                     OR ? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) 
                                     OR r.date BETWEEN ? AND ? 
@@ -1888,20 +1888,21 @@ class profileActions extends sfActions {
                 $maxPrice = $car->getPricePerDay() * 1.3;
                 $minPrice = $car->getPricePerDay() * 0.5;
                 /* obtengo todos los autos que cumplan con las condiciones */
+                /*   AND c.price_per_day <= ? 
+                    AND c.price_per_day >= ? 
+                */
                 $queryCars = "
                     SELECT c.*
                     from Car c 
                     WHERE c.seguro_ok=4
                     AND c.activo=1
-                    AND c.price_per_day <= ? 
-                    AND c.price_per_day >= ? 
                     AND distancia (?,?,c.lat,c.lng) < ?
                     AND c.uso_vehiculo_id = ? 
                     ORDER BY c.contesta_pedidos DESC
                     LIMIT 15";
                     $query = Doctrine_Query::create()->query($queryCars, array(
-                        $maxPrice,
-                        $minPrice,
+          //              $maxPrice,
+          //              $minPrice,
                         $car_lat,
                         $car_lng,
                         $radio,
@@ -3654,9 +3655,9 @@ class profileActions extends sfActions {
                 $q = Doctrine_Query::create()
                         ->select('r.date, date_add(r.date, INTERVAL r.duration HOUR) as endingDate')
                         ->from('reserve r')
-                        ->leftJoin('r.Transaction t')
+                       // ->leftJoin('r.Transaction t')
                         ->leftJoin('r.Car c')
-                        ->where('t.completed = ?', true)
+                        ->where('r.confirmed = ?', true)
                         ->andwhere('date_add(r.date, INTERVAL r.duration HOUR)>NOW()')
                         ->andwhere('c.id =?', $car->getId());
                 //->andwhere('r.date >= NOW()');
@@ -3680,7 +3681,10 @@ class profileActions extends sfActions {
                 $minPrice = $car->getPricePerDay() * 0.5;
 
                 //la consulta considera dos radios. Si es para hoy o mañana 8 kms, 
-                //si es para otra fecha solo 4kms
+                //            si es para otra fecha solo 4kms
+                /*   AND c.price_per_day <= ? 
+                    AND c.price_per_day >= ? 
+                 */
                 $q = "
                     SELECT * 
                     FROM reserve r 
@@ -3691,8 +3695,6 @@ class profileActions extends sfActions {
                     AND c.seguro_ok=4
                     AND c.activo=1
                     AND m.id_tipo_vehiculo = ? 
-                    AND c.price_per_day <= ? 
-                    AND c.price_per_day >= ? 
                     AND c.uso_vehiculo_id = ? 
                     AND (
                             (r.date <= DATE_ADD(NOW(),INTERVAL 2 DAY) AND distancia (?,?,c.lat,c.lng) < ?)
@@ -3705,8 +3707,8 @@ class profileActions extends sfActions {
 
                 $query = Doctrine_Query::create()->query($q, array(
                     $car->getModel()->getIdTipoVehiculo(),
-                    $maxPrice,
-                    $minPrice,
+       //             $maxPrice,
+        //            $minPrice,
                     $car->getUsoVehiculoId(),
                     $car_lat,
                     $car_lng,
