@@ -3699,7 +3699,7 @@ class profileActions extends sfActions {
                             OR
                             (r.date > DATE_ADD(NOW(),INTERVAL 2 DAY) AND distancia (?,?,c.lat,c.lng) < ?)
                         ) 
-                    AND t.completed <> 1 
+                    AND (t.completed <> 1 OR t.completed IS NULL)
                     AND " . implode(" AND ", $dateRestriction) . " 
                     GROUP BY r.user_id, DATE(r.date)";
 
