@@ -1885,7 +1885,7 @@ class profileActions extends sfActions {
                 }
                 $car_lat = $car->getLat();
                 $car_lng = $car->getLng();
-                $maxPrice = $car->getPricePerDay() * 1.3;
+                $maxPrice = $car->getPricePerDay() * 1.5;
                 $minPrice = $car->getPricePerDay() * 0.5;
                 /* obtengo todos los autos que cumplan con las condiciones */
                 $queryCars = "
@@ -3676,8 +3676,8 @@ class profileActions extends sfActions {
                 }
                 $car_lat = $car->getLat();
                 $car_lng = $car->getLng();
-                $maxPrice = $car->getPricePerDay() * 1.3;
-                $minPrice = $car->getPricePerDay() * 0.5;
+                $maxPrice = $car->getPricePerDay() * 2;
+                $minPrice = $car->getPricePerDay() * 0.67;
 
                 //la consulta considera dos radios. Si es para hoy o mañana 8 kms, 
                 //si es para otra fecha solo 4kms
@@ -3686,7 +3686,6 @@ class profileActions extends sfActions {
                     FROM reserve r 
                     JOIN r.Car c 
                     JOIN c.Model m 
-                    LEFT JOIN r.Transaction t 
                     WHERE r.date > NOW() 
                     AND c.seguro_ok=4
                     AND c.activo=1
@@ -3699,7 +3698,6 @@ class profileActions extends sfActions {
                             OR
                             (r.date > DATE_ADD(NOW(),INTERVAL 2 DAY) AND distancia (?,?,c.lat,c.lng) < ?)
                         ) 
-                    AND t.completed <> 1 
                     AND " . implode(" AND ", $dateRestriction) . " 
                     GROUP BY r.user_id, DATE(r.date)";
 
