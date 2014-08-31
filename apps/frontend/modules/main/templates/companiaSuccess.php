@@ -52,7 +52,6 @@ p.textoPie{
 <b style="margin-bottom:0px;float: left;">Socios estratégicos:</b>
 <br><?php echo image_tag("austral_incuba.png"); ?>
 </p>
-
             </p>
         </div>
     <br /><br />
