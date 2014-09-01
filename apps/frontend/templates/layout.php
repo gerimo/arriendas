@@ -67,6 +67,7 @@
 
 </script>
                         <!--Start of Zopim Live Chat Script-->
+                        
 <script type="text/javascript">
 window.$zopim||(function(d,s){var z=$zopim=function(c){z._.push(c)},$=z.s=
 d.createElement(s),e=d.getElementsByTagName(s)[0];z.set=function(o){z.set.
@@ -75,7 +76,39 @@ $.src='//v2.zopim.com/?26Abud4bDBxOW2GzSA6I6R9JaG985aM2';z.t=+new Date;$.
 type='text/javascript';e.parentNode.insertBefore($,e)})(document,'script');
 </script>
 <!--End of Zopim Live Chat Script-->
-    </head>
+
+<!--Analytics Soporte@arriendas.cl-->
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-35908733-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+					<!-- Google Code para etiquetas de remarketing -->
+
+<script type="text/javascript">
+/* <![CDATA[ */
+var google_conversion_id = 921096551;
+var google_custom_params = window.google_tag_params;
+var google_remarketing_only = true;
+/* ]]> */
+</script>
+<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+<div style="display:none;">
+<img height="0" width="0" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/921096551/?value=0&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
+
+</head>
 
     <body>
     	<!-- BANNER TOP 
@@ -435,7 +468,7 @@ type='text/javascript';e.parentNode.insertBefore($,e)})(document,'script');
                     class="item_2<?php if (inModuleAndAction("main", "contact")) { echo "_in"; } ?>"
                     target="_blank" title="Contacto"><span>CONTACTO</span></a></li>
     -->                
-                <li class="item_ayuda"><a href="https://arriendascl.zendesk.com/" target="_blank" class="item_2"><span>AYUDA</span></a></li>
+                <li class="item_ayuda"><a href="https://arriendascl.zendesk.com/forums" target="_blank" class="item_2"><span>AYUDA</span></a></li>
                 </ul><!-- menu_1 -->
                 </div><!-- Fin header_menu -->
             <?php else: ?>
@@ -574,5 +607,3 @@ var google_conversion_value = 0;
 <?php }?>
 </body>
 </html>
-
-
