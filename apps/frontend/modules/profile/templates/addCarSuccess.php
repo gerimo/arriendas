@@ -7,7 +7,7 @@
 
 <!-- vínculos para el formulario de "publica tu auto" -->
 <?php use_stylesheet('form_PublicaTuAuto.css?v=09122013') ?>
-<?php use_javascript('form_PublicaTuAuto.js?v=29082014') ?>
+<?php use_javascript('form_PublicaTuAuto.js?v=05062014') ?>
 
 <!-- js para subir imagen perfil -->
 <?php use_javascript('jquery.uploadify.v2.1.0.min.js') ?>
@@ -24,7 +24,7 @@
 <div class="main_contenido">
 
 
-<?php include_partial('profile/car2', array('car' => $car,'brand' => $brand, 'comunas'=>$comunas, 'urlCheckPatente'=>$urlCheckPatente, 'urlListadoAutos' => $urlListadoAutos , 'urlAbsoluta'=>$urlAbsoluta,'rutaArchivo'=>$rutaArchivo, "partes"=>$partes,"nombresPartes"=>$nombresPartes, 'auto' => $auto, "id" => $idAuto, "fotosPartes"=>$fotosPartes)) ?>
+<?php include_partial('profile/car2', array('car' => $car,'brand' => $brand, 'comunas'=>$comunas, 'urlAbsoluta'=>$urlAbsoluta,'rutaArchivo'=>$rutaArchivo, "partes"=>$partes,"nombresPartes"=>$nombresPartes, 'auto' => $auto, "id" => $idAuto, "fotosPartes"=>$fotosPartes)) ?>
 
 
 </div><!-- main_contenido -->

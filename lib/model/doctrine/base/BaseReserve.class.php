@@ -12,7 +12,6 @@
  * @property boolean $owner_km_confirmed
  * @property boolean $user_km_confirmed
  * @property integer $User_id
- * @property integer $extend_user_id
  * @property integer $Car_id
  * @property integer $Rating_id
  * @property boolean $complete
@@ -32,7 +31,6 @@
  * @method integer             getDuration()    Returns the current record's "duration" value
  * @method boolean             getConfirmed()   Returns the current record's "confirmed" value
  * @method integer             getUserId()      Returns the current record's "User_id" value
- * @method integer             getExtendUserId()      Returns the current record's "User_id" value
  * @method integer             getCarId()       Returns the current record's "Car_id" value
  * @method integer             getRatingId()    Returns the current record's "Rating_id" value
  * @method boolean             getComplete()    Returns the current record's "complete" value
@@ -55,7 +53,6 @@
  * @method Reserve             setDuration()    Sets the current record's "duration" value
  * @method Reserve             setConfirmed()   Sets the current record's "confirmed" value
  * @method Reserve             setUserId()      Sets the current record's "User_id" value
- * @method Reserve             setExtendUserId()      Sets the current record's "extend_user_id" value
  * @method Reserve             setCarId()       Sets the current record's "Car_id" value
  * @method Reserve             setRatingId()    Sets the current record's "Rating_id" value
  * @method Reserve             setComplete()    Sets the current record's "complete" value
@@ -108,11 +105,6 @@ abstract class BaseReserve extends sfDoctrineRecord
              'type' => 'integer',
              'notnull' => true,
              'length' => 4,
-             ));
-        $this->hasColumn('extend_user_id', 'integer', 11, array(
-             'type' => 'integer',
-             'default' => 'null',
-             'length' => 11,
              ));
         $this->hasColumn('Car_id', 'integer', 4, array(
              'type' => 'integer',

@@ -141,22 +141,3 @@ for ($i = 0; $i < count($partes); $i++) {
     <img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/996876210/?value=0&amp;label=P1bCCMb0swQQsr-s2wM&amp;guid=ON&amp;script=0"/>
 </div>
 </noscript>
-
-<!-- Google Code for Subir un auto (adwords) Conversion Page -->
-<script type="text/javascript">
-/* <![CDATA[ */
-var google_conversion_id = 921096551;
-var google_conversion_language = "en";
-var google_conversion_format = "3";
-var google_conversion_color = "ffffff";
-var google_conversion_label = "Y-C1CNWGjlYQ56KbtwM";
-var google_remarketing_only = false;
-/* ]]> */
-</script>
-<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
-</script>
-<noscript>
-<div style="display:inline;">
-<img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/921096551/?label=Y-C1CNWGjlYQ56KbtwM&amp;guid=ON&amp;script=0"/>
-</div>
-</noscript>

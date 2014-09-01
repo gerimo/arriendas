@@ -45,18 +45,8 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
 
     .ui-widget { font-family: Lucida Grande, Lucida Sans, Arial, sans-serif; font-size: 0.8em; }
 
-    .btn-busqueda{
-        background-color: #ACABAB;
-        border: none;
-        width: 100px;
-        color: white;
-        height: 22px;
-        cursor: pointer;
-        font-size: 11px;
-    }
-    .btn-busqueda.active{
-        background-color: #333333;
-    }
+
+
 
     .time-picker { width:121px;}
 
@@ -109,8 +99,7 @@ if (sfContext::getInstance()->getUser()->getAttribute("logged")) {
             alert('Oops! Tu navegador no soporta geolocalización. Bájate Chrome, que es gratis!');
         }
     }
-    
-    
+
     function crearMarca(position) {
 
         marker = new google.maps.Marker({
@@ -152,6 +141,10 @@ if (sfContext::getInstance()->getUser()->getAttribute("logged")) {
 
     function initialize() {
 
+        console.log('initialize gmaps')
+
+
+//	alert('stop');
         initialize2();
 
 <?php
@@ -230,60 +223,60 @@ else
         });
 
         //Autocomplete
-        var input = document.getElementById('searchTextField');
-        var autocomplete = new google.maps.places.Autocomplete(input);
-
-        autocomplete.bindTo('bounds', map);
-
-        var infowindow = new google.maps.InfoWindow();
-        var marker = new google.maps.Marker({
-            map: map
-        });
-
-        google.maps.event.addListener(autocomplete, 'place_changed', function() {
-            infowindow.close();
-            marker.setVisible(false);
-            input.className = '';
-            var place = autocomplete.getPlace();
-            if (!place.geometry) {
-                // Inform the user that the place was not found and return.
-                input.className = 'notfound';
-                return;
-            }
-
-            // If the place has a geometry, then present it on a map.
-            if (place.geometry.viewport) {
-                map.fitBounds(place.geometry.viewport);
-            } else {
-                map.setCenter(place.geometry.location);
-                map.setZoom(17);  // Why 17? Because it looks good.
-            }
-            var image = new google.maps.MarkerImage(
-                    place.icon,
-                    new google.maps.Size(71, 71),
-                    new google.maps.Point(0, 0),
-                    new google.maps.Point(17, 34),
-                    new google.maps.Size(35, 35));
-            marker.setIcon(image);
-            marker.setPosition(place.geometry.location);
-
-            var address = '';
-            if (place.address_components) {
-                address = [
-                    (place.address_components[0] && place.address_components[0].short_name || ''),
-                    (place.address_components[1] && place.address_components[1].short_name || ''),
-                    (place.address_components[2] && place.address_components[2].short_name || '')
-                ].join(' ');
-            }
-
-            infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
-            infowindow.open(map, marker);
-
-            searchMarkers();
-//		              doSearch();
-
-
-        });
+//        var input = document.getElementById('searchTextField');
+//        var autocomplete = new google.maps.places.Autocomplete(input);
+//
+//        autocomplete.bindTo('bounds', map);
+//
+//        var infowindow = new google.maps.InfoWindow();
+//        var marker = new google.maps.Marker({
+//            map: map
+//        });
+//
+//        google.maps.event.addListener(autocomplete, 'place_changed', function() {
+//            infowindow.close();
+//            marker.setVisible(false);
+//            input.className = '';
+//            var place = autocomplete.getPlace();
+//            if (!place.geometry) {
+//                // Inform the user that the place was not found and return.
+//                input.className = 'notfound';
+//                return;
+//            }
+//
+//            // If the place has a geometry, then present it on a map.
+//            if (place.geometry.viewport) {
+//                map.fitBounds(place.geometry.viewport);
+//            } else {
+//                map.setCenter(place.geometry.location);
+//                map.setZoom(17);  // Why 17? Because it looks good.
+//            }
+//            var image = new google.maps.MarkerImage(
+//                    place.icon,
+//                    new google.maps.Size(71, 71),
+//                    new google.maps.Point(0, 0),
+//                    new google.maps.Point(17, 34),
+//                    new google.maps.Size(35, 35));
+//            marker.setIcon(image);
+//            marker.setPosition(place.geometry.location);
+//
+//            var address = '';
+//            if (place.address_components) {
+//                address = [
+//                    (place.address_components[0] && place.address_components[0].short_name || ''),
+//                    (place.address_components[1] && place.address_components[1].short_name || ''),
+//                    (place.address_components[2] && place.address_components[2].short_name || '')
+//                ].join(' ');
+//            }
+//
+//            infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+//            infowindow.open(map, marker);
+//
+//            searchMarkers();
+////		              doSearch();
+//
+//
+//        });
 
         //Fin Autocomplete
     }
@@ -322,10 +315,14 @@ else
     }
     ;
 
-    function doSearch(){
+    function doSearch()
+    {
+        //console.log('doSearch')
 
         $('.search_arecomend_window').fadeOut('fast');
         $("#loader").fadeIn("fast");
+
+        //console.log(        $('input[name=transmision]:checked').map(function(){return $(this).val() }).get().join()           );
 
         document.getElementById("hour_from_hidden").value = document.getElementById("hour_from").value;
         document.getElementById("hour_to_hidden").value = document.getElementById("hour_to").value;
@@ -336,7 +333,9 @@ else
         document.getElementById("tipo_hidden").value = $('input[name=tipo]:checked').map(function() {
             return $(this).val()
         }).get().join();
+//        document.getElementById("model_hidden").value = document.getElementById("model").value;
         document.getElementById("location_hidden").value = ""; //document.getElementById("location").value;
+//        document.getElementById("brand_hidden").value = document.getElementById("brand").value;
         document.getElementById("day_from_hidden").value = document.getElementById("day_from").value;
         document.getElementById("day_to_hidden").value = document.getElementById("day_to").value;
 
@@ -346,6 +345,7 @@ else
 
             if ($('#day_from').val() == '<?php echo date('d-m-Y') ?>' && isValidTime($('#hour_from').val())) {
 
+//				var dif = restarHoras(current.getHours() + ':' + current.getMinutes() + ':' + current.getSeconds(), $('#hour_from').val())
                 var dif = restarHoras(current.getHours() + ':' + current.getMinutes(), $('#hour_from').val())
                 if (dif < 0) {
                     alert('La hora no puede ser menor a la actual');
@@ -358,6 +358,7 @@ else
 
             if ($('#day_to').val() == '<?php echo date('d-m-Y') ?>' && isValidTime($('#hour_to').val())) {
 
+//				var dif = restarHoras(current.getHours() + ':' + current.getMinutes() + ':' + current.getSeconds(), $('#hour_to').val())
                 var dif = restarHoras(current.getHours() + ':' + current.getMinutes(), $('#hour_to').val())
                 if (dif < 0) {
                     alert('La hora no puede ser menor a la actual');
@@ -380,7 +381,12 @@ else
             }
         }
 
+
+
         searchMarkers();
+
+        //createClickToMarker();
+
 
     }
 
@@ -428,6 +434,11 @@ else
             $("#loader").fadeIn("fast");
         });
 
+        //console.log('load markers');
+        //$('.search_arecomend_window').css("visibility", "hidden");
+        //$("#loader").fadeIn("slow");
+
+
         // First, determine the map bounds
         var bounds = map.getBounds();
 
@@ -436,6 +447,7 @@ else
         var nePoint = bounds.getNorthEast();
 
         // Now, each individual coordinate
+
         swLat = swPoint.lat();
         swLng = swPoint.lng();
         neLat = nePoint.lat();
@@ -1072,8 +1084,10 @@ else
 
             url2 = url2.join('/');
             $(".img_instrucciones_2").attr('src', url2);
+            //$('#sliderComoUsarImg').attr('src','Bimagenes1/slider2.png');
 
         });
+
         /*fin código germán*/
 
         /*Código Miguel*/
@@ -1296,15 +1310,6 @@ if ($day_to) {
 
     var openFilters = false;
     $(document).ready(function() {
-        
-        $(".btn-busqueda").click(function(){
-            var tabId = $(this).attr("data-tab");
-            $(".btn-busqueda").removeClass("active");
-            $(".search_box_1_header").hide();
-            $(".tab-"+tabId).show();
-            $(this).addClass("active");
-        });
-        
         $(".btn_filtro").click(function() {
             $('#opc_filtro').toggle("slow");
         });
@@ -1423,63 +1428,10 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
             <div class="search_sector1">      
                 <!--  busqueda avanzada -->
                 <div class="search_box_1_titleNew">
-                    <button id="btn_busqueda"  style="width: 80px;"><img class="img_btn_busqueda" src="<?php echo image_path('img_search/IcoLupa.png'); ?>"/><p class="txt_btn_busqueda">Búsqueda</p></button>
-                    <button class="btn-busqueda active" style="margin-left: 1px;" data-tab="mapa" >Mapa</button>
-                    <button class="btn-busqueda" style="margin-left: -3px;" data-tab="lista" >Región/Comuna</button>
+                    <button id="btn_busqueda"><img class="img_btn_busqueda" src="<?php echo image_path('img_search/IcoLupa.png'); ?>"/><p class="txt_btn_busqueda">Búsqueda</p></button>
                 </div>
                 <div class="search_box_1_PrincipalNew">
-                    <div class="search_box_1_header tab-mapa">
-                        <div class="search_box1_form" style="">
-                            <span style="width: 360px;" class="group_desde"><span class="numberBlue">1</span>Direcci&oacute;n |</span><span style="width: 222px;" class="group_desde"><span class="numberBlue">2</span>Desde |</span><span style="width: 227px;" class="group_hasta"><span class="numberBlue">3</span>Hasta |</span><span style="width: 51px;" class="group_hasta"><span class="numberBlue">4</span>Filtros |</span></span>
-                            <input class="input_f0" id="searchTextField" style="margin-right: 5px;margin-left: 10px;width: 355px;" type="text" size="50" placeholder="Ingrese Ciudad" autocomplete="off"/>
-                            <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_from" value="<?php if ($day_from && $day_from != '12-11-2013') {
-                            echo $day_from;
-                            } else {
-                            echo "Fecha desde";
-                            } ?>"/>
-                            <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="hour_from" value="<?php if ($hour_from && $hour_from != '01:00') {
-                            echo $hour_from;
-                            } else {
-                            echo "Hora";
-                            } ?>"/>
-                            <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_to" value="<?php if ($day_to) {
-                            echo $day_to;
-                            } else {
-                            echo "Fecha hasta";
-                            } ?>"/>
-                            <input class="input_f1b" style="width: 95px;" readonly="readonly" type="text" id="hour_to" value="<?php if ($hour_to && $hour_to != '01:00') {
-                            echo $hour_to;
-                            } else {
-                            echo "Hora";
-                            } ?>" />
-                            <button id="btn_buscar" title="Buscar autos"></button>
-                        </div>
-
-                        <!-- buscador avanzado -->
-                        <!--
-                        <div class="search_ext_box" style="display:none;">
-                                <span class="group_filtar">Filtrar por</span>
-                            <div class="search_ext_wrapper">
-                                <select name="price" id="price" style="margin-right:20px;" >
-                                    <option value="-" selected="selected">Precio</option>
-                                    <option value="1">Mayor a menor</option>
-                                    <option value="0">Menor a mayor</option>
-                                </select>
-                                <select name="brand" id="brand" style="margin-right:20px;" >
-                                    <option value="" selected="selected">Marca</option>	
-<?php foreach ($brand as $b): ?>	
-                                                <option value="<?= $b['id'] ?>" ><?= $b['name'] ?></option> 		
-<?php endforeach; ?>
-                                </select>
-        
-                                <select name="model" id="model" style="" >
-                                    <option value="" selected="selected">Modelo</option>
-                                </select>
-                            </div>
-                        </div>
-                        -->
-                    </div><!-- search_box_1_header -->     
-                    <div class="search_box_1_header tab-lista" style="display:none">    
+                    <div class="search_box_1_header">    
                         <div class="search_box1_form">
                             <div style="width: 175px; display: inline-block" >
                                 <div class="group_desde" style="width: 150px;"><span class="numberBlue">1</span>Región |</span></div>
@@ -1562,13 +1514,12 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
                         -->
                     </div><!-- search_box_1_header -->     
                 </div><!-- search_box_1 -->
-                
             </div><!-- search_sector1 -->
             <!--<p class='comparaPrecio'><a href="<?php echo url_for('main/comparaPrecios') ?>" class='comparaPrecio'>Compara Precios</a></p>-->
         </div>
 
         <div class="main_box_2_anterior" style="margin-top:15px;border-radius: 0px 0x 0px 0px;">
-            <div class="search_sector1" >
+            <div class="search_sector1">
 
                 <div class="search_box_1new">
                     <button id="btn_filtro1" class="btn_filtro"></button>

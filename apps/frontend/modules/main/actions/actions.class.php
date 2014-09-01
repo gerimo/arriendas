@@ -42,7 +42,9 @@ public function executeArriendo(sfWebRequest $request){
                 ->where('ca.activo = ?', 1)
                 ->andWhere('ca.seguro_ok = ?', 4)
                 ->andWhere('ca.city_id = ?', $objeto_ciudad->getId());
+        //$this->cars = $q->execute();
         $this->cars = $q->fetchArray();
+        //var_dump($this->cars);die();
 
         $fotos_autos = array();
         for($j=0;$j<count($this->cars);$j++){
@@ -149,8 +151,16 @@ public function executeArriendo(sfWebRequest $request){
                 }
             }
         }
-
+        //$this->arrayDescripcionFotos = $arrayDescripcion;
+        //$this->arrayFotos = $arrayImagenes;
+        //var_dump(count($fotos_autos[13]));die();
+        //var_dump($fotos_autos);die();
         $this->fotos_autos = $fotos_autos;
+        //var_dump($this->cars[0]);die();
+
+
+
+
 
 }
 
@@ -793,7 +803,6 @@ public function executeNotificacion(sfWebRequest $request) {
                 ->limit(10);
         $this->offers = $q->execute();
 
-                
         $this->brand =  $this->ordenarBrand(Doctrine_Core::getTable('Brand')->createQuery('a')->execute());
         //Doctrine_Core::getTable('Brand')->createQuery('a')->execute();
         /*
@@ -2390,9 +2399,6 @@ El equipo de Arriendas.cl
                     /* track ip */
                     $visitingIp = $request->getRemoteAddress();
                     $user->trackIp($visitingIp);
-                    
-                    /* check moroso */
-                    $user->checkMoroso();
         
                     /** block users */
                     if(Doctrine::getTable('user')->isABlockedIp($visitingIp)){

@@ -349,7 +349,7 @@ function verificaPaso1(){
 	if(ubicacion == ""){
 		//$('#ubicacionLabel').text('Ubicación del Vehículo(*)');
 		$('#ubicacionLabel').addClass('faltaValor');
-		camposIngresados = false;
+		var camposIngresados = false;
 	}else{
 		//$('#ubicacionLabel').text('Ubicación del Vehículo');
 		$('#ubicacionLabel').removeClass('faltaValor');
@@ -358,21 +358,10 @@ function verificaPaso1(){
 	if(patente == ""){
 		//$('#ubicacionLabel').text('Ubicación del Vehículo(*)');
 		$('#patenteLabel').addClass('faltaValor');
-		camposIngresados = false;
+		var camposIngresados = false;
 	}else{
+		//$('#ubicacionLabel').text('Ubicación del Vehículo');
 		$('#patenteLabel').removeClass('faltaValor');
-                $.ajax({
-                    "url": urlCheckPatente + "?patente=" + patente + "&carid="+$("#idCar").val(),
-                    "async" : false,
-                    "success": function(data){
-                        if(data.length <= 0 && data != "1" ){
-                            camposIngresados = false;
-                            alert("Ya ha subido este auto. Recién lo podrá ver publicado su auto una vez que lo haya visitado un inspector. Un inspector te llamará esta semana.");
-                            window.location = urlListadoAutos;
-                        }
-                        
-                    }
-                });
 	}
 
 	if(color == ""){

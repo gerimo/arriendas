@@ -142,8 +142,8 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 			if($c->getPhotoS3() == 1){
 				echo image_tag($c->getFoto(),array("width"=>"84px","height"=>"84px"));
 			}else{
-                            $base_url = $sf_request->getUriPrefix().$sf_request->getRelativeUrlRoot();
-                            echo "<img class='foto' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_84,h_84,c_fill,g_center/".$base_url."/uploads/cars/".$c->getFoto()."'/>";
+//				echo image_tag("../uploads/cars/".$c->getFoto(),array("width"=>"84px","height"=>"84px"));
+				echo "<img class='foto' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_84,h_84,c_fill,g_center/http://arriendas.cl/uploads/cars/".$c->getFoto()."'/>";
 			}
 		?>
 	</a>

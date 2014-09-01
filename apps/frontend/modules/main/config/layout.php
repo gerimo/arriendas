@@ -230,7 +230,7 @@
 								echo "_in";
 							}
                         ?>" target="_blank" title="Contacto"><span>Contacto</span></a></li>
-							<li><a href="https://arriendascl.zendesk.com/forums" target="_blank" class="item_2"><span>Ayuda</span></a></li>
+							<li><a href="https://arriendascl.zendesk.com/home" target="_blank" class="item_2"><span>Ayuda</span></a></li>
                             
                         </ul><!-- menu_1 -->
 

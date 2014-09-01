@@ -219,7 +219,6 @@ class khipuActions extends sfActions {
                     $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
                     $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
                     
-                    
                     $renterUser = $reserve->getUser();
                     if (!is_null($renterUser->getDriverLicenseFile())) {
                         $filepath = $renterUser->getDriverLicenseFile();
@@ -240,8 +239,6 @@ class khipuActions extends sfActions {
                     $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
                     $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
                     $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
-                    $pagare = $functions->generarPagare($tokenReserve);
-                    $message->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
                     $mailer->send($message);
 
                     /* mail Soporte */
