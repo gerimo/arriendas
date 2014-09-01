@@ -67,6 +67,7 @@
 
 </script>
                         <!--Start of Zopim Live Chat Script-->
+                        
 <script type="text/javascript">
 window.$zopim||(function(d,s){var z=$zopim=function(c){z._.push(c)},$=z.s=
 d.createElement(s),e=d.getElementsByTagName(s)[0];z.set=function(o){z.set.
@@ -75,9 +76,8 @@ $.src='//v2.zopim.com/?26Abud4bDBxOW2GzSA6I6R9JaG985aM2';z.t=+new Date;$.
 type='text/javascript';e.parentNode.insertBefore($,e)})(document,'script');
 </script>
 <!--End of Zopim Live Chat Script-->
-    </head>
 
-                        <!--Analytics Soporte@arriendas.cl-->
+<!--Analytics Soporte@arriendas.cl-->
 
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -103,11 +103,12 @@ var google_remarketing_only = true;
 <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
 </script>
 <noscript>
-<div style="display:inline;">
-<img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/921096551/?value=0&amp;guid=ON&amp;script=0"/>
+<div style="display:none;">
+<img height="0" width="0" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/921096551/?value=0&amp;guid=ON&amp;script=0"/>
 </div>
 </noscript>
 
+</head>
 
     <body>
     	<!-- BANNER TOP 
