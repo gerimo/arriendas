@@ -2723,6 +2723,9 @@ class profileActions extends sfActions {
         if ($reserve->getUser()->getMenor()) {
             $errorMessage = "error:usermenor";
         }
+        if (is_null($reserve->getUser()->getBirthdate()) || strlen($reserve->getUser()->getBirthdate()) <= 0) {
+            $errorMessage = "error:nobirthdate";
+        }
         echo $errorMessage;
         die();
     }

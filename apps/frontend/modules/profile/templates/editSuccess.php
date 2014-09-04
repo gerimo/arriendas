@@ -324,6 +324,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     	if( $("#lastname").val() == "" ) { $("#lastname").parent("label").find("span").text("* Falta ingresar Apellido Paterno"); }
     	if( $("#email").val() == "" ) { $("#email").parent("label").find("span").text("* Falta ingresar Email"); }
     	if( $("#run").val() == "" ) { $("#run").parent("label").find("span").text("* Falta ingresar Rut"); }
+    	if( $("#birth").val() == "" ) { $("#birth").parent("label").find("span").text("* Falta ingresar Fecha de nacimiento"); }
     	if( $("#address").val() == "" ) { $("#address").parent("label").find("span").text("* Falta ingresar Dirección"); }
     	
 	if( $("#apellidoMaterno").val() == "" ) { $("#apellidoMaterno").parent("label").find("span").text("* Falta ingresar Apellido Materno"); }
