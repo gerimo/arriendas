@@ -82,12 +82,17 @@ function bindEventsAll(){
                 switch (data) {
                     case 'error:rutnulo':
                         alert("No has ingresado tu RUT, Por favor ingresa tu RUT en tu Perfil para poder realizar el pago.");
+                        window.location = urlUpdateProfile + "?redirect=pedidos";
                         break;
                     case 'error:extranjero-sin-facebook':
                         alert("Siendo extranjero, obligatoriamente tienes que ingresar con facebook para poder pagar.");
                         break;
                     case 'error:usermenor':
                         alert("Para arrendar debes tener más de 23 años.");
+                        break;
+                    case 'error:nobirthdate':
+                        alert("Para arrendar debes completar tu fecha de nacimiento.");
+                        window.location = urlUpdateProfile + "?redirect=pedidos";
                         break;
                     default:
                         alert('Disculpe, ha ocurrido un error. Por favor inténtelo nuevamente mas tarde.');

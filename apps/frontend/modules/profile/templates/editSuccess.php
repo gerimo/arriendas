@@ -324,6 +324,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     	if( $("#lastname").val() == "" ) { $("#lastname").parent("label").find("span").text("* Falta ingresar Apellido Paterno"); }
     	if( $("#email").val() == "" ) { $("#email").parent("label").find("span").text("* Falta ingresar Email"); }
     	if( $("#run").val() == "" ) { $("#run").parent("label").find("span").text("* Falta ingresar Rut"); }
+    	if( $("#birth").val() == "" ) { $("#birth").parent("label").find("span").text("* Falta ingresar Fecha de nacimiento"); }
     	if( $("#address").val() == "" ) { $("#address").parent("label").find("span").text("* Falta ingresar Dirección"); }
     	
 	if( $("#apellidoMaterno").val() == "" ) { $("#apellidoMaterno").parent("label").find("span").text("* Falta ingresar Apellido Materno"); }
@@ -521,28 +522,19 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
             <?php endif; ?>
 
                 <div class="c1">
-                    <label class="input">
-                        <span>RUT</span>
-                        <input type="text" name="run" id="run" value="<?php if ($user->getRut() != null) echo $user->getRut(); ?>" />
-                    </label>
+                <label class="input">
+                    <span>RUT</span>
+                    <input type="text" name="run" id="run" value="<?php if ($user->getRut() != null) echo $user->getRut(); ?>" />
+                </label>
             	</div><!-- /c1 -->
 		
-                <div class="c1">
+		        <div class="c1">
                     <label class="input">
                         <span>Nº Serie del RUT</span>
                         <input type="text" name="serie_run" id="serie_run" value="<?php if ($user->getSerieRut() != null) echo $user->getSerieRut(); ?>" style="width:234px;" />
                         <a href='http://www.dicom.cl/dcom/pag/p.com.000.pag-cedula.htm#uno' target='_blank' title="¿Qué es el nº de serie del rut?"><?php echo image_tag('img_registro/dudaNSerie1.png', array('width'=>'25px','height'=>'25px')) ?></a>
                     </label>
             	</div><!-- /c1 -->
-                <div class="c1" style="width: 200px;">
-                    <label class="input">
-                        <select name="extranjero" id="extranjero">
-                            <option value="0" <?php echo $user->getExtranjero() == 0 ? "selected":""; ?> >Chileno</option>
-                            <option value="1" <?php echo $user->getExtranjero() == 1 ? "selected":""; ?> >Extranjero</option>
-                        </select>
-                    </label>
-            	</div><!-- /c1 -->
-                
             <?php if($user->getConfirmedSms() == 0){ ?>    
                 <div class="c1">
                 <label class="input" id="espacio">
@@ -687,8 +679,8 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     //frmvalidator.addValidation("emailAgain","req", "Vuelva a ingresar el correo electronico");
     //frmvalidator.addValidation("emailAgain","email", "Ingresa una direccion de correo valida");
  
-    frmvalidator.addValidation("run","req","Ingrese Rut");
-    frmvalidator.addValidation("run","rut","Ingrese un Rut valido", "VWZ_IsListItemSelected(document.forms['frm1'].elements['extranjero'],'0')");
+ 	frmvalidator.addValidation("run","req","Ingrese Rut");
+    frmvalidator.addValidation("run","rut","Ingrese un Rut valido");
     
     frmvalidator.addValidation("region","req", "Ingrese Region");
     frmvalidator.addValidation("comunas","req", "Ingrese Comuna");
@@ -701,5 +693,4 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     //frmvalidator.setAddnlValidationFunction(DoEmailValidation);
  
 
- 
 </script>

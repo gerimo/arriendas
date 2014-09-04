@@ -20,6 +20,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     var urlPagoValidar = <?php echo "'".url_for("profile/checkCanPay")."';" ?>
     var urlExtenderReserva = <?php echo "'".url_for("profile/extenderReservaAjax")."';" ?>
     var urlRefreshPedidos = <?php echo "'".url_for("profile/pedidosAjax")."';" ?>
+    var urlUpdateProfile = <?php echo "'".url_for("profile/edit")."';" ?>
 </script>
 
 <div class="main_box_1">
