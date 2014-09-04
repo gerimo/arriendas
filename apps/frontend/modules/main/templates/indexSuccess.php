@@ -1139,7 +1139,13 @@ else
 
         });
         
-        $('.gallery a').lightBox();
+        $('.gallery a').lightBox({
+            imageLoading:			'images/img_gallery/lightbox-ico-loading.gif',		
+            imageBtnPrev:			'images/img_gallery/lightbox-btn-prev.gif',			
+            imageBtnNext:			'images/img_gallery/lightbox-btn-next.gif',			
+            imageBtnClose:			'images/img_gallery/lightbox-btn-close.gif',		
+            imageBlank:				'images/img_gallery/lightbox-blank.gif'	
+        });
 
         /*Fin Código Miguel */
 
@@ -1214,7 +1220,13 @@ else
             "success": function(data) {
                 $("#tab-lista-data").html(data);
                 $("#tab-lista-data").show();
-                $('.gallery a').lightBox();
+                $('.gallery a').lightBox({
+                    imageLoading:			'images/img_gallery/lightbox-ico-loading.gif',		
+                    imageBtnPrev:			'images/img_gallery/lightbox-btn-prev.gif',			
+                    imageBtnNext:			'images/img_gallery/lightbox-btn-next.gif',			
+                    imageBtnClose:			'images/img_gallery/lightbox-btn-close.gif',		
+                    imageBlank:				'images/img_gallery/lightbox-blank.gif'	
+                });
                 $('#example').dataTable();
             },
             "complete": function() {
