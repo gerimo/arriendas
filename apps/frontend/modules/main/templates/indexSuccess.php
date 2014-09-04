@@ -1138,7 +1138,8 @@ else
 
 
         });
-
+        
+        $('.gallery a').lightBox();
 
         /*Fin Código Miguel */
 
@@ -1213,6 +1214,7 @@ else
             "success": function(data) {
                 $("#tab-lista-data").html(data);
                 $("#tab-lista-data").show();
+                $('.gallery a').lightBox();
                 $('#example').dataTable();
             },
             "complete": function() {
