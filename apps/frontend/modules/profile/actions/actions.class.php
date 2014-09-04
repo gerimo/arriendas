@@ -2802,6 +2802,13 @@ class profileActions extends sfActions {
     }
 
     public function executeFbDiscount(sfWebRequest $request) {
+        
+        $id_usuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+        $curr_user = Doctrine_Core::getTable('user')->find($id_usuario);
+        if($curr_user->getBlocked()){
+            throw new Exception;
+        }
+        
 
         $this->reserve = '';
         $this->deposito = $request->getParameter('deposito');
