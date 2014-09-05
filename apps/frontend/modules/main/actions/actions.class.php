@@ -3047,16 +3047,22 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
     public function executeLoginFacebook(sfWebRequest $request) {
         $app_id = "213116695458112";
         $app_secret = "8d8f44d1d2a893e82c89a483f8830c25";
-        $my_url = "http://www.arriendas.cl/main/loginFacebook";
+        //$my_url = "http://www.arriendas.cl/main/loginFacebook";
+        $my_url = $this->generateUrl("facebook_login", array(), true);
+        
      //   $app_id = "297296160352803";
       //  $app_secret = "e3559277563d612c3c20f2c202014cec";
       //  $my_url = "http://test.intothewhitebox.com/yineko/arriendas/main/loginFacebook";
         $code = $request->getParameter("code");
         $state = $request->getParameter("state");
         $previousUser= $request->getParameter("logged");
+        $returnRoute = $request->getParameter("return");
 	if($previousUser) {
 	    $my_url.="?logged=true";
 	}
+        if($returnRoute){
+	    $my_url.="?return=".$returnRoute;
+        }
         
         if (empty($code)) {
             $this->getUser()->setAttribute('state', md5(uniqid(rand(), TRUE)));
@@ -3081,9 +3087,11 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
     	    $myUser->setConfirmedFb(true);
     	    $myUser->setUsername($user["email"]);
     	    $myUser->save();
-            $this->redirect('main/index');
-            //$this->redirect('profile/cars');
-            //$this->redirect($_SESSION['login_back_url']);
+            if($returnRoute){
+                $this->redirect($this->generateUrl($returnRoute));
+            }else{
+                $this->redirect('main/index');
+            }
 	   }
 
 	
