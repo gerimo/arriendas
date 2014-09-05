@@ -86,6 +86,7 @@ function bindEventsAll(){
                         break;
                     case 'error:extranjero-sin-facebook':
                         alert("Siendo extranjero, obligatoriamente tienes que ingresar con facebook para poder pagar.");
+                        window.location = urlFBconnect + "?return=pedidos";
                         break;
                     case 'error:usermenor':
                         alert("Para arrendar debes tener más de 23 años.");
