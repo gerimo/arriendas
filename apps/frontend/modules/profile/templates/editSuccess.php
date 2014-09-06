@@ -416,7 +416,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 
 
        <br/>
-        <div class="titulolteral">Foto de Carnet</div>
+        <div class="titulolteral">Foto de tu Cédula</div>
 
         <div class="regis_foto_frame">
 
