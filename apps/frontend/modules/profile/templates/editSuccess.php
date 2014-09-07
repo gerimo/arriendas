@@ -535,6 +535,14 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                         <a href='http://www.dicom.cl/dcom/pag/p.com.000.pag-cedula.htm#uno' target='_blank' title="¿Qué es el nº de serie del rut?"><?php echo image_tag('img_registro/dudaNSerie1.png', array('width'=>'25px','height'=>'25px')) ?></a>
                     </label>
             	</div><!-- /c1 -->
+                <div class="c1" style="width: 200px;">
+                    <label class="input">
+                        <select name="extranjero" id="extranjero">
+                            <option value="0" <?php echo $user->getExtranjero() == 0 ? "selected" : ""; ?> >Chileno</option>
+                            <option value="1" <?php echo $user->getExtranjero() == 1 ? "selected" : ""; ?> >Extranjero</option>
+                        </select>
+                    </label>
+                </div><!-- /c1 -->
             <?php if($user->getConfirmedSms() == 0){ ?>    
                 <div class="c1">
                 <label class="input" id="espacio">
