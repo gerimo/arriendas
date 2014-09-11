@@ -1505,7 +1505,7 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
                 <!--  busqueda avanzada -->
                 <div class="search_box_1_titleNew">
                     <button class="btn-busqueda active" data-tab="mapa" >Mapa</button>
-                    <button class="btn-busqueda" style="margin-left: -3px;" data-tab="lista" >Lista</button>
+                    <button disabled="" class="btn-busqueda" style="margin-left: -3px;" data-tab="lista" >Lista</button>
                 </div>
                 <div class="search_box_1_PrincipalNew">
                     <div class="search_box_1_header tab-data tab-mapa">
