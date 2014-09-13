@@ -687,8 +687,8 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     //frmvalidator.addValidation("emailAgain","req", "Vuelva a ingresar el correo electronico");
     //frmvalidator.addValidation("emailAgain","email", "Ingresa una direccion de correo valida");
  
- 	frmvalidator.addValidation("run","req","Ingrese Rut");
-    frmvalidator.addValidation("run","rut","Ingrese un Rut valido");
+    frmvalidator.addValidation("run","req","Ingrese Rut");
+    frmvalidator.addValidation("run","rut","Ingrese un Rut valido", "VWZ_IsListItemSelected(document.forms['frm1'].elements['extranjero'],'0')");
     
     frmvalidator.addValidation("region","req", "Ingrese Region");
     frmvalidator.addValidation("comunas","req", "Ingrese Comuna");
