@@ -136,14 +136,14 @@ class paymentActions extends sfActions {
                 }
                 
                 /* pago con transbank */
-//                if ($request->getParameter("pp_medio_pago") == "3") {
-//                    $this->forward("webpay", "confirmPayment");
-//                }
+                if ($request->getParameter("pp_medio_pago") == "3") {
+                    $this->forward("webpay", "confirmPayment");
+                }
                 
                 /* pago con punto pagos */
-                if ($request->getParameter("pp_medio_pago") == "3") {
-                    $this->forward("bcpuntopagos", "creacion");
-                }
+//                if ($request->getParameter("pp_medio_pago") == "3") {
+//                    $this->forward("bcpuntopagos", "creacion");
+//                }
                 if ($request->getParameter("pp_medio_pago") == "20") {
                     $this->forward("paypal", "confirmPayment");
                 }
