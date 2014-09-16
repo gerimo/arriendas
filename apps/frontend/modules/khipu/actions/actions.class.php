@@ -79,8 +79,6 @@ class khipuActions extends sfActions {
                         'return_url' => $this->generateUrl("khipuReturn", array(), true),
                         'cancel_url' => $this->generateUrl("khipuCancel", array(), true),
                         'transaction_id' => $request->getParameter('id'),
-                        'payer_email' => '',
-                        'bank_id' => '',
                         'picture_url' => $carImageUrl,
                         'custom' => 'el modelo en color rojo',
                     );
@@ -90,6 +88,7 @@ class khipuActions extends sfActions {
                         $this->logMessage($msg);
                         $this->_log("Call", "info", $msg);
                         $response = $khipuService->createPaymentURL($data);
+                        $this->_log("Call_response", "info", "respuesta: ".  serialize($response));
                         $this->checkOutUrl = $response->url;
                         $khipuTransaction = array(
                             "payment-id" => $response->id,
@@ -136,6 +135,7 @@ class khipuActions extends sfActions {
         if ($response == 'VERIFIED' && $data["receiver_id"] == $settings["receiver_id"]) {
             /* Los parametros son correctos, ahora falta verificar que transacion_id, custom, subject y amount correspondan al pedido */
             $this->_log("NotifyPayment", "INFO", "cobro verificado");
+            $this->_log("NotifyPayment", "INFO", "respuesta: ".  serialize($response));
             $order = Doctrine_Core::getTable("Transaction")->getTransaction($data["transaction_id"]);
             $this->idReserva = $order->getReserveId();
             $reserve = Doctrine_Core::getTable('reserve')->findOneById($this->idReserva);
