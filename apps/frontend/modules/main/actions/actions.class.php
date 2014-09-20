@@ -944,6 +944,10 @@ public function executeNotificacion(sfWebRequest $request) {
         $hour_to = date("H:i", strtotime($request->getParameter('hour_to')));
         $startTime = strtotime($day_from);
         $endTime = strtotime($day_to);
+        
+        $transmission = $request->getParameter('transmission');
+        $type = $request->getParameter('type');
+        $price = $request->getParameter('price');
 
         $timeHasWorkday = false;
         $timeHasWeekend = false;
@@ -985,6 +989,7 @@ public function executeNotificacion(sfWebRequest $request) {
           st.name state, co.name country,
           owner.firstname firstname,
           owner.lastname lastname,
+          mo.id_tipo_vehiculo,
           ca.price_per_day priceday,
           ca.price_per_hour pricehour
 			')
@@ -1019,29 +1024,21 @@ public function executeNotificacion(sfWebRequest $request) {
             $q = $q->andWhere('ca.disponibilidad_semana >= ?', $timeHasWorkday);
             $q = $q->andWhere('ca.disponibilidad_finde >= ?', $timeHasWeekend);
         }
+        if ($transmission != "") {
+            $transmission = explode(",", $transmission);
+            $q = $q->andWhereIn('ca.transmission', $transmission);
+        }
+        if ($type != "") {
+            $type = explode(",", $type);
+            $q = $q->andWhereIn('mo.id_tipo_vehiculo', $type);
+        }
+        if($price == 0){
+            $q = $q->orderBy('ca.price_per_day');
+        }else{
+            $q = $q->orderBy('ca.price_per_day DESC');
+        }
+        $q->limit(100);
         
-//        $objeto_ciudad = Doctrine_Core::getTable("city")->findOneByName("santiago");
-//        $q = Doctrine_Query::create()
-//                ->select('ca.id, mo.name model,
-//          br.name brand, ca.uso_vehiculo_id tipo_vehiculo, ca.year year,
-//          ca.address address, ci.name city,
-//          st.name state, co.name country,
-//          owner.firstname firstname,
-//          owner.lastname lastname,
-//          ca.price_per_day priceday,
-//          ca.price_per_hour pricehour'
-//                )
-//                ->from('Car ca')
-//                ->innerJoin('ca.Model mo')
-//                ->innerJoin('ca.User owner')
-//                ->innerJoin('mo.Brand br')
-//                ->innerJoin('ca.City ci')
-//                ->innerJoin('ci.State st')
-//                ->innerJoin('st.Country co')
-//                ->where('ca.activo = ?', 1)
-//                ->andWhere('ca.seguro_ok = ?', 4)
-//                ->andWhere('ca.city_id = ?', $objeto_ciudad->getId())
-//                ->limit(10);
         $this->cars = $q->fetchArray();
         $fotos_autos = array();
         for($j=0;$j<count($this->cars);$j++){

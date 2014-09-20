@@ -126,6 +126,7 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
         padding-bottom: 23px;
     }
     #tab-lista-data-spinner{
+        display: none;
         text-align: center;
         height: 500px;
     }
@@ -920,7 +921,7 @@ else
         $('#model').change(function() {
             //doSearch();
         });
-        $("#day_from, #day_from_lista, #hour_from_lista, #day_to_lista, #hour_to_lista").change(function() {
+        $(".trigger_lista").change(function() {
             updateLista();
         });
 
@@ -1008,7 +1009,7 @@ else
 
 
 
-        $("#day_from").datepicker({
+        $("#day_from, #day_from_lista").datepicker({
             dateFormat: 'dd-mm-yy',
             buttonImageOnly: true,
             minDate: '-0d',
@@ -1021,7 +1022,7 @@ else
 
 
 
-        $("#day_to").datepicker({
+        $("#day_to, #day_to_lista").datepicker({
             dateFormat: 'dd-mm-yy',
             buttonImageOnly: true,
             minDate: '-0d',
@@ -1212,7 +1213,10 @@ else
             "date_from": $("#date_from_lista").val(),
             "hour_from": $("#hour_from_lista").val(),
             "date_to": $("#date_to_lista").val(),
-            "hour_to": $("#hour_to_lista").val()
+            "hour_to": $("#hour_to_lista").val(),
+            "transmission": $('input[name=transmision_lista]:checked').map(function() {return $(this).val()}).get().join(),
+            "price": $("input[name=precio_lista]").val(),
+            "type": $('input[name=tipo_lista]:checked').map(function() {return $(this).val()}).get().join(),
         }
         $.ajax({
             "url": url,
@@ -1227,7 +1231,12 @@ else
                     imageBtnClose:			'images/img_gallery/lightbox-btn-close.gif',		
                     imageBlank:				'images/img_gallery/lightbox-blank.gif'	
                 });
-                $('#example').dataTable();
+                $('#example').dataTable({
+                    "bDeferRender": true,
+                    "bScrollInfinite": true,
+                    "bScrollCollapse": true,
+                    "sScrollY": "400px"
+                });
             },
             "complete": function() {
                 $("#tab-lista-data-spinner").hide();
@@ -1389,6 +1398,10 @@ if ($day_to) {
         $(".btn_filtro").click(function() {
             $('#opc_filtro').toggle("slow");
         });
+        $(".btn_filtro_lista, .btn_buscar_lista").click(function() {
+            $('.opc_filtro_lista').toggle("slow");
+        });
+        
         $("#btn_buscar").click(function() {
             if (openFilters) {
                 $("#btn_filtro2").click();
@@ -1505,7 +1518,7 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
                 <!--  busqueda avanzada -->
                 <div class="search_box_1_titleNew">
                     <button class="btn-busqueda active" data-tab="mapa" >Mapa</button>
-                    <button disabled="" class="btn-busqueda" style="margin-left: -3px;" data-tab="lista" >Lista</button>
+                    <button class="btn-busqueda" style="margin-left: -3px;" data-tab="lista" >Lista</button>
                 </div>
                 <div class="search_box_1_PrincipalNew">
                     <div class="search_box_1_header tab-data tab-mapa">
@@ -1549,7 +1562,7 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
                         <div class="search_box1_form">
                             <div style="width: 175px; display: inline-block" >
                                 <div class="group_desde" style="width: 150px;"><span class="numberBlue">1</span>Región |</span></div>
-                                <select class="input_f0" id="chooseRegion" style="margin-left: 5px;width: 167px;">
+                                <select class="input_f0 trigger_lista" id="chooseRegion" style="margin-left: 5px;width: 167px;">
                                     <option value="">Elegir región</option>
 <?php foreach ($regiones as $region): ?>
                                         <option value="<?= $region->getCodigo() ?>"><?= $region->getNombre() ?></option>
@@ -1558,21 +1571,21 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
                             </div>
                             <div style="width: 180px; display: inline-block">
                                 <div class="group_desde" style="width: 150px;"><span class="numberBlue">2</span>Comuna |</span></div>
-                                <select class="input_f0" id="chooseComuna" style="margin-left: 5px;width: 167px;">
+                                <select class="input_f0 trigger_lista" id="chooseComuna" style="margin-left: 5px;width: 167px;">
                                     <option value="">Elegir comuna</option>
                                 </select>
                             </div>
 
                             <div style="width: 227px; display: inline-block">
                                 <span style="width: 220px;" class="group_desde"><span class="numberBlue">3</span>Desde |</span>
-                                <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_from_lista" value="<?php
+                                <input class="input_f1 trigger_lista" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_from_lista" value="<?php
                                 if ($day_from && $day_from != '12-11-2013') {
                                     echo $day_from;
                                 } else {
                                     echo "Fecha desde";
                                 }
                                 ?>"/>
-                                <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="hour_from_lista" value="<?php
+                                <input class="input_f1 trigger_lista" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="hour_from_lista" value="<?php
                                 if ($hour_from && $hour_from != '01:00') {
                                     echo $hour_from;
                                 } else {
@@ -1582,14 +1595,14 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
                             </div>
                             <div style="width: 227px; display: inline-block">
                                 <span style="width: 220px;" class="group_hasta"><span class="numberBlue">4</span>Hasta |</span>
-                                <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_to_lista" value="<?php
+                                <input class="input_f1 trigger_lista" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_to_lista" value="<?php
                                 if ($day_to) {
                                     echo $day_to;
                                 } else {
                                     echo "Fecha hasta";
                                 }
                                 ?>"/>
-                                <input class="input_f1b" style="width: 95px;" readonly="readonly" type="text" id="hour_to_lista"  value="<?php
+                                <input class="input_f1b trigger_lista" style="width: 95px;" readonly="readonly" type="text" id="hour_to_lista"  value="<?php
                                 if ($hour_to && $hour_to != '01:00') {
                                     echo $hour_to;
                                 } else {
@@ -1599,7 +1612,7 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
                             </div>
                             <div style="width: 100px; display: inline-block">
                                 <span style="width: 51px;" class="group_desde"><span class="numberBlue">5</span>Filtros |</span>
-                                <button id="btn_buscar" title="Buscar autos"></button>
+                                <button id="btn_buscar" class="btn_buscar_lista" title="Buscar autos"></button>
                             </div>
                         </div>
                     </div><!-- search_box_1_header -->     
@@ -1654,6 +1667,22 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
             </div>
 
             <div class="search_sector1 tab-data tab-lista" style="display:none" >
+                <button id="btn_filtro1" class="btn_filtro_lista"></button>
+                    <div id="opc_filtro" class="opc_filtro_lista">
+                        <button id="btn_filtro2" class="btn_filtro_lista"><img class="flechasfiltro2" src="<?php echo image_path('img_search/FlechasFiltro.png'); ?>"/><p class="textofiltro2">ELEGIR FILTROS</p></button>
+                        <div class="title_opc_filtro">Transmisión</div>
+                        <div class="opc_filtro"><input type="checkbox" class="trigger_lista" name="transmision_lista" value="0" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Manual</p></div>
+                        <div class="opc_filtro"><input type="checkbox" class="trigger_lista" name="transmision_lista" value="1" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Automática</p></div>
+                        <div class="title_opc_filtro">Tipo</div>
+                        <div class="opc_filtro"><input type="checkbox" class="trigger_lista" name="tipo_lista" value="1" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Automóvil</p></div>
+                        <div class="opc_filtro"><input type="checkbox" class="trigger_lista" name="tipo_lista" value="39" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">SUV</p></div>
+                        <div class="opc_filtro"><input type="checkbox" class="trigger_lista" name="tipo_lista" value="3" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Wagon Station</p></div>
+                        <div class="opc_filtro"><input type="checkbox" class="trigger_lista"  name="tipo_lista" value="2" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Pick Up</p></div>
+                        <div class="opc_filtro"><input type="checkbox" class="trigger_lista" name="tipo_lista" value="4" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Furgón</p></div>
+                        <div class="title_opc_filtro">Precio</div>
+                        <div class="opc_filtro"><input type="radio" class="trigger_lista" name="precio_lista"  value="0" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">De -$ a +$</p></div>
+                        <div class="opc_filtro"><input type="radio" class="trigger_lista" name="precio_lista"  value="1" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">De +$ a -$</p></div>
+                    </div>
                 <div id="tab-lista-data">
                     <div id="Fondo">
                         <div id="subFondo">

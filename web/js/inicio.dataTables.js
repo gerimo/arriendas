@@ -1,3 +1,5 @@
-$(document).on('ready',function(){
-	$('#example').dataTable();
+$(document).on('ready', function() {
+    $('#example').dataTable({
+        "bDeferRender": true
+    });
 });
