@@ -4923,6 +4923,7 @@ class profileActions extends sfActions {
         
         $comuna = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
         $stateId = $comuna->getStateId();
+        
 
         if ($disponibilidad == 1) {
             $disponibilidadSemana = 1;
@@ -5005,6 +5006,11 @@ class profileActions extends sfActions {
             $auto->setPricePerMonth($precioMes);
             $auto->setDisponibilidadSemana($disponibilidadSemana);
             $auto->setDisponibilidadFinde($disponibilidadFinde);
+            
+            $auto->setComunaId($comunaId);
+            $auto->setStateId($comuna->getStateId());
+            $auto->setRegion($comuna->getPadre());
+            $auto->setCityId($comuna->getCity());
 
             $auto->setPatente($patente);
             $auto->setColor($color);
