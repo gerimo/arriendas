@@ -2,7 +2,7 @@
     <div id="subFondo">
         <div id="Enunciado">
             <div id="demo">
-                <table cellpadding="0" cellspacing="0" border="0" class="display" id="example" width="100%">
+                <table border="0" class="display" id="example" width="100%">
                     <thead>
                         <tr>
                             <th>PRECIO</th>
@@ -126,5 +126,4 @@
         </div><!-- fin enunciado -->
         <br /><br />
     </div>
-</div> 
-<button id="footer_search_box_2"  onclick="window.open('<?= url_for('main/arriendo?autos=santiago'); ?>')" title="Ver todos los autos" >VER TODOS</button>
+</div>

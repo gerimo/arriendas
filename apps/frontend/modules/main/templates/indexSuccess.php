@@ -5,7 +5,7 @@
 
 <?php use_stylesheet('demo_page.css') ?>
 <?php use_stylesheet('demo_table.css') ?>
-<?php use_javascript('inicio.dataTables.js') ?>
+
 <?php use_javascript('jquery.dataTables.js') ?>
 
 <?php use_stylesheet('jquery.lightbox-0.5.css') ?>
@@ -163,6 +163,7 @@ if (sfContext::getInstance()->getUser()->getAttribute("logged")) {
     var _data;
     var strictBounds = null;
     var lastValidCenter;
+    var oTable;
 
     function localizame() {
         if (navigator.geolocation) { /* Si el navegador tiene geolocalizacion */
@@ -277,8 +278,6 @@ else
             } else {
                 map.panTo(lastValidCenter);
             }
-            $("#chooseRegion").val("");
-            $("#chooseComuna").val("");
             searchMarkers();
 
         });
@@ -514,8 +513,6 @@ else
         var model_hidden = encodeURIComponent(document.getElementById("model_hidden").value);
         var day_from_hidden = encodeURIComponent(document.getElementById("day_from_hidden").value);
         var day_to_hidden = encodeURIComponent(document.getElementById("day_to_hidden").value);
-        var region = $("#chooseRegion").val();
-        var comuna = $("#chooseComuna").val();
 
         if (price_hidden != '-') {
             precio = "&price=" + price_hidden;
@@ -530,7 +527,8 @@ else
         var center = map.getCenter();
         var map_lat = center.lat();
         var map_lng = center.lng();
-
+        var region = "";
+        var comuna = "";
 
         var url = "<?php echo url_for('main/map') ?>?day_from=" + day_from_hidden + "&day_to=" + day_to_hidden + "&model=" + model_hidden + "&hour_from=" + hour_from + "&hour_to=" + hour_to + "&brand=" + brand_hidden + "&transmission=" + transmision_hidden + "&type=" + tipo_hidden + "&location=" + location_hidden + precio + "&swLat=" + swLat + "&swLng=" + swLng + "&neLat=" + neLat + "&neLng=" + neLng + "&map_clat=" + map_lat + "&map_clng=" + map_lng + "";
         if (region && region.length > 0 && region != 0) {
@@ -910,7 +908,7 @@ else
 
         //timerSet("#hour_from", "#hour_to");
         $("#hour_from, #hour_to").timePicker({show24Hours: false});
-        $("#hour_from_lista , #hour_to_lista").timePicker({show24Hours: false});
+        $("#hour_from_lista, #hour_to_lista").timePicker({show24Hours: false});
 
         getModel($("#brand"), false);
 
@@ -1048,7 +1046,7 @@ else
         $("#chooseComuna").change(function() {
             updateLista();
         });
-
+        
         $('a.mapcar_btn_detalle').live('click', function(event) {
 
             event.preventDefault();
@@ -1140,13 +1138,13 @@ else
 
         });
         
-        $('.gallery a').lightBox({
-            imageLoading:			'images/img_gallery/lightbox-ico-loading.gif',		
-            imageBtnPrev:			'images/img_gallery/lightbox-btn-prev.gif',			
-            imageBtnNext:			'images/img_gallery/lightbox-btn-next.gif',			
-            imageBtnClose:			'images/img_gallery/lightbox-btn-close.gif',		
-            imageBlank:				'images/img_gallery/lightbox-blank.gif'	
-        });
+//        $('.gallery a').lightBox({
+//            imageLoading:			'images/img_gallery/lightbox-ico-loading.gif',		
+//            imageBtnPrev:			'images/img_gallery/lightbox-btn-prev.gif',			
+//            imageBtnNext:			'images/img_gallery/lightbox-btn-next.gif',			
+//            imageBtnClose:			'images/img_gallery/lightbox-btn-close.gif',		
+//            imageBlank:				'images/img_gallery/lightbox-blank.gif'	
+//        });
 
         /*Fin Código Miguel */
 
@@ -1174,8 +1172,10 @@ else
                     tabPosition: "Right"
                 });
             }
-        })
-
+        });
+//        $("#chooseRegion").val("13");
+//        updateLista();
+        $('#chooseRegion option[value=13]').prop('selected', 'selected').change();
 
     }
     ;
@@ -1188,7 +1188,7 @@ else
                 var dif = restarHoras(current.getHours() + ':' + current.getMinutes(), $('#hour_from_lista').val())
                 if (dif < 0) {
                     alert('La hora no puede ser menor a la actual');
-                    $('#hour_from').val('Hora de inicio');
+                    $('#hour_from_lista').val('Hora de inicio');
                 }
             }
         }
@@ -1231,7 +1231,7 @@ else
                     imageBtnClose:			'images/img_gallery/lightbox-btn-close.gif',		
                     imageBlank:				'images/img_gallery/lightbox-blank.gif'	
                 });
-                $('#example').dataTable({
+                oTable = $('#example').dataTable({
                     "bDeferRender": true,
                     "bScrollInfinite": true,
                     "bScrollCollapse": true,
@@ -1386,12 +1386,21 @@ if ($day_to) {
 
     var openFilters = false;
     $(document).ready(function() {
+        
+        $("#footer_search_box_2").click(function(){
+            $("#btn-lista").click();
+        });
+        
+        
 
         $(".btn-busqueda").click(function() {
             var tabId = $(this).attr("data-tab");
             $(".btn-busqueda").removeClass("active");
             $(".tab-data").hide();
             $(".tab-" + tabId).show();
+            if(tabId == "lista"){
+                oTable.fnAdjustColumnSizing();
+            }
             $(this).addClass("active");
         });
 
@@ -1518,7 +1527,7 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
                 <!--  busqueda avanzada -->
                 <div class="search_box_1_titleNew">
                     <button class="btn-busqueda active" data-tab="mapa" >Mapa</button>
-                    <button class="btn-busqueda" style="margin-left: -3px;" data-tab="lista" >Lista</button>
+                    <button class="btn-busqueda" id="btn-lista" style="margin-left: -3px;" data-tab="lista" >Lista</button>
                 </div>
                 <div class="search_box_1_PrincipalNew">
                     <div class="search_box_1_header tab-data tab-mapa">
@@ -1564,9 +1573,9 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
                                 <div class="group_desde" style="width: 150px;"><span class="numberBlue">1</span>Región |</span></div>
                                 <select class="input_f0 trigger_lista" id="chooseRegion" style="margin-left: 5px;width: 167px;">
                                     <option value="">Elegir región</option>
-<?php foreach ($regiones as $region): ?>
+                                        <?php foreach ($regiones as $region): ?>
                                         <option value="<?= $region->getCodigo() ?>"><?= $region->getNombre() ?></option>
-<?php endforeach; ?>
+                                        <?php endforeach; ?>
                                 </select>
                             </div>
                             <div style="width: 180px; display: inline-block">
@@ -1658,7 +1667,7 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
 
 
                         </div><!-- search_box_2 -->
-                        <button id="footer_search_box_2"  onclick="window.open('<?= url_for('main/arriendo?autos=santiago'); ?>')" title="Ver todos los autos" >VER TODOS</button>
+                        <button id="footer_search_box_2" title="Ver todos los autos" >VER TODOS</button>
                     </div>
                 </div><!-- search_box_1new -->
 
@@ -1683,136 +1692,7 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
                         <div class="opc_filtro"><input type="radio" class="trigger_lista" name="precio_lista"  value="0" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">De -$ a +$</p></div>
                         <div class="opc_filtro"><input type="radio" class="trigger_lista" name="precio_lista"  value="1" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">De +$ a -$</p></div>
                     </div>
-                <div id="tab-lista-data">
-                    <div id="Fondo">
-                        <div id="subFondo">
-                            <div id="Enunciado">
-                                <div id="demo">
-                                    <table cellpadding="0" cellspacing="0" border="0" class="display" id="example" width="100%">
-                                        <thead>
-                                            <tr>
-                                                <th>PRECIO</th>
-                                                <th>FOTO</th>
-                                                <th>TIPO</th>
-                                                <th>MODELO</th>
-                                                <th>COBERTURA</th>
-                                                <th>RESERVAR</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                                                <?php for ($i = 0; $i < count($cars); $i++) : ?>
-                                                <tr class="gradeA">
-                                                    <td><div class="posicionamiento1">$ <?= number_format(intval($cars[$i]['priceday']), 0, ',', '.'); ?> <span style="font-style: italic;">(por día)</span><br>$ <?= number_format(intval($cars[$i]['pricehour']), 0, ',', '.'); ?> <span style="font-style: italic;">(por hora)</span></div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="posicionamiento2">
-                                                            <div class="gallery galeria_<?= $i; ?>">
-                                                                <ul>
-    <?php
-    $cantidadFotos = count($fotos_autos[$i]) - 3;
-    if ($cantidadFotos > 0) {
-        for ($j = 0; $j < $cantidadFotos; $j = $j + 2) {
-            $k = $j + 1;
-            if ($j == 0) {
-                if ($fotos_autos[$i]['photoS3'] == TRUE) {
-                    ?>
-                                                                                    <li>
-                                                                                        <a title="Foto Perfil" href="http://www.arriendas.cl/main/s3thumb?alto=185&ancho=185&urlFoto=<?= $fotos_autos[$i][$j]; ?>">
-                                                                                            <img title="<?= $fotos_autos[$i][$k]; ?>" src="http://www.arriendas.cl/main/s3thumb?alto=185&ancho=185&urlFoto=<?= $fotos_autos[$i][$j]; ?>" width="68" height="68">
-                                                                                        </a>
-                                                                                    </li>
-                                                                                    <?php
-                                                                                } else {
-                                                                                    ?>
-                                                                                    <li>
-                                                                                        <a title="Foto Perfil" href="<?= image_path('../uploads/cars/' . $fotos_autos[$i][$j]); ?>">
-                                                                                            <img title="<?= $fotos_autos[$i][$k]; ?>" src="<?= image_path('../uploads/cars/thumbs/' . $fotos_autos[$i][$j]); ?>" width="68" height="68">
-                                                                                        </a>
-                                                                                    </li>
-                    <?php
-                }
-            } else {
-                if ($fotos_autos[$i]['verificationPhotoS3'] == TRUE) {
-                    ?>
-                                                                                    <li>
-                                                                                        <a style="display:none;" title="<?= $fotos_autos[$i][$k]; ?>" href="http://www.arriendas.cl/main/s3thumb?alto=600&ancho=600&urlFoto=<?= $fotos_autos[$i][$j]; ?>">
-                                                                                            <img title="<?= $fotos_autos[$i][$k]; ?>" src="http://www.arriendas.cl/main/s3thumb?alto=40&ancho=40&urlFoto=<?= $fotos_autos[$i][$j]; ?>" width="68" height="68">
-                                                                                        </a>
-                                                                                    </li>
-                                                                                    <?php
-                                                                                } else {
-                                                                                    ?>
-                                                                                    <li>
-                                                                                        <a style="display:none;" title="<?= $fotos_autos[$i][$k]; ?>" href="<?= image_path('../uploads/verificaciones/' . $fotos_autos[$i][$j]); ?>">
-                                                                                            <img title="<?= $fotos_autos[$i][$k]; ?>" src="<?= image_path('../uploads/verificaciones/thumbs/' . $fotos_autos[$i][$j]); ?>" width="68" height="68">
-                                                                                        </a>
-                                                                                    </li>
-                                                                                    <?php
-                                                                                }
-                                                                            }//fin else
-                                                                        }//fin for j
-                                                                    } else {//Si no existen fotos
-                                                                        ?>
-                                                                        <li>
-                                                                            <img title="No presenta fotos" src="http://www.arriendas.cl/images/default.png" width="68" height="68">
-                                                                        </li>
-                                                                <?php
-                                                            }//fin else   
-                                                            ?>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="posicionamiento3">
-                                                            <?php
-                                                            if (!$cars[$i]['tipo_vehiculo'])
-                                                                echo "<span style='font-style:italic'>Sin tipo</span>";
-                                                            else if ($cars[$i]['tipo_vehiculo'] == '1') {
-                                                                if (intval($cars[$i]['priceday']) < 22900)
-                                                                    echo "Citycar";
-                                                                else if (intval($cars[$i]['priceday']) >= 22900 && intval($cars[$i]['priceday']) < 26000)
-                                                                    echo "Sedán";
-                                                                else if (intval($cars[$i]['priceday']) >= 26000 && intval($cars[$i]['priceday']) < 32000)
-                                                                    echo "Mediano";
-                                                                else if (intval($cars[$i]['priceday']) >= 32000 && intval($cars[$i]['priceday']) < 36000)
-                                                                    echo "Familiar";
-                                                                else if (intval($cars[$i]['priceday']) >= 36000)
-                                                                    echo "Auto de lujo";
-                                                            }else if ($cars[$i]['tipo_vehiculo'] == '2')
-                                                                echo "Utilitario";
-                                                            else if ($cars[$i]['tipo_vehiculo'] == '3')
-                                                                echo "Pick-up";
-                                                            else if ($cars[$i]['tipo_vehiculo'] == '4')
-                                                                echo "SUV";
-                                                            ?>
-                                                        </div>
-                                                    </td>
-                                                    <td><div class="posicionamiento4"><?= $cars[$i]['brand']; ?> <?= $cars[$i]['model']; ?></div></td>
-                                                    <td><div class="posicionamiento5">Robo/Daños/CWD<br>Asistencia de viaje<br>Deducible 5UF</div></td>
-                                                    <td><div class="posicionamiento6"><a title="Realizar reserva" href="<?php echo url_for('profile/reserve?id=' . $cars[$i]['id']) ?>"><?php echo image_tag('Home/BotonReservarHome.png', array('class' => 'botonReservar', 'width' => '90px', 'height' => '30px')) ?></a></div></td>
-                                                </tr>
-<?php endfor; ?>        
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <th>PRECIO</th>
-                                                <th>FOTO</th>
-                                                <th>TIPO</th>
-                                                <th>MODELO</th>
-                                                <th>COBERTURA</th>
-                                                <th>RESERVAR</th>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-
-                            </div><!-- fin enunciado -->
-                            <br /><br />
-                        </div>
-                    </div> 
-                    <button id="footer_search_box_2"  onclick="window.open('<?= url_for('main/arriendo?autos=santiago'); ?>')" title="Ver todos los autos" >VER TODOS</button>
-                </div>
+                <div id="tab-lista-data"></div>
                 <div id="tab-lista-data-spinner">
 <?php echo image_tag("ajax-loader.gif", array()) ?>
                 </div>
@@ -1897,5 +1777,4 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
 
     </div>
 </div>
-
-</div><!-- search_container -->
+<!--</div> search_container -->
