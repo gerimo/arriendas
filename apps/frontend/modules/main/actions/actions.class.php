@@ -1035,10 +1035,10 @@ public function executeNotificacion(sfWebRequest $request) {
             $type = explode(",", $type);
             $q = $q->andWhereIn('mo.id_tipo_vehiculo', $type);
         }
-        if($price == 0){
-            $q = $q->orderBy('ca.price_per_day');
-        }else{
+        if($price == 1){
             $q = $q->orderBy('ca.price_per_day DESC');
+        }else{
+            $q = $q->orderBy('ca.price_per_day ASC');
         }
         $q->limit(100);
         
