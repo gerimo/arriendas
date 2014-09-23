@@ -763,6 +763,7 @@ public function executeNotificacion(sfWebRequest $request) {
         $boundtop = -60;
         $boundbottom = -55;
 
+        
 
         $q = Doctrine_Query::create()
                 ->select('ca.id , av.id idav , mo.name model,
@@ -793,7 +794,12 @@ public function executeNotificacion(sfWebRequest $request) {
                 ->limit(10);
         $this->offers = $q->execute();
 
-        $objeto_ciudad = Doctrine_Core::getTable("city")->findOneByName("santiago");
+        $comunas = array();
+        $regionMetropolitanaCodigo = "13";
+        $comunasList = Doctrine::getTable('Comunas')->findByPadre($regionMetropolitanaCodigo);
+        foreach ($comunasList as $comuna) {
+            $comunas[] = $comuna->getCodigoInterno();
+        }
         $q = Doctrine_Query::create()
                 ->select('ca.id, mo.name model,
           br.name brand, ca.uso_vehiculo_id tipo_vehiculo, ca.year year,
@@ -813,8 +819,8 @@ public function executeNotificacion(sfWebRequest $request) {
                 ->innerJoin('st.Country co')
                 ->where('ca.activo = ?', 1)
                 ->andWhere('ca.seguro_ok = ?', 4)
-                ->andWhere('ca.city_id = ?', $objeto_ciudad->getId())
-                ->limit(10);
+                ->andWhereIn('ca.comuna_id', $comunas)
+                ->limit(100);
         $this->cars = $q->fetchArray();
         $fotos_autos = array();
         for($j=0;$j<count($this->cars);$j++){
@@ -982,11 +988,11 @@ public function executeNotificacion(sfWebRequest $request) {
                 $comunas[] = $comunaCodigoInterno;
             }
         }
+        
         $q = Doctrine_Query::create()
                 ->select('ca.id, mo.name model,
           br.name brand, ca.uso_vehiculo_id tipo_vehiculo, ca.year year,
-          ca.address address, ci.name city,
-          st.name state, co.name country,
+          ca.address address, 
           owner.firstname firstname,
           owner.lastname lastname,
           mo.id_tipo_vehiculo,
@@ -997,9 +1003,6 @@ public function executeNotificacion(sfWebRequest $request) {
                 ->innerJoin('ca.Model mo')
                 ->innerJoin('ca.Comunas cm')
                 ->innerJoin('mo.Brand br')
-                ->innerJoin('ca.City ci')
-                ->innerJoin('ci.State st')
-                ->innerJoin('st.Country co')
                 ->innerJoin('ca.User owner')                
                 ->Where('ca.activo = ?', 1)
                 ->andWhereIn('ca.seguro_ok', array(3, 4));
