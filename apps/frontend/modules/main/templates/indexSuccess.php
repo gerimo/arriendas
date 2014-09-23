@@ -1215,7 +1215,7 @@ else
             "date_to": $("#date_to_lista").val(),
             "hour_to": $("#hour_to_lista").val(),
             "transmission": $('input[name=transmision_lista]:checked').map(function() {return $(this).val()}).get().join(),
-            "price": $("input[name=precio_lista]").val(),
+            "price": $("input[name=precio_lista]:checked").val(),
             "type": $('input[name=tipo_lista]:checked').map(function() {return $(this).val()}).get().join(),
         }
         $.ajax({
@@ -1232,6 +1232,7 @@ else
                     imageBlank:				'images/img_gallery/lightbox-blank.gif'	
                 });
                 oTable = $('#example').dataTable({
+                    "aaSorting": [],
                     "bDeferRender": true,
                     "bScrollInfinite": true,
                     "bScrollCollapse": true,
