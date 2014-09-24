@@ -267,7 +267,20 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                 <div class="barraSuperior" style="margin-bottom: 15px;">
                     <h2>INFORMACIÓN DEL AUTO EN ARRIENDO</h2>
                 </div>
-                <?php
+                <div class="ladoIzquierdo">
+                    <div id="imagenPerfil">
+                        <?php
+                        $image_alt = "arriendoautos/rentacar/" . $car->getModel()->getBrand() . $car->getModel() . "/" . $nombreComunaUrl . "/" . $car->getId();
+                        $image_title = "arriendoauto/" . $car->getId();
+                        if ($car->getPhotoS3() == 1) {
+                            echo image_tag("http://www.arriendas.cl/main/s3thumb?alto=185&ancho=185&urlFoto=" . $car->getFoto(), array("width" => "185", "height" => "185", "alt" => $image_alt, "title" => $image_title));
+                        } else {
+                            $base_url = $sf_request->getUriPrefix().$sf_request->getRelativeUrlRoot();
+                            echo "<img src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_185,h_185,c_fill,g_center/".$base_url."/uploads/cars/" . $car->getFoto() . "' alt='" . $image_alt . "' title='" . $image_title . "' />";
+                        }
+                        ?>
+                    </div>
+                    <?php
                     if ($arrayFotos) {
                         if ($opcionFotosEnS3 == 1) {
                             ?>
@@ -330,10 +343,9 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                                     $cantidadFotos = count($arrayFotos);
                                     for ($i = 0; $i < $cantidadFotos; $i++) {
                                         ?>
-                                            <!-- Imprimiendo foto -->
-                                            <a class="rsImg" data-rsBigImg="img/1.jpg" href="<?= image_path('../uploads/verificaciones/' . $arrayFotos[$i]); ?>" data-rsw="580" data-rsh="330">
-                                                <?= $arrayDescripcionFotos[$i]; ?>
-                                                <img width="100" height="100" class="rsTmb" src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_40,h_40,c_fill,g_center/http://arriendas.cl/<?= image_path('../uploads/verificaciones/thumbs/' . $arrayFotos[$i]); ?>" />
+                                        <li>
+                                            <a title="<?= $arrayDescripcionFotos[$i]; ?>" href="<?= image_path('../uploads/verificaciones/' . $arrayFotos[$i]); ?>">
+                                                <img title="<?= $arrayDescripcionFotos[$i]; ?>" src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_40,h_40,c_fill,g_center/<?= $base_url ?>/uploads/verificaciones/thumbs/<?= $arrayFotos[$i]?>" width="40" height="40" alt="<?=$image_alt?>" >
                                             </a>
 
                                            <!-- Fin impresión foto -->

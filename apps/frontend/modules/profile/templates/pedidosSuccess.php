@@ -2,7 +2,7 @@
 <?php use_stylesheet('registro.css') ?>
 <?php use_stylesheet('mis_arriendos.css') ?>
 <?php use_stylesheet('comunes.css') ?>
-<?php use_javascript('pedidos.js?v=28012013') ?>
+<?php use_javascript('pedidos.js?v=29072014') ?>
 <?php use_stylesheet('cupertino/jquery-ui.css') ?>
 <?php
 $useragent=$_SERVER['HTTP_USER_AGENT'];
@@ -20,6 +20,8 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     var urlPagoValidar = <?php echo "'".url_for("profile/checkCanPay")."';" ?>
     var urlExtenderReserva = <?php echo "'".url_for("profile/extenderReservaAjax")."';" ?>
     var urlRefreshPedidos = <?php echo "'".url_for("profile/pedidosAjax")."';" ?>
+    var urlUpdateProfile = <?php echo "'".url_for("profile/edit")."';" ?>
+    var urlFBconnect = <?php echo "'".url_for("main/loginFacebook")."';" ?>
 </script>
 
 <div class="main_box_1">

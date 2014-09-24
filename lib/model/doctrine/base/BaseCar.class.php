@@ -347,6 +347,10 @@ abstract class BaseCar extends sfDoctrineRecord
              'type' => 'string',
              'length' => 255,
              ));
+       $this->hasColumn('region', 'integer', 11, array(
+            'type' => 'integer',
+            'length' => 11,
+        ));
        $this->hasColumn('comuna_id', 'integer', 11, array(
              'type' => 'integer',
              'length' => 11,

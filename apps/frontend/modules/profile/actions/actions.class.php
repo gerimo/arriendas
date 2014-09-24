@@ -189,6 +189,8 @@ class profileActions extends sfActions {
 
     public function executeExtenderReservaAjax(sfWebRequest $request) {
 
+        $user = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")));
+        
         $id = $request->getPostParameter('id');
         $fechaHasta = $request->getPostParameter('fechaHasta');
         $horaHasta = $request->getPostParameter('horaHasta');
@@ -228,6 +230,9 @@ class profileActions extends sfActions {
         //echo $duracionAnterior." ".$duracion."<br>";
         //echo $precioCompleto." ".$precioNuevo;
         //almacena la extensión de la reserva
+        
+        
+        
         $reserve = new Reserve();
         $reserve->setDate($date);
         $reserve->setDuration($duracion);
@@ -236,8 +241,23 @@ class profileActions extends sfActions {
         $reserve->setPrice($precioNuevo);
         $reserve->setIdPadre($id);
         $reserve->setComentario('Reserva extendida');
-        $reserve->setFechaReserva($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
+        $reserve->setExtendUserId($user->getId());
+                
+        $fechaHoy = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"));
+        /* si extiende el duenio */
+        $extendioDuenio = false;
+        if($user->getId() == $car->getUser()->getId()){
+            $reserve->setConfirmed(true);
+            $reserve->setFechaConfirmacion($fechaHoy);
+            $extendioDuenio = true;
+        }
+        $reserve->setFechaReserva($fechaHoy);
+        
         $reserve->save();
+        
+        if($extendioDuenio){
+            $this->executeConfirmReserve($reserve->getId());
+        }
 
         //$nameOwner
         //$nameRenter
@@ -445,9 +465,11 @@ class profileActions extends sfActions {
             $message->setTo($correoRenter);
             $functions = new Functions;
             $contrato = $functions->generarContrato($tokenReserve);
-            //$reporte = $functions->generarReporte($idCar, true);
             $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
-            //$message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+            
+            $pagarePath = sfConfig::get("sf_web_dir")."/pagare_arriendas.pdf";
+            $message->attach(Swift_Attachment::fromPath($pagarePath)->setFilename("pagare_arriendas.pdf"));
+            
             if($sendNotifications){
                 $mailer->send($message);
             }
@@ -2720,6 +2742,16 @@ class profileActions extends sfActions {
         if ($reserve->getUser()->getRut() == "") {
             $errorMessage = "error:rutnulo";
         }
+
+        if ($reserve->getUser()->getExtranjero() == 1 && !$reserve->getUser()->getFacebookConfirmado() ) {
+            $errorMessage = "error:extranjero-sin-facebook";
+        }
+        if ($reserve->getUser()->getMenor()) {
+            $errorMessage = "error:usermenor";
+        }
+        if (is_null($reserve->getUser()->getBirthdate()) || strlen($reserve->getUser()->getBirthdate()) <= 0) {
+            $errorMessage = "error:nobirthdate";
+        }
         echo $errorMessage;
         die();
     }
@@ -2802,6 +2834,13 @@ class profileActions extends sfActions {
     }
 
     public function executeFbDiscount(sfWebRequest $request) {
+        
+        $id_usuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+        $curr_user = Doctrine_Core::getTable('user')->find($id_usuario);
+        if($curr_user->getBlocked()){
+            throw new Exception;
+        }
+        
 
         $this->reserve = '';
         $this->deposito = $request->getParameter('deposito');
@@ -3268,7 +3307,12 @@ class profileActions extends sfActions {
                 }
 
                 //comprueba si muestra o no la reserva, dependiendo del estado
-                if (($estado == 3 && ($duracion * 3600) + $fechaReserva > $fechaActual) || ($estado == 2 && $fechaReserva > $fechaActual) || (($estado == 1 || $estado == 0) && $fechaReserva > $fechaActual)) {
+                $horasASumar = $duracion + 36;
+                $fechaReservaParaPagadas = strtotime("+$horasASumar hours", strtotime($reserva->getDate()));
+                if (
+                        ($estado == 3 && $fechaReservaParaPagadas > $fechaActual) 
+                        || ($estado == 2 && $fechaReserva > $fechaActual) 
+                        || (($estado == 1 || $estado == 0) && $fechaReserva > $fechaActual)) {
 
                     //obtiene el id de la reserva
                     $reservasRealizadas[$i]['idReserve'] = $reserva->getId();
@@ -3382,10 +3426,11 @@ class profileActions extends sfActions {
 
                 $fechaReserva = strtotime($reserva->getDate());
                 $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
-
                 $duracion = $reserva->getDuration();
-
-                if (($estado == 3 && ($duracion * 3600) + $fechaReserva > $fechaActual) || ($estado == 2 && $fechaReserva > $fechaActual) || (($estado == 1 || $estado == 0) && $fechaReserva > $fechaActual)) {
+                
+                $horasASumar = $duracion + 36;
+                $fechaReservaParaPagadas = strtotime("+$horasASumar hours", strtotime($reserva->getDate()));
+                if (($estado == 3 && $fechaReservaParaPagadas > $fechaActual) || ($estado == 2 && $fechaReserva > $fechaActual) || (($estado == 1 || $estado == 0) && $fechaReserva > $fechaActual)) {
 
                     //obtiene el id de la reserva
                     $reservasRecibidas[$i]['idReserve'] = $reserva->getId();
@@ -3903,6 +3948,8 @@ class profileActions extends sfActions {
         //obtener url absoluta
         sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
         $this->urlAbsoluta = url_for('main/priceJson');
+        $this->urlCheckPatente = url_for('profile/checkPatente');
+        $this->urlListadoAutos = url_for('profile/cars', true);
 
         $this->partes = $this->partesAuto();
         $this->nombresPartes = $this->nombrePartesAuto();
@@ -4664,7 +4711,20 @@ class profileActions extends sfActions {
             $profile->setRegion($request->getParameter('region'));
             $profile->setComuna($request->getParameter('comunas'));
             $profile->setAddress($request->getParameter('address'));
+            
+            if($request->getParameter('birth') && ($profile->getBirthdate() !== $request->getParameter('birth'))){
+                $birthDate = explode("/", $request->getParameter('birth'));
+                $year = $birthDate[0];
+                $month = $birthDate[1];
+                $day = $birthDate[2];
+                $age = (date("md", date("U", mktime(0, 0, 0, $month, $day, $year))) > date("md") ? ((date("Y") - $year) - 1) : (date("Y") - $year));
+                if($age <= 24){
+                    $profile->setMenor(true);
+                }
+            }
+            
             $profile->setBirthdate($request->getParameter('birth'));
+            $profile->setExtranjero($request->getParameter('extranjero'));
             $profile->setApellidoMaterno($request->getParameter('apellidoMaterno'));
             $profile->setSerieRut($request->getParameter('serie_run'));
             if ($request->getParameter('password') != '') {
@@ -4683,7 +4743,27 @@ class profileActions extends sfActions {
                 $profile->setDriverLicenseFile($request->getParameter('licence'));
             if ($request->getParameter('rut') != NULL)
                 $profile->setRutFile($request->getParameter('rut'));
+            
+            /* validacion rut */
+            if($profile->getRut() != $request->getParameter('run') && !$profile->getExtranjero()){
+                $basePath = sfConfig::get('sf_root_dir');
+                $run = $request->getParameter('run');
+                $userid = $profile->getId();
+                
+                /* validacion rut */
+//                $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:RutValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
+//                exec($comando);
+                
+                
+                /* validacion judicial */
+                $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
+                exec($comando);
+                
+            }
+            
+            
             $profile->setRut($request->getParameter('run'));
+            
             $profile->save();
             $this->getUser()->setAttribute('picture_url', $profile->getFileName());
             $this->getUser()->setAttribute("name", current(explode(' ', $profile->getFirstName())) . " " . substr($profile->getLastName(), 0, 1) . '.');
@@ -4843,6 +4923,7 @@ class profileActions extends sfActions {
         
         $comuna = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
         $stateId = $comuna->getStateId();
+        
 
         if ($disponibilidad == 1) {
             $disponibilidadSemana = 1;
@@ -4925,6 +5006,11 @@ class profileActions extends sfActions {
             $auto->setPricePerMonth($precioMes);
             $auto->setDisponibilidadSemana($disponibilidadSemana);
             $auto->setDisponibilidadFinde($disponibilidadFinde);
+            
+            $auto->setComunaId($comunaId);
+            $auto->setStateId($comuna->getStateId());
+            $auto->setRegion($comuna->getPadre());
+            $auto->setCityId($comuna->getCity());
 
             $auto->setPatente($patente);
             $auto->setColor($color);
@@ -5059,54 +5145,13 @@ class profileActions extends sfActions {
     }
 
     public function generarImagenThumb($rutaImagenOriginal, $nameFile, $alojamiento) {
-        //Creamos una variable imagen a partir de la imagen original
-        $img_original = imagecreatefromjpeg($rutaImagenOriginal);
-        //var_dump($img_original);die();
-        //Se define el maximo ancho o alto que tendra la imagen final
-        $max_ancho = 100;
-        $max_alto = 100;
-        //Ancho y alto de la imagen original
-        list($ancho, $alto) = getimagesize($rutaImagenOriginal);
-        //Se calcula ancho y alto de la imagen final
-        $x_ratio = $max_ancho / $ancho;
-        $y_ratio = $max_alto / $alto;
-
-        //Si el ancho y el alto de la imagen no superan los maximos, 
-        //ancho final y alto final son los que tiene actualmente
-        if (($ancho <= $max_ancho) && ($alto <= $max_alto)) {//Si ancho 
-            $ancho_final = $ancho;
-            $alto_final = $alto;
-        }
-        /*
-         * si proporcion horizontal*alto mayor que el alto maximo,
-         * alto final es alto por la proporcion horizontal
-         * es decir, le quitamos al alto, la misma proporcion que 
-         * le quitamos al alto
-         * 
-         */ elseif (($x_ratio * $alto) < $max_alto) {
-            $alto_final = ceil($x_ratio * $alto);
-            $ancho_final = $max_ancho;
-        }
-        /*
-         * Igual que antes pero a la inversa
-         */ else {
-            $ancho_final = ceil($y_ratio * $ancho);
-            $alto_final = $max_alto;
-        }
-        //Creamos una imagen en blanco de tamaño $ancho_final  por $alto_final .
-        $tmp = imagecreatetruecolor($ancho_final, $alto_final);
-
-        //Copiamos $img_original sobre la imagen que acabamos de crear en blanco ($tmp)
-        imagecopyresampled($tmp, $img_original, 0, 0, 0, 0, $ancho_final, $alto_final, $ancho, $alto);
-        //Se destruye variable $img_original para liberar memoria
-        imagedestroy($img_original);
-        //Definimos la calidad de la imagen final
-        $calidad = 95;
-
         $uploadDir = sfConfig::get("sf_web_dir");
         $path = $uploadDir . $alojamiento;
-        //Se crea la imagen final en el directorio indicado
-        imagejpeg($tmp, $path . $nameFile, $calidad);
+        
+        // Create the thumbnail
+        $thumbnail = new sfThumbnail(100, 100);
+        $thumbnail->loadFile($rutaImagenOriginal);
+        $thumbnail->save($path . $nameFile);
         return $nameFile;
     }
 
@@ -5551,6 +5596,21 @@ class profileActions extends sfActions {
 
     public function executeSubeTuAuto(sfWebRequest $request) {
         
+    }
+    
+    public function executeCheckPatente(sfWebRequest $request) {
+        $valid = true;
+        $patente = $request->getParameter('patente');
+        $id = $request->getParameter('carid');
+        $user = Doctrine_Core::getTable('User')->find($this->getUser()->getAttribute('userid'));
+        foreach ($user->getCars() as $car) {
+            if( $car->getId() != $id && $car->getPatente() == $patente ){
+                $valid = FALSE;
+                break;
+            }
+        }
+        echo $valid;
+        die();
     }
 
 }

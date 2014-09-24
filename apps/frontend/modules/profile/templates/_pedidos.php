@@ -66,7 +66,10 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
         <input type="checkbox" name="contratoArrendatario0" id="contratoArrendatario1" class='checkboxContrato'><p> En caso de siniestro, dejaré constancia en carabineros INMEDIATAMENTE.</p>
         <input type="checkbox" name="contratoArrendatario1" id="contratoArrendatario1" class='checkboxContrato'><p> He visto el <a href='' class='informeDanios' target='_blank'>Informe de daños del veh&iacute;culo</a>.</p>
         <input type="checkbox" name="contratoArrendatario2" id="contratoArrendatario2" class='checkboxContrato'><p> Entiendo ser responsable por daños producidos durante el arriendo por debajo del deducible de 5UF.</p>
-        <input type="checkbox" name="contratoArrendatario3" id="contratoArrendatario3" class='checkboxContrato'><p> <span id='textoBencinaArrendatario'>Si el arriendo es por menos de un día, pagaré por la bencina utilizada en efectivo según los kilómetros manejados. Si el arriendo es por un día o más, devolveré el veh&iacute;culo con el marcador de bencina en el mismo nivel con el que me fue entregado.</span></p>
+        <input type="checkbox" name="contratoArrendatario3" id="contratoArrendatario3" class='checkboxContrato'><p> Entiendo perder mi cobertura en caso de conducción en estado de ebriedad.</p>
+        <input type="checkbox" name="contratoArrendatario4" id="contratoArrendatario4" class='checkboxContrato'><p> <span id='textoBencinaArrendatario'>Si el arriendo es por menos de un día, pagaré por la bencina utilizada en efectivo según los kilómetros manejados. Si el arriendo es por un día o más, devolveré el veh&iacute;culo con el marcador de bencina en el mismo nivel con el que me fue entregado.</span></p>
+        <input type="checkbox" name="contratoArrendatario5" id="contratoArrendatario5" class='checkboxContrato'><p> Realizaré el pago desde una cuenta bancaria o medio de pago, a mi nombre.</p>
+
     </div>
 
     <div id='confirmarContratosPropietario'>
@@ -157,15 +160,15 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo " " . $reserva['direccion'] . ", " . $reserva['comuna'] . "<!-- <a href='#' class='mapa' id='" . $reserva['lat'] . "_" . $reserva['lng'] . "'>(Ver mapa)</a>-->.<br>" . image_tag('img_pedidos/Telefono.png', 'class=telefono') . " +56 " . $reserva['telefono'];
                 echo "</div>";
                 echo "<div class='extender'>";
-                echo "<div class='der'><div class='cargando'>" . image_tag('../images/ajax-loader.gif') . "</div>";
-                echo "<div class='img'>" . image_tag('img_pedidos/IconoAutoAprobado.png') . "</div>";
-                echo "<span class='textoColor'>¡APROBADO!</span>";
+                echo "  <div class='der'><div class='cargando'>" . image_tag('../images/ajax-loader.gif') . "</div>";
+                echo "  <div class='img'>" . image_tag('img_pedidos/IconoAutoAprobado.png') . "</div>";
+                echo "  <span class='textoColor'>¡APROBADO!</span>";
                 echo "</div>";
                 echo "<a href='#' id='contrato_" . $reserva['idReserve'] . "_" . $reserva['carId'] . "_" . $reserva['token'] . "' class='descargarContrato'>Descargar Contratos</a>";
                 echo "</div>";
                 echo "<div class='pago'>";
-                echo "<a href='#' id='extender_" . $reserva['idReserve'] . "' class='boton_extender " . $reserva['fechaInicio'] . "_" . $reserva['horaInicio'] . "_" . $reserva['fechaTermino'] . "_" . $reserva['horaTermino'] . "'>" . image_tag('img_pedidos/BotonExtender2.png', array("style" => "margin-top: 12px")) . "</a>";
-                echo "<div style='text-align: center; margin-top: 3px;'><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' style='margin: auto' >Contactar</a></div>";
+                echo "  <a href='#' id='extender_" . $reserva['idReserve'] . "' class='boton_extender " . $reserva['fechaInicio'] . "_" . $reserva['horaInicio'] . "_" . $reserva['fechaTermino'] . "_" . $reserva['horaTermino'] . "'>" . image_tag('img_pedidos/BotonExtender2.png', array("style" => "margin-top: 12px")) . "</a>";
+                echo "  <div style='text-align: center; margin-top: 3px;'><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' style='margin: auto' >Contactar</a></div>";
                 echo "</div>";
                 echo "</div>";
             }
@@ -593,7 +596,8 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo "<a href='#' id='contrato_" . $reserva['idReserve'] . "_" . $reserva['carId'] . "_" . $reserva['token'] . "' class='descargarContrato'>Descargar Contratos</a>";
                 echo "</div>";
                 echo "<div class='precioPagados'>";
-                echo "<span class='textoGrande2'>$" . $reserva['valor'] . "</span> CLP<br>(" . $reserva['tiempoArriendo'] . " - asegurado)";
+                echo "  <a href='#' id='extender_" . $reserva['idReserve'] . "' class='boton_extender " . $reserva['fechaInicio'] . "_" . $reserva['horaInicio'] . "_" . $reserva['fechaTermino'] . "_" . $reserva['horaTermino'] . "'>" . image_tag('img_pedidos/BotonExtender2.png', array()) . "</a>";
+                echo "  <div style='text-align: center; margin-top: 3px;'><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' style='margin: auto' >Contactar</a></div>";
                 echo "</div>";
                 echo "</div>";
             }

@@ -20,6 +20,7 @@
  * @property string $telephone
  * @property string $identification
  * @property string $birthdate
+ * @property boolean $menor
  * @property string $country
  * @property string $city
  * @property string $hash
@@ -30,6 +31,10 @@
  * @property boolean $deleted
  * @property boolean $blocked
  * @property boolean $moroso
+ * @property boolean $extranjero
+ * @property boolean $licencia_falsa
+ * @property boolean $chequeo_licencia
+ * @property boolean $chequeo_judicial
  * @property boolean $confirmed_fb
  * @property boolean $confirmed_sms
  * @property boolean $friend_invite
@@ -58,6 +63,7 @@
  * @method string              getTelephone()             Returns the current record's "telephone" value
  * @method string              getIdentification()        Returns the current record's "identification" value
  * @method string              getBirthdate()             Returns the current record's "birthdate" value
+ * @method boolean              getMenor()             Returns the current record's "menor" value
  * @method string              getAddress()               Returns the current record's "address" value
  * @method string              getCountry()               Returns the current record's "country" value
  * @method string              getCity()                  Returns the current record's "city" value
@@ -72,6 +78,10 @@
  * @method boolean             getConfirmedFb()           Returns the current record's "confirmed_fb" value
  * @method boolean             getConfirmedSms()          Returns the current record's "confirmed_sms" value
  * @method boolean             getFriendInvite()          Returns the current record's "friend_invite" value
+ * @method boolean             getExtranjero()            Returns the current record's "extranjero" value
+ * @method boolean             getLicenciaFalsa()         Returns the current record's "licencia_falsa" value
+ * @method boolean             getChequeoLicencia()       Returns the current record's "chequeo_licencia" value
+ * @method boolean             getChequeoJudicial()       Returns the current record's "chequeo_judicial" value
  * @method Doctrine_Collection getCars()                  Returns the current record's "Cars" collection
  * @method Doctrine_Collection getConversation()          Returns the current record's "Conversation" collection
  * @method Doctrine_Collection getMessage()               Returns the current record's "Message" collection
@@ -94,6 +104,7 @@
  * @method User                setTelephone()             Sets the current record's "telephone" value
  * @method User                setIdentification()        Sets the current record's "identification" value
  * @method User                setBirthdate()             Sets the current record's "birthdate" value
+ * @method User                setMenor()             Sets the current record's "menor" value
  * @method User                setAddress()               Sets the current record's "address" value
  * @method User                setCountry()               Sets the current record's "country" value
  * @method User                setCity()                  Sets the current record's "city" value
@@ -104,10 +115,14 @@
  * @method User                setAutoconfirm()           Sets the current record's "autoconfirm" value
  * @method User                setDeleted()               Sets the current record's "deleted" value
  * @method User                setBlocked()               Sets the current record's "blocked" value
- * @method User                setMoroso()               Sets the current record's "moroso" value
+ * @method User                setMoroso()                Sets the current record's "moroso" value
  * @method User                setConfirmedFb()           Sets the current record's "confirmed_fb" value
  * @method User                setConfirmedSms()          Sets the current record's "confirmed_sms" value
  * @method User                setFriendInvite()          Sets the current record's "friend_invite" value
+ * @method User                setExtranjero()            Sets the current record's "extranjero" value
+ * @method User                setLicenciaFalsa()         Sets the current record's "licencia_falsa" value
+ * @method User                setChequeoLicencia()       Sets the current record's "chequeo_licencia" value
+ * @method User                setChequeoJudicial()       Sets the current record's "chequeo_judicial" value
  * @method User                setCars()                  Sets the current record's "Cars" collection
  * @method User                setConversation()          Sets the current record's "Conversation" collection
  * @method User                setMessage()               Sets the current record's "Message" collection
@@ -201,6 +216,11 @@ abstract class BaseUser extends sfDoctrineRecord {
             'type' => 'string',
             'length' => 45,
         ));
+        $this->hasColumn('menor', 'boolean', null, array(
+            'type' => 'boolean',
+            'notnull' => true,
+            'default' => false,
+        ));
         $this->hasColumn('country', 'string', 45, array(
             'type' => 'string',
             'length' => 45,
@@ -257,6 +277,26 @@ abstract class BaseUser extends sfDoctrineRecord {
             'default' => false,
         ));
         $this->hasColumn('friend_invite', 'boolean', null, array(
+            'type' => 'boolean',
+            'notnull' => true,
+            'default' => false,
+        ));
+        $this->hasColumn('extranjero', 'boolean', null, array(
+            'type' => 'boolean',
+            'notnull' => true,
+            'default' => false,
+        ));
+        $this->hasColumn('licencia_falsa', 'boolean', null, array(
+            'type' => 'boolean',
+            'notnull' => true,
+            'default' => false,
+        ));
+        $this->hasColumn('chequeo_licencia', 'boolean', null, array(
+            'type' => 'boolean',
+            'notnull' => true,
+            'default' => false,
+        ));
+        $this->hasColumn('chequeo_judicial', 'boolean', null, array(
             'type' => 'boolean',
             'notnull' => true,
             'default' => false,

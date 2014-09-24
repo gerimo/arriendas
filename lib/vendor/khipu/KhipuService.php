@@ -29,8 +29,9 @@ class KhipuService {
         $concatenated .= "&subject=" . $data["subject"];
         $concatenated .= "&body=" . $data["body"];
         $concatenated .= "&amount=" . $data["amount"];
-        $concatenated .= "&payer_email=" . $data["payer_email"];
-        $concatenated .= "&bank_id=" . $data["bank_id"];
+        $concatenated .= "&payer_email=";
+        $concatenated .= "&bank_id=";
+        $concatenated .= "&expires_date=";
         $concatenated .= "&transaction_id=" . $data["transaction_id"];
         $concatenated .= "&custom=" . $data["custom"];
         $concatenated .= "&notify_url=" . $data["notify_url"];
@@ -53,14 +54,16 @@ class KhipuService {
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         $output = curl_exec($ch);
         if ((curl_errno($ch) == 60 || curl_errno($ch) == 77)) {
-        		//curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		 	curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__) . '/cacert.pem');
-		 	$output = curl_exec($ch);
-	}
-        
-	if (curl_errno($ch) > 0) {
+            //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__) . '/cacert.pem');
+            $output = curl_exec($ch);
+        }
+
+        if (curl_errno($ch) > 0) {
             $info = curl_getinfo($ch);
-            throw new Exception("khipu connection error:" .curl_error($ch)." ". curl_errno($ch) . " info:" . var_dump($info));
+            $msg = "khipu connection error:" . curl_error($ch) . " " . curl_errno($ch) . " info:" . var_dump($info);
+            $this->_log("createPaymentURL", "error", $msg);
+            throw new Exception($msg);
         }
         curl_close($ch);
 
@@ -122,6 +125,12 @@ class KhipuService {
         curl_close($ch);
         $response = json_decode($output);
         return $response;
+    }
+
+    protected function _log($step, $status, $msg) {
+        $logPath = sfConfig::get('sf_log_dir') . '/khipu.log';
+        $custom_logger = new sfFileLogger(new sfEventDispatcher(), array('file' => $logPath));
+        $custom_logger->info($step . " - " . $status . ". " . $msg);
     }
 
 }

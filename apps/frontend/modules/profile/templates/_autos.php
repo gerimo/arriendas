@@ -11,7 +11,13 @@ if(count($cars)>0){
 	foreach ($cars as $c){
 		echo "<div class=marcoFoto >";
 		echo "<a href='".url_for('cars/car?id='.$c->getId())."' title='Ver ficha de auto'>";
-		echo "<img style='-webkit-box-shadow: 0px 0px 13px 4px rgba(0,0,0,0.13);-moz-box-shadow: 0px 0px 13px 4px rgba(0,0,0,0.13);box-shadow: 0px 0px 13px 4px rgba(0,0,0,0.13);' class='foto' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_140,h_140,c_fill,g_center,bo_5px_solid_white/http://arriendas.cl/uploads/cars/".$c->getFoto()."'/>";
+                $style = "-webkit-box-shadow: 0px 0px 13px 4px rgba(0,0,0,0.13);-moz-box-shadow: 0px 0px 13px 4px rgba(0,0,0,0.13);box-shadow: 0px 0px 13px 4px rgba(0,0,0,0.13);";
+                if($c->getPhotoS3() == 1){
+                    echo image_tag($c->getFoto(),array("width"=>"140px","height"=>"140px","class"=>"foto", "style"=>$style));
+                }else{
+                    $base_url = $sf_request->getUriPrefix().$sf_request->getRelativeUrlRoot();
+                    echo "<img style=".$style." class='foto' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_140,h_140,c_fill,g_center/".$base_url."/uploads/cars/".$c->getFoto()."'/>";
+		}
 		echo "</a></div>";
 	}
 ?>
@@ -32,7 +38,12 @@ if(count($cars)>0){
 		foreach ($carsPublicProfile as $c){
 			echo "<div class=marcoFoto>";
 			echo "<a href='".url_for('cars/car?id='.$c->getId())."' title='Ver ficha de auto'>";
-			echo image_tag($c->getFoto(),array("width"=>"140px","height"=>"140px","class"=>"foto"));
+                        if($c->getPhotoS3() == 1){
+                            echo image_tag($c->getFoto(),array("width"=>"140px","height"=>"140px","class"=>"foto"));
+			}else{
+                            $base_url = $sf_request->getUriPrefix().$sf_request->getRelativeUrlRoot();
+                            echo "<img class='foto' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_140,h_140,c_fill,g_center/".$base_url."/uploads/cars/".$c->getFoto()."'/>";
+			}
 			echo "</a></div>";
 		}
 	?>

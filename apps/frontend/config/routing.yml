@@ -38,6 +38,14 @@ khipuReturn:
 khipuCancel:
     url:  /khipu/processPaymentCanceled
     param:  { module: khipu, action: processPaymentCanceled }
+    
+pedidos:
+    url: /profile/pedidos
+    param:  { module: profile, action: pedidos }
+
+facebook_login:
+    url: /main/loginFacebook 
+    param:  { module: main, action: loginFacebook }
  
 # default rules
 homepage:
