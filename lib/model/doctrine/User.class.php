@@ -1595,5 +1595,17 @@ class User extends BaseUser {
         $message->setBody($messageBody, "text/html");
         $mailer->send($message);
     }
+    
+    /**
+     * 
+     */
+    public function checkMoroso(){
+        $countExtendedNotPayed = Doctrine_Core::getTable('reserve')->countExtendedNotPayed($this->getId());
+        if($countExtendedNotPayed > 0){
+            $this->setMoroso(TRUE);
+            $this->save();
+        }
+    }
+    
 
 }

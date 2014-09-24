@@ -3,6 +3,16 @@
 <?php use_stylesheet('registro.css?v=25022014') ?>
 <?php use_stylesheet('comparaprecios.css?v=25022014') ?>
 
+<?php use_stylesheet('demo_page.css') ?>
+<?php use_stylesheet('demo_table.css') ?>
+
+<?php use_javascript('jquery.dataTables.js') ?>
+
+<?php use_stylesheet('jquery.lightbox-0.5.css') ?>
+<?php use_javascript('jquery.lightbox-0.5.js') ?>
+<?php use_javascript('jquery.lightbox-0.5.min.js') ?>
+<?php use_javascript('jquery.lightbox-0.5.pack.js') ?>
+
 <?php
 $useragent = $_SERVER['HTTP_USER_AGENT'];
 if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i', $useragent) || preg_match('/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i', substr($useragent, 0, 4))) {
@@ -45,8 +55,18 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
 
     .ui-widget { font-family: Lucida Grande, Lucida Sans, Arial, sans-serif; font-size: 0.8em; }
 
-
-
+    .btn-busqueda{
+        background-color: #ACABAB;
+        border: none;
+        width: 100px;
+        color: white;
+        height: 22px;
+        cursor: pointer;
+        font-size: 11px;
+    }
+    .btn-busqueda.active{
+        background-color: #333333;
+    }
 
     .time-picker { width:121px;}
 
@@ -61,6 +81,58 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
 
     .img_instrucciones_2{
         cursor: pointer;
+    }
+
+    /* jQuery lightBox plugin - Gallery style */
+
+    .gallery ul{ list-style: none; }
+    .gallery ul li{ display: inline; }
+    .gallery ul img{
+        border: 4px solid #D1D2CA; /*A4A4A4*/
+        border-width: 4px 4px 4px;
+    }
+    .gallery ul a:hover img{
+        border: 4px solid #EC008C;
+        border-width: 4px 4px 4px;
+        color: #fff;
+    }
+    .gallery ul a:hover{ color: #fff; }
+    a{text-decoration:none;}
+    .posicionamiento1,.posicionamiento2,.posicionamiento3,.posicionamiento4,.posicionamiento5,.posicionamiento6{
+        float: left;
+    }
+    .posicionamiento1{
+        margin-left: 20px;
+        padding-bottom: 16px;    
+    }
+    .posicionamiento2{
+        margin-left: 36px;
+        padding-top: 12px;    
+    }
+    .posicionamiento3{
+        margin-left: 40px;
+        padding-bottom: 26px;
+    }
+    .posicionamiento4{
+        margin-left: 10px;
+        padding-bottom: 26px;
+    }
+    .posicionamiento5{
+        margin-left: 30px;
+        padding-bottom: 8px;
+    }
+    .posicionamiento6{
+        margin-left: 32px;
+        padding-bottom: 23px;
+    }
+    #tab-lista-data-spinner{
+        display: none;
+        text-align: center;
+        height: 500px;
+    }
+    #tab-lista-data-spinner img{
+        margin-top: 5%;
+        width: 33px;
     }
 
 </style>
@@ -91,6 +163,7 @@ if (sfContext::getInstance()->getUser()->getAttribute("logged")) {
     var _data;
     var strictBounds = null;
     var lastValidCenter;
+    var oTable;
 
     function localizame() {
         if (navigator.geolocation) { /* Si el navegador tiene geolocalizacion */
@@ -99,6 +172,7 @@ if (sfContext::getInstance()->getUser()->getAttribute("logged")) {
             alert('Oops! Tu navegador no soporta geolocalización. Bájate Chrome, que es gratis!');
         }
     }
+
 
     function crearMarca(position) {
 
@@ -141,10 +215,6 @@ if (sfContext::getInstance()->getUser()->getAttribute("logged")) {
 
     function initialize() {
 
-        console.log('initialize gmaps')
-
-
-//	alert('stop');
         initialize2();
 
 <?php
@@ -194,7 +264,7 @@ else
                 draggable: true,
             });
         }
-        
+
         lastValidCenter = center;
 
         google.maps.event.addListener(map, 'idle', function() {
@@ -205,78 +275,76 @@ else
         google.maps.event.addListener(map, 'dragend', function() {
             if (strictBounds === null || strictBounds.contains(map.getCenter())) {
                 lastValidCenter = map.getCenter();
-            }else{
+            } else {
                 map.panTo(lastValidCenter);
             }
-            $("#chooseRegion").val("");
-            $("#chooseComuna").val("");
             searchMarkers();
 
         });
         google.maps.event.addListener(map, 'zoom_changed', function() {
             if (strictBounds === null || strictBounds.contains(map.getCenter())) {
                 lastValidCenter = map.getCenter();
-            }else{
+            } else {
                 map.panTo(lastValidCenter);
             }
             searchMarkers();
         });
 
         //Autocomplete
-//        var input = document.getElementById('searchTextField');
-//        var autocomplete = new google.maps.places.Autocomplete(input);
-//
-//        autocomplete.bindTo('bounds', map);
-//
-//        var infowindow = new google.maps.InfoWindow();
-//        var marker = new google.maps.Marker({
-//            map: map
-//        });
-//
-//        google.maps.event.addListener(autocomplete, 'place_changed', function() {
-//            infowindow.close();
-//            marker.setVisible(false);
-//            input.className = '';
-//            var place = autocomplete.getPlace();
-//            if (!place.geometry) {
-//                // Inform the user that the place was not found and return.
-//                input.className = 'notfound';
-//                return;
-//            }
-//
-//            // If the place has a geometry, then present it on a map.
-//            if (place.geometry.viewport) {
-//                map.fitBounds(place.geometry.viewport);
-//            } else {
-//                map.setCenter(place.geometry.location);
-//                map.setZoom(17);  // Why 17? Because it looks good.
-//            }
-//            var image = new google.maps.MarkerImage(
-//                    place.icon,
-//                    new google.maps.Size(71, 71),
-//                    new google.maps.Point(0, 0),
-//                    new google.maps.Point(17, 34),
-//                    new google.maps.Size(35, 35));
-//            marker.setIcon(image);
-//            marker.setPosition(place.geometry.location);
-//
-//            var address = '';
-//            if (place.address_components) {
-//                address = [
-//                    (place.address_components[0] && place.address_components[0].short_name || ''),
-//                    (place.address_components[1] && place.address_components[1].short_name || ''),
-//                    (place.address_components[2] && place.address_components[2].short_name || '')
-//                ].join(' ');
-//            }
-//
-//            infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
-//            infowindow.open(map, marker);
-//
-//            searchMarkers();
-////		              doSearch();
-//
-//
-//        });
+        var input = document.getElementById('searchTextField');
+        var autocomplete = new google.maps.places.Autocomplete(input);
+
+        autocomplete.bindTo('bounds', map);
+
+        var infowindow = new google.maps.InfoWindow();
+        var marker = new google.maps.Marker({
+            map: map
+        });
+
+        google.maps.event.addListener(autocomplete, 'place_changed', function() {
+            infowindow.close();
+            marker.setVisible(false);
+            input.className = '';
+            var place = autocomplete.getPlace();
+            if (!place.geometry) {
+                // Inform the user that the place was not found and return.
+                input.className = 'notfound';
+                return;
+            }
+
+            // If the place has a geometry, then present it on a map.
+            if (place.geometry.viewport) {
+                map.fitBounds(place.geometry.viewport);
+            } else {
+                map.setCenter(place.geometry.location);
+                map.setZoom(17);  // Why 17? Because it looks good.
+            }
+            var image = new google.maps.MarkerImage(
+                    place.icon,
+                    new google.maps.Size(71, 71),
+                    new google.maps.Point(0, 0),
+                    new google.maps.Point(17, 34),
+                    new google.maps.Size(35, 35));
+            marker.setIcon(image);
+            marker.setPosition(place.geometry.location);
+
+            var address = '';
+            if (place.address_components) {
+                address = [
+                    (place.address_components[0] && place.address_components[0].short_name || ''),
+                    (place.address_components[1] && place.address_components[1].short_name || ''),
+                    (place.address_components[2] && place.address_components[2].short_name || '')
+                ].join(' ');
+            }
+
+            infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+            infowindow.open(map, marker);
+
+            searchMarkers();
+//		              doSearch();
+
+
+        });
 
         //Fin Autocomplete
     }
@@ -315,14 +383,10 @@ else
     }
     ;
 
-    function doSearch()
-    {
-        //console.log('doSearch')
+    function doSearch() {
 
         $('.search_arecomend_window').fadeOut('fast');
         $("#loader").fadeIn("fast");
-
-        //console.log(        $('input[name=transmision]:checked').map(function(){return $(this).val() }).get().join()           );
 
         document.getElementById("hour_from_hidden").value = document.getElementById("hour_from").value;
         document.getElementById("hour_to_hidden").value = document.getElementById("hour_to").value;
@@ -333,9 +397,7 @@ else
         document.getElementById("tipo_hidden").value = $('input[name=tipo]:checked').map(function() {
             return $(this).val()
         }).get().join();
-//        document.getElementById("model_hidden").value = document.getElementById("model").value;
         document.getElementById("location_hidden").value = ""; //document.getElementById("location").value;
-//        document.getElementById("brand_hidden").value = document.getElementById("brand").value;
         document.getElementById("day_from_hidden").value = document.getElementById("day_from").value;
         document.getElementById("day_to_hidden").value = document.getElementById("day_to").value;
 
@@ -345,7 +407,6 @@ else
 
             if ($('#day_from').val() == '<?php echo date('d-m-Y') ?>' && isValidTime($('#hour_from').val())) {
 
-//				var dif = restarHoras(current.getHours() + ':' + current.getMinutes() + ':' + current.getSeconds(), $('#hour_from').val())
                 var dif = restarHoras(current.getHours() + ':' + current.getMinutes(), $('#hour_from').val())
                 if (dif < 0) {
                     alert('La hora no puede ser menor a la actual');
@@ -358,7 +419,6 @@ else
 
             if ($('#day_to').val() == '<?php echo date('d-m-Y') ?>' && isValidTime($('#hour_to').val())) {
 
-//				var dif = restarHoras(current.getHours() + ':' + current.getMinutes() + ':' + current.getSeconds(), $('#hour_to').val())
                 var dif = restarHoras(current.getHours() + ':' + current.getMinutes(), $('#hour_to').val())
                 if (dif < 0) {
                     alert('La hora no puede ser menor a la actual');
@@ -366,6 +426,7 @@ else
                 }
             }
         }
+        
 
         //valido que reserva sea de mínimo 1 hora
         if (isValidDate($('#day_from').val()) && isValidDate($('#day_to').val()) && isValidTime($('#hour_from').val()) && isValidTime($('#hour_to').val())) {
@@ -381,12 +442,7 @@ else
             }
         }
 
-
-
         searchMarkers();
-
-        //createClickToMarker();
-
 
     }
 
@@ -434,11 +490,6 @@ else
             $("#loader").fadeIn("fast");
         });
 
-        //console.log('load markers');
-        //$('.search_arecomend_window').css("visibility", "hidden");
-        //$("#loader").fadeIn("slow");
-
-
         // First, determine the map bounds
         var bounds = map.getBounds();
 
@@ -447,7 +498,6 @@ else
         var nePoint = bounds.getNorthEast();
 
         // Now, each individual coordinate
-
         swLat = swPoint.lat();
         swLng = swPoint.lng();
         neLat = nePoint.lat();
@@ -463,8 +513,6 @@ else
         var model_hidden = encodeURIComponent(document.getElementById("model_hidden").value);
         var day_from_hidden = encodeURIComponent(document.getElementById("day_from_hidden").value);
         var day_to_hidden = encodeURIComponent(document.getElementById("day_to_hidden").value);
-        var region = $("#chooseRegion").val();
-        var comuna = $("#chooseComuna").val();
 
         if (price_hidden != '-') {
             precio = "&price=" + price_hidden;
@@ -476,10 +524,11 @@ else
             precio = "&clat=" + lat + "&clng=" + lon + "&price=" + start_price;
         }
 
-            var center = map.getCenter();
-            var map_lat = center.lat();
-            var map_lng = center.lng();
-
+        var center = map.getCenter();
+        var map_lat = center.lat();
+        var map_lng = center.lng();
+        var region = "";
+        var comuna = "";
 
         var url = "<?php echo url_for('main/map') ?>?day_from=" + day_from_hidden + "&day_to=" + day_to_hidden + "&model=" + model_hidden + "&hour_from=" + hour_from + "&hour_to=" + hour_to + "&brand=" + brand_hidden + "&transmission=" + transmision_hidden + "&type=" + tipo_hidden + "&location=" + location_hidden + precio + "&swLat=" + swLat + "&swLng=" + swLng + "&neLat=" + neLat + "&neLng=" + neLng + "&map_clat=" + map_lat + "&map_clng=" + map_lng + "";
         if (region && region.length > 0 && region != 0) {
@@ -858,7 +907,8 @@ else
         $('#video').html('	<iframe src="http://player.vimeo.com/video/45668172?title=0&byline=0&portrait=0ll" width="940" height="500" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>')
 
         //timerSet("#hour_from", "#hour_to");
-        $("#hour_from , #hour_to").timePicker({show24Hours: false});
+        $("#hour_from, #hour_to").timePicker({show24Hours: false});
+        $("#hour_from_lista, #hour_to_lista").timePicker({show24Hours: false});
 
         getModel($("#brand"), false);
 
@@ -868,6 +918,9 @@ else
 
         $('#model').change(function() {
             //doSearch();
+        });
+        $(".trigger_lista").change(function() {
+            updateLista();
         });
 
         $('#day_from').change(function() {
@@ -954,7 +1007,7 @@ else
 
 
 
-        $("#day_from").datepicker({
+        $("#day_from, #day_from_lista").datepicker({
             dateFormat: 'dd-mm-yy',
             buttonImageOnly: true,
             minDate: '-0d',
@@ -967,7 +1020,7 @@ else
 
 
 
-        $("#day_to").datepicker({
+        $("#day_to, #day_to_lista").datepicker({
             dateFormat: 'dd-mm-yy',
             buttonImageOnly: true,
             minDate: '-0d',
@@ -987,59 +1040,13 @@ else
                 }
                 $("#chooseComuna").html(options);
             });
-            strictBounds = null;
-            var service = new google.maps.places.AutocompleteService();
-            var inputStr = $("#chooseRegion option:selected").text();
-            var request = {
-                bounds: map.getBounds(),
-                input: inputStr,
-                componentRestrictions: {country: 'cl'}
-            };
-            service.getPlacePredictions(request, function(predictions, status) {
-                if (status != google.maps.places.PlacesServiceStatus.OK) {
-                    return;
-                }
-                var prediction = predictions[0];
-                var placeSrv = new google.maps.places.PlacesService(map);
-                placeSrv.getDetails({reference: prediction.reference}, function(place, status){
-                    if (place.geometry.viewport) {
-                        map.fitBounds(place.geometry.viewport);
-                        map.setZoom(9);
-                        strictBounds = place.geometry.viewport;
-                    } else {
-                        map.setCenter(place.geometry.location);
-                        map.setZoom(9);
-                    }
-                });
-            });
-            
+            updateLista();
         });
 
         $("#chooseComuna").change(function() {
-            var service = new google.maps.places.AutocompleteService();
-            var inputStr = $("#chooseRegion option:selected").text() + " " + $("#chooseComuna option:selected").text();
-            var request = {
-                bounds: map.getBounds(),
-                input: inputStr,
-                componentRestrictions: {country: 'cl'}
-            };
-            service.getPlacePredictions(request, function(predictions, status) {
-                if (status != google.maps.places.PlacesServiceStatus.OK) {
-                    return;
-                }
-                var prediction = predictions[0];
-                var placeSrv = new google.maps.places.PlacesService(map);
-                placeSrv.getDetails({reference: prediction.reference}, function(place, status){
-                    if (place.geometry.viewport) {
-                        map.fitBounds(place.geometry.viewport);
-                    } else {
-                        map.setCenter(place.geometry.location);
-                        map.setZoom(17);
-                    }
-                });
-            });
+            updateLista();
         });
-
+        
         $('a.mapcar_btn_detalle').live('click', function(event) {
 
             event.preventDefault();
@@ -1084,10 +1091,8 @@ else
 
             url2 = url2.join('/');
             $(".img_instrucciones_2").attr('src', url2);
-            //$('#sliderComoUsarImg').attr('src','Bimagenes1/slider2.png');
 
         });
-
         /*fin código germán*/
 
         /*Código Miguel*/
@@ -1132,7 +1137,14 @@ else
 
 
         });
-
+        
+//        $('.gallery a').lightBox({
+//            imageLoading:			'images/img_gallery/lightbox-ico-loading.gif',		
+//            imageBtnPrev:			'images/img_gallery/lightbox-btn-prev.gif',			
+//            imageBtnNext:			'images/img_gallery/lightbox-btn-next.gif',			
+//            imageBtnClose:			'images/img_gallery/lightbox-btn-close.gif',		
+//            imageBlank:				'images/img_gallery/lightbox-blank.gif'	
+//        });
 
         /*Fin Código Miguel */
 
@@ -1160,13 +1172,78 @@ else
                     tabPosition: "Right"
                 });
             }
-        })
-
+        });
+//        $("#chooseRegion").val("13");
+//        updateLista();
+        $('#chooseRegion option[value=13]').prop('selected', 'selected').change();
 
     }
     ;
 
+    function updateLista() {
+        if (isValidDate($('#day_from_lista').val())) {
 
+            if ($('#day_from_lista').val() == '<?php echo date('d-m-Y') ?>' && isValidTime($('#hour_from_lista').val())) {
+
+                var dif = restarHoras(current.getHours() + ':' + current.getMinutes(), $('#hour_from_lista').val())
+                if (dif < 0) {
+                    alert('La hora no puede ser menor a la actual');
+                    $('#hour_from_lista').val('Hora de inicio');
+                }
+            }
+        }
+
+        if (isValidDate($('#day_to_lista').val())) {
+
+            if ($('#day_to_lista').val() == '<?php echo date('d-m-Y') ?>' && isValidTime($('#hour_to_lista').val())) {
+
+                var dif = restarHoras(current.getHours() + ':' + current.getMinutes(), $('#hour_to_lista').val())
+                if (dif < 0) {
+                    alert('La hora no puede ser menor a la actual');
+                    $('#hour_to_lista').val('Hora');
+                }
+            }
+        }
+        var url = "<?php echo url_for('main/listaAjax') ?>";
+        $("#tab-lista-data").hide();
+        $("#tab-lista-data-spinner").show();
+        var dataObj = {
+            "region": $("#chooseRegion").val(), 
+            "comuna": $("#chooseComuna").val(),
+            "date_from": $("#date_from_lista").val(),
+            "hour_from": $("#hour_from_lista").val(),
+            "date_to": $("#date_to_lista").val(),
+            "hour_to": $("#hour_to_lista").val(),
+            "transmission": $('input[name=transmision_lista]:checked').map(function() {return $(this).val()}).get().join(),
+            "price": $("input[name=precio_lista]:checked").val(),
+            "type": $('input[name=tipo_lista]:checked').map(function() {return $(this).val()}).get().join(),
+        }
+        $.ajax({
+            "url": url,
+            "data": dataObj,
+            "success": function(data) {
+                $("#tab-lista-data").html(data);
+                $("#tab-lista-data").show();
+                $('.gallery a').lightBox({
+                    imageLoading:			'images/img_gallery/lightbox-ico-loading.gif',		
+                    imageBtnPrev:			'images/img_gallery/lightbox-btn-prev.gif',			
+                    imageBtnNext:			'images/img_gallery/lightbox-btn-next.gif',			
+                    imageBtnClose:			'images/img_gallery/lightbox-btn-close.gif',		
+                    imageBlank:				'images/img_gallery/lightbox-blank.gif'	
+                });
+                oTable = $('#example').dataTable({
+                    "aaSorting": [],
+                    "bDeferRender": true,
+                    "bScrollInfinite": true,
+                    "bScrollCollapse": true,
+                    "sScrollY": "400px"
+                });
+            },
+            "complete": function() {
+                $("#tab-lista-data-spinner").hide();
+            }
+        });
+    }
 
 
     function getModel(currentElement, reloadCars) {
@@ -1310,9 +1387,31 @@ if ($day_to) {
 
     var openFilters = false;
     $(document).ready(function() {
+        
+        $("#footer_search_box_2").click(function(){
+            $("#btn-lista").click();
+        });
+        
+        
+
+        $(".btn-busqueda").click(function() {
+            var tabId = $(this).attr("data-tab");
+            $(".btn-busqueda").removeClass("active");
+            $(".tab-data").hide();
+            $(".tab-" + tabId).show();
+            if(tabId == "lista"){
+                oTable.fnAdjustColumnSizing();
+            }
+            $(this).addClass("active");
+        });
+
         $(".btn_filtro").click(function() {
             $('#opc_filtro').toggle("slow");
         });
+        $(".btn_filtro_lista, .btn_buscar_lista").click(function() {
+            $('.opc_filtro_lista').toggle("slow");
+        });
+        
         $("#btn_buscar").click(function() {
             if (openFilters) {
                 $("#btn_filtro2").click();
@@ -1428,37 +1527,75 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
             <div class="search_sector1">      
                 <!--  busqueda avanzada -->
                 <div class="search_box_1_titleNew">
-                    <button id="btn_busqueda"><img class="img_btn_busqueda" src="<?php echo image_path('img_search/IcoLupa.png'); ?>"/><p class="txt_btn_busqueda">Búsqueda</p></button>
+                    <button class="btn-busqueda active" data-tab="mapa" >Mapa</button>
+                    <button class="btn-busqueda" id="btn-lista" style="margin-left: -3px;" data-tab="lista" >Lista</button>
                 </div>
                 <div class="search_box_1_PrincipalNew">
-                    <div class="search_box_1_header">    
+                    <div class="search_box_1_header tab-data tab-mapa">
+                        <div class="search_box1_form" style="">
+                            <span style="width: 360px;" class="group_desde"><span class="numberBlue">1</span>Direcci&oacute;n |</span><span style="width: 222px;" class="group_desde"><span class="numberBlue">2</span>Desde |</span><span style="width: 227px;" class="group_hasta"><span class="numberBlue">3</span>Hasta |</span><span style="width: 51px;" class="group_hasta"><span class="numberBlue">4</span>Filtros |</span></span>
+                            <input class="input_f0" id="searchTextField" style="margin-right: 5px;margin-left: 10px;width: 355px;" type="text" size="50" placeholder="Ingrese Ciudad" autocomplete="off"/>
+                            <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_from" value="<?php
+                            if ($day_from && $day_from != '12-11-2013') {
+                                echo $day_from;
+                            } else {
+                                echo "Fecha desde";
+                            }
+                            ?>"/>
+                            <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="hour_from" value="<?php
+                            if ($hour_from && $hour_from != '01:00') {
+                                echo $hour_from;
+                            } else {
+                                echo "Hora";
+                            }
+                            ?>"/>
+                            <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_to" value="<?php
+                            if ($day_to) {
+                                echo $day_to;
+                            } else {
+                                echo "Fecha hasta";
+                            }
+                            ?>"/>
+                            <input class="input_f1b" style="width: 95px;" readonly="readonly" type="text" id="hour_to" value="<?php
+                                   if ($hour_to && $hour_to != '01:00') {
+                                       echo $hour_to;
+                                   } else {
+                                       echo "Hora";
+                                   }
+                            ?>" />
+                            <button id="btn_buscar" title="Buscar autos"></button>
+                        </div>
+
+
+                    </div><!-- search_box_1_header -->     
+                    <div class="search_box_1_header tab-data tab-lista" style="display:none">    
                         <div class="search_box1_form">
                             <div style="width: 175px; display: inline-block" >
                                 <div class="group_desde" style="width: 150px;"><span class="numberBlue">1</span>Región |</span></div>
-                                <select class="input_f0" id="chooseRegion" style="margin-left: 5px;width: 167px;">
+                                <select class="input_f0 trigger_lista" id="chooseRegion" style="margin-left: 5px;width: 167px;">
                                     <option value="">Elegir región</option>
-<?php foreach ($regiones as $region): ?>
+                                        <?php foreach ($regiones as $region): ?>
                                         <option value="<?= $region->getCodigo() ?>"><?= $region->getNombre() ?></option>
-<?php endforeach; ?>
+                                        <?php endforeach; ?>
                                 </select>
                             </div>
                             <div style="width: 180px; display: inline-block">
                                 <div class="group_desde" style="width: 150px;"><span class="numberBlue">2</span>Comuna |</span></div>
-                                <select class="input_f0" id="chooseComuna" style="margin-left: 5px;width: 167px;">
+                                <select class="input_f0 trigger_lista" id="chooseComuna" style="margin-left: 5px;width: 167px;">
                                     <option value="">Elegir comuna</option>
                                 </select>
                             </div>
 
                             <div style="width: 227px; display: inline-block">
                                 <span style="width: 220px;" class="group_desde"><span class="numberBlue">3</span>Desde |</span>
-                                <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_from" value="<?php
+                                <input class="input_f1 trigger_lista" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_from_lista" value="<?php
                                 if ($day_from && $day_from != '12-11-2013') {
                                     echo $day_from;
                                 } else {
                                     echo "Fecha desde";
                                 }
                                 ?>"/>
-                                <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="hour_from" value="<?php
+                                <input class="input_f1 trigger_lista" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="hour_from_lista" value="<?php
                                 if ($hour_from && $hour_from != '01:00') {
                                     echo $hour_from;
                                 } else {
@@ -1468,14 +1605,14 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
                             </div>
                             <div style="width: 227px; display: inline-block">
                                 <span style="width: 220px;" class="group_hasta"><span class="numberBlue">4</span>Hasta |</span>
-                                <input class="input_f1" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_to" value="<?php
+                                <input class="input_f1 trigger_lista" style="width: 95px;margin-right: 5px;" readonly="readonly" type="text" id="day_to_lista" value="<?php
                                 if ($day_to) {
                                     echo $day_to;
                                 } else {
                                     echo "Fecha hasta";
                                 }
                                 ?>"/>
-                                <input class="input_f1b" style="width: 95px;" readonly="readonly" type="text" id="hour_to"  value="<?php
+                                <input class="input_f1b trigger_lista" style="width: 95px;" readonly="readonly" type="text" id="hour_to_lista"  value="<?php
                                 if ($hour_to && $hour_to != '01:00') {
                                     echo $hour_to;
                                 } else {
@@ -1485,41 +1622,17 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
                             </div>
                             <div style="width: 100px; display: inline-block">
                                 <span style="width: 51px;" class="group_desde"><span class="numberBlue">5</span>Filtros |</span>
-                                <button id="btn_buscar" title="Buscar autos"></button>
+                                <button id="btn_buscar" class="btn_buscar_lista" title="Buscar autos"></button>
                             </div>
                         </div>
-
-                        <!-- buscador avanzado -->
-                        <!--
-                        <div class="search_ext_box" style="display:none;">
-                                <span class="group_filtar">Filtrar por</span>
-                            <div class="search_ext_wrapper">
-                                <select name="price" id="price" style="margin-right:20px;" >
-                                    <option value="-" selected="selected">Precio</option>
-                                    <option value="1">Mayor a menor</option>
-                                    <option value="0">Menor a mayor</option>
-                                </select>
-                                <select name="brand" id="brand" style="margin-right:20px;" >
-                                    <option value="" selected="selected">Marca</option>	
-<?php foreach ($brand as $b): ?>	
-                                                <option value="<?= $b['id'] ?>" ><?= $b['name'] ?></option> 		
-<?php endforeach; ?>
-                                </select>
-        
-                                <select name="model" id="model" style="" >
-                                    <option value="" selected="selected">Modelo</option>
-                                </select>
-                            </div>
-                        </div>
-                        -->
                     </div><!-- search_box_1_header -->     
                 </div><!-- search_box_1 -->
+
             </div><!-- search_sector1 -->
-            <!--<p class='comparaPrecio'><a href="<?php echo url_for('main/comparaPrecios') ?>" class='comparaPrecio'>Compara Precios</a></p>-->
         </div>
 
         <div class="main_box_2_anterior" style="margin-top:15px;border-radius: 0px 0x 0px 0px;">
-            <div class="search_sector1">
+            <div class="search_sector1 tab-data tab-mapa" >
 
                 <div class="search_box_1new">
                     <button id="btn_filtro1" class="btn_filtro"></button>
@@ -1555,12 +1668,35 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
 
 
                         </div><!-- search_box_2 -->
-                        <button id="footer_search_box_2"  onclick="window.open('<?= url_for('main/arriendo?autos=santiago'); ?>')" title="Ver todos los autos" >VER TODOS</button>
+                        <button id="footer_search_box_2" title="Ver todos los autos" >VER TODOS</button>
                     </div>
                 </div><!-- search_box_1new -->
 
                 <div class="clear"></div>
 
+            </div>
+
+            <div class="search_sector1 tab-data tab-lista" style="display:none" >
+                <button id="btn_filtro1" class="btn_filtro_lista"></button>
+                    <div id="opc_filtro" class="opc_filtro_lista">
+                        <button id="btn_filtro2" class="btn_filtro_lista"><img class="flechasfiltro2" src="<?php echo image_path('img_search/FlechasFiltro.png'); ?>"/><p class="textofiltro2">ELEGIR FILTROS</p></button>
+                        <div class="title_opc_filtro">Transmisión</div>
+                        <div class="opc_filtro"><input type="checkbox" class="trigger_lista" name="transmision_lista" value="0" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Manual</p></div>
+                        <div class="opc_filtro"><input type="checkbox" class="trigger_lista" name="transmision_lista" value="1" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Automática</p></div>
+                        <div class="title_opc_filtro">Tipo</div>
+                        <div class="opc_filtro"><input type="checkbox" class="trigger_lista" name="tipo_lista" value="1" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Automóvil</p></div>
+                        <div class="opc_filtro"><input type="checkbox" class="trigger_lista" name="tipo_lista" value="39" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">SUV</p></div>
+                        <div class="opc_filtro"><input type="checkbox" class="trigger_lista" name="tipo_lista" value="3" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Wagon Station</p></div>
+                        <div class="opc_filtro"><input type="checkbox" class="trigger_lista"  name="tipo_lista" value="2" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Pick Up</p></div>
+                        <div class="opc_filtro"><input type="checkbox" class="trigger_lista" name="tipo_lista" value="4" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">Furgón</p></div>
+                        <div class="title_opc_filtro">Precio</div>
+                        <div class="opc_filtro"><input type="radio" class="trigger_lista" name="precio_lista"  value="0" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">De -$ a +$</p></div>
+                        <div class="opc_filtro"><input type="radio" class="trigger_lista" name="precio_lista"  value="1" style="margin-right:6px;"><p style="margin-top: -11px;margin-left: 18px;">De +$ a -$</p></div>
+                    </div>
+                <div id="tab-lista-data"></div>
+                <div id="tab-lista-data-spinner">
+<?php echo image_tag("ajax-loader.gif", array()) ?>
+                </div>
             </div>
         </div>
         <div id="centro">
@@ -1642,5 +1778,4 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
 
     </div>
 </div>
-
-</div><!-- search_container -->
+<!--</div> search_container -->

@@ -2742,11 +2742,15 @@ class profileActions extends sfActions {
         if ($reserve->getUser()->getRut() == "") {
             $errorMessage = "error:rutnulo";
         }
+
+        if ($reserve->getUser()->getExtranjero() == 1 && !$reserve->getUser()->getFacebookConfirmado() ) {
+            $errorMessage = "error:extranjero-sin-facebook";
+        }
         if ($reserve->getUser()->getMenor()) {
             $errorMessage = "error:usermenor";
         }
-        if ($reserve->getUser()->getExtranjero() == 1 && !$reserve->getUser()->getFacebookConfirmado() ) {
-            $errorMessage = "error:extranjero-sin-facebook";
+        if (is_null($reserve->getUser()->getBirthdate()) || strlen($reserve->getUser()->getBirthdate()) <= 0) {
+            $errorMessage = "error:nobirthdate";
         }
         echo $errorMessage;
         die();
@@ -2830,6 +2834,13 @@ class profileActions extends sfActions {
     }
 
     public function executeFbDiscount(sfWebRequest $request) {
+        
+        $id_usuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+        $curr_user = Doctrine_Core::getTable('user')->find($id_usuario);
+        if($curr_user->getBlocked()){
+            throw new Exception;
+        }
+        
 
         $this->reserve = '';
         $this->deposito = $request->getParameter('deposito');
@@ -4735,111 +4746,18 @@ class profileActions extends sfActions {
             
             /* validacion rut */
             if($profile->getRut() != $request->getParameter('run') && !$profile->getExtranjero()){
-                $scraperSrv = new ScraperService();
-                $status = $scraperSrv->getLicenceStatus($request->getParameter('run'), $request->getParameter('lastname'));
-                switch ($status) {
-                    case 0:
-                        /* problemas de conexion*/
-                        $profile->setChequeoLicencia(false);
-                        /* notificaciones */
-                        $messageBody = "<p>Usuario: " . $profile->getFirstname() . ":</p>";
-                        $messageBody .= "<p>mail: " . $profile->getEmail() . ":</p>";
-                        $messageBody .= "<p>licencia: " . $request->getParameter('run') . ":</p>";
-                        $messageBody .= "<p>No se pudo chequear la licencia por problemas de conexion con la web.</p>";
-                        $message = $this->getMailer()->compose();
-                        $message->setSubject("No se pudo chequear la licencia");
-                        $message->setFrom('notificaciones@arriendas.cl', 'Notificaciones Arriendas');
-                        $message->setTo('soporte@arriendas.cl');
-                        $message->setBody($messageBody, "text/html");
-                        $this->getMailer()->send($message);
-                        
-                        break;
-                    case 1:
-                        /* se chequeo y no ha sido bloqueada */
-                        $profile->setChequeoLicencia(true);
-                        
-                        break;
-                    case 2:
-                        /* bloqueado */
-                        $profile->setBlocked(true);
-                        $profile->setChequeoLicencia(true);
-                        
-                        /* notificaciones */
-                        $messageBody = "<p>Usuario: " . $profile->getFirstname() . ":</p>";
-                        $messageBody .= "<p>mail: " . $profile->getEmail() . ":</p>";
-                        $messageBody .= "<p>licencia: " . $request->getParameter('run') . ":</p>";
-                        $messageBody .= "<p>Tiene licencia bloqueada y  por eso fue blockeado en el sistema.</p>";
-                        $message = $this->getMailer()->compose();
-                        $message->setSubject("Usuario con licencia bloqueada");
-                        $message->setFrom('notificaciones@arriendas.cl', 'Notificaciones Arriendas');
-                        $message->setTo('soporte@arriendas.cl');
-                        $message->setBody($messageBody, "text/html");
-                        $this->getMailer()->send($message);
-                        break;
-                    case 3:
-                        /* licencia falsa */
-                        $profile->setBlocked(true);
-                        $profile->setLicenciaFalsa(true);
-                        $profile->setChequeoLicencia(true);
-                        
-                        /* notificaciones */
-                        $messageBody = "<p>Usuario: " . $profile->getFirstname() . ":</p>";
-                        $messageBody .= "<p>mail: " . $profile->getEmail() . ":</p>";
-                        $messageBody .= "<p>licencia: " . $request->getParameter('run') . ":</p>";
-                        $messageBody .= "<p>Tiene licencia falsa y  por eso fue blockeado en el sistema.</p>";
-                        $message = $this->getMailer()->compose();
-                        $message->setSubject("Usuario con licencia falsa");
-                        $message->setFrom('notificaciones@arriendas.cl', 'Notificaciones Arriendas');
-                        $message->setTo('soporte@arriendas.cl');
-                        $message->setBody($messageBody, "text/html");
-                        $this->getMailer()->send($message);
-                        break;
-
-                }
+                $basePath = sfConfig::get('sf_root_dir');
+                $run = $request->getParameter('run');
+                $userid = $profile->getId();
+                
+                /* validacion rut */
+//                $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:RutValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
+//                exec($comando);
+                
                 
                 /* validacion judicial */
-                $statusJudicial = $scraperSrv->getCausasJudicialesStatus($request->getParameter('run'));
-                switch ($statusJudicial) {
-                    case 0:
-                        /* problemas de conexion*/
-                        $profile->setChequeoJudicial(false);
-                        /* notificaciones */
-                        $messageBody = "<p>Usuario: " . $profile->getFirstname() . ":</p>";
-                        $messageBody .= "<p>mail: " . $profile->getEmail() . ":</p>";
-                        $messageBody .= "<p>licencia: " . $request->getParameter('run') . ":</p>";
-                        $messageBody .= "<p>No se pudo verificar si contaba con causas judiciales por problemas de conexion con la web.</p>";
-                        $message = $this->getMailer()->compose();
-                        $message->setSubject("No se pudo verificar causas judiciales");
-                        $message->setFrom('notificaciones@arriendas.cl', 'Notificaciones Arriendas');
-                        $message->setTo('soporte@arriendas.cl');
-                        $message->setBody($messageBody, "text/html");
-                        $this->getMailer()->send($message);
-                        
-                        break;
-                    case 1:
-                        /* se chequeo y no ha sido bloqueada */
-                        $profile->setChequeoJudicial(true);
-                        
-                        break;
-                    case 2:
-                        /* bloqueado */
-                        $profile->setBlocked(true);
-                        $profile->setChequeoJudicial(true);
-                        
-                        /* notificaciones */
-                        $messageBody = "<p>Usuario: " . $profile->getFirstname() . ":</p>";
-                        $messageBody .= "<p>mail: " . $profile->getEmail() . ":</p>";
-                        $messageBody .= "<p>licencia: " . $request->getParameter('run') . ":</p>";
-                        $messageBody .= "<p>Tiene causas judiciales y  por eso fue blockeado en el sistema.</p>";
-                        $message = $this->getMailer()->compose();
-                        $message->setSubject("Usuario con causas judiciales");
-                        $message->setFrom('notificaciones@arriendas.cl', 'Notificaciones Arriendas');
-                        $message->setTo('soporte@arriendas.cl');
-                        $message->setBody($messageBody, "text/html");
-                        $this->getMailer()->send($message);
-                        break;
-
-                }
+                $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
+                exec($comando);
                 
             }
             
@@ -5005,6 +4923,7 @@ class profileActions extends sfActions {
         
         $comuna = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
         $stateId = $comuna->getStateId();
+        
 
         if ($disponibilidad == 1) {
             $disponibilidadSemana = 1;
@@ -5087,6 +5006,11 @@ class profileActions extends sfActions {
             $auto->setPricePerMonth($precioMes);
             $auto->setDisponibilidadSemana($disponibilidadSemana);
             $auto->setDisponibilidadFinde($disponibilidadFinde);
+            
+            $auto->setComunaId($comunaId);
+            $auto->setStateId($comuna->getStateId());
+            $auto->setRegion($comuna->getPadre());
+            $auto->setCityId($comuna->getCity());
 
             $auto->setPatente($patente);
             $auto->setColor($color);

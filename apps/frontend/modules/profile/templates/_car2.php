@@ -1,5 +1,7 @@
 
 <script type="text/javascript">
+    var urlCheckPatente = '<?php echo $urlCheckPatente ?>';
+    var urlListadoAutos = '<?php echo $urlListadoAutos ?>';
 function ingresaPrecios(modelo, anio){
 	//alert('hola1');
 	/*

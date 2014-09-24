@@ -261,7 +261,7 @@
                 <p>DETALLES DEL ARRIENDO</p>
             </div>
 
-            <form name="pago" method="post" action="<?php echo url_for('bcpuntopagos/index') ?>?id=<?= $reserve->getId() ?>" id="pago">
+            <form name="pago" method="post" action="<?php echo url_for('payment/index') ?>?id=<?= $reserve->getId() ?>" id="pago">
 
                 <div id="contenidoPayReserva">
                     <div class="numReserva">Nro. Reserva: <b><?= $reserve->getId() ?></b></div>
@@ -334,8 +334,8 @@
                     <?php endif; ?>
 
                     <div id="eleccionDeposito">
-                        <div class="titulo">Deducible <b><?= number_format($garantia, 0, ',', '.'); ?></b> UF y Depósito en Garantía</div>
-                        <div id="eleccion1"><div class="selector"><input type="radio" name="deposito" value="depositoGarantia"></div><p>"Realizaré el Depósito en Garantía por <span><?= number_format($garantia, 0, ',', '.'); ?> CLP</span> Mediante Transferencia" (Este será devuelto en caso de que no se registren Daños)</p>
+                        <div class="titulo">Deducible <b><?= number_format($garantia, 0, ',', '.'); ?></b> CLP y Depósito en Garantía</div>
+                        <div id="eleccion1"><div class="selector"><input type="radio" name="deposito" value="depositoGarantia"></div><p>"Realizaré el Depósito en Garantía por <span><?= number_format($garantia, 0, ',', '.'); ?> CLP</span> mediante Transferencia" (esta será reembolsada <b>48 horas</b> después de devolver el vehículo).</p>
                         </div>
                         <?php if(!$arrendatario->getMoroso()): ?>
                         <div id="eleccion2"><div class="selector"><input type="radio" name="deposito" value="pagoPorDia"></div><p>"Pagaré <span><?= number_format($monto, 0, ',', '.'); ?> CLP</span> por Eliminar el Depósito en Garantía y Reducir el deducible a una 1UF (<span><?= number_format($monto, 0, ',', '.'); ?> CLP</span> por día adicional)."</p>
@@ -349,7 +349,7 @@
                     </div>
                     <div class="botones">
                         <a href="<?php echo url_for("profile/pedidos") ?>" class="botonVolver" title="Vuelve a pedidos"></a>
-                        <a href="<?php echo url_for("bcpuntopagos/index?id=" . $reserve->getId()) ?>" class="botonSiguiente" title="Ir a punto pago"></a>
+                        <a href="<?php echo url_for("payment/index?id=" . $reserve->getId()) ?>" class="botonSiguiente" title="Ir a punto pago"></a>
                     </div>
                     <div id="mensajePagoGarantia" style="display:none;"><p>En los próximos segundos te enviaremos un e-mail con los datos de la cuenta para hacer la transferencia.<p></div>
                 </div>

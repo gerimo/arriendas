@@ -130,8 +130,19 @@ class WebpayService {
         , 'wsInitTransactionOutput' => 'wsInitTransactionOutput'
     );
 
-    function __construct($url = 'http://201.238.207.131:7003/WSWebpayTransaction/cxf/WSWebpayService?wsdl') {
-        $this->soapClient = new ArriendasSoapClient($url, array("classmap" => self::$classmap, "trace" => true, "exceptions" => true));
+    function __construct($url = 'https://201.238.207.130:7200/WSWebpayTransaction/cxf/WSWebpayService?wsdl') {
+        $this->soapClient = new ArriendasSoapClient($url, array(
+            "classmap" => self::$classmap,
+            "trace" => true,
+            "exceptions" => true,
+            "stream_context" => stream_context_create(
+                    array(
+                        "ssl" => array(
+                            "verify_peer" => false
+                        )
+                    )
+            ))
+        );
     }
 
     function getTransactionResult($getTransactionResult) {
