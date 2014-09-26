@@ -578,7 +578,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                 </label>
             </div><!-- /c1 -->
             <?php else:?>
-                <input type="hidden" id="birth" name="birth" class="datepicker" value="<?php if ($user->getBirthdate() != null)
+                <input type="text" id="birth" name="birth" class="datepicker" value="<?php if ($user->getBirthdate() != null)
                             echo $user->getBirthdate(); ?>" />
             <?php endif;?>
 
