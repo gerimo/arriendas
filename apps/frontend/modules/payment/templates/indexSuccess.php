@@ -98,10 +98,10 @@
 
                     <div id="contenedorMedios">
                         <div class="contenedor-medios-pago">
-                            <div>
+<!--                            <div>
                                 <input type="radio" name="pp_medio_pago" value="3"/>
                                 <?php echo image_tag('puntopagos/webpay.gif') ?>
-                            </div>
+                            </div>-->
                             <div>
                                 <input type="radio" name="pp_medio_pago" value="21"/>
                                 <?php echo image_tag('payment/bancodechile.jpg') ?>
