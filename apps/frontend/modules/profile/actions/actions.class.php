@@ -2576,7 +2576,7 @@ class profileActions extends sfActions {
             $this->fndreserve['horatermino'] = $this->getUser()->getAttribute("horatermino");
 
         
-        $fechaActual = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"));
+        $fechaActual = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S", strtotime('+3 hours', time())));    // sumo 3hs a la hora chilena.
         $this->ultimaFechaValidaDesde = date("d-m-Y", strtotime($fechaActual));
         $this->ultimaFechaValidaHasta = date("d-m-Y",strtotime("+2 days",strtotime($fechaActual)));
         $this->ultimaHoraValidaDesde = date("H:i",strtotime($fechaActual));

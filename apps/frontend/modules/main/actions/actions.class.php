@@ -678,7 +678,7 @@ public function executeNotificacion(sfWebRequest $request) {
             $this->getUser()->setAttribute('geolocalizacion', false);
         }
         
-        $fechaActual = $this->formatearHoraChilena(strftime("%Y%m%d%H%M%S"));
+        $fechaActual = $this->formatearHoraChilena(strftime("%Y%m%d%H%M%S", strtotime('+3 hours', time())));    // sumo 3hs a la hora chilena.
         $this->day_from = date("d-m-Y", strtotime($fechaActual));
         $this->day_to = date("d-m-Y",strtotime("+2 days",strtotime($fechaActual)));
         $this->hour_from = date("H:i",strtotime($fechaActual));
@@ -1233,9 +1233,25 @@ public function executeNotificacion(sfWebRequest $request) {
 //            $this->getUser()->setAttribute("chooseRegionChangeCount", $chooseRegionChangeCount);
 //        }
         if ($request->getParameter('codigo')) {
-            $comunas = Doctrine_Core::getTable('Comunas')->findByPadre($request->getParameter('codigo'));
+            // el dropdown debe mostrar únicamente las comunas donde hay Cars con seguro_ok = 4 y activo = 1
+            //$comunas = Doctrine_Core::getTable('Comunas')->findByPadre($request->getParameter('codigo'));
+            
+            $sql =  " SELECT co.codigoInterno, co.nombre
+                FROM Comunas co
+                WHERE co.padre = ". $request->getParameter('codigo')
+                    . " AND co.codigoInterno in (
+                    SELECT ca.comuna_id
+                    FROM Car ca
+                    WHERE ca.activo = 1
+                        AND ca.seguro_ok = 4
+                    )";
+            
+            $query = Doctrine_Manager::getInstance()->connection();  
+            $comunas = $query->fetchAll($sql);
+            
             foreach ($comunas as $c) {
-                $_output[] = array("optionValue" => $c->getCodigoInterno(), "optionDisplay" => $c->getNombre());
+                //$_output[] = array("optionValue" => $c->getCodigoInterno(), "optionDisplay" => $c->getNombre());
+                $_output[] = array("optionValue" => $c['codigoInterno'], "optionDisplay" => $c['nombre']);
             }
         }
         return $this->renderText(json_encode($_output));
@@ -2318,6 +2334,11 @@ public function executeNotificacion(sfWebRequest $request) {
 
 					
                     $this->forward('main', 'completeRegister');
+                    
+                    // TODO: ejecutar proceso de scrapping de antecedentes penales sin frenar el registro!!
+                    /* validacion judicial *
+                    $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
+                    exec($comando);*/
                 }
                 else {
                     $this->getUser()->setFlash('msg', 'Uno de los datos ingresados es incorrecto');
@@ -2662,26 +2683,32 @@ El equipo de Arriendas.cl
                     $user->checkMoroso();
         
                     /** block users */
-                    if(Doctrine::getTable('user')->isABlockedIp($visitingIp)){
-                        $user->setBloqueado("Se loggeo desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario bloqueado.");
-                    }
-        
-                    /** block propietario */
-                    if($user->getPropietario()){
-                        $noPropietarios = Doctrine::getTable('user')->getPropietarioByIp($visitingIp, false);
-                        foreach ($noPropietarios as $nopropietario) {
-                            $nopropietario->setBloqueado("Un usuario propietario se loggeo desde la ip:".$visitingIp. ", desde la cual este usuario NO propietario se habia loggeado.");
+                    
+                    // primero verifico si la IP existe en la tabla de IPs válidas
+                    $validIp = Doctrine::getTable('ipsOk')->findByIP($visitingIp);
+                    if(empty($validIp))
+                    {
+                        if(Doctrine::getTable('user')->isABlockedIp($visitingIp)){
+                            $user->setBloqueado("Se loggeo desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario bloqueado.");
                         }
-                        if(count($noPropietarios) > 0){
-                            $user->setBloqueado("Se loggeo usuario propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario NO propietario.");
-                        }
-                    }else{
-                        $propietarios = Doctrine::getTable('user')->getPropietarioByIp($visitingIp, true);
-                        foreach ($propietarios as $propietario) {
-                            $propietario->setBloqueado("Se loggeo usuario NO propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado este usuario propietario.");
-                        }
-                        if(count($propietarios) > 0){
-                            $user->setBloqueado("Se loggeo este usuario NO propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario propietario.");
+
+                        /** block propietario */
+                        if($user->getPropietario()){
+                            $noPropietarios = Doctrine::getTable('user')->getPropietarioByIp($visitingIp, false);
+                            foreach ($noPropietarios as $nopropietario) {
+                                $nopropietario->setBloqueado("Un usuario propietario se loggeo desde la ip:".$visitingIp. ", desde la cual este usuario NO propietario se habia loggeado.");
+                            }
+                            if(count($noPropietarios) > 0){
+                                $user->setBloqueado("Se loggeo usuario propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario NO propietario.");
+                            }
+                        }else{
+                            $propietarios = Doctrine::getTable('user')->getPropietarioByIp($visitingIp, true);
+                            foreach ($propietarios as $propietario) {
+                                $propietario->setBloqueado("Se loggeo usuario NO propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado este usuario propietario.");
+                            }
+                            if(count($propietarios) > 0){
+                                $user->setBloqueado("Se loggeo este usuario NO propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario propietario.");
+                            }
                         }
                     }
                     /**/        
