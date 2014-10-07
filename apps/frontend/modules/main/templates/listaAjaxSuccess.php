@@ -104,7 +104,7 @@
                                 </td>
                                 <td><div class="posicionamiento4"><?= $cars[$i]['brand']; ?> <?= $cars[$i]['model']; ?></div></td>
                                 <td><div class="posicionamiento5">Robo/Daños/CWD<br>Asistencia de viaje<br>Deducible 5UF</div></td>
-                                <td><div class="posicionamiento6"><a title="Realizar reserva" href="<?php echo url_for('profile/reserve?id=' . $cars[$i]['id']) ?>"><?php echo image_tag('Home/BotonReservarHome.png', array('class' => 'botonReservar', 'width' => '90px', 'height' => '30px')) ?></a></div></td>
+                                <td><div class="posicionamiento6"><a title="Realizar reserva" href="<?php echo url_for('profile/reserve?id=' . $cars[$i]['id']) ?>" target="_blank"><?php echo image_tag('Home/BotonReservarHome.png', array('class' => 'botonReservar', 'width' => '90px', 'height' => '30px')) ?></a></div></td>
                             </tr>
                             <?php
                         }//fin for i 
