@@ -4756,8 +4756,8 @@ class profileActions extends sfActions {
                 
                 
                 /* validacion judicial */
-                $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
-                exec($comando);
+                //$comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
+                //exec($comando);
                 
             }
             
@@ -5009,7 +5009,7 @@ class profileActions extends sfActions {
             
             $auto->setComunaId($comunaId);
             $auto->setStateId($comuna->getStateId());
-            $auto->setRegion($comuna->getPadre());
+            //$auto->setRegion($comuna->getPadre());
             $auto->setCityId($comuna->getCity());
 
             $auto->setPatente($patente);

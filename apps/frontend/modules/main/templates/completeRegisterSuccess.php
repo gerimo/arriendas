@@ -470,7 +470,7 @@ option:first-child
                 <br/>
             </div><!-- /c1 -->
 
- <!--           <div class="c1">
+           <div class="c1">
                 <label class="input">
                     <span>Rut</span>
                     <input type="text" id="run" name="run" onfocus="checkclear(this)" >
@@ -639,8 +639,8 @@ option:first-child
  //   frmvalidator.addValidation("emailAgain","req", "Vuelva a ingresar el correo electronico");
   //  frmvalidator.addValidation("emailAgain","email", "Ingresa una direccion de correo valida");
     
-    //frmvalidator.addValidation("run","req", "Ingrese Rut");
-    //frmvalidator.addValidation("run","rut", "Ingrese un Rut valido");
+    frmvalidator.addValidation("run","req", "Ingrese Rut");
+    frmvalidator.addValidation("run","rut", "Ingrese un Rut valido");
     
     frmvalidator.addValidation("telephone","numeric","El Telefono Debe ser numerico");
     frmvalidator.addValidation("telephone","req", "Ingrese Teléfono");

@@ -1240,7 +1240,7 @@ public function executeNotificacion(sfWebRequest $request) {
                 FROM Comunas co
                 WHERE co.padre = ". $request->getParameter('codigo')
                     . " AND co.codigoInterno in (
-                    SELECT ca.comuna_id
+                    SELECT DISTINCT ca.comuna_id
                     FROM Car ca
                     WHERE ca.activo = 1
                         AND ca.seguro_ok = 4
@@ -2335,10 +2335,12 @@ public function executeNotificacion(sfWebRequest $request) {
 					
                     $this->forward('main', 'completeRegister');
                     
-                    // TODO: ejecutar proceso de scrapping de antecedentes penales sin frenar el registro!!
-                    /* validacion judicial *
+                    /* validacion judicial */
+                    $basePath = sfConfig::get('sf_root_dir');
+                    $run = $request->getParameter('run');
+                    $userid = $u->getId();
                     $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
-                    exec($comando);*/
+                    exec($comando);
                 }
                 else {
                     $this->getUser()->setFlash('msg', 'Uno de los datos ingresados es incorrecto');
@@ -2685,7 +2687,13 @@ El equipo de Arriendas.cl
                     /** block users */
                     
                     // primero verifico si la IP existe en la tabla de IPs válidas
-                    $validIp = Doctrine::getTable('ipsOk')->findByIP($visitingIp);
+                    //$validIp = Doctrine::getTable('ipsOk')->findByIP($visitingIp);                    
+                    $sql =  "SELECT *
+                        FROM ips_ok
+                        WHERE ip = '". $visitingIp ."'";
+
+                    $query = Doctrine_Manager::getInstance()->connection();  
+                    $validIp = $query->fetchOne($sql);
                     if(empty($validIp))
                     {
                         if(Doctrine::getTable('user')->isABlockedIp($visitingIp)){
@@ -2743,6 +2751,22 @@ El equipo de Arriendas.cl
                     }
 
                     $this->getUser()->setAttribute('geolocalizacion', true);
+                    
+                    
+                    // validación de pantalla de pago exitoso                   
+                    $sql =  "SELECT id
+                        FROM Transaction
+                        WHERE user_id = ". $user->getId() .
+                            " AND completed = 0";
+
+                    $query = Doctrine_Manager::getInstance()->connection();  
+                    $trans = $query->fetchOne($sql);
+                    if(!empty($trans)){
+                        
+                        //$this->redirect('bcpuntopagos?id='. $trans['id']);
+                        
+                    }
+                        
 
                     sfContext::getInstance()->getLogger()->info($_SESSION['login_back_url']);
 
