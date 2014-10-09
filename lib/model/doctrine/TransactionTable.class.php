@@ -31,6 +31,24 @@ class TransactionTable extends Doctrine_Table
         ->andWhere("t.completed = 0");
       return  $q->count();
     }
+    
+    public function countPendingToShowByUser($user_id){
+        $q = Doctrine_Query::create()
+            ->from("Transaction t ")
+            ->where("t.user_id = ? ",$user_id)
+            ->andWhere("t.show_success = 0");
+        
+        return  $q->count();
+    }
+    
+    public function getPendingToShowByUser($user_id){
+        $q = Doctrine_Query::create()
+            ->from("Transaction t ")
+            ->where("t.user_id = ? ",$user_id)
+            ->andWhere("t.show_success = 0");
+        
+        return  $q->fetchOne();
+    }
 	
 	public function getTransaction($trans_id = '') {
 		

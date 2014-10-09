@@ -2344,9 +2344,9 @@ public function executeNotificacion(sfWebRequest $request) {
                         $basePath = sfConfig::get('sf_root_dir');
                         $run = $request->getParameter('run');
                         $userid = $u->getId();
-                        $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
+                        //$comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
 
-                        //$comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /home/pancho/log-judicial.txt &";
+                        $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /home/pancho/log-judicial.txt &";
                         exec($comando);
                     }
                 }
@@ -2761,20 +2761,13 @@ El equipo de Arriendas.cl
                     $this->getUser()->setAttribute('geolocalizacion', true);
                     
                     
-                    // validación de pantalla de pago exitoso                   
-                    $sql =  "SELECT id
-                        FROM Transaction
-                        WHERE user_id = ". $user->getId() .
-                            " AND completed = 0";
-
-                    $query = Doctrine_Manager::getInstance()->connection();  
-                    $trans = $query->fetchOne($sql);
-                    if(!empty($trans)){
+                    // validación de pantalla de pago exitoso 
+                    $toShow = Doctrine_Core::getTable("Transaction")->countPendingToShowByUser($user->getId());
+                    if($toShow > 0){
                         
-                        //$this->redirect('bcpuntopagos?id='. $trans['id']);
+                        $this->redirect('bcpuntopagos/showExito');
                         
-                    }
-                        
+                    }    
 
                     sfContext::getInstance()->getLogger()->info($_SESSION['login_back_url']);
 

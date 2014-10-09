@@ -623,8 +623,6 @@ Reserve:
       type: boolean
       notnull: true
       default: 0
-<<<<<<< HEAD
-=======
     visible_owner:
       type: boolean
       notnull: true
@@ -674,13 +672,9 @@ Reserve:
       notnull: true
     montoLiberacion:
       type: decimal(10,2)
-<<<<<<< HEAD
->>>>>>> 60b601d9a31f98057c922e1d46052569d4f39038
-=======
     cambioEstadoRapido:
       type: boolean
       notnull: true
->>>>>>> 725fd68aa812c5bc262311b6be1802d5b4b183f1
   relations:
     User:
       class: User
@@ -782,6 +776,8 @@ Transaction:
       type: integer(4)
     discountamount:
       type: decimal(10,2)
+    show_success:
+      type: boolean
   relations:
     User:
       class: User
@@ -954,15 +950,13 @@ UserAdmin:
     charset: utf8
     type: InnoDB
 
-<<<<<<< HEAD
-=======
 SecurityTokens:
   tableName: security_tokens
   columns:
     id:
       type: varchar(10)
       primary: true
-      notnull:true
+      notnull: true
     secret:
       type: varchar(30)
     valid:
@@ -973,7 +967,7 @@ puntaje_mapa:
   columns:
     car_id:
       type: integer(11)
-      primary:true
+      primary: true
     user_id:
       type:integer(11)
     porcentaje_respuesta:
@@ -1016,9 +1010,6 @@ mail_calificaciones:
   options:
     charset: utf8
     type: InnoDB
-<<<<<<< HEAD
->>>>>>> 51c885deb874035d496df5e146ba05eac848c3b2
-=======
 
 LiberacionDeposito:
   tableName: LiberacionDeposito
@@ -1029,7 +1020,6 @@ LiberacionDeposito:
       notnull: true
     monto:
       type: decimal(10,2)
->>>>>>> 60b601d9a31f98057c922e1d46052569d4f39038
 
 ReserveFile:
   tableName: ReserveFiles
