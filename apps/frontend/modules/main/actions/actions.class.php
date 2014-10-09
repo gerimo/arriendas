@@ -664,6 +664,9 @@ public function executeNotificacion(sfWebRequest $request) {
 }
 
     public function executeIndex(sfWebRequest $request) {
+        
+        $this->region = $request->getParameter('region');
+        $this->comuna = $request->getParameter('comuna');
 
 	//Modificacion para setear la cookie de registo de la fecha de ingreso por primera vez del usuario
 	$cookie_ingreso = $this->getRequest()->getCookie('cookie_ingreso');
@@ -2270,7 +2273,7 @@ public function executeNotificacion(sfWebRequest $request) {
 	
 	
 
-    public function executeDoRegister(sfWebRequest $request) {
+    public function executeDoRegister(sfWebRequest $request) {//echo $request->getParameter('foreign');die;
         
         if ($this->getRequest()->getMethod() != sfRequest::POST) {
             sfView::SUCCESS;
@@ -2336,11 +2339,16 @@ public function executeNotificacion(sfWebRequest $request) {
                     $this->forward('main', 'completeRegister');
                     
                     /* validacion judicial */
-                    $basePath = sfConfig::get('sf_root_dir');
-                    $run = $request->getParameter('run');
-                    $userid = $u->getId();
-                    $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
-                    exec($comando);
+                    $foreign = $request->getParameter('foreign');
+                    if(!$foreign){
+                        $basePath = sfConfig::get('sf_root_dir');
+                        $run = $request->getParameter('run');
+                        $userid = $u->getId();
+                        $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
+
+                        //$comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /home/pancho/log-judicial.txt &";
+                        exec($comando);
+                    }
                 }
                 else {
                     $this->getUser()->setFlash('msg', 'Uno de los datos ingresados es incorrecto');

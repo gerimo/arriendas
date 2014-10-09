@@ -172,6 +172,8 @@ if (sfContext::getInstance()->getUser()->getAttribute("logged")) {
             alert('Oops! Tu navegador no soporta geolocalización. Bájate Chrome, que es gratis!');
         }
     }
+    
+    
 
 
     function crearMarca(position) {
@@ -1175,10 +1177,35 @@ else
         });
 //        $("#chooseRegion").val("13");
 //        updateLista();
-        $('#chooseRegion option[value=13]').prop('selected', 'selected').change();
+        
+        
+        <?php if ($region && $comuna): ?>
+            // viene por una URI específica para region/comuna
+            var region = <?php echo $region ?>;
+            var comuna = <?php echo $comuna ?>;
+            listadoRegionComuna(region, comuna);
+        <?php else: ?>
+            $('#chooseRegion option[value=13]').prop('selected', 'selected').change();
+        <?php endif; ?>
 
+    }    
+                        
+    function listadoRegionComuna(region, comuna) {   
+        
+        $("#btn-lista").click();
+        $('#chooseRegion option[value='+region+']').prop('selected', 'selected');
+        
+        $.getJSON("<?php echo url_for('main/getComunasSearch') ?>", {codigo: region, ajax: 'true'}, function(j) {
+            var options = '';
+            for (var i = 0; i < j.length; i++) {
+                options += '<option value="' + j[i].optionValue + '" >' + j[i].optionDisplay + '</option>';
+            }
+            $("#chooseComuna").html(options);
+            $('#chooseComuna option[value='+comuna+']').prop('selected', 'selected');
+            updateLista();
+        });
+        
     }
-    ;
 
     function updateLista() {
         if (isValidDate($('#day_from_lista').val())) {
@@ -1383,11 +1410,12 @@ if ($day_to) {
 ?> />
 
 <script>
-
-
-    var openFilters = false;
+                        
+    
+    var openFilters = false;    
     $(document).ready(function() {
-        
+
+           
         $("#footer_search_box_2").click(function(){
             $("#btn-lista").click();
         });
@@ -1399,9 +1427,9 @@ if ($day_to) {
             $(".btn-busqueda").removeClass("active");
             $(".tab-data").hide();
             $(".tab-" + tabId).show();
-            if(tabId == "lista"){
+            /*if(tabId == "lista"){
                 oTable.fnAdjustColumnSizing();
-            }
+            }*/
             $(this).addClass("active");
         });
 
@@ -1456,6 +1484,8 @@ if ($day_to) {
                 }
             });
         });
+        
+        
     });
 
 

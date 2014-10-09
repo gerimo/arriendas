@@ -46,6 +46,12 @@ pedidos:
 facebook_login:
     url: /main/loginFacebook 
     param:  { module: main, action: loginFacebook }
+    
+# URLs específicas para cada region-comuna
+region-comuna:
+    url: /autos/:region/:comuna
+    param: {module: main, action: index }
+    requirements: { region: \d+, comuna: \d+ }
  
 # default rules
 homepage:
