@@ -2230,7 +2230,7 @@ public function executeNotificacion(sfWebRequest $request) {
 
             $this->user = $user;
 
-            /*sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
+            sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
             $name = htmlentities($user->getFirstName());
             $correo = $user->getUsername();
             $lastName = $user->getLastname();
@@ -2249,7 +2249,7 @@ public function executeNotificacion(sfWebRequest $request) {
             $mail->setSubject('Registro de Nuevo Usuario');
             $mail->setBody("<p>$name $lastName</p><p>$email</p><p>$telefono</p>");
             $mail->setTo("soporte@arriendas.cl");
-            $mail->submit();*/
+            $mail->submit();
         }
 
         if ($userid != null) {
