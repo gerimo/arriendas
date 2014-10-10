@@ -51,8 +51,7 @@ border-top-right-radius: 5px;
     .captcha{
         clear: both;
     }
-    
-
+        
 
 
     /* Hack to remove Safari's extra padding. Remove if you don't care about pixel-perfection. */
@@ -235,7 +234,19 @@ option:first-child
         /* carga las comunas de la región metropolitana por default */
         cargarComunas(13);
 
-
+        
+        $('#foreign').click(function() {
+            $('#run').val('');
+            if($('#run').attr('disabled')){
+                $('#run').attr('disabled', false);
+                $('#run').css('background-color', '#FFFFFF');
+                $("#run").parent("label").find("span").text('Rut');
+            }else{
+                $('#run').attr('disabled', true);
+                $('#run').css('background-color', '#FFFADC');
+                $("#run").parent("label").find("span").text('');
+            }
+        });
     });
 
     function cargarComunas(idRegion){
@@ -291,11 +302,11 @@ option:first-child
   //      if( $("#emailAgain").val() == "" ) { $("#emailAgain").parent("label").find("span").text("* Falta Confirmar Email"); }
    //     if( $("#password").val() == "" ) { $("#password").parent("label").find("span").text("* Falta ingresar Contraseña"); }
  //       if( $("#passwordAgain").val() == "" ) { $("#passwordAgain").parent("label").find("span").text("* Falta Confirmar Contraseña"); }
-        if( $("#run").val() == "" ) { $("#run").parent("label").find("span").text("* Falta ingresar Rut"); }
+        if( $("#run").val() == "" && !$('#run').attr('disabled')) { $("#run").parent("label").find("span").text("* Falta ingresar Rut"); }
 //        if( $("#address").val() == "" ) { $("#address").parent("label").find("span").text("* Falta ingresar Dirección"); }
         if( $("#comunas").val() =='0') { $("#address").parent("label").find("span").text("* Falta ingresar Comuna"); }
         
-        document.forms["frm1"].username.value = document.forms["frm1"].email.value;
+        /*document.forms["frm1"].username.value = document.forms["frm1"].email.value;
 
         //alert("se va a enviar");
   //      DoRutValidation();
@@ -303,7 +314,10 @@ option:first-child
         if(document.myform.onsubmit())
         {
             document.forms["frm1"].submit();
-        }
+        }*/
+        
+        
+        document.forms["frm1"].submit();
     }
 
     function checkclear(what){
@@ -475,7 +489,14 @@ option:first-child
                     <span>Rut</span>
                     <input type="text" id="run" name="run" onfocus="checkclear(this)" >
                 </label>
-            </div><!-- /c1 -->  
+            </div><!-- /c1 -->
+            
+            <div style="margin-bottom: 15px;">
+                <label>
+                    <input type="checkbox" style="width:25px;" name="foreign" id="foreign" value="0" style="margin-right:6px;">
+                    <span style="font-family: 'Arial';font-size:14px; width: 50px">No tengo RUT - I am a foreigner</span>
+                </label>
+            </div>
 
   <!--          <div class="c1">
                 <label class="input">
@@ -606,20 +627,7 @@ option:first-child
         }
     }
 
-    function DoRutValidation(){
-        
-        var frm = document.forms["frm1"];
-        var rut = frm.run.value;
-        //alert(rut);
-        
-        if($.validaRut(rut)){ //rut correcto
-            $('#run').removeClass('inputerror');
-        }else{ //rut incorrecto
-            $('#run').addClass('inputerror');
-        }
-        
-    }
-
+    
     var frmvalidator = new Validator("frm1");
  
     frmvalidator.EnableMsgsTogether();
@@ -639,7 +647,7 @@ option:first-child
  //   frmvalidator.addValidation("emailAgain","req", "Vuelva a ingresar el correo electronico");
   //  frmvalidator.addValidation("emailAgain","email", "Ingresa una direccion de correo valida");
     
-    frmvalidator.addValidation("run","req", "Ingrese Rut");
+    //frmvalidator.addValidation("run","req", "Ingrese Rut");
     frmvalidator.addValidation("run","rut", "Ingrese un Rut valido");
     
     frmvalidator.addValidation("telephone","numeric","El Telefono Debe ser numerico");
@@ -656,7 +664,26 @@ option:first-child
 
   //  frmvalidator.setAddnlValidationFunction(DoPassValidation);
   //  frmvalidator.setAddnlValidationFunction(DoEmailValidation);
-    //frmvalidator.setAddnlValidationFunction(DoRutValidation);
+    frmvalidator.addAddnlValidationFunction(DoRutValidation);
 
+
+    function DoRutValidation(){
+        
+        if($('#run').attr('disabled')){
+            $('#run').removeClass('inputerror');
+            return;
+        }
+        
+        var frm = document.forms["frm1"];
+        var rut = frm.run.value;
+        //alert(rut);
+        
+        if($.validaRut(rut)){ //rut correcto
+            $('#run').removeClass('inputerror');
+        }else{ //rut incorrecto
+            $('#run').addClass('inputerror');
+        }
+        
+    }
  
 </script>

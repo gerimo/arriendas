@@ -2230,7 +2230,7 @@ public function executeNotificacion(sfWebRequest $request) {
 
             $this->user = $user;
 
-            sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
+            /*sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
             $name = htmlentities($user->getFirstName());
             $correo = $user->getUsername();
             $lastName = $user->getLastname();
@@ -2249,7 +2249,7 @@ public function executeNotificacion(sfWebRequest $request) {
             $mail->setSubject('Registro de Nuevo Usuario');
             $mail->setBody("<p>$name $lastName</p><p>$email</p><p>$telefono</p>");
             $mail->setTo("soporte@arriendas.cl");
-            $mail->submit();
+            $mail->submit();*/
         }
 
         if ($userid != null) {
@@ -2336,19 +2336,8 @@ public function executeNotificacion(sfWebRequest $request) {
 					$this->logMessage($u->getFechaRegistro(), 'err');
 
 					
-                    $this->forward('main', 'completeRegister');
                     
-                    /* validacion judicial */
-                    $foreign = $request->getParameter('foreign');
-                    if(!$foreign){
-                        $basePath = sfConfig::get('sf_root_dir');
-                        $run = $request->getParameter('run');
-                        $userid = $u->getId();
-                        //$comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
-
-                        $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /home/pancho/log-judicial.txt &";
-                        exec($comando);
-                    }
+                    $this->forward('main', 'completeRegister');
                 }
                 else {
                     $this->getUser()->setFlash('msg', 'Uno de los datos ingresados es incorrecto');
@@ -2386,7 +2375,7 @@ public function executeNotificacion(sfWebRequest $request) {
 
 	
 	
-	    public function executeCompleteRegister(sfWebRequest $request) {
+    public function executeCompleteRegister(sfWebRequest $request) {
 
         if (!isset($_SESSION['reg_back'])) {
             $urlpage = split('/', $request->getReferer());
@@ -2417,31 +2406,43 @@ public function executeNotificacion(sfWebRequest $request) {
             sfView::SUCCESS;
         } else {
 
+            try {
 
-		        try {
+                $profile = Doctrine_Core::getTable('User')->find($this->getUser()->getAttribute('userid'));
+                $profile->setRegion($request->getParameter('region'));
+                $profile->setComuna($request->getParameter('comunas'));
+                $profile->setComo($request->getParameter('como'));
+                if($profile->getTelephone() != $request->getParameter('telephone')){//Si se ingresa un nuevo telefono celular distinto al de la base de datos, el usuario podrá confirmarlo de nuevo
+                    $profile->setTelephone($request->getParameter('telephone'));
+                    $profile->setConfirmedSms(0);
+                }else{
+                    $profile->setTelephone($request->getParameter('telephone'));
+                }
+                $profile->setRut($request->getParameter('run'));
+                $profile->save();
+                $this->getUser()->setAttribute('picture_url', $profile->getFileName());
+                $this->getUser()->setAttribute("telephone", $profile->getTelephone());
+                $this->getUser()->setAttribute("comuna", $profile->getNombreComuna());
+                $this->getUser()->setAttribute("region", $profile->getNombreRegion());
+                $this->getUser()->setAttribute("fecha_registro", $profile->getFechaRegistro());
 
-            $profile = Doctrine_Core::getTable('User')->find($this->getUser()->getAttribute('userid'));
-            $profile->setRegion($request->getParameter('region'));
-            $profile->setComuna($request->getParameter('comunas'));
-            $profile->setComo($request->getParameter('como'));
-            if($profile->getTelephone() != $request->getParameter('telephone')){//Si se ingresa un nuevo telefono celular distinto al de la base de datos, el usuario podrá confirmarlo de nuevo
-                $profile->setTelephone($request->getParameter('telephone'));
-                $profile->setConfirmedSms(0);
-            }else{
-                $profile->setTelephone($request->getParameter('telephone'));
+            }catch (Exception $e) {
+                echo $e->getMessage();
             }
-            $profile->save();
-            $this->getUser()->setAttribute('picture_url', $profile->getFileName());
-			$this->getUser()->setAttribute("telephone", $profile->getTelephone());
-			$this->getUser()->setAttribute("comuna", $profile->getNombreComuna());
-			$this->getUser()->setAttribute("region", $profile->getNombreRegion());
-			$this->getUser()->setAttribute("fecha_registro", $profile->getFechaRegistro());
+            
+            /* validacion judicial */
+            $foreign = $request->getParameter('foreign');
+            if(!$foreign){
+                $basePath = sfConfig::get('sf_root_dir');
+                $run = $request->getParameter('run');
+                $userid = $this->getUser()->getAttribute('userid');
+                //$comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
 
-			} catch (Exception $e) {
-            echo $e->getMessage();
-        }
+                $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /home/pancho/log-judicial.txt &";
+                exec($comando);
+            }
 
-		            $this->redirect('main/registerVerify');
+            $this->redirect('main/registerVerify');
 
 		
 //        if($request->getParameter('redirect') && $request->getParameter('idRedirect')){
@@ -2449,11 +2450,10 @@ public function executeNotificacion(sfWebRequest $request) {
    //     }else{
     //        $this->redirect('profile/cars');
      //   }
-
 		
 		
-        return sfView::NONE;
-    }
+            return sfView::NONE;
+        }
     }
 
 	
