@@ -2436,9 +2436,9 @@ public function executeNotificacion(sfWebRequest $request) {
                 $basePath = sfConfig::get('sf_root_dir');
                 $run = $request->getParameter('run');
                 $userid = $this->getUser()->getAttribute('userid');
-                //$comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
+                $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
 
-                $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /home/pancho/log-judicial.txt &";
+                //$comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /home/pancho/log-judicial.txt &";
                 exec($comando);
             }
 
