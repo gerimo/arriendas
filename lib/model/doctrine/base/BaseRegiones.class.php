@@ -8,14 +8,18 @@
  * 
  * @property integer $codigo
  * @property string $nombre
+ * @property string $slug
  * @property Doctrine_Collection $Regiones
+ * 
  * 
  * @method integer             getCodigo()        Returns the current record's "codigo" value
  * @method string              getNombre()               Returns the current record's "nombre" value
  * @method Doctrine_Collection getComunas()     Returns the current record's "Comunas" collection
+ * @method string              getSlug()               Returns the current record's "slug" value
 
 
  * @method Regiones              setRegiones()                 Sets the current record's "Regiones" collection
+ * @method string              setSlug()               Sets the current record's "slug" value
  * 
  * @package    RegionesSharing
  * @subpackage model
@@ -35,6 +39,10 @@ abstract class BaseRegiones extends sfDoctrineRecord
         $this->hasColumn('nombre', 'string', 255, array(
              'type' => 'string',
              'length' => 255,
+             ));
+        $this->hasColumn('slug', 'string', 80, array(
+             'type' => 'string',
+             'length' => 80,
              ));
         
         $this->option('charset', 'utf8');

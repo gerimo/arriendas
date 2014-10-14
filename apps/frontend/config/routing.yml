@@ -51,7 +51,6 @@ facebook_login:
 region-comuna:
     url: /autos/:region/:comuna
     param: {module: main, action: index }
-    requirements: { region: \d+, comuna: \d+ }
  
 # default rules
 homepage:

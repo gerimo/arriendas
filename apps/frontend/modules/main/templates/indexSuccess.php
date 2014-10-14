@@ -1179,7 +1179,7 @@ else
 //        updateLista();
         
         
-        <?php if ($region && $comuna): ?>
+        <?php if (isset($region) && isset($comuna)): ?>
             // viene por una URI específica para region/comuna
             var region = <?php echo $region ?>;
             var comuna = <?php echo $comuna ?>;

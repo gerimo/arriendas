@@ -665,8 +665,10 @@ public function executeNotificacion(sfWebRequest $request) {
 
     public function executeIndex(sfWebRequest $request) {
         
-        $this->region = $request->getParameter('region');
-        $this->comuna = $request->getParameter('comuna');
+        if($request->getParameter('region'))
+            $this->region = Doctrine_Core::getTable('Regiones')->findOneBySlug($request->getParameter('region'))->getCodigo();
+        if($request->getParameter('comuna'))
+            $this->comuna = Doctrine_Core::getTable('Comunas')->findOneBySlug($request->getParameter('comuna'))->getCodigoInterno();
 
 	//Modificacion para setear la cookie de registo de la fecha de ingreso por primera vez del usuario
 	$cookie_ingreso = $this->getRequest()->getCookie('cookie_ingreso');
@@ -3312,5 +3314,15 @@ public function calificacionesPendientes(){
     //enviar mail a propietario y arrendatario informando
     
 }
+
+    public function executeGenerateRegionesSlugs(sfWebRequest $request) {
+        
+        Doctrine_Core::getTable('Regiones')->generateSlugs();
+    }
+    
+    public function executeGenerateComunasSlugs(sfWebRequest $request) {
+        
+        Doctrine_Core::getTable('Comunas')->generateSlugs();
+    }
 
 }

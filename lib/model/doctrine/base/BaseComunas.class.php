@@ -11,6 +11,7 @@
  * @property integer $padre
  * @property integer $city
  * @property integer $state_id
+ * @property string $slug
  * @property Doctrine_Collection $Comunas
  * 
  * @method integer             getCodigoInterno()        Returns the current record's "codigoInterno" value
@@ -19,10 +20,12 @@
  * @method integer             getCodigoBCI()                Returns the current record's "padre" value
  * @method integer             getCity()                Returns the current record's "padre" value
  * @method integer             getStateId()                Returns the current record's "padre" value
+ * @method string              getSlug()               Returns the current record's "slug" value
 
  * @method Comunas              setComunas()                 Sets the current record's "Comunas" collection
  * @method Comunas              setCity()                 Sets the current record's "Comunas" collection
  * @method Comunas              setStateId()                 Sets the current record's "Comunas" collection
+ * @method string              setSlug()               Sets the current record's "slug" value
  * 
  * @package    ComunasSharing
  * @subpackage model
@@ -68,6 +71,10 @@ abstract class BaseComunas extends sfDoctrineRecord
              array(
               0 => 'Padre',
              ),
+             ));
+        $this->hasColumn('slug', 'string', 80, array(
+             'type' => 'string',
+             'length' => 80,
              ));
 
         
