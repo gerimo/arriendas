@@ -501,6 +501,11 @@ class bcpuntopagosActions extends sfActions {
                 
                 $order->setShowSuccess(true);
                 $order->save();
+                
+                $this->nameOwner = $reserve->getNameOwner();
+                $this->emailOwner = $reserve->getEmailOwner();
+                $this->lastnameOwner = $reserve->getLastnameOwner();
+                $this->telephoneOwner = $reserve->getTelephoneOwner();
 
                 /*$idReserve = $order->getReserveId();
                 $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
