@@ -36,6 +36,7 @@ class TransactionTable extends Doctrine_Table
         $q = Doctrine_Query::create()
             ->from("Transaction t ")
             ->where("t.user_id = ? ",$user_id)
+            ->andWhere("t.completed = 1")
             ->andWhere("t.show_success = 0");
         
         return  $q->count();
@@ -45,6 +46,7 @@ class TransactionTable extends Doctrine_Table
         $q = Doctrine_Query::create()
             ->from("Transaction t ")
             ->where("t.user_id = ? ",$user_id)
+            ->andWhere("t.completed = 1")
             ->andWhere("t.show_success = 0");
         
         return  $q->fetchOne();
