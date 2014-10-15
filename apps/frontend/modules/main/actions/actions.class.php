@@ -2761,15 +2761,6 @@ El equipo de Arriendas.cl
                     }
 
                     $this->getUser()->setAttribute('geolocalizacion', true);
-                    
-                    
-                    // validación de pantalla de pago exitoso 
-                    $toShow = Doctrine_Core::getTable("Transaction")->countPendingToShowByUser($user->getId());
-                    if($toShow > 0){
-                        
-                        $this->redirect('bcpuntopagos/showExito');
-                        
-                    }    
 
                     sfContext::getInstance()->getLogger()->info($_SESSION['login_back_url']);
 
