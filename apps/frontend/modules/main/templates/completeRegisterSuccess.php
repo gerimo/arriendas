@@ -247,6 +247,31 @@ option:first-child
                 $("#run").parent("label").find("span").text('');
             }
         });
+        
+        $('input#run').live('focusout', function() {
+            var run = $(this).val();
+            var partes = run.split(" ");
+            var run_sinEspacios = "";
+            for(var i=0;i<partes.length;i++){
+                run_sinEspacios = run_sinEspacios+partes[i];
+            }
+            var partes = run_sinEspacios.split(".");
+            var run_sinPuntos_sinEspacios = "";
+            for(var i=0;i<partes.length;i++){
+                run_sinPuntos_sinEspacios = run_sinPuntos_sinEspacios+partes[i];
+            }
+            var partes = run_sinPuntos_sinEspacios.split("-");
+            var run_sinGuion_sinPuntos_sinEspacios = "";
+            for(var i=0;i<partes.length;i++){
+                run_sinGuion_sinPuntos_sinEspacios = run_sinGuion_sinPuntos_sinEspacios+partes[i];
+            }
+            var ultimoCaracter = run_sinGuion_sinPuntos_sinEspacios.slice(-1);
+            var restoCadena = run_sinGuion_sinPuntos_sinEspacios.slice(0,-1);
+
+            var runCorregido = restoCadena+"-"+ultimoCaracter;
+            $("input#run").attr("value",runCorregido);
+
+        });
     });
 
     function cargarComunas(idRegion){
