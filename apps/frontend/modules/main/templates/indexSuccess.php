@@ -1427,9 +1427,9 @@ if ($day_to) {
             $(".btn-busqueda").removeClass("active");
             $(".tab-data").hide();
             $(".tab-" + tabId).show();
-            /*if(tabId == "lista"){
+            if(oTable && tabId == "lista"){
                 oTable.fnAdjustColumnSizing();
-            }*/
+            }
             $(this).addClass("active");
         });
 
