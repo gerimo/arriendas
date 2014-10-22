@@ -2699,7 +2699,7 @@ El equipo de Arriendas.cl
                     // primero verifico si la IP existe en la tabla de IPs válidas
                     //$validIp = Doctrine::getTable('ipsOk')->findByIP($visitingIp);                    
                     $sql =  "SELECT *
-                        FROM ips_ok
+                        FROM Ips_ok
                         WHERE ip = '". $visitingIp ."'";
 
                     $query = Doctrine_Manager::getInstance()->connection();  
