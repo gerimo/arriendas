@@ -14,7 +14,7 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
 <?php use_javascript('jquery.lightbox-0.5-v2.js') ?>
 <?php use_javascript('jquery.lightbox-0.5.min.js') ?>
 <?php use_javascript('jquery.lightbox-0.5.pack.js') ?>
-<?//php use_javascript('jquery-1.8.3.min.js') ?>
+<?php //use_javascript('jquery-1.8.3.min.js') ?>
 <?php use_javascript('jquery.royalslider.min.js') ?>
 <script type="text/javascript">
     $(function() {
@@ -353,7 +353,7 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                         <div style="width: 470px;height: 105px;">
                             <h1 style="float: left;margin-left: 0px;font-size: 21px;font-weight: bold;color: #00AEEF;width: 100%;border-bottom: dashed 0px #d1d1d1;margin: 0px 0px 0px 0px;height: auto;line-height: 26px;">Arriendo <?php echo $car->getModel() . ", " . $car->getModel()->getBrand() . " <br> " . str_replace(".","",str_replace(",","",$nombreComunaAuto)). ", ".$ciudad ; ?><?php if ($car->autoVerificado()): ?><?php echo image_tag("verificado.png", "class=img_verificado title='Auto Asegurado' size=18x18"); ?><?php endif; ?>
                             </h1>
-                            <h4 class="style2014" style="margin-top: 5px;"><p style="float:left;">Due&ntilde;o - <a class="colorSub" href="<?php echo url_for('profile/publicprofile?id=' . $user->getId()) ?>" title="Ir al perfil de <?= $primerNombre ?>" style="text-decoration: none;"><?= $primerNombre . " " . $inicialApellido; ?></a></p>
+                            <h4 class="style2014" style="margin-top: 5px;"><p style="float:left;">Due&ntilde;o - <a class="colorSub" target="_blank" href="<?php echo url_for('profile/publicprofile?id=' . $user->getId()) ?>" title="Ir al perfil de <?= $primerNombre ?>" style="text-decoration: none;"><?= $primerNombre . " " . $inicialApellido; ?></a></p>
                                 <!-- Icono verificado correspondiente al del auto: cambiar cuando se implemente el php -->
                                 <?php if ($car->autoVerificado()): ?><?php echo image_tag("verificado.png", "class=img_verificado title='Auto Asegurado' size=18x18 style='margin-top: -4px;'"); ?><?php endif; ?>
                             </h4>
@@ -390,10 +390,10 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                                         ?>
                                     </div>
                                 </div>
-
+                                <?php $cantidadDeComentariosSobreMi = count($comentarios); ?>
                                 <div class="verComentarios" style="float:left;">
                                         <?php echo image_tag('img_evaluaciones/IconoVerComentarios.png',array("width"=>"16","height"=>"15","style"=>"float: left;margin-right: 4px;margin-top: 2px;")) ?>
-                                    <p style="width: 132px;margin-top: 3px;"><span style="font-size: 11px;">Ver Comentarios</span> <span style="color:#00AEEF;font-weight:bold;font-style:italic;">(3)</span></p>
+                                    <p style="width: 132px;margin-top: 3px;"><span style="font-size: 11px;">Ver Comentarios</span> <span style="color:#00AEEF;font-weight:bold;font-style:italic;">(<?php if ($comentarios[0] == null){echo "0";}else{echo $cantidadDeComentariosSobreMi;}?>)</span></p>
                                 </div>
 
 
@@ -446,7 +446,7 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                     </div><!--fin seccion -->
 
                     <div class="seccion" style="margin-left:5px;margin-top:25px;height: auto;">
-                        <h2 class="subtitulos punteado" style="margin-top:0px;margin-left:0px;"><p style="float:left;">Due&ntilde;o - <a class="colorSub" href="<?php echo url_for('profile/publicprofile?id=' . $user->getId()) ?>" title="Ir al perfil de <?= $primerNombre ?>" style="text-decoration: none;"><?= $primerNombre . " " . $inicialApellido; ?></a></p></h2>
+                        <h2 class="subtitulos punteado" style="margin-top:0px;margin-left:0px;"><p style="float:left;">Due&ntilde;o - <a class="colorSub" target="_blank" href="<?php echo url_for('profile/publicprofile?id=' . $user->getId()) ?>" title="Ir al perfil de <?= $primerNombre ?>" style="text-decoration: none;"><?= $primerNombre . " " . $inicialApellido; ?></a></p></h2>
                             <div class="texto_normal precios">Calificaciones Positivas | <strong><?= $aprobacionDuenio['porcentaje']; ?>%</strong></div>
                             <div class="texto_normal precios">Tiempo respuesta | <strong><?php
                             if ($velocidadMensajes == "") {
@@ -509,7 +509,7 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                     </div><!--fin seccion -->
                     <?php
                         //declarando arreglo de accesorios activos ordenados según pdf
-                        $arr_accesorios_activos = array(1,0, 1, 0, 1, 0, 1, 1,  0, 1, 1, 0); //para efectos de prueba se declara una costante, posteriormente se debe trabajar obteniendo la información desde la DB
+                        //$arr_accesorios_activos = array(1,0, 1, 0, 1, 0, 1, 1,  0, 1, 1, 0); //para efectos de prueba se declara una costante, posteriormente se debe trabajar obteniendo la información desde la DB
                     ?>
                     <div class="cont_accesorios">
                         <?php
@@ -552,10 +552,10 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                 <div id="evaluacionesPublicProfile" style="margin-left:26px;margin-top: 0px;">
                     <div class="evaluacion">
                         <?php
-                        $cantidadDeComentariosSobreMi = count($comentarios);
+                        //$cantidadDeComentariosSobreMi = count($comentarios); //Se declara más arriba para su utilización
                         if ($comentarios[0] == null) {
                             ?>
-                            <div class="seccion" style="margin-top:25px;height: 25px;">
+                            <div class="seccion" style="margin-top:25px;height: 40px;float:none;">
                                 <h2 class="subtitulos punteado" style="margin-top:0px;margin-left:0px;">Calificaciones (0)</h2>
                             </div><!--fin seccion -->
                             <p style="float:left;margin-left:10px;font-size:14px;color:#BCBEB0;font-style:italic;"><?= $user->getFirstname(); ?> aún no tiene calificaciones</p>

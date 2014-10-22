@@ -119,6 +119,37 @@ class autoActions extends sfActions {
             $this->transmision = "Autom&aacute;tica";
 
 
+        $cadena_accesoriosAseguradosDB = $auto->getAccesorios_Seguro();
+        $arr_accesoriosAseguradosDB = explode(',', $cadena_accesoriosAseguradosDB);
+        $acc_activos = array(0,0,0,0,0,0,0,0,0,0,0,0); //declaración todos inactivos
+        for ($j=0;$j<count($arr_accesoriosAseguradosDB);$j++){ //recorriendo accesorios asegurados en la dbactivados o no respectivamente.
+            if ($arr_accesoriosAseguradosDB[$j] == "aireAcondicionado"){
+                $acc_activos[0] = 1;
+            }else if($arr_accesoriosAseguradosDB[$j] == "sillaBebe"){
+                $acc_activos[1] = 1;
+            }else if($arr_accesoriosAseguradosDB[$j] == "esp_electricos"){
+                $acc_activos[2] = 1;
+            }else if($arr_accesoriosAseguradosDB[$j] == "esp_Manuales"){
+                $acc_activos[3] = 1;
+            }else if($arr_accesoriosAseguradosDB[$j] == "vid_electricos"){
+                $acc_activos[4] = 1;
+            }else if($arr_accesoriosAseguradosDB[$j] == "vid_manuales"){
+                $acc_activos[5] = 1;
+            }else if($arr_accesoriosAseguradosDB[$j] == "vid_manuales"){
+                $acc_activos[6] = 1;
+            }else if($arr_accesoriosAseguradosDB[$j] == "alarma"){
+                $acc_activos[7] = 1;
+            }else if($arr_accesoriosAseguradosDB[$j] == "sensorRetroceso" || $arr_accesoriosAseguradosDB[$j] == "sensorAcercamiento"){
+                $acc_activos[8] = 1;
+            }else if($arr_accesoriosAseguradosDB[$j] == "sistemaABS"){
+                $acc_activos[9] = 1;
+            }else if($arr_accesoriosAseguradosDB[$j] == "airBag"){
+                $acc_activos[10] = 1;
+            }else if($arr_accesoriosAseguradosDB[$j] == "tap_cuero"){
+                $acc_activos[11] = 1;
+            }
+        }
+        $this->arr_accesorios_activos = $acc_activos;
 
         $id_comuna = $auto->getComunaId($request->getParameter('id'));
 
@@ -204,6 +235,9 @@ class autoActions extends sfActions {
             $this->comentarios = $comentariosOrd;
             $this->puntualidad = $this->user->getScorePuntualidad();
             $this->limpieza = $this->user->getScoreLimpieza();
+
+            //var_dump("Limpieza: ".$this->limpieza." - Puntualidad: ".$this->puntualidad);
+            //die();
 
             $title = "Arriendo " . $this->car->getModel() . " " . $this->car->getModel()->getBrand() . " en " . $nombreComuna . " - Rent a Car Vecino";
             $metaDescription = "Arriendo de " . $this->car->getModel()->getBrand() . " " . $this->car->getModel() . ".  Rent a car en " . $nombreComuna . ".";
