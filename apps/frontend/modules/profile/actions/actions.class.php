@@ -2895,7 +2895,7 @@ class profileActions extends sfActions {
                 if ($this->deposito == "depositoGarantia") {
                     //$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(2);
                     $this->montoDeposito = sfConfig::get("app_monto_garantia");
-                    $this->enviarCorreoTransferenciaBancaria();
+                    //$this->enviarCorreoTransferenciaBancaria();
                 } else if ($this->deposito == "pagoPorDia") {
                     //$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(1);
                     $this->montoDeposito = $montoTotalPagoPorDia;
