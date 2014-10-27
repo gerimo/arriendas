@@ -1809,7 +1809,7 @@ class profileActions extends sfActions {
             $mail->setSubject('Has recibido un pedido de reserva!');
             $mail->setBody("<p>Hola $name:</p>
             <p>Has recibido un pedido de reserva por 
-            $$price por tu $marcaModelo desde <b>$fechaInicio $horaInicio</b> 
+            $price por tu $marcaModelo desde <b>$fechaInicio $horaInicio</b> 
                 hasta <b>$fechaTermino $horaTermino</b> 
                 cuando te habrán devuelto el auto.</p><p>Para ver la reserva 
                 has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a></p>");

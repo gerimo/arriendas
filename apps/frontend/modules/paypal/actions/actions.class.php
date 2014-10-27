@@ -252,7 +252,7 @@ class paypalActions extends sfActions {
                                     $message = $mail->getMessage();
                                     $message->setSubject('La reserva ha sido pagada!');
                                     $body = "<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
-                                    $body .= "<p>En caso de siniestro debes dejar constancia en la comisaría más cercana INMEDITAMENTE y llamar al (02)2905 5430.</p>";
+                                    $body .= "<p>En caso de siniestro debes dejar constancia en la comisaría más cercana INMEDITAMENTE y llamar al (02)2333 3714.</p>";
                                     $message->setBody($mail->addFooter($body), 'text/html');
                                     $message->setTo($emailRenter);
                                     $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
