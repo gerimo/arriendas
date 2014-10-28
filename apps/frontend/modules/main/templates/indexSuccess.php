@@ -1538,7 +1538,7 @@ if ($day_to) {
             }
             echo "</div>
                 <div id='tagLineArrendatario'>
-                    <h2 style='font-family: Helvetica,Arial,sans-serif;font-size: 26px;
+                    <h1 style='font-family: Helvetica,Arial,sans-serif;font-size: 26px;
 letter-spacing: -1px;
 font-weight: normal;
 display: block;
