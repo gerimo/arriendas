@@ -208,7 +208,7 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
             <div class="main_contenido">
 
                 <div class="barraSuperior">
-                    <h2>INFORMACIÓN DEL AUTO PARA RENT A CAR</h2>
+                    <h2>INFORMACIÓN DEL AUTO EN RENT A CAR</h2>
                 </div>
                 <div class="ladoIzquierdo">
                     <div id="imagenPerfil">
