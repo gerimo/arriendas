@@ -213,7 +213,7 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
                 <div class="ladoIzquierdo">
                     <div id="imagenPerfil">
                         <?php
-                        $image_alt = "arriendoautos/rentacar/" . $car->getModel()->getBrand() . $car->getModel() . "/" . $nombreComunaUrl . "/" . $car->getId();
+                        $image_alt = "arriendo-de-autos/rent-a-car/" . $car->getModel()->getBrand() . $car->getModel() . "/" . $nombreComunaUrl . "/" . $car->getId();
                         $image_title = "arriendoauto/" . $car->getId();
                         if ($car->getPhotoS3() == 1) {
                             echo image_tag("http://www.arriendas.cl/main/s3thumb?alto=185&ancho=185&urlFoto=" . $car->getFoto(), array("width" => "185", "height" => "185", "alt" => $image_alt, "title" => $image_title));
