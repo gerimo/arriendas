@@ -7,14 +7,14 @@
         <?php include_title() ?>
 	<link href="http://arriendas.assets.s3.amazonaws.com/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
-        <meta property="og:description" content="Arrienda un auto vecino con seguro premium, asistencia de viaje y TAGs incluídos. Busca un auto por ubicación o por precio. Rent a car Vecino."/>
-        <meta property="og:title" content="Arriendas.cl - Arrienda un auto vecino, cerca de ti" />
+        <meta property="og:description" content="Arriendo de autos vecinos con seguro premium, asistencia de viaje y TAGs incluídos. Busca un auto por ubicación o por precio. Rent a car Vecino."/>
+        <meta property="og:title" content="Rent a car vecino. Arriendo de autos, cerca de ti - Arriendas.cl" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="<?php echo image_path('Home/logo_arriendas3.jpg', 'absolute=true');?>" />
         <meta property="og:url" content="http://arriendas.cl<?php echo sfContext::getInstance()->getController()->genUrl(sfContext::getInstance()->getRouting()->getCurrentInternalUri());?>" />
-        <meta property="og:site_name" content="Arriendas.cl - Arrienda un auto vecino, cerca de ti" />
+        <meta property="og:site_name" content="Rent a car vecino. Arriendo de autos, cerca de ti - Arriendas.cl" />
         <meta property="fb:admins" content="germanrimo" />
-        <meta property="og:description" content="Arrienda un auto por horas o Gana dinero todos los meses arrendando tu auto, con seguro." />
+        <meta property="og:description" content="Arriendo de autos por horas o Gana dinero todos los meses arrendando tu auto, con seguro." />
         <meta name="google-site-verification" content="Y0Lya1N8r_8QIRxeyg3ht2lcwxR2B0VmBLAgopF2lgQ" />        
             <?php /* include_http_metas() */ ?>
             

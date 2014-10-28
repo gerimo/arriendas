@@ -667,7 +667,7 @@ function restarHoras(hora_desde, hora_hasta) {
 
             <!-- información del auto -->
             <div class="barraSuperior infoAuto" style='float:left; width:100%; margin-top:30px;'>
-                <p>INFORMACIÓN DEL AUTO EN ARRIENDO</p>
+                <p>INFORMACIÓN DEL AUTO PARA RENT A CAR</p>
             </div>
                 <div class="ladoIzquierdo">
                     <div id="imagenPerfil">

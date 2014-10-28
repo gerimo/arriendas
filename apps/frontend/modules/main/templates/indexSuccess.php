@@ -1543,7 +1543,7 @@ letter-spacing: -1px;
 font-weight: normal;
 display: block;
 color: #303030;
-font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con seguro 1000UF, asistencia y TAGs en el <span class='dest'>precio final</span></h2>
+font-style: italic;'>Arriendo de autos <span class='dest'>vecinos</span> con seguro 1000UF, asistencia y TAGs en el <span class='dest'>precio final</span></h2>
 
                 </div>";
             ?>
@@ -1753,7 +1753,7 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
 
             <div id="seguro"> 
 
-                <div class="titulos">Preguntas frecuentes (arrienda un auto)</div>
+                <div class="titulos">Preguntas frecuentes (arriendo de autos)</div>
 
                 <!--<div id="seguroContenidos">-->
 

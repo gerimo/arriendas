@@ -6,8 +6,8 @@ default:
     content-type: text/html
 
   metas:
-    title:        Arriendas.cl | Rent a car vecino en Chile
-    description:  Arrienda un auto vecino con seguro premium, asistencia de viaje y TAGs incluídos. Busca un auto por ubicación o por precio. Rent a car Vecino.
+    title:        Rent a car vecino. Arriendo de autos en Chile | Arriendas.cl
+    description:  Arriendo de autos vecinos con seguro premium, asistencia de viaje y TAGs incluídos. Busca un auto por ubicación o por precio. Rent a car Vecino.
     #keywords:     symfony, project
     language:     es
     robots:       index, follow

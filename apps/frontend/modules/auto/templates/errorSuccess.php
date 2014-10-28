@@ -174,7 +174,7 @@ a{text-decoration:none;}
 <div class="main_contenido">
 
 	<div class="barraSuperior">
-		<p>INFORMACIÓN DEL AUTO EN ARRIENDO</p>
+		<p>INFORMACIÓN DEL AUTO PARA RENT A CAR</p>
 	</div>
 
 	<br>
