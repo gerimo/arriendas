@@ -249,6 +249,7 @@ class bcpuntopagosActions extends sfActions {
      * @param sfRequest $request A request object
      */
     public function executeExito(sfWebRequest $request) {
+
         $customer_in_session = $this->getUser()->getAttribute('userid');
 
         if ($customer_in_session) {
@@ -385,7 +386,7 @@ class bcpuntopagosActions extends sfActions {
 
                     //mail Soporte
                     $message = $mail->getMessage();
-                    $message->setSubject('Nueva reserva paga ' . idReserve . '');
+                    $message->setSubject('Nueva reserva paga ' . $idReserve . '');
                     $body = "<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
                     $message->setBody($mail->addFooter($body), 'text/html');
                     $message->setTo("soporte@arriendas.cl");
@@ -393,6 +394,39 @@ class bcpuntopagosActions extends sfActions {
                     $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
                     $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
                     $mailer->send($message);
+
+                    // mail si posee ip ambigua
+                    try {
+
+                        $renter = $reserve->getRenter();
+                        $owner  = $reserve->getOwner();
+                        $ip = $renter->getTrackedIps();
+
+                        if ($renter->getIpAmbigua()) {
+
+                            // si posee la ip ambigua se envia el correo
+                            $body = "" .
+                                "<p>El pago ID {$order->getId()}, reserva ID {$reserve->getId()} tiene las IP {$ip} en común</p>" .
+                                "<p>Datos del propietario:".
+                                    "<br><br>Nombre: {$owner->getFirstname()} {$owner->getLastname()}".
+                                    "<br>Teléfono: {$owner->getTelephone()}".
+                                    "<br>Correo: {$owner->getEmail()}".
+                                    "<br>Id: {$owner->getId()}</p>".
+                                "<p>Datos del arrendatario:".
+                                    "<br><br>Nombre: {$renter->getFirstname()} {$renter->getLastname()}".
+                                    "<br>Teléfono: {$renter->getTelephone()}".
+                                    "<br>Correo: {$renter->getEmail()}".
+                                    "<br>Id: {$renter->getId()}</p>".
+                                "";
+                            $message = $mail->getMessage();
+                            $message->setSubject('Reserva Paga con IP coincidente ');
+                            $message->setBody($mail->addFooter($body), 'text/html');
+                            $message->setTo("soporte@arriendas.cl");
+                            $mailer->send($message);
+                        }
+                    } catch (Exception $ex) {
+                        error_log($ex->getMessage());
+                    }
 
                     //crea la fila calificaciones habilitada para la fecha de término de reserva + 2 horas (solo si no es una extension de otra reserva)
                     if (!$reserve->getIdPadre()) {
