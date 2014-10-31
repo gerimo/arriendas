@@ -675,6 +675,8 @@ Reserve:
     cambioEstadoRapido:
       type: boolean
       notnull: true
+    numero_factura:
+      type: integer(7)
   relations:
     User:
       class: User
@@ -778,6 +780,8 @@ Transaction:
       type: decimal(10,2)
     show_success:
       type: boolean
+    numero_factura:
+      type: integer(7)
   relations:
     User:
       class: User

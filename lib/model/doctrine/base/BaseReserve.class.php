@@ -26,6 +26,7 @@
  * @property Transaction $Transaction
  * @property decimal $price
  * @property integer $Extend
+ * @property integer $numero_factura
  * 
  * @method integer             getId()          Returns the current record's "id" value
  * @method timestamp           getDate()        Returns the current record's "date" value
@@ -48,8 +49,10 @@
  * @method Reserve             getCanceled()    Returns the current record's "Canceled" value
  * @method Reserve             getKminicial()   Return the current record's "Kminicial" value
  * @method Reserve             getKmfinal()     Return the current record's "Kmfinal" value
- * @method decimal         getPrice()              Returns the current record's "price" value
+ * @method decimal             getPrice()              Returns the current record's "price" value
  * @method integer             getExtend()      Return the current record's "Extend" value
+ * @method integer             getNumeroFactura()      Returns the current record's "numero_factura" value
+ * 
  * @method Reserve             setId()          Sets the current record's "id" value
  * @method Reserve             setDate()        Sets the current record's "date" value
  * @method Reserve             setDuration()    Sets the current record's "duration" value
@@ -75,6 +78,7 @@
  * @method Reserve             setKmfinal()     Sets the current record's "kmfinal" value
  * @method Reserve             setPrice()       Sets the current record's "price" value
  * @method Integer             setExtend()      Sets the current record's "extend" value
+ * @method integer             setNumeroFactura()      Sets the current record's "numero_factura" value
  * 
  * @package    CarSharing
  * @subpackage model
@@ -286,6 +290,10 @@ abstract class BaseReserve extends sfDoctrineRecord
             'type' => 'boolean',
             'notnull' => '0',
             'default' => 0,
+            ));
+        $this->hasColumn('numero_factura', 'integer', 7, array(
+            'type' => 'integer',
+            'length' => 7,
             ));
         $this->index('fk_Reserve_User1', array(
              'fields' => 

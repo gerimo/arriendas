@@ -331,6 +331,9 @@ class bcpuntopagosActions extends sfActions {
 
                 //verifica que la reserva no esté completa
                 if (!$order->getCompleted()) {
+                    
+                    $this->generarNroFactura($reserve, $order);                   
+                    
                     //actualiza el estado completed
                     $order->setCompleted(true);
                     $order->save();
@@ -412,10 +415,12 @@ class bcpuntopagosActions extends sfActions {
                         $reserve->setFechaPago(strftime("%Y-%m-%d %H:%M:%S"));
                         $reserve->setRatingId($ratingId);
                         $reserve->save();
+                        
                     }
 
                     //almacena $idReserve en la tabla mail calificaciones
                     $reserve->encolarMailCalificaciones();
+                    
                 }
             } else {
                 echo "No hay compras hechas para ser pagadas (Error de monto invalido)";
@@ -425,6 +430,82 @@ class bcpuntopagosActions extends sfActions {
         } else {
             $this->redirect('@homepage');
         }
+    }
+    
+    /** 
+     * generación de nro. de factura
+     * en tablas Reserve y Transaction
+     * @param type $reserve
+     * @param type $order
+     */
+    private function generarNroFactura($reserve, $order){
+        
+        // primero valido que no exista otra factura ya generada 
+        // para la misma quincena y mismo user_id
+
+        $date = date('Ymd');
+        $actual_day = date('j');
+        $first_day  = $date->modify('first day of this month')->format('Ymd');
+        $day_15 = date('Ymd', strtotime($first_day. ' + 14 days'));
+        if($actual_day <= 15){
+            // primera quincena
+            $quincena_from = $first_day;
+            $quincena_to = $day_15;
+        }else{
+            // segunda quincena
+            $quincena_from = $day_15;
+            $quincena_to = date('Ymt', strtotime($quincena_from));  //t returns the number of days in the month of a given date
+        }
+
+
+        $trans_query = Doctrine_Query::create()
+            ->from('Transaction t')
+            ->leftJoin('t.Reserve r')
+            ->leftJoin('r.Car c')
+            ->leftJoin('c.User u')
+            ->where('u.user_id = ?', $reserve->getIdOwner())
+            ->andWhere('t.completed = ?', true)
+            ->andwhere('t.date BETWEEN ? AND ?', $quincena_from, $quincena_to);
+            //->fetchOne();
+        
+        $cant_transac = $trans_query->count();
+
+        $conn = Doctrine_Manager::getInstance()->getCurrentConnection();
+        $conn->beginTransaction();
+        
+        $nro_fac_transaction = 0;
+        if($cant_transac > 0)
+        {
+            // hay factura generada durante quincena actual, asigno mismo nro.
+            $trans = $trans_query->fetchOne();
+            $nro_fac_transaction = $trans->getNumeroFactura();
+            $order->setNumeroFactura($nro_fac_transaction);
+        }else{                    
+            // no hay factura generada durante quincena actual, asigno el siguiente nro.
+            try{
+                $q = "select max(numero_factura) nro_fac from Transaction";
+                $query = Doctrine_Query::create()->query($q);
+                $trans = $query->toArray();
+                $nro_fac_transaction = $trans[0]['nro_fac'] + 1;
+                $order->setNumeroFactura($nro_fac_transaction);
+
+            } catch (Exception $ex) {
+                echo $ex->getMessage();
+            }
+        }
+        $order->save();
+        
+        $montoLiberacion = $reserve->getMontoLiberacion();
+        $montoGarantia = sfConfig::get('deposito_garantia');
+        if($montoLiberacion != $montoGarantia)
+        {
+            $nro_fac_reserve = $cant_transac > 0? $cant_transac + 2: $nro_fac_transaction + 1;
+            $reserve->setNumeroFactura($nro_fac_reserve + 1);
+            $reserve->save();
+        }                    
+
+        //Resolvemos la transaccoin
+        $conn->commit();
     }
     
     
@@ -507,114 +588,6 @@ class bcpuntopagosActions extends sfActions {
                 $this->lastnameOwner = $reserve->getLastnameOwner();
                 $this->telephoneOwner = $reserve->getTelephoneOwner();
 
-                /*$idReserve = $order->getReserveId();
-                $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
-
-                $tokenReserve = $reserve->getToken();
-                $this->tokenReserve = $reserve->getToken();
-                $nameRenter = $reserve->getNameRenter();
-                $this->nameOwner = $reserve->getNameOwner();
-                $emailRenter = $reserve->getEmailRenter();
-                $this->emailOwner = $reserve->getEmailOwner();
-                $nameOwner = $reserve->getNameOwner();
-                $emailOwner = $reserve->getEmailOwner();
-                $lastnameRenter = $reserve->getLastnameRenter();
-                $this->lastnameOwner = $reserve->getLastnameOwner();
-                $lastnameOwner = $reserve->getLastnameOwner();
-                $telephoneRenter = $reserve->getTelephoneRenter();
-                $this->telephoneOwner = $reserve->getTelephoneOwner();
-                $telephoneOwner = $reserve->getTelephoneOwner();
-                $addressCar = $reserve->getAddressCar();
-                $idCar = $reserve->getCarId();
-
-                //verifica que la reserva no esté completa
-                if (!$order->getCompleted()) {
-                    //actualiza el estado completed
-                    $order->setCompleted(true);
-                    $order->setShowSuccess(true);
-                    $order->save();
-
-                    //envío de mail
-                    require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
-
-                    //pedidos de reserva pagado (propietario)
-                    $mail = new Email();
-                    $mailer = $mail->getMailer();
-
-                    $message = $mail->getMessage();
-                    $message->setSubject('El arrendatario ha pagado la reserva!');
-                    $body = "<p>Hola $nameOwner:</p><p>El arrendatario ha pagado la reserva!</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>Puedes llenar el formulario <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/$idReserve'>desde tu celular</a>.</p><p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameRenter $lastnameRenter<br>Teléfono: $telephoneRenter<br>Correo: $emailRenter</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
-                    $message->setBody($mail->addFooter($body), 'text/html');
-                    $message->setTo($emailOwner);
-                    $functions = new Functions;
-                    $formulario = $functions->generarFormulario(NULL, $tokenReserve);
-                    $reporte = $functions->generarReporte($idCar);
-                    $contrato = $functions->generarContrato($tokenReserve);
-                    $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
-                    $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
-                    $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
-                    
-                    $renterUser = $reserve->getUser();
-                    if (!is_null($renterUser->getDriverLicenseFile())) {
-                        $filepath = $renterUser->getDriverLicenseFile();
-                        if (is_file($filepath)) {
-                            $message->attach(Swift_Attachment::fromPath($renterUser->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$renterUser->getLicenceFileName()));
-                        }
-                    }
-                    
-                    $mailer->send($message);
-
-
-                    //pedidos de reserva pagado (arrendatario)
-                    $message = $mail->getMessage();
-                    $message->setSubject('La reserva ha sido pagada!');
-                    $body = "<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
-                    $body .= "<p>En caso de siniestro debes dejar constancia en la comisaría más cercana INMEDITAMENTE y llamar al (02)2905 5430.</p>";
-                    $message->setBody($mail->addFooter($body), 'text/html');
-                    $message->setTo($emailRenter);
-                    $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
-                    $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
-                    $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
-                    
-                    $pagare = $functions->generarPagare($tokenReserve);
-                    $message->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
-                                    
-                    $mailer->send($message);
-
-                    //mail Soporte
-                    $message = $mail->getMessage();
-                    $message->setSubject('Nueva reserva paga ' . idReserve . '');
-                    $body = "<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
-                    $message->setBody($mail->addFooter($body), 'text/html');
-                    $message->setTo("soporte@arriendas.cl");
-                    $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
-                    $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
-                    $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
-                    $mailer->send($message);
-
-                    //crea la fila calificaciones habilitada para la fecha de término de reserva + 2 horas (solo si no es una extension de otra reserva)
-                    if (!$reserve->getIdPadre()) {
-
-                        $fecha = $reserve->getFechaHabilitacionRating();
-                        $idOwner = $reserve->getIdOwner();
-                        $idRenter = $reserve->getIdRenter();
-
-                        $rating = new Rating();
-                        $rating->setFechaHabilitadaDesde($fecha);
-                        $rating->setIdOwner($idOwner);
-                        $rating->setIdRenter($idRenter);
-                        $rating->save();
-
-                        //actualiza rating_id en la tabla Reserve
-                        $ratingId = $rating->getId();
-                        $reserve->setFechaPago(strftime("%Y-%m-%d %H:%M:%S"));
-                        $reserve->setRatingId($ratingId);
-                        $reserve->save();
-                    }
-
-                    //almacena $idReserve en la tabla mail calificaciones
-                    $reserve->encolarMailCalificaciones();
-                }*/
             } else {
                 echo "No hay compras hechas para ser pagadas (Error de monto invalido)";
                 $this->_log("Pago", "Error", "Usuario: " . $customer_in_session . ". Order ID: " . $order->getId());

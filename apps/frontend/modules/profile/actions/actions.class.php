@@ -435,13 +435,32 @@ class profileActions extends sfActions {
             $sendNotifications = true;
             $reservasOtras = Doctrine_Core::getTable("Reserve")->findByUserId($reserve->getUserId());
             foreach ($reservasOtras as $reservaUsuario){
-                if($reserve->getDate() == $reservaUsuario->getDate() && $reservaUsuario->getComplete() == 1){
+                if($reserve->getDate() == $reservaUsuario->getDate() //&& $reservaUsuario->getComplete() == 1){
+                        && $reservaUsuario->getTransaction()->getCompleted()){
                     $sendNotifications = false;
                     break;
                 }
             }
 
             //envía mail de preaprobación al arrendatario
+            
+            
+            /** busco otra reserva con mismo date y duration, pagada
+            
+            $reserve_paga_query = Doctrine_Query::create()
+                ->from('Reserve r')
+                ->leftJoin('r.Transaction t')
+                ->leftJoin('r.Car c')
+                ->leftJoin('c.User u')
+                ->where('u.user_id = ?', $oReserve->getIdRenter())
+                ->andWhere('t.completed = ?', true)
+                ->andwhere('r.date = ?', $oReserve->getDate())
+                ->andWhere('r.duration - ?', $oReserve->getDuration());
+            
+            $existe_reserva_paga = $reserve_paga_query->count() > 0? true : false;
+            
+            if(!$existe_reserva_paga){ **/
+            
             require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
             //al arrendatario
             $mail = new Email();
@@ -466,10 +485,10 @@ class profileActions extends sfActions {
             $functions = new Functions;
             $contrato = $functions->generarContrato($tokenReserve);
             $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
-            
+
             $pagarePath = sfConfig::get("sf_web_dir")."/pagare_arriendas.pdf";
             $message->attach(Swift_Attachment::fromPath($pagarePath)->setFilename("pagare_arriendas.pdf"));
-            
+
             if($sendNotifications){
                 $mailer->send($message);
             }
@@ -1595,8 +1614,29 @@ class profileActions extends sfActions {
 
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
         $from = $request->getParameter('datefrom');
+        
+        $t = strtotime($from);
+        $from_ymd = date('Y-m-d',$t);
+    
         $to = $request->getParameter('dateto');
         $carid = $request->getParameter('id');
+        
+        // valido que no exista una reserva idéntica
+        $reserve_query = Doctrine_Query::create()
+                ->from('Reserve r')
+                ->leftJoin('r.Car c')
+                ->where('r.user_id = ?', $idUsuario)
+                ->andWhere('DATE(r.date) = ?', $from_ymd)
+                ->andWhere('c.id = ?', $carid);
+        
+        $reserva_identica = $reserve_query->fetchOne();
+        
+        if($reserva_identica){
+            sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
+            $url = url_for("profile/pedidos");
+            $this->getUser()->setFlash('msg', 'Ya has realizado una reserva para este mismo auto y fecha! <br> Si deseas puedes actualizar tu reserva haciendo click <a href="'.$url.'"> aquí </a>');
+            $this->redirect('profile/reserve?id=' . $carid);
+        }
 
         $car = Doctrine_Core::getTable('car')->find(array($request->getParameter('id')));
 
@@ -1641,7 +1681,7 @@ class profileActions extends sfActions {
             $this->getUser()->setFlash('msg', 'Seleccione la fecha de inicio y de entrega');
             $this->redirect('profile/reserve?id=' . $request->getParameter('id'));
         }
-
+        
 
         $hourdesde = $request->getParameter('hour_from');
         $hourhasta = $request->getParameter('hour_to');
@@ -3771,6 +3811,22 @@ class profileActions extends sfActions {
                 if ($reserva->getConfirmed() == true 
                         && date('Y-m-d', strtotime($reserva->getFechaReserva())) == date("Y-m-d") 
                         && (is_null($reserva->getComentario()) || trim($reserva->getComentario()) == "null")) {
+                    $reservasRecibidas[$i]['estado'] = 1;
+                }
+                
+                // verifico si la oportunidad aplica, o por el contrario
+                // ya no debería mostrarla porque ya se aprobó una oportunidad igual antes
+                // (oportunidades múltiples generadas por el mismo arrendatario)
+                $reserva_igual = Doctrine_Query::create()
+                        ->from('Reserve r')
+                        ->leftJoin('r.Car c')
+                        ->where('r.confirmed = ?', true)
+                        ->andwhere('r.date = ?', $reserva->getDate())
+                        ->andwhere('r.user_id = ?', $reserva->getUserId())
+                        ->andwhere('c.user_id =?', $this->getUser()->getAttribute("userid"))
+                        ->fetchOne();
+                
+                if($reserva_igual){
                     $reservasRecibidas[$i]['estado'] = 1;
                 }
 
