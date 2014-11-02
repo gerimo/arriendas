@@ -1614,14 +1614,18 @@ class profileActions extends sfActions {
 
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
         $from = $request->getParameter('datefrom');
-        
-        $t = strtotime($from);
-        $from_ymd = date('Y-m-d',$t);
-    
         $to = $request->getParameter('dateto');
         $carid = $request->getParameter('id');
         
-        // valido que no exista una reserva idéntica
+        $hourdesde = $request->getParameter('hour_from');
+        $hourhasta = $request->getParameter('hour_to');
+        $startDate = date("Y-m-d H:i:s", strtotime($from . ' ' . $hourdesde));
+        $endDate = date("Y-m-d H:i:s", strtotime($to . ' ' . $hourhasta));
+        
+        $t = strtotime($from);
+        $from_ymd = date('Y-m-d',$t);        
+        
+        // valido que no exista una reserva idéntica, o con la misma fecha
         $reserve_query = Doctrine_Query::create()
                 ->from('Reserve r')
                 ->leftJoin('r.Car c')
@@ -1629,13 +1633,21 @@ class profileActions extends sfActions {
                 ->andWhere('DATE(r.date) = ?', $from_ymd)
                 ->andWhere('c.id = ?', $carid);
         
-        $reserva_identica = $reserve_query->fetchOne();
+        $result = $reserve_query->fetchOne();
         
-        if($reserva_identica){
-            sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
-            $url = url_for("profile/pedidos");
-            $this->getUser()->setFlash('msg', 'Ya has realizado una reserva para este mismo auto y fecha! <br> Si deseas puedes actualizar tu reserva haciendo click <a href="'.$url.'"> aquí </a>');
-            $this->redirect('profile/reserve?id=' . $carid);
+        if($result){
+            // si es una reserva idéntica (misma fecha/hora), muestro error
+            if($result->getDate() == $startDate){
+                //sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
+                //$url = url_for("profile/pedidos");
+                $this->getUser()->setFlash('msg', 'Ya has realizado una reserva para este mismo auto y en la misma fecha y horario.');    // <br> Si deseas puedes actualizar tu reserva haciendo click <a href="'.$url.'"> aquí </a>');
+                $this->redirect('profile/reserve?id=' . $carid);
+            }else{
+                // es una reserva con igual fecha pero diferentes horarios, actualizo la existente
+                $this->redirect($this->generateUrl('editReserve', array('idReserva' => $result->getId(),
+                    'fechainicio' => $startDate, 'fechafin' => $endDate, 'carid' => $carid, 'sendReserve' => TRUE)));
+                
+            }
         }
 
         $car = Doctrine_Core::getTable('car')->find(array($request->getParameter('id')));
@@ -1683,16 +1695,9 @@ class profileActions extends sfActions {
         }
         
 
-        $hourdesde = $request->getParameter('hour_from');
-        $hourhasta = $request->getParameter('hour_to');
-
         if (preg_match('/^\d{1,2}\-\d{1,2}\-\d{4}$/', $from) && preg_match('/^\d{1,2}\-\d{1,2}\-\d{4}$/', $to)) {
 
             //CORROBORAR SI SE SOLICITO ANTES PERO TIENE DURACION DURANTE EL PEDIDO
-
-            $startDate = date("Y-m-d H:i:s", strtotime($from . ' ' . $hourdesde));
-            $endDate = date("Y-m-d H:i:s", strtotime($to . ' ' . $hourhasta));
-
             $rangeDates = array($startDate, $endDate, $startDate, $endDate, $startDate, $endDate);
             $diff = strtotime($endDate) - strtotime($startDate);
 
@@ -5431,6 +5436,11 @@ class profileActions extends sfActions {
             }
         } else {
             echo 'Por favor ingrese fechas con formato YYYY-MM-DD HH:MM';
+        }
+        
+        if(!empty($request->getParameter('sendReserve'))){
+            $this->redirect('profile/reserveSend?id=' . $idReserva);
+            die();
         }
         return sfView::NONE;
     }

@@ -42,6 +42,10 @@ khipuCancel:
 pedidos:
     url: /profile/pedidos
     param:  { module: profile, action: pedidos }
+    
+editReserve:
+    url: /profile/editReserve
+    param:  { module: profile, action: editReserve }
 
 facebook_login:
     url: /main/loginFacebook 
