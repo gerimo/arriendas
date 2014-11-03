@@ -392,7 +392,6 @@ class bcpuntopagosActions extends sfActions {
                     $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
                     $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
                     $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
-                    $mailer->send($message);
                     $renterUser = $reserve->getUser();
                     if (!is_null($renterUser->getDriverLicenseFile())) {
                         $filepath = $renterUser->getDriverLicenseFile();
@@ -401,6 +400,7 @@ class bcpuntopagosActions extends sfActions {
                         }
                     }
                     
+                    $mailer->send($message);
 
                     //crea la fila calificaciones habilitada para la fecha de término de reserva + 2 horas (solo si no es una extension de otra reserva)
                     if (!$reserve->getIdPadre()) {
