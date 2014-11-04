@@ -2619,7 +2619,6 @@ class profileActions extends sfActions {
             $this->fndreserve['fechatermino'] = $this->getUser()->getAttribute("fechatermino");
         if ($this->getUser()->getAttribute("horatermino"))
             $this->fndreserve['horatermino'] = $this->getUser()->getAttribute("horatermino");
-
         
         $fechaActual = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S", strtotime('+3 hours', time())));    // sumo 3hs a la hora chilena.
         $this->ultimaFechaValidaDesde = date("d-m-Y", strtotime($fechaActual));
@@ -2653,13 +2652,29 @@ class profileActions extends sfActions {
             }
             if($ultimaFecha)
             {
-                $fechaAlmacenadaDesde = date("YmdHis",$ultimaFecha);
+                $fechaAlmacenadaDesde = date("YmdHis",$ultimaFecha);    // ultima guardada en ddbb
+                if($this->getUser()->getAttribute("fechainicio")){
+                    $time_desde = strtotime($this->getUser()->getAttribute("fechainicio") . " " . $this->getUser()->getAttribute("horainicio"));
+                    $fechaSessionDesde = date("YmdHis", $time_desde);
+                    $fechaAlmacenadaDesde = ($fechaSessionDesde < $fechaAlmacenadaDesde)? $fechaAlmacenadaDesde : $fechaSessionDesde;
+                    $ultimaFecha = ($fechaSessionDesde < $fechaAlmacenadaDesde)? $ultimaFecha : $time_desde;
+                    
+                    // obtengo duración de la session
+                    $time_hasta = strtotime($this->getUser()->getAttribute("fechatermino") . " " . $this->getUser()->getAttribute("horatermino"));
+                    $duracion = $time_hasta - $time_desde;
+                }
                 if( date("YmdHis", strtotime($fechaActual)) < $fechaAlmacenadaDesde)
                 {
                     $day_from = date("d-m-Y",$ultimaFecha);
                     $hour_from = date("H:i",$ultimaFecha);
                     $day_to = date("d-m-Y",$ultimaFecha+$duracion*3600);
                     $hour_to = date("H:i",$ultimaFecha+$duracion*3600);
+                    
+                    $this->getUser()->setAttribute('fechainicio', $day_from);
+                    $this->getUser()->setAttribute('fechatermino', $day_to);
+                    $this->getUser()->setAttribute('horainicio', $hour_from);
+                    $this->getUser()->setAttribute('horatermino', $hour_to);
+                    
                     $this->ultimaFechaValidaDesde = $day_from;
                     $this->ultimaFechaValidaHasta = $day_to;
                     $this->ultimaHoraValidaDesde = $hour_from;

@@ -684,10 +684,10 @@ public function executeNotificacion(sfWebRequest $request) {
         }
         
         $fechaActual = $this->formatearHoraChilena(strftime("%Y%m%d%H%M%S", strtotime('+3 hours', time())));    // sumo 3hs a la hora chilena.
-        $this->day_from = date("d-m-Y", strtotime($fechaActual));
-        $this->day_to = date("d-m-Y",strtotime("+2 days",strtotime($fechaActual)));
-        $this->hour_from = date("H:i",strtotime($fechaActual));
-        $this->hour_to = date("H:i",strtotime($fechaActual)+12*3600);
+        $this->day_from = (!$this->getUser()->getAttribute("fechainicio"))? date("d-m-Y", strtotime($fechaActual)) : $this->getUser()->getAttribute("fechainicio");
+        $this->day_to = (!$this->getUser()->getAttribute("fechatermino"))? date("d-m-Y",strtotime("+2 days",strtotime($fechaActual))) : $this->getUser()->getAttribute("fechatermino");
+        $this->hour_from = (!$this->getUser()->getAttribute("horainicio"))? date("H:i",strtotime($fechaActual)) : $this->getUser()->getAttribute("horainicio");
+        $this->hour_to = (!$this->getUser()->getAttribute("horatermino"))? date("H:i",strtotime($fechaActual)+12*3600) : $this->getUser()->getAttribute("horatermino");
         
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
         if($idUsuario)
@@ -716,7 +716,18 @@ public function executeNotificacion(sfWebRequest $request) {
             }
             if($ultimaFecha)
             {
-                $fechaAlmacenadaDesde = date("YmdHis",$ultimaFecha);
+                
+                $fechaAlmacenadaDesde = date("YmdHis",$ultimaFecha);    // ultima guardada en ddbb
+                if($this->getUser()->getAttribute("fechainicio")){
+                    $time_desde = strtotime($this->getUser()->getAttribute("fechainicio") . " " . $this->getUser()->getAttribute("horainicio"));
+                    $fechaSessionDesde = date("YmdHis", $time_desde);
+                    $fechaAlmacenadaDesde = ($fechaSessionDesde < $fechaAlmacenadaDesde)? $fechaAlmacenadaDesde : $fechaSessionDesde;
+                    $ultimaFecha = ($fechaSessionDesde < $fechaAlmacenadaDesde)? $ultimaFecha : $time_desde;
+                    
+                    // obtengo duración de la session
+                    $time_hasta = strtotime($this->getUser()->getAttribute("fechatermino") . " " . $this->getUser()->getAttribute("horatermino"));
+                    $duracion = $time_hasta - $time_desde;
+                }
                 if( date("YmdHis", strtotime($fechaActual)) < $fechaAlmacenadaDesde)
                 {
                     $day_from = date("d-m-Y",$ultimaFecha);
@@ -728,6 +739,11 @@ public function executeNotificacion(sfWebRequest $request) {
                     $this->getUser()->setAttribute('day_to', $day_to);
                     $this->getUser()->setAttribute('hour_from', $hour_from);
                     $this->getUser()->setAttribute('hour_to', $hour_to);
+                    
+                    $this->getUser()->setAttribute('fechainicio', $day_from);
+                    $this->getUser()->setAttribute('fechatermino', $day_to);
+                    $this->getUser()->setAttribute('horainicio', $hour_from);
+                    $this->getUser()->setAttribute('horatermino', $hour_to);
                     
                     $this->day_from = $day_from;
                     $this->day_to = $day_to;
@@ -1183,14 +1199,14 @@ public function executeNotificacion(sfWebRequest $request) {
 
     }
 
-	public function executeFiltrosBusqueda(sfWebRequest $request) {
-		
-		$this->getUser()->setAttribute('fechainicio', $request->getParameter('fechainicio'));
-		$this->getUser()->setAttribute('horainicio', $request->getParameter('horainicio'));
-		$this->getUser()->setAttribute('fechatermino', $request->getParameter('fechatermino'));
-		$this->getUser()->setAttribute('horatermino', $request->getParameter('horatermino'));
-		throw new sfStopException();
-	}
+    public function executeFiltrosBusqueda(sfWebRequest $request) {
+
+        $this->getUser()->setAttribute('fechainicio', $request->getParameter('fechainicio'));
+        $this->getUser()->setAttribute('horainicio', $request->getParameter('horainicio'));
+        $this->getUser()->setAttribute('fechatermino', $request->getParameter('fechatermino'));
+        $this->getUser()->setAttribute('horatermino', $request->getParameter('horatermino'));
+        throw new sfStopException();
+    }
 
     public function executeGetModelSearch(sfWebRequest $request) {
 
@@ -1368,6 +1384,11 @@ public function executeNotificacion(sfWebRequest $request) {
         $this->getUser()->setAttribute('day_to', $day_to);
         $this->getUser()->setAttribute('hour_from', $hour_from);
         $this->getUser()->setAttribute('hour_to', $hour_to);
+        
+        $this->getUser()->setAttribute('fechainicio', $day_from);
+        $this->getUser()->setAttribute('fechatermino', $day_to);
+        $this->getUser()->setAttribute('horainicio', $hour_from);
+        $this->getUser()->setAttribute('horatermino', $hour_to);
 
         $startTime = strtotime($day_from);
         $endTime = strtotime($day_to);

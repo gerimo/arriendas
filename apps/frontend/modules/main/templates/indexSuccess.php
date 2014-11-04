@@ -925,23 +925,41 @@ else
             updateLista();
         });
 
+        // desde MAPA
         $('#day_from').change(function() {
             doSearch();
         });
         $('#hour_from').change(function() {
             doSearch();
+            
+            // impacto cambio en desde/hasta de solapa LISTA
+            $('#hour_from_lista').val($(this).val());
+            $('#hour_to_lista').val($(this).val());
         });
 
+        // hasta MAPA
         $('#day_to').change(function() {
             doSearch();
         });
         $('#hour_to').change(function() {
             doSearch();
+            $('#hour_to_lista').val($(this).val());
         });
 
-//        $('#btn_buscar').click(function() {
-//            doSearch();
-//        });
+        // desde LISTA
+        $('#hour_from_lista').change(function() {
+            doSearch();
+            
+            // impacto cambio en desde/hasta de solapa MAPA
+            $('#hour_from').val($(this).val());
+            $('#hour_to').val($(this).val());
+        });
+
+        // hasta LISTA
+        $('#hour_to_lista').change(function() {
+            doSearch();
+            $('#hour_to').val($(this).val());
+        });
 
 
 //$('#searchTextField').keypress(function (e) {
@@ -984,7 +1002,32 @@ else
 
             if ($('#day_to').val() == 'Dia desde' || $('#day_to').val() == '')
                 $('#day_to').val($(this).val());
+            
+            // impacto cambio en desde/hasta de solapa LISTA
+            $('#day_from_lista').val($(this).val());
+            $('#day_to_lista').val($(this).val());
         });
+        
+        $('#day_from_lista').change(function() {
+
+            $('#day_to_lista').val($(this).val());
+            
+            // impacto cambio en desde/hasta de solapa MAPA
+            $('#day_from').val($(this).val());
+            $('#day_to').val($(this).val());
+        });
+        
+        $('#day_to').change(function() {
+            // impacto cambio en desde/hasta de solapa LISTA
+            $('#day_to_lista').val($(this).val());
+        });
+        
+        $('#day_to_lista').change(function() {
+            // impacto cambio en desde/hasta de solapa MAPA
+            $('#day_to').val($(this).val());
+        });
+        
+        
         /*	
          $('#day_to').change(function() {
          doSearch();
