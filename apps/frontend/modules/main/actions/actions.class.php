@@ -2723,34 +2723,48 @@ El equipo de Arriendas.cl
                         FROM Ips_ok
                         WHERE ip = '". $visitingIp ."'";
 
-                    $query = Doctrine_Manager::getInstance()->connection();  
+                    $query = Doctrine_Manager::getInstance()->connection();
                     $validIp = $query->fetchOne($sql);
-                    if(empty($validIp))
-                    {
-                        if(Doctrine::getTable('user')->isABlockedIp($visitingIp)){
+
+                    if(empty($validIp)) {
+
+                        // Se bloquea al usuario si es que su ip corresponde a una ip que posea CUALQUIER usuario bloqueado previamente
+                        if(Doctrine::getTable('user')->isABlockedIp($visitingIp)) {
                             $user->setBloqueado("Se loggeo desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario bloqueado.");
                         }
 
                         /** block propietario */
-                        if($user->getPropietario()){
+
+                        // Update 30/09/2014 No se bloquea al usuario y se marca con un flag ip_ambiguo
+                        //  Este flag es revisado despues en una reserva paga notificando por correo para hacer una revision manual
+                        if($user->getPropietario()) {
+
                             $noPropietarios = Doctrine::getTable('user')->getPropietarioByIp($visitingIp, false);
                             foreach ($noPropietarios as $nopropietario) {
-                                $nopropietario->setBloqueado("Un usuario propietario se loggeo desde la ip:".$visitingIp. ", desde la cual este usuario NO propietario se habia loggeado.");
+                                // $nopropietario->setBloqueado("Un usuario propietario se loggeo desde la ip:".$visitingIp. ", desde la cual este usuario NO propietario se habia loggeado.");
+                                $nopropietario->setIpAmbigua(true);
+                                $nopropietario->save();
                             }
-                            if(count($noPropietarios) > 0){
-                                $user->setBloqueado("Se loggeo usuario propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario NO propietario.");
+                            if(count($noPropietarios) > 0) {
+                                // $user->setBloqueado("Se loggeo usuario propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario NO propietario.");
+                                $user->setIpAmbigua(true);
+                                $user->save();
                             }
-                        }else{
+                        } else {
+
                             $propietarios = Doctrine::getTable('user')->getPropietarioByIp($visitingIp, true);
                             foreach ($propietarios as $propietario) {
-                                $propietario->setBloqueado("Se loggeo usuario NO propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado este usuario propietario.");
+                                // $propietario->setBloqueado("Se loggeo usuario NO propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado este usuario propietario.");
+                                $propietario->setIpAmbigua(true);
+                                $propietario->save();
                             }
-                            if(count($propietarios) > 0){
-                                $user->setBloqueado("Se loggeo este usuario NO propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario propietario.");
+                            if(count($propietarios) > 0) {
+                                // $user->setBloqueado("Se loggeo este usuario NO propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario propietario.");
+                                $user->setIpAmbigua(true);
+                                $user->save();
                             }
                         }
                     }
-                    /**/        
 
                     $this->getUser()->setFlash('msg', 'Autenticado');
                     $this->getUser()->setAuthenticated(true);

@@ -53,7 +53,7 @@ facebook_login:
     
 # URLs específicas para cada region-comuna
 region-comuna:
-    url: /autos/:region/:comuna
+    url: /arriendo-de-autos/:region/:comuna
     param: {module: main, action: index }
  
 # default rules
