@@ -663,7 +663,7 @@ public function executeFracaso(sfWebRequest $request) {
 public function executeNotificacion(sfWebRequest $request) {
 }
 
-    public function executeIndex(sfWebRequest $request) {
+    public function executeIndex(sfWebRequest $request) {//echo $this->getUser()->getAttribute("fechatermino");die;
         
         if($request->getParameter('region'))
             $this->region = Doctrine_Core::getTable('Regiones')->findOneBySlug($request->getParameter('region'))->getCodigo();
@@ -726,7 +726,7 @@ public function executeNotificacion(sfWebRequest $request) {
                     
                     // obtengo duración de la session
                     $time_hasta = strtotime($this->getUser()->getAttribute("fechatermino") . " " . $this->getUser()->getAttribute("horatermino"));
-                    $duracion = $time_hasta - $time_desde;
+                    $duracion = round(abs($time_hasta - $time_desde) / 3600,2);
                 }
                 if( date("YmdHis", strtotime($fechaActual)) < $fechaAlmacenadaDesde)
                 {

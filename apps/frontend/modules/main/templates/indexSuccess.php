@@ -934,7 +934,7 @@ else
             
             // impacto cambio en desde/hasta de solapa LISTA
             $('#hour_from_lista').val($(this).val());
-            $('#hour_to_lista').val($(this).val());
+            $('#hour_to_lista').val($('#hour_to').val());
         });
 
         // hasta MAPA
@@ -952,7 +952,6 @@ else
             
             // impacto cambio en desde/hasta de solapa MAPA
             $('#hour_from').val($(this).val());
-            $('#hour_to').val($(this).val());
         });
 
         // hasta LISTA
