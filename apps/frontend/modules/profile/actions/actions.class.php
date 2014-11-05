@@ -508,8 +508,8 @@ class profileActions extends sfActions {
      * @param sfWebRequest $request
      */
     public function executeAprobarReserve(sfWebRequest $request) {
-        $idReserve = $request->getPostParameter('idReserve');
-        $idUser = $request->getPostParameter('idUser');
+        $idReserve = $request->getParameter('idReserve');
+        $idUser = $request->getParameter('idUser');
         
         // chequeo de usuario correcto
         $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
@@ -641,9 +641,9 @@ class profileActions extends sfActions {
      * @param sfWebRequest $request
      */
     public function executeAprobarOportunidad(sfWebRequest $request) {
-        $idReserve = $request->getPostParameter('idReserve');
-        $idCar = $request->getPostParameter('idCar');
-        $idUser = $request->getPostParameter('idUser');
+        $idReserve = $request->getParameter('idReserve');
+        $idCar = $request->getParameter('idCar');
+        $idUser = $request->getParameter('idUser');
         
         // chequeo de usuario correcto
         $oReserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
@@ -2126,7 +2126,7 @@ class profileActions extends sfActions {
                 $this->enviarReservaSMS($reserve->getTelephoneOwner(), $fechaInicio);
             }
             
-            $url = $this->generateUrl("aprobarReserve", array('idReserve' => $reserve->getId(), 'idUser' => $car->getUserId()));
+            $url = $this->generateUrl("aprobarReserve", array('idReserve' => $reserve->getId(), 'idUser' => $car->getUserId()), TRUE);
 
             require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
             $mail = new Email();
@@ -2256,7 +2256,7 @@ class profileActions extends sfActions {
                     $this->logMessage("oportunidad -  notificable car user id:".$notifiable_car["User_id"]);
                     $owner = Doctrine_Core::getTable('user')->find($notifiable_car['User_id']);
                     
-                    $url = $this->generateUrl("aprobarOportunidad", array('idReserve' => $reserve->getId(), 'idCar' => $notifiable_car['id'], 'idUser' => $owner->getId()));
+                    $url = $this->generateUrl("aprobarOportunidad", array('idReserve' => $reserve->getId(), 'idCar' => $notifiable_car['id'], 'idUser' => $owner->getId()), TRUE);
                     $messageBody = "
                         <p>Hola " . $owner->getFirstname() . ":</p>
                         <p>La oportunidad es por $$price desde <b>$fechaInicio $horaInicio</b> hasta <b>$fechaTermino $horaTermino</b>.</p>
