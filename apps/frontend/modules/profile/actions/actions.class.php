@@ -2126,8 +2126,7 @@ class profileActions extends sfActions {
                 $this->enviarReservaSMS($reserve->getTelephoneOwner(), $fechaInicio);
             }
             
-            sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
-            $url = url_for("profile/aprobarReserve", array('idReserve' => $reserve->getId(), 'idUser' => $car->getUserId()));
+            $url = $this->generateUrl("aprobarReserve", array('idReserve' => $reserve->getId(), 'idUser' => $car->getUserId()));
 
             require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
             $mail = new Email();
@@ -2257,8 +2256,7 @@ class profileActions extends sfActions {
                     $this->logMessage("oportunidad -  notificable car user id:".$notifiable_car["User_id"]);
                     $owner = Doctrine_Core::getTable('user')->find($notifiable_car['User_id']);
                     
-                    sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
-                    $url = url_for("profile/aprobarOportunidad", array('idReserve' => $reserve->getId(), 'idCar' => $notifiable_car['id'], 'idUser' => $owner->getId()));
+                    $url = $this->generateUrl("aprobarOportunidad", array('idReserve' => $reserve->getId(), 'idCar' => $notifiable_car['id'], 'idUser' => $owner->getId()));
                     $messageBody = "
                         <p>Hola " . $owner->getFirstname() . ":</p>
                         <p>La oportunidad es por $$price desde <b>$fechaInicio $horaInicio</b> hasta <b>$fechaTermino $horaTermino</b>.</p>

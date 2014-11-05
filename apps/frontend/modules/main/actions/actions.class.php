@@ -972,6 +972,11 @@ public function executeNotificacion(sfWebRequest $request) {
         $startTime = strtotime($day_from);
         $endTime = strtotime($day_to);
         
+        $this->getUser()->setAttribute('fechainicio', $day_from);
+        $this->getUser()->setAttribute('fechatermino', $day_to);
+        $this->getUser()->setAttribute('horainicio', $hour_from);
+        $this->getUser()->setAttribute('horatermino', $hour_to);
+        
         $transmission = $request->getParameter('transmission');
         $type = $request->getParameter('type');
         $price = $request->getParameter('price');
