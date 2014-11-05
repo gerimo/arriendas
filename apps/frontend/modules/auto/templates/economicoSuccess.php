@@ -298,7 +298,7 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
 
                     <h2 class="subtitulos punteado">Precio sin Depósito en Garantía</h2>
                     <div class="texto_normal precios">Precio por Hora | <span class="texto_magenta"><strong><?php echo "$" . number_format(floor($car->getPricePerHour()) + 967, 0, ',', '.'); ?></strong></span></div>
-                    <div class="texto_normal precios">Precio por D&iacute;a | <span class="texto_magenta"><strong><?php echo "$" . number_format(floor($car->getPricePerDay()) + 5800, 0, ',', '.'); ?></strong></span></div>
+                    <div class="texto_normal precios">Precio por D&iacute;a | <span class="texto_magenta"><strong><?php echo "$" . number_format(floor($car->getPricePerDay()) + 8700, 0, ',', '.'); ?></strong></span></div>
 
                     <h2 class="subtitulos punteado">Datos del Auto</h2>
                     <div class="texto_normal precios"><div class="interlineado">Ubicaci&oacute;n |</div><div class="interlineado2"><strong><?php echo ucwords(strtolower($car->getAddressAprox())) . "" . $nombreComunaAuto ?></strong></div></div>
