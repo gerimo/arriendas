@@ -624,9 +624,11 @@ var google_conversion_value = 0;
                              <li><a class="item_thm fancybox" href="<?php echo url_for('main/valueyourcar') ?>">¿Cuánto puedo ganar con mi auto?</a></li>
                         </ul>
                         <ul class="enlaces_box movil">
-                            <li class="enlaces_titulo">Redes Sociales</li>
-                             <li><a class="item_thm fancybox" target="_blank" href="https://www.facebook.com/arriendaschile">Facebook</a></li>
-                             <li><a class="item_thm fancybox" target="_blank" href="https://twitter.com/Arriendas">Twitter</a></li>
+                            <li class="enlaces_titulo">Arriendo de Autos en Santiago</li>
+                             <li><a class="item_thm fancybox" href="<?php echo url_for('arriendo-de-autos/region-metropolitana/santiago-centro') ?>">Rent a Car Santiago Centro </a></li>
+                             <li><a class="item_thm fancybox" href="<?php echo url_for('arriendo-de-autos/region-metropolitana/providencia') ?>">Rent a Car Providencia</a></li>
+                             <li><a class="item_thm fancybox" href="<?php echo url_for('arriendo-de-autos/region-metropolitana/nunoa') ?>">Rent a Car Ñuñoa</a></li>
+
                         </ul>
             
                     </div><!-- footer_enlaces -->
