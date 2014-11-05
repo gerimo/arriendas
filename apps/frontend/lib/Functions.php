@@ -1182,6 +1182,82 @@ p{
         $pdf->WriteHTML(utf8_encode($contrato));
         return $pdf->Output("contrato.pdf", "S");
     }
+    
+    /** 
+     * generación de nro. de factura
+     * en tablas Reserve y Transaction
+     * @param type $reserve
+     * @param type $order
+     */
+    public function generarNroFactura($reserve, $order){
+        
+        // primero valido que no exista otra factura ya generada 
+        // para la misma quincena y mismo user_id
+
+        $date = date('Ymd');
+        $actual_day = date('j');
+        $first_day  = $date->modify('first day of this month')->format('Ymd');
+        $day_15 = date('Ymd', strtotime($first_day. ' + 14 days'));
+        if($actual_day <= 15){
+            // primera quincena
+            $quincena_from = $first_day;
+            $quincena_to = $day_15;
+        }else{
+            // segunda quincena
+            $quincena_from = $day_15;
+            $quincena_to = date('Ymt', strtotime($quincena_from));  //t returns the number of days in the month of a given date
+        }
+
+
+        $trans_query = Doctrine_Query::create()
+            ->from('Transaction t')
+            ->leftJoin('t.Reserve r')
+            ->leftJoin('r.Car c')
+            ->leftJoin('c.User u')
+            ->where('u.user_id = ?', $reserve->getIdOwner())
+            ->andWhere('t.completed = ?', true)
+            ->andwhere('t.date BETWEEN ? AND ?', $quincena_from, $quincena_to);
+            //->fetchOne();
+        
+        $cant_transac = $trans_query->count();
+
+        $conn = Doctrine_Manager::getInstance()->getCurrentConnection();
+        $conn->beginTransaction();
+        
+        $nro_fac_transaction = 0;
+        if($cant_transac > 0)
+        {
+            // hay factura generada durante quincena actual, asigno mismo nro.
+            $trans = $trans_query->fetchOne();
+            $nro_fac_transaction = $trans->getNumeroFactura();
+            $order->setNumeroFactura($nro_fac_transaction);
+        }else{                    
+            // no hay factura generada durante quincena actual, asigno el siguiente nro.
+            try{
+                $q = "select max(numero_factura) nro_fac from Transaction";
+                $query = Doctrine_Query::create()->query($q);
+                $trans = $query->toArray();
+                $nro_fac_transaction = $trans[0]['nro_fac'] + 1;
+                $order->setNumeroFactura($nro_fac_transaction);
+
+            } catch (Exception $ex) {
+                echo $ex->getMessage();
+            }
+        }
+        $order->save();
+        
+        $montoLiberacion = $reserve->getMontoLiberacion();
+        $montoGarantia = sfConfig::get('deposito_garantia');
+        if($montoLiberacion != $montoGarantia)
+        {
+            $nro_fac_reserve = $cant_transac > 0? $cant_transac + 2: $nro_fac_transaction + 1;
+            $reserve->setNumeroFactura($nro_fac_reserve + 1);
+            $reserve->save();
+        }                    
+
+        //Resolvemos la transaccoin
+        $conn->commit();
+    }
 
 }
 ?>
