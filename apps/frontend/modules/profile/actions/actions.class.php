@@ -501,6 +501,140 @@ class profileActions extends sfActions {
         die();
     }
     
+    
+    /**
+     * Action para aprobación de oportunidades directo desde link en email
+     * 
+     * @param sfWebRequest $request
+     */
+    public function executeAprobarReserve(sfWebRequest $request) {
+        $idReserve = $request->getPostParameter('idReserve');
+        $idUser = $request->getPostParameter('idUser');
+        
+        // chequeo de usuario correcto
+        $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+        if(!$reserve ){
+            throw new Exception("La reserva que intenta aprobar es inexistente.");
+        }
+        if($idUser != $this->getUser()->getAttribute("userid")){            
+            throw new Exception("La reserva que intenta aprobar no corresponde al usuario logueado.");
+        }
+        if($reserve->getUser()->getBlocked()){            
+            throw new Exception("No se pudo aprobar la reserva. El usuario arrendatario se encuentra bloqueado.");
+        }       
+        
+        $car = Doctrine_Core::getTable('car')->findOneById($reserve->getCarId());
+            
+        //echo "pre aprobar";
+        if ($car->getSeguroOk() != 4) {
+            echo "error:seguro4";
+            die();
+        } else if ($reserve->getCar()->getUser()->getRut() == "") {
+            echo "error:rutdueñonulo";
+            die();
+        }
+
+        $reserve->setConfirmed(1);
+        $reserve->setCanceled(0);
+        $reserve->setFechaConfirmacion($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
+        //Validando si la persona contestó dentro de los 10 primeros minutos
+        $horaLimite = strftime("%Y-%m-%d %H:%M:%S", strtotime('+10 minutes', strtotime($reserve->getFechaReserva())));
+        if (strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"))) <= strtotime($horaLimite)) {
+            $reserve->setCambioEstadoRapido(1);
+        } else {
+            $reserve->setCambioEstadoRapido(0);
+        }
+        $reserve->save();
+
+        //obtiene fecha inicio, fecha termino, marca y modelo del auto
+        $tokenReserve = $reserve->getToken();
+        $correoRenter = $reserve->getEmailRenter();
+        $nameRenter = $reserve->getNameRenter();
+        $correoOwner = $reserve->getEmailOwner();
+        $nameOwner = $reserve->getNameOwner();
+        $precio = $reserve->getPrice();
+        $precio = number_format($precio, 0, ',', '.');
+        $model = $car->getModel();
+        $brand = $model->getBrand();
+        $reserveComuna = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($car->getComunaId());
+
+        $lastName = $reserve->getLastnameOwner();
+        $telephone = $reserve->getTelephoneOwner();
+        $lastNameRenter = $reserve->getLastNameRenter();
+        $telephoneRenter = $reserve->getTelephoneRenter();
+
+        //crea la fila en la tabla transaction
+        $this->executeConfirmReserve($reserve->getId());
+
+        /* verificacion de otra reserva mismo dia */
+        $sendNotifications = true;
+        $reservasOtras = Doctrine_Core::getTable("Reserve")->findByUserId($reserve->getUserId());
+        foreach ($reservasOtras as $reservaUsuario){
+            if($reserve->getDate() == $reservaUsuario->getDate() //&& $reservaUsuario->getComplete() == 1){
+                    && $reservaUsuario->getTransaction()->getCompleted()){
+                $sendNotifications = false;
+                break;
+            }
+        }
+
+        //envía mail de preaprobación al arrendatario
+
+        require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
+        //al arrendatario
+        $mail = new Email();
+        $mailer = $mail->getMailer();
+
+        $message = $mail->getMessage();
+        if ($reserve->getComentario() == 'Reserva oportunidad') {
+            $message->setSubject('Otro dueño te ofrece su auto! (Reserva aprobada, falta pagar)');
+            $body = '<p>Hola ' . $nameRenter . ':</p>
+                <p><b>Otro dueño de auto</b>, ha aprobado tu reserva.</p>
+                <p>Es un' . $brand->getName() . ' ' . $model->getName() . ' en la misma comuna y con el mismo precio que solicitaste.</p>
+                <p>Para acceder a los datos del vehículo debes pagar a través del sitio.</p>
+                <p>Contra tu pago se emitirá la póliza para los horarios declarados y los contratos.</p>
+                <p>Has click <a href="http://www.arriendas.cl/profile/pedidos">aquí</a> para pagar.</p>
+                <p>Los datos del arriendo y el contrato se encuentran adjuntos en formato PDF.</p>';
+        } else {
+            $message->setSubject('Se ha aprobado tu reserva! (Falta pagar)');
+            $body = '<p>Hola ' . $nameRenter . ':</p><p>Se ha aprobado tu reserva!</p><p>Para acceder a los datos del vehículo debes pagar $precio.- CLP.</p><p>Si tu arriendo no se concreta, Arriendas.cl no le pagará al dueño del auto y te daremos un auto a elección.</p><p>Has click <a href="http://www.arriendas.cl/profile/pedidos">aquí</a> para pagar.</p><p>Los datos del arriendo y el contrato se encuentran adjuntos en formato PDF.</p>';
+        }
+        $message->setBody($mail->addFooter($body), 'text/html');
+        $message->setTo($correoRenter);
+        $functions = new Functions;
+        $contrato = $functions->generarContrato($tokenReserve);
+        $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+
+        $pagarePath = sfConfig::get("sf_web_dir")."/pagare_arriendas.pdf";
+        $message->attach(Swift_Attachment::fromPath($pagarePath)->setFilename("pagare_arriendas.pdf"));
+
+        if($sendNotifications){
+            $mailer->send($message);
+        }
+
+        $message = $mail->getMessage();
+        $message->setSubject('Se ha aprobado una reserva');
+        $body = "<p>Dueño: $nameOwner $lastName ($telephone) - $correoOwner</p><p>Arrendatario: $nameRenter $lastNameRenter ($telephoneRenter) - $correoRenter</p><p>Precio: $precio</p>";
+        $message->setBody($mail->addFooter($body), 'text/html');
+        $message->setTo('soporte@arriendas.cl');
+        $mailer->send($message);
+
+        if ($reserve->getConfirmedSMSRenter() == 1 && $sendNotifications) {
+            $texto = "Se ha aprobado tu reserva! Debes pagar en Arriendas.cl - Si tu arriendo no se concreta, no le pagaremos al propietario del auto y te daremos un auto a eleccion";
+            $this->enviarSMS($reserve->getTelephoneRenter(), $texto);
+        }
+
+        //al propietario
+        $message = $mail->getMessage();
+        $message->setSubject('Has aprobado una reserva!');
+        $body = "<p>Hola $nameOwner:</p><p>Has aprobado una reserva!</p><p>Recuerda que puedes aprobar varios pedidos de reserva para la misma fecha. El primer arrendatario que pague, ganará el arriendo.</p><p>El contrato de arriendo se emitirá una vez que el arrendatario haya pagado. La versión preliminar se encuentra adjunta en formato PDF.</p><p>Su pago se te informará por este medio y verás el cambio en la pestaña 'Reservas' del sitio.</p>";
+        $message->setBody($mail->addFooter($body), 'text/html');
+        $message->setTo($correoOwner);
+        $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+        $mailer->send($message);
+
+        $this->setTemplate('pedidos');
+    }
+    
     /**
      * Action para aprobación de oportunidades directo desde link en email
      * 
@@ -1991,6 +2125,9 @@ class profileActions extends sfActions {
             if ($reserve->getConfirmedSMSOwner() == 1) {
                 $this->enviarReservaSMS($reserve->getTelephoneOwner(), $fechaInicio);
             }
+            
+            sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
+            $url = url_for("profile/aprobarReserve", array('idReserve' => $reserve->getId(), 'idUser' => $car->getUserId()));
 
             require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
             $mail = new Email();
@@ -1999,8 +2136,8 @@ class profileActions extends sfActions {
             <p>Has recibido un pedido de reserva por 
             $$price por tu $marcaModelo desde <b>$fechaInicio $horaInicio</b> 
                 hasta <b>$fechaTermino $horaTermino</b> 
-                cuando te habrán devuelto el auto.</p><p>Para ver la reserva 
-                has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a></p>");
+                cuando te habrán devuelto el auto.</p><p>Para aprobar la reserva 
+                has click <a href='$url'>aquí</a></p>");
             $mail->setTo($correo);
             if ($correo != $correoEmail)
                 $mail->setCc($correoEmail);
