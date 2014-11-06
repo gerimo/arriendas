@@ -314,13 +314,7 @@ $(document).ready(function() {
         minDate:'-0d'
     });
     
-    $("#hour_from , #hour_to").timePicker({show24Hours:false});	
-
-
-	if(isValidDate('<?php echo $fndreserve['fechainicio']?>')) $('#datefrom').val('<?php echo $fndreserve['fechainicio']?>');
-	if(isValidTime('<?php echo $fndreserve['horainicio']?>')) $('#hour_from').val(tConvert('<?php echo $fndreserve['horainicio']?>'));
-	if(isValidDate('<?php echo $fndreserve['fechatermino']?>')) $('#dateto').val('<?php echo $fndreserve['fechatermino']?>');
-	if(isValidTime('<?php echo $fndreserve['horatermino']?>')) $('#hour_to').val(tConvert('<?php echo $fndreserve['horatermino']?>'));
+    $("#hour_from , #hour_to").timePicker({show24Hours:false});
 
     //calcula el precio
     calcularPrecio();
@@ -409,9 +403,9 @@ function convertAmPmto24(time) {
 //var time = $("#starttime").val();
 var hours = Number(time.match(/^(\d+)/)[1]);
 var minutes = Number(time.match(/:(\d+)/)[1]);
-/*var AMPM = time.match(/\s(.*)$/)[1];
+var AMPM = time.match(/\s(.*)$/)[1];
 if(AMPM == "PM" && hours<12) hours = hours+12;
-if(AMPM == "AM" && hours==12) hours = hours-12;*/
+if(AMPM == "AM" && hours==12) hours = hours-12;
 var sHours = hours.toString();
 var sMinutes = minutes.toString();
 if(hours<10) sHours = "0" + sHours;

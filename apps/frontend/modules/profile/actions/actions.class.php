@@ -2867,7 +2867,7 @@ class profileActions extends sfActions {
         throw new sfStopException();
     }
 
-    public function executeReserve(sfWebRequest $request) {//echo $this->getUser()->getAttribute("fechatermino");die;
+    public function executeReserve(sfWebRequest $request) {
 
         if ($this->getRequest()->getParameter('carid') != null)
             $carid = $this->getRequest()->getParameter('carid');
@@ -2889,7 +2889,7 @@ class profileActions extends sfActions {
         $this->user = $this->car->getUser();
         $this->getUser()->setAttribute('lastview', $request->getReferer());
 
-        $this->fndreserve = array('fechainicio' => '', 'horainicio' => '', 'fechatermino' => '', 'horatermino' => '');
+        /*$this->fndreserve = array('fechainicio' => '', 'horainicio' => '', 'fechatermino' => '', 'horatermino' => '');
 
         if ($this->getUser()->getAttribute("fechainicio"))
             $this->fndreserve['fechainicio'] = $this->getUser()->getAttribute("fechainicio");
@@ -2898,14 +2898,13 @@ class profileActions extends sfActions {
         if ($this->getUser()->getAttribute("fechatermino"))
             $this->fndreserve['fechatermino'] = $this->getUser()->getAttribute("fechatermino");
         if ($this->getUser()->getAttribute("horatermino"))
-            $this->fndreserve['horatermino'] = $this->getUser()->getAttribute("horatermino");
+            $this->fndreserve['horatermino'] = $this->getUser()->getAttribute("horatermino");*/
         
         $fechaActual = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S", strtotime('+3 hours', time())));    // sumo 3hs a la hora chilena.
         $this->ultimaFechaValidaDesde = date("d-m-Y", strtotime($fechaActual));
         $this->ultimaFechaValidaHasta = date("d-m-Y",strtotime("+2 days",strtotime($fechaActual)));
-        $this->ultimaHoraValidaDesde = date("H:i",strtotime($fechaActual));
-        if(!$this->ultimaHoraValidaHasta)
-            $this->ultimaHoraValidaHasta = date("H:i",strtotime($fechaActual)+12*3600);
+        $this->ultimaHoraValidaDesde = (!$this->getUser()->getAttribute("horainicio"))? date("g:i A",strtotime($fechaActual)) : date("g:i A",strtotime($this->getUser()->getAttribute("horainicio")));
+        $this->ultimaHoraValidaHasta = (!$this->getUser()->getAttribute("horatermino"))? date("g:i A",strtotime($fechaActual)+12*3600) : date("g:i A",strtotime($this->getUser()->getAttribute("horatermino")));
         
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
         if($idUsuario)
@@ -2937,20 +2936,22 @@ class profileActions extends sfActions {
                 $fechaAlmacenadaDesde = date("YmdHis",$ultimaFecha);    // ultima guardada en ddbb
                 if($this->getUser()->getAttribute("fechainicio")){
                     $time_desde = strtotime($this->getUser()->getAttribute("fechainicio") . " " . $this->getUser()->getAttribute("horainicio"));
-                    $fechaSessionDesde = date("YmdHis", $time_desde);
+                    /*$fechaSessionDesde = date("YmdHis", $time_desde);
                     $fechaAlmacenadaDesde = ($fechaSessionDesde < $fechaAlmacenadaDesde)? $fechaAlmacenadaDesde : $fechaSessionDesde;
-                    $ultimaFecha = ($fechaSessionDesde < $fechaAlmacenadaDesde)? $ultimaFecha : $time_desde;
+                    $ultimaFecha = ($fechaSessionDesde < $fechaAlmacenadaDesde)? $ultimaFecha : $time_desde;*/
+                    
+                    $ultimaFecha = $time_desde;
                     
                     // obtengo duración de la session
                     $time_hasta = strtotime($this->getUser()->getAttribute("fechatermino") . " " . $this->getUser()->getAttribute("horatermino"));
                     $duracion = round(abs($time_hasta - $time_desde) / 3600,2);
                 }
-                if( date("YmdHis", strtotime($fechaActual)) < $fechaAlmacenadaDesde)
-                {
+                /*if( date("YmdHis", strtotime($fechaActual)) < $fechaAlmacenadaDesde)
+                {*/
                     $day_from = date("d-m-Y",$ultimaFecha);
-                    $hour_from = date("H:i",$ultimaFecha);
+                    $hour_from = date("g:i A",$ultimaFecha);
                     $day_to = date("d-m-Y",$ultimaFecha+$duracion*3600);
-                    $hour_to = date("H:i",$ultimaFecha+$duracion*3600);
+                    $hour_to = date("g:i A",$ultimaFecha+$duracion*3600);
                     
                     $this->getUser()->setAttribute('fechainicio', $day_from);
                     $this->getUser()->setAttribute('fechatermino', $day_to);
@@ -2962,7 +2963,7 @@ class profileActions extends sfActions {
                     $this->ultimaHoraValidaDesde = $hour_from;
                     $this->ultimaHoraValidaHasta = $hour_to;
                     
-                }
+                //}
             }
         }
 
