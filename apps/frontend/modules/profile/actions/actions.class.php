@@ -519,6 +519,9 @@ class profileActions extends sfActions {
         if($idUser != $this->getUser()->getAttribute("userid")){            
             throw new Exception("La reserva que intenta aprobar no corresponde al usuario logueado.");
         }
+        if($reserve->getConfirmed()){
+            throw new Exception("Esta reserva ya ha sido aprobada!");
+        }
         if($reserve->getUser()->getBlocked()){            
             throw new Exception("No se pudo aprobar la reserva. El usuario arrendatario se encuentra bloqueado.");
         }       
