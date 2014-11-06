@@ -1233,11 +1233,19 @@ p{
             $order->setNumeroFactura($nro_fac_transaction);
         }else{                    
             // no hay factura generada durante quincena actual, asigno el siguiente nro.
+            // (debo obtener el mayor nro. asignado desde ambas tablas)
             try{
-                $q = "select max(numero_factura) nro_fac from Transaction";
-                $query = Doctrine_Query::create()->query($q);
-                $trans = $query->toArray();
-                $nro_fac_transaction = $trans[0]['nro_fac'] + 1;
+                // max en transaction
+                $qt = "select max(numero_factura) nro_fac from Transaction";
+                $query1 = Doctrine_Query::create()->query($qt);
+                $trans = $query1->toArray();
+                
+                // max en reserve
+                $qr = "select max(numero_factura) nro_fac from Reserve";
+                $query2 = Doctrine_Query::create()->query($qr);
+                $res = $query2->toArray();
+                
+                $nro_fac_transaction = ($trans[0]['nro_fac'] > $res[0]['nro_fac']? $trans[0]['nro_fac'] : $res[0]['nro_fac']) + 1;
                 $order->setNumeroFactura($nro_fac_transaction);
 
             } catch (Exception $ex) {
@@ -1251,7 +1259,7 @@ p{
         if($montoLiberacion != $montoGarantia)
         {
             $nro_fac_reserve = $cant_transac > 0? $cant_transac + 2: $nro_fac_transaction + 1;
-            $reserve->setNumeroFactura($nro_fac_reserve + 1);
+            $reserve->setNumeroFactura($nro_fac_reserve);
             $reserve->save();
         }                    
 
