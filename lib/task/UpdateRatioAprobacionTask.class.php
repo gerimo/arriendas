@@ -8,7 +8,7 @@ class UpdateRatioAprobacionTask extends sfBaseTask {
             new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name'),
             new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
             new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine'),
-            new sfCommandOption('numberOfMails', null, sfCommandOption::PARAMETER_REQUIRED, 'Cantidad de correos', 16),
+            new sfCommandOption('offset', null, sfCommandOption::PARAMETER_REQUIRED, 'offset', 0),
         ));
 
         $this->namespace = 'arriendas';
@@ -39,7 +39,9 @@ EOF;
         $table = Doctrine_Core::getTable('User');
         $q = $table
             ->createQuery('u')
-            ->orderBy('u.id')
+            ->innerJoin('u.Cars c')
+            ->groupBy('u.id')
+            ->orderBy('u.id ASC')
             ;
 
         $users = $q->execute();
