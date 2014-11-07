@@ -5372,7 +5372,7 @@ class profileActions extends sfActions {
         $precioMes = $request->getPostParameter('precioMes');
         $disponibilidad = $request->getPostParameter('disponibilidad');
         
-        if (is_null($comunaId)) {
+        if (is_null($comunaId) || $comunaId = "") {
             $comunaId = $request->getPostParameter('comuna');
         }
         
