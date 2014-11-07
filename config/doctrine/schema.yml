@@ -1057,3 +1057,95 @@ ReserveFile:
   options:
     charset: utf8
     type: InnoDB
+
+OportunityTaksConfiguration:
+  tablename: OportunityTaksConfiguration
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    time_between_emails:
+      type: integer(4)
+    simultanious_mails:
+      type: integer(4)
+
+OportunityQueue:
+  tableName: OportunityQueue
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    iteration:
+      type: integer(4)
+      notnull: true
+      default: 1
+    paid_at:
+      type: timestamp
+    reserve_id:
+      type: integer(4)
+      notnull: true
+    is_active:
+      type: boolean
+      notnull: true
+      default: 1
+  relations:
+    Reserve:
+      class: Reserve
+      local: reserve_id
+      foreign: id
+      foreignAlias: OportunityQueues
+      onDelete: no action
+      onUpdate: no action
+  options:
+    charset: utf8
+    type: InnoDB
+
+OportunityEmailQueue:
+  tableName: OportunityEmailQueue
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    renter_id:
+      type: integer(4)
+      notnull: true
+    owner_id:
+      type: integer(4)
+      notnull: true
+    reserve_id:
+      type: integer(4)
+      notnull: true
+    created_at:
+      type: timestamp
+    sended_at:
+      type: timestamp
+    opened_at:
+      type: timestamp
+  relations:
+    Renter:
+      class: User
+      local: renter_id
+      foreign: id
+      foreignAlias: RenterOportunities
+      onDelete: no action
+      onUpdate: no action
+    Owner:
+      class: User
+      local: owner_id
+      foreign: id
+      foreignAlias: OwnerOportunities
+      onDelete: no action
+      onUpdate: no action
+    Reserve:
+      class: Reserve
+      local: reserve_id
+      foreign: id
+      foreignAlias: Oportunities
+      onDelete: no action
+      onUpdate: no action
