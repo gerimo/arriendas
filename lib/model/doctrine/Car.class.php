@@ -230,68 +230,81 @@ where c.id=
 	
 	
 	
-		public function save(Doctrine_Connection $conn = null)	{
-		
-		
-				
-				
- 	  if (!$this->getId() || $this->getCustomerio()<=0)
-	  {
+	public function save(Doctrine_Connection $conn = null)	{
+	
+		if (!$this->getId() || $this->getCustomerio()<=0) {
 
 			$brand = $this->getMarcaModelo();
 			$patente = $this->getPatente();
 			$comuna = $this->getNombreComuna();
-			
-	  $session = curl_init();
-
-$customer_id = 'a_'.$this->getUserId(); // You'll want to set this dynamically to the unique id of the user
-$customerio_url = 'https://track.customer.io/api/v1/customers/'.$customer_id.'/events';
-$site_id = '3a9fdc2493ced32f26ee';
-$api_key = '4f191ca12da03c6edca4';
-
-sfContext::getInstance()->getLogger()->err($customerio_url);
-
-$data = array("name" => "subir_auto", "data[brand]" => $brand, "data[patente]" => $patente, "data[comuna]" => $comuna);
-
-curl_setopt($session, CURLOPT_URL, $customerio_url);
-curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-curl_setopt($session, CURLOPT_HEADER, false);
-curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($session, CURLOPT_VERBOSE, 1);
-curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
-curl_setopt($session, CURLOPT_POSTFIELDS,http_build_query($data));
-
-curl_setopt($session,CURLOPT_USERPWD,$site_id . ":" . $api_key);
-
-//if(ereg("^(https)",$request)) 
-curl_setopt($session,CURLOPT_SSL_VERIFYPEER,false);
-
-curl_exec($session);
-curl_close($session);
-
-	$this->setCustomerio(true);
 		
+      $session = curl_init();
+
+      $customer_id = 'a_'.$this->getUserId(); // You'll want to set this dynamically to the unique id of the user
+      $customerio_url = 'https://track.customer.io/api/v1/customers/'.$customer_id.'/events';
+      $site_id = '3a9fdc2493ced32f26ee';
+      $api_key = '4f191ca12da03c6edca4';
+
+      sfContext::getInstance()->getLogger()->err($customerio_url);
+
+      $data = array("name" => "subir_auto", "data[brand]" => $brand, "data[patente]" => $patente, "data[comuna]" => $comuna);
+
+      curl_setopt($session, CURLOPT_URL, $customerio_url);
+      curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+      curl_setopt($session, CURLOPT_HEADER, false);
+      curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($session, CURLOPT_VERBOSE, 1);
+      curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
+      curl_setopt($session, CURLOPT_POSTFIELDS,http_build_query($data));
+
+      curl_setopt($session,CURLOPT_USERPWD,$site_id . ":" . $api_key);
+
+      //if(ereg("^(https)",$request)) 
+      curl_setopt($session,CURLOPT_SSL_VERIFYPEER,false);
+
+      curl_exec($session);
+      curl_close($session);
+
+      $this->setCustomerio(true);
 	  }
 
-  $ret = parent::save($conn);
+    $ret = parent::save($conn);
 
-  
-			$car = Doctrine_Core::getTable('car')->findOneById($this->getId());	
-			$user = Doctrine_Core::getTable('user')->findOneById($car->getUserId());	
-			$ownerUserId=$user->getId();
-			
-				$percTotalContestadas=$user->getPercReservasContestadas();
-				$velocidadContestaPedidos = $user->getVelocidadRespuesta('0');
-				$CantReservasAprobadas= $user->getCantReservasAprobadasTotalOwner();
-				$q = Doctrine_Manager::getInstance()->getCurrentConnection();
-				$query = "update Car set Cant_Reservas_Aprobadas='$CantReservasAprobadas', contesta_pedidos='$percTotalContestadas', velocidad_contesta_pedidos='$velocidadContestaPedidos' where user_id='$ownerUserId'";
-//				$query = "update Car set Cant_Reservas_Aprobadas= $CantReservasAprobadas where user_id='$ownerUserId'";
-				$result = $q->execute($query);
-				
-				
-  return $ret;
+		$car = Doctrine_Core::getTable('car')->findOneById($this->getId());	
+		$user = Doctrine_Core::getTable('user')->findOneById($car->getUserId());	
+		$ownerUserId=$user->getId();
+		
+		$percTotalContestadas=$user->getPercReservasContestadas();
+		$velocidadContestaPedidos = $user->getVelocidadRespuesta('0');
+		$CantReservasAprobadas= $user->getCantReservasAprobadasTotalOwner();
+		$q = Doctrine_Manager::getInstance()->getCurrentConnection();
+		$query = "update Car set Cant_Reservas_Aprobadas='$CantReservasAprobadas', contesta_pedidos='$percTotalContestadas', velocidad_contesta_pedidos='$velocidadContestaPedidos' where user_id='$ownerUserId'";
 
+    $result = $q->execute($query);
+
+    /* nuevo flujo */
+
+    $limit = 7;
+    
+    $q = "SELECT sum(r.confirmed) as reservas_confirmadas, count(r.confirmed) as total_reservas
+      FROM reserve r
+      INNER JOIN car c on r.card_id = c.id
+      WHERE c.user_id = ".$ownerUserId." ORDER BY r.fecha_reserva DESC LIMIT ".$limit;
+    
+    $query = Doctrine_Query::create()->query($q);
+    $r = $query->toArray();
+
+    $ratio_aprobacion = null;
+    if ($r["total_reservas"] == 0) {
+      $ratio_aprobacion = 0;
+    } else {
+      $ratio_aprobacion = round(($r["reservas_confirmadas"] / $r["total_reservas"]) * 100, 2);
+    }
+
+    $query = "update Car set ratio_aprobacion='$ratio_aprobacion' where user_id='$ownerUserId'";
+    $result = $q->execute($query);
+
+    return $ret;
   }
-	
-	
+
 }

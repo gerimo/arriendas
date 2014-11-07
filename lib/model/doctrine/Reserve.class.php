@@ -500,10 +500,27 @@ class Reserve extends BaseReserve {
         $CantReservasAprobadas = $user->getCantReservasAprobadasTotalOwner();
         $q = Doctrine_Manager::getInstance()->getCurrentConnection();
         $query = "update Car set Cant_Reservas_Aprobadas= '$CantReservasAprobadas', contesta_pedidos='$percTotalContestadas', velocidad_contesta_pedidos='$velocidadContestaPedidos' where user_id='$ownerUserId'";
-//				$query = "update Car set Cant_Reservas_Aprobadas= $CantReservasAprobadas where user_id='$ownerUserId'";
         $result = $q->execute($query);
 
-//  $this->updateLuceneIndex();
+        $limit = 7;
+    
+        $q = "SELECT sum(r.confirmed) as reservas_confirmadas, count(r.confirmed) as total_reservas
+          FROM reserve r
+          INNER JOIN car c on r.card_id = c.id
+          WHERE c.user_id = ".$ownerUserId." ORDER BY r.fecha_reserva DESC LIMIT ".$limit;
+        
+        $query = Doctrine_Query::create()->query($q);
+        $r = $query->toArray();
+
+        $ratio_aprobacion = null;
+        if ($r["total_reservas"] == 0) {
+          $ratio_aprobacion = 0;
+        } else {
+          $ratio_aprobacion = round(($r["reservas_confirmadas"] / $r["total_reservas"]) * 100, 2);
+        }
+
+        $query = "update Car set ratio_aprobacion='$ratio_aprobacion' where user_id='$ownerUserId'";
+        $result = $q->execute($query);
 
         return $ret;
     }
