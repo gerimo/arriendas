@@ -1194,9 +1194,8 @@ p{
         // primero valido que no exista otra factura ya generada 
         // para la misma quincena y mismo user_id
 
-        $date = date('Ymd');
+        $first_day = date('Ym01');
         $actual_day = date('j');
-        $first_day  = $date->modify('first day of this month')->format('Ymd');
         $day_15 = date('Ymd', strtotime($first_day. ' + 14 days'));
         if($actual_day <= 15){
             // primera quincena
@@ -1208,15 +1207,14 @@ p{
             $quincena_to = date('Ymt', strtotime($quincena_from));  //t returns the number of days in the month of a given date
         }
 
-
+        $rangeDates = array($quincena_from, $quincena_to);
         $trans_query = Doctrine_Query::create()
             ->from('Transaction t')
             ->leftJoin('t.Reserve r')
             ->leftJoin('r.Car c')
-            ->leftJoin('c.User u')
-            ->where('u.user_id = ?', $reserve->getIdOwner())
+            ->where('c.user_id = ?', $reserve->getIdOwner())
             ->andWhere('t.completed = ?', true)
-            ->andwhere('t.date BETWEEN ? AND ?', $quincena_from, $quincena_to);
+            ->andwhere('t.date BETWEEN ? AND ?', $rangeDates);
             //->fetchOne();
         
         $cant_transac = $trans_query->count();

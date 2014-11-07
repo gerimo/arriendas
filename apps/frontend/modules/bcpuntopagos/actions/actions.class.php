@@ -713,5 +713,25 @@ class bcpuntopagosActions extends sfActions {
         $custom_logger = new sfFileLogger(new sfEventDispatcher(), array('file' => $logPath));
         $custom_logger->info($step . " - " . $status . ". " . $msg);
     }
+    
+    
+    /**
+     * action para testing de numeración de facturas
+     * 
+     * @param sfWebRequest $request
+     * @return type
+     */
+    public function executeFacturacionTest(sfWebRequest $request){
+        $idReserve = $request->getParameter('idReserve');
+        $idTransaction = $request->getParameter('idTransaction');
+        
+        $order = Doctrine_Core::getTable("Transaction")->getTransaction($idTransaction);
+        $reserve = Doctrine_Core::getTable('Reserve')->findOneById($idReserve);
+        
+        $functions = new Functions;
+        $functions->generarNroFactura($reserve, $order);
+        
+        return sfView::NONE;
+    }
 
 }
