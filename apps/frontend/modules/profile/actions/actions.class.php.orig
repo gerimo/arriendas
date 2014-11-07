@@ -3773,7 +3773,6 @@ class profileActions extends sfActions {
                     } else {
                         $reservasRealizadas[$i]['estado'] = 0;
                     }
-                    
 
                     //fecha y hora de inicio y término
                     $reservasRealizadas[$i]['posicion'] = $reserva->getDate();
@@ -5377,7 +5376,10 @@ class profileActions extends sfActions {
         $precioMes = $request->getPostParameter('precioMes');
         $disponibilidad = $request->getPostParameter('disponibilidad');
         
+<<<<<<< HEAD
         
+=======
+>>>>>>> 199004a6890f53b01e71b49347cd514e4f8b9e20
         $comuna = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
         $stateId = $comuna->getStateId();
         

@@ -139,13 +139,12 @@ $(document).on('ready',function(){
 	getModel($('#brand'));
 
 	//inicializa la comuna
-	<?php
-		if(isset($car[0]['comuna_id']) && isset($car[0]['nombreComuna'])){
-			echo "$('#valor option[value=".$car[0]['comuna_id']."]').attr('selected',true);";
-			echo "$('#comuna').val('".$car[0]['nombreComuna']."');";
-			echo "$('#comunaId').val('".$car[0]['comuna_id']."');";
-		}
-	?>
+
+	<?php if(isset($car[0]['comuna_id']) && isset($car[0]['nombreComuna'])): ?>
+		$('#valor option[value=' + '<?php echo $car[0]["comuna_id"] ?>' + ']').attr('selected', true);
+		$('#comuna').val( '<?php echo $car[0]["nombreComuna"] ?>' );
+		$('#comunaId').val( '<?php echo $car[0]["comuna_id"] ?>' );
+	<?php endif; ?>
 });
 
 </script>

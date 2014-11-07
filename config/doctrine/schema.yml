@@ -209,6 +209,8 @@ Car:
       type: timestamp
     fecha_validacion:
       type: timestamp
+    ratio_aprobacion:
+      type: float(10,2)
   relations:
     User:
       class: User
