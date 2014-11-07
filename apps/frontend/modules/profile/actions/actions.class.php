@@ -661,6 +661,11 @@ class profileActions extends sfActions {
             if(!$car || $car->getUserId() != $this->getUser()->getAttribute("userid")){            
                 throw new Exception("La oportunidad que intentas aprobar no corresponde al usuario logueado.");
             }
+            // tipo vehiculo
+            if($car->getModel()->getIdTipoVehiculo() != $oReserve->getCar()->getModel()->getIdTipoVehiculo()){
+                throw new Exception("Los tipos de vehiculo no coinciden.");
+            }
+            
             if($oReserve->getUser()->getBlocked()){            
                 throw new Exception("No se pudo aprobar la oportunidad. El usuario arrendatario se encuentra bloqueado.");
             }
