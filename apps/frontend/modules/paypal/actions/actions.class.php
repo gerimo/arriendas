@@ -211,6 +211,10 @@ class paypalActions extends sfActions {
 
                                 //verifica que la reserva no esté completa
                                 if (!$order->getCompleted()) {
+                                    
+                                    $functions = new Functions;
+                                    $functions->generarNroFactura($reserve, $order);
+                    
                                     //actualiza el estado completed
                                     $order->setCompleted(true);
                                     $order->save();

@@ -241,6 +241,17 @@ class Reserve extends BaseReserve {
         return $car->getAddress();
     }
 
+    public function getOwner() {
+        $car    = Doctrine_Core::getTable('car')->findOneById($this->getCarId());
+        $owner  = Doctrine_Core::getTable('user')->findOneById($car->getUserId());
+        return $owner;
+    }
+
+    public function getRenter() {
+        $user = Doctrine_Core::getTable('user')->findOneById($this->getUserId());
+        return $user;
+    }
+
     public function getTelephoneRenter() {
         $user = Doctrine_Core::getTable('user')->findOneById($this->getUserId());
         return $user->getTelephone();

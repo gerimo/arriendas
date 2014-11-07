@@ -18,7 +18,6 @@
 
 
 <style type="text/css">
-    /* jQuery lightBox plugin - Gallery style */
 
     #gallery ul,#galleryDanios ul { list-style: none; }
     #gallery ul li,#galleryDanios ul li { display: inline; }

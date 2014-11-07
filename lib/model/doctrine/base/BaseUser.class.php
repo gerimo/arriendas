@@ -25,6 +25,7 @@
  * @property string $city
  * @property string $hash
  * @property string $tracked_ips
+ * @property boolean $ip_ambigua
  * @property string $tracked_states
  * @property boolean $confirmed
  * @property boolean $autoconfirm
@@ -63,18 +64,19 @@
  * @method string              getTelephone()             Returns the current record's "telephone" value
  * @method string              getIdentification()        Returns the current record's "identification" value
  * @method string              getBirthdate()             Returns the current record's "birthdate" value
- * @method boolean              getMenor()             Returns the current record's "menor" value
+ * @method boolean             getMenor()                 Returns the current record's "menor" value
  * @method string              getAddress()               Returns the current record's "address" value
  * @method string              getCountry()               Returns the current record's "country" value
  * @method string              getCity()                  Returns the current record's "city" value
  * @method string              getHash()                  Returns the current record's "hash" value
  * @method string              getTrackedIps()            Returns the current record's "tracked_ips" value
+ * @method boolean             getIpAmbigua()             Returns the current record's "ip_ambigua" value
  * @method string              getTrackedStates()         Returns the current record's "tracked_stated" value
  * @method boolean             getConfirmed()             Returns the current record's "confirmed" value
  * @method boolean             getAutoconfirm()           Returns the current record's "autoconfirm" value
  * @method boolean             getDeleted()               Returns the current record's "deleted" value
  * @method boolean             getBlocked()               Returns the current record's "blocked" value
- * @method boolean             getMoroso()               Returns the current record's "moroso" value
+ * @method boolean             getMoroso()                Returns the current record's "moroso" value
  * @method boolean             getConfirmedFb()           Returns the current record's "confirmed_fb" value
  * @method boolean             getConfirmedSms()          Returns the current record's "confirmed_sms" value
  * @method boolean             getFriendInvite()          Returns the current record's "friend_invite" value
@@ -104,12 +106,13 @@
  * @method User                setTelephone()             Sets the current record's "telephone" value
  * @method User                setIdentification()        Sets the current record's "identification" value
  * @method User                setBirthdate()             Sets the current record's "birthdate" value
- * @method User                setMenor()             Sets the current record's "menor" value
+ * @method User                setMenor()                 Sets the current record's "menor" value
  * @method User                setAddress()               Sets the current record's "address" value
  * @method User                setCountry()               Sets the current record's "country" value
  * @method User                setCity()                  Sets the current record's "city" value
  * @method User                setHash()                  Sets the current record's "hash" value
  * @method User                setTrackedIps()            Sets the current record's "tracked_ips" value
+ * @method User                setIpAmbigua()             Sets the current record's "ip_ambigua" value
  * @method User                setTrackedStates()         Sets the current record's "tracked_states" value
  * @method User                setConfirmed()             Sets the current record's "confirmed" value
  * @method User                setAutoconfirm()           Sets the current record's "autoconfirm" value
@@ -236,6 +239,11 @@ abstract class BaseUser extends sfDoctrineRecord {
         $this->hasColumn('tracked_ips', 'string', 255, array(
             'type' => 'string',
             'length' => 255,
+        ));
+        $this->hasColumn('ip_ambigua', 'boolean', null, array(
+            'type' => 'boolean',
+            'notnull' => true,
+            'default' => false,
         ));
         $this->hasColumn('tracked_states', 'string', 255, array(
             'type' => 'string',

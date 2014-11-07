@@ -663,7 +663,7 @@ public function executeFracaso(sfWebRequest $request) {
 public function executeNotificacion(sfWebRequest $request) {
 }
 
-    public function executeIndex(sfWebRequest $request) {
+    public function executeIndex(sfWebRequest $request) {//echo $this->getUser()->getAttribute("fechatermino");die;
         
         if($request->getParameter('region'))
             $this->region = Doctrine_Core::getTable('Regiones')->findOneBySlug($request->getParameter('region'))->getCodigo();
@@ -684,10 +684,11 @@ public function executeNotificacion(sfWebRequest $request) {
         }
         
         $fechaActual = $this->formatearHoraChilena(strftime("%Y%m%d%H%M%S", strtotime('+3 hours', time())));    // sumo 3hs a la hora chilena.
-        $this->day_from = date("d-m-Y", strtotime($fechaActual));
-        $this->day_to = date("d-m-Y",strtotime("+2 days",strtotime($fechaActual)));
-        $this->hour_from = date("H:i",strtotime($fechaActual));
-        $this->hour_to = date("H:i",strtotime($fechaActual)+12*3600);
+        $this->day_from = (!$this->getUser()->getAttribute("fechainicio"))? date("d-m-Y", strtotime($fechaActual)) : $this->getUser()->getAttribute("fechainicio");
+        $this->day_to = (!$this->getUser()->getAttribute("fechatermino"))? date("d-m-Y",strtotime("+2 days",strtotime($fechaActual))) : $this->getUser()->getAttribute("fechatermino");
+        $this->hour_from = (!$this->getUser()->getAttribute("horainicio"))? date("g:i A",strtotime($fechaActual)) : date("g:i A",strtotime($this->getUser()->getAttribute("horainicio")));
+        $this->hour_to = (!$this->getUser()->getAttribute("horatermino"))? date("g:i A",strtotime($fechaActual)+12*3600) : date("g:i A",strtotime($this->getUser()->getAttribute("horatermino")));
+        //echo date("g:i A",strtotime($fechaActual));die;
         
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
         if($idUsuario)
@@ -716,18 +717,29 @@ public function executeNotificacion(sfWebRequest $request) {
             }
             if($ultimaFecha)
             {
-                $fechaAlmacenadaDesde = date("YmdHis",$ultimaFecha);
+                
+                $fechaAlmacenadaDesde = date("YmdHis",$ultimaFecha);    // ultima guardada en ddbb
+                if($this->getUser()->getAttribute("fechainicio")){
+                    $time_desde = strtotime($this->getUser()->getAttribute("fechainicio") . " " . $this->getUser()->getAttribute("horainicio"));
+                    $fechaSessionDesde = date("YmdHis", $time_desde);
+                    $fechaAlmacenadaDesde = ($fechaSessionDesde < $fechaAlmacenadaDesde)? $fechaAlmacenadaDesde : $fechaSessionDesde;
+                    $ultimaFecha = ($fechaSessionDesde < $fechaAlmacenadaDesde)? $ultimaFecha : $time_desde;
+                    
+                    // obtengo duración de la session
+                    $time_hasta = strtotime($this->getUser()->getAttribute("fechatermino") . " " . $this->getUser()->getAttribute("horatermino"));
+                    $duracion = round(abs($time_hasta - $time_desde) / 3600,2);
+                }
                 if( date("YmdHis", strtotime($fechaActual)) < $fechaAlmacenadaDesde)
                 {
                     $day_from = date("d-m-Y",$ultimaFecha);
-                    $hour_from = date("H:i",$ultimaFecha);
+                    $hour_from = date("g:i A",$ultimaFecha);
                     $day_to = date("d-m-Y",$ultimaFecha+$duracion*3600);
-                    $hour_to = date("H:i",$ultimaFecha+$duracion*3600);
+                    $hour_to = date("g:i A",$ultimaFecha+$duracion*3600);
                     
-                    $this->getUser()->setAttribute('day_from', $day_from);
-                    $this->getUser()->setAttribute('day_to', $day_to);
-                    $this->getUser()->setAttribute('hour_from', $hour_from);
-                    $this->getUser()->setAttribute('hour_to', $hour_to);
+                    $this->getUser()->setAttribute('fechainicio', $day_from);
+                    $this->getUser()->setAttribute('fechatermino', $day_to);
+                    $this->getUser()->setAttribute('horainicio', $hour_from);
+                    $this->getUser()->setAttribute('horatermino', $hour_to);
                     
                     $this->day_from = $day_from;
                     $this->day_to = $day_to;
@@ -956,6 +968,12 @@ public function executeNotificacion(sfWebRequest $request) {
         $startTime = strtotime($day_from);
         $endTime = strtotime($day_to);
         
+        $this->getUser()->setAttribute('fechainicio', $day_from);
+        $this->getUser()->setAttribute('fechatermino', $day_to);
+        $this->getUser()->setAttribute('horainicio', date("g:i A",strtotime($request->getParameter('hour_from'))));
+        $this->getUser()->setAttribute('horatermino', date("g:i A",strtotime($request->getParameter('hour_to'))));
+        
+        
         $transmission = $request->getParameter('transmission');
         $type = $request->getParameter('type');
         $price = $request->getParameter('price');
@@ -1183,14 +1201,14 @@ public function executeNotificacion(sfWebRequest $request) {
 
     }
 
-	public function executeFiltrosBusqueda(sfWebRequest $request) {
-		
-		$this->getUser()->setAttribute('fechainicio', $request->getParameter('fechainicio'));
-		$this->getUser()->setAttribute('horainicio', $request->getParameter('horainicio'));
-		$this->getUser()->setAttribute('fechatermino', $request->getParameter('fechatermino'));
-		$this->getUser()->setAttribute('horatermino', $request->getParameter('horatermino'));
-		throw new sfStopException();
-	}
+    public function executeFiltrosBusqueda(sfWebRequest $request) {
+
+        $this->getUser()->setAttribute('fechainicio', $request->getParameter('fechainicio'));
+        $this->getUser()->setAttribute('horainicio', $request->getParameter('horainicio'));
+        $this->getUser()->setAttribute('fechatermino', $request->getParameter('fechatermino'));
+        $this->getUser()->setAttribute('horatermino', $request->getParameter('horatermino'));
+        throw new sfStopException();
+    }
 
     public function executeGetModelSearch(sfWebRequest $request) {
 
@@ -1363,11 +1381,11 @@ public function executeNotificacion(sfWebRequest $request) {
         $day_to = $request->getParameter('day_to');
         $hour_from = date("H:i", strtotime($request->getParameter('hour_from')));
         $hour_to = date("H:i", strtotime($request->getParameter('hour_to')));
-
-        $this->getUser()->setAttribute('day_from', $day_from);
-        $this->getUser()->setAttribute('day_to', $day_to);
-        $this->getUser()->setAttribute('hour_from', $hour_from);
-        $this->getUser()->setAttribute('hour_to', $hour_to);
+        
+        $this->getUser()->setAttribute('fechainicio', $day_from);
+        $this->getUser()->setAttribute('fechatermino', $day_to);
+        $this->getUser()->setAttribute('horainicio', $hour_from);
+        $this->getUser()->setAttribute('horatermino', $hour_to);
 
         $startTime = strtotime($day_from);
         $endTime = strtotime($day_to);
@@ -2702,34 +2720,48 @@ El equipo de Arriendas.cl
                         FROM Ips_ok
                         WHERE ip = '". $visitingIp ."'";
 
-                    $query = Doctrine_Manager::getInstance()->connection();  
+                    $query = Doctrine_Manager::getInstance()->connection();
                     $validIp = $query->fetchOne($sql);
-                    if(empty($validIp))
-                    {
-                        if(Doctrine::getTable('user')->isABlockedIp($visitingIp)){
+
+                    if(empty($validIp)) {
+
+                        // Se bloquea al usuario si es que su ip corresponde a una ip que posea CUALQUIER usuario bloqueado previamente
+                        if(Doctrine::getTable('user')->isABlockedIp($visitingIp)) {
                             $user->setBloqueado("Se loggeo desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario bloqueado.");
                         }
 
                         /** block propietario */
-                        if($user->getPropietario()){
+
+                        // Update 30/09/2014 No se bloquea al usuario y se marca con un flag ip_ambiguo
+                        //  Este flag es revisado despues en una reserva paga notificando por correo para hacer una revision manual
+                        if($user->getPropietario()) {
+
                             $noPropietarios = Doctrine::getTable('user')->getPropietarioByIp($visitingIp, false);
                             foreach ($noPropietarios as $nopropietario) {
-                                $nopropietario->setBloqueado("Un usuario propietario se loggeo desde la ip:".$visitingIp. ", desde la cual este usuario NO propietario se habia loggeado.");
+                                // $nopropietario->setBloqueado("Un usuario propietario se loggeo desde la ip:".$visitingIp. ", desde la cual este usuario NO propietario se habia loggeado.");
+                                $nopropietario->setIpAmbigua(true);
+                                $nopropietario->save();
                             }
-                            if(count($noPropietarios) > 0){
-                                $user->setBloqueado("Se loggeo usuario propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario NO propietario.");
+                            if(count($noPropietarios) > 0) {
+                                // $user->setBloqueado("Se loggeo usuario propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario NO propietario.");
+                                $user->setIpAmbigua(true);
+                                $user->save();
                             }
-                        }else{
+                        } else {
+
                             $propietarios = Doctrine::getTable('user')->getPropietarioByIp($visitingIp, true);
                             foreach ($propietarios as $propietario) {
-                                $propietario->setBloqueado("Se loggeo usuario NO propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado este usuario propietario.");
+                                // $propietario->setBloqueado("Se loggeo usuario NO propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado este usuario propietario.");
+                                $propietario->setIpAmbigua(true);
+                                $propietario->save();
                             }
-                            if(count($propietarios) > 0){
-                                $user->setBloqueado("Se loggeo este usuario NO propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario propietario.");
+                            if(count($propietarios) > 0) {
+                                // $user->setBloqueado("Se loggeo este usuario NO propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario propietario.");
+                                $user->setIpAmbigua(true);
+                                $user->save();
                             }
                         }
                     }
-                    /**/        
 
                     $this->getUser()->setFlash('msg', 'Autenticado');
                     $this->getUser()->setAuthenticated(true);
