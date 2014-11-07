@@ -5630,4 +5630,22 @@ class profileActions extends sfActions {
         die();
     }
 
+    public function executeOpenOpportunityEmail(sfWebRequest $request) {
+
+        try {
+
+            $opportunityEmailQueue = Doctrine_Core::getTable('OportunityEmailQueue')->find($request->getParameter('id'));
+
+            $opportunityEmailQueue->setOpenedAt(date("Y-m-d H:m:i"));
+            $opportunityEmailQueue->save();
+        } catch ( Exception $e ) {
+
+            error_log("[OpenOpportunity - ".date('Y-m-d H:i:s')."] PROBLEMAS AL MARCAR COMO ABIERTO EL CORREO DE OPORTUNIDAD");
+        }
+
+        $this->getResponse()->setContentType('image/gif');
+        echo base64_decode("R0lGODlhAQABAIAAAP///////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACwAAAAAAQABAAACAkQBADs=");
+
+        return sfView::NONE;
+    }
 }
