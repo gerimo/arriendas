@@ -1913,6 +1913,12 @@ class profileActions extends sfActions {
         $startDate = date("Y-m-d H:i:s", strtotime($from . ' ' . $hourdesde));
         $endDate = date("Y-m-d H:i:s", strtotime($to . ' ' . $hourhasta));
         
+        // guardo en session
+        $this->getUser()->setAttribute('fechainicio', $from);
+        $this->getUser()->setAttribute('fechatermino', $to);
+        $this->getUser()->setAttribute('horainicio', date("g:i A",strtotime($request->getParameter('hour_from'))));
+        $this->getUser()->setAttribute('horatermino', date("g:i A",strtotime($request->getParameter('hour_to'))));
+        
         $t = strtotime($from);
         $from_ymd = date('Y-m-d',$t);        
         
