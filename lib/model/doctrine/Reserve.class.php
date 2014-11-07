@@ -516,8 +516,8 @@ class Reserve extends BaseReserve {
         $limit = 7;
     
         $q = "SELECT sum(r.confirmed) as reservas_confirmadas, count(r.confirmed) as total_reservas
-          FROM reserve r
-          INNER JOIN car c on r.card_id = c.id
+          FROM Reserve r
+          INNER JOIN Car c on r.car_id = c.id
           WHERE c.user_id = ".$ownerUserId." ORDER BY r.fecha_reserva DESC LIMIT ".$limit;
         
         $query = Doctrine_Query::create()->query($q);

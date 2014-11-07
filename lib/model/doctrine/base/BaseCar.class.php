@@ -80,7 +80,7 @@
  * @method Car                 setDamages()        Sets the current record's "Damages" collection
  * @method Car                 setPhotos()        Sets the current record's "Photoes" collection
  * @method Car                 setReserves()       Sets the current record's "Reserves" collection
- * @method Car                 setRatioAprobacion() Sets the current record's "ratio_aprobacion" collection
+ * @method Car                 setRatioAprobacion() Sets the current record's "ratio_aprobacion" value
  * 
  * @package    CarSharing
  * @subpackage model

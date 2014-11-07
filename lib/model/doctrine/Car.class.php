@@ -268,7 +268,6 @@ where c.id=
       $this->setCustomerio(true);
 	  }
 
-    $ret = parent::save($conn);
 
 		$car = Doctrine_Core::getTable('car')->findOneById($this->getId());	
 		$user = Doctrine_Core::getTable('user')->findOneById($car->getUserId());	
@@ -285,26 +284,31 @@ where c.id=
     /* nuevo flujo */
 
     $limit = 7;
-    
-    $q = "SELECT sum(r.confirmed) as reservas_confirmadas, count(r.confirmed) as total_reservas
-      FROM reserve r
-      INNER JOIN car c on r.card_id = c.id
-      WHERE c.user_id = ".$ownerUserId." ORDER BY r.fecha_reserva DESC LIMIT ".$limit;
-    
-    $query = Doctrine_Query::create()->query($q);
-    $r = $query->toArray();
 
-    $ratio_aprobacion = null;
-    if ($r["total_reservas"] == 0) {
-      $ratio_aprobacion = 0;
+    $table = Doctrine_Core::getTable('Reserve');
+    $q = $table
+        ->createQuery('r')
+        ->select('ROUND(SUM(r.confirmed)/count(r.confirmed) * 100, 2) AS ratio')
+        ->innerJoin('r.Car c')
+        ->where('c.user_id = ?', $ownerUserId)
+        ->andWhere('r.comentario = "null"')
+        ->andWhere('(day(r.date) - day(r.fecha_reserva)) > 0')
+        ->andWhere("hour(r.fecha_reserva) < 22 AND hour(r.fecha_reserva) > 5")
+        ->limit($limit)
+        ;
+
+    $results = $q->execute();
+
+    if (isset($results[0])) {
+
+        $ratio = (float)$results[0]->getRatio();
     } else {
-      $ratio_aprobacion = round(($r["reservas_confirmadas"] / $r["total_reservas"]) * 100, 2);
+
+        $ratio = 0;
     }
 
-    $query = "update Car set ratio_aprobacion='$ratio_aprobacion' where user_id='$ownerUserId'";
-    $result = $q->execute($query);
+    $this->setRatioAprobacion($ratio);
 
-    return $ret;
+    return parent::save($conn);
   }
-
 }
