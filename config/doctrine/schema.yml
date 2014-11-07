@@ -1059,7 +1059,7 @@ ReserveFile:
     type: InnoDB
 
 OportunityTaksConfiguration:
-  tablename: OportunityTaksConfiguration
+  tableName: OportunityTaksConfiguration
   columns:
     id:
       type: integer(4)
