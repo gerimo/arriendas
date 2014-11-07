@@ -526,12 +526,17 @@ class profileActions extends sfActions {
             if($reserve->getUser()->getBlocked()){            
                 throw new Exception("No se pudo aprobar la reserva. El usuario arrendatario se encuentra bloqueado.");
             }
+            
+            $car = Doctrine_Core::getTable('car')->findOneById($reserve->getCarId());
+            if(!$car || $car->getUserId() != $this->getUser()->getAttribute("userid")){            
+                throw new Exception("La reserva que intentas aprobar no corresponde al usuario logueado.");
+            }
         }catch(Exception $ex){
             echo $ex->getMessage();die;
             //$this->redirect('profile/pedidos');
         }
         
-        $car = Doctrine_Core::getTable('car')->findOneById($reserve->getCarId());
+        
             
         //echo "pre aprobar";
         if ($car->getSeguroOk() != 4) {
@@ -629,8 +634,8 @@ class profileActions extends sfActions {
         $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
         $mailer->send($message);
 
-        $this->getUser()->setFlash('msg', 'La reserva ha sido aprobada.');
-        $this->setTemplate('pedidos');
+        //$this->getUser()->setFlash('msg', 'La reserva ha sido aprobada.');
+        $this->redirect('profile/pedidos');
     }
     
     /**
@@ -652,6 +657,10 @@ class profileActions extends sfActions {
             if($idUser != $this->getUser()->getAttribute("userid")){            
                 throw new Exception("La oportunidad que intentas aprobar no corresponde al usuario logueado.");
             }
+            $car = Doctrine_Core::getTable('Car')->find($idCar);
+            if(!$car || $car->getUserId() != $this->getUser()->getAttribute("userid")){            
+                throw new Exception("La oportunidad que intentas aprobar no corresponde al usuario logueado.");
+            }
             if($oReserve->getUser()->getBlocked()){            
                 throw new Exception("No se pudo aprobar la oportunidad. El usuario arrendatario se encuentra bloqueado.");
             }
@@ -668,7 +677,8 @@ class profileActions extends sfActions {
 
             if($reserva_igual > 0){
                 throw new Exception("Ya has aprobado esta oportunidad.");
-            }
+            }            
+            
         }catch(Exception $ex){
             echo $ex->getMessage();die;
             //$this->redirect('profile/pedidos');
@@ -679,8 +689,6 @@ class profileActions extends sfActions {
         $reserve->setDuration($oReserve->getDuration());
         $reserve->setUser($oReserve->getUser());
         $reserve->setComentario('Reserva oportunidad');
-        
-        $car = Doctrine_Core::getTable('Car')->find($idCar);
         $reserve->setCar($car);
 
         $carId = $oReserve->getCarId();
@@ -804,9 +812,8 @@ class profileActions extends sfActions {
         $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
         $mailer->send($message);
 
-        $this->getUser()->setFlash('msg', 'La oportunidad ha sido aprobada.');
-        //$this->setTemplate('pedidos');
-        $this->forward('profile','pedidos');
+        //$this->getUser()->setFlash('msg', 'La oportunidad ha sido aprobada.');
+        $this->redirect('profile/pedidos');
     }
 
     public function executeTestMail(sfWebRequest $request) {
