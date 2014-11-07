@@ -429,7 +429,8 @@ class profileActions extends sfActions {
             $sendNotifications = true;
             $reservasOtras = Doctrine_Core::getTable("Reserve")->findByUserId($reserve->getUserId());
             foreach ($reservasOtras as $reservaUsuario){
-                if($reserve->getDate() == $reservaUsuario->getDate() && $reservaUsuario->getComplete() == 1){
+                if($reserve->getDate() == $reservaUsuario->getDate() //&& $reservaUsuario->getComplete() == 1){
+                        && $reservaUsuario->getTransaction()->getCompleted()){
                     $sendNotifications = false;
                     break;
                 }
@@ -460,10 +461,10 @@ class profileActions extends sfActions {
             $functions = new Functions;
             $contrato = $functions->generarContrato($tokenReserve);
             $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
-            
+
             $pagarePath = sfConfig::get("sf_web_dir")."/pagare_arriendas.pdf";
             $message->attach(Swift_Attachment::fromPath($pagarePath)->setFilename("pagare_arriendas.pdf"));
-            
+
             if($sendNotifications){
                 $mailer->send($message);
             }
@@ -491,6 +492,326 @@ class profileActions extends sfActions {
         }
 
         die();
+    }
+    
+    
+    /**
+     * Action para aprobación de oportunidades directo desde link en email
+     * 
+     * @param sfWebRequest $request
+     */
+    public function executeAprobarReserve(sfWebRequest $request) {
+        $idReserve = $request->getParameter('idReserve');
+        $idUser = $request->getParameter('idUser');
+        
+        $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+        // chequeos varios
+        try{            
+            if(!$reserve ){
+                throw new Exception("La reserva que intentas aprobar es inexistente.");
+            }
+            if($idUser != $this->getUser()->getAttribute("userid")){            
+                throw new Exception("La reserva que intentas aprobar no corresponde al usuario logueado.");
+            }
+            if($reserve->getConfirmed()){
+                throw new Exception("Ya has aprobado esta reserva!");
+            }
+            if($reserve->getUser()->getBlocked()){            
+                throw new Exception("No se pudo aprobar la reserva. El usuario arrendatario se encuentra bloqueado.");
+            }
+            
+            $car = Doctrine_Core::getTable('car')->findOneById($reserve->getCarId());
+            if(!$car || $car->getUserId() != $this->getUser()->getAttribute("userid")){            
+                throw new Exception("La reserva que intentas aprobar no corresponde al usuario logueado.");
+            }
+        }catch(Exception $ex){
+            echo $ex->getMessage();die;
+            //$this->redirect('profile/pedidos');
+        }
+        
+        
+            
+        //echo "pre aprobar";
+        if ($car->getSeguroOk() != 4) {
+            echo "error:seguro4";
+            die();
+        } else if ($reserve->getCar()->getUser()->getRut() == "") {
+            echo "error:rutdueñonulo";
+            die();
+        }
+
+        $reserve->setConfirmed(1);
+        $reserve->setCanceled(0);
+        $reserve->setFechaConfirmacion($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
+        //Validando si la persona contestó dentro de los 10 primeros minutos
+        $horaLimite = strftime("%Y-%m-%d %H:%M:%S", strtotime('+10 minutes', strtotime($reserve->getFechaReserva())));
+        if (strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"))) <= strtotime($horaLimite)) {
+            $reserve->setCambioEstadoRapido(1);
+        } else {
+            $reserve->setCambioEstadoRapido(0);
+        }
+        $reserve->save();
+
+        //obtiene fecha inicio, fecha termino, marca y modelo del auto
+        $tokenReserve = $reserve->getToken();
+        $correoRenter = $reserve->getEmailRenter();
+        $nameRenter = $reserve->getNameRenter();
+        $correoOwner = $reserve->getEmailOwner();
+        $nameOwner = $reserve->getNameOwner();
+        $precio = $reserve->getPrice();
+        $precio = number_format($precio, 0, ',', '.');
+        $model = $car->getModel();
+        $brand = $model->getBrand();
+        $reserveComuna = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($car->getComunaId());
+
+        $lastName = $reserve->getLastnameOwner();
+        $telephone = $reserve->getTelephoneOwner();
+        $lastNameRenter = $reserve->getLastNameRenter();
+        $telephoneRenter = $reserve->getTelephoneRenter();
+
+        //crea la fila en la tabla transaction
+        $this->executeConfirmReserve($reserve->getId());
+
+        /* verificacion de otra reserva mismo dia */
+        $sendNotifications = true;
+        $reservasOtras = Doctrine_Core::getTable("Reserve")->findByUserId($reserve->getUserId());
+        foreach ($reservasOtras as $reservaUsuario){
+            if($reserve->getDate() == $reservaUsuario->getDate() //&& $reservaUsuario->getComplete() == 1){
+                    && $reservaUsuario->getTransaction()->getCompleted()){
+                $sendNotifications = false;
+                break;
+            }
+        }
+
+        //envía mail de preaprobación al arrendatario
+
+        require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
+        //al arrendatario
+        $mail = new Email();
+        $mailer = $mail->getMailer();
+
+        $message = $mail->getMessage();
+        $message->setSubject('Se ha aprobado tu reserva! (Falta pagar)');
+        $body = '<p>Hola ' . $nameRenter . ':</p><p>Se ha aprobado tu reserva!</p><p>Para acceder a los datos del vehículo debes pagar $precio.- CLP.</p><p>Si tu arriendo no se concreta, Arriendas.cl no le pagará al dueño del auto y te daremos un auto a elección.</p><p>Has click <a href="http://www.arriendas.cl/profile/pedidos">aquí</a> para pagar.</p><p>Los datos del arriendo y el contrato se encuentran adjuntos en formato PDF.</p>';
+        $message->setBody($mail->addFooter($body), 'text/html');
+        $message->setTo($correoRenter);
+        $functions = new Functions();
+        $contrato = $functions->generarContrato($tokenReserve);
+        $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+
+        $pagarePath = sfConfig::get("sf_web_dir")."/pagare_arriendas.pdf";
+        $message->attach(Swift_Attachment::fromPath($pagarePath)->setFilename("pagare_arriendas.pdf"));
+
+        if($sendNotifications){
+            $mailer->send($message);
+        }
+
+        $message = $mail->getMessage();
+        $message->setSubject('Se ha aprobado una reserva');
+        $body = "<p>Dueño: $nameOwner $lastName ($telephone) - $correoOwner</p><p>Arrendatario: $nameRenter $lastNameRenter ($telephoneRenter) - $correoRenter</p><p>Precio: $precio</p>";
+        $message->setBody($mail->addFooter($body), 'text/html');
+        $message->setTo('soporte@arriendas.cl');
+        $mailer->send($message);
+
+        if ($reserve->getConfirmedSMSRenter() == 1 && $sendNotifications) {
+            $texto = "Se ha aprobado tu reserva! Debes pagar en Arriendas.cl - Si tu arriendo no se concreta, no le pagaremos al propietario del auto y te daremos un auto a eleccion";
+            $this->enviarSMS($reserve->getTelephoneRenter(), $texto);
+        }
+
+        //al propietario
+        $message = $mail->getMessage();
+        $message->setSubject('Has aprobado una reserva!');
+        $body = "<p>Hola $nameOwner:</p><p>Has aprobado una reserva!</p><p>Recuerda que puedes aprobar varios pedidos de reserva para la misma fecha. El primer arrendatario que pague, ganará el arriendo.</p><p>El contrato de arriendo se emitirá una vez que el arrendatario haya pagado. La versión preliminar se encuentra adjunta en formato PDF.</p><p>Su pago se te informará por este medio y verás el cambio en la pestaña 'Reservas' del sitio.</p>";
+        $message->setBody($mail->addFooter($body), 'text/html');
+        $message->setTo($correoOwner);
+        $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+        $mailer->send($message);
+
+        //$this->getUser()->setFlash('msg', 'La reserva ha sido aprobada.');
+        $this->redirect('profile/pedidos');
+    }
+    
+    /**
+     * Action para aprobación de oportunidades directo desde link en email
+     * 
+     * @param sfWebRequest $request
+     */
+    public function executeAprobarOportunidad(sfWebRequest $request) {
+        $idReserve = $request->getParameter('idReserve');
+        $idCar = $request->getParameter('idCar');
+        $idUser = $request->getParameter('idUser');
+        
+        // chequeos varios
+        try{
+            $oReserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+            if(!$oReserve ){
+                throw new Exception("La oportunidad que intentas aprobar es inexistente.");
+            }
+            if($idUser != $this->getUser()->getAttribute("userid")){            
+                throw new Exception("La oportunidad que intentas aprobar no corresponde al usuario logueado.");
+            }
+            $car = Doctrine_Core::getTable('Car')->find($idCar);
+            if(!$car || $car->getUserId() != $this->getUser()->getAttribute("userid")){            
+                throw new Exception("La oportunidad que intentas aprobar no corresponde al usuario logueado.");
+            }
+            // tipo vehiculo
+            if($car->getModel()->getIdTipoVehiculo() != $oReserve->getCar()->getModel()->getIdTipoVehiculo()){
+                throw new Exception("Los tipos de vehiculo no coinciden.");
+            }
+            
+            if($oReserve->getUser()->getBlocked()){            
+                throw new Exception("No se pudo aprobar la oportunidad. El usuario arrendatario se encuentra bloqueado.");
+            }
+
+            // valido doble aprobación
+            // verifico que no exista otra reserva igual, ya confirmada, para el usuario logueado
+            $reserva_igual = Doctrine_Core::getTable('Reserve')
+                    ->createQuery('r')
+                    ->leftJoin('r.Car c')
+                    ->where("c.user_id = ?", $this->getUser()->getAttribute("userid"))
+                    ->andWhere('r.confirmed = ?', TRUE)
+                    ->andWhere('r.date = ?', $oReserve->getDate())
+                    ->count();
+
+            if($reserva_igual > 0){
+                throw new Exception("Ya has aprobado esta oportunidad.");
+            }            
+            
+        }catch(Exception $ex){
+            echo $ex->getMessage();die;
+            //$this->redirect('profile/pedidos');
+        }
+        
+        $reserve = new Reserve();
+        $reserve->setDate($oReserve->getDate());
+        $reserve->setDuration($oReserve->getDuration());
+        $reserve->setUser($oReserve->getUser());
+        $reserve->setComentario('Reserva oportunidad');
+        $reserve->setCar($car);
+
+        $carId = $oReserve->getCarId();
+        $oCar = Doctrine_Core::getTable('car')->findOneById($carId);
+        if ($oCar->getPricePerDay() < $car->getPricePerDay()) {
+            $vCar = $oCar;
+        } else {
+            $vCar = $car;
+        }
+
+        $reserve->setPrice(number_format($this->calcularMontoTotal($reserve->getDuration(), $vCar->getPricePerHour(), $vCar->getPricePerDay(), $vCar->getPricePerWeek(), $vCar->getPricePerMonth()), 2, '.', ''));
+        $reserve->setFechaReserva($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
+            
+        //echo "pre aprobar";
+        if ($car->getSeguroOk() != 4) {
+            echo "error:seguro4";
+            die();
+        } else if ($reserve->getCar()->getUser()->getRut() == "") {
+            echo "error:rutdueñonulo";
+            die();
+        }
+
+        $reserve->setConfirmed(1);
+        $reserve->setCanceled(0);
+        $reserve->setFechaConfirmacion($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
+        //Validando si la persona contestó dentro de los 10 primeros minutos
+        $horaLimite = strftime("%Y-%m-%d %H:%M:%S", strtotime('+10 minutes', strtotime($reserve->getFechaReserva())));
+        if (strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"))) <= strtotime($horaLimite)) {
+            $reserve->setCambioEstadoRapido(1);
+        } else {
+            $reserve->setCambioEstadoRapido(0);
+        }
+        $reserve->save();
+
+        //obtiene fecha inicio, fecha termino, marca y modelo del auto
+        $tokenReserve = $reserve->getToken();
+        $fechaInicio = $reserve->getFechaInicio();
+        $horaInicio = $reserve->getHoraInicio();
+        $fechaTermino = $reserve->getFechaTermino();
+        $horaTermino = $reserve->getHoraTermino();
+        $marcaModelo = $reserve->getMarcaModelo();
+        $correoRenter = $reserve->getEmailRenter();
+        $nameRenter = $reserve->getNameRenter();
+        $correoOwner = $reserve->getEmailOwner();
+        $nameOwner = $reserve->getNameOwner();
+        $precio = $reserve->getPrice();
+        $precio = number_format($precio, 0, ',', '.');
+        $idCar = $reserve->getCarId();
+        $car = $reserve->getCar();
+        $model = $car->getModel();
+        $brand = $model->getBrand();
+        $reserveComuna = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($car->getComunaId());
+        $reserveComunaName = ucfirst(strtolower($reserveComuna->getNombre()));
+
+        $lastName = $reserve->getLastnameOwner();
+        $telephone = $reserve->getTelephoneOwner();
+        $lastNameRenter = $reserve->getLastNameRenter();
+        $telephoneRenter = $reserve->getTelephoneRenter();
+
+        //crea la fila en la tabla transaction
+        $this->executeConfirmReserve($reserve->getId());
+
+        /* verificacion de otra reserva mismo dia */
+        $sendNotifications = true;
+        $reservasOtras = Doctrine_Core::getTable("Reserve")->findByUserId($reserve->getUserId());
+        foreach ($reservasOtras as $reservaUsuario){
+            if($reserve->getDate() == $reservaUsuario->getDate() //&& $reservaUsuario->getComplete() == 1){
+                    && $reservaUsuario->getTransaction()->getCompleted()){
+                $sendNotifications = false;
+                break;
+            }
+        }
+
+        //envía mail de preaprobación al arrendatario
+
+        require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
+        //al arrendatario
+        $mail = new Email();
+        $mailer = $mail->getMailer();
+
+        $message = $mail->getMessage();
+        $message->setSubject('Otro dueño te ofrece su auto! (Reserva aprobada, falta pagar)');
+        $body = '<p>Hola ' . $nameRenter . ':</p>
+            <p><b>Otro dueño de auto</b>, ha aprobado tu reserva.</p>
+            <p>Es un' . $brand->getName() . ' ' . $model->getName() . ' en la misma comuna y con el mismo precio que solicitaste.</p>
+            <p>Para acceder a los datos del vehículo debes pagar a través del sitio.</p>
+            <p>Contra tu pago se emitirá la póliza para los horarios declarados y los contratos.</p>
+            <p>Has click <a href="http://www.arriendas.cl/profile/pedidos">aquí</a> para pagar.</p>
+            <p>Los datos del arriendo y el contrato se encuentran adjuntos en formato PDF.</p>';
+        $message->setBody($mail->addFooter($body), 'text/html');
+        $message->setTo($correoRenter);
+        $functions = new Functions();
+        $contrato = $functions->generarContrato($tokenReserve);
+        $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+
+        $pagarePath = sfConfig::get("sf_web_dir")."/pagare_arriendas.pdf";
+        $message->attach(Swift_Attachment::fromPath($pagarePath)->setFilename("pagare_arriendas.pdf"));
+
+        if($sendNotifications){
+            $mailer->send($message);
+        }
+
+        $message = $mail->getMessage();
+        $message->setSubject('Se ha aprobado una reserva');
+        $body = "<p>Dueño: $nameOwner $lastName ($telephone) - $correoOwner</p><p>Arrendatario: $nameRenter $lastNameRenter ($telephoneRenter) - $correoRenter</p><p>Precio: $precio</p>";
+        $message->setBody($mail->addFooter($body), 'text/html');
+        $message->setTo('soporte@arriendas.cl');
+        $mailer->send($message);
+
+        if ($reserve->getConfirmedSMSRenter() == 1 && $sendNotifications) {
+            $texto = "Se ha aprobado tu reserva! Debes pagar en Arriendas.cl - Si tu arriendo no se concreta, no le pagaremos al propietario del auto y te daremos un auto a eleccion";
+            $this->enviarSMS($reserve->getTelephoneRenter(), $texto);
+        }
+
+        //al propietario
+        $message = $mail->getMessage();
+        $message->setSubject('Has aprobado una reserva!');
+        $body = "<p>Hola $nameOwner:</p><p>Has aprobado una reserva!</p><p>Recuerda que puedes aprobar varios pedidos de reserva para la misma fecha. El primer arrendatario que pague, ganará el arriendo.</p><p>El contrato de arriendo se emitirá una vez que el arrendatario haya pagado. La versión preliminar se encuentra adjunta en formato PDF.</p><p>Su pago se te informará por este medio y verás el cambio en la pestaña 'Reservas' del sitio.</p>";
+        $message->setBody($mail->addFooter($body), 'text/html');
+        $message->setTo($correoOwner);
+        $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+        $mailer->send($message);
+
+        //$this->getUser()->setFlash('msg', 'La oportunidad ha sido aprobada.');
+        $this->redirect('profile/pedidos');
     }
 
     public function executeTestMail(sfWebRequest $request) {
@@ -1595,6 +1916,45 @@ class profileActions extends sfActions {
         /* Nuevo flujo */
         $newFlow = $request->getParameter("newFlow");
         //
+        
+        $hourdesde = $request->getParameter('hour_from');
+        $hourhasta = $request->getParameter('hour_to');
+        $startDate = date("Y-m-d H:i:s", strtotime($from . ' ' . $hourdesde));
+        $endDate = date("Y-m-d H:i:s", strtotime($to . ' ' . $hourhasta));
+        
+        // guardo en session
+        $this->getUser()->setAttribute('fechainicio', $from);
+        $this->getUser()->setAttribute('fechatermino', $to);
+        $this->getUser()->setAttribute('horainicio', date("g:i A",strtotime($request->getParameter('hour_from'))));
+        $this->getUser()->setAttribute('horatermino', date("g:i A",strtotime($request->getParameter('hour_to'))));
+        
+        $t = strtotime($from);
+        $from_ymd = date('Y-m-d',$t);        
+        
+        // valido que no exista una reserva idéntica, o con la misma fecha
+        $reserve_query = Doctrine_Query::create()
+                ->from('Reserve r')
+                ->leftJoin('r.Car c')
+                ->where('r.user_id = ?', $idUsuario)
+                ->andWhere('DATE(r.date) = ?', $from_ymd)
+                ->andWhere('c.id = ?', $carid);
+        
+        $result = $reserve_query->fetchOne();
+        
+        if($result){
+            // si es una reserva idéntica (misma fecha/hora), muestro error
+            if($result->getDate() == $startDate){
+                //sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
+                //$url = url_for("profile/pedidos");
+                $this->getUser()->setFlash('msg', 'Ya has realizado una reserva para este mismo auto y en la misma fecha y horario.');    // <br> Si deseas puedes actualizar tu reserva haciendo click <a href="'.$url.'"> aquí </a>');
+                $this->redirect('profile/reserve?id=' . $carid);
+            }else{
+                // es una reserva con igual fecha pero diferentes horarios, actualizo la existente
+                $this->redirect($this->generateUrl('editReserve', array('idReserva' => $result->getId(),
+                    'fechainicio' => $startDate, 'fechafin' => $endDate, 'carid' => $carid, 'sendReserve' => TRUE)));
+                
+            }
+        }
 
         $car = Doctrine_Core::getTable('car')->find(array($request->getParameter('id')));
 
@@ -1639,18 +1999,11 @@ class profileActions extends sfActions {
             $this->getUser()->setFlash('msg', 'Seleccione la fecha de inicio y de entrega');
             $this->redirect('profile/reserve?id=' . $request->getParameter('id'));
         }
-
-
-        $hourdesde = $request->getParameter('hour_from');
-        $hourhasta = $request->getParameter('hour_to');
+        
 
         if (preg_match('/^\d{1,2}\-\d{1,2}\-\d{4}$/', $from) && preg_match('/^\d{1,2}\-\d{1,2}\-\d{4}$/', $to)) {
 
             //CORROBORAR SI SE SOLICITO ANTES PERO TIENE DURACION DURANTE EL PEDIDO
-
-            $startDate = date("Y-m-d H:i:s", strtotime($from . ' ' . $hourdesde));
-            $endDate = date("Y-m-d H:i:s", strtotime($to . ' ' . $hourhasta));
-
             $rangeDates = array($startDate, $endDate, $startDate, $endDate, $startDate, $endDate);
             $diff = strtotime($endDate) - strtotime($startDate);
 
@@ -1826,6 +2179,8 @@ class profileActions extends sfActions {
             if ($reserve->getConfirmedSMSOwner() == 1) {
                 $this->enviarReservaSMS($reserve->getTelephoneOwner(), $fechaInicio);
             }
+            
+            $url = $this->generateUrl("aprobarReserve", array('idReserve' => $reserve->getId(), 'idUser' => $car->getUserId()), TRUE);
 
             require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
             $mail = new Email();
@@ -1834,8 +2189,8 @@ class profileActions extends sfActions {
             <p>Has recibido un pedido de reserva por 
             $$price por tu $marcaModelo desde <b>$fechaInicio $horaInicio</b> 
                 hasta <b>$fechaTermino $horaTermino</b> 
-                cuando te habrán devuelto el auto.</p><p>Para ver la reserva 
-                has click <a href='http://www.arriendas.cl/profile/pedidos'>aquí</a></p>");
+                cuando te habrán devuelto el auto.</p><p>Para aprobar la reserva 
+                has click <a href='$url'>aquí</a></p>");
             $mail->setTo($correo);
             if ($correo != $correoEmail)
                 $mail->setCc($correoEmail);
@@ -1955,10 +2310,11 @@ class profileActions extends sfActions {
                     $this->logMessage("oportunidad -  notificable car user id:".$notifiable_car["User_id"]);
                     $owner = Doctrine_Core::getTable('user')->find($notifiable_car['User_id']);
                     
+                    $url = $this->generateUrl("aprobarOportunidad", array('idReserve' => $reserve->getId(), 'idCar' => $notifiable_car['id'], 'idUser' => $owner->getId()), TRUE);
                     $messageBody = "
                         <p>Hola " . $owner->getFirstname() . ":</p>
                         <p>La oportunidad es por $$price desde <b>$fechaInicio $horaInicio</b> hasta <b>$fechaTermino $horaTermino</b>.</p>
-                        <p><b>Ingresa en la pestaña oportunidades y apruébala ahora mismo.</b></p>
+                        <p><b>Apruébala ahora mismo haciendo click <a href='$url'> aquí </a>.</b></p>
                         ";
                     $message = $this->getMailer()->compose();
                     $message->setSubject("Hay un oportunidad para arrendar tu auto!");
@@ -2587,7 +2943,7 @@ class profileActions extends sfActions {
         $this->user = $this->car->getUser();
         $this->getUser()->setAttribute('lastview', $request->getReferer());
 
-        $this->fndreserve = array('fechainicio' => '', 'horainicio' => '', 'fechatermino' => '', 'horatermino' => '');
+        /*$this->fndreserve = array('fechainicio' => '', 'horainicio' => '', 'fechatermino' => '', 'horatermino' => '');
 
         if ($this->getUser()->getAttribute("fechainicio"))
             $this->fndreserve['fechainicio'] = $this->getUser()->getAttribute("fechainicio");
@@ -2596,14 +2952,13 @@ class profileActions extends sfActions {
         if ($this->getUser()->getAttribute("fechatermino"))
             $this->fndreserve['fechatermino'] = $this->getUser()->getAttribute("fechatermino");
         if ($this->getUser()->getAttribute("horatermino"))
-            $this->fndreserve['horatermino'] = $this->getUser()->getAttribute("horatermino");
-
+            $this->fndreserve['horatermino'] = $this->getUser()->getAttribute("horatermino");*/
         
         $fechaActual = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S", strtotime('+3 hours', time())));    // sumo 3hs a la hora chilena.
         $this->ultimaFechaValidaDesde = date("d-m-Y", strtotime($fechaActual));
         $this->ultimaFechaValidaHasta = date("d-m-Y",strtotime("+2 days",strtotime($fechaActual)));
-        $this->ultimaHoraValidaDesde = date("H:i",strtotime($fechaActual));
-        $this->ultimaHoraValidaHasta = date("H:i",strtotime($fechaActual)+12*3600);
+        $this->ultimaHoraValidaDesde = (!$this->getUser()->getAttribute("horainicio"))? date("g:i A",strtotime($fechaActual)) : date("g:i A",strtotime($this->getUser()->getAttribute("horainicio")));
+        $this->ultimaHoraValidaHasta = (!$this->getUser()->getAttribute("horatermino"))? date("g:i A",strtotime($fechaActual)+12*3600) : date("g:i A",strtotime($this->getUser()->getAttribute("horatermino")));
         
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
         $this->idUsuario = $idUsuario;
@@ -2633,19 +2988,37 @@ class profileActions extends sfActions {
             }
             if($ultimaFecha)
             {
-                $fechaAlmacenadaDesde = date("YmdHis",$ultimaFecha);
-                if( date("YmdHis", strtotime($fechaActual)) < $fechaAlmacenadaDesde)
-                {
+                $fechaAlmacenadaDesde = date("YmdHis",$ultimaFecha);    // ultima guardada en ddbb
+                if($this->getUser()->getAttribute("fechainicio")){
+                    $time_desde = strtotime($this->getUser()->getAttribute("fechainicio") . " " . $this->getUser()->getAttribute("horainicio"));
+                    /*$fechaSessionDesde = date("YmdHis", $time_desde);
+                    $fechaAlmacenadaDesde = ($fechaSessionDesde < $fechaAlmacenadaDesde)? $fechaAlmacenadaDesde : $fechaSessionDesde;
+                    $ultimaFecha = ($fechaSessionDesde < $fechaAlmacenadaDesde)? $ultimaFecha : $time_desde;*/
+                    
+                    $ultimaFecha = $time_desde;
+                    
+                    // obtengo duración de la session
+                    $time_hasta = strtotime($this->getUser()->getAttribute("fechatermino") . " " . $this->getUser()->getAttribute("horatermino"));
+                    $duracion = round(abs($time_hasta - $time_desde) / 3600,2);
+                }
+                /*if( date("YmdHis", strtotime($fechaActual)) < $fechaAlmacenadaDesde)
+                {*/
                     $day_from = date("d-m-Y",$ultimaFecha);
-                    $hour_from = date("H:i",$ultimaFecha);
+                    $hour_from = date("g:i A",$ultimaFecha);
                     $day_to = date("d-m-Y",$ultimaFecha+$duracion*3600);
-                    $hour_to = date("H:i",$ultimaFecha+$duracion*3600);
+                    $hour_to = date("g:i A",$ultimaFecha+$duracion*3600);
+                    
+                    $this->getUser()->setAttribute('fechainicio', $day_from);
+                    $this->getUser()->setAttribute('fechatermino', $day_to);
+                    $this->getUser()->setAttribute('horainicio', $hour_from);
+                    $this->getUser()->setAttribute('horatermino', $hour_to);
+                    
                     $this->ultimaFechaValidaDesde = $day_from;
                     $this->ultimaFechaValidaHasta = $day_to;
                     $this->ultimaHoraValidaDesde = $hour_from;
                     $this->ultimaHoraValidaHasta = $hour_to;
                     
-                }
+                //}
             }
         }
 
@@ -3820,6 +4193,22 @@ class profileActions extends sfActions {
                 if ($reserva->getConfirmed() == true 
                         && date('Y-m-d', strtotime($reserva->getFechaReserva())) == date("Y-m-d") 
                         && (is_null($reserva->getComentario()) || trim($reserva->getComentario()) == "null")) {
+                    $reservasRecibidas[$i]['estado'] = 1;
+                }
+                
+                // verifico si la oportunidad aplica, o por el contrario
+                // ya no debería mostrarla porque ya se aprobó una oportunidad igual antes
+                // (oportunidades múltiples generadas por el mismo arrendatario)
+                $reserva_igual = Doctrine_Query::create()
+                        ->from('Reserve r')
+                        ->leftJoin('r.Car c')
+                        ->where('r.confirmed = ?', true)
+                        ->andwhere('r.date = ?', $reserva->getDate())
+                        ->andwhere('r.user_id = ?', $reserva->getUserId())
+                        ->andwhere('c.user_id =?', $this->getUser()->getAttribute("userid"))
+                        ->fetchOne();
+                
+                if($reserva_igual){
                     $reservasRecibidas[$i]['estado'] = 1;
                 }
 
@@ -5392,6 +5781,11 @@ class profileActions extends sfActions {
             }
         } else {
             echo 'Por favor ingrese fechas con formato YYYY-MM-DD HH:MM';
+        }
+        
+        if(!empty($request->getParameter('sendReserve'))){
+            $this->redirect('profile/reserveSend?id=' . $idReserva);
+            die();
         }
         return sfView::NONE;
     }

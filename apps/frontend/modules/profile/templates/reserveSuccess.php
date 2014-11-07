@@ -18,7 +18,6 @@
 
 
 <style type="text/css">
-    /* jQuery lightBox plugin - Gallery style */
 
     #gallery ul,#galleryDanios ul { list-style: none; }
     #gallery ul li,#galleryDanios ul li { display: inline; }
@@ -332,8 +331,8 @@ $(document).ready(function() {
     
     $("#hour_from , #hour_to").timePicker({show24Hours:false});
 
+    //calcula el precio
     calcularPrecio();
-
     $('#datefrom').click(function(){
 
         $('div.time-picker').css('display', 'none');

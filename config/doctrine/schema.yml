@@ -678,6 +678,8 @@ Reserve:
     impulsive:
       type: boolean
       default: false
+    numero_factura:
+      type: integer(7)
   relations:
     User:
       class: User
@@ -784,6 +786,8 @@ Transaction:
     impulsive:
       type: boolean
       default: false
+    numero_factura:
+      type: integer(7)
   relations:
     User:
       class: User
