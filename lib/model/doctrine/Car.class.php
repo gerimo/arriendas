@@ -268,9 +268,10 @@ where c.id=
       $this->setCustomerio(true);
 	  }
 
+    $ret = parent::save($conn);
 
-		$car = Doctrine_Core::getTable('car')->findOneById($this->getId());	
-		$user = Doctrine_Core::getTable('user')->findOneById($car->getUserId());	
+		$car = Doctrine_Core::getTable('car')->find($this->getId());
+		$user = Doctrine_Core::getTable('user')->find($car->getUserId());	
 		$ownerUserId=$user->getId();
 		
 		$percTotalContestadas=$user->getPercReservasContestadas();
@@ -283,6 +284,7 @@ where c.id=
 
     /* nuevo flujo */
 
+    // Se genera el calculo asociado al ratio de aprobacion del propietario
     $limit = 7;
 
     $table = Doctrine_Core::getTable('Reserve');
@@ -307,8 +309,9 @@ where c.id=
         $ratio = 0;
     }
 
+    // Se setea el nuevo ratio para el auto en particular
     $this->setRatioAprobacion($ratio);
 
-    return parent::save($conn);
+    return $ret;
   }
 }

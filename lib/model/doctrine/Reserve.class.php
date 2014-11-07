@@ -513,25 +513,22 @@ class Reserve extends BaseReserve {
         $query = "update Car set Cant_Reservas_Aprobadas= '$CantReservasAprobadas', contesta_pedidos='$percTotalContestadas', velocidad_contesta_pedidos='$velocidadContestaPedidos' where user_id='$ownerUserId'";
         $result = $q->execute($query);
 
-        $limit = 7;
-    
-        $q = "SELECT sum(r.confirmed) as reservas_confirmadas, count(r.confirmed) as total_reservas
-          FROM Reserve r
-          INNER JOIN Car c on r.car_id = c.id
-          WHERE c.user_id = ".$ownerUserId." ORDER BY r.fecha_reserva DESC LIMIT ".$limit;
-        
-        $query = Doctrine_Query::create()->query($q);
-        $r = $query->toArray();
+        /* nuevo flujo */
 
-        $ratio_aprobacion = null;
-        if ($r["total_reservas"] == 0) {
-          $ratio_aprobacion = 0;
-        } else {
-          $ratio_aprobacion = round(($r["reservas_confirmadas"] / $r["total_reservas"]) * 100, 2);
+        // Se obtienen todos los autos del dueño
+        //  y se llama al metodo save, ya que internamente el save de Car genera el calculo
+        //  del ratio de aprobacion (ver: Car.class.php#save)
+        $table = Doctrine_Core::getTable('Car');
+        $q = $table
+            ->createQuery('c')
+            ->where('c.user_id = ?', $ownerUserId)
+            ;
+
+        $cars = $q->execute();
+        foreach($cars as $car) {
+
+            $car->save();
         }
-
-        $query = "update Car set ratio_aprobacion='$ratio_aprobacion' where user_id='$ownerUserId'";
-        $result = $q->execute($query);
 
         return $ret;
     }
