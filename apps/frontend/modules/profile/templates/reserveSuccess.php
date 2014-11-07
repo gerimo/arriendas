@@ -1,3 +1,4 @@
+<?php use_stylesheet('search.css') ?>
 <?php use_stylesheet('subi_tu_auto.css') ?>
 <?php use_stylesheet('registro.css') ?>
 <?php use_stylesheet('calendario.css') ?>
@@ -5,6 +6,7 @@
 <?php use_javascript('jquery.lightbox-0.5.js') ?>
 <?php use_javascript('jquery.lightbox-0.5.min.js') ?>
 <?php use_javascript('jquery.lightbox-0.5.pack.js') ?>
+<?php use_stylesheet('mis_arriendos.css') ?>
 
 
 <script type="text/javascript">
@@ -12,27 +14,25 @@
         $('#gallery a').lightBox();
         $('#galleryDanios a').lightBox();
     }); 
-
 </script>
 
 
 <style type="text/css">
+    /* jQuery lightBox plugin - Gallery style */
 
-/* jQuery lightBox plugin - Gallery style */
-
-#gallery ul,#galleryDanios ul { list-style: none; }
-#gallery ul li,#galleryDanios ul li { display: inline; }
-#gallery ul img,#galleryDanios ul img {
-border: 2px solid #fff; /*A4A4A4*/
-border-width: 2px 2px 2px;
-}
-#gallery ul a:hover img,#galleryDanios ul a:hover img {
-border: 2px solid #EC008C;
-border-width: 2px 2px 2px;
-color: #fff;
-}
-#gallery ul a:hover,#galleryDanios ul a:hover { color: #fff; }
-a{text-decoration:none;}
+    #gallery ul,#galleryDanios ul { list-style: none; }
+    #gallery ul li,#galleryDanios ul li { display: inline; }
+    #gallery ul img,#galleryDanios ul img {
+        border: 2px solid #fff; /*A4A4A4*/
+        border-width: 2px 2px 2px;
+    }
+    #gallery ul a:hover img,#galleryDanios ul a:hover img {
+        border: 2px solid #EC008C;
+        border-width: 2px 2px 2px;
+        color: #fff;
+    }
+    #gallery ul a:hover,#galleryDanios ul a:hover { color: #fff; }
+    a{text-decoration:none;}
 </style>
 
 <style>
@@ -155,7 +155,6 @@ a{text-decoration:none;}
     .infoAuto{
         border-top: 1px solid rgb(227, 228, 223);
     }
-    
 </style>
 
 <style>
@@ -205,17 +204,16 @@ a{text-decoration:none;}
         margin-right: 80px;
     }
     .mensaje_alerta {
-    background: none repeat scroll 0 0 #F8F8F8;
-    border: 1px solid #CCCCCC;
-    color: #FF0000;
-    display: block;
-    height: auto;
-    line-height: 30px;
-    margin-left: 20px;
-    padding: 9px;
-    width: 360px;
-}
-
+        background: none repeat scroll 0 0 #F8F8F8;
+        border: 1px solid #CCCCCC;
+        color: #FF0000;
+        display: block;
+        height: auto;
+        line-height: 30px;
+        margin-left: 20px;
+        padding: 9px;
+        width: 360px;
+    }
 
     /* css for timepicker */
     .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
@@ -224,55 +222,88 @@ a{text-decoration:none;}
     .ui-timepicker-div dl dd { margin: 0 10px 10px 65px; }
     .ui-timepicker-div td { font-size: 90%; }
     .ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
-
-
     .ui-widget { font-family: Lucida Grande, Lucida Sans, Arial, sans-serif; font-size: 0.8em; }
 </style>
 
+<style>
+    /* Estilos varios */
+    .btn {
+        background-color: #ec008c;
+        border: solid 2px white;
+        border-radius: 8px;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: normal;
+        letter-spacing: 2px;
+        padding: 8px 16px;
+        text-decoration: none;
+        text-transform: uppercase;
+    }
 
+    .btn:hover {
+        background-color: #da007a;
+    }
 
+    .btn[disabled] {
+        background-color: gray;
+        cursor: auto;
+    }
+
+    .btn-link {
+        background-color: transparent;
+        border: solid 2px transparent;
+        border-radius: 8px;
+        color: blue;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: normal;
+        padding: 8px 16px;
+        text-decoration: underline;
+    }
+
+    .btn-link:hover {
+        color: #6633ff;
+    }
+
+    .btnbtn {
+        background-image: url('/images/Home/BotonReservarHome.png');
+        height: 38px;
+        text-decoration: none;
+        width: 111px;
+    }
+</style>
 
 <script>
 $(document).ready(function() {
+
+    durationCheck();
+
     //GUARDANDO EL FORMULARIO
-	$("form#frm1").submit(function() {			
-        /*
-		if( !$("#chkcontrato").is(':checked') ) {
-			
-			alert("Debes aceptar los terminos del contrato para continuar");
-			return false;
-		}
-        */
-		
-		//valido que reserva sea de mínimo 1 hora
-		if( isValidDate( $('#datefrom').val() ) && isValidDate( $('#dateto').val() ) && isValidTime( convertAmPmto24($('#hour_from').val()) ) && isValidTime( convertAmPmto24($('#hour_to').val()) ) ) {				
-		if( $('#datefrom').val() == $('#dateto').val() ) {
-				var dif = restarHoras(convertAmPmto24($('#hour_from').val()), convertAmPmto24($('#hour_to').val()))					
-				if( dif < 1 ) { alert('La reserva no puede ser menor a 1 hora'); return false; }
-			}
-		}
-	});
-    /*
-    $("#generatepdf").live("click", function(event) {
+    $("form#frm1").submit(function() {
+        
+        //valido que reserva sea de mínimo 1 hora
+        if( isValidDate( $('#datefrom').val() ) &&
+            isValidDate( $('#dateto').val() ) &&
+            isValidTime( convertAmPmto24($('#hour_from').val()) ) &&
+            isValidTime( convertAmPmto24($('#hour_to').val()) ) ) {
 
-    	event.preventDefault();
-    	
-    	if( isValidDate($('#datefrom').val()) && isValidDate($('#dateto').val()) && isValidTime($('#hour_from').val()) && isValidTime($('#hour_to').val()) ) {
-    		
-    		var arr = $('#datefrom').val().split('-');
-    		var horas = $('#hour_from').val().split(':');
-    		var inicio = arr[2] + '-' + arr[1] + '-' + arr[0] + ' ' + $('#hour_from').val();
-    		arr = $('#dateto').val().split('-');
-    		var termino = arr[2] + '-' + arr[1] + '-' + arr[0] + ' ' + $('#hour_to').val();
-
-    		window.open('<?php echo url_for('profile/agreePdf')?>?id=<?php echo  $car->getId() ?>&inicio=' + inicio + '&termino=' + termino);
-    	}
-    	else
-    		alert('Para poder visualizar el contrato es necesario llenar los datos de la reserva');
-
+            if( $('#datefrom').val() == $('#dateto').val() ) {
+                var dif = restarHoras(convertAmPmto24($('#hour_from').val()), convertAmPmto24($('#hour_to').val()));                    
+                if( dif < 1 ) {
+                    alert('La reserva no puede ser menor a 1 hora');
+                    return false;
+                }
+            }
+        }
     });
-    */
-	
+
+    $(".oldFlow").click(function(){
+        
+        durationCheck();
+        $("form#frm1").submit();
+    });
+    
     $.datepicker.regional['es'] = {
         closeText: 'Cerrar',
         prevText: '&#x3c;Ant',
@@ -293,49 +324,36 @@ $(document).ready(function() {
         yearSuffix: ''};
     $.datepicker.setDefaults($.datepicker.regional['es']);
 
-
-//    $.timepicker.regional['es'] = {
-//        timeOnlyTitle: 'Seleccione la hora',
-//        timeText: 'Tiempo',
-//        hourText: 'Hora',
-//        minuteText: 'Minutos',
-//        secondText: 'Segundos',
-//        millisecText: 'Milisegundos',
-//        currentText: 'Hoy',
-//        closeText: 'Cerrar',
-//        timeFormat: 'hh:mm:ss',
- //       ampm: false
-  //  };
-  //  $.timepicker.setDefaults($.timepicker.regional['es']);
-
     $('#datefrom,#dateto').datepicker({
         dateFormat: 'dd-mm-yy',
         buttonImageOnly: true,
         minDate:'-0d'
     });
     
-    $("#hour_from , #hour_to").timePicker({show24Hours:false});	
+    $("#hour_from , #hour_to").timePicker({show24Hours:false});
 
-
-//	if(isValidDate('<?php echo $fndreserve['fechainicio']?>')) $('#datefrom').val('<?php echo $fndreserve['fechainicio']?>');
-//	if(isValidTime('<?php echo $fndreserve['horainicio']?>')) $('#hour_from').val(tConvert('<?php echo $fndreserve['horainicio']?>'));
-//	if(isValidDate('<?php echo $fndreserve['fechatermino']?>')) $('#dateto').val('<?php echo $fndreserve['fechatermino']?>');
-//	if(isValidTime('<?php echo $fndreserve['horatermino']?>')) $('#hour_to').val(tConvert('<?php echo $fndreserve['horatermino']?>'));
-
-    //calcula el precio
     calcularPrecio();
+
     $('#datefrom').click(function(){
+
         $('div.time-picker').css('display', 'none');
     });
+
     $('#datefrom').on('change',function(){
-        $('#dateto').attr("value", $('#datefrom').val());
+
+        /*$('#dateto').attr("value", $('#datefrom').val());*/
         calcularPrecio();
+        durationCheck();
     });
+
     $('#hour_from').click(function(){
+
         $('div.time-picker ul li.horaImpar').css('display', 'block');
         $('div.time-picker ul li.horaPar').css('display', 'block');
     });
+
     $('#hour_from').on('change',function(){
+
         var hora = $("#hour_from").timePicker('getTime').val();
         hora = hora.split(':');
         var tiempoHora = (parseInt(hora[0])+parseInt(1));
@@ -358,6 +376,7 @@ $(document).ready(function() {
     });
 
     $('#dateto').on('change',function(){
+
         calcularPrecio();
     });
 
@@ -374,6 +393,7 @@ $(document).ready(function() {
     });
 
     $('#hour_to').on('change',function(){
+
         calcularPrecio();
     });
 
@@ -451,8 +471,6 @@ var separador_miles='.';
     return numero;
 }
 
-
-
 function calcularPrecio(){
     var fecha_inicial= $("#datefrom").val();
     var fecha_final= $("#dateto").val();
@@ -460,13 +478,20 @@ function calcularPrecio(){
     var hora_final= convertAmPmto24($("#hour_to").timePicker('getTime').val());
     //var fechaInicio = fecha_inicial+' '+hora_inicial;
 
-		if( isValidDate( $('#datefrom').val() ) && isValidDate( $('#dateto').val() ) && isValidTime( convertAmPmto24($('#hour_from').val()) ) && isValidTime( convertAmPmto24($('#hour_to').val()) ) ) {				
-		if( $('#datefrom').val() == $('#dateto').val() ) {
-				var dif = restarHoras(convertAmPmto24($('#hour_from').val()), convertAmPmto24($('#hour_to').val()))					
-				if( dif < 1 ) { alert('La reserva no puede ser menor a 1 hora'); return false; }
-			}
-		}
-			
+    if( isValidDate( $('#datefrom').val() ) &&
+        isValidDate( $('#dateto').val() ) &&
+        isValidTime( convertAmPmto24($('#hour_from').val()) ) &&
+        isValidTime( convertAmPmto24($('#hour_to').val()) ) ) {
+
+        if( $('#datefrom').val() == $('#dateto').val() ) {
+            var dif = restarHoras(convertAmPmto24($('#hour_from').val()), convertAmPmto24($('#hour_to').val()));                    
+            if( dif < 1 ) {
+                alert('La reserva no puede ser menor a 1 hora');
+                return false;
+            }
+        }
+    }
+            
     if(fecha_inicial!='' && fecha_final!='Día de entrega' && hora_inicial!='' && hora_final!='Hora de entrega'){
         //alert(fecha_inicial+' '+hora_inicInvalid Date ial+' '+fecha_final+' '+hora_final);        fecha_inicial = fecha_inicial.split('-');
         fecha_inicial = fecha_inicial.split('-');
@@ -474,14 +499,9 @@ function calcularPrecio(){
         hora_inicial = (hora_inicial.split(':'));
         hora_final = (hora_final.split(':'));
 
-			console.log(hora_inicial[0]);
-
-
         var dateInicio = new Date(fecha_inicial[2],fecha_inicial[1]-1,fecha_inicial[0],hora_inicial[0],hora_inicial[1],0);
         var dateTermino = new Date(fecha_final[2],fecha_final[1]-1,fecha_final[0],hora_final[0],hora_final[1],0);
-
-		console.log(dateInicio);
-		
+        
         var diferencia = new Date(dateTermino.valueOf()-dateInicio.valueOf());
         diferencia = Math.round(diferencia/(1000*3600)); // cantidad de horas de diferencia
 
@@ -490,20 +510,20 @@ function calcularPrecio(){
        var precioSemana = parseFloat(<?php echo $car->getPricePerWeek() ; ?>);
        var precioMes = parseFloat(<?php echo $car->getPricePerMonth() ; ?>);
 
-	   var dia = Math.floor(diferencia/24);
+       var dia = Math.floor(diferencia/24);
         var hora = diferencia%24;
         if(hora>=6){
             hora = 0;
             dia++;
         }
 
-		if (dia>=7 && precioSemana>0){
-			precioDia=precioSemana/7
-		};
-		
-		if (dia>=30 && precioMes>0){
-			precioDia=precioMes/30
-		};	
+        if (dia>=7 && precioSemana>0){
+            precioDia=precioSemana/7
+        };
+        
+        if (dia>=30 && precioMes>0){
+            precioDia=precioMes/30
+        };  
 
         var tarifa = precioHora*hora + precioDia*dia;
         $("#valor_reserva").text('$'+anadirPunto(tarifa));
@@ -543,9 +563,9 @@ function isValidDate(date){
 }
 
 function isValidTime(time){
-	var objRegExp  = /(^\d{2}:\d{2}$)/;
-	
-	if(time.match(objRegExp)) {
+    var objRegExp  = /(^\d{2}:\d{2}$)/;
+    
+    if(time.match(objRegExp)) {
       return true;
     }else{
       return false;
@@ -553,37 +573,75 @@ function isValidTime(time){
 }
 
 function restarHoras(hora_desde, hora_hasta) {
-	
-	var hora, min, seg;
-	var hora2, min2, seg2;
-	var arr = hora_desde.split(':');
-	var arr2 = hora_hasta.split(':');
-	hora = parseInt(arr[0]); min = parseInt(arr[1]); seg = parseInt(arr[2]);
-	hora2 = parseInt(arr2[0]); min2 = parseInt(arr2[1]); seg2 = parseInt(arr2[2]);
-	var aux = (hora * 3600) + (min * 60); var aux2 = (hora2 * 3600) + (min2 * 60);
-	var dif = parseFloat( (aux2 - aux) / 3600 );
-	
-	return dif; 
+    
+    var hora, min, seg;
+    var hora2, min2, seg2;
+    var arr = hora_desde.split(':');
+    var arr2 = hora_hasta.split(':');
+    hora = parseInt(arr[0]); min = parseInt(arr[1]); seg = parseInt(arr[2]);
+    hora2 = parseInt(arr2[0]); min2 = parseInt(arr2[1]); seg2 = parseInt(arr2[2]);
+    var aux = (hora * 3600) + (min * 60); var aux2 = (hora2 * 3600) + (min2 * 60);
+    var dif = parseFloat( (aux2 - aux) / 3600 );
+    
+    return dif; 
+}
+
+function durationCheck() {
+    var d = new Date();
+
+    var dd = d.getDate();
+    var mm = d.getMonth()+1;
+    var yy = d.getFullYear();
+
+    if (dd<10) { dd='0'+dd }
+    if (mm<10) { mm='0'+mm }
+
+    var today = dd+"-"+mm+"-"+yy;
+
+    if ($("#datefrom").val() == today) {
+        $("#newFlow").val(0);
+        $("#payBtn").removeClass("botonPagar");
+        $("#payBtn").addClass("oldFlow");
+    } else {
+        $("#newFlow").val(1);
+        $("#payBtn").addClass("botonPagar");
+        $("#payBtn").removeClass("oldFlow");
+    }
 }
 </script>
 
+<?php use_javascript('pedidos.js?v=29072014') ?>
 
+<script type="text/javascript">
+    var urlEliminarPedidosAjax = <?php echo "'".url_for("profile/eliminarPedidosAjax")."';" ?>
+    var urlCambiarEstadoPedido = <?php echo "'".url_for("profile/cambiarEstadoPedidoAjax")."';" ?>
+    var urlEditarFecha = <?php echo "'".url_for("profile/editarFechaPedidosAjax")."';" ?>
+    var urlPedidos = <?php echo "'".url_for("profile/pedidos")."';" ?>
+    var urlPago = <?php echo "'".url_for("profile/fbDiscount")."';" ?>
+    var urlPagoValidar = <?php echo "'".url_for("profile/checkCanPay")."';" ?>
+    var urlExtenderReserva = <?php echo "'".url_for("profile/extenderReservaAjax")."';" ?>
+    var urlRefreshPedidos = <?php echo "'".url_for("profile/pedidosAjax")."';" ?>
+    var urlUpdateProfile = <?php echo "'".url_for("profile/edit")."';" ?>
+    var urlFBconnect = <?php echo "'".url_for("main/loginFacebook")."';" ?>
+</script>
+
+<div style="display:none">
+    <?php include_partial('contratosArrendatario') ?>
+</div>
 
 <div class="main_box_1">
     <div class="main_box_2">
-
-
-
+    
         <?php include_component('profile', 'profile') ?>
             
-			<!-- 
+            <!-- 
             <div class="usuario_info">
                 <span >Usuario:</span><span class="usuario_nombre"><?php echo $user->getFirstname() . " " . $user->getLastname(); ?></span>
                 <span class="usuario_lugar"><?php echo $user->getNombreComuna() ?>, <?php echo $user->getNombreRegion() ?></span>    
             </div>
 
             <a href="#<?php echo url_for('profile/profile') ?>" class="usuario_btn_verperfil"></a>
-			-->
+            -->
 
 
         <!--  contenido de la seccion -->
@@ -600,64 +658,73 @@ function restarHoras(hora_desde, hora_hasta) {
                 <div class="calen_box_3">
                     <div style="padding-top:20px; padding-left:20px;font-size:12px;width:505px;">
 
-                        <?php echo form_tag('profile/doReserve', array('method' => 'post', 'id' => 'frm1')); ?>	
+                        <?php echo form_tag('profile/doReserve', array('method' => 'post', 'id' => 'frm1')); ?> 
 
-						<?php if( $sf_user->getFlash('msg') ): ?>
-                        <span class="mensaje_alerta"><?php echo html_entity_decode($sf_user->getFlash('msg')); ?></span>
-						<?php endif;?>
-						
-						<?php if(count($reserve) > 0) {?>
-						<?php foreach ($reserve as $r) { ?>
-                        <div class="c1 height">
-                            <label>Desde</label>
-                            <input id="datefrom" name="datefrom" type="text" class="datepicker" readonly="readonly" value="<?php echo date('d-m-Y',strtotime($r['fechafin']))?>" /><br/><br/>
-                            <input readonly="readonly" type="text" id="hour_from" name="hour_from" readonly="readonly" value=""/>
-                        </div><!-- /c1 -->
+                        <?php if( $sf_user->getFlash('msg') ): ?>
+                            <span class="mensaje_alerta"><?php echo html_entity_decode($sf_user->getFlash('msg')); ?></span>
+                        <?php endif;?>
+                        
+                        <?php if(count($reserve) > 0) {?>
+                            <?php foreach ($reserve as $r) { ?>
+                                <div class="c1 height">
+                                    <label>Desde</label>
+                                    <input id="datefrom" name="datefrom" type="text" class="datepicker" readonly="readonly" value="<?php echo date('d-m-Y',strtotime($r['fechafin']))?>" /><br/><br/>
+                                    <input readonly="readonly" type="text" id="hour_from" name="hour_from" readonly="readonly" value=""/>
+                                </div><!-- /c1 -->
+                            <?php } ?>
+                        <?php } else {?>
+                            <!-- muestra la última fecha ingresada vigente, si es que existe -->
+                            <div class="c1 height">
+                                <label>Desde</label>
+                                <input id="datefrom" name="datefrom" type="text" class="datepicker" readonly="readonly" value="<?php if(isset($ultimaFechaValidaDesde)) echo $ultimaFechaValidaDesde; else echo "Día de inicio";?>" /><br/><br/>
+                                <input readonly="readonly" type="text" id="hour_from" name="hour_from" readonly="readonly" value="<?php if(isset($ultimaHoraValidaDesde)) echo date("g:i A", strtotime($ultimaHoraValidaDesde)); else echo "Hora de inicio"; ?>"/>
+                            </div><!-- /c1 -->
                         <?php } ?>
-						<?php } else {?>
-                        <!-- muestra la última fecha ingresada vigente, si es que existe -->
-                        <?php
-                        //echo $ultimaFechaValida." ".$ultimaHoraValida;
-                        ?>
-                        <div class="c1 height">
-                            <label>Desde</label>
-                            <input id="datefrom" name="datefrom" type="text" class="datepicker" readonly="readonly" value="<?php if(isset($ultimaFechaValidaDesde)) echo $ultimaFechaValidaDesde; else echo "Día de inicio";?>" /><br/><br/>
-                            <input readonly="readonly" type="text" id="hour_from" name="hour_from" readonly="readonly" value="<?php if(isset($ultimaHoraValidaDesde)) echo date("g:i A", strtotime($ultimaHoraValidaDesde)); else echo "Hora de inicio"; ?>"/>
-                        </div><!-- /c1 -->
-						<?php } ?>
 
                         <div class="c1 height">
                             <label>Hasta</label>
                             <input id="dateto" name="dateto" type="text" class="datepicker" readonly="readonly" value="<?php if(isset($ultimaFechaValidaHasta)) echo $ultimaFechaValidaHasta; else echo "Día de entrega";?>"/><br/><br/>
                             <input readonly="readonly" type="text" id="hour_to" name="hour_to" value="<?php if(isset($ultimaHoraValidaHasta)) echo date("g:i A", strtotime($ultimaHoraValidaHasta)); else echo "Hora de entrega"; ?>" />
                         </div><!-- /c1 -->
-			
+            
                         <div class="c1 height" style="width:256px;">
                             <label>Valor de la Reserva</label>
-                			    <label id="valor_reserva">$0</label>
+                                <label id="valor_reserva">$0</label>
                                             <!--
-                			    <input id="dateto" name="dateto" type="text" class="datepicker" readonly="readonly" value="Día de entrega"/><br/><br/>
+                                <input id="dateto" name="dateto" type="text" class="datepicker" readonly="readonly" value="Día de entrega"/><br/><br/>
                                             <input readonly="readonly" type="text" id="hour_to" name="hour_to" value="Hora de entrega" />
-			                     -->
-			             </div><!-- /c1 -->
-						
+                                 -->
+                         </div><!-- /c1 -->
+                        
                         <!--
-						<div class="c1 height"><label><input type="checkbox" name="chkcontrato" id="chkcontrato" value="1" style="width: auto; height: auto;"> Declaro estar de acuerdo con los terminos del <a href="contratopdf" id="generatepdf">Contrato</a> asociado a los servicios de Arriendas.cl.</label></div>
+                        <div class="c1 height"><label><input type="checkbox" name="chkcontrato" id="chkcontrato" value="1" style="width: auto; height: auto;"> Declaro estar de acuerdo con los terminos del <a href="contratopdf" id="generatepdf">Contrato</a> asociado a los servicios de Arriendas.cl.</label></div>
                         -->
-							
+                            
                         <input type="hidden" name="duration" id="duration"/>
 
 
                         <input type="hidden" name="id" id="id" value="<?php echo  $car->getId() ?>"/>
-						<?php if(count($reserve) > 0) :?>
-						<?php foreach ($reserve as $r): ?>                        
-                        <input type="hidden" name="reserve_id" id="reserve_id" value="<?php echo $r['id']?>"/>
-                        <?php endforeach; ?>
-						<?php endif;?>
+                        <?php if(count($reserve) > 0) :?>
+                            <?php foreach ($reserve as $r): ?>                        
+                                <input type="hidden" name="reserve_id" id="reserve_id" value="<?php echo $r['id']?>"/>
+                            <?php endforeach; ?>
+                        <?php endif;?>
 
                         <div class="clear"></div>
 
-                        <input type="submit" value="Confirmar" class="btnAmarillo">
+                        <input type="hidden" name="newFlow" id="newFlow" value="0" />
+
+                        <!-- <h3>Opciones de reemplazo</h3>
+                        <p><input type="checkbox"> Auto de mayor precio manteniendo tu precio pagado.</p>
+                        <p><input type="checkbox"> Auto de las mismas características (te devolvemos el dinero a tu favor, si lo hubiera).</p>
+                        <p><input type="checkbox"> Arriendas conseguirá un auto muy cerca de tu reserva original.</p>
+                        <p><input type="checkbox"> A menos de 1 km del metro.</p> -->
+
+                        <div style="max-width: 85%; text-align: right">
+                            <button class="arriendas_pink_btn arriendas_big_btn right" id="payBtn" data-carid="<?php echo $car->getId() ?>" data-userid="<?php echo $idUsuario ?>" style="position: initial">Reservar</button>
+                            <br>
+                            <input type="submit" value="Consultar" class="btn-link">
+                        </div>
 
                         </form>  
 
@@ -740,16 +807,16 @@ function restarHoras(hora_desde, hora_hasta) {
                 <div class="texto_normal precios">Precio por Hora | <span class="texto_magenta"><strong><?php echo "$".number_format(floor($car->getPricePerHour()),0,',','.'); ?></strong></span></div>
                 <div class="texto_normal precios">Precio por D&iacute;a | <span class="texto_magenta"><strong><?php echo "$".number_format(floor($car->getPricePerDay()),0,',','.'); ?></strong></span></div>
 
-		<?php if($car->getDisponibilidadSemana()==1 && $car->getDisponibilidadFinde()==1): ?>
-				<div class="texto_normal precios">Precio por Semana | 
-				<?php if($car->getPricePerWeek()>0): ?><span class="texto_magenta"><strong><?php echo "$".number_format(floor($car->getPricePerWeek()),0,',','.'); ?></strong></span>
-				<?php else: ?><a href="mailto:soporte@arriendas.cl&subject=Arriendo Semanal <?php echo $car->getModel()->getBrand()." ".$car->getModel(); ?> (<?php echo $car->getId(); ?>)"><span class="texto_magenta"><strong>Consultar</strong></span></a>
-				<?php endif; ?></div>
-				<div class="texto_normal precios">Precio por Mes | 
-				<?php if($car->getPricePerMonth()>0): ?><span class="texto_magenta"><strong><?php echo "$".number_format(floor($car->getPricePerMonth()),0,',','.'); ?></strong></span>
-				<?php else: ?><a href="mailto:soporte@arriendas.cl&subject=Arriendo Mensual <?php echo $car->getModel()->getBrand()." ".$car->getModel(); ?> (<?php echo $car->getId(); ?>)"><span class="texto_magenta"><strong>Consultar</strong></span></a>
-				<?php endif; ?></div>		
-		<?php endif; ?>
+        <?php if($car->getDisponibilidadSemana()==1 && $car->getDisponibilidadFinde()==1): ?>
+                <div class="texto_normal precios">Precio por Semana | 
+                <?php if($car->getPricePerWeek()>0): ?><span class="texto_magenta"><strong><?php echo "$".number_format(floor($car->getPricePerWeek()),0,',','.'); ?></strong></span>
+                <?php else: ?><a href="mailto:soporte@arriendas.cl&subject=Arriendo Semanal <?php echo $car->getModel()->getBrand()." ".$car->getModel(); ?> (<?php echo $car->getId(); ?>)"><span class="texto_magenta"><strong>Consultar</strong></span></a>
+                <?php endif; ?></div>
+                <div class="texto_normal precios">Precio por Mes | 
+                <?php if($car->getPricePerMonth()>0): ?><span class="texto_magenta"><strong><?php echo "$".number_format(floor($car->getPricePerMonth()),0,',','.'); ?></strong></span>
+                <?php else: ?><a href="mailto:soporte@arriendas.cl&subject=Arriendo Mensual <?php echo $car->getModel()->getBrand()." ".$car->getModel(); ?> (<?php echo $car->getId(); ?>)"><span class="texto_magenta"><strong>Consultar</strong></span></a>
+                <?php endif; ?></div>       
+        <?php endif; ?>
 
                 <div class="subtitulos punteado">Datos del Auto</div>
                 <div class="texto_normal precios"><div class="interlineado">Ubicaci&oacute;n |</div><div class="interlineado2"><strong><?php echo ucwords(strtolower($car->getAddressAprox()))."" .$nombreComunaAuto ?></strong></div></div>

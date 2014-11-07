@@ -40,6 +40,7 @@
  * @method string          getCodpagocompra()      Returns the current record's "codpagocompra" value
  * @method integer         getMetodoId()           Returns the current record's "metodo_id" value
  * @method integer         getShowSuccess()        Returns the current record's "show_success" value
+ * @method boolean         getImpulsive()          Returns the current record's "impulsive" value
  * 
  * @method Transaction     setId()                 Sets the current record's "id" value
  * @method Transaction     setCar()                Sets the current record's "car" value
@@ -57,7 +58,8 @@
  * @method Transaction     setReserve()            Sets the current record's "Reserve" value
  * @method Transaction     setCodpagocompra()      Sets the current record's "codpagocompra" value
  * @method Transaction     setMetodoId()           Sets the current record's "metodo_id" value
-   @method Transaction     setShowSuccess()        Sets the current record's "show_sucess" value
+ * @method Transaction     setShowSuccess()        Sets the current record's "show_sucess" value
+ * @method Transaction     setImpulsive()          Sets the current record's "impulsive" value
  * 
  * @package    CarSharing
  * @subpackage model
@@ -172,6 +174,11 @@ abstract class BaseTransaction extends sfDoctrineRecord
             'default' => 0,
             ));
         $this->hasColumn('show_success', 'boolean', null, array(
+            'type' => 'boolean',
+            'notnull' => '0',
+            'default' => 0,
+            ));
+        $this->hasColumn('impulsive', 'boolean', null, array(
             'type' => 'boolean',
             'notnull' => '0',
             'default' => 0,

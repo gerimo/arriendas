@@ -1,4 +1,5 @@
 <?php
+
 $mostrarReservasRealizadas = false;
 $mostrarReservasRecibidas = false;
 $mostrarBarra = false;
@@ -14,6 +15,7 @@ if ($reservasRecibidas) {
         $mostrarReservasRecibidas = true;
     }
 }
+
 if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
     echo "<div class='barraSuperior'><p>PEDIDOS</p></div>";
 } else if ($mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
@@ -25,6 +27,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
     $mostrarBarra = true;
 }
 ?>
+
 <?php if ($mostrarBarra) { ?>
     <div class="barraNavegadora">
         <div id="boton1" class='oscuro'>Pedidos Realizados</div>
@@ -62,15 +65,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
 
     </div>
 
-    <div id='confirmarContratosArrendatario'>
-        <input type="checkbox" name="contratoArrendatario0" id="contratoArrendatario1" class='checkboxContrato'><p> En caso de siniestro, dejaré constancia en carabineros INMEDIATAMENTE.</p>
-        <input type="checkbox" name="contratoArrendatario1" id="contratoArrendatario1" class='checkboxContrato'><p> He visto el <a href='' class='informeDanios' target='_blank'>Informe de daños del veh&iacute;culo</a>.</p>
-        <input type="checkbox" name="contratoArrendatario2" id="contratoArrendatario2" class='checkboxContrato'><p> Entiendo ser responsable por daños producidos durante el arriendo por debajo del deducible de 5UF.</p>
-        <input type="checkbox" name="contratoArrendatario3" id="contratoArrendatario3" class='checkboxContrato'><p> Entiendo perder mi cobertura en caso de conducción en estado de ebriedad.</p>
-        <input type="checkbox" name="contratoArrendatario4" id="contratoArrendatario4" class='checkboxContrato'><p> <span id='textoBencinaArrendatario'>Si el arriendo es por menos de un día, pagaré por la bencina utilizada en efectivo según los kilómetros manejados. Si el arriendo es por un día o más, devolveré el veh&iacute;culo con el marcador de bencina en el mismo nivel con el que me fue entregado.</span></p>
-        <input type="checkbox" name="contratoArrendatario5" id="contratoArrendatario5" class='checkboxContrato'><p> Realizaré el pago desde una cuenta bancaria o medio de pago, a mi nombre.</p>
-
-    </div>
+    <?php include_partial('contratosArrendatario') ?>
 
     <div id='confirmarContratosPropietario'>
         <input type="checkbox" name="contratoPropietario1" id="contratoPropietario1" class='checkboxContrato'><p> El <a href='' class='informeDanios' target='_blank'>Informe de daños de mi veh&iacute;culo</a> se encuentra completo.</p>
@@ -179,12 +174,10 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
         echo "</div>";
         echo"</div>";
         echo "<div class='mensajeContacto'><p>Si necesita modificar su reserva pagada, escr&iacutebanos a <i>soporte@arriendas.cl</i></p></div>";
-    }else {
+    } else {
         //echo "<h3>APROBADOS (PAGADO)</h3>";
         //echo "<p class='alerta'>No registra pedidos aprobados</p>";
     }
-
-
 
 
     $mostrar = false;
@@ -198,7 +191,6 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
             }
         }
     }
-
 
     if ($mostrar) {
 
@@ -259,7 +251,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
         echo"<div class='herramientas'>";
         echo "</div>";
         echo"</div>";
-    }else {
+    } else {
         //echo "<h3>PRE APROBADOS (PENDIENTE DE PAGO)</h3>";
         //echo "<p class='alerta'>No registra resultados";
     }

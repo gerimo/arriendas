@@ -72,11 +72,19 @@ function bindEventsAll(){
         idReserve = obtenerId(idReserve);
         var duracion = $(this).attr('class').split(' ');
 
+        var newFlow = 0;
+        var idUsuario = $(this).data('userid');
+        var idCar = $(this).data('carid');
+
+        if (idUsuario) {
+            var newFlow = 1;
+        }
+
         /* valido que pueda pagar */
         $.ajax({
             type: 'post',
             url: urlPagoValidar,
-            data: {idReserve: idReserve}
+            data: {idReserve: idReserve, idUsuario: idUsuario}
         }).done(function(data) {
             if (data.length > 0) {
                 switch (data) {
@@ -100,27 +108,33 @@ function bindEventsAll(){
                         break;
                 }
             } else {
-                /* se valido que puede pagar */
+                /* se validó que puede pagar */
 
-                //alert(duracion[1]);
-                duracion = obtenerId(duracion[1]);
+                if (newFlow) {
+                    /* Se asigna 24 porque pq en la página de realizar reserva si es menor a un día se sigue flujo antiguo */
+                    duracion = 24;
+                } else {
+                    duracion = obtenerId(duracion[1]);
+                }                
+                
                 if (duracion > 23) {
                     $('#textoBencinaArrendatario').text('Devolveré el vehículo con el marcador de bencina en el mismo nivel con el que me fue entregado.');
                 } else {
                     $('#textoBencinaArrendatario').text('Pagaré por la bencina utilizada en efectivo según los kilómetros manejados.');
                 }
 
-                //informe de daños
-                var classCar = $('#bloque_' + idReserve).attr('class');
-                //alert(classCar);
-                classCar = classCar.split(' ');
-                for (var i = 0; i < classCar.length; i++) {
-                    if (classCar[i].indexOf != -1) {
-                        idCar = obtenerId(classCar[i]);
+                /*informe de daños*/
+                if (!newFlow) { 
+                    var classCar = $('#bloque_' + idReserve).attr('class');
+                    
+                    classCar = classCar.split(' ');
+                    for (var i = 0; i < classCar.length; i++) {
+                        if (classCar[i].indexOf != -1) {
+                            idCar = obtenerId(classCar[i]);
+                        }
                     }
                 }
-                //$('.informeDanios').attr('href','http://www.arriendas.cl/main/generarReporte/idAuto/'+idCar);
-                //$('.informeDanios').attr('href','http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/idReserve/'+idReserve);
+                
                 $('.informeDanios').attr('href', 'http://arriendas.cl/frontend_dev.php/main/generarReporteDanios/idAuto/' + idCar);
 
                 $("#confirmarContratosArrendatario").dialog({
@@ -131,24 +145,26 @@ function bindEventsAll(){
                     closeOnEscape: false,
                     title: 'Confirmar contratos',
                     position: {my: "center", at: "center"},
-//	        position: 'center',
                     dialogClass: 'no-close',
                     buttons: {
                         "Aceptar": function() {
 
-                            //confirmar que se aprueben los contratos
+                            /*confirmar que se aprueben los contratos*/
                             if (contratosSeleccionados('Arrendatario')) {
-                                //redirecciona
-                                window.location.href = urlPago + '/id/' + idReserve;
-                                //alert(urlPago);
 
-                                //limpiar checkbox
+                                if (newFlow) {
+                                    durationCheck();
+                                    $("form#frm1").submit();
+                                } else {
+                                    window.location.href = urlPago + '/id/' + idReserve;                                    
+                                }
+
                                 limpiarContratos('Arrendatario');
                                 $(this).dialog("close");
                             }
                         },
                         Cancelar: function() {
-                            //limpiar checkbox
+                            /*limpiar checkbox*/
                             limpiarContratos('Arrendatario');
                             $(this).dialog("close");
                         }
@@ -156,14 +172,10 @@ function bindEventsAll(){
                 });
 
                 $("#confirmarContratosArrendatario").dialog('open');
-
             }
         }).fail(function() {
             alert('Disculpe, ha ocurrido un error. Por favor inténtelo nuevamente mas tarde.');
         });
-
-
-
     });
 
     //evento de select (en espera-propietario)
@@ -1254,9 +1266,6 @@ function confirmarExtension() {
     //fecha y hora hasta mayor que desde
     var fechaCompletaDesde = obtenerFechaString(fechaDesde, horaDesde);
     var fechaCompletaHasta = obtenerFechaString(fechaHasta, horaHasta);
-
-    //alert(fechaCompletaDesde);
-    //alert(fechaCompletaHasta);
 
     if (fechaCompletaHasta <= fechaCompletaDesde) {
         alert('Debe ingresar una fecha de entrega superior a la de pedido');

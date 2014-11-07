@@ -231,8 +231,6 @@ class profileActions extends sfActions {
         //echo $precioCompleto." ".$precioNuevo;
         //almacena la extensión de la reserva
         
-        
-        
         $reserve = new Reserve();
         $reserve->setDate($date);
         $reserve->setDuration($duracion);
@@ -244,6 +242,7 @@ class profileActions extends sfActions {
         $reserve->setExtendUserId($user->getId());
                 
         $fechaHoy = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"));
+
         /* si extiende el duenio */
         $extendioDuenio = false;
         if($user->getId() == $car->getUser()->getId()){
@@ -251,7 +250,13 @@ class profileActions extends sfActions {
             $reserve->setFechaConfirmacion($fechaHoy);
             $extendioDuenio = true;
         }
+
         $reserve->setFechaReserva($fechaHoy);
+
+        /* nuevo flujo */
+        if ($reserveAnterior->getImpulsive()) {
+            $reserve->setConfirmed(true);
+        }
         
         $reserve->save();
         
@@ -259,17 +264,6 @@ class profileActions extends sfActions {
             $this->executeConfirmReserve($reserve->getId());
         }
 
-        //$nameOwner
-        //$nameRenter
-        //$correo
-        /*
-          require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
-          $mail = new Email();
-          $mail->setSubject('Extensión de reserva');
-          $mail->setBody("<p>Hola $nameOwner:</p><p>$nameRenter quiere extender la reserva pagada:</p><p></p>");
-          $mail->setTo($correo);
-          $mail->submit();
-         */
         die();
     }
 
@@ -1598,6 +1592,10 @@ class profileActions extends sfActions {
         $to = $request->getParameter('dateto');
         $carid = $request->getParameter('id');
 
+        /* Nuevo flujo */
+        $newFlow = $request->getParameter("newFlow");
+        //
+
         $car = Doctrine_Core::getTable('car')->find(array($request->getParameter('id')));
 
         //Validar Disponibilidad
@@ -1746,14 +1744,39 @@ class profileActions extends sfActions {
                     $reserve->setFechaReserva($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
                     $reserve->save();
 
-                    //var_dump($reserve->getPrice());die();
-                    //envía correo al propietario del auto
-                    /*
-                     * El envío de correo de movió a la función executeReserveCallback
-                     * que se llama por ajax una vez la página se haya cargado 
-                     *  
-                     */
-                    $this->redirect('profile/reserveSend?id=' . $reserve->getId());
+                    if ($newFlow) {
+
+                        $reserve->setConfirmed(false);
+                        $reserve->setImpulsive(true);
+                        $reserve->save();
+
+                        $transaccion = Doctrine_Core::getTable('Transaction')->findByReserveId(array($idReserve));
+
+                        if (!count($transaccion)) {
+
+                            $transaction = new Transaction();
+                            $carString = $reserve->getCar()->getModel()->getName() . " " . $reserve->getCar()->getModel()->getBrand()->getName();
+                            $transaction->setCar($carString);
+                            $transaction->setPrice($reserve->getPrice());
+                            $transaction->setUser($reserve->getUser());
+                            $transaction->setDate(date("Y-m-d H:i:s"));
+                            $transactionType = Doctrine_Core::getTable('TransactionType')->find(1);
+                            $transaction->setTransactionType($transactionType);
+                            $transaction->setReserve($reserve);
+                            $transaction->setCompleted(false);
+                            $transaction->save();
+                        }
+
+                        $this->redirect('profile/fbDiscount?id=' . $reserve->getId());
+                    } else {
+                        //envía correo al propietario del auto
+                        /*
+                         * El envío de correo de movió a la función executeReserveCallback
+                         * que se llama por ajax una vez la página se haya cargado 
+                         *  
+                         */
+                        $this->redirect('profile/reserveSend?id=' . $reserve->getId());
+                    }
                     die();
                 }
 
@@ -2581,7 +2604,9 @@ class profileActions extends sfActions {
         $this->ultimaFechaValidaHasta = date("d-m-Y",strtotime("+2 days",strtotime($fechaActual)));
         $this->ultimaHoraValidaDesde = date("H:i",strtotime($fechaActual));
         $this->ultimaHoraValidaHasta = date("H:i",strtotime($fechaActual)+12*3600);
+        
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+        $this->idUsuario = $idUsuario;
         if($idUsuario)
         {
             $reservas = Doctrine_Core::getTable("Reserve")->findByUserId($idUsuario);
@@ -2623,9 +2648,6 @@ class profileActions extends sfActions {
                 }
             }
         }
-
-        
-
 
         /////información del auto
         //$this->car = Doctrine_Core::getTable('car')->find($carid);
@@ -2732,26 +2754,53 @@ class profileActions extends sfActions {
         }
         $this->arrayFotosDanios = $arrayFotoDanios;
         $this->arrayDescripcionesDanios = $arrayDescripcionDanios;
+
+
+
+        $this->test = $this->getUser()->getAttribute('userid');
     }
 
     public function executeCheckCanPay(sfWebRequest $request) {
+        
         $idReserve = $request->getPostParameter('idReserve');
+        $idUsuario = $request->getPostParameter('idUsuario');
+
         $errorMessage = "";
 
-        $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
-        if ($reserve->getUser()->getRut() == "") {
-            $errorMessage = "error:rutnulo";
+        if ($idUsuario) {
+            
+            $user = Doctrine_Core::getTable('user')->find($idUsuario);
+            if ($user->getRut() == "") {
+                $errorMessage = "error:rutnulo";
+            }
+
+            if ($user->getExtranjero() == 1 && !$user->getFacebookConfirmado() ) {
+                $errorMessage = "error:extranjero-sin-facebook";
+            }
+            if ($user->getMenor()) {
+                $errorMessage = "error:usermenor";
+            }
+            if (is_null($user->getBirthdate()) || strlen($user->getBirthdate()) <= 0) {
+                $errorMessage = "error:nobirthdate";
+            }
+        } else {
+
+            $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+            if ($reserve->getUser()->getRut() == "") {
+                $errorMessage = "error:rutnulo";
+            }
+
+            if ($reserve->getUser()->getExtranjero() == 1 && !$reserve->getUser()->getFacebookConfirmado() ) {
+                $errorMessage = "error:extranjero-sin-facebook";
+            }
+            if ($reserve->getUser()->getMenor()) {
+                $errorMessage = "error:usermenor";
+            }
+            if (is_null($reserve->getUser()->getBirthdate()) || strlen($reserve->getUser()->getBirthdate()) <= 0) {
+                $errorMessage = "error:nobirthdate";
+            }
         }
 
-        if ($reserve->getUser()->getExtranjero() == 1 && !$reserve->getUser()->getFacebookConfirmado() ) {
-            $errorMessage = "error:extranjero-sin-facebook";
-        }
-        if ($reserve->getUser()->getMenor()) {
-            $errorMessage = "error:usermenor";
-        }
-        if (is_null($reserve->getUser()->getBirthdate()) || strlen($reserve->getUser()->getBirthdate()) <= 0) {
-            $errorMessage = "error:nobirthdate";
-        }
         echo $errorMessage;
         die();
     }
@@ -4628,39 +4677,7 @@ class profileActions extends sfActions {
             $transaction->setReserve($reserve);
             $transaction->setCompleted(false);
             $transaction->save();
-        } /* else {
-
-          $q = Doctrine_Query::create()
-          ->update('Transaction t')
-          ->set('t.date', '?', date("Y-m-d H:i:s"))
-          ->where('t.reserve_id = ?', $request->getParameter('id'));
-          $q->execute();
-          }
-
-
-          $startDate = date("Y-m-d H:i:s", strtotime($reserve->getDate()));
-          $endDate = date("Y-m-d H:i:s", strtotime($reserve->getDate() . " + " . $reserve->getDuration() . " hour"));
-          $userid = $reserve->getUser()->getId();
-
-          //$this->sendConfirmEmail($reserve);
-
-          $reserve = Doctrine_Core::getTable('Reserve')
-          ->createQuery('a')
-          ->where('((a.date <= ? and date_add(a.date, INTERVAL a.duration HOUR) > ?) or (a.date <= ? and date_add(a.date, INTERVAL a.duration HOUR) > ?)) and (a.User.id = ? and a.confirmed = false and a.complete = false)', array($startDate, $startDate, $endDate, $endDate, $userid))
-          ->execute();
-
-
-          foreach ($reserve as $r) {
-          Doctrine_Query::create()
-          ->delete()
-          ->from('Transaction')
-          ->andWhere('reserve_id = ?', $r->getId())
-          ->execute();
-          $r->delete();
-          }
-
-          //$this->redirect('profile/pedidos');
-         */
+        }
     }
 
     public function executeCompleteReserve(sfWebRequest $request) {
