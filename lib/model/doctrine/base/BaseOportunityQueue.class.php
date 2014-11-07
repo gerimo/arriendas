@@ -43,6 +43,8 @@ abstract class BaseOportunityQueue extends sfDoctrineRecord
              ));
         $this->hasColumn('iteration', 'integer', 4, array(
              'type' => 'integer',
+             'notnull' => true,
+             'default' => 1,
              'length' => 4,
              ));
         $this->hasColumn('paid_at', 'timestamp', null, array(
@@ -56,7 +58,7 @@ abstract class BaseOportunityQueue extends sfDoctrineRecord
         $this->hasColumn('is_active', 'boolean', null, array(
              'type' => 'boolean',
              'notnull' => true,
-             'default' => 0,
+             'default' => 1,
              ));
 
         $this->option('charset', 'utf8');

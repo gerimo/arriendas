@@ -42,7 +42,19 @@ khipuCancel:
 pedidos:
     url: /profile/pedidos
     param:  { module: profile, action: pedidos }
+    
+editReserve:
+    url: /profile/editReserve
+    param:  { module: profile, action: editReserve }
+    
+aprobarReserve:
+    url:  /profile/aprobarReserve/:idReserve/:idUser
+    param:  { module: profile, action: aprobarReserve }
 
+aprobarOportunidad:
+    url:  /profile/aprobarOportunidad/:idReserve/:idCar/:idUser
+    param:  { module: profile, action: aprobarOportunidad }
+    
 facebook_login:
     url: /main/loginFacebook 
     param:  { module: main, action: loginFacebook }

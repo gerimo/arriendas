@@ -17,6 +17,7 @@
  * @property integer $Reserve_id
  * @property boolean $completed
  * @property boolean $show_success
+ * @property integer $numero_factura
  * @property User $User
  * @property TransactionType $TransactionType
  * @property Reserve $Reserve
@@ -41,6 +42,7 @@
  * @method integer         getMetodoId()           Returns the current record's "metodo_id" value
  * @method integer         getShowSuccess()        Returns the current record's "show_success" value
  * @method boolean         getImpulsive()          Returns the current record's "impulsive" value
+ * @method integer         getNumeroFactura()      Returns the current record's "numero_factura" value
  * 
  * @method Transaction     setId()                 Sets the current record's "id" value
  * @method Transaction     setCar()                Sets the current record's "car" value
@@ -60,6 +62,7 @@
  * @method Transaction     setMetodoId()           Sets the current record's "metodo_id" value
  * @method Transaction     setShowSuccess()        Sets the current record's "show_sucess" value
  * @method Transaction     setImpulsive()          Sets the current record's "impulsive" value
+ * @method integer         setNumeroFactura()      Sets the current record's "numero_factura" value
  * 
  * @package    CarSharing
  * @subpackage model
@@ -182,6 +185,10 @@ abstract class BaseTransaction extends sfDoctrineRecord
             'type' => 'boolean',
             'notnull' => '0',
             'default' => 0,
+            ));
+        $this->hasColumn('numero_factura', 'integer', 7, array(
+            'type' => 'integer',
+            'length' => 7,
             ));
         $this->option('charset', 'utf8');
         $this->option('type', 'InnoDB');

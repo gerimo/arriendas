@@ -35,7 +35,22 @@ EOF;
 
         // Este task toma un registro por cada reserva y envia un correo de oportunidad al dueño
 
+        $table = Doctrine_Core::getTable('OportunityEmailQueue');
+        $q = $table
+            ->createQuery('o')
+            ->where('o.sended_at IS NULL')
+            ->groupBy('o.reserve_id')
+            ;
+
+        $oportunityEmails = $q->execute();
+
+        foreach($oportunityEmails as $oportunityEmail) {
+
+            $renter = $oportunityEmail->getRenter();
+        }
+
         $messageBody = "<p>Usuario: " . "yo" . ":</p>";
+        $messageBody = "<img src=''>";
         $messageBody .= "<p>mail: " . "mi@email.com" . ":</p>";
         $messageBody .= "<p>licencia: " . "14083627-3" . ":</p>";
         $messageBody .= "<p>No se pudo chequear la licencia por problemas de conexion con la web.</p>";
