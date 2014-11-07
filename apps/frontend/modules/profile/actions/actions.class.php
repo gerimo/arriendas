@@ -511,20 +511,25 @@ class profileActions extends sfActions {
         $idReserve = $request->getParameter('idReserve');
         $idUser = $request->getParameter('idUser');
         
-        // chequeo de usuario correcto
         $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
-        if(!$reserve ){
-            throw new Exception("La reserva que intenta aprobar es inexistente.");
+        // chequeos varios
+        try{            
+            if(!$reserve ){
+                throw new Exception("La reserva que intentas aprobar es inexistente.");
+            }
+            if($idUser != $this->getUser()->getAttribute("userid")){            
+                throw new Exception("La reserva que intentas aprobar no corresponde al usuario logueado.");
+            }
+            if($reserve->getConfirmed()){
+                throw new Exception("Ya has aprobado esta reserva!");
+            }
+            if($reserve->getUser()->getBlocked()){            
+                throw new Exception("No se pudo aprobar la reserva. El usuario arrendatario se encuentra bloqueado.");
+            }
+        }catch(Exception $ex){
+            echo $ex->getMessage();die;
+            //$this->redirect('profile/pedidos');
         }
-        if($idUser != $this->getUser()->getAttribute("userid")){            
-            throw new Exception("La reserva que intenta aprobar no corresponde al usuario logueado.");
-        }
-        if($reserve->getConfirmed()){
-            throw new Exception("Esta reserva ya ha sido aprobada!");
-        }
-        if($reserve->getUser()->getBlocked()){            
-            throw new Exception("No se pudo aprobar la reserva. El usuario arrendatario se encuentra bloqueado.");
-        }       
         
         $car = Doctrine_Core::getTable('car')->findOneById($reserve->getCarId());
             
@@ -588,22 +593,11 @@ class profileActions extends sfActions {
         $mailer = $mail->getMailer();
 
         $message = $mail->getMessage();
-        if ($reserve->getComentario() == 'Reserva oportunidad') {
-            $message->setSubject('Otro dueño te ofrece su auto! (Reserva aprobada, falta pagar)');
-            $body = '<p>Hola ' . $nameRenter . ':</p>
-                <p><b>Otro dueño de auto</b>, ha aprobado tu reserva.</p>
-                <p>Es un' . $brand->getName() . ' ' . $model->getName() . ' en la misma comuna y con el mismo precio que solicitaste.</p>
-                <p>Para acceder a los datos del vehículo debes pagar a través del sitio.</p>
-                <p>Contra tu pago se emitirá la póliza para los horarios declarados y los contratos.</p>
-                <p>Has click <a href="http://www.arriendas.cl/profile/pedidos">aquí</a> para pagar.</p>
-                <p>Los datos del arriendo y el contrato se encuentran adjuntos en formato PDF.</p>';
-        } else {
-            $message->setSubject('Se ha aprobado tu reserva! (Falta pagar)');
-            $body = '<p>Hola ' . $nameRenter . ':</p><p>Se ha aprobado tu reserva!</p><p>Para acceder a los datos del vehículo debes pagar $precio.- CLP.</p><p>Si tu arriendo no se concreta, Arriendas.cl no le pagará al dueño del auto y te daremos un auto a elección.</p><p>Has click <a href="http://www.arriendas.cl/profile/pedidos">aquí</a> para pagar.</p><p>Los datos del arriendo y el contrato se encuentran adjuntos en formato PDF.</p>';
-        }
+        $message->setSubject('Se ha aprobado tu reserva! (Falta pagar)');
+        $body = '<p>Hola ' . $nameRenter . ':</p><p>Se ha aprobado tu reserva!</p><p>Para acceder a los datos del vehículo debes pagar $precio.- CLP.</p><p>Si tu arriendo no se concreta, Arriendas.cl no le pagará al dueño del auto y te daremos un auto a elección.</p><p>Has click <a href="http://www.arriendas.cl/profile/pedidos">aquí</a> para pagar.</p><p>Los datos del arriendo y el contrato se encuentran adjuntos en formato PDF.</p>';
         $message->setBody($mail->addFooter($body), 'text/html');
         $message->setTo($correoRenter);
-        $functions = new Functions;
+        $functions = new Functions();
         $contrato = $functions->generarContrato($tokenReserve);
         $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
 
@@ -635,6 +629,7 @@ class profileActions extends sfActions {
         $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
         $mailer->send($message);
 
+        $this->getUser()->setFlash('msg', 'La reserva ha sido aprobada.');
         $this->setTemplate('pedidos');
     }
     
@@ -648,16 +643,35 @@ class profileActions extends sfActions {
         $idCar = $request->getParameter('idCar');
         $idUser = $request->getParameter('idUser');
         
-        // chequeo de usuario correcto
-        $oReserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
-        if(!$oReserve ){
-            throw new Exception("La oportunidad que intenta aprobar es inexistente.");
-        }
-        if($idUser != $this->getUser()->getAttribute("userid")){            
-            throw new Exception("La oportunidad que intenta aprobar no corresponde al usuario logueado.");
-        }
-        if($oReserve->getUser()->getBlocked()){            
-            throw new Exception("No se pudo aprobar la oportunidad. El usuario arrendatario se encuentra bloqueado.");
+        // chequeos varios
+        try{
+            $oReserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+            if(!$oReserve ){
+                throw new Exception("La oportunidad que intentas aprobar es inexistente.");
+            }
+            if($idUser != $this->getUser()->getAttribute("userid")){            
+                throw new Exception("La oportunidad que intentas aprobar no corresponde al usuario logueado.");
+            }
+            if($oReserve->getUser()->getBlocked()){            
+                throw new Exception("No se pudo aprobar la oportunidad. El usuario arrendatario se encuentra bloqueado.");
+            }
+
+            // valido doble aprobación
+            // verifico que no exista otra reserva igual, ya confirmada, para el usuario logueado
+            $reserva_igual = Doctrine_Core::getTable('Reserve')
+                    ->createQuery('r')
+                    ->leftJoin('r.Car c')
+                    ->where("c.user_id = ?", $this->getUser()->getAttribute("userid"))
+                    ->andWhere('r.confirmed = ?', TRUE)
+                    ->andWhere('r.date = ?', $oReserve->getDate())
+                    ->count();
+
+            if($reserva_igual > 0){
+                throw new Exception("Ya has aprobado esta oportunidad.");
+            }
+        }catch(Exception $ex){
+            echo $ex->getMessage();die;
+            //$this->redirect('profile/pedidos');
         }
         
         $reserve = new Reserve();
@@ -748,22 +762,17 @@ class profileActions extends sfActions {
         $mailer = $mail->getMailer();
 
         $message = $mail->getMessage();
-        if ($reserve->getComentario() == 'Reserva oportunidad') {
-            $message->setSubject('Otro dueño te ofrece su auto! (Reserva aprobada, falta pagar)');
-            $body = '<p>Hola ' . $nameRenter . ':</p>
-                <p><b>Otro dueño de auto</b>, ha aprobado tu reserva.</p>
-                <p>Es un' . $brand->getName() . ' ' . $model->getName() . ' en la misma comuna y con el mismo precio que solicitaste.</p>
-                <p>Para acceder a los datos del vehículo debes pagar a través del sitio.</p>
-                <p>Contra tu pago se emitirá la póliza para los horarios declarados y los contratos.</p>
-                <p>Has click <a href="http://www.arriendas.cl/profile/pedidos">aquí</a> para pagar.</p>
-                <p>Los datos del arriendo y el contrato se encuentran adjuntos en formato PDF.</p>';
-        } else {
-            $message->setSubject('Se ha aprobado tu reserva! (Falta pagar)');
-            $body = '<p>Hola ' . $nameRenter . ':</p><p>Se ha aprobado tu reserva!</p><p>Para acceder a los datos del vehículo debes pagar $precio.- CLP.</p><p>Si tu arriendo no se concreta, Arriendas.cl no le pagará al dueño del auto y te daremos un auto a elección.</p><p>Has click <a href="http://www.arriendas.cl/profile/pedidos">aquí</a> para pagar.</p><p>Los datos del arriendo y el contrato se encuentran adjuntos en formato PDF.</p>';
-        }
+        $message->setSubject('Otro dueño te ofrece su auto! (Reserva aprobada, falta pagar)');
+        $body = '<p>Hola ' . $nameRenter . ':</p>
+            <p><b>Otro dueño de auto</b>, ha aprobado tu reserva.</p>
+            <p>Es un' . $brand->getName() . ' ' . $model->getName() . ' en la misma comuna y con el mismo precio que solicitaste.</p>
+            <p>Para acceder a los datos del vehículo debes pagar a través del sitio.</p>
+            <p>Contra tu pago se emitirá la póliza para los horarios declarados y los contratos.</p>
+            <p>Has click <a href="http://www.arriendas.cl/profile/pedidos">aquí</a> para pagar.</p>
+            <p>Los datos del arriendo y el contrato se encuentran adjuntos en formato PDF.</p>';
         $message->setBody($mail->addFooter($body), 'text/html');
         $message->setTo($correoRenter);
-        $functions = new Functions;
+        $functions = new Functions();
         $contrato = $functions->generarContrato($tokenReserve);
         $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
 
@@ -795,7 +804,9 @@ class profileActions extends sfActions {
         $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
         $mailer->send($message);
 
-        $this->setTemplate('pedidos');
+        $this->getUser()->setFlash('msg', 'La oportunidad ha sido aprobada.');
+        //$this->setTemplate('pedidos');
+        $this->forward('profile','pedidos');
     }
 
     public function executeTestMail(sfWebRequest $request) {
