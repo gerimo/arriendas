@@ -99,13 +99,82 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
     <?php } ?>
 
     <?php
-    $mostrar = false;
+    
     $checkMostrar = 0;
 
-    //ARRENDATARIO $reservasRealizadas
-    //echo "<p class='tiutlo'>PEDIDOS REALIZADOS</p>";
-//			if($cantidadConversacionesOrdenadas > 0){
+    $mostrar = false;
 
+    if ($reservasRealizadas) {
+        foreach ($reservasRealizadas as $reserva) {
+            //echo $reserva['estado']."<br>";
+            if (isset($reserva['estado']) && $reserva['estado'] == 4) {
+                $mostrar = true;
+                $checkMostrar++;
+            }
+        }
+    }
+
+    if ($mostrar) {
+
+        echo "<h3>OPCIONES PARA TU RESERVA PAGA " . image_tag('img_pedidos/Check_PedidosDeReserva.png', 'class=imgCorrecto') . "</h3>";
+        /*echo "<p class='textoAyuda'>Debes buscar el auto en la dirección indicada. Cualquier duda contactar al dueño</p>";*/
+
+        foreach ($reservasRealizadas as $reserva) {
+
+            if (isset($reserva['estado']) && $reserva['estado'] == 4) {
+                echo "<div class='bloqueEstado' id='bloque_" . $reserva['idReserve'] . "'>";
+                echo "<div class='fechaReserva'>";
+                echo "<div class='izq'>";
+                echo $reserva['fechaInicio'] . "<br>" . $reserva['fechaTermino'];
+                echo "</div>";
+                echo "<div class='der'>";
+                echo $reserva['horaInicio'] . "<br>" . $reserva['horaTermino'];
+                echo "</div>";
+                echo "<span class='comuna' >".$reserva['comuna']."</span>";
+                echo "</div>";
+                echo "<div class='infoUsuario ocultarWeb'>";
+                echo "<div class='izq'>";
+                echo "<a href='" . url_for('cars/car?id=' . $reserva['carId']) . "' title='Ver Auto'>";
+                if ($reserva['photoType'] == 0)
+                    echo image_tag("../uploads/cars/thumbs/" . $reserva['fotoCar'], 'class=img_usuario');
+                else
+                    echo image_tag($reserva['fotoCar'], 'class=img_usuario');
+                echo "</a>";
+                echo "</div>";
+                echo "<div class='der'>";
+                echo "<span class='textoMediano'>" . $reserva['marca'] . ", " . $reserva['modelo'] . "</span><br><a href='" . url_for('profile/publicprofile?id=' . $reserva['contraparteId']) . "'>" . $reserva['nombre'] . " " . $reserva['apellidoCorto'] . "</a>";
+                echo "</div>";
+                echo "</div>";
+                echo "<div class='direccion'>";
+                echo "<a class='nombreMovil' href='" . url_for('profile/publicprofile?id=' . $reserva['contraparteId']) . "'><span class='textoMediano'>" . $reserva['nombre'] . " " . $reserva['apellidoCorto'] . "</span></a>";
+                echo image_tag('img_pedidos/IconoUbicacion.png');
+                echo " " . $reserva['direccion'] . ", " . $reserva['comuna'] . "<!-- <a href='#' class='mapa' id='" . $reserva['lat'] . "_" . $reserva['lng'] . "'>(Ver mapa)</a>-->.<br>" . image_tag('img_pedidos/Telefono.png', 'class=telefono') . " +56 " . $reserva['telefono'];
+                echo "</div>";
+                echo "<div class='extender'>";
+                echo "  <div class='der'><div class='cargando'>" . image_tag('../images/ajax-loader.gif') . "</div>";
+                echo "  <div class='img'>" . image_tag('img_pedidos/IconoAutoAprobado.png') . "</div>";
+                echo "  <span class='textoColor'>¡APROBADO!</span>";
+                echo "</div>";
+                echo "<a href='#' id='contrato_" . $reserva['idReserve'] . "_" . $reserva['carId'] . "_" . $reserva['token'] . "' class='descargarContrato'>Descargar Contratos</a>";
+                echo "</div>";
+                echo "<div class='pago'>";
+                echo "  <a href='#' id='extender_" . $reserva['idReserve'] . "' class='boton_extender " . $reserva['fechaInicio'] . "_" . $reserva['horaInicio'] . "_" . $reserva['fechaTermino'] . "_" . $reserva['horaTermino'] . "'>" . image_tag('img_pedidos/BotonExtender2.png', array("style" => "margin-top: 12px")) . "</a>";
+                echo "  <div style='text-align: center; margin-top: 3px;'><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' style='margin: auto' >Contactar</a></div>";
+                echo "</div>";
+                echo "</div>";
+            }
+        }
+
+        echo"<div class='bloqueEstado'>";
+        echo"<div class='herramientas'>";
+        echo "</div>";
+        echo"</div>";
+        echo "<div class='mensajeContacto'><p>Si necesita modificar su reserva pagada, escr&iacutebanos a <i>soporte@arriendas.cl</i></p></div>";
+    }
+
+    //ARRENDATARIO $reservasRealizadas
+
+    $mostrar = false;
 
     if ($reservasRealizadas) {
         foreach ($reservasRealizadas as $reserva) {

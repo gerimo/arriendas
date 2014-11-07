@@ -3709,6 +3709,7 @@ class profileActions extends sfActions {
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
         //$idUsuario = 885;
         //$idUsuario = 79;
+
         //ARRENDATARIO
         $reserve = Doctrine_Core::getTable('reserve')->findByUserId($idUsuario);
 
@@ -3728,7 +3729,9 @@ class profileActions extends sfActions {
                 $duracion = $reserva->getDuration();
 
                 //obtiene en que estado se encuentra (pagada(3), preaprobada(2), rechazada(1) y espera(0))
-                if (isset($transaction[0]) && $transaction[0]['completed'] == 1) { //la reserva está pagada
+                if ($reserva->getConfirmed() && $reserva->getImpulsive()) {
+                    $estado = 4;
+                } else if (isset($transaction[0]) && $transaction[0]['completed'] == 1) { //la reserva está pagada
                     //$reservasRealizadas[$i]['estado'] = 3;
                     $estado = 3;
                 } else if ($reserva->getConfirmed()) {//la reserva no está pagada
@@ -3754,7 +3757,9 @@ class profileActions extends sfActions {
                     $reservasRealizadas[$i]['idReserve'] = $reserva->getId();
 
                     //establece el estado
-                    if ($estado == 3) {
+                    if ($estado == 4) {
+                        $reservasRealizadas[$i]['estado'] = 4;
+                    } elseif ($estado == 3) {
                         $reservasRealizadas[$i]['estado'] = 3;
                     } elseif ($estado == 2) {
                         /* manejo de usuarios bloqueados */
@@ -3768,7 +3773,6 @@ class profileActions extends sfActions {
                     } else {
                         $reservasRealizadas[$i]['estado'] = 0;
                     }
-                    
 
                     //fecha y hora de inicio y término
                     $reservasRealizadas[$i]['posicion'] = $reserva->getDate();
@@ -5372,9 +5376,6 @@ class profileActions extends sfActions {
         $precioMes = $request->getPostParameter('precioMes');
         $disponibilidad = $request->getPostParameter('disponibilidad');
         
-        if (is_null($comunaId) || $comunaId = "") {
-            $comunaId = $request->getPostParameter('comuna');
-        }
         
         $comuna = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
         $stateId = $comuna->getStateId();
