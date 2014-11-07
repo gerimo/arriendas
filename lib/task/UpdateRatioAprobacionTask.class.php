@@ -51,6 +51,8 @@ EOF;
 
         foreach ($users as $user) {
 
+            $this->log("User: {$user->getId()}");
+
             $carTable = Doctrine_Core::getTable('Car');
             $carQuery = $carTable
                 ->createQuery('c')
