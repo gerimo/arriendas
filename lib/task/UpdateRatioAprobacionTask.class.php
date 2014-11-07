@@ -33,6 +33,8 @@ EOF;
         $databaseManager = new sfDatabaseManager($this->configuration);
         $conn = $databaseManager->getDatabase($options['connection'])->getConnection();
 
+        $offset = $options['offset'];
+
         // Este task toma todas las reservas pagas que se hayan hecho y que esten pendientes para generar
         //  la lista de usuarios a los cuales se les debe enviar correos de "oportunidades"
 
@@ -42,6 +44,7 @@ EOF;
             ->innerJoin('u.Cars c')
             ->groupBy('u.id')
             ->orderBy('u.id ASC')
+            ->offset($offset)
             ;
 
         $users = $q->execute();
