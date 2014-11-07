@@ -675,6 +675,9 @@ Reserve:
     cambioEstadoRapido:
       type: boolean
       notnull: true
+    impulsive:
+      type: boolean
+      default: false
   relations:
     User:
       class: User
@@ -778,6 +781,9 @@ Transaction:
       type: decimal(10,2)
     show_success:
       type: boolean
+    impulsive:
+      type: boolean
+      default: false
   relations:
     User:
       class: User
