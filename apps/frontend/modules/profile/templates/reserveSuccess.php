@@ -1,4 +1,4 @@
-<?php use_stylesheet('search.css') ?>
+
 <?php use_stylesheet('subi_tu_auto.css') ?>
 <?php use_stylesheet('registro.css') ?>
 <?php use_stylesheet('calendario.css') ?>
@@ -332,7 +332,6 @@ $(document).ready(function() {
     $("#hour_from , #hour_to").timePicker({show24Hours:false});
 
     calcularPrecio();
-
     $('#datefrom').click(function(){
 
         $('div.time-picker').css('display', 'none');

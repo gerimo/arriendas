@@ -17,6 +17,7 @@
  * @property integer $Reserve_id
  * @property boolean $completed
  * @property boolean $show_success
+ * @property boolean $impulsive
  * @property integer $numero_factura
  * @property User $User
  * @property TransactionType $TransactionType
