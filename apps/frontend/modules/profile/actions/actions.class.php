@@ -264,6 +264,17 @@ class profileActions extends sfActions {
             $this->executeConfirmReserve($reserve->getId());
         }
 
+        //$nameOwner
+        //$nameRenter
+        //$correo
+        /*
+          require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
+          $mail = new Email();
+          $mail->setSubject('Extensión de reserva');
+          $mail->setBody("<p>Hola $nameOwner:</p><p>$nameRenter quiere extender la reserva pagada:</p><p></p>");
+          $mail->setTo($correo);
+          $mail->submit();
+         */
         die();
     }
 
@@ -437,6 +448,7 @@ class profileActions extends sfActions {
             }
 
             //envía mail de preaprobación al arrendatario
+            
             require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
             //al arrendatario
             $mail = new Email();
@@ -2083,6 +2095,8 @@ class profileActions extends sfActions {
                         /* usuario blockeado */
                         $reserve->setVisibleOwner(false);
                         $reserve->setConfirmed(true);
+                        /* usuario bloqueado sigue flujo antiguo */
+                        $newFlow = 0;
                     }
 
                     if ($car->getUser()->getAutoconfirm()) {
@@ -5066,7 +5080,39 @@ class profileActions extends sfActions {
             $transaction->setReserve($reserve);
             $transaction->setCompleted(false);
             $transaction->save();
-        }
+        } /* else {
+
+          $q = Doctrine_Query::create()
+          ->update('Transaction t')
+          ->set('t.date', '?', date("Y-m-d H:i:s"))
+          ->where('t.reserve_id = ?', $request->getParameter('id'));
+          $q->execute();
+          }
+
+
+          $startDate = date("Y-m-d H:i:s", strtotime($reserve->getDate()));
+          $endDate = date("Y-m-d H:i:s", strtotime($reserve->getDate() . " + " . $reserve->getDuration() . " hour"));
+          $userid = $reserve->getUser()->getId();
+
+          //$this->sendConfirmEmail($reserve);
+
+          $reserve = Doctrine_Core::getTable('Reserve')
+          ->createQuery('a')
+          ->where('((a.date <= ? and date_add(a.date, INTERVAL a.duration HOUR) > ?) or (a.date <= ? and date_add(a.date, INTERVAL a.duration HOUR) > ?)) and (a.User.id = ? and a.confirmed = false and a.complete = false)', array($startDate, $startDate, $endDate, $endDate, $userid))
+          ->execute();
+
+
+          foreach ($reserve as $r) {
+          Doctrine_Query::create()
+          ->delete()
+          ->from('Transaction')
+          ->andWhere('reserve_id = ?', $r->getId())
+          ->execute();
+          $r->delete();
+          }
+
+          //$this->redirect('profile/pedidos');
+         */
     }
 
     public function executeCompleteReserve(sfWebRequest $request) {
@@ -6024,4 +6070,22 @@ class profileActions extends sfActions {
         die();
     }
 
+    public function executeOpenOpportunityEmail(sfWebRequest $request) {
+
+        try {
+
+            $opportunityEmailQueue = Doctrine_Core::getTable('OportunityEmailQueue')->find($request->getParameter('id'));
+
+            $opportunityEmailQueue->setOpenedAt(date("Y-m-d H:m:i"));
+            $opportunityEmailQueue->save();
+        } catch ( Exception $e ) {
+
+            error_log("[OpenOpportunity - ".date('Y-m-d H:i:s')."] PROBLEMAS AL MARCAR COMO ABIERTO EL CORREO DE OPORTUNIDAD");
+        }
+
+        $this->getResponse()->setContentType('image/gif');
+        echo base64_decode("R0lGODlhAQABAIAAAP///////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACwAAAAAAQABAAACAkQBADs=");
+
+        return sfView::NONE;
+    }
 }

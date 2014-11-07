@@ -35,17 +35,35 @@ EOF;
 
         // Este task toma un registro por cada reserva y envia un correo de oportunidad al dueño
 
-        $messageBody = "<p>Usuario: " . "yo" . ":</p>";
-        $messageBody .= "<p>mail: " . "mi@email.com" . ":</p>";
-        $messageBody .= "<p>licencia: " . "14083627-3" . ":</p>";
-        $messageBody .= "<p>No se pudo chequear la licencia por problemas de conexion con la web.</p>";
-        $message = $this->getMailer()->compose();
-        $message->setSubject("No se pudo chequear la licencia");
-        $message->setFrom('notificaciones@arriendas.cl', 'Notificaciones Arriendas');
-        $message->setTo('marco.pincheira.s@gmail.com');
-        $message->setBody($messageBody, "text/html");
-        //$this->getMailer()->send($message);
+        $table = Doctrine_Core::getTable('OportunityEmailQueue');
+        $q = $table
+            ->createQuery('o')
+            ->where('o.sended_at IS NULL')
+            ->groupBy('o.reserve_id')
+            ;
 
-        echo $messageBody;
+        $oportunityEmails = $q->execute();
+
+        foreach($oportunityEmails as $oportunityEmail) {
+
+            $renter = $oportunityEmail->getRenter();
+
+            $this->log($renter);
+
+            $messageBody = "<p>Usuario: " . "yo" . ":</p>";
+            $messageBody = "<img src=''>";
+            $messageBody .= "<p>mail: " . "mi@email.com" . ":</p>";
+            $messageBody .= "<p>licencia: " . "14083627-3" . ":</p>";
+            $messageBody .= "<p>No se pudo chequear la licencia por problemas de conexion con la web.</p>";
+            $message = $this->getMailer()->compose();
+            $message->setSubject("No se pudo chequear la licencia");
+            $message->setFrom('notificaciones@arriendas.cl', 'Notificaciones Arriendas');
+            $message->setTo('marco.pincheira.s@gmail.com');
+            $message->setBody($messageBody, "text/html");
+            //$this->getMailer()->send($message);
+
+            echo $messageBody;
+        }
+
     }
 }

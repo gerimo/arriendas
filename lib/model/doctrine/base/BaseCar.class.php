@@ -28,6 +28,7 @@
  * @property Doctrine_Collection $Damages
  * @property Doctrine_Collection $Photoes
  * @property Doctrine_Collection $Reserves
+ * @property float $ratio_aprobacion
  * 
  * @method integer             getId()             Returns the current record's "id" value
  * @method integer             getUserId()         Returns the current record's "User_id" value
@@ -49,6 +50,7 @@
  * @method User                getUser()           Returns the current record's "User" value
  * @method Model               getModel()          Returns the current record's "Model" value
  * @method City                getCity()           Returns the current record's "City" value
+ * @method float               getRatioAprobacion() Returns the current record's "ratio_aprobacion" value
  * 
  * @method Doctrine_Collection getAvailabilities() Returns the current record's "Availabilities" collection
  * @method Doctrine_Collection getDamages()        Returns the current record's "Damages" collection
@@ -78,6 +80,7 @@
  * @method Car                 setDamages()        Sets the current record's "Damages" collection
  * @method Car                 setPhotos()        Sets the current record's "Photoes" collection
  * @method Car                 setReserves()       Sets the current record's "Reserves" collection
+ * @method Car                 setRatioAprobacion() Sets the current record's "ratio_aprobacion" collection
  * 
  * @package    CarSharing
  * @subpackage model
@@ -417,12 +420,15 @@ abstract class BaseCar extends sfDoctrineRecord
             'type' => 'boolean',
             'notnull' => '0',
             'default' => 1,
-            ));             
+            ));
         $this->hasColumn('disponibilidad_finde', 'boolean', null, array(
             'type' => 'boolean',
             'notnull' => '0',
             'default' => 1,
-            ));             
+            ));
+        $this->hasColumn('ratio_aprobacion', 'float', null, array(
+            'type' => 'float'
+            ));
         $this->index('fk_Car_User', array(
              'fields' => 
              array(
