@@ -2095,6 +2095,8 @@ class profileActions extends sfActions {
                         /* usuario blockeado */
                         $reserve->setVisibleOwner(false);
                         $reserve->setConfirmed(true);
+                        /* usuario bloqueado sigue flujo antiguo */
+                        $newFlow = 0;
                     }
 
                     if ($car->getUser()->getAutoconfirm()) {
