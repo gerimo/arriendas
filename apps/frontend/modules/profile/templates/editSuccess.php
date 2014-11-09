@@ -417,6 +417,8 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 
 
        <br/>
+
+<!--
         <div class="titulolteral">Foto de tu Cédula</div>
 
         <div class="regis_foto_frame">
@@ -442,6 +444,8 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 
         </div>
 
+
+--> 
         <!--  <h2 class="regis_usuario">Katia Dolizniak</h2>-->
 
         <!-- <ul class="regis_validar">
@@ -457,7 +461,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 
 
     <!-- sector datos de usuario -->
-    <div class="regis_box_info">     
+    <div class="regis_box_info" style="padding-bottom:5%">     
 
         <div class="regis_titulo_1">Datos de usuario</div>
 
@@ -482,7 +486,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
             <div class="c1">
                 <label class="input">
                     <span>Nombres</span>
-                    <input id="firstname" name="firstname" type="text" value="<?php if($user->getFirstName()) echo $user->getFirstName(); ?>" style="width: 566px;" >
+                    <input id="firstname" name="firstname" type="text" value="<?php if($user->getFirstName()) echo $user->getFirstName(); ?>">
 					</label>
             </div><!-- /c1 -->  
 
@@ -528,15 +532,10 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                 </label>
             	</div><!-- /c1 -->
 		
-		        <div class="c1">
-                    <label class="input">
-                        <span>Nº Serie del RUT</span>
-                        <input type="text" name="serie_run" id="serie_run" value="<?php if ($user->getSerieRut() != null) echo $user->getSerieRut(); ?>" style="width:234px;" />
-                        <a href='http://www.dicom.cl/dcom/pag/p.com.000.pag-cedula.htm#uno' target='_blank' title="¿Qué es el nº de serie del rut?"><?php echo image_tag('img_registro/dudaNSerie1.png', array('width'=>'25px','height'=>'25px')) ?></a>
-                    </label>
-            	</div><!-- /c1 -->
+
+
                 <div class="c1" style="width: 200px;">
-                    <label class="input">
+                    <label class="input" style="margin-right:100px;">
                         <select name="extranjero" id="extranjero">
                             <option value="0" <?php echo $user->getExtranjero() == 0 ? "selected" : ""; ?> >Chileno</option>
                             <option value="1" <?php echo $user->getExtranjero() == 1 ? "selected" : ""; ?> >Extranjero</option>
@@ -544,12 +543,15 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                     </label>
                 </div><!-- /c1 -->
             <?php if($user->getConfirmedSms() == 0){ ?>    
-                <div class="c1">
+                <div class="c1" style="padding-bottom:15px">
                 <label class="input" id="espacio">
                     <p class="fono">98765432</p>
                     <input title="Celular" type="text" name="telephone" id="telephone" value="<?php if ($user->getTelephone() != null) echo $user->getTelephone();?>" />
 		    <?php echo image_tag("http://arriendas.assets.s3.amazonaws.com/images/BotonConfimarTelef.png",array("style"=>"margin-top: -37px; margin-bottom: -30px; cursor: pointer;","onclick"=>"enviarSMS();","class"=>"codigo_telephone","title"=>"Enviar SMS para Confirmar Teléfono")); ?>
             <?php echo image_tag("img_registro/BotonConfimarTelefGris.png",array("style"=>"margin-top: -37px; margin-bottom: -30px; display:none","title"=>"Teléfono Verificado","id"=>"img_tel_verificado")); ?>
+                
+                <span style="color:#999;font-size:12px;padding-top:1px;margin-left:-1.2%"> <br>*No es obligatorio confirmar tu tel&eacutefono. </span>
+                
                 </label>
             	</div><!-- /c1 -->
 
@@ -561,42 +563,60 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                 </label>
             	</div><!-- /c1 -->
             <?php }else{ ?>
-            <div class="c1">
-                <label class="input" style="margin-right:100px;">
+            <div class="c1" style="padding-bottom:15px">
+                <label class="input">
                     <p class="fono">98765432</p>
                     <input title="Celular" type="text" name="telephone" id="telephone" value="<?php if ($user->getTelephone() != null) echo $user->getTelephone();?>" />
                     <?php echo image_tag("img_registro/BotonConfimarTelefGris.png",array("style"=>"margin-top: -37px; margin-bottom: -30px;","title"=>"Teléfono Verificado")); ?>
+                        
+            
+            <span style="color:#999;font-size:12px;padding-top:1px;margin-left:-1.2%"> 
+            
+            <br>*No es obligatorio confirmar tu tel&eacutefono. 
+            
+            </span>
+
+                                                          
                 </label>
             </div><!-- /c1 -->
             <?php } ?>
             <?php if ($user->getFacebookId() == null): ?>  
-            <div class="c1">
-                <label class="input">
+            <div class="c1" style="padding-bottom:1px">
+                <label class="input" style="padding-bottom:2px">
                     <span>Fecha de nacimiento</span>
                     <input type="text" id="birth" name="birth" class="datepicker" value="<?php if ($user->getBirthdate() != null)
                             echo $user->getBirthdate(); ?>" >
                 </label>
+                
+                <span style="color:#999;font-size:12px;"> <br> *La fecha debe coincidir con la fecha de nacimiento de tu licencia. </span>
+
             </div><!-- /c1 -->
             <?php else:?>
             <div class="c1">
             <label class="input">
-                    <span>Fecha de nacimiento</span>
+                    <span>Fecha de nacimiento (Debe coincidir con la fecha de tu licencia) </span>
                 <input type="text" id="birth" name="birth" class="datepicker" value="<?php if ($user->getBirthdate() != null)
                             echo $user->getBirthdate(); ?>" />
-             </label>
+             </label>                          
              </div>
             <?php endif;?>
+
+
 
             <div class="c1">
                 <label class="input">
                     <span>Direcci&oacute;n #1111</span>
-                    <input type="text" name="address" id="address" value="<?php if ($user->getAddress() != null) echo $user->getAddress();?>" style="width:566px;" >
+                    <input type="text" name="address" id="address" value="<?php if ($user->getAddress() != null) echo $user->getAddress();?>" >
                 </label>
             </div><!-- /c1 -->
 
+
+
             <div class="c1">
                 <label>
-                    <select name="region" id="region" onChange="cargarComunas(this.value)">
+                
+                    <select name="region" id="region" onChange="cargarComunas(this.value)" style="margin-top:5px;">
+                
                         <?php
                         foreach ($regiones as $r) {
                             if ($r["codigo"] == $userRegion) {
@@ -641,7 +661,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 
         <div class="regis_botones posit">     
 
-            <button class="regis_btn_formulario" name="save" onclick="submitFrom()"> Guardar </button>        
+            <button class="arriendas_pink_btn arriendas_big_btn right" name="save" onclick="submitFrom()"> Guardar Datos </button>        
 
         </div><!-- regis_botones -->
 
