@@ -295,7 +295,7 @@ $(document).ready(function() {
         }
     });
 
-    $('#payBtn').on('click', function(event) {
+    $('#payBtn').click(function(event) {
 
         durationCheck();
 
@@ -723,7 +723,7 @@ function durationCheck() {
                         <p><input type="checkbox"> A menos de 1 km del metro.</p> -->
 
                         <div style="max-width: 85%; text-align: right">
-                            <button class="right" id="payBtn" data-carid="<?php echo $car->getId() ?>" data-userid="<?php echo $idUsuario ?>" style="position: initial">Reservar</button>
+                            <button class="arriendas_pink_btn arriendas_big_btn right" id="payBtn" data-carid="<?php echo $car->getId() ?>" data-userid="<?php echo $idUsuario ?>" style="position: initial">Reservar</button>
                             <br>
                             <input type="submit" value="Consultar" class="btn-link">
                         </div>
