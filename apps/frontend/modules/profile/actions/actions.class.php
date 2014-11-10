@@ -6088,12 +6088,12 @@ class profileActions extends sfActions {
                 if ($originalReserve->getSignature() == $signature) {
 
                     $already = false;
-                    $user = $this->getUser();
+                    $userId = $this->getUser()->getAttribute('userid');
 
                     $allReservations = Doctrine_Core::getTable('Reserve')->findByReservaOriginal($originalReserveId);
 
                     foreach ($allReservations as $reserve) {
-                        if ($user->getId() == $reserve->getUserId()) {
+                        if ($userId == $reserve->getUserId()) {
                             $already = true;
                             break;
                         }
