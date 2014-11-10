@@ -18,6 +18,7 @@
  * @property boolean $completed
  * @property boolean $show_success
  * @property boolean $impulsive
+ * @property integer $transaccion_original
  * @property integer $numero_factura
  * @property User $User
  * @property TransactionType $TransactionType
@@ -43,6 +44,7 @@
  * @method integer         getMetodoId()           Returns the current record's "metodo_id" value
  * @method integer         getShowSuccess()        Returns the current record's "show_success" value
  * @method boolean         getImpulsive()          Returns the current record's "impulsive" value
+ * @method integer         getTransaccionOriginal()      Returns the current record's "transaccion_original" value
  * @method integer         getNumeroFactura()      Returns the current record's "numero_factura" value
  * 
  * @method Transaction     setId()                 Sets the current record's "id" value
@@ -63,6 +65,7 @@
  * @method Transaction     setMetodoId()           Sets the current record's "metodo_id" value
  * @method Transaction     setShowSuccess()        Sets the current record's "show_sucess" value
  * @method Transaction     setImpulsive()          Sets the current record's "impulsive" value
+ * @method integer         setTransaccionOriginal()      Sets the current record's "transaccion_original" value
  * @method integer         setNumeroFactura()      Sets the current record's "numero_factura" value
  * 
  * @package    CarSharing
@@ -190,6 +193,11 @@ abstract class BaseTransaction extends sfDoctrineRecord
         $this->hasColumn('numero_factura', 'integer', 7, array(
             'type' => 'integer',
             'length' => 7,
+            ));
+        $this->hasColumn('transaccion_original', 'integer', null, array(
+            'type' => 'integer',
+            'length' => 11,
+            'default' => 'null',
             ));
         $this->option('charset', 'utf8');
         $this->option('type', 'InnoDB');
