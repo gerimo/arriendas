@@ -56,7 +56,7 @@ aprobarOportunidad:
     param:  { module: profile, action: aprobarOportunidad }
 
 checkOpenedEmail:
-    url: /arriendas.jpg
+    url: /img
     param: { module: profile, action: openOpportunityEmail }
 
 facebook_login:
