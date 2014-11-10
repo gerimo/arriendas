@@ -61,7 +61,7 @@ checkOpenedEmail:
 
 opportunityAccept:
     url: /accept
-    param: { module: main, action: oportunidadAceptar }
+    param: { module: profile, action: oportunidadAceptar }
 
 facebook_login:
     url: /main/loginFacebook 
