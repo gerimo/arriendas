@@ -306,7 +306,7 @@ $(document).ready(function() {
             console.log("pagar");
             $('.botonPagar').click();
             console.log("pagar v2");
-        }        
+        }
     });
     
     $.datepicker.regional['es'] = {
@@ -603,11 +603,9 @@ function durationCheck() {
 
     if ($("#datefrom").val() == today) {
         $("#newFlow").val(0);
-        $("#payBtn").removeClass("botonPagar");
         $("#payBtn").addClass("oldFlow");
     } else {
         $("#newFlow").val(1);
-        $("#payBtn").addClass("botonPagar");
         $("#payBtn").removeClass("oldFlow");
     }
 }
