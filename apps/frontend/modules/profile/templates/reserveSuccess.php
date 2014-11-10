@@ -301,10 +301,10 @@ $(document).ready(function() {
 
         if ($(this).hasClass('oldFlow')) {
             console.log("flujo viejo");
-            <!-- // /*$("form#frm1").submit();*/ -->
+            $("form#frm1").submit();
         } else {
             console.log("pagar");
-            <!-- // /*$('.botonPagar').click();*/ -->
+            $('.botonPagar').click();
         }        
     });
     
