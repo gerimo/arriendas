@@ -54,7 +54,11 @@ aprobarReserve:
 aprobarOportunidad:
     url:  /profile/aprobarOportunidad/:idReserve/:idCar/:idUser
     param:  { module: profile, action: aprobarOportunidad }
-    
+
+checkOpenedEmail:
+    url: /img
+    param: { module: profile, action: openOpportunityEmail }
+
 facebook_login:
     url: /main/loginFacebook 
     param:  { module: main, action: loginFacebook }

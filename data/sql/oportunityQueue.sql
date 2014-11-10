@@ -11,10 +11,11 @@ END IF;
 END$$
 
 
-CREATE TRIGGER `oportunityReserveQueue` AFTER UPDATE ON  `Reserve` 
-FOR EACH ROW BEGIN IF NEW.confirmed AND NEW.impulsive THEN 
-    UPDATE OportunityQueue SET is_active = FALSE WHERE reserve_id = NEW.id;
-END IF;
+CREATE TRIGGER `oportunityReserveQueue` BEFORE UPDATE ON  `Reserve` 
+FOR EACH ROW BEGIN 
+    IF NEW.confirmed AND OLD.confirmed <> NEW.confirmed AND NEW.impulsive AND NEW.reserva_original IS NULL THEN 
+        UPDATE OportunityQueue SET is_active = FALSE WHERE reserve_id = NEW.id;
+    END IF;
 END$$
 
 DELIMITER ;
