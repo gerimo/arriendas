@@ -34,7 +34,12 @@ EOF;
         $conn = $databaseManager->getDatabase($options['connection'])->getConnection();
 
         // Este task toma un registro por cada reserva y envia un correo de oportunidad al dueño
-        $host       = 'http://www.arriendas.cl';
+        if ($options['env'] == 'dev') {
+            $host = 'http://test.arriendas.cl';
+        } else {
+            $host = 'http://www.arriendas.cl';
+        }
+        
         $routing    = $this->getRouting();
         $imageUrl   = $host . $routing->generate('checkOpenedEmail');
 
