@@ -80,6 +80,9 @@ function bindEventsAll(){
             var newFlow = 1;
         }
 
+        console.log(newFlow+", "+idUsuario+", "+idCar);
+        return false;
+
         /* valido que pueda pagar */
         $.ajax({
             type: 'post',
