@@ -615,7 +615,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
         /*echo "<p class='textoAyuda'>La reserva ha sido confirmada.</p>";*/
 
         foreach ($reservasRecibidas as $reserva) {
-            if (isset($reserva['estado']) && $reserva['estado'] == 3) {
+            if (isset($reserva['estado']) && $reserva['estado'] == 4) {
                 echo "<div class='bloqueEstado' id='bloque_" . $reserva['idReserve'] . "'>";
                 echo "<div class='fechaReserva'>";
                 echo "<div class='izq'>";
