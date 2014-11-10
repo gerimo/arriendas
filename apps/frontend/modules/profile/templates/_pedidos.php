@@ -652,7 +652,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo "<div class='extender'>";
                 echo "<div class='der'><div class='cargando'>" . image_tag('../images/ajax-loader.gif') . "</div>";
                 echo "<div class='img'>" . image_tag('img_pedidos/IconoAutoAprobado.png') . "</div>";
-                echo "<span class='textoColor'>¡APROBADO!</span>";
+                echo "<span class='textoColor'>¡PAGADO!</span>";
                 echo "</div>";
                 echo "<a href='#' id='contrato_" . $reserva['idReserve'] . "_" . $reserva['carId'] . "_" . $reserva['token'] . "' class='descargarContrato'>Descargar Contratos</a>";
                 echo "</div>";
