@@ -3404,7 +3404,7 @@ public function calificacionesPendientes(){
         try {
 
             $opportunityEmailQueue = Doctrine_Core::getTable('OportunityEmailQueue')->find($request->getParameter('id'));
-            $opportunityEmailQueue->setOpenedAt($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
+            $opportunityEmailQueue->setOpenedAt(date("Y-m-d H:i:s"));
             $opportunityEmailQueue->save();
 
         } catch (Exception $e) {
