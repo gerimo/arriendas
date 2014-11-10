@@ -6099,26 +6099,22 @@ class profileActions extends sfActions {
 
                     $allReservations = Doctrine_Core::getTable('Reserve')->findByReservaOriginal($originalReserveId);
 
-                    error_log("cantidad de reservas creadas: ".count($allReservations));
-                    $cont = 1;
                     foreach ($allReservations as $reserve) {
-                        error_log("reserva ".$cont);
-                        error_log("usuario login: ".$userId);
-                        error_log("usuario reserva: ".$reserve->getUserId());
-                        if ($userId == $reserve->getUserId()) {
+                        if ($userId == $reserve->getCar()->getUserId()) {
                             $already = true;
                             break;
                         }
-                        $cont++;
                     }
 
                     if (!$already) {
+
+                        $car = Doctrine_Core::getTable('Car')->findOneByUserId($userId);
                     
                         $reserve = new Reserve();
                         $reserve->setDuration($originalReserve->getDuration());
                         $reserve->setDate($originalReserve->getDate());
                         $reserve->setUser($originalReserve->getUser());
-                        $reserve->setCar($originalReserve->getCar());
+                        $reserve->setCar($car);
                         $reserve->setPrice($originalReserve->getPrice());
                         $reserve->setFechaReserva($originalReserve->getFechaReserva());
                         $reserve->setConfirmed(true);
@@ -6129,7 +6125,7 @@ class profileActions extends sfActions {
                         $originalTransaction = $originalReserve->getTransaction();
 
                         $transaction = new Transaction();
-                        $transaction->setCar($originalTransaction->getCar());
+                        $transaction->setCar($car);
                         $transaction->setPrice($originalTransaction->getPrice());
                         $transaction->setUser($originalTransaction->getUser());
                         $transaction->setDate($originalTransaction->getDate());
