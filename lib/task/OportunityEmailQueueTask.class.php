@@ -73,7 +73,7 @@ EOF;
             $message->setSubject("No se pudo chequear la licencia");
             $message->setFrom('notificaciones@arriendas.cl', 'Notificaciones Arriendas');
 
-            $message->setTo($oportunityEmail->getOwner());
+            $message->setTo($oportunityEmail->getOwner()->getEmail());
 
             $message->setBody($body, "text/html");
 
