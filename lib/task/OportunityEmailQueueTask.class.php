@@ -64,7 +64,7 @@ EOF;
 
             $this->log($renter);
 
-            $body = '<p>Correo de prueba</p>';
+            $body  = '<p>Correo de prueba</p>';
             $body .= "<img src='{$imageUrl}?id={$oportunityEmail->getId()}'>";
             $body .= "Para aceptar la oprtunidad presiona <a href='{$acceptUrl}'>Aqui</a>";
 
@@ -72,7 +72,9 @@ EOF;
             $message = $this->getMailer()->compose();
             $message->setSubject("No se pudo chequear la licencia");
             $message->setFrom('notificaciones@arriendas.cl', 'Notificaciones Arriendas');
-            $message->setTo('marco.pincheira.s@gmail.com');
+
+            $message->setTo($oportunityEmail->getOwner());
+
             $message->setBody($body, "text/html");
 
             $this->getMailer()->send($message);
