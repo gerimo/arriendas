@@ -300,7 +300,7 @@ $(document).ready(function() {
     $('.oldFlow').on('click', function(event) {
         durationCheck();
         console.log("click oldFlow");
-        console.log(newFlow+", "+idUsuario+", "+idCar);
+        console.log($("#newFlow").val(0));
         return false;
         $("form#frm1").submit();
     });
