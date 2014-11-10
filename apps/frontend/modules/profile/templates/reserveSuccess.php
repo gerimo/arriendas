@@ -297,7 +297,7 @@ $(document).ready(function() {
         }
     });
 
-    $(".oldFlow").click(function(){
+    $('.oldFlow').on('click', function(event) {
         
         console.log("click oldFlow");
         return false;
