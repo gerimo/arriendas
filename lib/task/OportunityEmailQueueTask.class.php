@@ -42,7 +42,6 @@ EOF;
 
         $routing    = $this->getRouting();
         $imageUrl   = $host . $routing->generate('checkOpenedEmail');
-        $acceptUrl  = $host . $routing->generate('opportunityAccept');
 
         // Se obtiene una oportunidad por cada reserva diferente
         $table = Doctrine_Core::getTable('OportunityEmailQueue');
@@ -57,6 +56,11 @@ EOF;
         foreach($oportunityEmails as $oportunityEmail) {
 
             $renter = $oportunityEmail->getRenter();
+
+            $acceptUrl  = $host . $routing->generate('opportunityAccept', array(
+                'reserve_id' => $oportunityEmail->getReserve()->getId(),
+                'signature' => $oportunityEmail->getReserve()->getSignature(),
+            ));
 
             $this->log($renter);
 
