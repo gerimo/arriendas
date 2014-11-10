@@ -27,6 +27,7 @@
  * @property decimal $price
  * @property integer $Extend
  * @property boolean $impulsive
+ * @property integer $reserva_original
  * @property integer $numero_factura
  * 
  * @method integer             getId()          Returns the current record's "id" value
@@ -53,6 +54,7 @@
  * @method decimal             getPrice()              Returns the current record's "price" value
  * @method integer             getExtend()      Return the current record's "Extend" value
  * @method boolean             getImpulsive()   Return the current record's "impulsive" value
+ * @method integer             getReservaOriginal()      Returns the current record's "reserva_original" value
  * @method integer             getNumeroFactura()      Returns the current record's "numero_factura" value
  * @method Reserve             setId()          Sets the current record's "id" value
  * @method Reserve             setDate()        Sets the current record's "date" value
@@ -80,6 +82,7 @@
  * @method Reserve             setPrice()       Sets the current record's "price" value
  * @method Integer             setExtend()      Sets the current record's "extend" value
  * @method boolean             setImpulsive()   Sets the current record's "impulsive" value
+ * @method integer             setReservaOriginal()   Sets the current record's "reserva_original" value
  * @method integer             setNumeroFactura()      Sets the current record's "numero_factura" value
  * 
  * @package    CarSharing
@@ -297,6 +300,11 @@ abstract class BaseReserve extends sfDoctrineRecord
             'type' => 'boolean',
             'notnull' => '0',
             'default' => 0,
+            ));
+        $this->hasColumn('reserva_original', 'integer', null, array(
+            'type' => 'integer',
+            'length' => 11,
+            'default' => 'null',
             ));
         $this->hasColumn('numero_factura', 'integer', 7, array(
             'type' => 'integer',

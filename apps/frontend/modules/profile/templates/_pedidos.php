@@ -102,6 +102,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
     
     $checkMostrar = 0;
 
+    //ARRENDATARIO $reservasRealizadas
     $mostrar = false;
 
     if ($reservasRealizadas) {
@@ -116,8 +117,8 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
 
     if ($mostrar) {
 
-        echo "<h3>OPCIONES PARA TU RESERVA PAGA " . image_tag('img_pedidos/Check_PedidosDeReserva.png', 'class=imgCorrecto') . "</h3>";
-        /*echo "<p class='textoAyuda'>Debes buscar el auto en la dirección indicada. Cualquier duda contactar al dueño</p>";*/
+        echo "<h3>OPCIONES PARA TU RESERVA PAGA</h3>";
+        echo "<p class='textoAyuda'>A continuación alternativas a tu reserva</p>";
 
         foreach ($reservasRealizadas as $reserva) {
 
@@ -159,6 +160,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo "</div>";
                 echo "<div class='pago'>";
                 echo "  <a href='#' id='extender_" . $reserva['idReserve'] . "' class='boton_extender " . $reserva['fechaInicio'] . "_" . $reserva['horaInicio'] . "_" . $reserva['fechaTermino'] . "_" . $reserva['horaTermino'] . "'>" . image_tag('img_pedidos/BotonExtender2.png', array("style" => "margin-top: 12px")) . "</a>";
+                echo "  <button class='nuevo_flujo_cambiar arriendas_pink_btn arriendas_big_btn' data-reserveid='". $reserva['idReserve'] ."' style='position: initial'>Cambiar</button>";
                 echo "  <div style='text-align: center; margin-top: 3px;'><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' style='margin: auto' >Contactar</a></div>";
                 echo "</div>";
                 echo "</div>";
@@ -171,8 +173,6 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
         echo"</div>";
         echo "<div class='mensajeContacto'><p>Si necesita modificar su reserva pagada, escr&iacutebanos a <i>soporte@arriendas.cl</i></p></div>";
     }
-
-    //ARRENDATARIO $reservasRealizadas
 
     $mostrar = false;
 
@@ -397,7 +397,6 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
         echo"</div>";
     }
 
-
     $mostrar = false;
 
     if ($reservasRealizadas) {
@@ -593,6 +592,8 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
     <?php } ?>
 
     <?php
+
+
     //PROPIETARIO
     //muestra la barra de pedidos recibidos solo si tiene algún pedido que mostrar
 

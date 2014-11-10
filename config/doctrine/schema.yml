@@ -680,6 +680,9 @@ Reserve:
     impulsive:
       type: boolean
       default: false
+    reserva_original:
+      type: integer(11)
+      default: null
     numero_factura:
       type: integer(7)
   relations:

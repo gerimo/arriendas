@@ -1324,3 +1324,26 @@ function masDeUnDia() {
 $(document).on('ready', function() {
     bindEventsAll();
 });
+
+
+$(".nuevo_flujo_cambiar").on("click", function(){
+
+    var idReserve = $(this).data('reserveid');
+
+    $.ajax({
+        type: 'post',
+        url: urlNuevoFlujoCambiar,
+        data: {idReserve: idReserve}
+    }).done(function(data) {
+
+        console.log(data);
+        if(data.error) {
+            console.log("Error: "+data.error);
+            alert('Disculpe, ha ocurrido un error. Por favor inténtelo nuevamente mas tarde.');
+        } else {
+            // do something
+        }
+    }).fail(function() {
+        alert('Disculpe, ha ocurrido un error. Por favor inténtelo nuevamente mas tarde.');
+    });
+});

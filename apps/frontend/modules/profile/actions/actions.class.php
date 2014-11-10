@@ -2131,6 +2131,7 @@ class profileActions extends sfActions {
                             $transaction->setTransactionType($transactionType);
                             $transaction->setReserve($reserve);
                             $transaction->setCompleted(false);
+                            $transaction->setImpulsive(true);
                             $transaction->save();
                         }
 
@@ -3729,19 +3730,15 @@ class profileActions extends sfActions {
                 $duracion = $reserva->getDuration();
 
                 //obtiene en que estado se encuentra (pagada(3), preaprobada(2), rechazada(1) y espera(0))
-                if ($reserva->getConfirmed() && $reserva->getImpulsive()) {
+                if ($reserva->getConfirmed() && $reserva->getImpulsive() && $transaction[0]['completed'] == 0) {
                     $estado = 4;
-                } else if (isset($transaction[0]) && $transaction[0]['completed'] == 1) { //la reserva está pagada
-                    //$reservasRealizadas[$i]['estado'] = 3;
+                } else if (isset($transaction[0]) && $transaction[0]['completed'] == 1 && $reserva->getConfirmed()) { // la reserva está pagada
                     $estado = 3;
-                } else if ($reserva->getConfirmed()) {//la reserva no está pagada
-                    //$reservasRealizadas[$i]['estado'] = 2;
+                } else if ($reserva->getConfirmed()) { // la reserva no está pagada
                     $estado = 2;
                 } else if ($reserva->getCanceled()) {
-                    //$reservasRealizadas[$i]['estado'] = 1;
                     $estado = 1;
                 } else {
-                    //$reservasRealizadas[$i]['estado'] = 0;
                     $estado = 0;
                 }
 
@@ -3749,7 +3746,8 @@ class profileActions extends sfActions {
                 $horasASumar = $duracion + 36;
                 $fechaReservaParaPagadas = strtotime("+$horasASumar hours", strtotime($reserva->getDate()));
                 if (
-                        ($estado == 3 && $fechaReservaParaPagadas > $fechaActual) 
+                        ($estado == 4 && $fechaReservaParaPagadas > $fechaActual)
+                        || ($estado == 3 && $fechaReservaParaPagadas > $fechaActual) 
                         || ($estado == 2 && $fechaReserva > $fechaActual) 
                         || (($estado == 1 || $estado == 0) && $fechaReserva > $fechaActual)) {
 
@@ -6090,6 +6088,32 @@ class profileActions extends sfActions {
 
         $this->getResponse()->setContentType('image/gif');
         echo base64_decode("R0lGODlhAQABAIAAAP///////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACwAAAAAAQABAAACAkQBADs=");
+
+        return sfView::NONE;
+    }
+
+    public function executeNuevoFlujoCambiar(sfWebRequest $request) {
+        
+        $error = false;
+
+        $idReserve = $request->getPostParameter('idReserve');
+
+        try {
+
+            $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+            $reserve->setConfirmed(true);
+            $reserve->getTransaction()->setCompleted(true);
+            $reserve->save();
+
+            $originalReserve = Doctrine_Core::getTable('reserve')->findOneById($reserve->getReservaOriginal());
+            $originalReserve->getTransaction()->setCompleted(false);
+            $originalReserve->save();
+
+        } catch (Exception $e) {
+            $error = $e->getMessage();
+        }
+
+        $this->renderText(json_encode(array('error' => $error)));
 
         return sfView::NONE;
     }
