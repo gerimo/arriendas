@@ -295,7 +295,7 @@ $(document).ready(function() {
         }
     });
 
-    $('#payBtn').click(function(event) {
+    $('#payBtn').click(function() {
 
         durationCheck();
 
@@ -305,6 +305,7 @@ $(document).ready(function() {
         } else {
             console.log("pagar");
             $('.botonPagar').click();
+            console.log("pagar v2");
         }        
     });
     
