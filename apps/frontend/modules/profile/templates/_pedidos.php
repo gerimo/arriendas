@@ -652,13 +652,13 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo "<div class='extender'>";
                 echo "<div class='der'><div class='cargando'>" . image_tag('../images/ajax-loader.gif') . "</div>";
                 echo "<div class='img'>" . image_tag('img_pedidos/IconoAutoAprobado.png') . "</div>";
-                echo "<span class='textoColor'>¡APROBADO!</span>";
+                echo "<span class='textoColor'>¡PAGADO!</span>";
                 echo "</div>";
                 echo "<a href='#' id='contrato_" . $reserva['idReserve'] . "_" . $reserva['carId'] . "_" . $reserva['token'] . "' class='descargarContrato'>Descargar Contratos</a>";
                 echo "</div>";
                 echo "<div class='precioPagados'>";
                 /*echo "  <a href='#' id='extender_" . $reserva['idReserve'] . "' class='boton_extender " . $reserva['fechaInicio'] . "_" . $reserva['horaInicio'] . "_" . $reserva['fechaTermino'] . "_" . $reserva['horaTermino'] . "'>" . image_tag('img_pedidos/BotonExtender2.png', array()) . "</a>";*/
-                echo "<select class='select enEspera duracion_" . $reserva['duracion'] . "' id='select_" . $reserva['idReserve'] . "'><option name='none' selected>Acci&oacute;n</option><option name='preaprobar'>Pre aprobar</option><option name='rechazar'>Rechazar</option></select>";
+                echo "<select class='select enEspera duracion_" . $reserva['duracion'] . "' id='select_" . $reserva['idReserve'] . "'><option name='none' selected>Acci&oacute;n</option><option name='preaprobar'>Confirmar</option><option name='rechazar'>Rechazar</option></select>";
                 echo "  <div style='text-align: center; margin-top: 3px;'><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' style='margin: auto' >Contactar</a></div>";
                 echo "</div>";
                 echo "</div>";
