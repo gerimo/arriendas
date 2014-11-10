@@ -300,12 +300,9 @@ $(document).ready(function() {
         durationCheck();
 
         if ($(this).hasClass('oldFlow')) {
-            console.log("flujo viejo");
             $("form#frm1").submit();
         } else {
-            console.log("pagar");
             $('.botonPagar').click();
-            console.log("pagar v2");
         }
     });
     

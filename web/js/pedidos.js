@@ -81,10 +81,6 @@ function bindEventsAll(){
             var duracion = $(this).attr('class').split(' ');
         }
 
-        console.log("click botonPagar");
-        console.log(newFlow+", "+idUsuario+", "+idCar);
-        return false;
-
         /* valido que pueda pagar */
         $.ajax({
             type: 'post',
