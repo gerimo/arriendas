@@ -39,9 +39,10 @@ EOF;
         } else {
             $host = 'http://www.arriendas.cl';
         }
-        
+
         $routing    = $this->getRouting();
         $imageUrl   = $host . $routing->generate('checkOpenedEmail');
+        $acceptUrl  = $host . $routing->generate('opportunityAccept');
 
         // Se obtiene una oportunidad por cada reserva diferente
         $table = Doctrine_Core::getTable('OportunityEmailQueue');
@@ -61,6 +62,7 @@ EOF;
 
             $body = '<p>Correo de prueba</p>';
             $body .= "<img src='{$imageUrl}?id={$oportunityEmail->getId()}'>";
+            $body .= "Para aceptar la oprtunidad presiona <a href='{$acceptUrl}'>Aqui</a>";
 
 
             $message = $this->getMailer()->compose();
