@@ -59,6 +59,10 @@ checkOpenedEmail:
     url: /img
     param: { module: main, action: openOpportunityEmail }
 
+opportunityAccept:
+    url: /accept
+    param: { module: main, action: oportunidadAceptar }
+
 facebook_login:
     url: /main/loginFacebook 
     param:  { module: main, action: loginFacebook }

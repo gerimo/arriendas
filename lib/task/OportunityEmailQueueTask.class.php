@@ -34,7 +34,12 @@ EOF;
         $conn = $databaseManager->getDatabase($options['connection'])->getConnection();
 
         // Este task toma un registro por cada reserva y envia un correo de oportunidad al dueño
-        $host       = 'http://www.arriendas.cl';
+        if ($options['env'] == 'dev') {
+            $host = 'http://test.arriendas.cl';
+        } else {
+            $host = 'http://www.arriendas.cl';
+        }
+
         $routing    = $this->getRouting();
         $imageUrl   = $host . $routing->generate('checkOpenedEmail');
 
@@ -52,10 +57,16 @@ EOF;
 
             $renter = $oportunityEmail->getRenter();
 
+            $acceptUrl  = $host . $routing->generate('opportunityAccept', array(
+                'reserve_id' => $oportunityEmail->getReserve()->getId(),
+                'signature' => $oportunityEmail->getReserve()->getSignature(),
+            ));
+
             $this->log($renter);
 
             $body = '<p>Correo de prueba</p>';
             $body .= "<img src='{$imageUrl}?id={$oportunityEmail->getId()}'>";
+            $body .= "Para aceptar la oprtunidad presiona <a href='{$acceptUrl}'>Aqui</a>";
 
 
             $message = $this->getMailer()->compose();
