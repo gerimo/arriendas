@@ -3348,57 +3348,6 @@ public function calificacionesPendientes(){
         Doctrine_Core::getTable('Comunas')->generateSlugs();
     }
 
-    public function executeOportunidadAceptar(sfWebRequest $request) {
-
-        $this->error = false;
-
-        $originalReserveId = $request->getPostParameter("reserve_id");
-        $signature = $request->getPostParameter("signature");
-
-        try {
-
-            $originalReserve = Doctrine_Core::getTable('Reserve')->find($originalReserveId);
-
-            if ($originalReserve) {
-                if ($originalReserve->getSignature() == $signature) {
-
-                    $reserve = new Reserve();
-                    $reserve->setDuration($originalReserve->getDuration());
-                    $reserve->setDate($originalReserve->getDate());
-                    $reserve->setUser($originalReserve->getUser());
-                    $reserve->setCar($originalReserve->getCar());
-                    $reserve->setPrice($originalReserve->getPrice());
-                    $reserve->setFechaReserva($originalReserve->getFechaReserva());
-                    $reserve->setConfirmed(true);
-                    $reserve->setImpulsive(true);
-                    $reserve->setReservaOriginal($originalReserve);
-                    $reserve->save();
-
-                    $originalTransaction = $originalReserve->getTransaction();
-
-                    $transaction = new Transaction();
-                    $transaction->setCar($originalTransaction->getCar());
-                    $transaction->setPrice($originalTransaction->getPrice());
-                    $transaction->setUser($originalTransaction->getUser());
-                    $transaction->setDate($originalTransaction->getDate());
-                    $transaction->setTransactionType($transactionType);
-                    $transaction->setReserve($reserve);
-                    $transaction->setCompleted(false);
-                    $transaction->setImpulsive(true);
-                    $transaction->setTransaccionOriginal($originalTransaction);
-                    $transaction->save();
-                } else {
-                    $this->error = "Problemas al validar la oportunidad";
-                }
-            } else {
-                $this->error = "Oportunidad no encontrada";
-            }
-
-        } catch ( Exception $e ) {
-            $this->error = "ERROR: ".$e->getMessage();
-        }
-    }
-
     public function executeOpenOpportunityEmail(sfWebRequest $request) {
 
         try {
