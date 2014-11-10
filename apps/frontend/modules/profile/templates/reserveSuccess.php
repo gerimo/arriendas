@@ -276,8 +276,6 @@
 <script>
 $(document).ready(function() {
 
-    durationCheck();
-
     //GUARDANDO EL FORMULARIO
     $("form#frm1").submit(function() {
         
@@ -297,12 +295,17 @@ $(document).ready(function() {
         }
     });
 
-    $('.oldFlow').on('click', function(event) {
+    $('#payBtn').on('click', function(event) {
+
         durationCheck();
-        console.log("click oldFlow");
-        console.log($("#newFlow").val(0));
-        return false;
-        $("form#frm1").submit();
+
+        if ($(this).hasClass('oldFlow')) {
+            console.log("flujo viejo");
+            /*$("form#frm1").submit();*/
+        } else {
+            console.log("pagar");
+            /*$('.botonPagar').click();*/
+        }        
     });
     
     $.datepicker.regional['es'] = {
@@ -343,7 +346,6 @@ $(document).ready(function() {
 
         /*$('#dateto').attr("value", $('#datefrom').val());*/
         calcularPrecio();
-        durationCheck();
     });
 
     $('#hour_from').click(function(){
