@@ -6153,6 +6153,8 @@ class profileActions extends sfActions {
         } catch ( Exception $e ) {
             $this->error = "ERROR: ".$e->getMessage();
         }
+
+        $this->redirect('pedidos');
     }
 
     public function executeNuevoFlujoCambiar(sfWebRequest $request) {
