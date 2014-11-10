@@ -298,10 +298,10 @@ $(document).ready(function() {
     });
 
     $('.oldFlow').on('click', function(event) {
-        
-        console.log("click oldFlow");
-        return false;
         durationCheck();
+        console.log("click oldFlow");
+        console.log(newFlow+", "+idUsuario+", "+idCar);
+        return false;
         $("form#frm1").submit();
     });
     
