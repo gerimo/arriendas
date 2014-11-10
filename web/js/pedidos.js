@@ -152,6 +152,8 @@ function bindEventsAll(){
                             /*confirmar que se aprueben los contratos*/
                             if (contratosSeleccionados('Arrendatario')) {
 
+                                console.log("newFow: "+newFlow);
+                                return false;
                                 if (newFlow) {
                                     durationCheck();
                                     $("form#frm1").submit();

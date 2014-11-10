@@ -1927,7 +1927,6 @@ class profileActions extends sfActions {
 
         /* Nuevo flujo */
         $newFlow = $request->getParameter("newFlow");
-        //
         
         $hourdesde = $request->getParameter('hour_from');
         $hourhasta = $request->getParameter('hour_to');
