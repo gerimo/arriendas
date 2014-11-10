@@ -6109,6 +6109,10 @@ class profileActions extends sfActions {
             $originalReserve->getTransaction()->setCompleted(false);
             $originalReserve->save();
 
+            $opportunityQueue = Doctrine_Core::getTable('OportunityQueue')->findOneByReserveId($originalReserve->getId());
+            $opportunityQueue->setIsActive(false);
+            $opportunityQueue->save();
+
         } catch (Exception $e) {
             $error = $e->getMessage();
         }
