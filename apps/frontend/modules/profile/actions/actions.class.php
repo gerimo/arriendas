@@ -6099,11 +6099,17 @@ class profileActions extends sfActions {
 
                     $allReservations = Doctrine_Core::getTable('Reserve')->findByReservaOriginal($originalReserveId);
 
+                    error_log("cantidad de reservas creadas: ".count($allReservations));
+                    $cont = 1;
                     foreach ($allReservations as $reserve) {
+                        error_log("reserva ".$cont);
+                        error_log("usuario login: ".$userId);
+                        error_log("usuario reserva: ".$reserve->getUserId());
                         if ($userId == $reserve->getUserId()) {
                             $already = true;
                             break;
                         }
+                        $cont++;
                     }
 
                     if (!$already) {
