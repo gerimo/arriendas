@@ -295,17 +295,15 @@ $(document).ready(function() {
         }
     });
 
-    $('#payBtn').click(function(event) {
+    $('#payBtn').click(function() {
 
         durationCheck();
 
         if ($(this).hasClass('oldFlow')) {
-            console.log("flujo viejo");
             $("form#frm1").submit();
         } else {
-            console.log("pagar");
             $('.botonPagar').click();
-        }        
+        }
     });
     
     $.datepicker.regional['es'] = {
@@ -602,11 +600,9 @@ function durationCheck() {
 
     if ($("#datefrom").val() == today) {
         $("#newFlow").val(0);
-        $("#payBtn").removeClass("botonPagar");
         $("#payBtn").addClass("oldFlow");
     } else {
         $("#newFlow").val(1);
-        $("#payBtn").addClass("botonPagar");
         $("#payBtn").removeClass("oldFlow");
     }
 }
@@ -723,7 +719,8 @@ function durationCheck() {
                         <p><input type="checkbox"> A menos de 1 km del metro.</p> -->
 
                         <div style="max-width: 85%; text-align: right">
-                            <button class="arriendas_pink_btn arriendas_big_btn right" id="payBtn" data-carid="<?php echo $car->getId() ?>" data-userid="<?php echo $idUsuario ?>" style="position: initial" type="button">Reservar</button>
+                            <button class="arriendas_pink_btn arriendas_big_btn right" id="payBtn" style="position: initial" type="button">Reservar</button>
+                            <input class="botonPagar" data-carid="<?php echo $car->getId() ?>" data-userid="<?php echo $idUsuario ?>" style="display:none">
                             <br>
                             <input type="submit" value="Consultar" class="btn-link">
                         </div>
@@ -908,3 +905,6 @@ var google_conversion_value = 22;
     
     <div class="clear"></div>
 </div><!-- main_box_1 -->
+
+
+
