@@ -6123,7 +6123,7 @@ class profileActions extends sfActions {
                         $reserve->setFechaReserva($originalReserve->getFechaReserva());
                         $reserve->setConfirmed(true);
                         $reserve->setImpulsive(true);
-                        $reserve->setReservaOriginal($originalReserve);
+                        $reserve->setReservaOriginal($originalReserve->getId());
                         $reserve->save();
 
                         $originalTransaction = $originalReserve->getTransaction();
@@ -6137,7 +6137,7 @@ class profileActions extends sfActions {
                         $transaction->setReserve($reserve);
                         $transaction->setCompleted(false);
                         $transaction->setImpulsive(true);
-                        $transaction->setTransaccionOriginal($originalTransaction);
+                        $transaction->setTransaccionOriginal($originalTransaction->getId());
                         $transaction->save();
 
                     } else {
