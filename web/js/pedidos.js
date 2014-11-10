@@ -68,16 +68,17 @@ function bindEventsAll(){
     $('.botonPagar').on('click', function(event) {
 
         event.preventDefault();
-        var idReserve = $(this).attr('id');
-        idReserve = obtenerId(idReserve);
-        var duracion = $(this).attr('class').split(' ');
 
         var newFlow = 0;
         var idUsuario = $(this).data('userid');
-        var idCar = $(this).data('carid');
+        var idCar = $(this).data('carid');        
 
         if (idUsuario) {
             var newFlow = 1;
+        } else {
+            var idReserve = $(this).attr('id');
+            idReserve = obtenerId(idReserve);
+            var duracion = $(this).attr('class').split(' ');
         }
 
         console.log("click botonPagar");
