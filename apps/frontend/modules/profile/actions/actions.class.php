@@ -6120,7 +6120,7 @@ class profileActions extends sfActions {
                         $transaction->setPrice($originalTransaction->getPrice());
                         $transaction->setUser($originalTransaction->getUser());
                         $transaction->setDate($originalTransaction->getDate());
-                        $transaction->setTransactionType($transactionType);
+                        $transaction->setTransactionType($originalTransaction->getTransactionType());
                         $transaction->setReserve($reserve);
                         $transaction->setCompleted(false);
                         $transaction->setImpulsive(true);
