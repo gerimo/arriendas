@@ -6077,8 +6077,8 @@ class profileActions extends sfActions {
 
         $this->error = false;
 
-        $originalReserveId = $request->getPostParameter("reserve_id");
-        $signature = $request->getPostParameter("signature");
+        $originalReserveId = $request->getGetParameter("reserve_id");
+        $signature = $request->getGetParameter("signature");
 
         try {
 
