@@ -299,6 +299,8 @@ $(document).ready(function() {
 
     $(".oldFlow").click(function(){
         
+        console.log("click oldFlow");
+        return false;
         durationCheck();
         $("form#frm1").submit();
     });
