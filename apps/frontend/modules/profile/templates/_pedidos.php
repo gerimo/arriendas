@@ -602,7 +602,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
 
     if ($reservasRecibidas) {
         foreach ($reservasRecibidas as $reserva) {
-            if (isset($reserva['estado']) && $reserva['estado'] == 3) {
+            if (isset($reserva['estado']) && $reserva['estado'] == 4) {
                 $mostrar = true;
                 $checkMostrar++;
             }
