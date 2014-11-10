@@ -3837,12 +3837,14 @@ class profileActions extends sfActions {
             if ($reserva->getVisibleOwner()) {
 
                 //obtiene completed de transaction
-                $q = "SELECT completed FROM transaction WHERE reserve_id=" . $reserva->getId();
+                $q = "SELECT completed, impulsive FROM transaction WHERE reserve_id=" . $reserva->getId();
                 $query = Doctrine_Query::create()->query($q);
                 $transaction = $query->toArray();
 
                 //obtiene en que estado se encuentra (pagada(3), preaprobada(2), rechazada(1) y espera(0))
-                if (isset($transaction[0]) && $transaction[0]['completed'] == 1) { //la reserva está pagada
+                if (isset($transaction[0]) && $transaction[0]['completed'] == 1 && $transaction[0]['impulsive'] == 1) {
+                    $estado = 4;
+                } else if (isset($transaction[0]) && $transaction[0]['completed'] == 1) { //la reserva está pagada
                     //$reservasRealizadas[$i]['estado'] = 3;
                     $estado = 3;
                 } else if ($reserva->getConfirmed()) {//la reserva no está pagada
@@ -3868,13 +3870,19 @@ class profileActions extends sfActions {
                 
                 $horasASumar = $duracion + 36;
                 $fechaReservaParaPagadas = strtotime("+$horasASumar hours", strtotime($reserva->getDate()));
-                if (($estado == 3 && $fechaReservaParaPagadas > $fechaActual) || ($estado == 2 && $fechaReserva > $fechaActual) || (($estado == 1 || $estado == 0) && $fechaReserva > $fechaActual)) {
+                if (
+                        ($estado == 4 && $fechaReservaParaPagadas > $fechaActual)
+                        || ($estado == 3 && $fechaReservaParaPagadas > $fechaActual)
+                        || ($estado == 2 && $fechaReserva > $fechaActual)
+                        || (($estado == 1 || $estado == 0) && $fechaReserva > $fechaActual)) {
 
                     //obtiene el id de la reserva
                     $reservasRecibidas[$i]['idReserve'] = $reserva->getId();
 
                     //establece el estado
-                    if ($estado == 3) {
+                    if ($estado == 4) {
+                        $reservasRecibidas[$i]['estado'] = 4;
+                    } elseif ($estado == 3) {
                         $reservasRecibidas[$i]['estado'] = 3;
                     } elseif ($estado == 2) {
                         $reservasRecibidas[$i]['estado'] = 2;
