@@ -533,4 +533,8 @@ class Reserve extends BaseReserve {
         return $ret;
     }
 
+    public function getSignature() {
+        return md5("Arriendas ~ ".$this->getDate());
+    }
+
 }
