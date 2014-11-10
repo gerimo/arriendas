@@ -55,7 +55,7 @@ EOF;
             $this->log($renter);
 
             $body = '<p>Correo de prueba</p>';
-            $body .= '<img src="{$imageUrl}?id={$oportunityEmail->getId()}">';
+            $body .= "<img src='{$imageUrl}?id={$oportunityEmail->getId()}'>";
 
 
             $message = $this->getMailer()->compose();
