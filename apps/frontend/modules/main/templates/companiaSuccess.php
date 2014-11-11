@@ -32,7 +32,17 @@ p.textoPie{
     margin-top: 20px;
 }
 
+iframe[name='google_conversion_frame'] { 
+    height: 0 !important;
+    width: 0 !important; 
+    line-height: 0 !important; 
+    font-size: 0 !important;
+    margin-top: -13px;
+    float: left;
+}
+
 </style>
+
 <div id="Fondo">
     <div id="subFondo">
         <div id="Enunciado">

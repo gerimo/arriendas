@@ -158,6 +158,20 @@ var google_remarketing_only = true;
 
     <body>
     
+    <style type="text/css">
+
+iframe[name='google_conversion_frame'] { 
+    height: 0 !important;
+    width: 0 !important; 
+    line-height: 0 !important; 
+    font-size: 0 !important;
+    margin-top: -13px;
+    float: left;
+}
+
+</style>
+    
+    
     <!--Analytics German@arriendas.cl-->
 
 <script>
