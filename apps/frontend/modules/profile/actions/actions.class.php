@@ -3705,7 +3705,7 @@ class profileActions extends sfActions {
     }
 
     public function executePedidos(sfWebRequest $request) {
-        //id del usuario actual
+        
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
         //$idUsuario = 885;
         //$idUsuario = 79;
@@ -3729,8 +3729,12 @@ class profileActions extends sfActions {
                 $duracion = $reserva->getDuration();
 
                 //obtiene en que estado se encuentra (pagada(3), preaprobada(2), rechazada(1) y espera(0))
-                if ($reserva->getConfirmed() && $reserva->getImpulsive() && $transaction[0]['completed'] == 0) {
-                    $estado = 4;
+                if ($reserva->getConfirmed() == 0 && $reserva->getImpulsive() && $reserva->getReservaOriginal() == null) {
+                    $estado = 6; // Compra impulsiva, dueño original aún no confirma
+                } else if ($reserva->getConfirmed() && $reserva->getImpulsive() && $reserva->getReservaOriginal() == null) {
+                    $estado = 5; // Compra impulsiva, dueño original confirmó
+                } else if ($reserva->getConfirmed() && $reserva->getImpulsive() && $transaction[0]['completed'] == 0) {
+                    $estado = 4; // Dueños que desean la oportunidad
                 } else if (isset($transaction[0]) && $transaction[0]['completed'] == 1 && $reserva->getConfirmed()) { // la reserva está pagada
                     $estado = 3;
                 } else if ($reserva->getConfirmed()) { // la reserva no está pagada
@@ -3745,7 +3749,9 @@ class profileActions extends sfActions {
                 $horasASumar = $duracion + 36;
                 $fechaReservaParaPagadas = strtotime("+$horasASumar hours", strtotime($reserva->getDate()));
                 if (
-                        ($estado == 4 && $fechaReservaParaPagadas > $fechaActual)
+                        ($estado == 6 && $fechaReservaParaPagadas > $fechaActual)
+                        || ($estado == 5 && $fechaReservaParaPagadas > $fechaActual)
+                        || ($estado == 4 && $fechaReservaParaPagadas > $fechaActual)
                         || ($estado == 3 && $fechaReservaParaPagadas > $fechaActual) 
                         || ($estado == 2 && $fechaReserva > $fechaActual) 
                         || (($estado == 1 || $estado == 0) && $fechaReserva > $fechaActual)) {
@@ -3754,7 +3760,11 @@ class profileActions extends sfActions {
                     $reservasRealizadas[$i]['idReserve'] = $reserva->getId();
 
                     //establece el estado
-                    if ($estado == 4) {
+                    if ($estado == 6) {
+                        $reservasRealizadas[$i]['estado'] = 6;
+                    } elseif ($estado == 5) {
+                        $reservasRealizadas[$i]['estado'] = 5;
+                    } elseif ($estado == 4) {
                         $reservasRealizadas[$i]['estado'] = 4;
                     } elseif ($estado == 3) {
                         $reservasRealizadas[$i]['estado'] = 3;
@@ -3823,7 +3833,7 @@ class profileActions extends sfActions {
             }
         }
 
-        //PROPIETARIO $idUsuario
+        // PROPIETARIO $idUsuario
 
         $reservasRecibidas = null;
 
@@ -3841,20 +3851,16 @@ class profileActions extends sfActions {
                 $query = Doctrine_Query::create()->query($q);
                 $transaction = $query->toArray();
 
-                //obtiene en que estado se encuentra (pagada(3), preaprobada(2), rechazada(1) y espera(0))
+                // obtiene en que estado se encuentra (impulsive(4), pagada(3), preaprobada(2), rechazada(1) y espera(0))
                 if (isset($transaction[0]) && $transaction[0]['completed'] == 1 && $transaction[0]['impulsive'] == 1) {
                     $estado = 4;
                 } else if (isset($transaction[0]) && $transaction[0]['completed'] == 1) { //la reserva está pagada
-                    //$reservasRealizadas[$i]['estado'] = 3;
                     $estado = 3;
                 } else if ($reserva->getConfirmed()) {//la reserva no está pagada
-                    //$reservasRealizadas[$i]['estado'] = 2;
                     $estado = 2;
                 } else if ($reserva->getCanceled()) {
-                    //$reservasRealizadas[$i]['estado'] = 1;
                     $estado = 1;
                 } else {
-                    //$reservasRealizadas[$i]['estado'] = 0;
                     $estado = 0;
                 }
 
@@ -3892,8 +3898,6 @@ class profileActions extends sfActions {
                         $reservasRecibidas[$i]['estado'] = 0;
                     }
                     
-                    
-
                     //fecha y hora de inicio y término
                     $reservasRecibidas[$i]['posicion'] = $reserva->getDate();
                     $reservasRecibidas[$i]['fechaInicio'] = $reserva->getFechaInicio();
