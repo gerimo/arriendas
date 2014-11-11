@@ -1,3 +1,5 @@
+console.log("hola mundo");
+
 function nuevoFlujoCambiar(idReserve) {
 
     $.ajax({
