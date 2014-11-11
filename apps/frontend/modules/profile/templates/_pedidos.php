@@ -167,13 +167,13 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo "  </div>";
 
                 if ($reserva['estado'] == 6) {
-                    echo "<div class='eventoReserva'>";
+                    /*echo "<div class='eventoReserva'>";
                     echo "  <div class='der'>";
                     echo "    <div class='cargando'>" . image_tag('../images/ajax-loader.gif') . "</div>";
                     echo "    <div class='img'>" . image_tag('img_pedidos/IconoEnEspera.png') . "</div>";
                     echo "    <div class='texto'>En espera de confirmaci&oacute;n</div>";
                     echo "  </div>";
-                    echo "</div>";    
+                    echo "</div>";  */  
                 } else {
                     echo "<div class='pago'>";
                     echo "  <a href='#' id='extender_" . $reserva['idReserve'] . "' class='boton_extender " . $reserva['fechaInicio'] . "_" . $reserva['horaInicio'] . "_" . $reserva['fechaTermino'] . "_" . $reserva['horaTermino'] . "'>" . image_tag('img_pedidos/BotonExtender2.png', array("style" => "margin-top: 12px")) . "</a>";
