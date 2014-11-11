@@ -4093,6 +4093,7 @@ class profileActions extends sfActions {
     }
 
     public function executeOportunidades(sfWebRequest $request) {
+
         $cars = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")))->getCars();
 
         $mKey = 0;
@@ -4179,6 +4180,7 @@ class profileActions extends sfActions {
                 $auxReserves = array_merge($auxReserves, $reserve);
             }
         }
+
         //var_dump($auxReserves);exit;
         $auxIdsIncluidos = array();
         $reservasAConsiderar = array();
