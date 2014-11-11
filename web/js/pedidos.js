@@ -182,106 +182,105 @@ function bindEventsAll(){
     //evento de select (en espera-propietario)
     $('.select').on('change', function() {
 
-//		console.log('cambio de estado');
+        var isImpulsive = $(this).data('impulsive');
+        var signature = $(this).data('signature');
 
         var select_id = $(this).attr('id');
         var id = obtenerId(select_id);
 
         var accion = $('#' + select_id + ' option:selected').attr('name');
 
-        var duracion = $(this).attr('class').split(' ');
+        if (isImpulsive == 1 && accion == "oportunidad") {
 
-        if (duracion[0].indexOf('_') != -1) {
-            duracion = duracion[0];
-        } else if (duracion[1].indexOf('_') != -1) {
-            duracion = duracion[1];
-        } else if (duracion[2].indexOf('_') != -1) {
-            duracion = duracion[2];
-        }
-
-        duracion = obtenerId(duracion);
-
-        if (duracion > 23) {
-            $('#textoBencinaPropietario').text('El arrendatario me devolverá el vehículo con el marcador de bencina en el mismo nivel con el que lo se lo entregué.');
+            url = urlNuevoFlujoAceptarOportunidad.replace("reservePattern", id).replace("signaturePattern", signature);
+            window.location = url;
+            
         } else {
-            $('#textoBencinaPropietario').text('El arrendatario me pagará en efectivo la bencina utilizada según los kilómetros manejados.');
-        }
 
-        //informe de daños
-        var classCar = $('#bloque_' + id).attr('class');
-        //alert(classCar);
-        classCar = classCar.split(' ');
-        for (var i = 0; i < classCar.length; i++) {
-            if (classCar[i].indexOf != -1) {
-                idCar = obtenerId(classCar[i]);
+            var duracion = $(this).attr('class').split(' ');
+
+            if (duracion[0].indexOf('_') != -1) {
+                duracion = duracion[0];
+            } else if (duracion[1].indexOf('_') != -1) {
+                duracion = duracion[1];
+            } else if (duracion[2].indexOf('_') != -1) {
+                duracion = duracion[2];
             }
-        }
-        //$('.informeDanios').attr('href','http://www.arriendas.cl/main/generarReporte/idAuto/'+idCar);
-        //$('.informeDanios').attr('href','http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/idReserve/'+id);
-        $('.informeDanios').attr('href', 'http://arriendas.cl/main/generarReporteDanios/idAuto/' + idCar);
 
+            duracion = obtenerId(duracion);
 
-        if (accion != 'none') {
+            if (duracion > 23) {
+                $('#textoBencinaPropietario').text('El arrendatario me devolverá el vehículo con el marcador de bencina en el mismo nivel con el que lo se lo entregué.');
+            } else {
+                $('#textoBencinaPropietario').text('El arrendatario me pagará en efectivo la bencina utilizada según los kilómetros manejados.');
+            }
 
-//			console.log('change event reserva');
-
-            if (accion == 'preaprobar' || accion.indexOf('oportunidad') !== -1) { //debe aprobar los contratos
-
-//				console.log('aprobar reserva');			
-                if(accion === 'oportunidad'){
-                    buildCarSelect(id);
+            //informe de daños
+            var classCar = $('#bloque_' + id).attr('class');
+            
+            classCar = classCar.split(' ');
+            for (var i = 0; i < classCar.length; i++) {
+                if (classCar[i].indexOf != -1) {
+                    idCar = obtenerId(classCar[i]);
                 }
+            }
 
-                $("#confirmarContratosPropietario").dialog({
-                    resizable: false,
-                    width: 550,
-                    modal: false,
-                    autoOpen: false,
-                    closeOnEscape: false,
-                    title: 'Confirmar contratos',
-                    position: {my: "center", at: "center"},
-                    dialogClass: 'no-close',
-                    buttons: {
-                        "Aceptar": function() {
-                            if (contratosSeleccionados('Propietario')) {
-                                if (accion === 'oportunidad') {
-                                    accion = accion + '-' + $('#carsSelect option:selected').attr('name');
+            $('.informeDanios').attr('href', 'http://arriendas.cl/main/generarReporteDanios/idAuto/' + idCar);
+
+            if (accion != 'none') {
+
+                if (accion == 'preaprobar' || accion.indexOf('oportunidad') !== -1) { //debe aprobar los contratos
+
+                    if(accion === 'oportunidad'){
+                        buildCarSelect(id);
+                    }
+
+                    $("#confirmarContratosPropietario").dialog({
+                        resizable: false,
+                        width: 550,
+                        modal: false,
+                        autoOpen: false,
+                        closeOnEscape: false,
+                        title: 'Confirmar contratos',
+                        position: {my: "center", at: "center"},
+                        dialogClass: 'no-close',
+                        buttons: {
+                            "Aceptar": function() {
+                                if (contratosSeleccionados('Propietario')) {
+                                    if (accion === 'oportunidad') {
+                                        accion = accion + '-' + $('#carsSelect option:selected').attr('name');
+                                    }
+                                    cambiarEstado(id, accion);
+
+                                    //limpiar checkbox
+                                    limpiarContratos('Propietario');
+                                    $(this).dialog("close");
                                 }
-                                cambiarEstado(id, accion);
 
+                            },
+                            Cancelar: function() {
+                                $('#select_' + id).val('none');
                                 //limpiar checkbox
                                 limpiarContratos('Propietario');
                                 $(this).dialog("close");
                             }
-
-                        },
-                        Cancelar: function() {
-                            $('#select_' + id).val('none');
-                            //limpiar checkbox
-                            limpiarContratos('Propietario');
-                            $(this).dialog("close");
                         }
-                    }
-                });
+                    });
 
-                //		alert('open modal');			
+                    $("#confirmarContratosPropietario").dialog('open');
 
-
-                $("#confirmarContratosPropietario").dialog('open');
-
-                //		alert('modal opened');			
-
-
-            } else {
-                if (confirm('¿Desea rechazar esta reserva?. No podrá ser recuperada')) {
-                    cambiarEstado(id, accion);
                 } else {
-                    var clases = $(this).attr('class');
-                    clases = clases.split(' ');
-                    if (clases.length == 2) {
-                        $(this).val('none');
+
+                    if (confirm('¿Desea rechazar esta reserva?. No podrá ser recuperada')) {
+                        cambiarEstado(id, accion);
                     } else {
-                        $(this).val('preaprobar');
+                        var clases = $(this).attr('class');
+                        clases = clases.split(' ');
+                        if (clases.length == 2) {
+                            $(this).val('none');
+                        } else {
+                            $(this).val('preaprobar');
+                        }
                     }
                 }
             }
