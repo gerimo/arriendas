@@ -194,7 +194,7 @@ function bindEventsAll(){
 
             url = urlNuevoFlujoAceptarOportunidad.replace("reservePattern", id).replace("signaturePattern", signature);
             window.location = url;
-            
+
         } else {
 
             var duracion = $(this).attr('class').split(' ');
@@ -1346,6 +1346,8 @@ function nuevoFlujoCambiar(idReserve) {
 $('.nuevo_flujo_cambiar').on('click', function(event) {
 
     var idReserve = $(this).data('reserveid');
+
+    console.log("cliick!!!!");
 
     $("#nuevo_flujo_cambiar_dialog").dialog({
         resizable: false,

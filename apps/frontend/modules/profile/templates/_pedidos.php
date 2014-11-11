@@ -254,7 +254,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
         echo"</div>";
 
         echo "<div class='mensajeContacto'>";
-        echo "<p class='textoAyuda'>Se emitirá la póliza y el contrato formal durante las próximas dos horas. </p>";
+        echo "<p>Se emitirá la póliza y el contrato formal durante las próximas dos horas. </p>";
         echo "<p>Si necesita modificar su reserva pagada, escr&iacutebanos a <i>soporte@arriendas.cl</i></p>";
         echo "</div>";
     }
