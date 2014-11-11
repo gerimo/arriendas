@@ -16,7 +16,7 @@
     });
 }*/
 
-$('.nuevo_flujo_cambiar').on('click', function() {
+$('.nuevo_flujo_cambiar').click(function() {
 console.log("hola mundo!!");
     var idReserve = $(this).data('reserveid');
 
