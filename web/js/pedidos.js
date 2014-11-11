@@ -15,32 +15,32 @@ function nuevoFlujoCambiar(idReserve) {
         alert('Disculpe, ha ocurrido un error. Por favor inténtelo nuevamente mas tarde.');
     });
 }
-console.log("hola mundo");
-$('.nuevo_flujo_cambiar').on('click', function() {
-console.log("click");
-    var idReserve = $(this).data('reserveid');
-
-    $("#nuevo_flujo_cambiar_dialog").dialog({
-        resizable: false,
-        width: 550,
-        modal: false,
-        autoOpen: false,
-        closeOnEscape: false,
-        title: 'Cambiar auto',
-        position: {my: "center", at: "center"},
-        buttons: {
-            Aceptar: function() {
-                nuevoFlujoCambiar(idReserve);
-                $(this).dialog("close");
-            },
-            Cancelar: function() {
-                $(this).dialog("close");
-            }
-        }
-    });
-});
 
 function bindEventsAll(){
+    $('.nuevo_flujo_cambiar').on('click', function() {
+    console.log("click");
+        var idReserve = $(this).data('reserveid');
+
+        $("#nuevo_flujo_cambiar_dialog").dialog({
+            resizable: false,
+            width: 550,
+            modal: false,
+            autoOpen: false,
+            closeOnEscape: false,
+            title: 'Cambiar auto',
+            position: {my: "center", at: "center"},
+            buttons: {
+                Aceptar: function() {
+                    nuevoFlujoCambiar(idReserve);
+                    $(this).dialog("close");
+                },
+                Cancelar: function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+    });
+
     $("#confirmarEditarHora").dialog({
         resizable: false,
         width: 550,
