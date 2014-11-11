@@ -1,4 +1,4 @@
-function nuevoFlujoCambiar(idReserve) {
+/*function nuevoFlujoCambiar(idReserve) {
 
     $.ajax({
         type: 'post',
@@ -14,7 +14,7 @@ function nuevoFlujoCambiar(idReserve) {
     }).fail(function() {
         alert('Disculpe, ha ocurrido un error. Por favor inténtelo nuevamente mas tarde.');
     });
-}
+}*/
 
 $('.nuevo_flujo_cambiar').on('click', function() {
 console.log("hola mundo!!");
