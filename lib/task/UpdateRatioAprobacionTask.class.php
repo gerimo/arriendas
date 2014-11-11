@@ -63,6 +63,10 @@ EOF;
 
                 $car->save();
             }
+
+            unset($cars);
+            unset($carTable);
+            unset($carQuery);
         }
     }
 }

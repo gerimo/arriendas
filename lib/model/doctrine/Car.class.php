@@ -306,7 +306,7 @@ where c.id=
         $ratio = (float)$results[0]->getRatio();
     } else {
 
-        $ratio = 1;
+        $ratio = 100;
     }
 
     // Se setea el nuevo ratio para el auto en particular
