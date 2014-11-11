@@ -1,5 +1,3 @@
-console.log("hola mundo");
-
 function nuevoFlujoCambiar(idReserve) {
 
     $.ajax({
@@ -19,10 +17,8 @@ function nuevoFlujoCambiar(idReserve) {
 }
 
 $('.nuevo_flujo_cambiar').on('click', function() {
-
+console.log("hola mundo!!");
     var idReserve = $(this).data('reserveid');
-
-    console.log("cliick!!!!");
 
     $("#nuevo_flujo_cambiar_dialog").dialog({
         resizable: false,
