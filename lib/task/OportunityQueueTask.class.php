@@ -82,7 +82,6 @@ EOF;
                 ->createQuery('c')
                 ->select('c.*, r.* , round((sum(r.confirmed) / count(r.confirmed)) * 100, 2) AS kpi')
                 ->innerJoin('c.Reserves r')
-                ->innerJoin('r.Transaction t')
                 ->where('distancia(?, ?, c.lat, c.lng) > ?', array($element->getReserve()->getCar()->getLat(), $element->getReserve()->getCar()->getLng(), $desde))
                 ->andWhere('distancia(?, ?, c.lat, c.lng) <= ?',  array($element->getReserve()->getCar()->getLat(), $element->getReserve()->getCar()->getLng(), $hasta))
                 ->andWhere('r.comentario = "null"')
