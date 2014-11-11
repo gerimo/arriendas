@@ -122,8 +122,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
     if ($mostrar) {
 
         echo "<h3>RESERVA PAGADA</h3>";
-        echo "<p class='textoAyuda'>Se emitirá la póliza y el contrato formal durante las próximas dos horas. </p>";
-
+        
         foreach ($reservasRealizadas as $reserva) {
 
             if (isset($reserva['estado']) && ($reserva['estado'] == 6 || $reserva['estado'] == 5)) {
@@ -253,7 +252,11 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
         echo"<div class='herramientas'>";
         echo "</div>";
         echo"</div>";
-        echo "<div class='mensajeContacto'><p>Si necesita modificar su reserva pagada, escr&iacutebanos a <i>soporte@arriendas.cl</i></p></div>";
+
+        echo "<div class='mensajeContacto'>";
+        echo "<p class='textoAyuda'>Se emitirá la póliza y el contrato formal durante las próximas dos horas. </p>";
+        echo "<p>Si necesita modificar su reserva pagada, escr&iacutebanos a <i>soporte@arriendas.cl</i></p>";
+        echo "</div>";
     }
 
     // ESTADO 3
