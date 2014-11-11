@@ -241,7 +241,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo "<a href='#' id='contrato_" . $reserva['idReserve'] . "_" . $reserva['carId'] . "_" . $reserva['token'] . "' class='descargarContrato'>Descargar Contratos</a>";
                 echo "</div>";
                 echo "<div class='pago'>";
-                echo "  <button class='nuevo_flujo_cambiar arriendas_pink_btn arriendas_big_btn' data-reserveid='". $reserva['idReserve'] ."' style='position: initial'>Cambiar</button>";
+                echo "  <button class='nuevo_flujo_cambiar arriendas_pink_btn arriendas_big_btn' data-reserveid='". $reserva['idReserve'] ."' style='position: initial' type='button'>Cambiar</button>";
                 echo "  <div style='text-align: center; margin-top: 3px;'><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' style='margin: auto' >Contactar</a></div>";
                 echo "</div>";
                 echo "</div>";
