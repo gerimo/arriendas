@@ -5,7 +5,15 @@ function bindEventsAll(){
     
         var idReserve = $(this).data('reserveid');
 
-        $("#nuevo_flujo_cambiar_dialog").dialog({
+        var c = confirm("Al cambiar el auto, se anulará tu reserva original y se emitirán contratos y póliza por el nuevo arriendo de auto.");
+
+        if (c) {
+            nuevoFlujoCambiar(idReserve);
+        } else {
+            console.log("asdasdasd");
+        }
+
+        /*$("#nuevo_flujo_cambiar_dialog").dialog({
             resizable: false,
             width: 550,
             modal: false,
@@ -22,7 +30,7 @@ function bindEventsAll(){
                     $(this).dialog("close");
                 }
             }
-        });
+        });*/
     });
 
     $("#confirmarEditarHora").dialog({
