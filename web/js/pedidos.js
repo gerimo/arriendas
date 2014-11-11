@@ -1,4 +1,4 @@
-/*function nuevoFlujoCambiar(idReserve) {
+function nuevoFlujoCambiar(idReserve) {
 
     $.ajax({
         type: 'post',
@@ -14,10 +14,10 @@
     }).fail(function() {
         alert('Disculpe, ha ocurrido un error. Por favor inténtelo nuevamente mas tarde.');
     });
-}*/
+}
 
-$('.nuevo_flujo_cambiar').click(function() {
-console.log("hola mundo!!");
+$('.nuevo_flujo_cambiar').on('click', function() {
+
     var idReserve = $(this).data('reserveid');
 
     $("#nuevo_flujo_cambiar_dialog").dialog({
@@ -29,7 +29,7 @@ console.log("hola mundo!!");
         title: 'Cambiar auto',
         position: {my: "center", at: "center"},
         buttons: {
-            "Aceptar": function() {
+            Aceptar: function() {
                 nuevoFlujoCambiar(idReserve);
                 $(this).dialog("close");
             },
