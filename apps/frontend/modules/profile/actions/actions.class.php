@@ -3733,7 +3733,7 @@ class profileActions extends sfActions {
                     $estado = 6; // Compra impulsiva, dueño original aún no confirma
                 } else if ($reserva->getConfirmed() && $reserva->getImpulsive() && ($reserva->getReservaOriginal() == null || $reserva->getReservaOriginal() == 0)) {
                     $estado = 5; // Compra impulsiva, dueño original confirmó
-                } else if ($reserva->getConfirmed() && $reserva->getImpulsive() && $transaction[0]['completed'] == 0) {
+                } else if ($reserva->getConfirmed() && $reserva->getImpulsive() {
                     $estado = 4; // Dueños que desean la oportunidad
                 } else if (isset($transaction[0]) && $transaction[0]['completed'] == 1 && $reserva->getConfirmed()) { // la reserva está pagada
                     $estado = 3;
@@ -3758,6 +3758,7 @@ class profileActions extends sfActions {
 
                     //obtiene el id de la reserva
                     $reservasRealizadas[$i]['idReserve'] = $reserva->getId();
+                    $reservasRealizadas[$i]['completed'] = $transaction[0]['completed'];
 
                     //establece el estado
                     if ($estado == 6) {

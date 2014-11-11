@@ -9,8 +9,6 @@ function bindEventsAll(){
 
         if (c) {
             nuevoFlujoCambiar(idReserve);
-        } else {
-            console.log("asdasdasd");
         }
 
         /*$("#nuevo_flujo_cambiar_dialog").dialog({
@@ -1364,7 +1362,7 @@ function nuevoFlujoCambiar(idReserve) {
         if(data.error) {
             alert('Disculpe, ha ocurrido un error. Por favor inténtelo nuevamente mas tarde.');
         } else {
-            // do something
+            location.reload(true);
         }
     }).fail(function() {
         alert('Disculpe, ha ocurrido un error. Por favor inténtelo nuevamente mas tarde.');

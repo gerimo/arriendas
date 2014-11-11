@@ -41,7 +41,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
     <div id="nuevo_flujo_cambiar_dialog">
         <p>Al cambiar el auto, se anulará tu reserva original y se emitirán contratos y póliza por el nuevo arriendo de auto.</p>
     </div>
-    
+
     <div id='confirmarEditarHora'>
         <p>¿Desea editar la fecha y hora de todos los pedidos realizados para la fecha <span id='textoFecha'>seleccionada</span>?</p>
     </div>
@@ -241,10 +241,21 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo "</div>";
                 echo "<a href='#' id='contrato_" . $reserva['idReserve'] . "_" . $reserva['carId'] . "_" . $reserva['token'] . "' class='descargarContrato'>Descargar Contratos</a>";
                 echo "</div>";
-                echo "<div class='pago'>";
-                echo "  <button class='nuevo_flujo_cambiar arriendas_pink_btn arriendas_big_btn' data-reserveid='". $reserva['idReserve'] ."' style='position: initial' type='button'>Cambiar</button>";
-                echo "  <div style='text-align: center; margin-top: 3px;'><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' style='margin: auto' >Contactar</a></div>";
-                echo "</div>";
+                
+                if ($reserva['completed'] == 0) {
+                    echo "<div class='pago'>";
+                    echo "  <a href='#' id='extender_" . $reserva['idReserve'] . "' class='boton_extender " . $reserva['fechaInicio'] . "_" . $reserva['horaInicio'] . "_" . $reserva['fechaTermino'] . "_" . $reserva['horaTermino'] . "'>" . image_tag('img_pedidos/BotonExtender2.png', array("style" => "margin-top: 12px")) . "</a>";
+                    echo "  <div style='text-align: center; margin-top: 3px;'>";
+                    echo "    <a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' style='margin: auto' >Contactar</a>";
+                    echo "  </div>";
+                    echo "</div>"; 
+                } else {
+                    echo "<div class='pago'>";
+                    echo "  <button class='nuevo_flujo_cambiar arriendas_pink_btn arriendas_big_btn' data-reserveid='". $reserva['idReserve'] ."' style='position: initial' type='button'>Cambiar</button>";
+                    echo "  <div style='text-align: center; margin-top: 3px;'><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' style='margin: auto' >Contactar</a></div>";
+                    echo "</div>";
+                }
+                
                 echo "</div>";
             }
         }
