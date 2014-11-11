@@ -43,6 +43,20 @@
 	border-right: 13px solid transparent;
 	border-bottom: 25px solid white;
 }
+.land_slogan_area h1 {
+	font-size: 19px;
+	letter-spacing: -1px;
+	display: block;
+	color: black;
+}
+.land_slogan_area h1 .dest {
+	color:#00AEEF;
+	font-weight: bold;
+}
+.land_slogan_area h1 .dest_rosa{
+	color:#EC008C;
+	font-weight: bold;
+
 .land_slogan_area h2 {
 	font-size: 19px;
 	letter-spacing: -1px;

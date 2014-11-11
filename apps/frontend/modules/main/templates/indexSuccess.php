@@ -609,7 +609,7 @@ else
                 var contentString = '<div style="width:380px; height:165px;" class="mapcar_box" id="' + dataCar.id + '">' +
                         '<div class="mapcar_frame">' +
                         '<a href="' + urlFotoTipo + '"  class="thickbox"  ><img class="imagemark" width="112" height="84" src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/' + urlFotoThumbTipo + '"/></a>' +
-                        '</div><div class="detalles_car"><div class="titulo"><a target="_blank" title="Ir al perfil del auto" href="<?php echo url_for('arriendoautos/rentacar') ?>/' + dataCar.brand + dataCar.model + '/' + dataCar.comuna + '/' + dataCar.id + '">' + dataCar.brand + ' ' + dataCar.model + " " + verificado + calificacionesPositivas + '</a></div><div class="datos_car"><p>Dia: <b>$' + dataCar.price_per_day + ' CLP</b></p><p>Hora: <b>$' + dataCar.price_per_hour + ' CLP</b></p><p>Transmisión: <b>' + dataCar.typeTransmission + '</b></p></div>' + opcionLogeado + '</div><a target="_blank" href="<?php echo url_for('profile/reserve?id=') ?>' + dataCar.id + '" class="mapcar_btn_detalle"></a></div>';
+                        '</div><div class="detalles_car"><div class="titulo"><a target="_blank" title="Ir al perfil del auto" href="<?php echo url_for('arriendo-de-autos/rent-a-car') ?>/' + dataCar.brand + dataCar.model + '/' + dataCar.comuna + '/' + dataCar.id + '">' + dataCar.brand + ' ' + dataCar.model + " " + verificado + calificacionesPositivas + '</a></div><div class="datos_car"><p>Dia: <b>$' + dataCar.price_per_day + ' CLP</b></p><p>Hora: <b>$' + dataCar.price_per_hour + ' CLP</b></p><p>Transmisión: <b>' + dataCar.typeTransmission + '</b></p></div>' + opcionLogeado + '</div><a target="_blank" href="<?php echo url_for('profile/reserve?id=') ?>' + dataCar.id + '" class="mapcar_btn_detalle"></a></div>';
 
 
                 if (infowindow)
@@ -666,9 +666,9 @@ else
                 nodes += '<img width="80px" height="52px" src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_80,h_52,c_fill,g_center/' + urlFotoThumbTipo + '" />';
                 nodes += '</div>';
                 nodes += '<ul class="search_arecomend_info">';
-                nodes += '<input type="hidden" class="link" value="<?php echo url_for('arriendoautos/rentacar') ?>/' + dataCar.brand + dataCar.model + '/' + dataCar.comuna + '/' + dataCar.id + '"/>';
+                nodes += '<input type="hidden" class="link" value="<?php echo url_for('arriendo-de-autos/rent-a-car') ?>/' + dataCar.brand + dataCar.model + '/' + dataCar.comuna + '/' + dataCar.id + '"/>';
                 nodes += '<li class="search_arecomend_marca">';
-                nodes += '<a target="_blank" title="Ir al perfil del auto" href="<?php echo url_for('arriendoautos/rentacar') ?>/' + dataCar.brand + dataCar.model + '/' + dataCar.comuna + '/' + dataCar.id + '">';
+                nodes += '<a target="_blank" title="Ir al perfil del auto" href="<?php echo url_for('arriendo-de-autos/rent-a-car') ?>/' + dataCar.brand + dataCar.model + '/' + dataCar.comuna + '/' + dataCar.id + '">';
                 switch (dataCar.typeModel)
                 {
                     case "1":
@@ -1586,12 +1586,12 @@ if ($day_to) {
             }
             echo "</div>
                 <div id='tagLineArrendatario'>
-                    <h2 style='font-family: Helvetica,Arial,sans-serif;font-size: 26px;
+                    <h1 style='font-family: Helvetica,Arial,sans-serif;font-size: 26px;
 letter-spacing: -1px;
 font-weight: normal;
 display: block;
 color: #303030;
-font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con seguro 1000UF, asistencia y TAGs en el <span class='dest'>precio final</span></h2>
+font-style: italic;'>Arriendo de autos <span class='dest'>vecinos</span> con seguro 1000UF, asistencia y TAGs en el <span class='dest'>precio final</span></h2>
 
                 </div>";
             ?>
@@ -1801,7 +1801,7 @@ font-style: italic;'>Arrienda un auto <span class='dest'>vecino</span> con segur
 
             <div id="seguro"> 
 
-                <div class="titulos">Preguntas frecuentes (arrienda un auto)</div>
+                <div class="titulos">Preguntas frecuentes (arriendo de autos)</div>
 
                 <!--<div id="seguroContenidos">-->
 

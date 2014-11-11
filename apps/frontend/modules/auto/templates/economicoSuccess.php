@@ -208,12 +208,12 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
             <div class="main_contenido">
 
                 <div class="barraSuperior">
-                    <h2>INFORMACIÓN DEL AUTO EN ARRIENDO</h2>
+                    <h2>INFORMACIÓN DEL AUTO EN RENT A CAR</h2>
                 </div>
                 <div class="ladoIzquierdo">
                     <div id="imagenPerfil">
                         <?php
-                        $image_alt = "arriendoautos/rentacar/" . $car->getModel()->getBrand() . $car->getModel() . "/" . $nombreComunaUrl . "/" . $car->getId();
+                        $image_alt = "arriendo-de-autos/rent-a-car/" . $car->getModel()->getBrand() . $car->getModel() . "/" . $nombreComunaUrl . "/" . $car->getId();
                         $image_title = "arriendoauto/" . $car->getId();
                         if ($car->getPhotoS3() == 1) {
                             echo image_tag("http://www.arriendas.cl/main/s3thumb?alto=185&ancho=185&urlFoto=" . $car->getFoto(), array("width" => "185", "height" => "185", "alt" => $image_alt, "title" => $image_title));
@@ -298,7 +298,7 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
 
                     <h2 class="subtitulos punteado">Precio sin Depósito en Garantía</h2>
                     <div class="texto_normal precios">Precio por Hora | <span class="texto_magenta"><strong><?php echo "$" . number_format(floor($car->getPricePerHour()) + 967, 0, ',', '.'); ?></strong></span></div>
-                    <div class="texto_normal precios">Precio por D&iacute;a | <span class="texto_magenta"><strong><?php echo "$" . number_format(floor($car->getPricePerDay()) + 5800, 0, ',', '.'); ?></strong></span></div>
+                    <div class="texto_normal precios">Precio por D&iacute;a | <span class="texto_magenta"><strong><?php echo "$" . number_format(floor($car->getPricePerDay()) + 8700, 0, ',', '.'); ?></strong></span></div>
 
                     <h2 class="subtitulos punteado">Datos del Auto</h2>
                     <div class="texto_normal precios"><div class="interlineado">Ubicaci&oacute;n |</div><div class="interlineado2"><strong><?php echo ucwords(strtolower($car->getAddressAprox())) . "" . $nombreComunaAuto ?></strong></div></div>

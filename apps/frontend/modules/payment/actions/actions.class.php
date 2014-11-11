@@ -15,6 +15,7 @@ class paymentActions extends sfActions {
      *
      * @param sfRequest $request A request object
      */
+     
     public function enviarCorreoTransferenciaBancaria() {
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
         $usuario = Doctrine_Core::getTable('user')->findOneById($idUsuario);
