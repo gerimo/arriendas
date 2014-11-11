@@ -37,6 +37,11 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
 <?php } ?>
 
 <div style="display:none">
+
+    <div id="nuevo_flujo_cambiar_dialog">
+        <p>Al cambiar el auto, se anulará tu reserva original y se emitirán contratos y póliza por el nuevo arriendo de auto.</p>
+    </div>
+    
     <div id='confirmarEditarHora'>
         <p>¿Desea editar la fecha y hora de todos los pedidos realizados para la fecha <span id='textoFecha'>seleccionada</span>?</p>
     </div>
@@ -90,10 +95,6 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
             <p><label>Hora</label>
                 <input readonly="readonly" type="text" id="hour_to_extender" name="hour_to_extender" value="Hora de entrega"/></p>
         </div>
-    </div>
-
-    <div id="nuevo_flujo_cambiar_dialog">
-        <p>Al cambiar el auto, se anulará tu reserva original y se emitirán contratos y póliza por el nuevo arriendo de auto.</p>
     </div>
 </div>
 
