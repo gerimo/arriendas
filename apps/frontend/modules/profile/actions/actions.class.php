@@ -3729,9 +3729,9 @@ class profileActions extends sfActions {
                 $duracion = $reserva->getDuration();
 
                 //obtiene en que estado se encuentra (pagada(3), preaprobada(2), rechazada(1) y espera(0))
-                if ($reserva->getConfirmed() == 0 && $reserva->getImpulsive() && $reserva->getReservaOriginal() == null) {
+                if ($reserva->getConfirmed() == 0 && $reserva->getImpulsive() && ($reserva->getReservaOriginal() == null || $reserva->getReservaOriginal() == 0)) {
                     $estado = 6; // Compra impulsiva, dueño original aún no confirma
-                } else if ($reserva->getConfirmed() && $reserva->getImpulsive() && $reserva->getReservaOriginal() == null) {
+                } else if ($reserva->getConfirmed() && $reserva->getImpulsive() && ($reserva->getReservaOriginal() == null || $reserva->getReservaOriginal() == 0)) {
                     $estado = 5; // Compra impulsiva, dueño original confirmó
                 } else if ($reserva->getConfirmed() && $reserva->getImpulsive() && $transaction[0]['completed'] == 0) {
                     $estado = 4; // Dueños que desean la oportunidad
@@ -4199,6 +4199,8 @@ class profileActions extends sfActions {
             if (!$reserva->getUser()->getBlocked() && $reserva->getCar()->getUserId() != $this->getUser()->getAttribute("userid") ) {
                 //obtiene el id de la reserva
                 $reservasRecibidas[$i]['idReserve'] = $reserva->getId();
+                $reservasRecibidas[$i]['isImpulsive'] = $reserva->getImpulsive();
+
                 $this->logMessage("reserva recibida a considerar:" . $reservasRecibidas[$i]['idReserve']);
 
                 /* es una oportunidad y esta disponible */
