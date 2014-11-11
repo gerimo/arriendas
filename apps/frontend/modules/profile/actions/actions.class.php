@@ -4199,7 +4199,12 @@ class profileActions extends sfActions {
             if (!$reserva->getUser()->getBlocked() && $reserva->getCar()->getUserId() != $this->getUser()->getAttribute("userid") ) {
                 //obtiene el id de la reserva
                 $reservasRecibidas[$i]['idReserve'] = $reserva->getId();
-                $reservasRecibidas[$i]['isImpulsive'] = $reserva->getImpulsive();
+                $reservasRecibidas[$i]['signature'] = $reserva->getSignature();
+                if ($reserva->getImpulsive()) {
+                    $reservasRecibidas[$i]['isImpulsive'] = 1;
+                } else {
+                    $reservasRecibidas[$i]['isImpulsive'] = 0;
+                }
 
                 $this->logMessage("reserva recibida a considerar:" . $reservasRecibidas[$i]['idReserve']);
 

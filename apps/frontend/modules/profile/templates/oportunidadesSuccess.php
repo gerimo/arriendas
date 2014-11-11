@@ -19,6 +19,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     var urlPago = <?php echo "'".url_for("profile/fbDiscount")."';" ?>
     var urlExtenderReserva = <?php echo "'".url_for("profile/extenderReservaAjax")."';" ?>
     var urlCars = <?php echo "'".url_for("cars/GetByReserserVehicleType")."';" ?>
+    var urlNuevoFlujoAceptarOportunidad = <?php echo "'".url_for("opportunityAccept", array("reserve_id" => "reservePattern", "signature" => "signaturePattern"))."';" ?>
 </script>
 
 <div class="main_box_1">
@@ -123,7 +124,10 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                                        echo "</div>";
                                    echo"</div>";
                                    echo"<div class='pagoCheckbox'>";
-                                           echo "<select class='select enEspera duracion_".$reserva['duracion']."' id='select_".$reserva['idReserve']."'><option name='none' selected>Acci&oacute;n</option><option name='oportunidad'>Pre aprobar</option></select>";
+                                           echo "<select class='select enEspera duracion_".$reserva['duracion']."' id='select_".$reserva['idReserve']."' data-impulsive='".$reserva['isImpulsive']."' data-signature='".$reserva['signature']."'>";
+                                              echo "<option name='none' selected>Acci&oacute;n</option>";
+                                              echo "<option name='oportunidad'>Pre aprobar</option>";
+                                           echo "</select>";
                                    echo "</div>";
                                    echo"</div>";
 
