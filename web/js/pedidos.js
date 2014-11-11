@@ -15,9 +15,9 @@ function nuevoFlujoCambiar(idReserve) {
         alert('Disculpe, ha ocurrido un error. Por favor inténtelo nuevamente mas tarde.');
     });
 }
-
+console.log("hola mundo");
 $('.nuevo_flujo_cambiar').on('click', function() {
-
+console.log("click");
     var idReserve = $(this).data('reserveid');
 
     $("#nuevo_flujo_cambiar_dialog").dialog({
@@ -71,7 +71,7 @@ function bindEventsAll(){
         title: 'Editar hora',
         position: {my: "center", at: "center"},
         buttons: {
-            "Aceptar": function() {
+            Aceptar: function() {
                 //confirmar datos
                 if (confirmarFecha()) {
                     //ingresar datos a la bd
@@ -188,7 +188,7 @@ function bindEventsAll(){
                     position: {my: "center", at: "center"},
                     dialogClass: 'no-close',
                     buttons: {
-                        "Aceptar": function() {
+                        Aceptar: function() {
 
                             /*confirmar que se aprueben los contratos*/
                             if (contratosSeleccionados('Arrendatario')) {
@@ -285,7 +285,7 @@ function bindEventsAll(){
                         position: {my: "center", at: "center"},
                         dialogClass: 'no-close',
                         buttons: {
-                            "Aceptar": function() {
+                            Aceptar: function() {
                                 if (contratosSeleccionados('Propietario')) {
                                     if (accion === 'oportunidad') {
                                         accion = accion + '-' + $('#carsSelect option:selected').attr('name');
@@ -859,7 +859,7 @@ function bindEventsAll(){
             title: 'Extender reserva',
             position: {my: "center", at: "center"},
             buttons: {
-                "Aceptar": function() {
+                Aceptar: function() {
                     //confirmar datos
                     if (confirmarExtension()) {
                         //ingresar datos a la bd
