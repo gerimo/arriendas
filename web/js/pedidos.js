@@ -1,24 +1,8 @@
-function nuevoFlujoCambiar(idReserve) {
-
-    $.ajax({
-        type: 'post',
-        url: urlNuevoFlujoCambiar,
-        data: {idReserve: idReserve}
-    }).done(function(data) {
-
-        if(data.error) {
-            alert('Disculpe, ha ocurrido un error. Por favor inténtelo nuevamente mas tarde.');
-        } else {
-            // do something
-        }
-    }).fail(function() {
-        alert('Disculpe, ha ocurrido un error. Por favor inténtelo nuevamente mas tarde.');
-    });
-}
 
 function bindEventsAll(){
+
     $('.nuevo_flujo_cambiar').on('click', function() {
-    console.log("click");
+    
         var idReserve = $(this).data('reserveid');
 
         $("#nuevo_flujo_cambiar_dialog").dialog({
@@ -1361,8 +1345,24 @@ function masDeUnDia() {
 
 }
 
+function nuevoFlujoCambiar(idReserve) {
+
+    $.ajax({
+        type: 'post',
+        url: urlNuevoFlujoCambiar,
+        data: {idReserve: idReserve}
+    }).done(function(data) {
+
+        if(data.error) {
+            alert('Disculpe, ha ocurrido un error. Por favor inténtelo nuevamente mas tarde.');
+        } else {
+            // do something
+        }
+    }).fail(function() {
+        alert('Disculpe, ha ocurrido un error. Por favor inténtelo nuevamente mas tarde.');
+    });
+}
+
 $(document).on('ready', function() {
     bindEventsAll();
 });
-
-
