@@ -3727,7 +3727,7 @@ class profileActions extends sfActions {
             if ($reserva->getVisibleRenter()) {
 
                 //obtiene completed de transaction
-                $q = "SELECT completed, impulsive FROM transaction WHERE reserve_id=" . $reserva->getId();
+                $q = "SELECT completed, impulsive, transaccion_original FROM transaction WHERE reserve_id=" . $reserva->getId();
                 $query = Doctrine_Query::create()->query($q);
                 $transaction = $query->toArray();
 
