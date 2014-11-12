@@ -3885,6 +3885,7 @@ class profileActions extends sfActions {
 
                     //obtiene el id de la reserva
                     $reservasRecibidas[$i]['idReserve'] = $reserva->getId();
+                    $reservasRecibidas[$i]['confirmed'] = $reserva->getConfirmed();
 
                     //establece el estado
                     if ($estado == 4) {

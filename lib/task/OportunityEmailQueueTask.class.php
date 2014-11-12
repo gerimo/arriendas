@@ -70,9 +70,7 @@ EOF;
             $price = number_format($reserve->getPrice(), 0, ',', '.');
 
             $body  = "<p>Hola {$owner->getFirstname()}.</p>";
-            $body .= "<br>";
             $body .= "<p>La oportunidad es por \${$price} desde {$desde} hasta {$hasta}.</p>";
-            $body .= "<br>";
             $body .= "<p>Aprueba la oportunidad haciendo click <a href='{$acceptUrl}'>AQUI</a></p>";
             $body .= "<br>";
             $body .= "<p>Saludos</p>";
