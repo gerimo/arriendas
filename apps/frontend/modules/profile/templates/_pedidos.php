@@ -175,12 +175,19 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                     echo "  </div>";
                     echo "</div>";    
                 } else {
-                    echo "<div class='pago'>";
-                    echo "  <a href='#' id='extender_" . $reserva['idReserve'] . "' class='boton_extender " . $reserva['fechaInicio'] . "_" . $reserva['horaInicio'] . "_" . $reserva['fechaTermino'] . "_" . $reserva['horaTermino'] . "'>" . image_tag('img_pedidos/BotonExtender2.png', array("style" => "margin-top: 12px")) . "</a>";
-                    echo "  <div style='text-align: center; margin-top: 3px;'>";
-                    echo "    <a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' style='margin: auto' >Contactar</a>";
-                    echo "  </div>";
-                    echo "</div>";
+                    if ($reserva['completed']) {
+                        echo "<div class='pago'>";
+                        echo "  <a href='#' id='extender_" . $reserva['idReserve'] . "' class='boton_extender " . $reserva['fechaInicio'] . "_" . $reserva['horaInicio'] . "_" . $reserva['fechaTermino'] . "_" . $reserva['horaTermino'] . "'>" . image_tag('img_pedidos/BotonExtender2.png', array("style" => "margin-top: 12px")) . "</a>";
+                        echo "  <div style='text-align: center; margin-top: 3px;'>";
+                        echo "    <a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' style='margin: auto' >Contactar</a>";
+                        echo "  </div>";
+                        echo "</div>";
+                    } else {
+                        echo "<div class='pago'>";
+                        echo "  <button class='nuevo_flujo_cambiar arriendas_pink_btn arriendas_big_btn' data-reserveid='". $reserva['idReserve'] ."' style='position: initial' type='button'>Cambiar</button>";
+                        echo "  <div style='text-align: center; margin-top: 3px;'><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' style='margin: auto' >Contactar</a></div>";
+                        echo "</div>";
+                    }
                 }
 
                 echo "</div>";
@@ -266,7 +273,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
         echo"</div>";
 
         echo "<div class='mensajeContacto'>";
-        echo "<p>Se emitirá la póliza y el contrato formal durante las próximas dos horas. </p>";
+        /*echo "<p>Se emitirá la póliza y el contrato formal durante las próximas dos horas. </p>";*/
         echo "</div>";
     }
 
