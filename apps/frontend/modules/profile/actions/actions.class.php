@@ -3751,10 +3751,10 @@ class profileActions extends sfActions {
                 $horasASumar = $duracion + 36;
                 $fechaReservaParaPagadas = strtotime("+$horasASumar hours", strtotime($reserva->getDate()));
                 if (
-                        ($estado == 7 && $fechaReservaParaPagadas > $fechaActual)
-                        || ($estado == 6 && $fechaReservaParaPagadas > $fechaActual)
-                        || ($estado == 5 && $fechaReservaParaPagadas > $fechaActual)
-                        || ($estado == 4 && $fechaReservaParaPagadas > $fechaActual)
+                        ($estado == 7 && $fechaReserva > $fechaActual)
+                        || ($estado == 6 && $fechaReserva > $fechaActual)
+                        || ($estado == 5 && $fechaReserva > $fechaActual)
+                        || ($estado == 4 && $fechaReserva > $fechaActual)
                         || ($estado == 3 && $fechaReservaParaPagadas > $fechaActual) 
                         || ($estado == 2 && $fechaReserva > $fechaActual) 
                         || (($estado == 1 || $estado == 0) && $fechaReserva > $fechaActual)) {
