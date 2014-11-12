@@ -1,6 +1,36 @@
 
-
 function bindEventsAll(){
+
+    $('.nuevo_flujo_cambiar').on('click', function() {
+    
+        var idReserve = $(this).data('reserveid');
+
+        var c = confirm("Al cambiar el auto, se anulará tu reserva original y se emitirán contratos y póliza por el nuevo arriendo de auto.");
+
+        if (c) {
+            nuevoFlujoCambiar(idReserve);
+        }
+
+        /*$("#nuevo_flujo_cambiar_dialog").dialog({
+            resizable: false,
+            width: 550,
+            modal: false,
+            autoOpen: false,
+            closeOnEscape: false,
+            title: 'Cambiar auto',
+            position: {my: "center", at: "center"},
+            buttons: {
+                Aceptar: function() {
+                    nuevoFlujoCambiar(idReserve);
+                    $(this).dialog("close");
+                },
+                Cancelar: function() {
+                    $(this).dialog("close");
+                }
+            }
+        });*/
+    });
+
     $("#confirmarEditarHora").dialog({
         resizable: false,
         width: 550,
@@ -31,7 +61,7 @@ function bindEventsAll(){
         title: 'Editar hora',
         position: {my: "center", at: "center"},
         buttons: {
-            "Aceptar": function() {
+            Aceptar: function() {
                 //confirmar datos
                 if (confirmarFecha()) {
                     //ingresar datos a la bd
@@ -148,7 +178,7 @@ function bindEventsAll(){
                     position: {my: "center", at: "center"},
                     dialogClass: 'no-close',
                     buttons: {
-                        "Aceptar": function() {
+                        Aceptar: function() {
 
                             /*confirmar que se aprueben los contratos*/
                             if (contratosSeleccionados('Arrendatario')) {
@@ -194,7 +224,7 @@ function bindEventsAll(){
 
             url = urlNuevoFlujoAceptarOportunidad.replace("reservePattern", id).replace("signaturePattern", signature);
             window.location = url;
-            
+
         } else {
 
             var duracion = $(this).attr('class').split(' ');
@@ -245,7 +275,7 @@ function bindEventsAll(){
                         position: {my: "center", at: "center"},
                         dialogClass: 'no-close',
                         buttons: {
-                            "Aceptar": function() {
+                            Aceptar: function() {
                                 if (contratosSeleccionados('Propietario')) {
                                     if (accion === 'oportunidad') {
                                         accion = accion + '-' + $('#carsSelect option:selected').attr('name');
@@ -819,7 +849,7 @@ function bindEventsAll(){
             title: 'Extender reserva',
             position: {my: "center", at: "center"},
             buttons: {
-                "Aceptar": function() {
+                Aceptar: function() {
                     //confirmar datos
                     if (confirmarExtension()) {
                         //ingresar datos a la bd
@@ -1321,10 +1351,6 @@ function masDeUnDia() {
 
 }
 
-$(document).on('ready', function() {
-    bindEventsAll();
-});
-
 function nuevoFlujoCambiar(idReserve) {
 
     $.ajax({
@@ -1336,33 +1362,13 @@ function nuevoFlujoCambiar(idReserve) {
         if(data.error) {
             alert('Disculpe, ha ocurrido un error. Por favor inténtelo nuevamente mas tarde.');
         } else {
-            // do something
+            location.reload(true);
         }
     }).fail(function() {
         alert('Disculpe, ha ocurrido un error. Por favor inténtelo nuevamente mas tarde.');
     });
 }
 
-$('.nuevo_flujo_cambiar').on('click', function(event) {
-
-    var idReserve = $(this).data('reserveid');
-
-    $("#nuevo_flujo_cambiar_dialog").dialog({
-        resizable: false,
-        width: 550,
-        modal: false,
-        autoOpen: false,
-        closeOnEscape: false,
-        title: 'Cambiar auto',
-        position: {my: "center", at: "center"},
-        buttons: {
-            "Aceptar": function() {
-                nuevoFlujoCambiar(idReserve);
-                $(this).dialog("close");
-            },
-            Cancelar: function() {
-                $(this).dialog("close");
-            }
-        }
-    });
+$(document).on('ready', function() {
+    bindEventsAll();
 });

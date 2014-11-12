@@ -37,6 +37,11 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
 <?php } ?>
 
 <div style="display:none">
+
+    <div id="nuevo_flujo_cambiar_dialog">
+        <p>Al cambiar el auto, se anulará tu reserva original y se emitirán contratos y póliza por el nuevo arriendo de auto.</p>
+    </div>
+
     <div id='confirmarEditarHora'>
         <p>¿Desea editar la fecha y hora de todos los pedidos realizados para la fecha <span id='textoFecha'>seleccionada</span>?</p>
     </div>
@@ -91,10 +96,6 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 <input readonly="readonly" type="text" id="hour_to_extender" name="hour_to_extender" value="Hora de entrega"/></p>
         </div>
     </div>
-
-    <div id="nuevo_flujo_cambiar_dialog">
-        <p>Al cambiar el auto, se anulará tu reserva original y se emitirán contratos y póliza por el nuevo arriendo de auto.</p>
-    </div>
 </div>
 
 <?php if ($mostrarBarra) { ?>
@@ -122,11 +123,10 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
     if ($mostrar) {
 
         echo "<h3>RESERVA PAGADA</h3>";
-        echo "<p class='textoAyuda'>Se emitirá la póliza y el contrato formal durante las próximas dos horas. </p>";
-
+        
         foreach ($reservasRealizadas as $reserva) {
 
-            if (isset($reserva['estado']) && ($reserva['estado'] == 6 || $reserva['estado'] == 5)) {
+            if (isset($reserva['estado']) && ($reserva['estado'] == 5)) {
                 echo "<div class='bloqueEstado' id='bloque_" . $reserva['idReserve'] . "'>";
                 echo "  <div class='fechaReserva'>";
                 echo "    <div class='izq'>";
@@ -241,10 +241,21 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo "</div>";
                 echo "<a href='#' id='contrato_" . $reserva['idReserve'] . "_" . $reserva['carId'] . "_" . $reserva['token'] . "' class='descargarContrato'>Descargar Contratos</a>";
                 echo "</div>";
-                echo "<div class='pago'>";
-                echo "  <button class='nuevo_flujo_cambiar arriendas_pink_btn arriendas_big_btn' data-reserveid='". $reserva['idReserve'] ."' style='position: initial'>Cambiar</button>";
-                echo "  <div style='text-align: center; margin-top: 3px;'><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' style='margin: auto' >Contactar</a></div>";
-                echo "</div>";
+                
+                if ($reserva['completed']) {
+                    echo "<div class='pago'>";
+                    echo "  <a href='#' id='extender_" . $reserva['idReserve'] . "' class='boton_extender " . $reserva['fechaInicio'] . "_" . $reserva['horaInicio'] . "_" . $reserva['fechaTermino'] . "_" . $reserva['horaTermino'] . "'>" . image_tag('img_pedidos/BotonExtender2.png', array("style" => "margin-top: 12px")) . "</a>";
+                    echo "  <div style='text-align: center; margin-top: 3px;'>";
+                    echo "    <a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' style='margin: auto' >Contactar</a>";
+                    echo "  </div>";
+                    echo "</div>"; 
+                } else {
+                    echo "<div class='pago'>";
+                    echo "  <button class='nuevo_flujo_cambiar arriendas_pink_btn arriendas_big_btn' data-reserveid='". $reserva['idReserve'] ."' style='position: initial' type='button'>Cambiar</button>";
+                    echo "  <div style='text-align: center; margin-top: 3px;'><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' style='margin: auto' >Contactar</a></div>";
+                    echo "</div>";
+                }
+
                 echo "</div>";
             }
         }
@@ -253,7 +264,10 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
         echo"<div class='herramientas'>";
         echo "</div>";
         echo"</div>";
-        echo "<div class='mensajeContacto'><p>Si necesita modificar su reserva pagada, escr&iacutebanos a <i>soporte@arriendas.cl</i></p></div>";
+
+        echo "<div class='mensajeContacto'>";
+        echo "<p>Se emitirá la póliza y el contrato formal durante las próximas dos horas. </p>";
+        echo "</div>";
     }
 
     // ESTADO 3
