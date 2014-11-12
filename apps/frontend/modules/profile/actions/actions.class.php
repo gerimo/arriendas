@@ -3694,7 +3694,14 @@ class profileActions extends sfActions {
             if ($reserva["confirmed"] == 1 && strtolower($reserva["comentario"]) == "reserva oportunidad" && $reserva["estado"] == 2) {
                 $oportunidades[$key] = $reserva;
             } else {
-                $reservasRealizadasNoOportunidadesAux[$key] = $reserva;
+                if ($reserva['estado'] == 5) {
+
+                    // Se ubica la reserva al principio de las realizadas
+                    array_unshift($reservasRealizadasNoOportunidadesAux, $reserva);
+                } else {
+
+                    $reservasRealizadasNoOportunidadesAux[$key] = $reserva;
+                }
             }
         }
 
@@ -4089,7 +4096,14 @@ class profileActions extends sfActions {
             if ($reserva["confirmed"] == 1 && strtolower($reserva["comentario"]) == "reserva oportunidad" && $reserva["estado"] == 2) {
                 $oportunidades[$key] = $reserva;
             } else {
-                $reservasRealizadasNoOportunidadesAux[$key] = $reserva;
+                if ($reserva['estado'] == 5) {
+
+                    // Se ubica la reserva al principio de las realizadas
+                    array_unshift($reservasRealizadasNoOportunidadesAux, $reserva);
+                } else {
+
+                    $reservasRealizadasNoOportunidadesAux[$key] = $reserva;
+                }
             }
         }
 

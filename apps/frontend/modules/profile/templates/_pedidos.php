@@ -167,7 +167,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo "  </div>";
 
                 if ($reserva['estado'] == 6) {
-                    echo "<div class='eventoReserva'>";
+                    echo "<div class='eventoReserva' style='width:100px;'>";
                     echo "  <div class='der'>";
                     echo "    <div class='cargando'>" . image_tag('../images/ajax-loader.gif') . "</div>";
                     echo "    <div class='img'>" . image_tag('img_pedidos/IconoEnEspera.png') . "</div>";
