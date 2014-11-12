@@ -126,7 +126,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
         
         foreach ($reservasRealizadas as $reserva) {
 
-            if (isset($reserva['estado']) && ($reserva['estado'] == 5)) {
+            if (isset($reserva['estado']) && ($reserva['estado'] == 6 || $reserva['estado'] == 5)) {
                 echo "<div class='bloqueEstado' id='bloque_" . $reserva['idReserve'] . "'>";
                 echo "  <div class='fechaReserva'>";
                 echo "    <div class='izq'>";
