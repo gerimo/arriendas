@@ -5857,7 +5857,7 @@ class profileActions extends sfActions {
             $this->redirect('profile/reserveSend?id=' . $idReserva);
             die();
         }
-        return sfView::NONE;
+        /*return sfView::NONE;*/
     }
 
     public function executeDoModificarArriendo(sfWebRequest $request) {
