@@ -5853,11 +5853,12 @@ class profileActions extends sfActions {
             echo 'Por favor ingrese fechas con formato YYYY-MM-DD HH:MM';
         }
         
-        if(!empty($request->getParameter('sendReserve'))){
+        /*if(!empty($request->getParameter('sendReserve'))){*/
+        if(!$sf_request->hasParameter('sendReserve')){
             $this->redirect('profile/reserveSend?id=' . $idReserva);
             die();
         }
-        /*return sfView::NONE;*/
+        return sfView::NONE;
     }
 
     public function executeDoModificarArriendo(sfWebRequest $request) {
