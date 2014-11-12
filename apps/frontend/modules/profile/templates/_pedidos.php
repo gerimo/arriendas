@@ -108,71 +108,6 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
 
     //ARRENDATARIO $reservasRealizadas
 
-    // ESTADO 7
-    $mostrar = false;
-
-    if ($reservasRealizadas) {
-        foreach ($reservasRealizadas as $reserva) {
-            if (isset($reserva['estado']) && $reserva['estado'] == 7) {
-                $mostrar = true;
-                $checkMostrar++;
-            }
-        }
-    }
-
-    if ($mostrar) {
-
-        echo "<h3>RESERVAS EN PROCESO</h3>";
-        
-        foreach ($reservasRealizadas as $reserva) {
-
-            if (isset($reserva['estado']) && $reserva['estado'] == 7) {
-                echo"<div class='bloqueEstado idCar_" . $reserva['carId'] . "' id='bloque_" . $reserva['idReserve'] . "'>";
-                echo "<div class='checkboxOpcion'>";
-                echo "<input type='checkbox' class='checkbox checkboxResultadosRealizados' id='checkbox_" . $reserva['idReserve'] . "'>";
-                echo "</div>";
-                echo "<div class='fechaReserva'>";
-                echo "<div class='izq'>";
-                echo $reserva['fechaInicio'] . "<br>" . $reserva['fechaTermino'];
-                echo "</div>";
-                echo "<div class='der'>";
-                echo $reserva['horaInicio'] . "<br>" . $reserva['horaTermino'];
-                echo "</div>";
-                echo "<span class='comuna' >".$reserva['comuna']."</span>";
-                echo "</div>";
-                echo "<div class='infoUsuario ocultarWeb'>";
-                echo "<div class='izq'>";
-                echo "<a href='" . url_for('cars/car?id=' . $reserva['carId']) . "' title='Ver Auto'>";
-                if ($reserva['photoType'] == 0)
-                    echo image_tag("../uploads/cars/thumbs/" . $reserva['fotoCar'], 'class=img_usuario');
-                else
-                    echo image_tag($reserva['fotoCar'], 'class=img_usuario');
-                echo "</a>";
-                echo "</div>";
-                echo "<div class='der'>";
-                echo "<span class='textoMediano'>" . $reserva['marca'] . ", " . $reserva['modelo'] . "</span><br><a href='" . url_for('profile/publicprofile?id=' . $reserva['contraparteId']) . "'>" . $reserva['nombre'] . " " . $reserva['apellidoCorto'] . "</a>";
-                echo "</div>";
-                echo "</div>";
-                echo "<div class='precio'>";
-                echo "<span class='textoMediano nombreMovil'>" . $reserva['marca'] . ", " . $reserva['modelo'] . "<br></span><a class='nombreMovil' href='" . url_for('profile/publicprofile?id=' . $reserva['contraparteId']) . "'>" . $reserva['nombre'] . " " . $reserva['apellidoCorto'] . "</a>";
-                echo "<span class='textoGrande2'>$" . $reserva['valor'] . "</span> CLP<br>(" . $reserva['tiempoArriendo'] . " - asegurado)";
-                echo "</div>";
-                echo"<div class='eventoReserva'>";
-                echo "<div class='der'>";
-                echo "<div class='cargando'>" . image_tag('../images/ajax-loader.gif') . "</div>";
-                echo "<div class='img'>" . image_tag('img_pedidos/IconoPreAprobado.png') . "</div>";
-                echo "Pre aprobado<br>(Falta pago)";
-                echo "</div>";
-                echo"</div>";
-                echo"<div class='pagoBoton'>";
-                echo "<a href='#'>" . image_tag('img_pedidos/BotonPagar.png', 'class=botonPagar duracion_' . $reserva['duracion'] . ' id=pagar_' . $reserva['idReserve']) . "</a>";
-                echo "</div>";
-                echo "<div><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' >Contactar</a></div>";
-                echo"</div>";
-            }
-        }
-    }
-
     // ESTADO 5 y 6
     $mostrar = false;
 
@@ -340,6 +275,71 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
         echo "<div class='mensajeContacto'>";
         /*echo "<p>Se emitirá la póliza y el contrato formal durante las próximas dos horas. </p>";*/
         echo "</div>";
+    }
+
+    // ESTADO 7
+    $mostrar = false;
+
+    if ($reservasRealizadas) {
+        foreach ($reservasRealizadas as $reserva) {
+            if (isset($reserva['estado']) && $reserva['estado'] == 7) {
+                $mostrar = true;
+                $checkMostrar++;
+            }
+        }
+    }
+
+    if ($mostrar) {
+
+        echo "<h3>RESERVAS EN PROCESO</h3>";
+        
+        foreach ($reservasRealizadas as $reserva) {
+
+            if (isset($reserva['estado']) && $reserva['estado'] == 7) {
+                echo"<div class='bloqueEstado idCar_" . $reserva['carId'] . "' id='bloque_" . $reserva['idReserve'] . "'>";
+                echo "<div class='checkboxOpcion'>";
+                echo "<input type='checkbox' class='checkbox checkboxResultadosRealizados' id='checkbox_" . $reserva['idReserve'] . "'>";
+                echo "</div>";
+                echo "<div class='fechaReserva'>";
+                echo "<div class='izq'>";
+                echo $reserva['fechaInicio'] . "<br>" . $reserva['fechaTermino'];
+                echo "</div>";
+                echo "<div class='der'>";
+                echo $reserva['horaInicio'] . "<br>" . $reserva['horaTermino'];
+                echo "</div>";
+                echo "<span class='comuna' >".$reserva['comuna']."</span>";
+                echo "</div>";
+                echo "<div class='infoUsuario ocultarWeb'>";
+                echo "<div class='izq'>";
+                echo "<a href='" . url_for('cars/car?id=' . $reserva['carId']) . "' title='Ver Auto'>";
+                if ($reserva['photoType'] == 0)
+                    echo image_tag("../uploads/cars/thumbs/" . $reserva['fotoCar'], 'class=img_usuario');
+                else
+                    echo image_tag($reserva['fotoCar'], 'class=img_usuario');
+                echo "</a>";
+                echo "</div>";
+                echo "<div class='der'>";
+                echo "<span class='textoMediano'>" . $reserva['marca'] . ", " . $reserva['modelo'] . "</span><br><a href='" . url_for('profile/publicprofile?id=' . $reserva['contraparteId']) . "'>" . $reserva['nombre'] . " " . $reserva['apellidoCorto'] . "</a>";
+                echo "</div>";
+                echo "</div>";
+                echo "<div class='precio'>";
+                echo "<span class='textoMediano nombreMovil'>" . $reserva['marca'] . ", " . $reserva['modelo'] . "<br></span><a class='nombreMovil' href='" . url_for('profile/publicprofile?id=' . $reserva['contraparteId']) . "'>" . $reserva['nombre'] . " " . $reserva['apellidoCorto'] . "</a>";
+                echo "<span class='textoGrande2'>$" . $reserva['valor'] . "</span> CLP<br>(" . $reserva['tiempoArriendo'] . " - asegurado)";
+                echo "</div>";
+                echo"<div class='eventoReserva'>";
+                echo "<div class='der'>";
+                echo "<div class='cargando'>" . image_tag('../images/ajax-loader.gif') . "</div>";
+                echo "<div class='img'>" . image_tag('img_pedidos/IconoPreAprobado.png') . "</div>";
+                echo "Pre aprobado<br>(Falta pago)";
+                echo "</div>";
+                echo"</div>";
+                echo"<div class='pagoBoton'>";
+                echo "<a href='#'>" . image_tag('img_pedidos/BotonPagar.png', 'class=botonPagar duracion_' . $reserva['duracion'] . ' id=pagar_' . $reserva['idReserve']) . "</a>";
+                echo "</div>";
+                echo "<div><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' >Contactar</a></div>";
+                echo"</div>";
+            }
+        }
     }
 
     // ESTADO 3
