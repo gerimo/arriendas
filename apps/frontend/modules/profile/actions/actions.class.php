@@ -3720,7 +3720,7 @@ class profileActions extends sfActions {
             if ($reserva->getVisibleRenter()) {
 
                 //obtiene completed de transaction
-                $q = "SELECT completed FROM transaction WHERE reserve_id=" . $reserva->getId();
+                $q = "SELECT completed, impulsive FROM transaction WHERE reserve_id=" . $reserva->getId();
                 $query = Doctrine_Query::create()->query($q);
                 $transaction = $query->toArray();
 
@@ -3729,7 +3729,7 @@ class profileActions extends sfActions {
                 $duracion = $reserva->getDuration();
 
                 //obtiene en que estado se encuentra (pagada(3), preaprobada(2), rechazada(1) y espera(0))
-                if ($reserve->getTransaction()->getImpulsive() && $reserve->getTransaction()->getCompleted() == 0) {
+                if ($transaction[0]['impulsive'] && $transaction[0]['completed'] == 0) {
                     $estado = 7; // Se genera la reserva impulsive, pero no se paga
                 } else if ($reserva->getConfirmed() == 0 && $reserva->getImpulsive() && ($reserva->getReservaOriginal() == null || $reserva->getReservaOriginal() == 0)) {
                     $estado = 6; // Compra impulsiva, dueño original aún no confirma
