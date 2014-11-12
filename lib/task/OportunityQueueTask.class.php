@@ -93,7 +93,7 @@ EOF;
 
                 if ($car->getRatioAprobacion() > $baseKpi) {
 
-                    $this->log("User: {$car->getUser()} Id: {$car->getUser()->getId()} KPI: {$car->getKpi()}");
+                    $this->log("User: {$car->getUser()} Id: {$car->getUser()->getId()} KPI: {$car->getRatioAprobacion()}");
 
                     $oportunityEmail = new OportunityEmailQueue();
                     $oportunityEmail->setOwner($car->getUser()); // Dueño del auto
