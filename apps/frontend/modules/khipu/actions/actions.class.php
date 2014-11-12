@@ -210,9 +210,34 @@ class khipuActions extends sfActions {
                     $mail = new Email();
                     $mailer = $mail->getMailer();
 
+                    if ($order->getImpulsive()) {
+
+                        $url = $this->generateUrl("aprobarReserve", array('idReserve' => $reserve->getId(), 'idUser' => $reserve->getCar()->getUserId()), TRUE);
+
+                        $subject = "¡Has recibido un pago! Apruébalo ahora";
+
+                        $body = "";
+                        $body .= "<p>Hola $nameOwner,</p>";
+                        $body .= "<p>Has recibido un pago por ".number_format(($reserve->getPrice()), 0, ',', '.').", desde ".$reserve->getFechaInicio()." ".$reserve->getHoraInicio()." hasta ".$reserve->getFechaTermino()." ".$reserve->getHoraTermino().".</p>";
+                        $body .= "<p>Si no apruebas la reserva cuanto antes otro dueño podría ganar la reserva.";
+                        $body .= "<p>Para recibir tu pago debes aprobar la reserva haciendo <a href='$url'>click aquí</a></p>";
+
+                    } else {
+
+                        $subject = "¡El arrendatario ha pagado la reserva!";
+
+                        $body = "";
+                        $body .= "<p>Hola $nameOwner,</p>";
+                        $body .= "<p>El arrendatario ha pagado la reserva!</p>";
+                        $body .= "<p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p>";
+                        $body .= "<p>Puedes llenar el formulario <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/$idReserve'>desde tu celular</a>.</p>";
+                        $body .= "<p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p>";
+                        $body .= "<p>Datos del propietario:<br><br>Nombre: $nameRenter $lastnameRenter<br>Teléfono: $telephoneRenter<br>Correo: $emailRenter</p>";
+                        $body .= "<p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
+                    }
+
                     $message = $mail->getMessage();
-                    $message->setSubject('El arrendatario ha pagado la reserva!');
-                    $body = "<p>Hola $nameOwner:</p><p>El arrendatario ha pagado la reserva!</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>Puedes llenar el formulario <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/$idReserve'>desde tu celular</a>.</p><p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameRenter $lastnameRenter<br>Teléfono: $telephoneRenter<br>Correo: $emailRenter</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
+                    $message->setSubject($subject);
                     $message->setBody($mail->addFooter($body), 'text/html');
                     $message->setTo($emailOwner);
                     $functions = new Functions;
@@ -222,7 +247,6 @@ class khipuActions extends sfActions {
                     $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
                     $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
                     $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
-                    
                     
                     $renterUser = $reserve->getUser();
                     if (!is_null($renterUser->getDriverLicenseFile())) {

@@ -3720,7 +3720,7 @@ class profileActions extends sfActions {
             if ($reserva->getVisibleRenter()) {
 
                 //obtiene completed de transaction
-                $q = "SELECT completed FROM transaction WHERE reserve_id=" . $reserva->getId();
+                $q = "SELECT completed, impulsive FROM transaction WHERE reserve_id=" . $reserva->getId();
                 $query = Doctrine_Query::create()->query($q);
                 $transaction = $query->toArray();
 
@@ -3729,7 +3729,9 @@ class profileActions extends sfActions {
                 $duracion = $reserva->getDuration();
 
                 //obtiene en que estado se encuentra (pagada(3), preaprobada(2), rechazada(1) y espera(0))
-                if ($reserva->getConfirmed() == 0 && $reserva->getImpulsive() && ($reserva->getReservaOriginal() == null || $reserva->getReservaOriginal() == 0)) {
+                if ($transaction[0]['impulsive'] && $transaction[0]['completed'] == 0) {
+                    $estado = 7; // Se genera la reserva impulsive, pero no se paga
+                } else if ($reserva->getConfirmed() == 0 && $reserva->getImpulsive() && ($reserva->getReservaOriginal() == null || $reserva->getReservaOriginal() == 0)) {
                     $estado = 6; // Compra impulsiva, dueño original aún no confirma
                 } else if ($reserva->getConfirmed() && $reserva->getImpulsive() && ($reserva->getReservaOriginal() == null || $reserva->getReservaOriginal() == 0)) {
                     $estado = 5; // Compra impulsiva, dueño original confirmó
@@ -3749,7 +3751,8 @@ class profileActions extends sfActions {
                 $horasASumar = $duracion + 36;
                 $fechaReservaParaPagadas = strtotime("+$horasASumar hours", strtotime($reserva->getDate()));
                 if (
-                        ($estado == 6 && $fechaReservaParaPagadas > $fechaActual)
+                        ($estado == 7 && $fechaReservaParaPagadas > $fechaActual)
+                        || ($estado == 6 && $fechaReservaParaPagadas > $fechaActual)
                         || ($estado == 5 && $fechaReservaParaPagadas > $fechaActual)
                         || ($estado == 4 && $fechaReservaParaPagadas > $fechaActual)
                         || ($estado == 3 && $fechaReservaParaPagadas > $fechaActual) 
@@ -3761,7 +3764,9 @@ class profileActions extends sfActions {
                     $reservasRealizadas[$i]['completed'] = $transaction[0]['completed'];
 
                     //establece el estado
-                    if ($estado == 6) {
+                    if ($estado == 7) {
+                        $reservasRealizadas[$i]['estado'] = 7;
+                    } elseif ($estado == 6) {
                         $reservasRealizadas[$i]['estado'] = 6;
                     } elseif ($estado == 5) {
                         $reservasRealizadas[$i]['estado'] = 5;
@@ -3885,6 +3890,7 @@ class profileActions extends sfActions {
 
                     //obtiene el id de la reserva
                     $reservasRecibidas[$i]['idReserve'] = $reserva->getId();
+                    $reservasRecibidas[$i]['confirmed'] = $reserva->getConfirmed();
 
                     //establece el estado
                     if ($estado == 4) {
@@ -6176,7 +6182,30 @@ class profileActions extends sfActions {
 
         try {
 
-            $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+            $r = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+
+            $r->getTransaction()->setCompleted(true);
+            $r->save();
+
+            if (!is_null($r->getReservaOriginal()) && $r->getReservaOriginal() > 0) {
+
+                $originalReserve = Doctrine_Core::getTable('reserve')->findOneById($r->getReservaOriginal());
+                $originalReserve->getTransaction()->setCompleted(false);
+                $originalReserve->save();
+
+            } else {
+
+                $rOportunidades = Doctrine_Core::getTable('reserve')->findByReservaOriginal($r->getId());
+                foreach ($rOportunidades as $rOportunidad) {
+
+                    if ($rOportunidad->getTransaction()->getCompleted()) {
+                        $rOportunidad->getTransaction()->setCompleted(false);
+                        $rOportunidad->save();
+                    }
+                }
+            }
+
+            /*$reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
             $reserve->setConfirmed(true);
             $reserve->getTransaction()->setCompleted(true);
             $reserve->save();
@@ -6187,7 +6216,7 @@ class profileActions extends sfActions {
 
             $opportunityQueue = Doctrine_Core::getTable('OportunityQueue')->findOneByReserveId($originalReserve->getId());
             $opportunityQueue->setIsActive(false);
-            $opportunityQueue->save();
+            $opportunityQueue->save();*/
 
         } catch (Exception $e) {
             $error = $e->getMessage();
