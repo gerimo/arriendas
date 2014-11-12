@@ -6177,7 +6177,30 @@ class profileActions extends sfActions {
 
         try {
 
-            $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+            $r = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+
+            $r->getTransaction()->setCompleted(true);
+            $r->save();
+
+            if (!is_null($r->getReservaOriginal()) && $r->getReservaOriginal() > 0) {
+
+                $originalReserve = Doctrine_Core::getTable('reserve')->findOneById($r->getReservaOriginal());
+                $originalReserve->getTransaction()->setCompleted(false);
+                $originalReserve->save();
+
+            } else {
+
+                $rOportunidades = Doctrine_Core::getTable('reserve')->findByReservaOriginal($r->getId());
+                foreach ($rOportunidades as $rOportunidad) {
+
+                    if ($rOportunidad->getTransaction()->getCompleted()) {
+                        $rOportunidad->getTransaction()->setCompleted(false);
+                        $rOportunidad->save();
+                    }
+                }
+            }
+
+            /*$reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
             $reserve->setConfirmed(true);
             $reserve->getTransaction()->setCompleted(true);
             $reserve->save();
@@ -6188,7 +6211,7 @@ class profileActions extends sfActions {
 
             $opportunityQueue = Doctrine_Core::getTable('OportunityQueue')->findOneByReserveId($originalReserve->getId());
             $opportunityQueue->setIsActive(false);
-            $opportunityQueue->save();
+            $opportunityQueue->save();*/
 
         } catch (Exception $e) {
             $error = $e->getMessage();
