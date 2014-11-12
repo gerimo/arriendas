@@ -83,7 +83,6 @@ EOF;
             $message->setFrom('notificaciones@arriendas.cl', 'Notificaciones Arriendas');
 
             $message->setTo($oportunityEmail->getOwner()->getEmail());
-
             $message->setBody($body, "text/html");
 
             $this->getMailer()->send($message);
