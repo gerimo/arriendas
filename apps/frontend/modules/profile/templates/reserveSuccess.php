@@ -1,4 +1,3 @@
-
 <?php use_stylesheet('subi_tu_auto.css') ?>
 <?php use_stylesheet('registro.css') ?>
 <?php use_stylesheet('calendario.css') ?>
@@ -18,6 +17,7 @@
 
 
 <style type="text/css">
+    /* jQuery lightBox plugin - Gallery style */
 
     #gallery ul,#galleryDanios ul { list-style: none; }
     #gallery ul li,#galleryDanios ul li { display: inline; }
@@ -501,7 +501,6 @@ function calcularPrecio(){
 
         var dateInicio = new Date(fecha_inicial[2],fecha_inicial[1]-1,fecha_inicial[0],hora_inicial[0],hora_inicial[1],0);
         var dateTermino = new Date(fecha_final[2],fecha_final[1]-1,fecha_final[0],hora_final[0],hora_final[1],0);
-        
         var diferencia = new Date(dateTermino.valueOf()-dateInicio.valueOf());
         diferencia = Math.round(diferencia/(1000*3600)); // cantidad de horas de diferencia
 
@@ -733,7 +732,7 @@ function durationCheck() {
 
             <!-- información del auto -->
             <div class="barraSuperior infoAuto" style='float:left; width:100%; margin-top:30px;'>
-                <p>INFORMACIÓN DEL AUTO EN ARRIENDO</p>
+                <p>INFORMACIÓN DEL AUTO EN RENT A CAR</p>
             </div>
                 <div class="ladoIzquierdo">
                     <div id="imagenPerfil">
@@ -905,6 +904,3 @@ var google_conversion_value = 22;
     
     <div class="clear"></div>
 </div><!-- main_box_1 -->
-
-
-

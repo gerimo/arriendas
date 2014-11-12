@@ -1,3 +1,16 @@
+<style type="text/css">
+
+iframe[name='google_conversion_frame'] { 
+    height: 0 !important;
+    width: 0 !important; 
+    line-height: 0 !important; 
+    font-size: 0 !important;
+    margin-top: -13px;
+    float: left;
+}
+
+</style> 
+
 <?php use_stylesheet('login.css') ?>
 <?php
 $useragent=$_SERVER['HTTP_USER_AGENT'];

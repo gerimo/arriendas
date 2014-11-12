@@ -6,7 +6,7 @@ index_by_city:
   param:  { module: main, action: index }
   
 perfil_auto:
-    url:  /arriendoautos/rentacar/*/:chile/:id
+    url:  /arriendo-de-autos/rent-a-car/*/:chile/:id
     param:  { module: auto, action: economico }
     
 paypalReturn:

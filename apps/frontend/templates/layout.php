@@ -7,14 +7,14 @@
         <?php include_title() ?>
 	<link href="http://arriendas.assets.s3.amazonaws.com/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
-        <meta property="og:description" content="Arrienda un auto vecino con seguro premium, asistencia de viaje y TAGs incluídos. Busca un auto por ubicación o por precio. Rent a car Vecino."/>
-        <meta property="og:title" content="Arriendas.cl - Arrienda un auto vecino, cerca de ti" />
+        <meta property="og:description" content="Arriendo de autos vecinos con seguro premium, asistencia de viaje y TAGs incluídos. Busca un auto por ubicación o por precio. Rent a car Vecino."/>
+        <meta property="og:title" content="Rent a car vecino. Arriendo de autos, cerca de ti - Arriendas.cl" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="<?php echo image_path('Home/logo_arriendas3.jpg', 'absolute=true');?>" />
         <meta property="og:url" content="http://arriendas.cl<?php echo sfContext::getInstance()->getController()->genUrl(sfContext::getInstance()->getRouting()->getCurrentInternalUri());?>" />
-        <meta property="og:site_name" content="Arriendas.cl - Arrienda un auto vecino, cerca de ti" />
+        <meta property="og:site_name" content="Rent a car vecino. Arriendo de autos, cerca de ti - Arriendas.cl" />
         <meta property="fb:admins" content="germanrimo" />
-        <meta property="og:description" content="Arrienda un auto por horas o Gana dinero todos los meses arrendando tu auto, con seguro." />
+        <meta property="og:description" content="Arriendo de autos por horas o Gana dinero todos los meses arrendando tu auto, con seguro." />
         <meta name="google-site-verification" content="Y0Lya1N8r_8QIRxeyg3ht2lcwxR2B0VmBLAgopF2lgQ" />        
             <?php /* include_http_metas() */ ?>
             
@@ -157,6 +157,20 @@ var google_remarketing_only = true;
 
 
     <body>
+    
+    <style type="text/css">
+
+iframe[name='google_conversion_frame'] { 
+    height: 0 !important;
+    width: 0 !important; 
+    line-height: 0 !important; 
+    font-size: 0 !important;
+    margin-top: -13px;
+    float: left;
+}
+
+</style>
+    
     
     <!--Analytics German@arriendas.cl-->
 
@@ -624,9 +638,11 @@ var google_conversion_value = 0;
                              <li><a class="item_thm fancybox" href="<?php echo url_for('main/valueyourcar') ?>">¿Cuánto puedo ganar con mi auto?</a></li>
                         </ul>
                         <ul class="enlaces_box movil">
-                            <li class="enlaces_titulo">Redes Sociales</li>
-                             <li><a class="item_thm fancybox" target="_blank" href="https://www.facebook.com/arriendaschile">Facebook</a></li>
-                             <li><a class="item_thm fancybox" target="_blank" href="https://twitter.com/Arriendas">Twitter</a></li>
+                            <li class="enlaces_titulo">Arriendo de Autos en Santiago</li>
+                             <li><a class="item_thm fancybox" href="<?php echo url_for('arriendo-de-autos/region-metropolitana/santiago-centro') ?>">Rent a Car Santiago Centro </a></li>
+                             <li><a class="item_thm fancybox" href="<?php echo url_for('arriendo-de-autos/region-metropolitana/providencia') ?>">Rent a Car Providencia</a></li>
+                             <li><a class="item_thm fancybox" href="<?php echo url_for('arriendo-de-autos/region-metropolitana/nunoa') ?>">Rent a Car Ñuñoa</a></li>
+
                         </ul>
             
                     </div><!-- footer_enlaces -->

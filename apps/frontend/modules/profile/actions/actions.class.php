@@ -2201,7 +2201,7 @@ class profileActions extends sfActions {
             $mail->setSubject('Has recibido un pedido de reserva!');
             $mail->setBody("<p>Hola $name:</p>
             <p>Has recibido un pedido de reserva por 
-            $$price por tu $marcaModelo desde <b>$fechaInicio $horaInicio</b> 
+            $price por tu $marcaModelo desde <b>$fechaInicio $horaInicio</b> 
                 hasta <b>$fechaTermino $horaTermino</b> 
                 cuando te habrán devuelto el auto.</p><p>Para aprobar la reserva 
                 has click <a href='$url'>aquí</a></p>");
@@ -3331,7 +3331,7 @@ class profileActions extends sfActions {
                 if ($this->deposito == "depositoGarantia") {
                     //$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(2);
                     $this->montoDeposito = sfConfig::get("app_monto_garantia");
-                    $this->enviarCorreoTransferenciaBancaria();
+                    //$this->enviarCorreoTransferenciaBancaria();
                 } else if ($this->deposito == "pagoPorDia") {
                     //$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(1);
                     $this->montoDeposito = $montoTotalPagoPorDia;
