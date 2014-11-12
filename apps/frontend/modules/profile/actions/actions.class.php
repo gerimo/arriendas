@@ -4207,8 +4207,20 @@ class profileActions extends sfActions {
         $reservasAConsiderar = array();
         foreach ($auxReserves as $r) {
             if (!in_array($r['id'], $auxIdsIncluidos) && $r['User_id'] != $this->getUser()->getAttribute("userid")) {
-                $reservasAConsiderar[] = $r;
-                $auxIdsIncluidos[] = $r['id'];
+
+                if ($r['impulsive']) {
+                    $t = Doctrine_Core::getTable('Transaction')->findOneByReserveId($r['id']);
+
+                    if (!$t->getCompleted() && ($t->getTransaccionOriginal() == 0 || $t->getTransaccionOriginal() == null)) {
+                        // Chequear este caso. 
+                    } else {
+                        $reservasAConsiderar[] = $r;
+                        $auxIdsIncluidos[] = $r['id'];
+                    }
+                } else {
+                    $reservasAConsiderar[] = $r;
+                    $auxIdsIncluidos[] = $r['id'];
+                }
             }
         }
 
