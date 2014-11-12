@@ -80,16 +80,11 @@ EOF;
             $table = Doctrine_Core::getTable('Car');
             $q = $table
                 ->createQuery('c')
-                ->select('c.*, r.* , round((sum(r.confirmed) / count(r.confirmed)) * 100, 2) AS kpi')
                 ->innerJoin('c.Reserves r')
                 ->where('distancia(?, ?, c.lat, c.lng) > ?', array($element->getReserve()->getCar()->getLat(), $element->getReserve()->getCar()->getLng(), $desde))
                 ->andWhere('distancia(?, ?, c.lat, c.lng) <= ?',  array($element->getReserve()->getCar()->getLat(), $element->getReserve()->getCar()->getLng(), $hasta))
-                ->andWhere('r.comentario = "null"')
-                ->andWhere('(day(r.date) - day(r.fecha_reserva)) > 0')
-                ->andWhere("r.date > '2014-03-03 00:00:00'")
-                ->andWhere("hour(r.fecha_reserva) < 22 AND hour(r.fecha_reserva) > 5")
                 ->groupBy('c.user_id')
-                ->orderBy('kpi DESC')
+                ->orderBy('c.ratio_aprobacion DESC')
                 ;
 
             $cars = $q->execute();

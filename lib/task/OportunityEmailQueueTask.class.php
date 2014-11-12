@@ -55,22 +55,31 @@ EOF;
 
         foreach($oportunityEmails as $oportunityEmail) {
 
-            $renter = $oportunityEmail->getRenter();
+            $owner = $oportunityEmail->getOwner();
+            $reserve = $oportunityEmail->getReserve();
 
             $acceptUrl  = $host . $routing->generate('opportunityAccept', array(
                 'reserve_id' => $oportunityEmail->getReserve()->getId(),
                 'signature' => $oportunityEmail->getReserve()->getSignature(),
             ));
 
-            $this->log($renter);
+            $this->log("Envio de correo de oportunidad a " . $owner->getFirstname() . " Reserva {$reserve->getId()}");
 
-            $body  = '<p>Correo de prueba</p>';
+            $desde = $reserve->getDate();
+            $hasta = date('Y-m-d H:i:s', strtotime($desde. " + {$reserve->getDuration()} hours"));
+            $price = number_format($reserve->getPrice(), 0, ',', '.');
+
+            $body  = "<p>Hola {$owner->getFirstname()}.</p>";
+            $body .= "<br>";
+            $body .= "<p>La oportunidad es por \${$price} desde {$desde} hasta {$hasta}.</p>";
+            $body .= "<br>";
+            $body .= "<p>Aprueba la oportunidad haciendo click <a href='{$acceptUrl}'>AQUI</a></p>";
+            $body .= "<br>";
+            $body .= "<p>Saludos</p>";
             $body .= "<img src='{$imageUrl}?id={$oportunityEmail->getId()}'>";
-            $body .= "Para aceptar la oprtunidad presiona <a href='{$acceptUrl}'>Aqui</a>";
-
 
             $message = $this->getMailer()->compose();
-            $message->setSubject("No se pudo chequear la licencia");
+            $message->setSubject("Oportunidad Especial para arrendar tu Auto");
             $message->setFrom('notificaciones@arriendas.cl', 'Notificaciones Arriendas');
 
             $message->setTo($oportunityEmail->getOwner()->getEmail());
