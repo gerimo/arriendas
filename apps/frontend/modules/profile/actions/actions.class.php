@@ -6208,10 +6208,7 @@ class profileActions extends sfActions {
 
         try {
 
-            $r = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
-
-            $r->getTransaction()->setCompleted(true);
-            $r->save();
+            $r = Doctrine_Core::getTable('reserve')->find($idReserve);
 
             if (!is_null($r->getReservaOriginal()) && $r->getReservaOriginal() > 0) {
 
@@ -6230,6 +6227,9 @@ class profileActions extends sfActions {
                     }
                 }
             }
+
+            $r->getTransaction()->setCompleted(true);
+            $r->save();
 
             /*$reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
             $reserve->setConfirmed(true);
