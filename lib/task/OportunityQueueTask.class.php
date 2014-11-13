@@ -55,6 +55,12 @@ EOF;
 
         foreach ($elements as $element) {
 
+            if ($element->getReserve()->getUser()->getBlocked()) {
+
+                // Si el usuario que realizó la reserva o el pago se encuentra bloqueado, no se generan oportunidades
+                continue;
+            }
+
             $table = Doctrine_Core::getTable('OportunityEmailQueue');
             $q = $table
                 ->createQuery('o')
@@ -83,6 +89,11 @@ EOF;
                 ->innerJoin('c.Reserves r')
                 ->where('distancia(?, ?, c.lat, c.lng) > ?', array($element->getReserve()->getCar()->getLat(), $element->getReserve()->getCar()->getLng(), $desde))
                 ->andWhere('distancia(?, ?, c.lat, c.lng) <= ?',  array($element->getReserve()->getCar()->getLat(), $element->getReserve()->getCar()->getLng(), $hasta))
+                ->andWhere('c.seguro_ok = ?', 4)
+                ->andWhere('c.activo IS TRUE')
+                ->andWhere('r.comentario = "null"')
+                ->andWhere('(day(r.date) - day(r.fecha_reserva)) > 0')
+                ->andWhere("hour(r.fecha_reserva) < 22 AND hour(r.fecha_reserva) > 5")
                 ->groupBy('c.user_id')
                 ->orderBy('c.ratio_aprobacion DESC')
                 ;
