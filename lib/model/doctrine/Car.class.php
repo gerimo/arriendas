@@ -312,6 +312,8 @@ where c.id=
     // Se setea el nuevo ratio para el auto en particular
     $this->setRatioAprobacion($ratio);
 
+    parent::save($conn);
+
     return $ret;
   }
 }

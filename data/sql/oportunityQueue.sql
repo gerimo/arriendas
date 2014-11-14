@@ -4,8 +4,8 @@ DROP TRIGGER IF EXISTS  `oportunityReserveQueue`;
 
 DELIMITER $$
 
-CREATE TRIGGER `oportunityQueue` AFTER UPDATE ON `Transaction` 
-FOR EACH ROW BEGIN IF NEW.completed AND NEW.impulsive THEN 
+CREATE TRIGGER `oportunityQueue` BEFORE UPDATE ON `Transaction` 
+FOR EACH ROW BEGIN IF NEW.completed AND OLD.completed <> NEW.completed AND NEW.impulsive THEN 
     INSERT IGNORE INTO OportunityQueue( reserve_id ) VALUES (NEW.reserve_id);
 END IF;
 END$$

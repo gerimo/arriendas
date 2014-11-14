@@ -7,6 +7,8 @@
 <?php use_javascript('jquery.lightbox-0.5.pack.js') ?>
 <?php use_stylesheet('mis_arriendos.css') ?>
 
+<?php use_javascript('pedidos.js?v=13112014') ?>
+
 
 <script type="text/javascript">
     $(function() {
@@ -606,8 +608,6 @@ function durationCheck() {
     }
 }
 </script>
-
-<?php use_javascript('pedidos.js?v=29072014') ?>
 
 <script type="text/javascript">
     var urlEliminarPedidosAjax = <?php echo "'".url_for("profile/eliminarPedidosAjax")."';" ?>

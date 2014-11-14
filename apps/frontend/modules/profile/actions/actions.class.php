@@ -3727,7 +3727,7 @@ class profileActions extends sfActions {
             if ($reserva->getVisibleRenter()) {
 
                 //obtiene completed de transaction
-                $q = "SELECT completed, impulsive FROM transaction WHERE reserve_id=" . $reserva->getId();
+                $q = "SELECT completed, impulsive, transaccion_original FROM transaction WHERE reserve_id=" . $reserva->getId();
                 $query = Doctrine_Query::create()->query($q);
                 $transaction = $query->toArray();
 
@@ -4207,8 +4207,20 @@ class profileActions extends sfActions {
         $reservasAConsiderar = array();
         foreach ($auxReserves as $r) {
             if (!in_array($r['id'], $auxIdsIncluidos) && $r['User_id'] != $this->getUser()->getAttribute("userid")) {
-                $reservasAConsiderar[] = $r;
-                $auxIdsIncluidos[] = $r['id'];
+
+                if ($r['impulsive']) {
+                    $t = Doctrine_Core::getTable('Transaction')->findOneByReserveId($r['id']);
+
+                    if (!$t->getCompleted() && ($t->getTransaccionOriginal() == 0 || $t->getTransaccionOriginal() == null)) {
+                        // Chequear este caso. 
+                    } else {
+                        $reservasAConsiderar[] = $r;
+                        $auxIdsIncluidos[] = $r['id'];
+                    }
+                } else {
+                    $reservasAConsiderar[] = $r;
+                    $auxIdsIncluidos[] = $r['id'];
+                }
             }
         }
 
@@ -6202,10 +6214,7 @@ class profileActions extends sfActions {
 
         try {
 
-            $r = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
-
-            $r->getTransaction()->setCompleted(true);
-            $r->save();
+            $r = Doctrine_Core::getTable('reserve')->find($idReserve);
 
             if (!is_null($r->getReservaOriginal()) && $r->getReservaOriginal() > 0) {
 
@@ -6224,6 +6233,9 @@ class profileActions extends sfActions {
                     }
                 }
             }
+
+            $r->getTransaction()->setCompleted(true);
+            $r->save();
 
             /*$reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
             $reserve->setConfirmed(true);
