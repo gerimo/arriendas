@@ -5276,8 +5276,14 @@ class profileActions extends sfActions {
 
         if ($request->getParameter('redirect') && $request->getParameter('idRedirect')) {
             $this->redirect('profile/' . $request->getParameter('redirect') . "?id=" . $request->getParameter('idRedirect'));
-        }if ($request->getParameter('redirect')) {
-            $this->redirect('profile/' . $request->getParameter('redirect'));
+        } elseif ($request->getParameter('redirect')) {
+
+            if (is_numeric($request->getParameter('redirect'))) {
+                $this->redirect('profile/reserve?id=' . $request->getParameter('redirect'));
+            } else {
+                $this->redirect('profile/' . $request->getParameter('redirect'));
+            }
+
         } else {
             $this->redirect('profile/cars');
         }

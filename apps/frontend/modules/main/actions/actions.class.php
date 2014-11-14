@@ -2432,6 +2432,7 @@ public function executeNotificacion(sfWebRequest $request) {
                 $profile->setRegion($request->getParameter('region'));
                 $profile->setComuna($request->getParameter('comunas'));
                 $profile->setComo($request->getParameter('como'));
+                $profile->setBirthdate($request->getParameter('birth'));
                 if($profile->getTelephone() != $request->getParameter('telephone')){//Si se ingresa un nuevo telefono celular distinto al de la base de datos, el usuario podrá confirmarlo de nuevo
                     $profile->setTelephone($request->getParameter('telephone'));
                     $profile->setConfirmedSms(0);
