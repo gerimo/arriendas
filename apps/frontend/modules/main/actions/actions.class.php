@@ -2441,7 +2441,7 @@ public function executeNotificacion(sfWebRequest $request) {
                 }
                 $profile->setRut($request->getParameter('run'));
 
-                $birthDate = explode("/", $request->getParameter('birth'));
+                $birthDate = explode("-", $request->getParameter('birth'));
                 $year = $birthDate[0];
                 $month = $birthDate[1];
                 $day = $birthDate[2];
@@ -2459,7 +2459,7 @@ public function executeNotificacion(sfWebRequest $request) {
                 $this->getUser()->setAttribute("comuna", $profile->getNombreComuna());
                 $this->getUser()->setAttribute("region", $profile->getNombreRegion());
                 $this->getUser()->setAttribute("fecha_registro", $profile->getFechaRegistro());
-                
+
             }catch (Exception $e) {
                 echo $e->getMessage();
             }
