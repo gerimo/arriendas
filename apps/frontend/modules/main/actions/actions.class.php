@@ -2442,7 +2442,7 @@ public function executeNotificacion(sfWebRequest $request) {
                 $profile->setRut($request->getParameter('run'));
 
                 $birthDate = explode("-", $request->getParameter('birth'));
-                error_log(print_r($birthDate, true));
+                
                 $year = $birthDate[2];
                 $month = $birthDate[1];
                 $day = $birthDate[1];
