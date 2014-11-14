@@ -2447,8 +2447,8 @@ public function executeNotificacion(sfWebRequest $request) {
                 $month = $birthDate[1];
                 $day = $birthDate[2];
                 /*$age = (date("md", date("U", mktime(0, 0, 0, $month, $day, $year))) > date("md") ? ((date("Y") - $year) - 1) : (date("Y") - $year));*/
-                $age = date("Y") - $year;
-                error_log("edad: ".$age);
+                $age = (date("Y") - $year);
+                error_log("edad2: ".$age);
                 if($age <= 24){
                     $profile->setMenor(true);
                 }
