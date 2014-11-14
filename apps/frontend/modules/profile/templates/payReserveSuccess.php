@@ -95,7 +95,7 @@
             if ($("input[type='radio'][name='deposito']:checked").val() == 'depositoGarantia' || $("input[type='radio'][name='deposito']:checked").val() == 'pagoPorDia') {
                 //alert($("input[type='radio'][name='deposito']:checked").val());
                 event.preventDefault();
-                if ($("input[type='radio'][name='deposito']:checked").val() == 'depositoGarantia') {
+                /*if ($("input[type='radio'][name='deposito']:checked").val() == 'depositoGarantia') {
                     $("#mensajePagoGarantia").dialog({
                         resizable: false,
                         width: 500,
@@ -118,7 +118,9 @@
                     $("#mensajePagoGarantia").dialog("open");
                 } else {
                     $('form#pago').submit();
-                }
+                }*/
+
+                $('form#pago').submit();
             } else {
                 event.preventDefault();
                 alert("Debe indicar una opción de Pago");
