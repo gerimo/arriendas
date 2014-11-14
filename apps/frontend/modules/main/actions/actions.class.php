@@ -2442,10 +2442,12 @@ public function executeNotificacion(sfWebRequest $request) {
                 $profile->setRut($request->getParameter('run'));
 
                 $birthDate = explode("-", $request->getParameter('birth'));
+                error_log(print_r($birthDate, true));
                 $year = $birthDate[0];
                 $month = $birthDate[1];
                 $day = $birthDate[2];
                 $age = (date("md", date("U", mktime(0, 0, 0, $month, $day, $year))) > date("md") ? ((date("Y") - $year) - 1) : (date("Y") - $year));
+                error_log("edad: ".$age);
                 if($age <= 24){
                     $profile->setMenor(true);
                 }
