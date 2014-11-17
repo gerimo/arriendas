@@ -3720,7 +3720,20 @@ class profileActions extends sfActions {
         //ARRENDATARIO
         $reserve = Doctrine_Core::getTable('reserve')->findByUserId($idUsuario);
 
+        $table = Doctrine_Core::getTable('Reserve');
+        $q = $table
+            ->createQuery('r')
+            ->leftJoin('r.Transaction t')
+            ->where('r.user_id = ?', $idUsuario)
+            ->orderBy('r.confirmed DESC')
+            ->addOrderBy('t.completed DESC')
+            ->addOrderBy('r.impulsive DESC')
+            ;
+
+        $reserve = $q->execute();
+
         $reservasRealizadas = null;
+        $reservasPagadas = null;
 
         foreach ($reserve as $i => $reserva) {
 
@@ -3735,8 +3748,10 @@ class profileActions extends sfActions {
                 $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
                 $duracion = $reserva->getDuration();
 
+                $oportunityQueue = Doctrine_Core::getTable('OportunityQueue')->findOneByReserveId($reserva->getId());
+
                 //obtiene en que estado se encuentra (pagada(3), preaprobada(2), rechazada(1) y espera(0))
-                if ($transaction[0]['impulsive'] && $transaction[0]['completed'] == 0 && ($transaction[0]['transaccion_original'] == 0 || $transaction[0]['transaccion_original'] == null)) {
+                if ($transaction[0]['impulsive'] && $transaction[0]['completed'] == 0 && !$oportunityQueue && ($transaction[0]['transaccion_original'] == 0 || $transaction[0]['transaccion_original'] == null)) {
                     $estado = 7; // Se genera la reserva impulsive, pero no se paga
                 } else if ($reserva->getConfirmed() == 0 && $reserva->getImpulsive() && ($reserva->getReservaOriginal() == null || $reserva->getReservaOriginal() == 0)) {
                     $estado = 6; // Compra impulsiva, dueño original aún no confirma
@@ -3753,6 +3768,8 @@ class profileActions extends sfActions {
                 } else {
                     $estado = 0;
                 }
+
+                error_log("Reserva: " . $reserva->getId() . " Estado: " . $estado);
 
                 //comprueba si muestra o no la reserva, dependiendo del estado
                 $horasASumar = $duracion + 36;
@@ -3806,6 +3823,7 @@ class profileActions extends sfActions {
                     $reservasRealizadas[$i]['token'] = $reserva->getToken();
                     $reservasRealizadas[$i]['confirmed'] = $reserva->getConfirmed();
                     $reservasRealizadas[$i]['comentario'] = $reserva->getComentario();
+                    $reservasRealizadas[$i]['reserva_original'] = $reserva->getReservaOriginal();
 
                     //obtiene valor
                     $reservasRealizadas[$i]['valor'] = number_format(intval($reserva->getPrice()), 0, '', '.');
@@ -3842,6 +3860,18 @@ class profileActions extends sfActions {
                     $reservasRealizadas[$i]['facebook'] = $propietarioClass->getFacebookId();
                     $reservasRealizadas[$i]['urlFoto'] = $propietarioClass->getPictureFile();
                     $reservasRealizadas[$i]['apellidoCorto'] = $reservasRealizadas[$i]['apellido'][0] . ".";
+
+                    if (in_array($reservasRealizadas[$i]['estado'], array(6, 5, 4))) {
+
+                        //Es una reserva pagada
+                        $index = $reserva->getReservaOriginal() ?: $reserva->getId();
+
+                        if (!isset($reservasPagadas[$index])) {
+                            $reservasPagadas[$index] = $reservasRealizadas[$i];
+                        } else {
+                            $reservasPagadas[$index]['subReservas'][] = $reservasRealizadas[$i];
+                        }
+                    }
                 }//end if
             }
         }
@@ -4111,6 +4141,7 @@ class profileActions extends sfActions {
         $this->reservasRealizadas = $reservasRealizadasNoOportunidadesAux;
         $this->reservasRecibidas = $reservasRecibidasAux;
         $this->reservasRecibidasOportunidades = $oportunidades;
+        $this->reservasPagadas = $reservasPagadas;
     }
 
     public function executeOportunidades(sfWebRequest $request) {
