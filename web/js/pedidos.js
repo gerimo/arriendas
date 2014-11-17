@@ -132,7 +132,11 @@ function bindEventsAll(){
                         break;
                     case 'error:nobirthdate':
                         alert("Para arrendar debes completar tu fecha de nacimiento.");
-                        window.location = urlUpdateProfile + "?redirect=pedidos";
+                        if (newFlow) {
+                            window.location = urlUpdateProfile + "?redirect="+idCar;
+                        } else {
+                            window.location = urlUpdateProfile + "?redirect=pedidos";
+                        }
                         break;
                     default:
                         alert('Disculpe, ha ocurrido un error. Por favor inténtelo nuevamente mas tarde.');

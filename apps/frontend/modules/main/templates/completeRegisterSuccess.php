@@ -528,7 +528,17 @@ option:first-child
                     <span>Serie Rut</span>
                     <input type="text" id="serie_run" name="serie_run" onfocus="checkclear(this)" >
                 </label>
-            </div><!-- /c1 -->  
+            </div><!-- /c1 -->
+
+            <div class="c1">
+                <label class="input">
+                    <span>Fecha de nacimiento</span>
+                    <input type="text" id="birth" name="birth" class="datepicker">
+                </label>
+                
+                <span style="color:#999;font-size:12px;"> <br> *La fecha debe coincidir con la fecha de nacimiento de tu licencia. <br></span>
+
+            </div>
             
             <div class="c1">
                 <label class="input">
@@ -583,7 +593,7 @@ option:first-child
                 </label>
             </div><!-- /c1 -->
 
-            <div class="c1">
+            <!-- <div class="c1">
                 <label class="input" style="height:40px;">
                     <select onchange="changeMe(this)" name="como" id="como" class="comboReg">
                         <option value="0" selected disabled>¿Cómo escuchaste de Nosotros?</option>
@@ -597,7 +607,7 @@ option:first-child
 						<option value="Otro" >Otro</option>
                     </select>
                 </label>
-            </div><!-- /c1 -->
+            </div> --><!-- /c1 -->
             
 <!--			<div style="clear: left;"><input type="checkbox" style="width:25px;" id="propietario" name="propietario"/>
                 <span style="font-family: 'Arial';font-size:11px;">Deseo ofrecer mi auto en arriendo</span></div>    
@@ -674,13 +684,13 @@ option:first-child
     
     //frmvalidator.addValidation("run","req", "Ingrese Rut");
     frmvalidator.addValidation("run","rut", "Ingrese un Rut valido");
-    
+    frmvalidator.addValidation("birth","req", "Ingrese Fecha de Nacimiento");
     frmvalidator.addValidation("telephone","numeric","El Telefono Debe ser numerico");
     frmvalidator.addValidation("telephone","req", "Ingrese Teléfono");
     frmvalidator.addValidation("region","req", "Ingrese Region");
     //frmvalidator.addValidation("comunas","req", "Ingrese Comuna");
 	
-    frmvalidator.addValidation("como","dontselect=0","Seleccione como nos conociste");	
+    /*frmvalidator.addValidation("como","dontselect=0","Seleccione como nos conociste");*/	
     frmvalidator.addValidation("comunas","dontselect=0","Ingrese Comuna");	
 	
 //    frmvalidator.addValidation("address","req", "Ingrese Direccion");

@@ -2432,6 +2432,7 @@ public function executeNotificacion(sfWebRequest $request) {
                 $profile->setRegion($request->getParameter('region'));
                 $profile->setComuna($request->getParameter('comunas'));
                 $profile->setComo($request->getParameter('como'));
+                
                 if($profile->getTelephone() != $request->getParameter('telephone')){//Si se ingresa un nuevo telefono celular distinto al de la base de datos, el usuario podrá confirmarlo de nuevo
                     $profile->setTelephone($request->getParameter('telephone'));
                     $profile->setConfirmedSms(0);
@@ -2439,7 +2440,21 @@ public function executeNotificacion(sfWebRequest $request) {
                     $profile->setTelephone($request->getParameter('telephone'));
                 }
                 $profile->setRut($request->getParameter('run'));
+
+                $birthDate = explode("-", $request->getParameter('birth'));
+                
+                $year = $birthDate[2];
+                $month = $birthDate[1];
+                $day = $birthDate[1];
+                $age = (date("md", date("U", mktime(0, 0, 0, $month, $day, $year))) > date("md") ? ((date("Y") - $year) - 1) : (date("Y") - $year));
+                if($age <= 24){
+                    $profile->setMenor(true);
+                }
+
+                $profile->setBirthdate($request->getParameter('birth'));
+
                 $profile->save();
+
                 $this->getUser()->setAttribute('picture_url', $profile->getFileName());
                 $this->getUser()->setAttribute("telephone", $profile->getTelephone());
                 $this->getUser()->setAttribute("comuna", $profile->getNombreComuna());

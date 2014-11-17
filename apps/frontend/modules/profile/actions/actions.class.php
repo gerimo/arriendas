@@ -5319,8 +5319,14 @@ class profileActions extends sfActions {
 
         if ($request->getParameter('redirect') && $request->getParameter('idRedirect')) {
             $this->redirect('profile/' . $request->getParameter('redirect') . "?id=" . $request->getParameter('idRedirect'));
-        }if ($request->getParameter('redirect')) {
-            $this->redirect('profile/' . $request->getParameter('redirect'));
+        } elseif ($request->getParameter('redirect')) {
+
+            if (is_numeric($request->getParameter('redirect'))) {
+                $this->redirect('profile/reserve?id=' . $request->getParameter('redirect'));
+            } else {
+                $this->redirect('profile/' . $request->getParameter('redirect'));
+            }
+
         } else {
             $this->redirect('profile/cars');
         }
@@ -6197,6 +6203,7 @@ class profileActions extends sfActions {
                         $reserve->setFechaReserva($originalReserve->getFechaReserva());
                         $reserve->setConfirmed(true);
                         $reserve->setImpulsive(true);
+                        $reserve->setComentario('Reserva oportunidad - nuevo flujo');
                         $reserve->setReservaOriginal($originalReserve->getId());
                         $reserve->save();
 
@@ -6262,18 +6269,10 @@ class profileActions extends sfActions {
             $r->getTransaction()->setCompleted(true);
             $r->save();
 
-            /*$reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
-            $reserve->setConfirmed(true);
-            $reserve->getTransaction()->setCompleted(true);
-            $reserve->save();
+            $oq = Doctrine_Core::getTable("OportunityQueue")->findOneByReserveId($idReserve);
+            $oq->setIsActive(false);
+            $oq->save();
 
-            $originalReserve = Doctrine_Core::getTable('reserve')->findOneById($reserve->getReservaOriginal());
-            $originalReserve->getTransaction()->setCompleted(false);
-            $originalReserve->save();
-
-            $opportunityQueue = Doctrine_Core::getTable('OportunityQueue')->findOneByReserveId($originalReserve->getId());
-            $opportunityQueue->setIsActive(false);
-            $opportunityQueue->save();*/
 
         } catch (Exception $e) {
             $error = $e->getMessage();
