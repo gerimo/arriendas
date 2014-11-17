@@ -6172,6 +6172,7 @@ class profileActions extends sfActions {
                         $reserve->setFechaReserva($originalReserve->getFechaReserva());
                         $reserve->setConfirmed(true);
                         $reserve->setImpulsive(true);
+                        $reserve->setComentario('Reserva oportunidad - nuevo flujo');
                         $reserve->setReservaOriginal($originalReserve->getId());
                         $reserve->save();
 
@@ -6237,18 +6238,10 @@ class profileActions extends sfActions {
             $r->getTransaction()->setCompleted(true);
             $r->save();
 
-            /*$reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
-            $reserve->setConfirmed(true);
-            $reserve->getTransaction()->setCompleted(true);
-            $reserve->save();
+            $oq = Doctrine_Core::getTable("OportunityQueue")->findOneByReserveId($idReserve);
+            $oq->setIsActive(false);
+            $oq->save();
 
-            $originalReserve = Doctrine_Core::getTable('reserve')->findOneById($reserve->getReservaOriginal());
-            $originalReserve->getTransaction()->setCompleted(false);
-            $originalReserve->save();
-
-            $opportunityQueue = Doctrine_Core::getTable('OportunityQueue')->findOneByReserveId($originalReserve->getId());
-            $opportunityQueue->setIsActive(false);
-            $opportunityQueue->save();*/
 
         } catch (Exception $e) {
             $error = $e->getMessage();
