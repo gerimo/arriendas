@@ -6248,31 +6248,37 @@ class profileActions extends sfActions {
 
             $r = Doctrine_Core::getTable('reserve')->find($idReserve);
 
-            if (!is_null($r->getReservaOriginal()) && $r->getReservaOriginal() > 0) {
+            if ($r->getReservaOriginal()) {
 
-                $originalReserve = Doctrine_Core::getTable('reserve')->findOneById($r->getReservaOriginal());
-                $originalReserve->getTransaction()->setCompleted(false);
-                $originalReserve->save();
-
+                //Si tiene una reserva original (es hija), usamos ese id
+                $reserveId = $r->getReservaOriginal();
             } else {
+                //Si no tiene reserva original (es padre) usamos el id de la reserva
+                $reserveId = $r->getId();
+            }
 
-                $rOportunidades = Doctrine_Core::getTable('reserve')->findByReservaOriginal($r->getId());
-                foreach ($rOportunidades as $rOportunidad) {
+            // pasamos la reserva padre a completed = 0 y todas las reservas hijas
 
-                    if ($rOportunidad->getTransaction()->getCompleted()) {
-                        $rOportunidad->getTransaction()->setCompleted(false);
-                        $rOportunidad->save();
-                    }
+            $originalReserve = Doctrine_Core::getTable('reserve')->find($reserveId);
+            $originalReserve->getTransaction()->setCompleted(false);
+            $originalReserve->save();
+
+            $childReserves = Doctrine_Core::getTable('reserve')->findByReservaOriginal($reserveId);
+            foreach ($childReserves as $rOportunidad) {
+
+                if ($rOportunidad->getTransaction()->getCompleted()) {
+                    $rOportunidad->getTransaction()->setCompleted(false);
+                    $rOportunidad->save();
                 }
             }
 
+            // Finalmente se deja como completa la reserva que se solicitó
             $r->getTransaction()->setCompleted(true);
             $r->save();
 
             $oq = Doctrine_Core::getTable("OportunityQueue")->findOneByReserveId($idReserve);
             $oq->setIsActive(false);
             $oq->save();
-
 
         } catch (Exception $e) {
             $error = $e->getMessage();
