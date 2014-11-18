@@ -2956,17 +2956,6 @@ class profileActions extends sfActions {
 
         $this->user = $this->car->getUser();
         $this->getUser()->setAttribute('lastview', $request->getReferer());
-
-        /*$this->fndreserve = array('fechainicio' => '', 'horainicio' => '', 'fechatermino' => '', 'horatermino' => '');
-
-        if ($this->getUser()->getAttribute("fechainicio"))
-            $this->fndreserve['fechainicio'] = $this->getUser()->getAttribute("fechainicio");
-        if ($this->getUser()->getAttribute("horainicio"))
-            $this->fndreserve['horainicio'] = $this->getUser()->getAttribute("horainicio");
-        if ($this->getUser()->getAttribute("fechatermino"))
-            $this->fndreserve['fechatermino'] = $this->getUser()->getAttribute("fechatermino");
-        if ($this->getUser()->getAttribute("horatermino"))
-            $this->fndreserve['horatermino'] = $this->getUser()->getAttribute("horatermino");*/
         
         $fechaActual = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S", strtotime('+3 hours', time())));    // sumo 3hs a la hora chilena.
         $this->ultimaFechaValidaDesde = date("d-m-Y", strtotime($fechaActual));
@@ -3005,9 +2994,6 @@ class profileActions extends sfActions {
                 $fechaAlmacenadaDesde = date("YmdHis",$ultimaFecha);    // ultima guardada en ddbb
                 if($this->getUser()->getAttribute("fechainicio")){
                     $time_desde = strtotime($this->getUser()->getAttribute("fechainicio") . " " . $this->getUser()->getAttribute("horainicio"));
-                    /*$fechaSessionDesde = date("YmdHis", $time_desde);
-                    $fechaAlmacenadaDesde = ($fechaSessionDesde < $fechaAlmacenadaDesde)? $fechaAlmacenadaDesde : $fechaSessionDesde;
-                    $ultimaFecha = ($fechaSessionDesde < $fechaAlmacenadaDesde)? $ultimaFecha : $time_desde;*/
                     
                     $ultimaFecha = $time_desde;
                     
@@ -3142,9 +3128,14 @@ class profileActions extends sfActions {
         $this->arrayFotosDanios = $arrayFotoDanios;
         $this->arrayDescripcionesDanios = $arrayDescripcionDanios;
 
-
-
-        $this->test = $this->getUser()->getAttribute('userid');
+        // Si es usuario nuevo y el id es par, sigue nuevo flujo
+        // local 5481
+        // prod 7176
+        if ($this->getUser()->getAttribute('userid') > 5480 && ($this->getUser()->getAttribute('userid') % 2) == 0) {
+            $this->newFlow = 1;
+        } else {
+            $this->newFlow = 0;
+        }
     }
 
     public function executeCheckCanPay(sfWebRequest $request) {

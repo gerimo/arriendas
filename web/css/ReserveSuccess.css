@@ -1,0 +1,252 @@
+/* jQuery lightBox plugin - Gallery style */
+
+#gallery ul,#galleryDanios ul { list-style: none; }
+#gallery ul li,#galleryDanios ul li { display: inline; }
+#gallery ul img,#galleryDanios ul img {
+    border: 2px solid #fff; /*A4A4A4*/
+    border-width: 2px 2px 2px;
+}
+#gallery ul a:hover img,#galleryDanios ul a:hover img {
+    border: 2px solid #EC008C;
+    border-width: 2px 2px 2px;
+    color: #fff;
+}
+#gallery ul a:hover,#galleryDanios ul a:hover { color: #fff; }
+a{text-decoration:none;}
+
+
+.texto_normal{
+    font-size: 12px;
+    margin-right: 20px;
+}
+.texto_normal_grande {
+    color: #2D2D2D;
+    font-size: 17px;
+    font-family: Arial, sans-serif;
+}
+.texto_normal, .subtitulos{
+    float: left;
+    width: 95%;
+}
+.subtitulos{
+    font-style: italic;
+    font-size: 15px;
+}
+
+.texto_auto {
+    color:#00AEEF;
+    font-size: 24px;
+}
+
+.punteado {
+    border-bottom: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: #BDBDBD;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 4px;
+    margin-top: 20px;
+    float: left;
+}
+
+.precios{
+    margin-left: 40px;
+    margin-bottom: 15px;
+}
+
+.texto_magenta {
+    color: #EC008C;
+}
+
+.espaciado {
+    margin-top: 20px;
+}
+
+.galeria{
+    margin-bottom: 10px;
+    margin-left: 30px;
+}
+
+.botones{
+    height: 70px;
+    width: 325px;
+}
+
+.boton{
+    margin-right: 10px;
+}
+.boton2{
+    margin-left: 10px;
+    float: left;
+    margin-top: -4px;
+    margin-bottom: -4px;
+}
+
+.titulo{
+    float: left;
+    margin-left: 18px;
+    /*border-bottom: 1px solid #00AEEF;
+    padding-bottom: 5px;*/
+    font-size: 21px;
+    font-weight: bold;
+    color: #00AEEF; /* celeste */
+    width: 100%;
+}
+.ladoIzquierdo{
+    float: left;
+    width: 220px;
+}
+.subtitulos p{
+    float: left;
+}
+.colorSub{
+    color:#00AEEF;
+}
+a.colorSub:hover{
+    padding-bottom: 2px;
+    text-decoration: underline;
+}
+.interlineado{
+    float: left;
+}
+.interlineado2{
+    float: left;
+    width: 165px;
+    margin-left: 5px;
+
+}
+.img_verificado{
+    margin-left: 8px;
+}
+
+#imagenPerfil{
+    padding-top: 6px;
+    padding-left: 6px;
+    width: 193px;
+    height: 192px;
+    float: left;
+    margin-left: 20px;
+
+    -webkit-box-shadow: 0px 0px 9px rgba(50, 50, 50, 0.32);
+    -moz-box-shadow:    0px 0px 9px rgba(50, 50, 50, 0.32);
+    box-shadow:         0px 0px 9px rgba(50, 50, 50, 0.32);
+}
+.infoAuto{
+    border-top: 1px solid rgb(227, 228, 223);
+}
+
+
+
+input[type=text], input[type=password]{
+    border: 1px solid #CECECE;
+    background-color: white;
+    width: 256px;
+    height: 30px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    padding-left: 10px;
+}
+.c1 label { 
+    display:table; 
+    width:100%;
+    margin-bottom:10px
+}
+
+.c1 {
+    margin:20px; 
+    margin-top:10px;
+    width: 450px;
+
+}
+#centralcontent {
+    margin:0px;
+    margin-top:80px;
+    display:block;
+    width:100%;
+}
+
+#centralcontent h3 {
+    margin-top:20px;
+    margin-bottom:10px;
+}
+#linkmain {
+    /*position: absolute;*/
+    display:table;
+    padding-top:10px;
+    bottom: 20px;
+    left: 54px;
+}
+.btnAmarillo{
+    cursor: pointer;
+    padding: 1px;
+    margin-right: 80px;
+}
+.mensaje_alerta {
+    background: none repeat scroll 0 0 #F8F8F8;
+    border: 1px solid #CCCCCC;
+    color: #FF0000;
+    display: block;
+    height: auto;
+    line-height: 30px;
+    margin-left: 20px;
+    padding: 9px;
+    width: 360px;
+}
+
+/* css for timepicker */
+.ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
+.ui-timepicker-div dl { text-align: left; }
+.ui-timepicker-div dl dt { height: 25px; margin-bottom: -25px; }
+.ui-timepicker-div dl dd { margin: 0 10px 10px 65px; }
+.ui-timepicker-div td { font-size: 90%; }
+.ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
+.ui-widget { font-family: Lucida Grande, Lucida Sans, Arial, sans-serif; font-size: 0.8em; }
+
+
+/* Estilos varios */
+.btn {
+    background-color: #ec008c;
+    border: solid 2px white;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: normal;
+    letter-spacing: 2px;
+    padding: 8px 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.btn:hover {
+    background-color: #da007a;
+}
+
+.btn[disabled] {
+    background-color: gray;
+    cursor: auto;
+}
+
+.btn-link {
+    background-color: transparent;
+    border: solid 2px transparent;
+    border-radius: 8px;
+    color: blue;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: normal;
+    padding: 8px 16px;
+    text-decoration: underline;
+}
+
+.btn-link:hover {
+    color: #6633ff;
+}
+
+.btnbtn {
+    background-image: url('/images/Home/BotonReservarHome.png');
+    height: 38px;
+    text-decoration: none;
+    width: 111px;
+}
