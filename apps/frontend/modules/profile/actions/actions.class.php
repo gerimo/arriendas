@@ -3129,9 +3129,10 @@ class profileActions extends sfActions {
         $this->arrayDescripcionesDanios = $arrayDescripcionDanios;
 
         // Si es usuario nuevo y el id es par, sigue nuevo flujo
-        // local 5481
+        // local 6765
+        // cmedinamoenne 6768
         // prod 7176
-        if ($this->getUser()->getAttribute('userid') > 5480 && ($this->getUser()->getAttribute('userid') % 2) == 0) {
+        if ($this->getUser()->getAttribute('userid') > 7176 && ($this->getUser()->getAttribute('userid') % 2) == 0) {
             $this->newFlow = 1;
         } else {
             $this->newFlow = 0;

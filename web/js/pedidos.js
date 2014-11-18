@@ -188,7 +188,7 @@ function bindEventsAll(){
                             if (contratosSeleccionados('Arrendatario')) {
 
                                 if (newFlow) {
-                                    durationCheck();
+                                    //durationCheck();
                                     $("form#frm1").submit();
                                 } else {
                                     window.location.href = urlPago + '/id/' + idReserve;                                    

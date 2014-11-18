@@ -98,7 +98,7 @@
                         <input type="hidden" name="newFlow" id="newFlow" value="<?php echo $newFlow ?>" />
 
                         <div style="max-width: 85%; text-align: right">
-                            <button class="arriendas_pink_btn arriendas_big_btn right" id="payBtn" style="position: initial" type="button">Reservar</button>
+                            <button class="arriendas_pink_btn arriendas_big_btn right <?php if (!$newFlow) echo 'oldFlow' ?>" id="payBtn" style="position: initial" type="button">Reservar</button>
                             <input class="botonPagar" data-carid="<?php echo $car->getId() ?>" data-userid="<?php echo $idUsuario ?>" style="display:none">
                             <!-- <br>
                             <input type="submit" value="Consultar" class="btn-link"> -->
@@ -262,25 +262,85 @@
 
     </div><!-- main_box_2 -->
 
+<script type="text/javascript">
+    function calcularPrecio(){
+        var fecha_inicial= $("#datefrom").val();
+        var fecha_final= $("#dateto").val();
+        var hora_inicial= convertAmPmto24($("#hour_from").timePicker('getTime').val());
+        var hora_final= convertAmPmto24($("#hour_to").timePicker('getTime').val());
+        //var fechaInicio = fecha_inicial+' '+hora_inicial;
+
+        if( isValidDate( $('#datefrom').val() ) &&
+            isValidDate( $('#dateto').val() ) &&
+            isValidTime( convertAmPmto24($('#hour_from').val()) ) &&
+            isValidTime( convertAmPmto24($('#hour_to').val()) ) ) {
+
+            if( $('#datefrom').val() == $('#dateto').val() ) {
+                var dif = restarHoras(convertAmPmto24($('#hour_from').val()), convertAmPmto24($('#hour_to').val()));                    
+                if( dif < 1 ) {
+                    alert('La reserva no puede ser menor a 1 hora');
+                    return false;
+                }
+            }
+        }
+                
+        if(fecha_inicial!='' && fecha_final!='Día de entrega' && hora_inicial!='' && hora_final!='Hora de entrega'){
+            //alert(fecha_inicial+' '+hora_inicInvalid Date ial+' '+fecha_final+' '+hora_final);        fecha_inicial = fecha_inicial.split('-');
+            fecha_inicial = fecha_inicial.split('-');
+            fecha_final = fecha_final.split('-');
+            hora_inicial = (hora_inicial.split(':'));
+            hora_final = (hora_final.split(':'));
+
+            var dateInicio = new Date(fecha_inicial[2],fecha_inicial[1]-1,fecha_inicial[0],hora_inicial[0],hora_inicial[1],0);
+            var dateTermino = new Date(fecha_final[2],fecha_final[1]-1,fecha_final[0],hora_final[0],hora_final[1],0);
+            var diferencia = new Date(dateTermino.valueOf()-dateInicio.valueOf());
+            diferencia = Math.round(diferencia/(1000*3600)); // cantidad de horas de diferencia
+
+            var precioHora = parseFloat(<?php echo $car->getPricePerHour(); ?>);
+            var precioDia = parseFloat(<?php echo $car->getPricePerDay() ; ?>);
+           var precioSemana = parseFloat(<?php echo $car->getPricePerWeek() ; ?>);
+           var precioMes = parseFloat(<?php echo $car->getPricePerMonth() ; ?>);
+
+           var dia = Math.floor(diferencia/24);
+            var hora = diferencia%24;
+            if(hora>=6){
+                hora = 0;
+                dia++;
+            }
+
+            if (dia>=7 && precioSemana>0){
+                precioDia=precioSemana/7
+            };
+            
+            if (dia>=30 && precioMes>0){
+                precioDia=precioMes/30
+            };  
+
+            var tarifa = precioHora*hora + precioDia*dia;
+            $("#valor_reserva").text('$'+anadirPunto(tarifa));
+
+        }
+    };
+</script>
+
 <!-- Google Code for Pantalla de pedido de reserva Conversion Page -->
 <script type="text/javascript">
-/* <![CDATA[ */
-var google_conversion_id = 996876210;
-var google_conversion_language = "en";
-var google_conversion_format = "2";
-var google_conversion_color = "ffffff";
-var google_conversion_label = "hDs_CM7itwQQsr-s2wM";
-var google_conversion_value = 22;
+    /* <![CDATA[ */
+    var google_conversion_id = 996876210;
+    var google_conversion_language = "en";
+    var google_conversion_format = "2";
+    var google_conversion_color = "ffffff";
+    var google_conversion_label = "hDs_CM7itwQQsr-s2wM";
+    var google_conversion_value = 22;
 /* ]]> */
 </script>
-<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
-</script>
+
+<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js"></script>
 <noscript>
-<div style="display:inline;">
-<img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/996876210/?value=22&amp;label=hDs_CM7itwQQsr-s2wM&amp;guid=ON&amp;script=0"/>
-</div>
+    <div style="display:inline;">
+        <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/996876210/?value=22&amp;label=hDs_CM7itwQQsr-s2wM&amp;guid=ON&amp;script=0"/>
+    </div>
 </noscript>
 
-    
     <div class="clear"></div>
 </div><!-- main_box_1 -->

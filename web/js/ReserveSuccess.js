@@ -201,87 +201,6 @@ var separador_miles='.';
     return numero;
 }
 
-function calcularPrecio(){
-    var fecha_inicial= $("#datefrom").val();
-    var fecha_final= $("#dateto").val();
-    var hora_inicial= convertAmPmto24($("#hour_from").timePicker('getTime').val());
-    var hora_final= convertAmPmto24($("#hour_to").timePicker('getTime').val());
-    //var fechaInicio = fecha_inicial+' '+hora_inicial;
-
-    if( isValidDate( $('#datefrom').val() ) &&
-        isValidDate( $('#dateto').val() ) &&
-        isValidTime( convertAmPmto24($('#hour_from').val()) ) &&
-        isValidTime( convertAmPmto24($('#hour_to').val()) ) ) {
-
-        if( $('#datefrom').val() == $('#dateto').val() ) {
-            var dif = restarHoras(convertAmPmto24($('#hour_from').val()), convertAmPmto24($('#hour_to').val()));                    
-            if( dif < 1 ) {
-                alert('La reserva no puede ser menor a 1 hora');
-                return false;
-            }
-        }
-    }
-            
-    if(fecha_inicial!='' && fecha_final!='Día de entrega' && hora_inicial!='' && hora_final!='Hora de entrega'){
-        //alert(fecha_inicial+' '+hora_inicInvalid Date ial+' '+fecha_final+' '+hora_final);        fecha_inicial = fecha_inicial.split('-');
-        fecha_inicial = fecha_inicial.split('-');
-        fecha_final = fecha_final.split('-');
-        hora_inicial = (hora_inicial.split(':'));
-        hora_final = (hora_final.split(':'));
-
-        var dateInicio = new Date(fecha_inicial[2],fecha_inicial[1]-1,fecha_inicial[0],hora_inicial[0],hora_inicial[1],0);
-        var dateTermino = new Date(fecha_final[2],fecha_final[1]-1,fecha_final[0],hora_final[0],hora_final[1],0);
-        var diferencia = new Date(dateTermino.valueOf()-dateInicio.valueOf());
-        diferencia = Math.round(diferencia/(1000*3600)); // cantidad de horas de diferencia
-
-        var precioHora = parseFloat(<?php echo $car->getPricePerHour(); ?>);
-        var precioDia = parseFloat(<?php echo $car->getPricePerDay() ; ?>);
-       var precioSemana = parseFloat(<?php echo $car->getPricePerWeek() ; ?>);
-       var precioMes = parseFloat(<?php echo $car->getPricePerMonth() ; ?>);
-
-       var dia = Math.floor(diferencia/24);
-        var hora = diferencia%24;
-        if(hora>=6){
-            hora = 0;
-            dia++;
-        }
-
-        if (dia>=7 && precioSemana>0){
-            precioDia=precioSemana/7
-        };
-        
-        if (dia>=30 && precioMes>0){
-            precioDia=precioMes/30
-        };  
-
-        var tarifa = precioHora*hora + precioDia*dia;
-        $("#valor_reserva").text('$'+anadirPunto(tarifa));
-
-        /*
-        var inicio= fecha_inicial.getTime()+ (parseInt(hora_inicial.substring(0,2)) * 60 * 60) + (parseInt(hora_inicial.substring(3,5)) * 60);
-        var fin= fecha_final.getTime()+ parseInt(hora_final.substring(0,2)) * 60 *60 + parseInt(hora_final.substring(3,5)) * 60;
-        var horas= (Math.ceil((fin - inicio)/(60*60)));
-        alert(horas);
-        */
-        /*
-        if(horas>0){
-            if (horas <= 6) {
-                //Calculo de la tarifa por horas
-                var tarifa=horas*<?php echo $car->getPricePerHour(); ?>;
-                $("#valor_reserva").text('$'+tarifa);
-            } else {
-                //Calculo de la tarifa por dias
-                var dias= (Math.ceil(horas/24000));
-                $("#valor_reserva").text('$'+dias*<?php echo $car->getPricePerDay() ; ?>);
-            }
-        }else{
-            $("#valor_reserva").text('$0');
-        }
-        */
-
-    }
-};
-
 //Valida formato fecha
 function isValidDate(date){
   if (date.match(/^(?:(0[1-9]|[12][0-9]|3[01])[\- \/.](0[1-9]|1[012])[\- \/.](19|20)[0-9]{2})$/)){
@@ -316,6 +235,7 @@ function restarHoras(hora_desde, hora_hasta) {
 }
 
 function durationCheck() {
+    
     var d = new Date();
 
     var dd = d.getDate();
@@ -327,11 +247,13 @@ function durationCheck() {
 
     var today = dd+"-"+mm+"-"+yy;
 
-    if ($("#datefrom").val() == today) {
-        $("#newFlow").val(0);
-        $("#payBtn").addClass("oldFlow");
-    } else {
-        $("#newFlow").val(1);
-        $("#payBtn").removeClass("oldFlow");
+    if ($("#newFlow").val() == 1) {
+        if ($("#datefrom").val() == today) {
+            $("#newFlow").val(0);
+            $("#payBtn").addClass("oldFlow");
+        } else {
+            $("#newFlow").val(1);
+            $("#payBtn").removeClass("oldFlow");
+        }
     }
 }
