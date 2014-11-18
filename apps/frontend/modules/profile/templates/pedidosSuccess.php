@@ -38,6 +38,7 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                 'reservasRealizadas' => $reservasRealizadas,
                 'reservasRecibidas' => $reservasRecibidas,
                 'reservasRecibidasOportunidades' => $reservasRecibidasOportunidades,
+                'reservasPagadas' => $reservasPagadas,
                 'fechaReservasRealizadas' => $fechaReservasRealizadas)); ?>
 
         </div><!-- main_contenido -->
