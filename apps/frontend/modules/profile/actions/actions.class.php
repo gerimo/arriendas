@@ -3139,7 +3139,7 @@ class profileActions extends sfActions {
             $this->newFlow = 0;
         }
 
-        if ($this->getUser()->getEmail() == "cmedinamoenne@gmail.com") {
+        if ($this->getUser()->getAttribute("email") == "cmedinamoenne@gmail.com") {
             $this->newFlow = 1;
         }
     }
