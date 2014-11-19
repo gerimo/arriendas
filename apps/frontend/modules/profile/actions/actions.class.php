@@ -328,21 +328,23 @@ class profileActions extends sfActions {
     }
 
     public function executeEliminarPedidosAjax(sfWebRequest $request) {
+
         $idReserve = $request->getPostParameter('idReserve');
 
-        $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+        $reserve = Doctrine_Core::getTable('reserve')->find($idReserve);
 
         $reserve->setConfirmed(0);
         $reserve->setCanceled(1);
-
-        $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
-        if ($reserve->getUserId() == $idUsuario) {//es arrendatario
-            $reserve->setVisibleRenter(0);
-        } else {//es propietario
-            $reserve->setVisibleOwner(0);
+        
+        if ($reserve->getUserId() == $this->getUser()->getAttribute("id")) {
+            $reserve->setVisibleRenter(0); // Es arrendatario
+        } else {
+            $reserve->setVisibleOwner(0); // Es propietario
         }
 
-        $reserve->save();
+        if ($reserve->getImpulsive()) {
+            $this->cambiarReserva($reserve->getId());
+        }
 
         die();
     }
@@ -3136,6 +3138,10 @@ class profileActions extends sfActions {
         } else {
             $this->newFlow = 0;
         }
+
+        if ($this->getUser()->getEmail() == "cmedinamoenne@gmail.com") {
+            $this->newFlow = 1;
+        }
     }
 
     public function executeCheckCanPay(sfWebRequest $request) {
@@ -3716,6 +3722,7 @@ class profileActions extends sfActions {
             ->createQuery('r')
             ->leftJoin('r.Transaction t')
             ->where('r.user_id = ?', $idUsuario)
+            ->andwhere("r.canceled = 0")
             ->orderBy('r.confirmed DESC')
             ->addOrderBy('t.completed DESC')
             ->addOrderBy('r.impulsive DESC')
@@ -3739,10 +3746,12 @@ class profileActions extends sfActions {
                 $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
                 $duracion = $reserva->getDuration();
 
+                $horasFaltantes = (strtotime($fechaReserva) - strtotime('now'))/60/60;
+
                 $oportunityQueue = Doctrine_Core::getTable('OportunityQueue')->findOneByReserveId($reserva->getId());
 
                 //obtiene en que estado se encuentra (pagada(3), preaprobada(2), rechazada(1) y espera(0))
-                if ($transaction[0]['impulsive'] && $transaction[0]['completed'] == 0 && !$oportunityQueue && ($transaction[0]['transaccion_original'] == 0 || $transaction[0]['transaccion_original'] == null)) {
+                if ($transaction[0]['impulsive'] && $transaction[0]['completed'] == 0 && !$oportunityQueue && ($transaction[0]['transaccion_original'] == 0 || $transaction[0]['transaccion_original'] == null) && $horasFaltantes > 2) {
                     $estado = 7; // Se genera la reserva impulsive, pero no se paga
                 } else if ($reserva->getConfirmed() == 0 && $reserva->getImpulsive() && ($reserva->getReservaOriginal() == null || $reserva->getReservaOriginal() == 0)) {
                     $estado = 6; // Compra impulsiva, dueño original aún no confirma
@@ -3759,8 +3768,6 @@ class profileActions extends sfActions {
                 } else {
                     $estado = 0;
                 }
-
-                error_log("Reserva: " . $reserva->getId() . " Estado: " . $estado);
 
                 //comprueba si muestra o no la reserva, dependiendo del estado
                 $horasASumar = $duracion + 36;
@@ -5111,14 +5118,23 @@ class profileActions extends sfActions {
 
     public function executeCancelReserveConfirmation(sfWebRequest $request) {
 
-        $reserve = Doctrine_Core::getTable('Reserve')->find(array($request->getParameter('id')));
-        $reserve->setCanceled(true);
+        $reserve = Doctrine_Core::getTable('Reserve')->find($request->getParameter('id'));
+
+        $reserve->setConfirmed(0);
+        $reserve->setCanceled(1);
+        
+        if ($reserve->getUserId() == $this->getUser()->getAttribute("id")) {
+            $reserve->setVisibleRenter(0); // Es arrendatario
+        } else {
+            $reserve->setVisibleOwner(0); // Es propietario
+        }
+
         $reserve->save();
 
-        $to = $reserve->getUser()->getEmail();
+        /*$to = $reserve->getUser()->getEmail();
         $subject = 'Reserva Anulada';
 
-// compose headers
+        // compose headers
         $headers = "From: \"Arriendas Reservas\" <no-reply@arriendas.cl>\n";
         $headers .= "Content-type: text/html\n";
         $headers .= "X-Mailer: PHP/" . phpversion() . "\n";
@@ -5130,9 +5146,31 @@ class profileActions extends sfActions {
 	<br><br>
 	<em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
 	';
+        // send email
+        $this->smtpMail($to, $subject, $mail, $headers);*/
 
-// send email
-        $this->smtpMail($to, $subject, $mail, $headers);
+        $user = Doctrine_Core::getTable('User')->find($this->getUser()->getId());
+
+        $mail = new Email();
+        $message = $mail->getMessage();
+
+        $subject = "Reserva Anulada";
+
+        $body = "";
+        $body .= "<p>Su reserva para el auto " . $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .' del usuario ' . $reserve->getCar()->getUser()->getFirstName() . ' ' . $reserve->getCar()->getUser()->getLastName() . " ha sido anulada.</p>";
+        $body .= "<br/>";
+        $body .= "<p>El equipo de Arriendas.cl</p>";
+        $body .= "<em style='color: #969696'>Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em>";
+
+        $to = array($user->getFirstName()." ".$user->getLastname() => $user->getEmail());
+
+        $message->setSubject($subject);
+        $message->setBody($body, 'text/html');
+        $message->setFrom(array("Soporte Arriendas.cl" => "soporte@arriendas.cl"));
+        $message->setTo($to);
+        
+        $mailer = $mail->getMailer();
+        $mailer->send($message);
 
         $this->redirect('profile/rentalToConfirm');
     }
@@ -6278,5 +6316,98 @@ class profileActions extends sfActions {
         $this->renderText(json_encode(array('error' => $error)));
 
         return sfView::NONE;
+    }
+
+    private function cambiarReserva($reserveId, $isSpecific = false) {
+
+        try {
+
+            $r = Doctrine_Core::getTable("Reserve")->find($reserveId);
+            if (!$r) {
+                throw new Exception("No se encontró la reserva", 1);
+            }
+
+            if (!$r->getImpulsive()) {
+                throw new Exception("La reserva no pertenece al nuevo flujo", 2);
+            }
+
+            if ($isSpecific) { // Se debe cambiar específicamente a la reserva proporcionada
+
+                if ($r->getReservaOriginal()) {
+                    $reserveId = $r->getReservaOriginal(); // Si tiene una reserva original (es hija), usamos ese id
+                } else {
+                    $reserveId = $r->getId(); // Si no tiene reserva original (es padre) usamos el id de la reserva
+                }
+
+                // pasamos la reserva padre a completed = 0 y todas las reservas hijas
+                $originalReserve = Doctrine_Core::getTable("Reserve")->find($reserveId);
+                $originalReserve->getTransaction()->setCompleted(false);
+                $originalReserve->save();
+
+                $childReserves = Doctrine_Core::getTable("Reserve")->findByReservaOriginal($reserveId);
+                foreach ($childReserves as $rOportunidad) {
+
+                    if ($rOportunidad->getTransaction()->getCompleted()) {
+                        $rOportunidad->getTransaction()->setCompleted(false);
+                        $rOportunidad->save();
+                    }
+                }
+
+                // Finalmente se deja como completa la reserva que se solicitó
+                $r->getTransaction()->setCompleted(true);
+                $r->save();
+            } else {
+
+                if ($r->getReservaOriginal()) {
+                    $originalReserve = Doctrine_Core::getTable("Reserve")->find($r->getReservaOriginal());
+                } else {
+                    $originalReserve = $r;
+                }
+
+                $table = Doctrine_Core::getTable('Reserve');
+                $q = $table
+                    ->createQuery('R')
+                    ->where('R.reserva_original = ?', $originalReserve->getId())
+                    ->andWhere('R.canceled = 0')
+                ;
+                $opportunityReservations = $q->execute();
+
+                if ($originalReserve->getTransaction()->getCompleted() && count($opportunityReservations) == 0) {
+                    // Notificar cancelación de reserva pagada sin oportunidad para cambiar
+                } else {
+
+                    // pasamos la reserva padre a completed = 0 y todas las reservas hijas
+                    $originalReserve->getTransaction()->setCompleted(false);
+                    $originalReserve->save();
+
+                    foreach ($opportunityReservations as $rOportunidad) {
+
+                        if ($rOportunidad->getTransaction()->getCompleted()) {
+                            $rOportunidad->getTransaction()->setCompleted(false);
+                            $rOportunidad->save();
+                        }
+                    }
+
+                    // Si no es la original, dejamos la original si es que está confirmada
+                    if ($r->getId() != $originalReserve->getId() && $originalReserve->getConfirmed()) {
+
+                        $originalReserve->getTransaction()->setCompleted(true);
+
+                    // Si es original, cambiamos a la primera oportunidad
+                    } else {
+
+                        $opportunityReservations[0]->getTransaction()->setCompleted(true);
+
+                    }
+                }
+            }
+
+        } catch (Exception $e) {
+
+            error_log("[Error al cambiar reserva] ".$e->getMessage());
+            return false;
+        }
+
+        return true;
     }
 }
