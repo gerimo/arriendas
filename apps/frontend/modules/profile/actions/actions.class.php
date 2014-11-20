@@ -6374,6 +6374,19 @@ class profileActions extends sfActions {
 
                 if ($originalReserve->getTransaction()->getCompleted() && count($opportunityReservations) == 0) {
                     // Notificar cancelación de reserva pagada sin oportunidad para cambiar
+                    $mail = new Email();
+
+                    $subject = "Reserva pagada sin auto";
+                    $body = "<p>La reserva ".$originalReserve->getId()." ha sido concelada por el dueño del auto y no hay oportunidades a la cual cambiar.</p>";
+
+                    $message = $mail->getMessage()
+                        ->setSubject($subject)
+                        ->setBody($body, 'text/html')
+                        ->setFrom(array("Notificaciones Arriendas.cl" => "no-reply@arriendas.cl"))
+                        ->setTo(array("Soporte Arriendas.cl" => "soporte@arriendas.cl"))
+                    ;
+                    
+                    $mail->getMailer()->send($message);
                 } else {
 
                     // pasamos la reserva padre a completed = 0 y todas las reservas hijas
