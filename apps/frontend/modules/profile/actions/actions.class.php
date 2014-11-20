@@ -357,8 +357,7 @@ class profileActions extends sfActions {
         $idReserve = $request->getPostParameter('idReserve');
         $accion = $request->getPostParameter('accion');
 
-        //$accion = 'preaprobar';
-        //$idReserve = 663;
+error_log("RESERVA: ".$idReserve.", ACCION: ".$accion);
 
         if (strpos($accion, 'oportunidad') !== false) {
             $oReserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
@@ -386,6 +385,7 @@ class profileActions extends sfActions {
             $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
             $car = Doctrine_Core::getTable('car')->findOneById($reserve->getCarId());
         }
+
         if ($accion == 'preaprobar' || strpos($accion, 'oportunidad') !== false) {
             //echo "pre aprobar";
             if ($car->getSeguroOk() != 4) {
@@ -407,7 +407,7 @@ class profileActions extends sfActions {
                 $reserve->setCambioEstadoRapido(0);
             }
         } else if ($accion == 'rechazar') {
-            
+error_log("RESERVA RECHAZAR: ".$reserve->getId());
             $reserve->setCanceled(1);
 
             if ($reserve->getImpulsive()) {
