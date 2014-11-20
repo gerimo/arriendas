@@ -343,7 +343,11 @@ class profileActions extends sfActions {
         }
 
         if ($reserve->getImpulsive()) {
-            $this->cambiarReserva($reserve->getId());
+            if (!$this->cambiarReserva($reserve->getId()) {
+                error_log("NO SE PUDO CAMBIAR LA RESERVA");
+            } else {
+                error_log("TODO OK CON EL CAMBIO DE RESERVA");
+            }
         }
 
         die();
@@ -6275,7 +6279,7 @@ class profileActions extends sfActions {
 
         try {
 
-            $r = Doctrine_Core::getTable('reserve')->find($idReserve);
+            /*$r = Doctrine_Core::getTable('reserve')->find($idReserve);
 
             if ($r->getReservaOriginal()) {
 
@@ -6303,7 +6307,12 @@ class profileActions extends sfActions {
 
             // Finalmente se deja como completa la reserva que se solicitó
             $r->getTransaction()->setCompleted(true);
-            $r->save();
+            $r->save();*/
+
+            if (!$this->cambiarReserva($idReserve, true)) {
+                throw new Exception("No se pudo realizar el cambio de reserva específico", 1);
+                error_log("executeNuevoFlujoCambiar: no se pudo realizar el cambio de reserva");
+            }
 
             $oq = Doctrine_Core::getTable("OportunityQueue")->findOneByReserveId($idReserve);
             $oq->setIsActive(false);
