@@ -343,7 +343,7 @@ class profileActions extends sfActions {
         }
 
         if ($reserve->getImpulsive()) {
-            if (!$this->cambiarReserva($reserve->getId()) {
+            if (!$this->cambiarReserva($reserve->getId())) {
                 error_log("NO SE PUDO CAMBIAR LA RESERVA");
             } else {
                 error_log("TODO OK CON EL CAMBIO DE RESERVA");
