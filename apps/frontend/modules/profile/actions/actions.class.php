@@ -6387,7 +6387,7 @@ error_log("CAMBIO MEJOR OPORTUNIDAD");
                     ->andWhere('R.canceled = 0')
                 ;
                 $opportunityReservations = $q->execute();
-error_log("ORIGINAL RESERVE: ".$originalReserve->getId().", OPORTUNIDADES: ".count($opportunityReservations));
+error_log("ORIGINAL RESERVE: ".$originalReserve->getId().", COMPLETE: ".$originalReserve->getTransaction()->getCompleted().", OPORTUNIDADES: ".count($opportunityReservations));
                 if ($originalReserve->getTransaction()->getCompleted() && count($opportunityReservations) == 0) {
 error_log("NO HAY OPORTUNIDADES. NOTIFICANDO...");
                     // Notificar cancelación de reserva pagada sin oportunidad para cambiar
