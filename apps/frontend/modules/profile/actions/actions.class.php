@@ -332,8 +332,6 @@ class profileActions extends sfActions {
         $idReserve = $request->getPostParameter('idReserve');
 
         $reserve = Doctrine_Core::getTable('reserve')->find($idReserve);
-
-        $reserve->setConfirmed(0);
         $reserve->setCanceled(1);
         
         if ($reserve->getUserId() == $this->getUser()->getAttribute("id")) {
@@ -341,6 +339,8 @@ class profileActions extends sfActions {
         } else {
             $reserve->setVisibleOwner(0); // Es propietario
         }
+
+        $reserve->save();
 
         if ($reserve->getImpulsive()) {
             if (!$this->cambiarReserva($reserve->getId())) {
@@ -407,9 +407,16 @@ class profileActions extends sfActions {
                 $reserve->setCambioEstadoRapido(0);
             }
         } else if ($accion == 'rechazar') {
-            //echo "rechazar";
-            $reserve->setConfirmed(0);
+            
             $reserve->setCanceled(1);
+
+            if ($reserve->getImpulsive()) {
+                if (!$this->cambiarReserva($reserve->getId())) {
+                    error_log("NO SE PUDO CAMBIAR LA RESERVA");
+                } else {
+                    error_log("TODO OK CON EL CAMBIO DE RESERVA");
+                }
+            }
         }
         $reserve->save();
 
