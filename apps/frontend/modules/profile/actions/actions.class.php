@@ -6387,8 +6387,11 @@ error_log("CAMBIO MEJOR OPORTUNIDAD");
                     ->andWhere('R.canceled = 0')
                 ;
                 $opportunityReservations = $q->execute();
-error_log("ORIGINAL RESERVE: ".$originalReserve->getId().", COMPLETE: ".$originalReserve->getTransaction()->getCompleted().", OPORTUNIDADES: ".count($opportunityReservations));
-                if ($originalReserve->getTransaction()->getCompleted() && count($opportunityReservations) == 0) {
+
+                $originalTransaction = Doctrine_Core::getTable("Transaction")->findOneByReserveId($originalReserve->getId());
+
+error_log("ORIGINAL RESERVE: ".$originalReserve->getId().", COMPLETE: ".$originalTransaction->getCompleted().", OPORTUNIDADES: ".count($opportunityReservations));
+                if ($originalTransaction->getCompleted() && count($opportunityReservations) == 0) {
 error_log("NO HAY OPORTUNIDADES. NOTIFICANDO...");
                     // Notificar cancelación de reserva pagada sin oportunidad para cambiar
                     $mail = new Email();
@@ -6407,27 +6410,30 @@ error_log("NO HAY OPORTUNIDADES. NOTIFICANDO...");
                 } else {
 error_log("BUSCANDO LA MEJOR OPORTUNIDAD");
                     // pasamos la reserva padre a completed = 0 y todas las reservas hijas
-                    $originalReserve->getTransaction()->setCompleted(false);
-                    $originalReserve->save();
+                    $originalTransaction->setCompleted(false);
+                    $originalTransaction->save();
 
-                    foreach ($opportunityReservations as $rOportunidad) {
+                    foreach ($opportunityReservations as $oReserve) {
 
-                        if ($rOportunidad->getTransaction()->getCompleted()) {
-                            $rOportunidad->getTransaction()->setCompleted(false);
-                            $rOportunidad->save();
+                        $oTransaction = Doctrine_Core::getTable("Transaction")->findOneByReserveId($oReserve->getId());
+                        if ($oTransaction->getCompleted()) {
+                            $oTransaction->setCompleted(false);
+                            $oTransaction->save();
                         }
                     }
 
                     // Si no es la original, dejamos la original si es que está confirmada
                     if ($r->getId() != $originalReserve->getId() && $originalReserve->getConfirmed()) {
 
-                        $originalReserve->getTransaction()->setCompleted(true);
+                        $originalTransaction->setCompleted(true);
+                        $originalTransaction->save();
 
                     // Si es original, cambiamos a la primera oportunidad
                     } else {
 
-                        $opportunityReservations[0]->getTransaction()->setCompleted(true);
-
+                        $oTransaction = Doctrine_Core::getTable("Transaction")->findOneByReserveId($opportunityReservations[0]->getId());
+                        $oTransaction->setCompleted(true);
+                        $oTransaction->save();
                     }
                 }
             }
