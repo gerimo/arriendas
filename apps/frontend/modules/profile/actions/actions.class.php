@@ -6348,7 +6348,7 @@ class profileActions extends sfActions {
             }
 
             if ($isSpecific) { // Se debe cambiar específicamente a la reserva proporcionada
-
+error_log("CAMBIO ESPECIFICO");
                 if ($r->getReservaOriginal()) {
                     $reserveId = $r->getReservaOriginal(); // Si tiene una reserva original (es hija), usamos ese id
                 } else {
@@ -6373,7 +6373,7 @@ class profileActions extends sfActions {
                 $r->getTransaction()->setCompleted(true);
                 $r->save();
             } else {
-
+error_log("CAMBIO MEJOR OPORTUNIDAD");
                 if ($r->getReservaOriginal()) {
                     $originalReserve = Doctrine_Core::getTable("Reserve")->find($r->getReservaOriginal());
                 } else {
@@ -6389,6 +6389,7 @@ class profileActions extends sfActions {
                 $opportunityReservations = $q->execute();
 
                 if ($originalReserve->getTransaction()->getCompleted() && count($opportunityReservations) == 0) {
+error_log("NO HAY OPORTUNIDADES. NOTIFICANDO...");
                     // Notificar cancelación de reserva pagada sin oportunidad para cambiar
                     $mail = new Email();
 
@@ -6404,7 +6405,7 @@ class profileActions extends sfActions {
                     
                     $mail->getMailer()->send($message);
                 } else {
-
+error_log("BUSCANDO LA MEJOR OPORTUNIDAD");
                     // pasamos la reserva padre a completed = 0 y todas las reservas hijas
                     $originalReserve->getTransaction()->setCompleted(false);
                     $originalReserve->save();
