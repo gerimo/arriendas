@@ -29,6 +29,7 @@
  * @property boolean $impulsive
  * @property integer $reserva_original
  * @property integer $numero_factura
+ * @property OportunityQueue $OportunityQueue
  * 
  * @method integer             getId()          Returns the current record's "id" value
  * @method timestamp           getDate()        Returns the current record's "date" value
@@ -56,6 +57,8 @@
  * @method boolean             getImpulsive()   Return the current record's "impulsive" value
  * @method integer             getReservaOriginal()      Returns the current record's "reserva_original" value
  * @method integer             getNumeroFactura()      Returns the current record's "numero_factura" value
+ * @method OportunityQueue     getOportunityQueue()      Returns the current record's "OportunityQueue" value
+ *
  * @method Reserve             setId()          Sets the current record's "id" value
  * @method Reserve             setDate()        Sets the current record's "date" value
  * @method Reserve             setDuration()    Sets the current record's "duration" value
@@ -84,6 +87,7 @@
  * @method boolean             setImpulsive()   Sets the current record's "impulsive" value
  * @method integer             setReservaOriginal()   Sets the current record's "reserva_original" value
  * @method integer             setNumeroFactura()      Sets the current record's "numero_factura" value
+ * @method Reserve             setOportunityQueue() Sets the current record's "OportunityQueue" value
  * 
  * @package    CarSharing
  * @subpackage model
