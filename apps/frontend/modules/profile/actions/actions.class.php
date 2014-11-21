@@ -4211,9 +4211,6 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
                 $maxPrice = $car->getPricePerDay() * 2;
                 $minPrice = $car->getPricePerDay() * 0.67;
 
-
-                error_log("restriccion");
-                error_log(print_r($dateRestriction, true));
                 //la consulta considera dos radios. Si es para hoy o mañana 8 kms, 
                 //si es para otra fecha solo 4kms
                 $q = "
@@ -4251,6 +4248,9 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
                 );
                 $reserve = $query->toArray();
                 $auxReserves = array_merge($auxReserves, $reserve);
+
+                error_log("[][]Reservas");
+                error_log(print_r($reserve, true));
             }
         }
 
