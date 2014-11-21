@@ -138,9 +138,6 @@ EOF;
                         $message->setTo(array("Germán Rimoldi" => "german@arriendas.cl"));
                         $message->setBody($body, "text/html");
                         $this->getMailer()->send($message);
-
-                        $OpportunityQueue->setFinalNotice(true);
-                        $OpportunityQueue->save();
                     } else {
 
                         $this->notificarASoporte($OriginalReserve);
@@ -150,7 +147,6 @@ EOF;
                     $OpportunityQueue->setFinalNotice(true);
                     $OpportunityQueue->save();
                 }
-
             }
         }
     }
