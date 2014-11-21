@@ -191,7 +191,8 @@ EOF;
         $message = $this->getMailer()->compose();
         $message->setSubject("Notificación reserva sin oportunidades [".$OriginalReserve->getId()."]");
         $message->setFrom('no-reply@arriendas.cl', 'Notificaciones Arriendas.cl');
-        $message->setTo(array("cristobal@arriendas.cl" => "Soporte Arriendas.cl"));
+        /*$message->setTo(array("soporte@arriendas.cl" => "Soporte Arriendas.cl"));*/
+        $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
         $message->setBody($body, "text/html");
         $this->getMailer()->send($message);
     }
