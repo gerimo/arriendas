@@ -4169,13 +4169,14 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
         $radio2 = 4;
         $activeCars = array();
 
-        foreach ($cars as $key => $car) {
+        foreach ($cars as $car) {
             //autos para que postule a la oportunidad
 
             if ($car->getSeguroOk() == 4) {
                 error_log("seguroOK");
                 $activeCars[] = $car;
             }
+
             if ($car->getActivo() == 1) {
                 error_log("Activo");
 
@@ -4191,7 +4192,8 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
                 //->andwhere('r.date >= NOW()');
                 $payed_dates = $q->fetchArray();
 
-                error_log("payed_dates :".count($payed_dates));
+                error_log(print_r($payed_dates, true));
+                error_log("payed_dates: ".count($payed_dates));
 
                 $dateRestriction = array();
                 foreach ($payed_dates as $payed_date) {
