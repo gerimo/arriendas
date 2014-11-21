@@ -50,8 +50,8 @@ EOF;
             ->where('R.confirmed = 0')
             ->andWhere('R.impulsive = 1')
             ->andWhere('R.reserva_original = 0 OR R.reserva_original = NULL')
-            ->andWhere("R.date > DATE_SUB(NOW(), INTERVAL {$hoursToNotice} HOUR)", $hoursToNotice)
-            ->andWhere("R.date <= NOW()")
+            ->andWhere('NOW() < R.date')
+            ->andWhere("NOW() > DATE_SUB(NOW(), INTERVAL {$hoursToNotice} HOUR)", $hoursToNotice)
             ->andWhere('T.completed = 1')
             ->andWhere("OQ.final_notice = 0");
 
