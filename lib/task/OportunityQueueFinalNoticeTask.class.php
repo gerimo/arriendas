@@ -48,11 +48,16 @@ EOF;
 
         $Reservations = $q->execute();
 
+        $this->log("Reservas a revisar: ".count($Reservations));
+
         foreach ($Reservations as $OriginalReserve) {
 
+            $this->log("Chequeando reserva ".$OriginalReserve->getId()."...");
             $OpportunityReservations = Doctrine_Core::getTable("Reserve")->findByReservaOriginal($OriginalReserve->getId());
             
             if (count($OpportunityReservations) == 0) {
+
+                $this->log("No tiene oportunidades. Notificando a soporte...");
 
                 $this->notificarASoporte($OriginalReserve);
 
@@ -72,6 +77,8 @@ EOF;
                 }
 
                 if ($notify) {
+
+                    $this->log("Revisando diponibilidad de las oportunidades...");
 
                     $moreSaving = array();
                     $nearest = array();
@@ -109,6 +116,8 @@ EOF;
 
                     if (count($moreSaving) > 0) {
 
+                        $this->log("Cambiando a la oportunidad que genera más ahorro...");
+
                         // Se ordenan los autos del mayor ahorro al menor
                         arsort($moreSaving);
                         // Se ordenan los autos de menor distancia a mayor
@@ -140,12 +149,15 @@ EOF;
                         $this->getMailer()->send($message);
                     } else {
 
+                        $this->log("No hay oportunidad(es) disponible(s). Notificando a soporte...");
                         $this->notificarASoporte($OriginalReserve);
                     }
 
                     $OpportunityQueue = Doctrine_Core::getTable("OportunityQueue")->findOneByReserveId($OriginalReserve->getId());
                     $OpportunityQueue->setFinalNotice(true);
                     $OpportunityQueue->save();
+                } else {
+                    $this->log("Ya poseía oportunidad seleccionada [si sucede esto revisar poque es raro]");
                 }
             }
         }
