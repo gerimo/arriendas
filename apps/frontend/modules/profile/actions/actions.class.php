@@ -4169,6 +4169,9 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
         $radio2 = 4;
         $activeCars = array();
 
+        $radio1 = 100;
+        $radio2 = 50;
+
         foreach ($cars as $car) {
             //autos para que postule a la oportunidad
 
