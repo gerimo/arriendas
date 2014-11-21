@@ -4157,6 +4157,9 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
 
         $cars = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")))->getCars();
 
+        error_log("autos: ".count($cars));
+        error_log(print_r($cars, true));
+
         $mKey = 0;
         $minKey = 0;
         $cities = array();
@@ -4242,8 +4245,9 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
             }
         }
 
+        error_log("1");
         error_log(print_r($auxReserves, true));
-        
+
         $auxIdsIncluidos = array();
         $reservasAConsiderar = array();
         foreach ($auxReserves as $r) {
