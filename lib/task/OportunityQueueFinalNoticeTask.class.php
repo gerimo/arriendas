@@ -32,6 +32,7 @@ EOF;
         $conn = $databaseManager->getDatabase($options['connection'])->getConnection();
 
         $hoursToNotice = $options["hoursToNotice"];
+        $hoursToNotice = 96;
 
         $this->log("-".$hoursToNotice.": ".date("Y-m-d H:i:s", strtotime("-".$hoursToNotice." hour", time())) );
 

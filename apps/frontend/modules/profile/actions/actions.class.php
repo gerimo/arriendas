@@ -4279,6 +4279,8 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
                     $reservasRecibidas[$i]['isImpulsive'] = 0;
                 }
 
+                error_log(print_r($reservasRecibidas[$i], true));
+
                 $this->logMessage("reserva recibida a considerar:" . $reservasRecibidas[$i]['idReserve']);
 
                 /* es una oportunidad y esta disponible */
