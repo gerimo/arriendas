@@ -4223,10 +4223,9 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
                     WHERE r.date > NOW() 
                     AND c.seguro_ok=4
                     AND c.activo=1
-                    AND m.id_tipo_vehiculo = ? 
+                    AND m.id_otro_tipo_vehiculo = ? 
                     AND c.price_per_day <= ? 
-                    AND c.price_per_day >= ? 
-                    AND c.uso_vehiculo_id = ? 
+                    AND c.price_per_day >= ?
                     AND (
                             (r.date <= DATE_ADD(NOW(),INTERVAL 2 DAY) AND distancia (?,?,c.lat,c.lng) < ?)
                             OR
@@ -4236,10 +4235,9 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
                     GROUP BY r.user_id, DATE(r.date)";
 
                 $query = Doctrine_Query::create()->query($q, array(
-                    $car->getModel()->getIdTipoVehiculo(),
+                    $car->getModel()->getIdOtroTipoVehiculo(),
                     $maxPrice,
                     $minPrice,
-                    $car->getUsoVehiculoId(),
                     $car_lat,
                     $car_lng,
                     $radio1,
