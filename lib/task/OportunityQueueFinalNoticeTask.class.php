@@ -68,7 +68,7 @@ EOF;
 
                 $this->log("No tiene oportunidades. Notificando a soporte...");
 
-                $this->notificarASoporte($OriginalReserve);
+                $this->notificarASoporte($OriginalReserve, $hoursToNotice);
 
                 $OpportunityQueue = Doctrine_Core::getTable("OportunityQueue")->findOneByReserveId($OriginalReserve->getId());
                 $OpportunityQueue->setFinalNotice(true);
@@ -174,19 +174,18 @@ EOF;
         }
     }
 
-    private function notificarASoporte($OriginalReserve) {
+    private function notificarASoporte($OriginalReserve, $hoursToNotice) {
 
         // Se notifica a soporte que el dueño no ha confirmado y el arrendatario no tiene opciones
 
         $User = $OriginalReserve->getUser();
 
-        $body = "<p>Faltan aproximadamente $hoursToNotice horas y la reserva ".$OriginalReserve->getId()." no se sido confirmada por el dueño y el arrendatario no tiene otras opciones.</p>";
-        $body .= "<br>";
+        $body = "<p>Faltan aproximadamente $hoursToNotice horas y la reserva ".$OriginalReserve->getId()." no ha sido confirmada por el dueño y, el arrendatario no tiene otras opciones.</p>";
         $body .= "<h3>Información de contacto del arrendatario</h3>";
         $body .= "<table>";
-        $body .= "<tr><th>Nombre</th><td>".$User->getFirstname()." ".$User->getLastname()."</td></tr>";
-        $body .= "<tr><th>Teléfono</th><td>".$User->getTelephone()."</td></tr>";
-        $body .= "<tr><th>Email</th><td>".$User->getEmail()."</td></tr>";
+        $body .= "<tr><th style='text-align: left'>Nombre</th><td>".$User->getFirstname()." ".$User->getLastname()."</td></tr>";
+        $body .= "<tr><th style='text-align: left'>Teléfono</th><td>".$User->getTelephone()."</td></tr>";
+        $body .= "<tr><th style='text-align: left'>Email</th><td>".$User->getEmail()."</td></tr>";
         $body .= "</table>";
 
         $message = $this->getMailer()->compose();
