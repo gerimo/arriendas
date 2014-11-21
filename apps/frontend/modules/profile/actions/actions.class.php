@@ -4158,7 +4158,6 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
         $cars = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")))->getCars();
 
         error_log("autos: ".count($cars));
-        error_log(print_r($cars, true));
 
         $mKey = 0;
         $minKey = 0;
@@ -4172,10 +4171,14 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
 
         foreach ($cars as $key => $car) {
             //autos para que postule a la oportunidad
+
             if ($car->getSeguroOk() == 4) {
+                error_log("seguroOK");
                 $activeCars[] = $car;
             }
             if ($car->getActivo() == 1) {
+                error_log("Activo");
+
                 //mostramos solo las oportunidades cuando un auto no está ya arrendado
                 $q = Doctrine_Query::create()
                         ->select('r.date, date_add(r.date, INTERVAL r.duration HOUR) as endingDate')
