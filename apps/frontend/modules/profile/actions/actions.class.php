@@ -4187,13 +4187,10 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
                         ->leftJoin('r.Transaction t')
                         ->leftJoin('r.Car c')
                         ->where('t.completed = ?', true)
-                        ->andwhere('date_add(r.date, INTERVAL r.duration HOUR)>NOW()')
+                        ->andwhere('date_add(r.date, INTERVAL r.duration HOUR) > NOW()')
                         ->andwhere('c.id =?', $car->getId());
                 //->andwhere('r.date >= NOW()');
                 $payed_dates = $q->fetchArray();
-
-                error_log(print_r($payed_dates, true));
-                error_log("payed_dates: ".count($payed_dates));
 
                 $dateRestriction = array();
                 foreach ($payed_dates as $payed_date) {
@@ -4202,16 +4199,21 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
                                         AND r.date NOT BETWEEN '" . $payed_date['date'] . "' AND '" . $payed_date['endingDate'] . "' 
                                         AND DATE_ADD(r.date, INTERVAL r.duration HOUR) NOT BETWEEN '" . $payed_date['date'] . "' AND '" . $payed_date['endingDate'] . "'";
                 }
+
                 //si no tiene reservas, creo una restricción 
                 //inocua para que no caiga la consulta
                 if (count($dateRestriction) == 0) {
                     $dateRestriction[] = '1=1';
                 }
+
                 $car_lat = $car->getLat();
                 $car_lng = $car->getLng();
                 $maxPrice = $car->getPricePerDay() * 2;
                 $minPrice = $car->getPricePerDay() * 0.67;
 
+
+                error_log("restriccion");
+                error_log(print_r($dateRestriction, true));
                 //la consulta considera dos radios. Si es para hoy o mañana 8 kms, 
                 //si es para otra fecha solo 4kms
                 $q = "
