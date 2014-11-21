@@ -55,9 +55,8 @@ EOF;
 
         foreach ($elements as $element) {
 
+            // Si el usuario que realizó la reserva o el pago se encuentra bloqueado, no se generan oportunidades
             if ($element->getReserve()->getUser()->getBlocked()) {
-
-                // Si el usuario que realizó la reserva o el pago se encuentra bloqueado, no se generan oportunidades
                 continue;
             }
 
@@ -87,16 +86,25 @@ EOF;
             $q = $table
                 ->createQuery('c')
                 ->innerJoin('c.Reserves r')
+                ->innerJoin('c.Model m')
                 ->where('distancia(?, ?, c.lat, c.lng) > ?', array($element->getReserve()->getCar()->getLat(), $element->getReserve()->getCar()->getLng(), $desde))
                 ->andWhere('distancia(?, ?, c.lat, c.lng) <= ?',  array($element->getReserve()->getCar()->getLat(), $element->getReserve()->getCar()->getLng(), $hasta))
                 ->andWhere('c.seguro_ok = ?', 4)
                 ->andWhere('c.activo IS TRUE')
+                ->andWhere('c.transmission = ?', $element->getReserve()->getCar()->getTransmission())
                 ->andWhere('r.comentario = "null"')
                 ->andWhere('(day(r.date) - day(r.fecha_reserva)) > 0')
                 ->andWhere("hour(r.fecha_reserva) < 22 AND hour(r.fecha_reserva) > 5")
+                
                 ->groupBy('c.user_id')
                 ->orderBy('c.ratio_aprobacion DESC')
                 ;
+
+            if ($element->getReserve()->getCar()->getModel()->getIdOtroTipoVehiculo() == 1) {
+                $q->andWhere('m.id_otro_tipo_vehiculo IN (1,2)');
+            } else {
+                $q->andWhere('m.id_otro_tipo_vehiculo = ?', $element->getReserve()->getCar()->getModel()->getIdOtroTipoVehiculo());
+            }
 
             $cars = $q->execute();
 

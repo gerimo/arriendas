@@ -418,6 +418,9 @@ Model:
     Brand_id:
       type: integer(4)
       notnull: true
+    id_otro_tipo_vehiculo:
+      type: integer(11)
+      notnull: true
   relations:
     Brand:
       class: Brand
@@ -1110,6 +1113,10 @@ OportunityQueue:
       type: boolean
       notnull: true
       default: 1
+    final_notice:
+      type: boolean
+      notnull: true
+      default: 0
   relations:
     Reserve:
       class: Reserve

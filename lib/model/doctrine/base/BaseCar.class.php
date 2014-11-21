@@ -51,6 +51,7 @@
  * @method Model               getModel()          Returns the current record's "Model" value
  * @method City                getCity()           Returns the current record's "City" value
  * @method float               getRatioAprobacion() Returns the current record's "ratio_aprobacion" value
+ * @method integer             getTransmission()        Returns the current record's "transmission" value
  * 
  * @method Doctrine_Collection getAvailabilities() Returns the current record's "Availabilities" collection
  * @method Doctrine_Collection getDamages()        Returns the current record's "Damages" collection
@@ -81,6 +82,7 @@
  * @method Car                 setPhotos()        Sets the current record's "Photoes" collection
  * @method Car                 setReserves()       Sets the current record's "Reserves" collection
  * @method Car                 setRatioAprobacion() Sets the current record's "ratio_aprobacion" value
+ * @method Car                 setTransmission() Sets the current record's "transmission" value
  * 
  * @package    CarSharing
  * @subpackage model

@@ -18,12 +18,14 @@
  * @method Brand               getBrand()       Returns the current record's "Brand" value
  * @method Doctrine_Collection getCars()        Returns the current record's "Cars" collection
  * @method Doctrine_Collection getModelPrices() Returns the current record's "ModelPrices" collection
+ * @method integer             getIdOtroTipoVehiculo()     Returns the current record's "id_otro_tipo_vehiculo" value
  * @method Model               setId()          Sets the current record's "id" value
  * @method Model               setName()        Sets the current record's "name" value
  * @method Model               setBrandId()     Sets the current record's "Brand_id" value
  * @method Model               setBrand()       Sets the current record's "Brand" value
  * @method Model               setCars()        Sets the current record's "Cars" collection
  * @method Model               setModelPrices() Sets the current record's "ModelPrices" collection
+ * @method Model               setIdOtroTipoVehiculo() Sets the current record's "id_otro_tipo_vehiculo" integer
  * 
  * @package    CarSharing
  * @subpackage model
@@ -106,6 +108,15 @@ abstract class BaseModel extends sfDoctrineRecord
              'notnull' => false,
              'autoincrement' => false,
              'length' => 256,
+             ));
+        $this->hasColumn('id_otro_tipo_vehiculo', 'integer', 11, array(
+             'type' => 'integer',
+             'fixed' => 0,
+             'unsigned' => false,
+             'primary' => false,
+             'notnull' => true,
+             'autoincrement' => false,
+             'length' => 11,
              ));
     }
  

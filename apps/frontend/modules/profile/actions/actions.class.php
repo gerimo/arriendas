@@ -6391,6 +6391,7 @@ error_log("CAMBIO MEJOR OPORTUNIDAD");
                 $originalTransaction = Doctrine_Core::getTable("Transaction")->findOneByReserveId($originalReserve->getId());
 
 error_log("ORIGINAL RESERVE: ".$originalReserve->getId().", COMPLETE: ".$originalTransaction->getCompleted().", OPORTUNIDADES: ".count($opportunityReservations));
+
                 if ($originalTransaction->getCompleted() && count($opportunityReservations) == 0) {
 error_log("NO HAY OPORTUNIDADES. NOTIFICANDO...");
                     // Notificar cancelación de reserva pagada sin oportunidad para cambiar
