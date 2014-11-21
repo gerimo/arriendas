@@ -39,7 +39,7 @@ EOF;
         $this->log("Confirmado: ".$r->getConfirmed());
         $this->log("Reserva Original: ".$r->getReservaOriginal());
         $this->log("Completada: ".$r->getTransaction()->getCompleted());
-        $this->log("Notificado: ".$r->getOportunityQueue->getFinalNotice());
+        $this->log("Notificado: ".$r->getOportunityQueue()->getFinalNotice());
 
         // Se obtienen todas las reservas dentro del periodo de notificación que no hayan sido ya notificadas
         $q = Doctrine_Core::getTable('Reserve')
