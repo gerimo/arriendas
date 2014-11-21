@@ -371,5 +371,9 @@ abstract class BaseReserve extends sfDoctrineRecord
         $this->hasOne('Transaction', array(
              'local' => 'id',
              'foreign' => 'Reserve_id'));
+
+        $this->hasOne('OportunityQueue', array(
+             'local' => 'id',
+             'foreign' => 'reserve_id'));
     }
 }

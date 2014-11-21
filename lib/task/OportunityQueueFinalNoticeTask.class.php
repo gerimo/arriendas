@@ -141,12 +141,14 @@ EOF;
                         $NewReserve->save();
 
                         // Notificamos al usuario
-                        $message = $this->getMailer()->compose();
+                        $this->log("Notificando al usuario...");
+
+                        /*$message = $this->getMailer()->compose();
                         $message->setSubject("[NF] Reserva ".$OriginalReserve->getId()." sin oportunidades");
                         $message->setFrom('no-reply@arriendas.cl', 'Notificaciones Arriendas');
                         $message->setTo(array("Germán Rimoldi" => "german@arriendas.cl"));
                         $message->setBody($body, "text/html");
-                        $this->getMailer()->send($message);
+                        $this->getMailer()->send($message);*/
                     } else {
 
                         $this->log("No hay oportunidad(es) disponible(s). Notificando a soporte...");
