@@ -33,6 +33,7 @@ EOF;
 
         $hoursToNotice = $options["hoursToNotice"];
 
+        $this->log("HORAS: ".$hoursToNotice);
 
         $r = Doctrine_Core::getTable("Reserve")->find(18261);
         $this->log("Fecha inicio: ".$r->getDate());
