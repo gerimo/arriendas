@@ -35,7 +35,7 @@ EOF;
 
 
         $r = Doctrine_Core::getTable("Reserve")->find(18261);
-        $this->log("Fecha inicio: ".date("Y-d-m H:i:s", $r->getDate()));
+        $this->log("Fecha inicio: ".$r->getDate());
 
 
         // Se obtienen todas las reservas dentro del periodo de notificación que no hayan sido ya notificadas
