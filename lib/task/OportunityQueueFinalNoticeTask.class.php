@@ -180,7 +180,7 @@ EOF;
 
         $User = $OriginalReserve->getUser();
 
-        $body = "<p style='background-color: red'>Faltan aproximadamente $hoursToNotice horas y la reserva <strong>".$OriginalReserve->getId()."</strong> no ha sido confirmada por el dueño y, el arrendatario no tiene otras opciones.</p>";
+        $body = "<p style='background-color: #FA5858; padding: 10px 5px'>Faltan aproximadamente $hoursToNotice horas y la reserva <strong>".$OriginalReserve->getId()."</strong> no ha sido confirmada por el dueño y, el arrendatario no tiene otras opciones.</p>";
         $body .= "<h3>Información de contacto del arrendatario</h3>";
         $body .= "<table>";
         $body .= "<tr><th style='text-align: left'>Nombre</th><td>".$User->getFirstname()." ".$User->getLastname()."</td></tr>";
