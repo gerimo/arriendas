@@ -4242,22 +4242,23 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
             }
         }
 
-        //var_dump($auxReserves);exit;
+        error_log(print_r($auxReserves, true));
+        
         $auxIdsIncluidos = array();
         $reservasAConsiderar = array();
         foreach ($auxReserves as $r) {
             if (!in_array($r['id'], $auxIdsIncluidos) && $r['User_id'] != $this->getUser()->getAttribute("userid")) {
 
                 if ($r['impulsive']) {
+
                     $t = Doctrine_Core::getTable('Transaction')->findOneByReserveId($r['id']);
 
-                    if (!$t->getCompleted() && ($t->getTransaccionOriginal() == 0 || $t->getTransaccionOriginal() == null)) {
-                        // Chequear este caso. 
-                    } else {
+                    if (!$t->getCompleted()) {
                         $reservasAConsiderar[] = $r;
                         $auxIdsIncluidos[] = $r['id'];
                     }
                 } else {
+
                     $reservasAConsiderar[] = $r;
                     $auxIdsIncluidos[] = $r['id'];
                 }
@@ -4266,7 +4267,8 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
 
         $reservasRecibidas = null;
         foreach ($reservasAConsiderar as $i => $reserva) {
-            $reserva = Doctrine_Core::getTable('reserve')->findOneById($reserva['id']);
+
+            $reserva = Doctrine_Core::getTable('reserve')->find($reserva['id']);
 
             /* el usuario que hizo la reserva no tiene que estar blockeado */
             if (!$reserva->getUser()->getBlocked() && $reserva->getCar()->getUserId() != $this->getUser()->getAttribute("userid") ) {
