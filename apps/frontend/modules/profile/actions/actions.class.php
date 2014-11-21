@@ -4191,6 +4191,8 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
                 //->andwhere('r.date >= NOW()');
                 $payed_dates = $q->fetchArray();
 
+                error_log("payed_dates :".count($payed_dates));
+
                 $dateRestriction = array();
                 foreach ($payed_dates as $payed_date) {
                     $dateRestriction[] = "'" . $payed_date['date'] . "' NOT BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) 
@@ -4248,7 +4250,7 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
             }
         }
 
-        error_log("1");
+        error_log("Reservas");
         error_log(print_r($auxReserves, true));
 
         $auxIdsIncluidos = array();
