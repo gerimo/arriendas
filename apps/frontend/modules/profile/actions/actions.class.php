@@ -6303,7 +6303,7 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
 
         try {
 
-            /*$r = Doctrine_Core::getTable('reserve')->find($idReserve);
+            $r = Doctrine_Core::getTable('reserve')->find($idReserve);
 
             if ($r->getReservaOriginal()) {
 
@@ -6331,16 +6331,30 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
 
             // Finalmente se deja como completa la reserva que se solicitó
             $r->getTransaction()->setCompleted(true);
-            $r->save();*/
+            $r->save();
 
-            if (!$this->cambiarReserva($idReserve, true)) {
+            /*if (!$this->cambiarReserva($idReserve, true)) {
                 throw new Exception("No se pudo realizar el cambio de reserva específico", 1);
                 error_log("executeNuevoFlujoCambiar: no se pudo realizar el cambio de reserva");
             }
 
             $oq = Doctrine_Core::getTable("OportunityQueue")->findOneByReserveId($idReserve);
             $oq->setIsActive(false);
-            $oq->save();
+            $oq->save();*/
+
+
+
+
+            // CONTRATOS!!
+            $body = "<h1>Se ha realizado un cambio</h1>";
+
+            $message = $this->getMailer()->compose();
+            $message->setSubject("Notificación cambio [".$r->getId()."]");
+            $message->setFrom('no-reply@arriendas.cl', 'Notificaciones Arriendas.cl');
+            /*$message->setTo(array("soporte@arriendas.cl" => "Soporte Arriendas.cl"));*/
+            $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+            $message->setBody($body, "text/html");
+            $this->getMailer()->send($message);
 
         } catch (Exception $e) {
             $error = $e->getMessage();

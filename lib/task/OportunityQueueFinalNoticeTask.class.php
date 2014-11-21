@@ -32,7 +32,7 @@ EOF;
         $conn = $databaseManager->getDatabase($options['connection'])->getConnection();
 
         $hoursToNotice = $options["hoursToNotice"];
-        $hoursToNotice = 96;
+        /*$hoursToNotice = 168;*/
 
         // Se obtienen todas las reservas dentro del periodo de notificación que no hayan sido ya notificadas
         $q = Doctrine_Core::getTable('Reserve')
@@ -150,6 +150,16 @@ EOF;
                         $message->setTo(array("Germán Rimoldi" => "german@arriendas.cl"));
                         $message->setBody($body, "text/html");
                         $this->getMailer()->send($message);*/
+
+                        $body = "<h1>Notificación de cambio de vehículo</h1>";
+
+                        $message = $this->getMailer()->compose();
+                        $message->setSubject("Notificación cambio de vehículo [".$OriginalReserve->getId()."]");
+                        $message->setFrom('no-reply@arriendas.cl', 'Notificaciones Arriendas.cl');
+                        /*$message->setTo(array("soporte@arriendas.cl" => "Soporte Arriendas.cl"));*/
+                        $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                        $message->setBody($body, "text/html");
+                        $this->getMailer()->send($message);
                     } else {
 
                         $this->log("No hay oportunidad(es) disponible(s). Notificando a soporte...");
