@@ -39,7 +39,7 @@ EOF;
             ->createQuery('R')
             ->innerJoin('R.Transaction T')
             ->innerJoin('R.OportunityQueue OQ')
-            ->where('R.confirmed = 0')
+            ->where('R.confirmed = 0 OR R.canceled = 1')
             ->andWhere('R.impulsive = 1')
             ->andWhere('R.reserva_original = 0 OR R.reserva_original = NULL')
             ->andWhere('NOW() < R.date')
