@@ -33,6 +33,11 @@ EOF;
 
         $hoursToNotice = $options["hoursToNotice"];
 
+
+        $r = Doctrine_Core::getTable("Reserve")->find(18261);
+        $this->log("Fecha inicio: ".date("Y-d-m H:i:s", $r->getDate()));
+
+
         // Se obtienen todas las reservas dentro del periodo de notificación que no hayan sido ya notificadas
         $q = Doctrine_Core::getTable('Reserve')
             ->createQuery('R')
@@ -92,13 +97,13 @@ EOF;
                             ->where('R.confirmed = 1')
                             ->andWhere('R.car_id = ?', $OpportunityReserve->getCarId())
                             ->andWhere('
-                                (R.fecha_reserva >= ? AND R.fecha_reserva < DATE_ADD(?, INTERVAL ? HOUR)) OR
-                                (? >= R.fecha_reserva AND DATE_ADD(?, INTERVAL ? HOUR) < DATE_ADD(R.fecha_reserva, INTERVAL R.duration HOUR)) OR
-                                (? <= DATE_ADD(R.fecha_reserva, INTERVAL R.duration HOUR) AND DATE_ADD(?, INTERVAL ? HOUR) >= DATE_ADD(R.fecha_reserva, INTERVAL R.duration HOUR))
+                                (R.date >= ? AND R.date < DATE_ADD(?, INTERVAL ? HOUR)) OR
+                                (? >= R.date AND DATE_ADD(?, INTERVAL ? HOUR) < DATE_ADD(R.date, INTERVAL R.duration HOUR)) OR
+                                (? <= DATE_ADD(R.date, INTERVAL R.duration HOUR) AND DATE_ADD(?, INTERVAL ? HOUR) >= DATE_ADD(R.date, INTERVAL R.duration HOUR))
                             ', array(
-                                    $OpportunityReserve->getFechaReserva(), $OpportunityReserve->getFechaReserva(), $OpportunityReserve->getDuration(),
-                                    $OpportunityReserve->getFechaReserva(), $OpportunityReserve->getFechaReserva(), $OpportunityReserve->getDuration(),
-                                    $OpportunityReserve->getFechaReserva(), $OpportunityReserve->getFechaReserva(), $OpportunityReserve->getDuration()
+                                    $OpportunityReserve->getDate(), $OpportunityReserve->getDate(), $OpportunityReserve->getDuration(),
+                                    $OpportunityReserve->getDate(), $OpportunityReserve->getDate(), $OpportunityReserve->getDuration(),
+                                    $OpportunityReserve->getDate(), $OpportunityReserve->getDate(), $OpportunityReserve->getDuration()
                                 )
                             )
                             ->andWhere("T.completed = 1");
