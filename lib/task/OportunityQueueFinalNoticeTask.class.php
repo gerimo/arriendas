@@ -48,7 +48,7 @@ EOF;
 
         $Reservations = $q->execute();
 
-        $this->log("Reservas a revisar: ".count($Reservations));
+        $this->log("[".date("Y-m-d H:i:s")."] Reservas a revisar: ".count($Reservations));
 
         foreach ($Reservations as $OriginalReserve) {
 
