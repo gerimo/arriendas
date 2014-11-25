@@ -93,11 +93,12 @@ EOF;
 
                     $this->log("Enviando consulta a Auto ID: ".$Car->getId());
 
+                    $User = $Car->getUser();
+
                     $subject = "¡Tenemos un aumento en la demana! Cuéntanos sobre ".$Car->getPatente();
 
-                    $body = "<p>".$Car->getUser()->getFirstname().",</p>";
-                    $body .= "<p>Tenemos un aumento en la demanda de autos y nos gustaría saber si tu auto patente <strong>".$Car->getPatente()."</strong> se encuentra disponible.</p>";
-                    $body .= "<p style='text-align: center'><a href='http://www.arriendas.cl/profile/auto-hoy/".$CarTodayEmail->getSignature()."'>Confirmar Disponibilidad</a></p>";
+                    $body = "<p>".$User->getFirstname().",</p>";
+                    $body .= "<p>Tenemos un aumento en la demanda de autos y nos gustaría saber si tu auto patente <strong>".$Car->getPatente()."</strong> se encuentra disponible. Para confirmar la disponibilidad haz <a href='http://www.arriendas.cl/profile/auto-hoy/".$CarTodayEmail->getSignature()."'>click aquíx</a></p>";
                     $body .= "<br>";
                     $body .= "<p style='color: #aaa; font-size:14px'>Atentamente</p>";
                     $body .= "<p style='color: #aaa; font-size:14px'>Equipo Arriendas.cl</p>";
@@ -105,8 +106,8 @@ EOF;
                     $message = $this->getMailer()->compose();
                     $message->setSubject($subject);
                     $message->setBody($body, "text/html");
-                    $message->setFrom('no-reply@arriendas.cl', 'Notificaciones Arriendas.cl');
-                    /*$message->setTo(array("soporte@arriendas.cl" => "Soporte Arriendas.cl"));*/
+                    $message->setFrom('soporte@arriendas.cl', 'Soporte Arriendas.cl');
+                    /*$message->setTo(array($User->getEmail() => $User->getFirstname()." ".$User->getLastname()));*/
                     $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
                     
                     $this->getMailer()->send($message);
