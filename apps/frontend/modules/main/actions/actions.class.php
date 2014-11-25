@@ -1606,7 +1606,7 @@ public function executeIndex(sfWebRequest $request) {
                 $this->logMessage('fullstartdate ' . $fullstartdate, 'err');
                 $this->logMessage('fullenddate ' . $fullenddate, 'err');
 
-                $has_reserve = $car->hasReserve($fullstartdate, $fullstartdate, $fullenddate, $fullenddate);
+                $has_reserve = $car->hasReserve($fullstartdate, $fullenddate);
             }
 
             $porcentaje = $car->getContestaPedidos();
@@ -2009,7 +2009,7 @@ public function executeIndex(sfWebRequest $request) {
 
                 $fullstartdate = $day_from . " " . $hour_from;
                 $fullenddate = $day_to . " " . $hour_to;
-                $has_reserve = $car->hasReserve($fullstartdate, $fullstartdate, $fullenddate, $fullenddate);
+                $has_reserve = $car->hasReserve($fullstartdate, $fullenddate);
             }
 
             $urlUser = $this->getPhotoUser($car->getUser()->getId());
