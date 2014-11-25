@@ -12,13 +12,13 @@ class AutoMananaTask extends sfBaseTask {
         ));
 
         $this->namespace = 'arriendas';
-        $this->name = 'autoMananaTask';
+        $this->name = 'autoManana';
         $this->briefDescription = '';
         $this->detailedDescription = <<<EOF
-The [AutoMananaTask|INFO] task does things.
+The [AutoManana|INFO] task does things.
 Call it with:
 
-  [php symfony arriendas:autoMananaTask|INFO]
+  [php symfony arriendas:autoManana|INFO]
 EOF;
     }
 
