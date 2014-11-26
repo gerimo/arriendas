@@ -53,7 +53,7 @@ EOF;
 
         foreach ($Reservations as $OriginalReserve) {
 
-            $this->log("[".date("Y-m-d H:i:s")."] Chequeando reserva ".$OriginalReserve->getId()."...");
+            $this->log("[".date("Y-m-d H:i:s")."] Chequeando reserva ".$OriginalReserve->getId());
             $OpportunityReservations = Doctrine_Core::getTable("Reserve")->findByReservaOriginal($OriginalReserve->getId());
             
             if (count($OpportunityReservations) == 0) {
@@ -94,9 +94,15 @@ EOF;
                             // OJO. se considera sólo el precio por hora. averiguar como considerar el precio por día
                             $moreSaving[$OpportunityReserve->getId()] = ($Car->getPricePerHour() * $OpportunityReserve->getDuration()) - $OpportunityReserve->getPrice();
                             $nearest[$OpportunityReserve->getId()] = (6371 * acos( cos( deg2rad($OriginalReserve->getCar()->getLat()) ) * cos( deg2rad( $OpportunityReserve->getCar()->getLat() ) ) * cos( deg2rad($OpportunityReserve->getCar()->getLng()) - deg2rad($OriginalReserve->getCar()->getLng()) ) + sin( deg2rad($OriginalReserve->getCar()->getLat()) ) * sin( deg2rad( $OpportunityReserve->getCar()->getLat() ) ) ) );
+
+                            error_log("[DEBUG] NO TIENE RESERVA");
+                        } else {
+                            error_log("[DEBUG] TIENE RESERVA");
                         }
                     }
 
+                    var_dump($moreSaving);
+                    
                     if (count($moreSaving) > 0) {
 
                         $this->log("[".date("Y-m-d H:i:s")."] Cambiando a la oportunidad que genera más ahorro...");
