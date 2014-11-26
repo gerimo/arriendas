@@ -211,7 +211,7 @@ EOF;
                             }
                         }
                         
-                        $mailer->send($message);
+                        $this->getMailer()->send($message);
 
                         $subject = "Ha habido un cambio de auto en la Reserva ".$originalReserve->getId();
 
@@ -252,7 +252,7 @@ EOF;
                             }
                         }
 
-                        $mailer->send($message);
+                        $this->getMailer()->send($message);
                     } else {
 
                         $this->log("No hay oportunidad(es) disponible(s). Notificando a soporte...");
@@ -293,6 +293,7 @@ EOF;
                 "german@arriendas.cl" => "Germán Rimoldi"
             ));
         $message->setBody($body, "text/html");
+        
         $this->getMailer()->send($message);
     }
 }
