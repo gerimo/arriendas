@@ -3759,7 +3759,8 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
                 $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
                 $duracion = $reserva->getDuration();
 
-                $horasFaltantes = (strtotime($fechaReserva) - strtotime('now'))/60/60;
+                $horasFaltantes = intval((strtotime($fechaReserva) - strtotime('now'))/60/60);
+                error_log("horas faltantes: ".$horasFaltantes);
 
                 $oportunityQueue = Doctrine_Core::getTable('OportunityQueue')->findOneByReserveId($reserva->getId());
 
