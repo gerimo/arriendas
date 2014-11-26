@@ -3391,7 +3391,7 @@ public function calificacionesPendientes(){
      * @param type $reserve
      * @param type $order
      */
-    public function executeUpdateManualNroFactura(sfWebRequest $request){ 
+    public function executeUpdateManualNroFactura(sfWebRequest $request){
         
         ini_set('memory_limit', '1024M');
         
@@ -3486,7 +3486,7 @@ public function calificacionesPendientes(){
         $order->save();
         
         $montoLiberacion = $reserve->getMontoLiberacion();
-        $montoGarantia = sfConfig::get('deposito_garantia');
+        $montoGarantia = sfConfig::get('app_monto_garantia');
         if($montoLiberacion != $montoGarantia)
         {
             $nro_fac_reserve = $cant_transac > 0? $this->getNextNumeroFactura($trans_limite) : $nro_fac_transaction + 1;

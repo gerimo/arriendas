@@ -1243,7 +1243,7 @@ p{
         $order->save();
         
         $montoLiberacion = $reserve->getMontoLiberacion();
-        $montoGarantia = sfConfig::get('deposito_garantia');
+        $montoGarantia = sfConfig::get('app_monto_garantia');
         if($montoLiberacion != $montoGarantia)
         {
             $nro_fac_reserve = $cant_transac > 0? $this->getNextNumeroFactura() : $nro_fac_transaction + 1;
