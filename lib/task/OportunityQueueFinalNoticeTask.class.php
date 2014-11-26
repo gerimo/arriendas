@@ -235,8 +235,7 @@ EOF;
                         $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Atentamente</p>";
                         $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Equipo Arriendas.cl</p>";
 
-                        $mail = new Email();
-                        $message = $mail->getMessage()
+                        $message = $this->getMailer()->compose()
                             ->setSubject($subject)
                             ->setBody($body, 'text/html')
                             ->setFrom(array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl"))
