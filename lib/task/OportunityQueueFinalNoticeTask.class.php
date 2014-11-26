@@ -132,7 +132,7 @@ EOF;
 
                         $subject = "Hemos cambiado el auto de tu reserva por un auto mejor, manteniendo el precio";
 
-                        $body = "<p>Hola ".$Renter->getFirstname()."</p>";
+                        $body = "<p>Hola ".$Renter->getFirstname().",</p>";
                         $body .= "<p>Hemos reemplazado el auto que pagaste por otro auto de mayor precio (y no debes pagar la diferencia!).</p>";
                         $body .= "<h3>Datos del propietario</h3>";
                         $body .= "<table>";
