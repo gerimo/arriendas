@@ -6334,7 +6334,7 @@ class profileActions extends sfActions {
             $subject = "¡Has ganado la oportunidad!";
 
             $body = "<p>".$Owner->getFirstname().",</p>";
-            $body .= "<p>Han aceptado tu postulación por un total de <strong>".number_format(($reserve->getPrice()), 0, ',', '.')."</strong>, desde ".$r->getFechaInicio()." ".$r->getHoraInicio()." hasta ".$r->getFechaTermino()." ".$r->getHoraTermino().". Te recomendamos que llames al arrendatario cuanto antes. Sus datos son los siguientes:</p>";
+            $body .= "<p>Han aceptado tu postulación por un total de <strong>".number_format(($r->getPrice()), 0, ',', '.')."</strong>, desde ".$r->getFechaInicio()." ".$r->getHoraInicio()." hasta ".$r->getFechaTermino()." ".$r->getHoraTermino().". Te recomendamos que llames al arrendatario cuanto antes. Sus datos son los siguientes:</p>";
             $body .= "<table>";
             $body .= "<tr><th style='text-align: left'>Nombre</th><td>".$Renter->getFirstname()." ".$Renter->getLastname()."</td></tr>";
             $body .= "<tr><th style='text-align: left'>Teléfono</th><td>".$Renter->getTelephone()."</td></tr>";
