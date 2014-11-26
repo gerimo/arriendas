@@ -2956,17 +2956,6 @@ class profileActions extends sfActions {
 
         $this->user = $this->car->getUser();
         $this->getUser()->setAttribute('lastview', $request->getReferer());
-
-        /*$this->fndreserve = array('fechainicio' => '', 'horainicio' => '', 'fechatermino' => '', 'horatermino' => '');
-
-        if ($this->getUser()->getAttribute("fechainicio"))
-            $this->fndreserve['fechainicio'] = $this->getUser()->getAttribute("fechainicio");
-        if ($this->getUser()->getAttribute("horainicio"))
-            $this->fndreserve['horainicio'] = $this->getUser()->getAttribute("horainicio");
-        if ($this->getUser()->getAttribute("fechatermino"))
-            $this->fndreserve['fechatermino'] = $this->getUser()->getAttribute("fechatermino");
-        if ($this->getUser()->getAttribute("horatermino"))
-            $this->fndreserve['horatermino'] = $this->getUser()->getAttribute("horatermino");*/
         
         $fechaActual = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S", strtotime('+3 hours', time())));    // sumo 3hs a la hora chilena.
         $this->ultimaFechaValidaDesde = date("d-m-Y", strtotime($fechaActual));
@@ -3005,9 +2994,6 @@ class profileActions extends sfActions {
                 $fechaAlmacenadaDesde = date("YmdHis",$ultimaFecha);    // ultima guardada en ddbb
                 if($this->getUser()->getAttribute("fechainicio")){
                     $time_desde = strtotime($this->getUser()->getAttribute("fechainicio") . " " . $this->getUser()->getAttribute("horainicio"));
-                    /*$fechaSessionDesde = date("YmdHis", $time_desde);
-                    $fechaAlmacenadaDesde = ($fechaSessionDesde < $fechaAlmacenadaDesde)? $fechaAlmacenadaDesde : $fechaSessionDesde;
-                    $ultimaFecha = ($fechaSessionDesde < $fechaAlmacenadaDesde)? $ultimaFecha : $time_desde;*/
                     
                     $ultimaFecha = $time_desde;
                     
@@ -3142,9 +3128,14 @@ class profileActions extends sfActions {
         $this->arrayFotosDanios = $arrayFotoDanios;
         $this->arrayDescripcionesDanios = $arrayDescripcionDanios;
 
-
-
-        $this->test = $this->getUser()->getAttribute('userid');
+        // Si es usuario nuevo y el id es par, sigue nuevo flujo
+        // test 5474
+        // prod 7176
+        if ($this->getUser()->getAttribute('userid') >= 7176 && ($this->getUser()->getAttribute('userid') % 2) == 0) {
+            $this->newFlow = 1;
+        } else {
+            $this->newFlow = 0;
+        }
     }
 
     public function executeCheckCanPay(sfWebRequest $request) {
@@ -3720,7 +3711,20 @@ class profileActions extends sfActions {
         //ARRENDATARIO
         $reserve = Doctrine_Core::getTable('reserve')->findByUserId($idUsuario);
 
+        $table = Doctrine_Core::getTable('Reserve');
+        $q = $table
+            ->createQuery('r')
+            ->leftJoin('r.Transaction t')
+            ->where('r.user_id = ?', $idUsuario)
+            ->orderBy('r.confirmed DESC')
+            ->addOrderBy('t.completed DESC')
+            ->addOrderBy('r.impulsive DESC')
+            ;
+
+        $reserve = $q->execute();
+
         $reservasRealizadas = null;
+        $reservasPagadas = null;
 
         foreach ($reserve as $i => $reserva) {
 
@@ -3735,8 +3739,10 @@ class profileActions extends sfActions {
                 $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
                 $duracion = $reserva->getDuration();
 
+                $oportunityQueue = Doctrine_Core::getTable('OportunityQueue')->findOneByReserveId($reserva->getId());
+
                 //obtiene en que estado se encuentra (pagada(3), preaprobada(2), rechazada(1) y espera(0))
-                if ($transaction[0]['impulsive'] && $transaction[0]['completed'] == 0 && ($transaction[0]['transaccion_original'] == 0 || $transaction[0]['transaccion_original'] == null)) {
+                if ($transaction[0]['impulsive'] && $transaction[0]['completed'] == 0 && !$oportunityQueue && ($transaction[0]['transaccion_original'] == 0 || $transaction[0]['transaccion_original'] == null)) {
                     $estado = 7; // Se genera la reserva impulsive, pero no se paga
                 } else if ($reserva->getConfirmed() == 0 && $reserva->getImpulsive() && ($reserva->getReservaOriginal() == null || $reserva->getReservaOriginal() == 0)) {
                     $estado = 6; // Compra impulsiva, dueño original aún no confirma
@@ -3753,6 +3759,8 @@ class profileActions extends sfActions {
                 } else {
                     $estado = 0;
                 }
+
+                error_log("Reserva: " . $reserva->getId() . " Estado: " . $estado);
 
                 //comprueba si muestra o no la reserva, dependiendo del estado
                 $horasASumar = $duracion + 36;
@@ -3806,6 +3814,7 @@ class profileActions extends sfActions {
                     $reservasRealizadas[$i]['token'] = $reserva->getToken();
                     $reservasRealizadas[$i]['confirmed'] = $reserva->getConfirmed();
                     $reservasRealizadas[$i]['comentario'] = $reserva->getComentario();
+                    $reservasRealizadas[$i]['reserva_original'] = $reserva->getReservaOriginal();
 
                     //obtiene valor
                     $reservasRealizadas[$i]['valor'] = number_format(intval($reserva->getPrice()), 0, '', '.');
@@ -3842,6 +3851,18 @@ class profileActions extends sfActions {
                     $reservasRealizadas[$i]['facebook'] = $propietarioClass->getFacebookId();
                     $reservasRealizadas[$i]['urlFoto'] = $propietarioClass->getPictureFile();
                     $reservasRealizadas[$i]['apellidoCorto'] = $reservasRealizadas[$i]['apellido'][0] . ".";
+
+                    if (in_array($reservasRealizadas[$i]['estado'], array(6, 5, 4))) {
+
+                        //Es una reserva pagada
+                        $index = $reserva->getReservaOriginal() ?: $reserva->getId();
+
+                        if (!isset($reservasPagadas[$index])) {
+                            $reservasPagadas[$index] = $reservasRealizadas[$i];
+                        } else {
+                            $reservasPagadas[$index]['subReservas'][] = $reservasRealizadas[$i];
+                        }
+                    }
                 }//end if
             }
         }
@@ -4111,6 +4132,7 @@ class profileActions extends sfActions {
         $this->reservasRealizadas = $reservasRealizadasNoOportunidadesAux;
         $this->reservasRecibidas = $reservasRecibidasAux;
         $this->reservasRecibidasOportunidades = $oportunidades;
+        $this->reservasPagadas = $reservasPagadas;
     }
 
     public function executeOportunidades(sfWebRequest $request) {
@@ -6172,6 +6194,7 @@ class profileActions extends sfActions {
                         $reserve->setFechaReserva($originalReserve->getFechaReserva());
                         $reserve->setConfirmed(true);
                         $reserve->setImpulsive(true);
+                        $reserve->setComentario('Reserva oportunidad - nuevo flujo');
                         $reserve->setReservaOriginal($originalReserve->getId());
                         $reserve->save();
 
@@ -6216,39 +6239,37 @@ class profileActions extends sfActions {
 
             $r = Doctrine_Core::getTable('reserve')->find($idReserve);
 
-            if (!is_null($r->getReservaOriginal()) && $r->getReservaOriginal() > 0) {
+            if ($r->getReservaOriginal()) {
 
-                $originalReserve = Doctrine_Core::getTable('reserve')->findOneById($r->getReservaOriginal());
-                $originalReserve->getTransaction()->setCompleted(false);
-                $originalReserve->save();
-
+                //Si tiene una reserva original (es hija), usamos ese id
+                $reserveId = $r->getReservaOriginal();
             } else {
-
-                $rOportunidades = Doctrine_Core::getTable('reserve')->findByReservaOriginal($r->getId());
-                foreach ($rOportunidades as $rOportunidad) {
-
-                    if ($rOportunidad->getTransaction()->getCompleted()) {
-                        $rOportunidad->getTransaction()->setCompleted(false);
-                        $rOportunidad->save();
-                    }
-                }
+                //Si no tiene reserva original (es padre) usamos el id de la reserva
+                $reserveId = $r->getId();
             }
 
-            $r->getTransaction()->setCompleted(true);
-            $r->save();
+            // pasamos la reserva padre a completed = 0 y todas las reservas hijas
 
-            /*$reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
-            $reserve->setConfirmed(true);
-            $reserve->getTransaction()->setCompleted(true);
-            $reserve->save();
-
-            $originalReserve = Doctrine_Core::getTable('reserve')->findOneById($reserve->getReservaOriginal());
+            $originalReserve = Doctrine_Core::getTable('reserve')->find($reserveId);
             $originalReserve->getTransaction()->setCompleted(false);
             $originalReserve->save();
 
-            $opportunityQueue = Doctrine_Core::getTable('OportunityQueue')->findOneByReserveId($originalReserve->getId());
-            $opportunityQueue->setIsActive(false);
-            $opportunityQueue->save();*/
+            $childReserves = Doctrine_Core::getTable('reserve')->findByReservaOriginal($reserveId);
+            foreach ($childReserves as $rOportunidad) {
+
+                if ($rOportunidad->getTransaction()->getCompleted()) {
+                    $rOportunidad->getTransaction()->setCompleted(false);
+                    $rOportunidad->save();
+                }
+            }
+
+            // Finalmente se deja como completa la reserva que se solicitó
+            $r->getTransaction()->setCompleted(true);
+            $r->save();
+
+            $oq = Doctrine_Core::getTable("OportunityQueue")->findOneByReserveId($idReserve);
+            $oq->setIsActive(false);
+            $oq->save();
 
         } catch (Exception $e) {
             $error = $e->getMessage();

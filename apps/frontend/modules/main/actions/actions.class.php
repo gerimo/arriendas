@@ -663,12 +663,12 @@ public function executeFracaso(sfWebRequest $request) {
 public function executeNotificacion(sfWebRequest $request) {
 }
 
-    public function executeIndex(sfWebRequest $request) {//echo $this->getUser()->getAttribute("fechatermino");die;
-        
-        if($request->getParameter('region'))
-            $this->region = Doctrine_Core::getTable('Regiones')->findOneBySlug($request->getParameter('region'))->getCodigo();
-        if($request->getParameter('comuna'))
-            $this->comuna = Doctrine_Core::getTable('Comunas')->findOneBySlug($request->getParameter('comuna'))->getCodigoInterno();
+public function executeIndex(sfWebRequest $request) {
+    
+    if($request->getParameter('region'))
+        $this->region = Doctrine_Core::getTable('Regiones')->findOneBySlug($request->getParameter('region'))->getCodigo();
+    if($request->getParameter('comuna'))
+        $this->comuna = Doctrine_Core::getTable('Comunas')->findOneBySlug($request->getParameter('comuna'))->getCodigoInterno();
 
 	//Modificacion para setear la cookie de registo de la fecha de ingreso por primera vez del usuario
 	$cookie_ingreso = $this->getRequest()->getCookie('cookie_ingreso');
@@ -791,7 +791,7 @@ public function executeNotificacion(sfWebRequest $request) {
 		  owner.lastname lastname,
 		  ca.price_per_day priceday,
 		  ca.price_per_hour pricehour,
-		  owner.id userid, IF(ca.seguro_ok=4 or ca.seguro_ok=3,1,0) as verificado'
+		  owner.id userid, IF(ca.seguro_ok=4,1,0) as verificado'
                 )
                 ->from('Car ca')
                 ->innerJoin('ca.Availabilities av')
@@ -1028,7 +1028,7 @@ public function executeNotificacion(sfWebRequest $request) {
                 ->innerJoin('mo.Brand br')
                 ->innerJoin('ca.User owner')                
                 ->Where('ca.activo = ?', 1)
-                ->andWhereIn('ca.seguro_ok', array(3, 4));
+                ->andWhereIn('ca.seguro_ok', array(4));
         if (count($comunas) > 0) {
             $q->andWhereIn('ca.comuna_id', $comunas);
         } 
@@ -1480,7 +1480,7 @@ public function executeNotificacion(sfWebRequest $request) {
                 ->innerJoin('ca.Comunas co')
                 ->innerJoin('mo.Brand br')
                 ->Where('ca.activo = ?', 1)
-                ->andWhereIn('ca.seguro_ok', array(3, 4));
+                ->andWhereIn('ca.seguro_ok', array(4));
         if (count($comunas) > 0) {
             $q->andWhereIn('ca.comuna_id', $comunas);
         } else {
@@ -1911,7 +1911,7 @@ public function executeNotificacion(sfWebRequest $request) {
                 ->innerJoin('st.Country co')
                 ->where('ca.lat > ?', $boundleft)
                 ->andWhere('ca.activo = ?', 1)
-                ->andWhereIn('ca.seguro_ok', array(3,4))
+                ->andWhereIn('ca.seguro_ok', array(4))
                 ->andWhere('ca.lat < ?', $boundright)
                 ->andWhere('ca.lng > ?', $boundtop)
                 ->andWhere('ca.lng < ?', $boundbottom);

@@ -8,7 +8,6 @@ class OportunityQueueTask extends sfBaseTask {
             new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name'),
             new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
             new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine'),
-            new sfCommandOption('numberOfMails', null, sfCommandOption::PARAMETER_REQUIRED, 'Cantidad de correos', 16),
         ));
 
         $this->namespace = 'arriendas';
@@ -36,9 +35,9 @@ EOF;
         // Este task toma todas las reservas pagas que se hayan hecho y que esten pendientes para generar
         //  la lista de usuarios a los cuales se les debe enviar correos de "oportunidades"
 
-        $maxIterations  = 5;
+        $maxIterations = 5;
         $kmPerIteration = 1;
-        $exclusivityTime = 20; // En minutos
+        $exclusivityTime = 60; // En minutos
         $baseKpi = 20; //en porcentaje
 
         // Se obtienen todas las reservas para procesar
@@ -49,6 +48,7 @@ EOF;
             ->where('o.is_active IS TRUE')
             ->andWhere("DATE_ADD(o.paid_at, INTERVAL {$exclusivityTime} MINUTE) < NOW()")
             ->andWhere('o.iteration <= ?', $maxIterations)
+            ->andWhere('r.date < ?', date("Y-m-d H:i:s"))
             ;
 
         $elements = $q->execute();
