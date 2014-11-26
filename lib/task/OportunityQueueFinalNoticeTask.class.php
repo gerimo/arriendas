@@ -142,7 +142,7 @@ EOF;
                         $body .= "<tr><th>Dirección</th><td>".$Owner->getAddress()."</td></tr>";
                         $body .= "<tr><th>Marca</th><td>".$Car->getModel()->getBrand()->getName()."</td></tr>";
                         $body .= "<tr><th>Modelo</th><td>".$Car->getModel()->getName()."</td></tr>";
-                        $body .= "<tr><th>Ahorro</th><td>".round((($NewReserve->getRentalPrice() - $NewReserve->getPrice())/ $NewReserve->getPrice(), 0) * 100)." %</td></tr>";
+                        $body .= "<tr><th>Ahorro</th><td>".(round(($NewReserve->getRentalPrice() - $NewReserve->getPrice())/ $NewReserve->getPrice(), 0) * 100)." %</td></tr>";
                         $body .= "</table>";
 
                         $body .= "<br><br>";
