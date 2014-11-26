@@ -3764,7 +3764,7 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
                 $oportunityQueue = Doctrine_Core::getTable('OportunityQueue')->findOneByReserveId($reserva->getId());
 
                 //obtiene en que estado se encuentra (pagada(3), preaprobada(2), rechazada(1) y espera(0))
-                if ($transaction[0]['impulsive'] && $transaction[0]['completed'] == 0 && !$oportunityQueue && ($transaction[0]['transaccion_original'] == 0 || $transaction[0]['transaccion_original'] == null) && $horasFaltantes > 2) {
+                if ($transaction[0]['impulsive'] && $transaction[0]['completed'] == 0 && !$oportunityQueue && ($transaction[0]['transaccion_original'] == 0 || $transaction[0]['transaccion_original'] == null) /*&& $horasFaltantes > 2*/) {
                     $estado = 7; // Se genera la reserva impulsive, pero no se paga
                 } else if ($reserva->getConfirmed() == 0 && $reserva->getImpulsive() && ($reserva->getReservaOriginal() == null || $reserva->getReservaOriginal() == 0)) {
                     $estado = 6; // Compra impulsiva, dueño original aún no confirma
