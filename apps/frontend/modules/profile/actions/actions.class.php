@@ -3765,7 +3765,11 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
 
                 //obtiene en que estado se encuentra (pagada(3), preaprobada(2), rechazada(1) y espera(0))
                 if ($transaction[0]['impulsive'] && $transaction[0]['completed'] == 0 && !$oportunityQueue && ($transaction[0]['transaccion_original'] == 0 || $transaction[0]['transaccion_original'] == null) /*&& $horasFaltantes > 2*/) {
-                    $estado = 7; // Se genera la reserva impulsive, pero no se paga
+                    if ($horasFaltantes > 2) {
+                        $estado = 7; // Se genera la reserva impulsive, pero no se paga
+                    } else {
+                        $estado = -1; // Se pone -1 para que no tenga estado y no se muestre en pedidos
+                    }
                 } else if ($reserva->getConfirmed() == 0 && $reserva->getImpulsive() && ($reserva->getReservaOriginal() == null || $reserva->getReservaOriginal() == 0)) {
                     $estado = 6; // Compra impulsiva, dueño original aún no confirma
                 } else if ($reserva->getConfirmed() && $reserva->getImpulsive() && ($reserva->getReservaOriginal() == null || $reserva->getReservaOriginal() == 0)) {
