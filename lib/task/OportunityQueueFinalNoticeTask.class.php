@@ -215,7 +215,7 @@ EOF;
 
                         $subject = "Ha habido un cambio de auto en la Reserva ".$originalReserve->getId();
 
-                        $body = "<p style='background-color: #FA5858; padding: 10px 5px'>Este cambio fue realizado de manera automático por el Task OpportunityQueueFinalNotice.</p>"
+                        $body = "<p style='background-color: #FA5858; padding: 10px 5px'>Este cambio fue realizado de manera automático por el Task OpportunityQueueFinalNotice.</p>";
                         $body .= "<h3>Datos del propietario</h3>";
                         $body .= "<table>";
                         $body .= "<tr><th style='text-align: left'>Nombre</th><td>".$Owner->getFirstname()." ".$Owner->getLastname()."</td></tr>";
@@ -225,7 +225,7 @@ EOF;
                         $body .= "<tr><th style='text-align: left'>Marca</th><td>".$Car->getModel()->getBrand()->getName()."</td></tr>";
                         $body .= "<tr><th style='text-align: left'>Modelo</th><td>".$Car->getModel()->getName()."</td></tr>";
                         $body .= "</table>";
-                        $body = "<h3>Datos del arrendatario</h3>";
+                        $body .= "<h3>Datos del arrendatario</h3>";
                         $body .= "<table>";
                         $body .= "<tr><th style='text-align: left'>Nombre</th><td>".$Renter->getFirstname()." ".$Renter->getLastname()."</td></tr>";
                         $body .= "<tr><th style='text-align: left'>Teléfono</th><td>".$Renter->getTelephone()."</td></tr>";

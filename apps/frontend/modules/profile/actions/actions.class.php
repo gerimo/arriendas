@@ -6410,7 +6410,7 @@ class profileActions extends sfActions {
             $body .= "<tr><th style='text-align: left'>Marca</th><td>".$r->getCar()->getModel()->getBrand()->getName()."</td></tr>";
             $body .= "<tr><th style='text-align: left'>Modelo</th><td>".$r->getCar()->getModel()->getName()."</td></tr>";
             $body .= "</table>";
-            $body = "<h3>Datos del arrendatario</h3>";
+            $body .= "<h3>Datos del arrendatario</h3>";
             $body .= "<table>";
             $body .= "<tr><th style='text-align: left'>Nombre</th><td>".$Renter->getFirstname()." ".$Renter->getLastname()."</td></tr>";
             $body .= "<tr><th style='text-align: left'>Teléfono</th><td>".$Renter->getTelephone()."</td></tr>";
