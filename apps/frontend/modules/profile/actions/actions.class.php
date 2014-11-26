@@ -6343,13 +6343,8 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
             $oq->setIsActive(false);
             $oq->save();*/
 
-
-
-
-            
-
-            $renter = $r->getUser();
-            $owner = $r->getCar()->getUser();
+            $Renter = $r->getUser();
+            $Owner = $r->getCar()->getUser();
 
             $functions = new Functions;
             $formulario = $functions->generarFormulario(NULL, $r->getToken());
@@ -6359,24 +6354,33 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
 
             // DOCUMENTOS DUEÑO
 
-            $subject = "";
+            $subject = "¡Has ganado la oportunidad!";
 
-            $body = "";
+            $body = "<p>".$Owner->getFirstname().",</p>";
+            $body .= "<p>Han aceptado tu postulación por un total de <strong>".number_format(($reserve->getPrice()), 0, ',', '.')."</strong>, desde ".$r->getFechaInicio()." ".$r->getHoraInicio()." hasta ".$r->getFechaTermino()." ".$r->getHoraTermino().". Te recomendamos que llames al arrendatario cuanto antes. Sus datos son los siguientes:</p>";
+            $body .= "<table>";
+            $body .= "<tr><th style='text-align: left'>Nombre</th><td>".$Renter->getFirstname()." ".$Renter->getLastname()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Teléfono</th><td>".$Renter->getTelephone()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Correo electrónico</th><td>".$Renter->getEmail()."</td></tr>";
+            $body .= "</table>";
+            $body .= "<br><br>";
+            $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Atentamente</p>";
+            $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Equipo Arriendas.cl</p>";
 
             $mail = new Email();
             $message = $mail->getMessage()
                 ->setSubject($subject)
-                ->setBody($body), 'text/html')
+                ->setBody($body, 'text/html')
                 ->setFrom("soporte@arriendas.cl" => "Soporte Arriendas.cl")
-                ->setTo(array($owner->getEmail() => $owner->getFirstName()." ".$owner->getLastname()))
+                ->setTo(array($Owner->getEmail() => $Owner->getFirstName()." ".$Owner->getLastname()))
                 ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
                 ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
                 ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
             
-            if (!is_null($renter->getDriverLicenseFile())) {
-                $filepath = $renter->getDriverLicenseFile();
+            if (!is_null($Renter->getDriverLicenseFile())) {
+                $filepath = $Renter->getDriverLicenseFile();
                 if (is_file($filepath)) {
-                    $message->attach(Swift_Attachment::fromPath($renter->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$renter->getLicenceFileName()));
+                    $message->attach(Swift_Attachment::fromPath($Renter->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$Renter->getLicenceFileName()));
                 }
             }
             
@@ -6384,16 +6388,31 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
 
             // DOCUMENTOS ARRENDATARIO
 
-            $subject = "";
+            $subject = "Has cambiado el auto de tu reserva";
 
-            $body = "";
+            $body = "<p>Hola ".$Renter->getFirstname().",</p>";
+            $body .= "<p>Has cambiado el auto de tu reserva y esta ya esta confirmada. Recuerda que debes llenar el <strong>Formulario de entrega</strong> Y <strong>Devolución</strong> del vehículo.</p>";
+            $body .= "<p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p>";
+            $body .= "<h3>Datos del propietario</h3>";
+            $body .= "<table>";
+            $body .= "<tr><th style='text-align: left'>Nombre</th><td>".$Owner->getFirstname()." ".$Owner->getLastname()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Teléfono</th><td>".$Owner->getTelephone()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Correo electrónico</th><td>".$Owner->getEmail()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Dirección</th><td>".$Owner->getAddress()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Marca</th><td>".$r->getCar()->getModel()->getBrand()->getName()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Modelo</th><td>".$r->getCar()->getModel()->getName()."</td></tr>";
+            $body .= "</table>";
+            $body .= "<p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
+            $body .= "<br><br>";
+            $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Atentamente</p>";
+            $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Equipo Arriendas.cl</p>";
 
             $mail = new Email();
             $message = $mail->getMessage()
                 ->setSubject($subject)
                 ->setBody($body, 'text/html')
                 ->setFrom("soporte@arriendas.cl" => "Soporte Arriendas.cl")
-                ->setTo(array($renter->getEmail() => $renter->getFirstName()." ".$renter->getLastname()))
+                ->setTo(array($Renter->getEmail() => $Renter->getFirstName()." ".$Renter->getLastname()))
                 ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
                 ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
                 ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'))
@@ -6403,9 +6422,26 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
 
             // DOCUMENTOS SOPORTE
 
-            $subject = "";
+            $subject = "Ha habido un cambio de auto en la Reserva ".$originalReserve->getId();
 
-            $body = "";
+            $body = "<h3>Datos del propietario</h3>";
+            $body .= "<table>";
+            $body .= "<tr><th style='text-align: left'>Nombre</th><td>".$Owner->getFirstname()." ".$Owner->getLastname()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Teléfono</th><td>".$Owner->getTelephone()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Correo electrónico</th><td>".$Owner->getEmail()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Dirección</th><td>".$Owner->getAddress()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Marca</th><td>".$r->getCar()->getModel()->getBrand()->getName()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Modelo</th><td>".$r->getCar()->getModel()->getName()."</td></tr>";
+            $body .= "</table>";
+            $body = "<h3>Datos del arrendatario</h3>";
+            $body .= "<table>";
+            $body .= "<tr><th style='text-align: left'>Nombre</th><td>".$Renter->getFirstname()." ".$Renter->getLastname()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Teléfono</th><td>".$Renter->getTelephone()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Correo electrónico</th><td>".$Renter->getEmail()."</td></tr>";
+            $body .= "</table>";
+            $body .= "<br><br>";
+            $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Atentamente</p>";
+            $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Equipo Arriendas.cl</p>";
 
             $mail = new Email();
             $message = $mail->getMessage()
@@ -6417,10 +6453,10 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
                 ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
                 ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
             
-            if (!is_null($renter->getDriverLicenseFile())) {
-                $filepath = $renter->getDriverLicenseFile();
+            if (!is_null($Renter->getDriverLicenseFile())) {
+                $filepath = $Renter->getDriverLicenseFile();
                 if (is_file($filepath)) {
-                    $message->attach(Swift_Attachment::fromPath($renter->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$renter->getLicenceFileName()));
+                    $message->attach(Swift_Attachment::fromPath($Renter->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$Renter->getLicenceFileName()));
                 }
             }
 
