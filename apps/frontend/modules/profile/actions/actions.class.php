@@ -3746,7 +3746,7 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
 
         foreach ($reserve as $i => $reserva) {
 
-            $from = $reserve->getDate();
+            $from = $reserva->getDate();
 
             if ($reserva->getVisibleRenter()) {
 
@@ -3770,7 +3770,7 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
                     $estado = 6; // Compra impulsiva, dueño original aún no confirma
                 } else if ($reserva->getConfirmed() && $reserva->getImpulsive() && ($reserva->getReservaOriginal() == null || $reserva->getReservaOriginal() == 0)) {
                     $estado = 5; // Compra impulsiva, dueño original confirmó
-                } else if ($reserva->getConfirmed() && $reserva->getImpulsive() && !$reserve->getCar()->hasReserve($reserve->getInicio(), $reserve->getTermino())) {
+                } else if ($reserva->getConfirmed() && $reserva->getImpulsive() && !$reserva->getCar()->hasReserve($reserva->getInicio(), $reserva->getTermino())) {
                     $estado = 4; // Dueños que desean la oportunidad
                 } else if (isset($transaction[0]) && $transaction[0]['completed'] == 1 && $reserva->getConfirmed()) { // la reserva está pagada
                     $estado = 3;
