@@ -163,7 +163,7 @@ EOF;
                         $message = $this->getMailer()->compose()
                             ->setSubject($subject)
                             ->setBody($body, "text/html")
-                            ->setFrom('soporte@arriendas.cl', 'Soporte Arriendas.cl')
+                            ->setFrom('soporte@arriendas.cl', 'Arriendas.cl')
                             /*->setTo(array($Renter->getEmail() => $Renter->getFirstName()." ".$Renter->getLastname()))*/
                             ->setBcc(array(
                                 "cristobal@arriendas.cl" => "Cristóbal Medina Moenne",
@@ -194,7 +194,7 @@ EOF;
                         $message = $this->getMailer()->compose()
                             ->setSubject($subject)
                             ->setBody($body, 'text/html')
-                            ->setFrom(array("soporte@arriendas.cl" => "Soporte Arriendas.cl"))
+                            ->setFrom(array("soporte@arriendas.cl" => "Arriendas.cl"))
                             /*->setTo(array($Owner->getEmail() => $Owner->getFirstName()." ".$Owner->getLastname()))*/
                             ->setBcc(array(
                                 "cristobal@arriendas.cl" => "Cristóbal Medina Moenne",
