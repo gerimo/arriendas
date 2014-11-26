@@ -93,7 +93,7 @@ EOF;
 
                             // OJO. se considera sólo el precio por hora. averiguar como considerar el precio por día
                             $moreSaving[$OpportunityReserve->getId()] = ($Car->getPricePerHour() * $OpportunityReserve->getDuration()) - $OpportunityReserve->getPrice();
-                            $nearest[$OpportunityReserve->getId()] = (6371 * acos( cos( deg2rad($OriginalReserve->getCar()->getLat()) ) * cos( deg2rad( $OpportunityReserve->getCar()->getLat() ) ) * cos( deg2rad($OpportunityReserve->getCar()->getLng()) - deg2rad($OriginalReserve->getCar()->getLng()) ) + sin( deg2rad($OriginalReserve->getCar()->getLat()) ) * sin( deg2rad( $OpportunityReserve->getCar()->getLat() ) ) ) );
+                            /*$nearest[$OpportunityReserve->getId()] = (6371 * acos( cos( deg2rad($OriginalReserve->getCar()->getLat()) ) * cos( deg2rad( $OpportunityReserve->getCar()->getLat() ) ) * cos( deg2rad($OpportunityReserve->getCar()->getLng()) - deg2rad($OriginalReserve->getCar()->getLng()) ) + sin( deg2rad($OriginalReserve->getCar()->getLat()) ) * sin( deg2rad( $OpportunityReserve->getCar()->getLat() ) ) ) );*/
                         }
                     }
 
@@ -104,7 +104,7 @@ EOF;
                         // Se ordenan los autos del mayor ahorro al menor
                         arsort($moreSaving);
                         // Se ordenan los autos de menor distancia a mayor
-                        asort($nearest);
+                        /*asort($nearest);*/
 
                         // Reseteamos todas las reservas, tanto original como oportunidades
                         $OriginalReserve->getTransaction()->setCompleted(false);
@@ -133,16 +133,16 @@ EOF;
                         $subject = "Hemos cambiado el auto de tu reserva por un auto mejor, manteniendo el precio";
 
                         $body = "<p>Hola ".$Renter->getFirstname().",</p>";
-                        $body .= "<p>Hemos reemplazado el auto que pagaste por otro auto de mayor precio (y no debes pagar la diferencia!).</p>";
+                        $body .= "<p>Hemos reemplazado el auto que pagaste por otro auto debido a que el dueño del auto que elegiste no ha confirmado y queda poco tiempo para la hora límite. Cuando realizamos estos cambios y el nuevo auto es de mayor precio, se conserva el precio que pagaste. A continuación te dejamos la información del propietario:</p>";
                         $body .= "<h3>Datos del propietario</h3>";
                         $body .= "<table>";
-                        $body .= "<tr><th style='text-align: left'>Nombre</th><td>".$Owner->getFirstname()." ".$Owner->getLastname()."</td></tr>";
-                        $body .= "<tr><th style='text-align: left'>Teléfono</th><td>".$Owner->getTelephone()."</td></tr>";
-                        $body .= "<tr><th style='text-align: left'>Correo electrónico</th><td>".$Owner->getEmail()."</td></tr>";
-                        $body .= "<tr><th style='text-align: left'>Dirección</th><td>".$Owner->getAddress()."</td></tr>";
-                        $body .= "<tr><th style='text-align: left'>Marca</th><td>".$Car->getModel()->getBrand()->getName()."</td></tr>";
-                        $body .= "<tr><th style='text-align: left'>Modelo</th><td>".$Car->getModel()->getName()."</td></tr>";
-                        $body .= "<tr><th style='text-align: left'>Ahorro</th><td>".(round(($NewReserve->getRentalPrice() - $NewReserve->getPrice())/ $NewReserve->getPrice(), 0) * 100)." %</td></tr>";
+                        $body .= "<tr><th style='padding-right: 5px; text-align: left'>Nombre</th><td>".$Owner->getFirstname()." ".$Owner->getLastname()."</td></tr>";
+                        $body .= "<tr><th style='padding-right: 5px; text-align: left'>Teléfono</th><td>".$Owner->getTelephone()."</td></tr>";
+                        $body .= "<tr><th style='padding-right: 5px; text-align: left'>Correo electrónico</th><td>".$Owner->getEmail()."</td></tr>";
+                        $body .= "<tr><th style='padding-right: 5px; text-align: left'>Dirección</th><td>".$Owner->getAddress()."</td></tr>";
+                        $body .= "<tr><th style='padding-right: 5px; text-align: left'>Marca</th><td>".$Car->getModel()->getBrand()->getName()."</td></tr>";
+                        $body .= "<tr><th style='padding-right: 5px; text-align: left'>Modelo</th><td>".$Car->getModel()->getName()."</td></tr>";
+                        $body .= "<tr><th style='padding-right: 5px; text-align: left'>Ahorro</th><td>".(round(($NewReserve->getRentalPrice() - $NewReserve->getPrice())/ $NewReserve->getPrice(), 0) * 100)." %</td></tr>";
                         $body .= "</table>";
 
                         $body .= "<br><br>";
