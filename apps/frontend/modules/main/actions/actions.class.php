@@ -3501,12 +3501,14 @@ public function calificacionesPendientes(){
     private function getNextNumeroFactura($trans_limite){
         
         // max en transaction
-        $qt = "select max(numero_factura) nro_fac from Transaction where id < " . $trans_limite;
+        //$qt = "select max(numero_factura) nro_fac from Transaction where id < " . $trans_limite;
+        $qt = "select max(numero_factura) nro_fac from Transaction";
         $query1 = Doctrine_Query::create()->query($qt);
         $trans = $query1->toArray();
 
         // max en reserve
-        $qr = "select max(numero_factura) nro_fac from Reserve where numero_factura < 2000";
+        //$qr = "select max(numero_factura) nro_fac from Reserve where numero_factura < 2000";
+        $qr = "select max(numero_factura) nro_fac from Reserve";
         $query2 = Doctrine_Query::create()->query($qr);
         $res = $query2->toArray();
 
