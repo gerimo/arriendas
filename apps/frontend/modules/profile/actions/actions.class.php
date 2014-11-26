@@ -342,13 +342,13 @@ class profileActions extends sfActions {
 
         $reserve->save();
 
-        if ($reserve->getImpulsive()) {
+        /*if ($reserve->getImpulsive()) {
             if (!$this->cambiarReserva($reserve->getId())) {
                 error_log("NO SE PUDO CAMBIAR LA RESERVA");
             } else {
                 error_log("TODO OK CON EL CAMBIO DE RESERVA");
             }
-        }
+        }*/
 
         die();
     }
@@ -356,8 +356,6 @@ class profileActions extends sfActions {
     public function executeCambiarEstadoPedidoAjax(sfWebRequest $request) {
         $idReserve = $request->getPostParameter('idReserve');
         $accion = $request->getPostParameter('accion');
-
-error_log("RESERVA: ".$idReserve.", ACCION: ".$accion);
 
         if (strpos($accion, 'oportunidad') !== false) {
             $oReserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
@@ -407,16 +405,16 @@ error_log("RESERVA: ".$idReserve.", ACCION: ".$accion);
                 $reserve->setCambioEstadoRapido(0);
             }
         } else if ($accion == 'rechazar') {
-error_log("RESERVA RECHAZAR: ".$reserve->getId());
+
             $reserve->setCanceled(1);
 
-            if ($reserve->getImpulsive()) {
+            /*if ($reserve->getImpulsive()) {
                 if (!$this->cambiarReserva($reserve->getId())) {
                     error_log("NO SE PUDO CAMBIAR LA RESERVA");
                 } else {
                     error_log("TODO OK CON EL CAMBIO DE RESERVA");
                 }
-            }
+            }*/
         }
         $reserve->save();
 
@@ -4162,8 +4160,6 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
 
         $cars = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")))->getCars();
 
-        error_log("autos: ".count($cars));
-
         $mKey = 0;
         $minKey = 0;
         $cities = array();
@@ -4177,16 +4173,12 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
         foreach ($cars as $car) {
             //autos para que postule a la oportunidad
 
-            error_log($car->getId());
-
             if ($car->getSeguroOk() == 4) {
-                error_log("seguroOK");
                 $activeCars[] = $car;
             }
 
             if ($car->getActivo() == 1) {
-                error_log("Activo");
-
+                
                 //mostramos solo las oportunidades cuando un auto no está ya arrendado
                 $q = Doctrine_Query::create()
                         ->select('r.date, date_add(r.date, INTERVAL r.duration HOUR) as endingDate')
@@ -4253,14 +4245,8 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
                 );
                 $reserve = $query->toArray();
                 $auxReserves = array_merge($auxReserves, $reserve);
-
-                error_log("[][]Reservas");
-                error_log(print_r($reserve, true));
             }
         }
-
-        error_log("Reservas");
-        error_log(print_r($auxReserves, true));
 
         $auxIdsIncluidos = array();
         $reservasAConsiderar = array();
@@ -4287,8 +4273,6 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
                 } else {
                     $reservasRecibidas[$i]['isImpulsive'] = 0;
                 }
-
-                error_log(print_r($reservasRecibidas[$i], true));
 
                 $this->logMessage("reserva recibida a considerar:" . $reservasRecibidas[$i]['idReserve']);
 
