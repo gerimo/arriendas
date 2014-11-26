@@ -12,13 +12,13 @@ class OportunityQueueFinalNoticeTask extends sfBaseTask {
         ));
 
         $this->namespace = 'arriendas';
-        $this->name = 'oportunityQueueFinalNoticeTask';
+        $this->name = 'oportunityQueueFinalNotice';
         $this->briefDescription = '';
         $this->detailedDescription = <<<EOF
-The [OportunityQueueFinalNoticeTask|INFO] task does things.
+The [OportunityQueueFinalNotice|INFO] task does things.
 Call it with:
 
-  [php symfony arriendas:OportunityQueueFinalNoticeTask|INFO]
+  [php symfony arriendas:oportunityQueueFinalNotice|INFO]
 EOF;
     }
 

@@ -3760,7 +3760,6 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
                 $duracion = $reserva->getDuration();
 
                 $horasFaltantes = intval(($fechaReserva - strtotime('now'))/60/60);
-                error_log("horas faltantes: ".$horasFaltantes);
 
                 $oportunityQueue = Doctrine_Core::getTable('OportunityQueue')->findOneByReserveId($reserva->getId());
 
@@ -4268,19 +4267,8 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
         foreach ($auxReserves as $r) {
             if (!in_array($r['id'], $auxIdsIncluidos) && $r['User_id'] != $this->getUser()->getAttribute("userid")) {
 
-                if ($r['impulsive']) {
-
-                    $t = Doctrine_Core::getTable('Transaction')->findOneByReserveId($r['id']);
-
-                    if (!$t->getCompleted()) {
-                        $reservasAConsiderar[] = $r;
-                        $auxIdsIncluidos[] = $r['id'];
-                    }
-                } else {
-
-                    $reservasAConsiderar[] = $r;
-                    $auxIdsIncluidos[] = $r['id'];
-                }
+                $reservasAConsiderar[] = $r;
+                $auxIdsIncluidos[] = $r['id'];
             }
         }
 
