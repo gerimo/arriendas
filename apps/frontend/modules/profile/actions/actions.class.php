@@ -3746,6 +3746,8 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
 
         foreach ($reserve as $i => $reserva) {
 
+            $from = $reserve->getDate();
+
             if ($reserva->getVisibleRenter()) {
 
                 //obtiene completed de transaction
@@ -3768,7 +3770,7 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
                     $estado = 6; // Compra impulsiva, dueño original aún no confirma
                 } else if ($reserva->getConfirmed() && $reserva->getImpulsive() && ($reserva->getReservaOriginal() == null || $reserva->getReservaOriginal() == 0)) {
                     $estado = 5; // Compra impulsiva, dueño original confirmó
-                } else if ($reserva->getConfirmed() && $reserva->getImpulsive()) {
+                } else if ($reserva->getConfirmed() && $reserva->getImpulsive() && !$reserve->getCar()->hasReserve($reserve->getInicio(), $reserve->getTermino())) {
                     $estado = 4; // Dueños que desean la oportunidad
                 } else if (isset($transaction[0]) && $transaction[0]['completed'] == 1 && $reserva->getConfirmed()) { // la reserva está pagada
                     $estado = 3;
@@ -3808,7 +3810,7 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
                     } elseif ($estado == 3) {
                         $reservasRealizadas[$i]['estado'] = 3;
                     } elseif ($estado == 2) {
-                        /* manejo de usuarios bloqueados */
+                        // manejo de usuarios bloqueados
                         if($reserva->getUser()->getBlocked()){
                             $reservasRealizadas[$i]['estado'] = 0;
                         }else{
@@ -3819,7 +3821,6 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
                     } else {
                         $reservasRealizadas[$i]['estado'] = 0;
                     }
-                    
 
                     //fecha y hora de inicio y término
                     $reservasRealizadas[$i]['posicion'] = $reserva->getDate();
@@ -6345,16 +6346,85 @@ error_log("RESERVA RECHAZAR: ".$reserve->getId());
 
 
 
-            // CONTRATOS!!
-            $body = "<h1>Se ha realizado un cambio</h1>";
+            
 
-            $message = $this->getMailer()->compose();
-            $message->setSubject("Notificación cambio [".$r->getId()."]");
-            $message->setFrom('no-reply@arriendas.cl', 'Notificaciones Arriendas.cl');
-            /*$message->setTo(array("soporte@arriendas.cl" => "Soporte Arriendas.cl"));*/
-            $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
-            $message->setBody($body, "text/html");
-            $this->getMailer()->send($message);
+            $renter = $r->getUser();
+            $owner = $r->getCar()->getUser();
+
+            $functions = new Functions;
+            $formulario = $functions->generarFormulario(NULL, $r->getToken());
+            $reporte = $functions->generarReporte($reserve->getCar()->getId());
+            $contrato = $functions->generarContrato($r->getToken());
+            $pagare = $functions->generarPagare($r->getToken());
+
+            // DOCUMENTOS DUEÑO
+
+            $subject = "";
+
+            $body = "";
+
+            $mail = new Email();
+            $message = $mail->getMessage()
+                ->setSubject($subject)
+                ->setBody($body), 'text/html')
+                ->setFrom("soporte@arriendas.cl" => "Soporte Arriendas.cl")
+                ->setTo(array($owner->getEmail() => $owner->getFirstName()." ".$owner->getLastname()))
+                ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
+                ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
+                ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+            
+            if (!is_null($renter->getDriverLicenseFile())) {
+                $filepath = $renter->getDriverLicenseFile();
+                if (is_file($filepath)) {
+                    $message->attach(Swift_Attachment::fromPath($renter->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$renter->getLicenceFileName()));
+                }
+            }
+            
+            $mailer->send($message);
+
+            // DOCUMENTOS ARRENDATARIO
+
+            $subject = "";
+
+            $body = "";
+
+            $mail = new Email();
+            $message = $mail->getMessage()
+                ->setSubject($subject)
+                ->setBody($body, 'text/html')
+                ->setFrom("soporte@arriendas.cl" => "Soporte Arriendas.cl")
+                ->setTo(array($renter->getEmail() => $renter->getFirstName()." ".$renter->getLastname()))
+                ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
+                ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
+                ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'))
+                ->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
+                
+            $mailer->send($message);
+
+            // DOCUMENTOS SOPORTE
+
+            $subject = "";
+
+            $body = "";
+
+            $mail = new Email();
+            $message = $mail->getMessage()
+                ->setSubject($subject)
+                ->setBody($body, 'text/html')
+                ->setFrom("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl")
+                ->setTo("soporte@arriendas.cl" => "Soporte Arriendas.cl")
+                ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
+                ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
+                ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+            
+            if (!is_null($renter->getDriverLicenseFile())) {
+                $filepath = $renter->getDriverLicenseFile();
+                if (is_file($filepath)) {
+                    $message->attach(Swift_Attachment::fromPath($renter->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$renter->getLicenceFileName()));
+                }
+            }
+
+            $mailer->send($message);
 
         } catch (Exception $e) {
             $error = $e->getMessage();

@@ -43,7 +43,7 @@ EOF;
             ->andWhere('R.impulsive = 1')
             ->andWhere('R.reserva_original = 0 OR R.reserva_original = NULL')
             ->andWhere('NOW() < R.date')
-            ->andWhere("NOW() > DATE_SUB(NOW(), INTERVAL {$hoursToNotice} HOUR)", $hoursToNotice)
+            ->andWhere("NOW() >= DATE_SUB(R.date, INTERVAL {$hoursToNotice} HOUR)", $hoursToNotice)
             ->andWhere('T.completed = 1')
             ->andWhere("OQ.final_notice = 0");
 
@@ -53,12 +53,12 @@ EOF;
 
         foreach ($Reservations as $OriginalReserve) {
 
-            $this->log("Chequeando reserva ".$OriginalReserve->getId()."...");
+            $this->log("[".date("Y-m-d H:i:s")."] Chequeando reserva ".$OriginalReserve->getId()."...");
             $OpportunityReservations = Doctrine_Core::getTable("Reserve")->findByReservaOriginal($OriginalReserve->getId());
             
             if (count($OpportunityReservations) == 0) {
 
-                $this->log("No tiene oportunidades. Notificando a soporte...");
+                $this->log("[".date("Y-m-d H:i:s")."] No tiene oportunidades. Notificando a soporte...");
 
                 $this->notificarASoporte($OriginalReserve, $hoursToNotice);
 
@@ -79,45 +79,27 @@ EOF;
 
                 if ($notify) {
 
-                    $this->log("Revisando diponibilidad de las oportunidades...");
+                    $this->log("[".date("Y-m-d H:i:s")."] Revisando diponibilidad de las oportunidades...");
 
                     $moreSaving = array();
                     $nearest = array();
 
                     foreach ($OpportunityReservations as $OpportunityReserve) {
 
-                        // Se revisa que el auto esté disponible
-                        $q = Doctrine_Core::getTable('Reserve')
-                            ->createQuery('R')
-                            ->innerJoin('R.Transaction T')
-                            ->where('R.confirmed = 1')
-                            ->andWhere('R.car_id = ?', $OpportunityReserve->getCarId())
-                            ->andWhere('
-                                (R.date >= ? AND R.date < DATE_ADD(?, INTERVAL ? HOUR)) OR
-                                (? >= R.date AND DATE_ADD(?, INTERVAL ? HOUR) < DATE_ADD(R.date, INTERVAL R.duration HOUR)) OR
-                                (? <= DATE_ADD(R.date, INTERVAL R.duration HOUR) AND DATE_ADD(?, INTERVAL ? HOUR) >= DATE_ADD(R.date, INTERVAL R.duration HOUR))
-                            ', array(
-                                    $OpportunityReserve->getDate(), $OpportunityReserve->getDate(), $OpportunityReserve->getDuration(),
-                                    $OpportunityReserve->getDate(), $OpportunityReserve->getDate(), $OpportunityReserve->getDuration(),
-                                    $OpportunityReserve->getDate(), $OpportunityReserve->getDate(), $OpportunityReserve->getDuration()
-                                )
-                            )
-                            ->andWhere("T.completed = 1");
-
-                        $OverlappedReservations = $q->execute();
+                        $Car = $OpportunityReserve->getCar();
 
                         // El auto se considera sólo si no está ya tomado por otra reserva
-                        if (count($OverlappedReservations) == 0) {
+                        if (!$Car->hasReserve($OpportunityReserve->getInicio(), $OpportunityReserve->getTermino())) {
 
                             // OJO. se considera sólo el precio por hora. averiguar como considerar el precio por día
-                            $moreSaving[$OpportunityReserve->getId()] = ($OpportunityReserve->getCar()->getPricePerHour() * $OpportunityReserve->getDuration()) - $OpportunityReserve->getPrice();
+                            $moreSaving[$OpportunityReserve->getId()] = ($Car->getPricePerHour() * $OpportunityReserve->getDuration()) - $OpportunityReserve->getPrice();
                             $nearest[$OpportunityReserve->getId()] = (6371 * acos( cos( radians($OriginalReserve->getLat()) ) * cos( radians( $OpportunityReserve->getLat() ) ) * cos( radians($OpportunityReserve->getLng()) - radians($OriginalReserve->getLng()) ) + sin( radians($OriginalReserve->getLat()) ) * sin( radians( $OpportunityReserve->getLat() ) ) ) );
                         }
                     }
 
                     if (count($moreSaving) > 0) {
 
-                        $this->log("Cambiando a la oportunidad que genera más ahorro...");
+                        $this->log("[".date("Y-m-d H:i:s")."] Cambiando a la oportunidad que genera más ahorro...");
 
                         // Se ordenan los autos del mayor ahorro al menor
                         arsort($moreSaving);
@@ -141,24 +123,39 @@ EOF;
                         $NewReserve->getTransaction()->setCompleted(true);
                         $NewReserve->save();
 
-                        // Notificamos al usuario
-                        $this->log("Notificando al usuario...");
+                        $Car = $NewReserve->getCar();
+                        $Renter = $NewReserve->getRenter();
+                        $Owner = $Car->getUser();
 
-                        /*$message = $this->getMailer()->compose();
-                        $message->setSubject("[NF] Reserva ".$OriginalReserve->getId()." sin oportunidades");
-                        $message->setFrom('no-reply@arriendas.cl', 'Notificaciones Arriendas');
-                        $message->setTo(array("Germán Rimoldi" => "german@arriendas.cl"));
-                        $message->setBody($body, "text/html");
-                        $this->getMailer()->send($message);*/
+                        // Notificamos al arrendatario
+                        $this->log("[".date("Y-m-d H:i:s")."] Notificando al arrendatario cambio de auto ".$OriginalReserve->getCar()->getId()." a ".$Car->getId());
 
-                        $body = "<h1>Notificación de cambio de vehículo</h1>";
+                        $subject = "Hemos cambiado el auto de tu reserva por un auto mejor, manteniendo el precio";
+
+                        $body = "<p>Hola ".$Renter->getFirstname()."</p>";
+                        $body .= "<p>Hemos reemplazado el auto que pagaste por otro auto de mayor precio (y no debes pagar la diferencia!).</p>";
+                        $body .= "<h3>Datos del propietario</h3>";
+                        $body .= "<table>";
+                        $body .= "<tr><th>Nombre</th><td>".$Owner->getFirstname()." ".$Owner->getLastname()."</td></tr>";
+                        $body .= "<tr><th>Teléfono</th><td>".$Owner->getTelephone()."</td></tr>";
+                        $body .= "<tr><th>Correo electrónico</th><td>".$Owner->getEmail()."</td></tr>";
+                        $body .= "<tr><th>Dirección</th><td>".$Owner->getAddress()."</td></tr>";
+                        $body .= "<tr><th>Marca</th><td>".$Car->getModel()->getBrand()->getName()."</td></tr>";
+                        $body .= "<tr><th>Modelo</th><td>".$Car->getModel()->getName()."</td></tr>";
+                        $body .= "<tr><th>Ahorro</th><td>".round((($NewReserve->getRentalPrice() - $NewReserve->getPrice())/ $NewReserve->getPrice(), 0) * 100)." %</td></tr>";
+                        $body .= "</table>";
+
+                        $body .= "<br><br>";
+                        $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Atentamente</p>";
+                        $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Equipo Arriendas.cl</p>";
 
                         $message = $this->getMailer()->compose();
-                        $message->setSubject("Notificación cambio de vehículo [".$OriginalReserve->getId()."]");
-                        $message->setFrom('no-reply@arriendas.cl', 'Notificaciones Arriendas.cl');
-                        /*$message->setTo(array("soporte@arriendas.cl" => "Soporte Arriendas.cl"));*/
-                        $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                        $message->setSubject($subject);
                         $message->setBody($body, "text/html");
+                        $message->setFrom('soporte@arriendas.cl', 'Soporte Arriendas.cl');
+                        /*$message->setTo(array($Renter->getEmail() => $Renter->getFirstName()." ".$Renter->getLastname()));*/
+                        $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                        
                         $this->getMailer()->send($message);
                     } else {
 
@@ -170,6 +167,7 @@ EOF;
                     $OpportunityQueue->setFinalNotice(true);
                     $OpportunityQueue->save();
                 } else {
+
                     $this->log("Ya poseía oportunidad seleccionada [si sucede esto revisar poque es raro]");
                 }
             }

@@ -1,5 +1,7 @@
 <?php
 
+// FALTA VER UNA FORMA DE NO ENVIAR DENUEVO LOS CORREOS SI EL TASK SE LLEGASE A CORRER AGAIN
+
 class AutoMananaTask extends sfBaseTask {
 
     protected function configure() {
@@ -88,20 +90,20 @@ EOF;
                     $CarTodayEmail = new CarTodayEmail();
 
                     $CarTodayEmail->setCar($Car);
-                    $CarTodayEmail->setSentAt(date("Y-m-d H:i:S"));
+                    $CarTodayEmail->setSentAt(date("Y-m-d H:i:s"));
                     $CarTodayEmail->save();
 
                     $this->log("Enviando consulta a Auto ID: ".$Car->getId());
 
                     $User = $Car->getUser();
 
-                    $subject = "¡Tenemos un aumento en la demana! Cuéntanos sobre ".$Car->getPatente();
+                    $subject = "¡Tenemos un aumento en la demanda! Cuéntanos sobre ".$Car->getPatente();
 
                     $body = "<p>".$User->getFirstname().",</p>";
-                    $body .= "<p>Tenemos un aumento en la demanda de autos y nos gustaría saber si tu auto patente <strong>".$Car->getPatente()."</strong> se encuentra disponible. Para confirmar la disponibilidad haz <a href='http://www.arriendas.cl/profile/auto-hoy/".$CarTodayEmail->getSignature()."'>click aquíx</a></p>";
+                    $body .= "<p>Tenemos un aumento en la demanda de autos y nos gustaría saber si tu auto patente <strong>".$Car->getPatente()."</strong> se encuentra disponible. Para confirmar la disponibilidad haz <a href='http://www.arriendas.cl/profile/auto-hoy/".$CarTodayEmail->getSignature()."'>click aquí</a>.</p>";
                     $body .= "<br>";
-                    $body .= "<p style='color: #aaa; font-size:14px'>Atentamente</p>";
-                    $body .= "<p style='color: #aaa; font-size:14px'>Equipo Arriendas.cl</p>";
+                    $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Atentamente</p>";
+                    $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Equipo Arriendas.cl</p>";
 
                     $message = $this->getMailer()->compose();
                     $message->setSubject($subject);
