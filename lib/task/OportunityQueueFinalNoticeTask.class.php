@@ -94,10 +94,6 @@ EOF;
                             // OJO. se considera sólo el precio por hora. averiguar como considerar el precio por día
                             $moreSaving[$OpportunityReserve->getId()] = ($Car->getPricePerHour() * $OpportunityReserve->getDuration()) - $OpportunityReserve->getPrice();
                             $nearest[$OpportunityReserve->getId()] = (6371 * acos( cos( deg2rad($OriginalReserve->getCar()->getLat()) ) * cos( deg2rad( $OpportunityReserve->getCar()->getLat() ) ) * cos( deg2rad($OpportunityReserve->getCar()->getLng()) - deg2rad($OriginalReserve->getCar()->getLng()) ) + sin( deg2rad($OriginalReserve->getCar()->getLat()) ) * sin( deg2rad( $OpportunityReserve->getCar()->getLat() ) ) ) );
-
-                            error_log("[DEBUG] NO TIENE RESERVA");
-                        } else {
-                            error_log("[DEBUG] TIENE RESERVA");
                         }
                     }
 
