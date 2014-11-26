@@ -117,7 +117,7 @@ function bindEventsAll(){
             url: urlPagoValidar,
             data: {idReserve: idReserve, idUsuario: idUsuario}
         }).done(function(data) {
-            if (data.length > 0) {
+            if (data.length > 0) {alert(data);
                 switch (data) {
                     case 'error:rutnulo':
                         alert("No has ingresado tu RUT, Por favor ingresa tu RUT en tu Perfil para poder realizar el pago.");
@@ -137,6 +137,9 @@ function bindEventsAll(){
                         } else {
                             window.location = urlUpdateProfile + "?redirect=pedidos";
                         }
+                        break;
+                    case 'error:notlogged':
+                        window.location = urlCarProfile + idCar;
                         break;
                     default:
                         alert('Disculpe, ha ocurrido un error. Por favor inténtelo nuevamente mas tarde.');

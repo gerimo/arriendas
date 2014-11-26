@@ -3171,8 +3171,8 @@ class profileActions extends sfActions {
                 $errorMessage = "error:nobirthdate";
             }
         } else {
-
-            $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+            $errorMessage = "error:notlogged";
+            /*$reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
             if ($reserve->getUser()->getRut() == "") {
                 $errorMessage = "error:rutnulo";
             }
@@ -3185,7 +3185,7 @@ class profileActions extends sfActions {
             }
             if (is_null($reserve->getUser()->getBirthdate()) || strlen($reserve->getUser()->getBirthdate()) <= 0) {
                 $errorMessage = "error:nobirthdate";
-            }
+            }*/
         }
 
         echo $errorMessage;
