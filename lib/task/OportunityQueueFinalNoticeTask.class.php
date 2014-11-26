@@ -101,10 +101,6 @@ EOF;
                         }
                     }
 
-                    var_dump($moreSaving);
-                    $maisBaratu = array_shift(array_keys($moreSaving));
-                    var_dump($maisBaratu);
-
                     if (count($moreSaving) > 0) {
 
                         $this->log("[".date("Y-m-d H:i:s")."] Cambiando a la oportunidad que genera más ahorro...");
@@ -127,7 +123,7 @@ EOF;
                         }
 
                         // Finalmente, se deja como completa la reserva que genera más ahorro (OJO. falta incluir también la distancia)
-                        $NewReserve = Doctrine_Core::getTable("Reserve")->find(key(array_shift($moreSaving)));
+                        $NewReserve = Doctrine_Core::getTable("Reserve")->find(array_shift(array_keys($moreSaving)));
                         $NewReserve->getTransaction()->setCompleted(true);
                         $NewReserve->save();
 
