@@ -102,7 +102,7 @@ EOF;
                     }
 
                     var_dump($moreSaving);
-                    $maisBaratu = array_shift($moreSaving);
+                    $maisBaratu = current($moreSaving);
                     var_dump($maisBaratu);
 
                     if (count($moreSaving) > 0) {
