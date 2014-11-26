@@ -181,7 +181,7 @@ EOF;
                         $subject = "¡Has ganado la oportunidad!";
 
                         $body = "<p>".$Owner->getFirstname().",</p>";
-                        $body .= "<p>Han aceptado tu postulación por un total de <strong>".number_format(($NewReserve->getPrice()), 0, ',', '.')."</strong>, desde ".$NewReserve->getFechaInicio()." ".$NewReserve->getHoraInicio()." hasta ".$NewReserve->getFechaTermino()." ".$NewReserve->getHoraTermino().". Te recomendamos que llames al arrendatario cuanto antes. Sus datos son los siguientes:</p>";
+                        $body .= "<p>Han aceptado tu postulación por un total de <strong>$ ".number_format(($NewReserve->getPrice()), 0, ',', '.')."</strong>, desde ".$NewReserve->getFechaInicio()." ".$NewReserve->getHoraInicio()." hasta ".$NewReserve->getFechaTermino()." ".$NewReserve->getHoraTermino().". Te recomendamos que llames al arrendatario cuanto antes. Sus datos son los siguientes:</p>";
                         $body .= "<table>";
                         $body .= "<tr><th style='text-align: left'>Nombre</th><td>".$Renter->getFirstname()." ".$Renter->getLastname()."</td></tr>";
                         $body .= "<tr><th style='text-align: left'>Teléfono</th><td>".$Renter->getTelephone()."</td></tr>";
@@ -213,7 +213,7 @@ EOF;
                         
                         $this->getMailer()->send($message);
 
-                        $subject = "Ha habido un cambio de auto en la Reserva ".$originalReserve->getId();
+                        $subject = "Ha habido un cambio de auto en la Reserva ".$OriginalReserve->getId();
 
                         $body = "<p style='background-color: #FA5858; padding: 10px 5px'>Este cambio fue realizado de manera automático por el Task OpportunityQueueFinalNotice.</p>";
                         $body .= "<h3>Datos del propietario</h3>";
@@ -293,7 +293,7 @@ EOF;
                 "german@arriendas.cl" => "Germán Rimoldi"
             ));
         $message->setBody($body, "text/html");
-        
+
         $this->getMailer()->send($message);
     }
 }
