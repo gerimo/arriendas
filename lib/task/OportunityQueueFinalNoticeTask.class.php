@@ -102,7 +102,9 @@ EOF;
                     }
 
                     var_dump($moreSaving);
-                    
+                    $maisBaratu = array_shift($moreSaving);
+                    var_dump($maisBaratu);
+
                     if (count($moreSaving) > 0) {
 
                         $this->log("[".date("Y-m-d H:i:s")."] Cambiando a la oportunidad que genera más ahorro...");
