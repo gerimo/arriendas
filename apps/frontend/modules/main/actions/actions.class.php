@@ -3395,7 +3395,7 @@ public function calificacionesPendientes(){
             $mailer = $mail->getMailer();
 
             $message = $mail->getMessage()
-                ->setSubject('Error main/availabilityOpen '.date("Y-m-d H:i:s"))
+                ->setSubject('Error main/executeAvailabilityOpen '.date("Y-m-d H:i:s"))
                 ->setBody("<p>".$e->getMessage()."</p>", 'text/html')
                 ->setFrom(array("no-reply@arriendas.cl" => "Errores Arriendas.cl"))
                 ->setTo(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
