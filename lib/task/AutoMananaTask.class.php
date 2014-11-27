@@ -7,7 +7,7 @@ class AutoMananaTask extends sfBaseTask {
     protected function configure() {
 
         $this->addOptions(array(
-            new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name'),
+            new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name', 'frontend'),
             new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
             new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine'),
             new sfCommandOption('reminder', null, sfCommandOption::PARAMETER_REQUIRED, 'Is a reminder', 0),
@@ -41,8 +41,8 @@ EOF;
             $host = 'http://www.arriendas.cl';
         }
 
-        $routing    = $this->getRouting();
-        $imageUrl   = $host . $routing->generate('availabilityEmailOpen');
+        $routing = $this->getRouting();
+        $imageUrl = $host . $routing->generate('availabilityEmailOpen');
 
         if ($isReminder) {
 
@@ -55,7 +55,7 @@ EOF;
             $this->log("Revisando si mañana es feriado o sábado...");
 
             $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+".$i." day")));
-            if ($Holiday || date("N", strtotime("+".$i." day")) == 6) {
+            if ($Holiday || date("N", strtotime("+".$i." day")) == 6 || date("N", strtotime("+".$i." day")) == 5) {
 
                 $from = date("Y-m-d", strtotime("+".$i." day"));
                 $to = date("Y-m-d", strtotime("+".$i." day"));
@@ -104,8 +104,8 @@ EOF;
                     $CarTodayEmail->save();
 
                     $url  = $host . $routing->generate('availability', array(
-                        'id' => $oportunityEmail->getReserve()->getId(),
-                        'signature' => $oportunityEmail->getReserve()->getSignature(),
+                        'id' => $CarTodayEmail->getId(),
+                        'signature' => $CarTodayEmail->getSignature(),
                     ));
 
                     $this->log("Enviando consulta a Auto ID: ".$Car->getId());
@@ -115,7 +115,7 @@ EOF;
                     $subject = "¡Tenemos un aumento en la demanda! Cuéntanos sobre tu auto patente ".strtoupper($Car->getPatente());
 
                     $body = "<p>".$User->getFirstname().",</p>";
-                    $body .= "<p>Tenemos un aumento en la demanda de autos y nos gustaría saber si tu auto patente <strong>".strtoupper($Car->getPatente())."</strong> se encuentra disponible. Para confirmar la disponibilidad haz <strong><a href='http://www.arriendas.cl/profile/availability/".$CarTodayEmail->getId()."/".$CarTodayEmail->getSignature()."'>click aquí</a></strong>.</p>";
+                    $body .= "<p>Tenemos un aumento en la demanda de autos y nos gustaría saber si tu auto patente <strong>".strtoupper($Car->getPatente())."</strong> se encuentra disponible. Para confirmar la disponibilidad haz <strong><a href='{$url}'>click aquí</a></strong>.</p>";
                     $body .= "<br>";
                     $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Atentamente</p>";
                     $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Equipo Arriendas.cl</p>";
