@@ -115,7 +115,7 @@ EOF;
                     $subject = "¡Tenemos un aumento en la demanda! Cuéntanos sobre tu auto patente ".strtoupper($Car->getPatente());
 
                     $body = "<p>".$User->getFirstname().",</p>";
-                    $body .= "<p>Tenemos un aumento en la demanda de autos y nos gustaría saber si tu auto patente <strong>".strtoupper($Car->getPatente())."</strong> se encuentra disponible. Para confirmar la disponibilidad haz <strong><a href='http://www.arriendas.cl/profile/availability/".$CarTodayEmail->getId()."/".$CarTodayEmail->getSignature()."'>click aquí</a></strong>.</p>";
+                    $body .= "<p>Tenemos un aumento en la demanda de autos y nos gustaría saber si tu auto patente <strong>".strtoupper($Car->getPatente())."</strong> se encuentra disponible. Para confirmar la disponibilidad haz <strong><a href='{$url}'>click aquí</a></strong>.</p>";
                     $body .= "<br>";
                     $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Atentamente</p>";
                     $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Equipo Arriendas.cl</p>";
