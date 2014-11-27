@@ -3382,4 +3382,137 @@ public function calificacionesPendientes(){
         return sfView::NONE;
     }
 
+    // PROCESO ARTIFICIAL DE UPDATE PARA FACTURAS ENTRE 1306 Y 2000
+    // CORRESPONDIENTE A TRANSACCIONES COMPLETADAS
+    
+    /** 
+     * proceso de update manual de nro. de factura
+     * en tablas Reserve y Transaction
+     * @param type $reserve
+     * @param type $order
+     */
+    public function executeUpdateManualNroFactura(sfWebRequest $request){
+        
+        ini_set('memory_limit', '1024M');
+        
+        //$trans_actual = 13421;
+        //$trans_limite = 17826;
+        
+        $trans_actual = $request->getParameter('from');
+        $trans_limite = $request->getParameter('to');
+        
+        
+        $limits = array($trans_actual, $trans_limite);
+        $trans_query = Doctrine_Query::create()
+            ->from('Transaction t')
+            ->leftJoin('t.Reserve r')
+            ->leftJoin('r.Car c')
+            ->where('t.completed = ?', true)
+            ->andwhere('t.id BETWEEN ? AND ?', $limits)
+            ->andWhere('t.numero_factura = 0')
+            ->execute();
+        
+        foreach($trans_query as $trans){
+            $reserve = $trans->getReserve();
+            $this->generarNroFactura($reserve, $trans, $trans_limite);
+            echo "transaction " . $trans->getId() . " actualiza nro_factura a: " . $trans->getNumeroFactura() . "\n";
+            echo "reserve " . $reserve->getId() . " actualiza nro_factura a: " . $reserve->getNumeroFactura() . "\n";
+            echo '<br>';
+        }
+        
+        exit;
+    }
+    
+    /** 
+     * generación de nro. de factura
+     * en tablas Reserve y Transaction
+     * @param type $reserve
+     * @param type $order
+     */
+    private function generarNroFactura($reserve, $order, $trans_limite){
+        
+        // primero valido que no exista otra factura ya generada 
+        // para la misma quincena y mismo user_id (y numero asignado!)
+
+        $first_day = date('Ym01', strtotime($order->getDate()));
+        $actual_day = date('j', strtotime($order->getDate()));
+        $day_15 = date('Ymd', strtotime($first_day. ' + 14 days'));
+        if($actual_day <= 15){
+            // primera quincena
+            $quincena_from = $first_day;
+            $quincena_to = $day_15;
+        }else{
+            // segunda quincena
+            $quincena_from = $day_15;
+            $quincena_to = date('Ymt', strtotime($quincena_from));  //t returns the number of days in the month of a given date
+        }
+
+        $rangeDates = array($quincena_from, $quincena_to);
+        $trans_query = Doctrine_Query::create()
+            ->from('Transaction t')
+            ->leftJoin('t.Reserve r')
+            ->leftJoin('r.Car c')
+            ->where('c.user_id = ?', $reserve->getIdOwner())
+            ->andWhere('t.completed = ?', true)
+            ->andwhere('t.date BETWEEN ? AND ?', $rangeDates)
+            ->andWhere('t.id <> ?', $order->getId())
+            ->andWhere('t.numero_factura <> 0');
+            //->fetchOne();
+        
+        
+        $cant_transac = $trans_query->count();
+
+        $conn = Doctrine_Manager::getInstance()->getCurrentConnection();
+        $conn->beginTransaction();
+        
+        $nro_fac_transaction = 0;
+        if($cant_transac > 0)
+        {
+            // hay factura generada durante quincena actual, asigno mismo nro.
+            $trans = $trans_query->fetchOne();
+            $nro_fac_transaction = $trans->getNumeroFactura();
+            $order->setNumeroFactura($nro_fac_transaction);
+        }else{                    
+            // no hay factura generada durante quincena actual, asigno el siguiente nro.
+            // (debo obtener el mayor nro. asignado desde ambas tablas)
+            try{
+                $nro_fac_transaction = $this->getNextNumeroFactura($trans_limite);
+                $order->setNumeroFactura($nro_fac_transaction);
+
+            } catch (Exception $ex) {
+                echo $ex->getMessage();
+            }
+        }
+        $order->save();
+        
+        $montoLiberacion = $reserve->getMontoLiberacion();
+        $montoGarantia = sfConfig::get('app_monto_garantia');
+        if($montoLiberacion != $montoGarantia)
+        {
+            $nro_fac_reserve = $cant_transac > 0? $this->getNextNumeroFactura($trans_limite) : $nro_fac_transaction + 1;
+            $reserve->setNumeroFactura($nro_fac_reserve);
+            $reserve->save();
+        }                    
+
+        //Resolvemos la transaccion
+        $conn->commit();
+    }
+    
+    private function getNextNumeroFactura($trans_limite){
+        
+        // max en transaction
+        //$qt = "select max(numero_factura) nro_fac from Transaction where id < " . $trans_limite;
+        $qt = "select max(numero_factura) nro_fac from Transaction";
+        $query1 = Doctrine_Query::create()->query($qt);
+        $trans = $query1->toArray();
+
+        // max en reserve
+        //$qr = "select max(numero_factura) nro_fac from Reserve where numero_factura < 2000";
+        $qr = "select max(numero_factura) nro_fac from Reserve";
+        $query2 = Doctrine_Query::create()->query($qr);
+        $res = $query2->toArray();
+
+        $next_numero = ($trans[0]['nro_fac'] > $res[0]['nro_fac']? $trans[0]['nro_fac'] : $res[0]['nro_fac']) + 1;
+        return $next_numero;
+    }
 }

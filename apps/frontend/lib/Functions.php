@@ -1233,18 +1233,8 @@ p{
             // no hay factura generada durante quincena actual, asigno el siguiente nro.
             // (debo obtener el mayor nro. asignado desde ambas tablas)
             try{
-                // max en transaction
-                $qt = "select max(numero_factura) nro_fac from Transaction";
-                $query1 = Doctrine_Query::create()->query($qt);
-                $trans = $query1->toArray();
-                
-                // max en reserve
-                $qr = "select max(numero_factura) nro_fac from Reserve";
-                $query2 = Doctrine_Query::create()->query($qr);
-                $res = $query2->toArray();
-                
-                $nro_fac_transaction = ($trans[0]['nro_fac'] > $res[0]['nro_fac']? $trans[0]['nro_fac'] : $res[0]['nro_fac']) + 1;
-                $order->setNumeroFactura($nro_fac_transaction);
+                $nro_fac_transaction = $this->getNextNumeroFactura();
+		$order->setNumeroFactura($nro_fac_transaction);
 
             } catch (Exception $ex) {
                 echo $ex->getMessage();
@@ -1253,16 +1243,32 @@ p{
         $order->save();
         
         $montoLiberacion = $reserve->getMontoLiberacion();
-        $montoGarantia = sfConfig::get('deposito_garantia');
+        $montoGarantia = sfConfig::get('app_monto_garantia');
         if($montoLiberacion != $montoGarantia)
         {
-            $nro_fac_reserve = $cant_transac > 0? $cant_transac + 2: $nro_fac_transaction + 1;
+            $nro_fac_reserve = $cant_transac > 0? $this->getNextNumeroFactura() : $nro_fac_transaction + 1;
             $reserve->setNumeroFactura($nro_fac_reserve);
             $reserve->save();
         }                    
 
-        //Resolvemos la transaccoin
+        //Resolvemos la transaccion
         $conn->commit();
+    }
+
+    private function getNextNumeroFactura(){
+        
+        // max en transaction
+        $qt = "select max(numero_factura) nro_fac from Transaction";
+        $query1 = Doctrine_Query::create()->query($qt);
+        $trans = $query1->toArray();
+
+        // max en reserve
+        $qr = "select max(numero_factura) nro_fac from Reserve";
+        $query2 = Doctrine_Query::create()->query($qr);
+        $res = $query2->toArray();
+
+        $next_numero = ($trans[0]['nro_fac'] > $res[0]['nro_fac']? $trans[0]['nro_fac'] : $res[0]['nro_fac']) + 1;
+        return $next_numero;
     }
 
 }
