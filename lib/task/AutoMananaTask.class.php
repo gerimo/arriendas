@@ -104,8 +104,8 @@ EOF;
                     $CarTodayEmail->save();
 
                     $url  = $host . $routing->generate('availability', array(
-                        'id' => $oportunityEmail->getReserve()->getId(),
-                        'signature' => $oportunityEmail->getReserve()->getSignature(),
+                        'id' => $CarTodayEmail->getId(),
+                        'signature' => $CarTodayEmail->getSignature(),
                     ));
 
                     $this->log("Enviando consulta a Auto ID: ".$Car->getId());
