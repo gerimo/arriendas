@@ -32,7 +32,6 @@ EOF;
         $conn = $databaseManager->getDatabase($options['connection'])->getConnection();
 
         $hoursToNotice = $options["hoursToNotice"];
-        /*$hoursToNotice = 168;*/
 
         // Se obtienen todas las reservas dentro del periodo de notificación que no hayan sido ya notificadas
         $q = Doctrine_Core::getTable('Reserve')
@@ -167,7 +166,6 @@ EOF;
                             /*->setTo(array($Renter->getEmail() => $Renter->getFirstName()." ".$Renter->getLastname()))*/
                             ->setBcc(array(
                                 "cristobal@arriendas.cl" => "Cristóbal Medina Moenne",
-                                "german@arriendas.cl" => "Germán Rimoldi"
                             ))
                             ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
                             ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
@@ -198,7 +196,6 @@ EOF;
                             /*->setTo(array($Owner->getEmail() => $Owner->getFirstName()." ".$Owner->getLastname()))*/
                             ->setBcc(array(
                                 "cristobal@arriendas.cl" => "Cristóbal Medina Moenne",
-                                "german@arriendas.cl" => "Germán Rimoldi"
                             ))
                             ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
                             ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
@@ -287,10 +284,9 @@ EOF;
         $message = $this->getMailer()->compose();
         $message->setSubject("Notificación reserva sin oportunidades [".$OriginalReserve->getId()."]");
         $message->setFrom('no-reply@arriendas.cl', 'Notificaciones Arriendas.cl');
-        /*$message->setTo(array("soporte@arriendas.cl" => "Soporte Arriendas.cl"));*/
+        $message->setTo(array("soporte@arriendas.cl" => "Soporte Arriendas.cl"));
         $message->setBcc(array(
                 "cristobal@arriendas.cl" => "Cristóbal Medina Moenne",
-                "german@arriendas.cl" => "Germán Rimoldi"
             ));
         $message->setBody($body, "text/html");
 

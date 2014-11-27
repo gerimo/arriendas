@@ -3382,4 +3382,32 @@ public function calificacionesPendientes(){
         return sfView::NONE;
     }
 
+    public function executeAvailabilityOpen(sfWebRequest $request) {
+
+        try {
+
+            $CarTodayEmail = Doctrine_Core::getTable('CarTodayEmail')->find($request->getParameter('id'));
+            $CarTodayEmail->setOpenedAt(date("Y-m-d H:i:s"));
+            $CarTodayEmail->save();
+
+        } catch (Exception $e) {
+            $mail = new Email();
+            $mailer = $mail->getMailer();
+
+            $message = $mail->getMessage()
+                ->setSubject('Error main/availabilityOpen '.date("Y-m-d H:i:s"))
+                ->setBody("<p>".$e->getMessage()."</p>", 'text/html')
+                ->setFrom(array("no-reply@arriendas.cl" => "Errores Arriendas.cl")
+                ->setTo(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+            
+            $mailer->send($message);
+        }
+
+        $this->getResponse()->setContentType('image/gif');
+
+        echo base64_decode("R0lGODlhAQABAIAAAP///////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACwAAAAAAQABAAACAkQBADs=");
+
+        return sfView::NONE;
+    }
+
 }

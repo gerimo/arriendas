@@ -1569,10 +1569,10 @@ class profileActions extends sfActions {
                 ->createQuery('a')
                 ->where("a.Car.User.id = ?", $this->getUser()->getAttribute("userid"))
                 ->andWhere("
-		(a.date_from >= '$start' and a.date_from <= '$end') or 
-		(a.date_from <= '$start' and a.date_to >= '$end') or
-		(a.date_to >= '$start' and a.date_to <= '$end') or
-		(a.date_from <= '$end' and a.date_to = 0) "
+        (a.date_from >= '$start' and a.date_from <= '$end') or 
+        (a.date_from <= '$start' and a.date_to >= '$end') or
+        (a.date_to >= '$start' and a.date_to <= '$end') or
+        (a.date_from <= '$end' and a.date_to = 0) "
                 )
                 ->execute();
 
@@ -2035,10 +2035,10 @@ class profileActions extends sfActions {
 
             if ($diff > 0) {
 
-                //comprueba que no haya una reserva PAGA para la fecha y hora señalada, al mismo auto, a cualquier usuario			
+                //comprueba que no haya una reserva PAGA para la fecha y hora señalada, al mismo auto, a cualquier usuario          
                 $q = Doctrine_Query::create()
                         ->from('reserve r')
-//					  ->leftJoin('transaction t ON r.id = t.reserve_id')
+//                    ->leftJoin('transaction t ON r.id = t.reserve_id')
                         ->leftJoin('r.Transaction t')
                         ->where('t.completed = ?', true)
                         ->andwhere('r.car_id = ?', $carid)
@@ -2054,7 +2054,7 @@ class profileActions extends sfActions {
                     die();
                 };
 
-                //END comprueba que no haya una reserva PAGA para la fecha y hora señalada, al mismo auto, a cualquier usuario			
+                //END comprueba que no haya una reserva PAGA para la fecha y hora señalada, al mismo auto, a cualquier usuario          
                 //comprueba que no haya una reserva vigente(fecha mayor a la actual) para la fecha y hora señalada, al mismo auto, al mismo usuario
                 $reservas = Doctrine_Core::getTable("reserve")->findByUserId($idUsuario);
                 $reservaPrevia = false;
@@ -4446,15 +4446,15 @@ class profileActions extends sfActions {
         $this->getUser()->setAttribute("propietario", true);
         $usuario->save();
 
-//		$this->logMessage($usuario->getPropietario());
+//      $this->logMessage($usuario->getPropietario());
 
         require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
         $mail = new Email();
         $mail->setSubject('Responde este e-mail para subir tu ' . $brand . ' (' . $patente . ') en Arriendas.cl');
         $mail->setBody("<p>Hola $name,</p>
-		<p>Has subido un auto!</p>
-		<p>Para verlo publicado responde a este correo escribiendo tu DIRECCION, COMUNA y NUMERO DE CELULAR.</p>
-		<p>Ante cualquier duda, llámanos al 2333-3714.</p>");
+        <p>Has subido un auto!</p>
+        <p>Para verlo publicado responde a este correo escribiendo tu DIRECCION, COMUNA y NUMERO DE CELULAR.</p>
+        <p>Ante cualquier duda, llámanos al 2333-3714.</p>");
         $mail->setTo($correo);
         $mail->setCc('soporte@arriendas.cl');
         $mail->submit();
@@ -4673,11 +4673,11 @@ class profileActions extends sfActions {
 
         $q = Doctrine_Query::create()
                 ->select('r.id , ca.id idcar , mo.name model, 
-	  br.name brand, ca.year year, 
-	  ca.address address, ci.name city, 
-	  st.name state, co.name country, 
-	  user.firstname firstname, user.lastname lastname,
-	  r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin'
+      br.name brand, ca.year year, 
+      ca.address address, ci.name city, 
+      st.name state, co.name country, 
+      user.firstname firstname, user.lastname lastname,
+      r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin'
                 )
                 ->from('Reserve r')
                 ->innerJoin('r.Car ca')
@@ -4700,11 +4700,11 @@ class profileActions extends sfActions {
 
         $q = Doctrine_Query::create()
                 ->select('r.id , ca.id idcar , mo.name model, 
-	  br.name brand, ca.year year, 
-	  ca.address address, ci.name city, 
-	  st.name state, co.name country, 
-	  user.firstname firstname, user.lastname lastname,
-	  r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin'
+      br.name brand, ca.year year, 
+      ca.address address, ci.name city, 
+      st.name state, co.name country, 
+      user.firstname firstname, user.lastname lastname,
+      r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin'
                 )
                 ->from('Reserve r')
                 ->innerJoin('r.Car ca')
@@ -4726,11 +4726,11 @@ class profileActions extends sfActions {
         try {
             $q = Doctrine_Query::create()
                     ->select('r.id , ca.id idcar , mo.name model, 
-	  br.name brand, ca.year year, 
-	  ca.address address, ci.name city, 
-	  st.name state, co.name country, 
-	  user.firstname firstname, user.lastname lastname,
-	  r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin'
+      br.name brand, ca.year year, 
+      ca.address address, ci.name city, 
+      st.name state, co.name country, 
+      user.firstname firstname, user.lastname lastname,
+      r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin'
                     )
                     ->from('Reserve r')
                     ->innerJoin('r.Car ca')
@@ -4756,11 +4756,11 @@ class profileActions extends sfActions {
 
         $q = Doctrine_Query::create()
                 ->select('r.id , ca.id idcar , mo.name model, 
-	  br.name brand, ca.year year, 
-	  ca.address address, ci.name city, 
-	  st.name state, co.name country, 
-	  user.firstname firstname, user.lastname lastname,
-	  r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin '
+      br.name brand, ca.year year, 
+      ca.address address, ci.name city, 
+      st.name state, co.name country, 
+      user.firstname firstname, user.lastname lastname,
+      r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin '
                 )
                 ->from('Reserve r')
                 ->innerJoin('r.Car ca')
@@ -4783,11 +4783,11 @@ class profileActions extends sfActions {
         try {
             $q = Doctrine_Query::create()
                     ->select('r.id , ca.id idcar , mo.name model, 
-	  br.name brand, ca.year year, 
-	  ca.address address, ci.name city, 
-	  st.name state, co.name country, 
-	  user.firstname firstname, user.lastname lastname,
-	  r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin '
+      br.name brand, ca.year year, 
+      ca.address address, ci.name city, 
+      st.name state, co.name country, 
+      user.firstname firstname, user.lastname lastname,
+      r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin '
                     )
                     ->from('Reserve r')
                     ->innerJoin('r.Car ca')
@@ -4938,14 +4938,14 @@ class profileActions extends sfActions {
 
         $mail = 'Su reserva para el auto ' . $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
                 ' del usuario ' . $reserve->getCar()->getUser()->getFirstName() . ' ' . $reserve->getCar()->getUser()->getLastName() . ' ha sido confirmada.<br/><br/>
-	
-	Debes retirar el auto el d&iacute;a <b>' . $date_from . '</b> a las <b>' . $hour_from . '</b> y devolverlo el d&iacute;a <b>' . $date_to . '</b> a las <b>' . $hour_to . '</b>.<br/>
-	Recuerda que debes verificar el estado del auto antes de subirte. Si el auto presenta otros daños debes anular la reserva. <br /><br />
-	
-	El equipo de Arriendas.cl
-	<br><br>
-	<em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-	';
+    
+    Debes retirar el auto el d&iacute;a <b>' . $date_from . '</b> a las <b>' . $hour_from . '</b> y devolverlo el d&iacute;a <b>' . $date_to . '</b> a las <b>' . $hour_to . '</b>.<br/>
+    Recuerda que debes verificar el estado del auto antes de subirte. Si el auto presenta otros daños debes anular la reserva. <br /><br />
+    
+    El equipo de Arriendas.cl
+    <br><br>
+    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
+    ';
 
 
         /*
@@ -4985,11 +4985,11 @@ class profileActions extends sfActions {
                 ' desde el d&iacute;a ' . $date_from . ' a las ' . $hour_from .
                 ' hasta el d&iacute;a ' . $date_to . ' a las ' . $hour_to . ' cuando el usuario ' . $reserve->getUser()->getFirstname() . ' ' . $reserve->getUser()->getLastname() . ' devuelva el auto. <br/>' .
                 'Recuerda que debes verificar el estado del auto en la devolución. De haber ocurrido daños al auto durante el arriendo, debes informar a Arriendas.cl en el acto.<br /><br />
-	
-	El equipo de Arriendas.cl
-	<br><br>
-	<em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-	';
+    
+    El equipo de Arriendas.cl
+    <br><br>
+    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
+    ';
 
 
 
@@ -5016,12 +5016,12 @@ class profileActions extends sfActions {
 
         $mail = 'Se ha solicitado una reserva para el auto ' . $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
                 ' del usuario ' . $reserve->getCar()->getUser()->getFirstName() . ' ' . $reserve->getCar()->getUser()->getLastName() . '.
-	
-	Gracias
-	Arriendas.cl
-	<br><br>
-	<em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-	';
+    
+    Gracias
+    Arriendas.cl
+    <br><br>
+    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
+    ';
 
 // send email
         $this->smtpMail($to, $subject, $mail, $headers);
@@ -5057,13 +5057,13 @@ class profileActions extends sfActions {
                 $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
                 ' desde el día <b>' . $date_from . '</b> a las <b>' . $hour_from .
                 '</b> hasta el día <b>' . $date_to . '</b> a las <b>' . $hour_to . '</b> cuando te habrán devuelto el auto. <br/><br/>
-	
-		Para ver la reserva has click <a href="http://' . $site . $this->getController()->genUrl('profile/rentalToConfirm') . '">aquí</a><br/><br/>
-	
-	El equipo de Arriendas.cl
-	<br><br>
-	<em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em>	
-	';
+    
+        Para ver la reserva has click <a href="http://' . $site . $this->getController()->genUrl('profile/rentalToConfirm') . '">aquí</a><br/><br/>
+    
+    El equipo de Arriendas.cl
+    <br><br>
+    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em>  
+    ';
 
 
         /*
@@ -5088,12 +5088,12 @@ class profileActions extends sfActions {
 
         $mail = 'Ha finalizado la reseva para el auto ' . $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
                 ' del usuario ' . $reserve->getCar()->getUser()->getFirstName() . ' ' . $reserve->getCar()->getUser()->getLastName() . ' que usted realizo.
-	
-	Gracias
-	Arriendas.cl
-	<br><br>
-	<em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-	';
+    
+    Gracias
+    Arriendas.cl
+    <br><br>
+    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
+    ';
 
 // send email
         $this->smtpMail($to, $subject, $mail, $headers);
@@ -5111,12 +5111,12 @@ class profileActions extends sfActions {
 
         $mail = 'Ha solicitado la reserva de su auto ' . $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
                 ' alquilado por el usuario ' . $reserve->getUser()->getFirstName() . ' ' . $reserve->getUser()->getLastName() . '.
-	
-	Gracias
-	Arriendas.cl
-	<br><br>
-	<em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-	';
+    
+    Gracias
+    Arriendas.cl
+    <br><br>
+    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
+    ';
 
 // send email
         $this->smtpMail($to, $subject, $mail, $headers);
@@ -5147,11 +5147,11 @@ class profileActions extends sfActions {
 
         $mail = 'Su reserva para el auto ' . $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
                 ' del usuario ' . $reserve->getCar()->getUser()->getFirstName() . ' ' . $reserve->getCar()->getUser()->getLastName() . ' ha sido anulada.<br/><br/>
-	
-	El equipo de Arriendas.cl
-	<br><br>
-	<em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-	';
+    
+    El equipo de Arriendas.cl
+    <br><br>
+    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
+    ';
         // send email
         $this->smtpMail($to, $subject, $mail, $headers);*/
 
@@ -5551,9 +5551,9 @@ class profileActions extends sfActions {
             //actualiza los datos asociados al vehículo, por medio de la $idCar
             $q = Doctrine_Manager::getInstance()->getCurrentConnection();
             $query = "update Car set address='$ubicacion', comuna_id='$comunaId',state_id='$stateId',
-			    model_id='$modelo', year='$anio', doors='$puertas', transmission='$transmision', photoS3='0',
-			    tipoBencina='$tipoBencina', uso_vehiculo_id='$usosVehiculo', price_per_hour='$precioHora',price_per_week='$precioSemana',price_per_month='$precioMes',
-			    disponibilidad_semana='$disponibilidadSemana' , disponibilidad_finde='$disponibilidadFinde', price_per_day='$precioDia' ,lat=$lat, lng=$lng, patente='$patente', color='$color', seguro_ok='$ok' where id=$idCar";
+                model_id='$modelo', year='$anio', doors='$puertas', transmission='$transmision', photoS3='0',
+                tipoBencina='$tipoBencina', uso_vehiculo_id='$usosVehiculo', price_per_hour='$precioHora',price_per_week='$precioSemana',price_per_month='$precioMes',
+                disponibilidad_semana='$disponibilidadSemana' , disponibilidad_finde='$disponibilidadFinde', price_per_day='$precioDia' ,lat=$lat, lng=$lng, patente='$patente', color='$color', seguro_ok='$ok' where id=$idCar";
             $result = $q->execute($query);
 
 
@@ -5670,7 +5670,7 @@ class profileActions extends sfActions {
 
 
 
-        /* 	foreach ($request->getFiles() as $fileName) {
+        /*  foreach ($request->getFiles() as $fileName) {
           $fileSize = $fileName['size'];
           $fileType = $fileName['type'];
           $extesion = getFileExtension($fileName['name']);
@@ -5820,12 +5820,12 @@ class profileActions extends sfActions {
 
                 $q = Doctrine_Query::create()
                         ->select('r.id , ca.id idcar , mo.name model, 
-	  br.name brand, ca.year year, 
+      br.name brand, ca.year year, 
           ca.price_per_hour pricehour, ca.price_per_day priceday,
-	  ca.address address, ci.name city, 
-	  st.name state, co.name country, 
-	  user.firstname firstname, user.lastname lastname,
-	  r.date date, r.duration'
+      ca.address address, ci.name city, 
+      st.name state, co.name country, 
+      user.firstname firstname, user.lastname lastname,
+      r.date date, r.duration'
                         )
                         ->from('Reserve r')
                         ->innerJoin('r.Car ca')
@@ -5975,12 +5975,12 @@ class profileActions extends sfActions {
 
         $q = Doctrine_Query::create()
                 ->select('r.id , ca.id idcar , r.confirmed, mo.name model, 
-	  br.name brand, ca.year year, 
+      br.name brand, ca.year year, 
           ca.price_per_hour pricehour, ca.price_per_day priceday,
-	  ca.address address, ci.name city, 
-	  st.name state, co.name country, 
-	  user.firstname firstname, user.lastname lastname,
-	  r.date date, r.duration, date_add(r.date, INTERVAL r.duration HOUR) fechafin'
+      ca.address address, ci.name city, 
+      st.name state, co.name country, 
+      user.firstname firstname, user.lastname lastname,
+      r.date date, r.duration, date_add(r.date, INTERVAL r.duration HOUR) fechafin'
                 )
                 ->from('Reserve r')
                 ->innerJoin('r.Car ca')
@@ -6056,12 +6056,12 @@ class profileActions extends sfActions {
 
             $mail = 'Se ha solicitado confirmación de kms para el auto ' . $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
                     ' reservado por el usuario ' . $reserve->getUser()->getFirstName() . ' ' . $reserve->getUser()->getLastName() . '.
-	
-	Gracias
-	Arriendas.cl
-	<br><br>
-	<em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-	';
+    
+    Gracias
+    Arriendas.cl
+    <br><br>
+    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
+    ';
         } else {
             $to = $reserve->getUser()->getEmail();
 
@@ -6073,12 +6073,12 @@ class profileActions extends sfActions {
 
             $mail = 'Se ha solicitado confirmación de kms para el auto ' . $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
                     ' del usuario ' . $reserve->getCar()->getUser()->getFirstName() . ' ' . $reserve->getCar()->getUser()->getLastName() . '.
-	
-	Gracias
-	Arriendas.cl
-	<br><br>
-	<em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-	';
+    
+    Gracias
+    Arriendas.cl
+    <br><br>
+    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
+    ';
         }
 
         $this->smtpMail($to, $subject, $mail, $headers);
@@ -6561,5 +6561,39 @@ error_log("BUSCANDO LA MEJOR OPORTUNIDAD");
         }
 
         return true;
+    }
+
+    public function executeAvailability(sfWebRequest $request) {
+
+        $carTodayEmailId = $request->getGetParameter("id");
+        $signature = $request->getGetParameter("signature");
+
+        try {
+
+            $CarTodayEmail = Doctrine_Core::getTable("CarTodayEmail")->find($carTodayEmailId);
+            if (!$CarTodayEmail) {
+                throw new Exception("No se encontró el registro.", 1);
+            }
+
+            if ($CarTodayEmail->getSignature() != $signature) {
+                throw new Exception("Las firmas no coinciden. Parece que alguien intenta hacer trampa.", 2);
+            }
+
+            $CarTodayEmail->setCheckedAt(date("Y-m-d H:i:s"));
+            $CarTodayEmail->save();
+
+        } catch (Exception $e) {
+
+            $mail = new Email();
+            $mailer = $mail->getMailer();
+
+            $message = $mail->getMessage()
+                ->setSubject('Error profile/availability '.date("Y-m-d H:i:s"))
+                ->setBody("<p>".$e->getMessage()."</p>", 'text/html')
+                ->setFrom(array("no-reply@arriendas.cl" => "Errores Arriendas.cl")
+                ->setTo(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+            
+            $mailer->send($message);
+        }
     }
 }
