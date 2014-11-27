@@ -86,6 +86,10 @@ Car:
       type: decimal(10,2)
     price_per_day:
       type: decimal(10,2)
+    price_per_week:
+      type: decimal(10,2)
+    price_per_month:
+      type: decimal(10,2)
     Model_id:
       type: integer(4)
       notnull: true
@@ -247,6 +251,38 @@ Car:
     charset: utf8
     type: InnoDB
 
+CarTodayEmail:
+    tableName: CarTodayEmail
+    columns:
+        id:
+            type: integer(11)
+            primary: true
+            notnull: true
+            autoincrement: true
+        car_id:
+            type: integer(11)
+            notnull: true
+        checked_at:
+            type: timestamp
+        opened_at:
+            type: timestamp
+        remembered_at:
+            type: timestamp
+        sent_at:
+            type: timestamp
+            notnull: true
+    relations:
+        Car:
+            class: Car
+            local: car_id
+            foreign: id
+            foreignAlias: CarTodayEmails
+            onDelete: no action
+            onUpdate: no action
+    options:
+        charset: utf8
+        type: InnoDB
+
 City:
   tableName: City
   columns:
@@ -275,6 +311,40 @@ City:
   indexes:
     fk_City_State1:
       fields: [State_idt]
+    id_UNIQUE:
+      fields: [id]
+      type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+Conversation:
+  tableName: Conversation
+  columns:
+    id:
+      type: integer(4)
+      primary: true
+      notnull: true
+      autoincrement: true
+    filed:
+      type: boolean
+      notnull: true
+      default: 0
+    user_to_id:
+      notnull: true
+      type: integer(4)
+    user_from_id:
+      notnull: true
+      type: integer(4)
+    start:
+      type: timestamp
+      notnull: true
+    end:
+      type: timestamp
+  relations:
+    UserTo: { local: user_to_id, foreign: id, class: User, onDelete: no action, onUpdate: no action }
+    UserFrom: { local: user_from_id, foreign: id, class: User , onDelete: no action, onUpdate: no action }
+  indexes:
     id_UNIQUE:
       fields: [id]
       type: unique
@@ -331,43 +401,22 @@ Damage:
     charset: utf8
     type: InnoDB
 
-
-
-Conversation:
-  tableName: Conversation
-  columns:
-    id:
-      type: integer(4)
-      primary: true
-      notnull: true
-      autoincrement: true
-    filed:
-      type: boolean
-      notnull: true
-      default: 0
-    user_to_id:
-      notnull: true
-      type: integer(4)
-    user_from_id:
-      notnull: true
-      type: integer(4)
-    start:
-      type: timestamp
-      notnull: true
-    end:
-      type: timestamp
-  relations:
-    UserTo: { local: user_to_id, foreign: id, class: User, onDelete: no action, onUpdate: no action }
-    UserFrom: { local: user_from_id, foreign: id, class: User , onDelete: no action, onUpdate: no action }
-  indexes:
-    id_UNIQUE:
-      fields: [id]
-      type: unique
-  options:
-    charset: utf8
-    type: InnoDB
-
-
+Holiday:
+    tableName: Holiday
+    columns:
+        id:
+            type: integer(11)
+            primary: true
+            notnull: true
+            autoincrement: true
+        date:
+            type: date
+            notnull: true
+        name:
+            type: string(100)
+    options:
+        charset: utf8
+        type: InnoDB
 
 Message:
   tableName: Message
@@ -404,7 +453,6 @@ Message:
     charset: utf8
     type: InnoDB
 
-
 Model:
   tableName: Model
   columns:
@@ -417,6 +465,9 @@ Model:
       type: string(45)
     Brand_id:
       type: integer(4)
+      notnull: true
+    id_otro_tipo_vehiculo:
+      type: integer(11)
       notnull: true
   relations:
     Brand:
@@ -1110,6 +1161,10 @@ OportunityQueue:
       type: boolean
       notnull: true
       default: 1
+    final_notice:
+      type: boolean
+      notnull: true
+      default: 0
   relations:
     Reserve:
       class: Reserve

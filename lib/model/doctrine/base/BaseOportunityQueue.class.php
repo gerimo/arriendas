@@ -11,6 +11,7 @@
  * @property integer $reserve_id
  * @property boolean $is_active
  * @property Reserve $Reserve
+ * @property boolean $final_notice
  * 
  * @method integer         getId()         Returns the current record's "id" value
  * @method integer         getIteration()  Returns the current record's "iteration" value
@@ -18,12 +19,14 @@
  * @method integer         getReserveId()  Returns the current record's "reserve_id" value
  * @method boolean         getIsActive()   Returns the current record's "is_active" value
  * @method Reserve         getReserve()    Returns the current record's "Reserve" value
+ * @method boolean         getFinalNotice()    Returns the current record's "final_notice" value
  * @method OportunityQueue setId()         Sets the current record's "id" value
  * @method OportunityQueue setIteration()  Sets the current record's "iteration" value
  * @method OportunityQueue setPaidAt()     Sets the current record's "paid_at" value
  * @method OportunityQueue setReserveId()  Sets the current record's "reserve_id" value
  * @method OportunityQueue setIsActive()   Sets the current record's "is_active" value
  * @method OportunityQueue setReserve()    Sets the current record's "Reserve" value
+ * @method OportunityQueue setFinalNotice()    Sets the current record's "final_notice" value
  * 
  * @package    CarSharing
  * @subpackage model
@@ -59,6 +62,11 @@ abstract class BaseOportunityQueue extends sfDoctrineRecord
              'type' => 'boolean',
              'notnull' => true,
              'default' => 1,
+             ));
+        $this->hasColumn('final_notice', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
+             'default' => 0,
              ));
 
         $this->option('charset', 'utf8');

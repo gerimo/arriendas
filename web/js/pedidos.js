@@ -920,7 +920,7 @@ function cambiarEstado(id, accion) {
         ;
         //recarga la página
         if (accion == 'preaprobar') {
-            //	window.location.href = urlPedidos;
+            window.location.href = urlPedidos;
         }
 
     }).fail(function() {

@@ -1606,7 +1606,7 @@ public function executeIndex(sfWebRequest $request) {
                 $this->logMessage('fullstartdate ' . $fullstartdate, 'err');
                 $this->logMessage('fullenddate ' . $fullenddate, 'err');
 
-                $has_reserve = $car->hasReserve($fullstartdate, $fullstartdate, $fullenddate, $fullenddate);
+                $has_reserve = $car->hasReserve($fullstartdate, $fullenddate);
             }
 
             $porcentaje = $car->getContestaPedidos();
@@ -2009,7 +2009,7 @@ public function executeIndex(sfWebRequest $request) {
 
                 $fullstartdate = $day_from . " " . $hour_from;
                 $fullenddate = $day_to . " " . $hour_to;
-                $has_reserve = $car->hasReserve($fullstartdate, $fullstartdate, $fullenddate, $fullenddate);
+                $has_reserve = $car->hasReserve($fullstartdate, $fullenddate);
             }
 
             $urlUser = $this->getPhotoUser($car->getUser()->getId());
@@ -3514,6 +3514,34 @@ public function calificacionesPendientes(){
 
         $next_numero = ($trans[0]['nro_fac'] > $res[0]['nro_fac']? $trans[0]['nro_fac'] : $res[0]['nro_fac']) + 1;
         return $next_numero;
+    }
+
+    public function executeAvailabilityOpen(sfWebRequest $request) {
+
+        try {
+
+            $CarTodayEmail = Doctrine_Core::getTable('CarTodayEmail')->find($request->getParameter('id'));
+            $CarTodayEmail->setOpenedAt(date("Y-m-d H:i:s"));
+            $CarTodayEmail->save();
+
+        } catch (Exception $e) {
+            $mail = new Email();
+            $mailer = $mail->getMailer();
+
+            $message = $mail->getMessage()
+                ->setSubject('Error main/availabilityOpen '.date("Y-m-d H:i:s"))
+                ->setBody("<p>".$e->getMessage()."</p>", 'text/html')
+                ->setFrom(array("no-reply@arriendas.cl" => "Errores Arriendas.cl")
+                ->setTo(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+            
+            $mailer->send($message);
+        }
+
+        $this->getResponse()->setContentType('image/gif');
+
+        echo base64_decode("R0lGODlhAQABAIAAAP///////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACwAAAAAAQABAAACAkQBADs=");
+
+        return sfView::NONE;
     }
 
 }

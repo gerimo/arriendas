@@ -4,11 +4,11 @@
 index_by_city:
   url:    /c/:c
   param:  { module: main, action: index }
-  
+
 perfil_auto:
     url:  /arriendo-de-autos/rent-a-car/*/:chile/:id
     param:  { module: auto, action: economico }
-    
+
 paypalReturn:
     url:  /paypal/processPayment
     param:  { module: paypal, action: processPayment }
@@ -38,15 +38,15 @@ khipuReturn:
 khipuCancel:
     url:  /khipu/processPaymentCanceled
     param:  { module: khipu, action: processPaymentCanceled }
-    
+
 pedidos:
     url: /profile/pedidos
     param:  { module: profile, action: pedidos }
-    
+
 editReserve:
     url: /profile/editReserve
     param:  { module: profile, action: editReserve }
-    
+
 aprobarReserve:
     url:  /profile/aprobarReserve/:idReserve/:idUser
     param:  { module: profile, action: aprobarReserve }
@@ -63,10 +63,18 @@ opportunityAccept:
     url: /accept
     param: { module: profile, action: oportunidadAceptar }
 
+availability:
+    url: /availability
+    param: { module: profile, action: availability }
+
+availabilityEmailOpen:
+    url: /availability/open
+    param: { module: main, action: availabilityOpen }
+
 facebook_login:
     url: /main/loginFacebook 
     param:  { module: main, action: loginFacebook }
-    
+
 # URLs específicas para cada region-comuna
 region-comuna:
     url: /arriendo-de-autos/:region/:comuna
