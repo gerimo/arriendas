@@ -411,7 +411,7 @@ public function executeNotificacion(sfWebRequest $request) {
 
                 $fullstartdate = $day_from . " " . $hour_from;
                 $fullenddate = $day_to . " " . $hour_to;
-                $has_reserve = $car->hasReserve($fullstartdate, $fullstartdate, $fullenddate, $fullenddate);
+                $has_reserve = $car->hasReserve($fullstartdate, $fullenddate);
             }
 
 
@@ -695,7 +695,7 @@ public function executeNotificacion(sfWebRequest $request) {
 
                 $fullstartdate = $day_from . " " . $hour_from;
                 $fullenddate = $day_to . " " . $hour_to;
-                $has_reserve = $car->hasReserve($fullstartdate, $fullstartdate, $fullenddate, $fullenddate);
+                $has_reserve = $car->hasReserve($fullstartdate, $fullenddate);
             }
 
 

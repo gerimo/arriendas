@@ -16,6 +16,8 @@
  * @property string $observations
  * @property decimal $price_per_hour
  * @property decimal $price_per_day
+ * @property decimal $price_per_week
+ * @property decimal $price_per_month
  * @property integer $Model_id
  * @property integer $year
  * @property string $patente
@@ -34,7 +36,7 @@
  * @method integer             getUserId()         Returns the current record's "User_id" value
  * @method string              getKm()             Returns the current record's "km" value
  * @method integer             getCityId()         Returns the current record's "City_id" value
- * @method integer             getStateId()         Returns the current record's "State_id" value
+ * @method integer             getStateId()        Returns the current record's "State_id" value
  * @method string              getAddress()        Returns the current record's "address" value
  * @method float               getLat()            Returns the current record's "lat" value
  * @method float               getLng()            Returns the current record's "lng" value
@@ -42,6 +44,8 @@
  * @method string              getObservations()   Returns the current record's "observations" value
  * @method decimal             getPricePerHour()   Returns the current record's "price_per_hour" value
  * @method decimal             getPricePerDay()    Returns the current record's "price_per_day" value
+ * @method decimal             getPricePerWeek()   Returns the current record's "price_per_week" value
+ * @method decimal             getPricePerMonth()  Returns the current record's "price_per_month" value
  * @method integer             getModelId()        Returns the current record's "Model_id" value
  * @method integer             getYear()           Returns the current record's "year" value
  * @method string              getPatente()        Returns the current record's "patente" value
@@ -51,6 +55,7 @@
  * @method Model               getModel()          Returns the current record's "Model" value
  * @method City                getCity()           Returns the current record's "City" value
  * @method float               getRatioAprobacion() Returns the current record's "ratio_aprobacion" value
+ * @method integer             getTransmission()        Returns the current record's "transmission" value
  * 
  * @method Doctrine_Collection getAvailabilities() Returns the current record's "Availabilities" collection
  * @method Doctrine_Collection getDamages()        Returns the current record's "Damages" collection
@@ -68,6 +73,8 @@
  * @method Car                 setObservations()   Sets the current record's "observations" value
  * @method Car                 setPricePerHour()   Sets the current record's "price_per_hour" value
  * @method Car                 setPricePerDay()    Sets the current record's "price_per_day" value
+ * @method Car                 setPricePerWeek()   Sets the current record's "price_per_week" value
+ * @method Car                 setPricePerMonth()  Sets the current record's "price_per_month" value
  * @method Car                 setModelId()        Sets the current record's "Model_id" value
  * @method Car                 setYear()           Sets the current record's "year" value
  * @method Car                 setPatente()        Sets the current record's "patente" value
@@ -81,6 +88,7 @@
  * @method Car                 setPhotos()        Sets the current record's "Photoes" collection
  * @method Car                 setReserves()       Sets the current record's "Reserves" collection
  * @method Car                 setRatioAprobacion() Sets the current record's "ratio_aprobacion" value
+ * @method Car                 setTransmission() Sets the current record's "transmission" value
  * 
  * @package    CarSharing
  * @subpackage model

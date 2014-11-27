@@ -15,7 +15,7 @@ class Car extends BaseCar
  
   //TODO
   public function ingresarCalificacion($idUsuario, $recomienda, $comentarioRecomienda, $desperfecto, $comentarioDesperfecto,
-				       $limpieza, $comentarioGeneral) {
+                       $limpieza, $comentarioGeneral) {
     
   }
   
@@ -67,14 +67,14 @@ class Car extends BaseCar
       sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
       $photo = $this->getFotoPerfil();
       if(is_null($photo)) {
-//	$idModelo= $this->getModelId();
-//	$query = "SELECT foto_defecto from Model WHERE id='".$idModelo."'";
-//	$rs = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAssoc($query);
-//	$photo= "".$rs[0]['foto_defecto'];
-	$photo= "../../images/img_asegura_tu_auto/seguroFotoCostadoDerecho.png"
-;	return $photo;
+//  $idModelo= $this->getModelId();
+//  $query = "SELECT foto_defecto from Model WHERE id='".$idModelo."'";
+//  $rs = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAssoc($query);
+//  $photo= "".$rs[0]['foto_defecto'];
+    $photo= "../../images/img_asegura_tu_auto/seguroFotoCostadoDerecho.png"
+;   return $photo;
       } else {
-	return $photo;
+    return $photo;
       }
   }
 
@@ -89,15 +89,15 @@ class Car extends BaseCar
       $photo = $q->fetchOne();
     
       if(!$photo) {
-	//En este caso, no hay foto del auto. Cargamos la foto por defecto del modelo
-	$q = Doctrine_Manager::getInstance()->getCurrentConnection()->getDbh();
+    //En este caso, no hay foto del auto. Cargamos la foto por defecto del modelo
+    $q = Doctrine_Manager::getInstance()->getCurrentConnection()->getDbh();
         $query= "SELECT Model.foto_defecto FROM Model, Car WHERE Car.id='".$this->getId()."' AND Model.id=Car.model_id";
-	$stmt= $q->prepare($query);
-	$stmt->execute();
-	$result= $stmt->fetchAll();
+    $stmt= $q->prepare($query);
+    $stmt->execute();
+    $result= $stmt->fetchAll();
         $temp= new Photo();
-	$temp->setPath("default_".$result[0]['foto_defecto']);
-	return $temp;
+    $temp->setPath("default_".$result[0]['foto_defecto']);
+    return $temp;
       }
       
       return $photo;
@@ -110,61 +110,46 @@ class Car extends BaseCar
 
      $q = Doctrine_Query::create()->from('Rating')
       ->where('Rating.Reserve.Car.Id = ?', $this->getId())
-	  ->andWhere('Rating.Qualified = ?', 1);
+      ->andWhere('Rating.Qualified = ?', 1);
       $ratings = $q->execute();
-	 
+     
 
       return $ratings->count();
 
   }
   
- public function hasReserve($startDate, $startDate, $endDate, $endDate)
-  {
+public function hasReserve($from, $to) {
 
-	$rangeDates = array($startDate, $endDate,$startDate, $endDate,$startDate, $endDate);
-					$q = Doctrine_Query::create()
-					  ->from('reserve r')
-//					  ->leftJoin('transaction t ON r.id = t.reserve_id')
-					  ->leftJoin('r.Transaction t')
-					  ->where('t.completed = ?', true)
-					  ->andwhere('r.car_id = ?', $this->getId())
-					  ->andwhere('? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR ? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR r.date BETWEEN ? AND ? OR DATE_ADD(r.date, INTERVAL r.duration HOUR) BETWEEN ? AND ?', $rangeDates);
-	
-						$checkAvailability = $q->fetchArray();
-	
-						if( !$checkAvailability ) {
-							return false;
-						 }else{
-							return true;
-							};
+    $q = Doctrine_Core::getTable("Reserve")
+        ->createQuery('R')
+        ->leftJoin('R.Transaction T')
+        ->where('T.completed = 1')
+        ->andWhere('R.car_id = ?', $this->getId())
+        ->andWhere('(? BETWEEN R.date AND DATE_ADD(R.date, INTERVAL R.duration HOUR)) OR (? BETWEEN R.date AND DATE_ADD(R.date, INTERVAL R.duration HOUR)) OR (R.date BETWEEN ? AND ?) OR (DATE_ADD(R.date, INTERVAL R.duration HOUR) BETWEEN ? AND ?)', array($from, $to, $from, $to, $from, $to));
 
-//   $has_reserve = Doctrine_Core::getTable('Reserve')
-//	->createQuery('a')
-//	->where('((a.date <= ? and date_add(a.date, INTERVAL a.duration HOUR) > ?) or (a.date <= ? and date_add(a.date, INTERVAL a.duration HOUR) > ?) or (a.date > ? and date_add(a.date, INTERVAL a.duration HOUR) < ?)) and (a.Car.id = ?)', array($startDate, $startDate, $endDate, $endDate, $startDate, $endDate, $this->getId()))
-//	->fetchArray();
-	
-	//print_r(count($has_reserve));
-  
-//	 if (count($has_reserve) == 0)
-//		return false;
-//	 else
-//		return true;
-	 
+    $checkAvailability = $q->execute();
 
-  }
-
-  public function getNombreComuna() {
-        $q = Doctrine_Query::create()->from('Comunas')
-                ->where('Comunas.codigoInterno = ?', $this->getComunaId());
-
-        $comuna = $q->fetchOne();
-
-      if(!is_object($comuna)) {
-          return '';
-      } else {
-       return ucwords(strtolower($comuna->getNombre()));
-      }
+    if (count($checkAvailability) == 0) {
+        return false;
     }
+
+    return true;
+}
+
+public function getNombreComuna() {
+
+    $q = Doctrine_Query::create()
+        ->from('Comunas')
+        ->where('Comunas.codigoInterno = ?', $this->getComunaId());
+
+    $comuna = $q->fetchOne();
+
+    if (!is_object($comuna)) {
+        return '';
+    }
+    
+    return ucwords(strtolower($comuna->getNombre()));
+}
 
     public function getAddressAprox(){
       $exp_frase=explode(" ",$this->getAddress());
@@ -193,7 +178,7 @@ class Car extends BaseCar
         }
         if($i==0) $direccionAprox = $exp_frase[$i];
         else $direccionAprox = $direccionAprox." ".$exp_frase[$i];
-      }	
+      } 
       return $direccionAprox;
     }
 
@@ -201,8 +186,8 @@ class Car extends BaseCar
     public function getCarPercentile(){
         $carId = $this->getId();
         $query = "
-		
-		SELECT 
+        
+        SELECT 
     c.id, c.score, ((100-ROUND(((@rank - rank) / @rank) * 100, 2))/100)*5 AS percentile_rank
 FROM
     (SELECT 
@@ -217,27 +202,27 @@ FROM
 ORDER BY score DESC) AS c
 where c.id=
 
-		".$carId;
-		
-		$rs = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAssoc($query);
+        ".$carId;
+        
+        $rs = Doctrine_Manager::getInstance()->getCurrentConnection()->fetchAssoc($query);
       
 
 
-		return $rs[0]['percentile_rank'];
+        return $rs[0]['percentile_rank'];
     }
 
 
-	
-	
-	
-	public function save(Doctrine_Connection $conn = null)	{
-	
-		if (!$this->getId() || $this->getCustomerio()<=0) {
+    
+    
+    
+    public function save(Doctrine_Connection $conn = null)  {
+    
+        if (!$this->getId() || $this->getCustomerio()<=0) {
 
-			$brand = $this->getMarcaModelo();
-			$patente = $this->getPatente();
-			$comuna = $this->getNombreComuna();
-		
+            $brand = $this->getMarcaModelo();
+            $patente = $this->getPatente();
+            $comuna = $this->getNombreComuna();
+        
       $session = curl_init();
 
       $customer_id = 'a_'.$this->getUserId(); // You'll want to set this dynamically to the unique id of the user
@@ -266,19 +251,19 @@ where c.id=
       curl_close($session);
 
       $this->setCustomerio(true);
-	  }
+      }
 
     $ret = parent::save($conn);
 
-		$car = Doctrine_Core::getTable('car')->find($this->getId());
-		$user = Doctrine_Core::getTable('user')->find($car->getUserId());	
-		$ownerUserId=$user->getId();
-		
-		$percTotalContestadas=$user->getPercReservasContestadas();
-		$velocidadContestaPedidos = $user->getVelocidadRespuesta('0');
-		$CantReservasAprobadas= $user->getCantReservasAprobadasTotalOwner();
-		$q = Doctrine_Manager::getInstance()->getCurrentConnection();
-		$query = "update Car set Cant_Reservas_Aprobadas='$CantReservasAprobadas', contesta_pedidos='$percTotalContestadas', velocidad_contesta_pedidos='$velocidadContestaPedidos' where user_id='$ownerUserId'";
+        $car = Doctrine_Core::getTable('car')->find($this->getId());
+        $user = Doctrine_Core::getTable('user')->find($car->getUserId());   
+        $ownerUserId=$user->getId();
+        
+        $percTotalContestadas=$user->getPercReservasContestadas();
+        $velocidadContestaPedidos = $user->getVelocidadRespuesta('0');
+        $CantReservasAprobadas= $user->getCantReservasAprobadasTotalOwner();
+        $q = Doctrine_Manager::getInstance()->getCurrentConnection();
+        $query = "update Car set Cant_Reservas_Aprobadas='$CantReservasAprobadas', contesta_pedidos='$percTotalContestadas', velocidad_contesta_pedidos='$velocidadContestaPedidos' where user_id='$ownerUserId'";
 
     $result = $q->execute($query);
 
