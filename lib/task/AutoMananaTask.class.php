@@ -7,7 +7,7 @@ class AutoMananaTask extends sfBaseTask {
     protected function configure() {
 
         $this->addOptions(array(
-            new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name'),
+            new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name', 'frontend'),
             new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
             new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine'),
             new sfCommandOption('reminder', null, sfCommandOption::PARAMETER_REQUIRED, 'Is a reminder', 0),
@@ -41,8 +41,8 @@ EOF;
             $host = 'http://www.arriendas.cl';
         }
 
-        $routing    = $this->getRouting();
-        $imageUrl   = $host . $routing->generate('availabilityEmailOpen');
+        $routing = $this->getRouting();
+        $imageUrl = $host . $routing->generate('availabilityEmailOpen');
 
         if ($isReminder) {
 
