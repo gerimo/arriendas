@@ -3502,8 +3502,11 @@ public function calificacionesPendientes(){
         try {
 
             $opportunityEmailQueue = Doctrine_Core::getTable('OportunityEmailQueue')->find($request->getParameter('id'));
-            $opportunityEmailQueue->setOpenedAt(date("Y-m-d H:i:s"));
-            $opportunityEmailQueue->save();
+
+            if (is_null($opportunityEmailQueue->getOpenedAt())) {
+                $opportunityEmailQueue->setOpenedAt(date("Y-m-d H:i:s"));
+                $opportunityEmailQueue->save();
+            }
 
         } catch (Exception $e) {
 
@@ -3523,7 +3526,7 @@ public function calificacionesPendientes(){
 
             $CarTodayEmail = Doctrine_Core::getTable('CarTodayEmail')->find($request->getParameter('id'));
 
-            if (!is_null($CarTodayEmail->getOpenedAt())) {
+            if (is_null($CarTodayEmail->getOpenedAt())) {
                 $CarTodayEmail->setOpenedAt(date("Y-m-d H:i:s"));
                 $CarTodayEmail->save();
             }

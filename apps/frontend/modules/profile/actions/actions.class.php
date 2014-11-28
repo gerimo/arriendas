@@ -6579,7 +6579,7 @@ error_log("BUSCANDO LA MEJOR OPORTUNIDAD");
                 throw new Exception("Las firmas no coinciden. Parece que alguien intenta hacer trampa.", 2);
             }
 
-            if (!is_null($CarTodayEmail->getCheckedAt())) {
+            if (is_null($CarTodayEmail->getCheckedAt())) {
                 $CarTodayEmail->setCheckedAt(date("Y-m-d H:i:s"));
                 $CarTodayEmail->save();
             }

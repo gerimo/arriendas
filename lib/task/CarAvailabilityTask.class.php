@@ -2,7 +2,7 @@
 
 // FALTA VER UNA FORMA DE NO ENVIAR DENUEVO LOS CORREOS SI EL TASK SE LLEGASE A CORRER AGAIN
 
-class AutoMananaTask extends sfBaseTask {
+class CarAvailabilityTask extends sfBaseTask {
 
     protected function configure() {
 
@@ -14,13 +14,13 @@ class AutoMananaTask extends sfBaseTask {
         ));
 
         $this->namespace = 'arriendas';
-        $this->name = 'autoManana';
+        $this->name = 'carAvailability';
         $this->briefDescription = '';
         $this->detailedDescription = <<<EOF
-The [AutoManana|INFO] task does things.
+The [CarAvailability|INFO] task does things.
 Call it with:
 
-  [php symfony arriendas:autoManana|INFO]
+  [php symfony arriendas:carAvailability|INFO]
 EOF;
     }
 
@@ -145,7 +145,7 @@ EOF;
             }
         } catch (Exeception $e) {
 
-            Utils::reportError($e->getMessage(), "profile/AutoMananaTask");
+            Utils::reportError($e->getMessage(), "profile/CarAvailabilityTask");
         }
     }
 }
