@@ -60,7 +60,7 @@ EOF;
                 $this->log("Revisando si mañana es feriado o sábado...");
 
                 $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+".$i." day")));
-                if ($Holiday || date("N", strtotime("+".$i." day")) == 6 || date("N", strtotime("+".$i." day")) == 5) {
+                if ($Holiday || date("N", strtotime("+".$i." day")) == 6) {
 
                     $from = date("Y-m-d", strtotime("+".$i." day"));
                     $to = date("Y-m-d", strtotime("+".$i." day"));
