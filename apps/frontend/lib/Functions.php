@@ -1272,21 +1272,5 @@ p{
         return $next_numero;
     }
 
-    private function getNextNumeroFactura(){
-        
-        // max en transaction
-        $qt = "select max(numero_factura) nro_fac from Transaction";
-        $query1 = Doctrine_Query::create()->query($qt);
-        $trans = $query1->toArray();
-
-        // max en reserve
-        $qr = "select max(numero_factura) nro_fac from Reserve";
-        $query2 = Doctrine_Query::create()->query($qr);
-        $res = $query2->toArray();
-
-        $next_numero = ($trans[0]['nro_fac'] > $res[0]['nro_fac']? $trans[0]['nro_fac'] : $res[0]['nro_fac']) + 1;
-        return $next_numero;
-    }
-
 }
 ?>
