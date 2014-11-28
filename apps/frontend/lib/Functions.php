@@ -1234,11 +1234,8 @@ p{
             // (debo obtener el mayor nro. asignado desde ambas tablas)
             try{
                 $nro_fac_transaction = $this->getNextNumeroFactura();
-<<<<<<< HEAD
-		$order->setNumeroFactura($nro_fac_transaction);
-=======
-                $order->setNumeroFactura($nro_fac_transaction);
->>>>>>> 689027966e6e761ff1cc11241d34f87696419166
+
+		        $order->setNumeroFactura($nro_fac_transaction);
 
             } catch (Exception $ex) {
                 echo $ex->getMessage();
