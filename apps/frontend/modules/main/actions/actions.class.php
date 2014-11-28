@@ -1606,7 +1606,7 @@ public function executeIndex(sfWebRequest $request) {
                 $this->logMessage('fullstartdate ' . $fullstartdate, 'err');
                 $this->logMessage('fullenddate ' . $fullenddate, 'err');
 
-                $has_reserve = $car->hasReserve($fullstartdate, $fullstartdate, $fullenddate, $fullenddate);
+                $has_reserve = $car->hasReserve($fullstartdate, $fullenddate);
             }
 
             $porcentaje = $car->getContestaPedidos();
@@ -2009,7 +2009,7 @@ public function executeIndex(sfWebRequest $request) {
 
                 $fullstartdate = $day_from . " " . $hour_from;
                 $fullenddate = $day_to . " " . $hour_to;
-                $has_reserve = $car->hasReserve($fullstartdate, $fullstartdate, $fullenddate, $fullenddate);
+                $has_reserve = $car->hasReserve($fullstartdate, $fullenddate);
             }
 
             $urlUser = $this->getPhotoUser($car->getUser()->getId());
@@ -3362,25 +3362,6 @@ public function calificacionesPendientes(){
         
         Doctrine_Core::getTable('Comunas')->generateSlugs();
     }
-
-    public function executeOpenOpportunityEmail(sfWebRequest $request) {
-
-        try {
-
-            $opportunityEmailQueue = Doctrine_Core::getTable('OportunityEmailQueue')->find($request->getParameter('id'));
-            $opportunityEmailQueue->setOpenedAt(date("Y-m-d H:i:s"));
-            $opportunityEmailQueue->save();
-
-        } catch (Exception $e) {
-            error_log("[OpenOpportunity - ".date('Y-m-d H:i:s')."] PROBLEMAS AL MARCAR COMO ABIERTO EL CORREO DE OPORTUNIDAD");
-        }
-
-        $this->getResponse()->setContentType('image/gif');
-
-        echo base64_decode("R0lGODlhAQABAIAAAP///////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACwAAAAAAQABAAACAkQBADs=");
-
-        return sfView::NONE;
-    }
     
     // PROCESO ARTIFICIAL DE UPDATE PARA FACTURAS ENTRE 1306 Y 2000
     // CORRESPONDIENTE A TRANSACCIONES COMPLETADAS
@@ -3391,7 +3372,7 @@ public function calificacionesPendientes(){
      * @param type $reserve
      * @param type $order
      */
-    public function executeUpdateManualNroFactura(sfWebRequest $request){ 
+    public function executeUpdateManualNroFactura(sfWebRequest $request){
         
         ini_set('memory_limit', '1024M');
         
@@ -3414,7 +3395,7 @@ public function calificacionesPendientes(){
         
         foreach($trans_query as $trans){
             $reserve = $trans->getReserve();
-            $this->generarNroFactura($reserve, $trans, $trans_limite);
+            $this->generarNroFactura($reserve, $trans);
             echo "transaction " . $trans->getId() . " actualiza nro_factura a: " . $trans->getNumeroFactura() . "\n";
             echo "reserve " . $reserve->getId() . " actualiza nro_factura a: " . $reserve->getNumeroFactura() . "\n";
             echo '<br>';
@@ -3429,7 +3410,7 @@ public function calificacionesPendientes(){
      * @param type $reserve
      * @param type $order
      */
-    private function generarNroFactura($reserve, $order, $trans_limite){
+    private function generarNroFactura($reserve, $order){
         
         // primero valido que no exista otra factura ya generada 
         // para la misma quincena y mismo user_id (y numero asignado!)
@@ -3476,7 +3457,7 @@ public function calificacionesPendientes(){
             // no hay factura generada durante quincena actual, asigno el siguiente nro.
             // (debo obtener el mayor nro. asignado desde ambas tablas)
             try{
-                $nro_fac_transaction = $this->getNextNumeroFactura($trans_limite);
+                $nro_fac_transaction = $this->getNextNumeroFactura();
                 $order->setNumeroFactura($nro_fac_transaction);
 
             } catch (Exception $ex) {
@@ -3486,10 +3467,10 @@ public function calificacionesPendientes(){
         $order->save();
         
         $montoLiberacion = $reserve->getMontoLiberacion();
-        $montoGarantia = sfConfig::get('deposito_garantia');
+        $montoGarantia = sfConfig::get('app_monto_garantia');
         if($montoLiberacion != $montoGarantia)
         {
-            $nro_fac_reserve = $cant_transac > 0? $this->getNextNumeroFactura($trans_limite) : $nro_fac_transaction + 1;
+            $nro_fac_reserve = $cant_transac > 0? $this->getNextNumeroFactura() : $nro_fac_transaction + 1;
             $reserve->setNumeroFactura($nro_fac_reserve);
             $reserve->save();
         }                    
@@ -3498,15 +3479,17 @@ public function calificacionesPendientes(){
         $conn->commit();
     }
     
-    private function getNextNumeroFactura($trans_limite){
+    private function getNextNumeroFactura(){
         
         // max en transaction
-        $qt = "select max(numero_factura) nro_fac from Transaction where id < " . $trans_limite;
+        //$qt = "select max(numero_factura) nro_fac from Transaction where id < " . $trans_limite;
+        $qt = "select max(numero_factura) nro_fac from Transaction";
         $query1 = Doctrine_Query::create()->query($qt);
         $trans = $query1->toArray();
 
         // max en reserve
-        $qr = "select max(numero_factura) nro_fac from Reserve where numero_factura < 2000";
+        //$qr = "select max(numero_factura) nro_fac from Reserve where numero_factura < 2000";
+        $qr = "select max(numero_factura) nro_fac from Reserve";
         $query2 = Doctrine_Query::create()->query($qr);
         $res = $query2->toArray();
 
@@ -3514,4 +3497,43 @@ public function calificacionesPendientes(){
         return $next_numero;
     }
 
+    public function executeOpenOpportunityEmail(sfWebRequest $request) {
+
+        try {
+
+            $opportunityEmailQueue = Doctrine_Core::getTable('OportunityEmailQueue')->find($request->getParameter('id'));
+            $opportunityEmailQueue->setOpenedAt(date("Y-m-d H:i:s"));
+            $opportunityEmailQueue->save();
+
+        } catch (Exception $e) {
+
+            Utils::reportError($e->getMessage(), "profile/executeOpenOpportunityEmail");
+        }
+
+        $this->getResponse()->setContentType('image/gif');
+
+        echo base64_decode("R0lGODlhAQABAIAAAP///////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACwAAAAAAQABAAACAkQBADs=");
+
+        return sfView::NONE;
+    }
+
+    public function executeAvailabilityOpen(sfWebRequest $request) {
+
+        try {
+
+            $CarTodayEmail = Doctrine_Core::getTable('CarTodayEmail')->find($request->getParameter('id'));
+            $CarTodayEmail->setOpenedAt(date("Y-m-d H:i:s"));
+            $CarTodayEmail->save();
+
+        } catch (Exception $e) {
+            
+            Utils::reportError($e->getMessage(), "profile/executeAvailabilityOpen");
+        }
+
+        $this->getResponse()->setContentType('image/gif');
+
+        echo base64_decode("R0lGODlhAQABAIAAAP///////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACwAAAAAAQABAAACAkQBADs=");
+
+        return sfView::NONE;
+    }
 }
