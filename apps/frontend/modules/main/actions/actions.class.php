@@ -3506,7 +3506,8 @@ public function calificacionesPendientes(){
             $opportunityEmailQueue->save();
 
         } catch (Exception $e) {
-            error_log("[OpenOpportunity - ".date('Y-m-d H:i:s')."] PROBLEMAS AL MARCAR COMO ABIERTO EL CORREO DE OPORTUNIDAD");
+
+            Utils::reportError($e->getMessage(), "profile/executeOpenOpportunityEmail");
         }
 
         $this->getResponse()->setContentType('image/gif');
@@ -3525,16 +3526,8 @@ public function calificacionesPendientes(){
             $CarTodayEmail->save();
 
         } catch (Exception $e) {
-            $mail = new Email();
-            $mailer = $mail->getMailer();
-
-            $message = $mail->getMessage()
-                ->setSubject('Error main/executeAvailabilityOpen '.date("Y-m-d H:i:s"))
-                ->setBody("<p>".$e->getMessage()."</p>", 'text/html')
-                ->setFrom(array("no-reply@arriendas.cl" => "Errores Arriendas.cl"))
-                ->setTo(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
             
-            $mailer->send($message);
+            Utils::reportError($e->getMessage(), "profile/executeAvailabilityOpen");
         }
 
         $this->getResponse()->setContentType('image/gif');

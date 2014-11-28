@@ -6314,11 +6314,11 @@ class profileActions extends sfActions {
             /*if (!$this->cambiarReserva($idReserve, true)) {
                 throw new Exception("No se pudo realizar el cambio de reserva específico", 1);
                 error_log("executeNuevoFlujoCambiar: no se pudo realizar el cambio de reserva");
-            }
+            }*/
 
-            $oq = Doctrine_Core::getTable("OportunityQueue")->findOneByReserveId($idReserve);
+            $oq = Doctrine_Core::getTable("OportunityQueue")->findOneByReserveId($reserveId);
             $oq->setIsActive(false);
-            $oq->save();*/
+            $oq->save();
 
             $Renter = $r->getUser();
             $Owner = $r->getCar()->getUser();
@@ -6584,16 +6584,7 @@ error_log("BUSCANDO LA MEJOR OPORTUNIDAD");
 
         } catch (Exception $e) {
 
-            $mail = new Email();
-            $mailer = $mail->getMailer();
-
-            $message = $mail->getMessage()
-                ->setSubject('Error profile/availability '.date("Y-m-d H:i:s"))
-                ->setBody("<p>".$e->getMessage()."</p>", 'text/html')
-                ->setFrom(array("no-reply@arriendas.cl" => "Errores Arriendas.cl"))
-                ->setTo(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
-            
-            $mailer->send($message);
+            Utils::reportError($e->getMessage(), "profile/executeAvailability");
         }
     }
 }
