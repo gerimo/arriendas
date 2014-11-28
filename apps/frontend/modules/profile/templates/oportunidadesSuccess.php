@@ -40,35 +40,38 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
                     <input type="checkbox" name="contratoPropietario3" id="contratoPropietario3" class='checkboxContrato'><p> <span id='textoBencinaPropietario'>Si el arriendo es por menos de un día, el arrendatario me pagará en efectivo la bencina utilizada según los kilómetros manejados. Si el arriendo es por un día o más, el arrendatario me devolverá el auto con el marcador de bencina en el mismo nivel con el que lo se lo entregué.</span></p>
                 </div>
             </div>
-            <div class="barraSuperior">
-            <p>OPORTUNIDADES</p>
-            </div>
-            <?php
-            $mostrarReservasRecibidas = false;
 
-            if($reservasRecibidas){
-                foreach ($reservasRecibidas as $reserva) {
-                    $mostrarReservasRecibidas = true;
-                }
-            }
+            <div class="barraSuperior">
+              <p>OPORTUNIDADES</p>
+            </div>
+
+            <?php
+              $mostrarReservasRecibidas = false;
+
+              if($reservasRecibidas){
+                  foreach ($reservasRecibidas as $reserva) {
+                      $mostrarReservasRecibidas = true;
+                  }
+              }
             ?>
     
             <?php if($mostrarReservasRecibidas){ ?>
-            <div id="conten_opcion1">
+              <div id="conten_opcion1">
             <?php } ?>
 
             <?php
-            $mostrar = false;
-            $checkMostrar=0;
+              $mostrar = false;
+              $checkMostrar=0;
 
-            if($reservasRecibidas){
-                foreach ($reservasRecibidas as $reserva) {
-                    if(isset($reserva['estado']) && ($reserva['estado']==0 || $reserva['estado']==1)){
-                        $mostrar = true;
-			$checkMostrar++;
-                    }
-                }
-            }?>
+              if($reservasRecibidas){
+                  foreach ($reservasRecibidas as $reserva) {
+                      if(isset($reserva['estado']) && ($reserva['estado']==0 || $reserva['estado']==1)){
+                          $mostrar = true;
+  			                  $checkMostrar++;
+                      }
+                  }
+              }
+            ?>
             
             <?php if($mostrar): ?>
 

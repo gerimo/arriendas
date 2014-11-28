@@ -1606,7 +1606,7 @@ public function executeIndex(sfWebRequest $request) {
                 $this->logMessage('fullstartdate ' . $fullstartdate, 'err');
                 $this->logMessage('fullenddate ' . $fullenddate, 'err');
 
-                $has_reserve = $car->hasReserve($fullstartdate, $fullstartdate, $fullenddate, $fullenddate);
+                $has_reserve = $car->hasReserve($fullstartdate, $fullenddate);
             }
 
             $porcentaje = $car->getContestaPedidos();
@@ -2009,7 +2009,7 @@ public function executeIndex(sfWebRequest $request) {
 
                 $fullstartdate = $day_from . " " . $hour_from;
                 $fullenddate = $day_to . " " . $hour_to;
-                $has_reserve = $car->hasReserve($fullstartdate, $fullstartdate, $fullenddate, $fullenddate);
+                $has_reserve = $car->hasReserve($fullstartdate, $fullenddate);
             }
 
             $urlUser = $this->getPhotoUser($car->getUser()->getId());
@@ -3362,25 +3362,6 @@ public function calificacionesPendientes(){
         
         Doctrine_Core::getTable('Comunas')->generateSlugs();
     }
-
-    public function executeOpenOpportunityEmail(sfWebRequest $request) {
-
-        try {
-
-            $opportunityEmailQueue = Doctrine_Core::getTable('OportunityEmailQueue')->find($request->getParameter('id'));
-            $opportunityEmailQueue->setOpenedAt(date("Y-m-d H:i:s"));
-            $opportunityEmailQueue->save();
-
-        } catch (Exception $e) {
-            error_log("[OpenOpportunity - ".date('Y-m-d H:i:s')."] PROBLEMAS AL MARCAR COMO ABIERTO EL CORREO DE OPORTUNIDAD");
-        }
-
-        $this->getResponse()->setContentType('image/gif');
-
-        echo base64_decode("R0lGODlhAQABAIAAAP///////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACwAAAAAAQABAAACAkQBADs=");
-
-        return sfView::NONE;
-    }
     
     // PROCESO ARTIFICIAL DE UPDATE PARA FACTURAS ENTRE 1306 Y 2000
     // CORRESPONDIENTE A TRANSACCIONES COMPLETADAS
@@ -3516,4 +3497,43 @@ public function calificacionesPendientes(){
         return $next_numero;
     }
 
+    public function executeOpenOpportunityEmail(sfWebRequest $request) {
+
+        try {
+
+            $opportunityEmailQueue = Doctrine_Core::getTable('OportunityEmailQueue')->find($request->getParameter('id'));
+            $opportunityEmailQueue->setOpenedAt(date("Y-m-d H:i:s"));
+            $opportunityEmailQueue->save();
+
+        } catch (Exception $e) {
+
+            Utils::reportError($e->getMessage(), "profile/executeOpenOpportunityEmail");
+        }
+
+        $this->getResponse()->setContentType('image/gif');
+
+        echo base64_decode("R0lGODlhAQABAIAAAP///////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACwAAAAAAQABAAACAkQBADs=");
+
+        return sfView::NONE;
+    }
+
+    public function executeAvailabilityOpen(sfWebRequest $request) {
+
+        try {
+
+            $CarTodayEmail = Doctrine_Core::getTable('CarTodayEmail')->find($request->getParameter('id'));
+            $CarTodayEmail->setOpenedAt(date("Y-m-d H:i:s"));
+            $CarTodayEmail->save();
+
+        } catch (Exception $e) {
+            
+            Utils::reportError($e->getMessage(), "profile/executeAvailabilityOpen");
+        }
+
+        $this->getResponse()->setContentType('image/gif');
+
+        echo base64_decode("R0lGODlhAQABAIAAAP///////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACwAAAAAAQABAAACAkQBADs=");
+
+        return sfView::NONE;
+    }
 }

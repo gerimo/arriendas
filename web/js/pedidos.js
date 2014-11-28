@@ -435,24 +435,32 @@ function bindEventsAll(){
     });
 
     $('#eliminarEnEsperaRealizados').on('click', function(event) {
+
         event.preventDefault();
-        //alert('eliminar resultados seleccionados');
+        
         var noSeleccionados = true;
         var eliminar = new Array();
         var i = 0;
+        
         $('.checkboxEnEsperaRealizados').each(function() {
+            
             if ($(this).is(':checked')) {
-                //alert('eliminar '+$(this).attr('id'));
-                eliminar[i] = obtenerId($(this).attr('id'));
-                i++;
-                noSeleccionados = false;
+                if (obtenerId($(this).attr('id')) != 0) {
+                    eliminar[i] = obtenerId($(this).attr('id'));
+                    i++;
+                    noSeleccionados = false;
+                }
             }
         });
+
         if (noSeleccionados) {
             alert('Debe seleccionar algún pedido de "EN ESPERA" para ser eliminado');
         } else {
+
             var opcion = confirm('Los pedidos eliminados no podrán ser recuperados');
+
             if (opcion) {
+                
                 for (var i = 0; i < eliminar.length; i++) {
                     $('#bloque_' + eliminar[i] + ' .eventoReserva .der .cargando').show();
                     $.ajax({
@@ -472,7 +480,6 @@ function bindEventsAll(){
                         alert('Ha ocurrido un error al eliminar algunos pedidos, inténtelo nuevamente');
                     });
                 }
-                ;
             } else {
                 quitarChecked('.checkboxEnEsperaRealizados');
             }
@@ -913,7 +920,7 @@ function cambiarEstado(id, accion) {
         ;
         //recarga la página
         if (accion == 'preaprobar') {
-            //	window.location.href = urlPedidos;
+            window.location.href = urlPedidos;
         }
 
     }).fail(function() {

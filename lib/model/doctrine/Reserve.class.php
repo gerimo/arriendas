@@ -537,4 +537,40 @@ class Reserve extends BaseReserve {
         return md5("Arriendas ~ ".$this->getDate());
     }
 
+    public function getInicio() {
+
+        return date("Y-m-d H:i:s", strtotime($this->getDate()));
+    }
+
+    public function getTermino() {
+        
+        return date("Y-m-d H:i:s", strtotime("+".$this->getDuration()." hour", strtotime($this->getDate())));
+    }
+
+    public function getRentalPrice() {
+
+        $Car = $this->getCar();
+
+        $days = floor($this->duration / 24);
+        $hours = ($this->duration / 24) - $days;
+
+        if ($hours >= 0.25) {
+            $days = $days + 1;
+            $hours = 0;
+        } else {
+            $hours = round($hours * 24, 0);
+        }
+
+        $pricePerDay = $Car->getPricePerDay();
+
+        if ($days >= 7 && $Car->getPricePerWeek() > 0) {
+            $pricePerDay = $Car->getPricePerWeek() / 7;
+        }
+
+        if ($days >= 30 && $Car->getPricePerMonth() > 0) {
+            $pricePerDay = $Car->getPricePerMonth() / 30;
+        }
+        
+        return floor($pricePerDay * $days + $Car->getPricePerHour() * $hours);
+    }
 }

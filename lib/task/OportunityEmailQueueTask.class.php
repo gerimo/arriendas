@@ -27,66 +27,72 @@ EOF;
         $config = ProjectConfiguration::getApplicationConfiguration("frontend", "prod", TRUE);
         $context = sfContext::createInstance($this->configuration);
 
-        // Este task debiera correr cada 1 minuto app
-
         // initialize the database connection
         $databaseManager = new sfDatabaseManager($this->configuration);
         $conn = $databaseManager->getDatabase($options['connection'])->getConnection();
 
+        // Este task debiera correr cada 1 minuto app
         // Este task toma un registro por cada reserva y envia un correo de oportunidad al dueño
-        if ($options['env'] == 'dev') {
-            $host = 'http://test.arriendas.cl';
-        } else {
-            $host = 'http://www.arriendas.cl';
-        }
 
-        $routing    = $this->getRouting();
-        $imageUrl   = $host . $routing->generate('checkOpenedEmail');
+        try {
+            if ($options['env'] == 'dev') {
+                $host = 'http://test.arriendas.cl';
+            } else {
+                $host = 'http://www.arriendas.cl';
+            }
 
-        // Se obtiene una oportunidad por cada reserva diferente
-        $table = Doctrine_Core::getTable('OportunityEmailQueue');
-        $q = $table
-            ->createQuery('o')
-            ->where('o.sended_at IS NULL')
-            ->groupBy('o.reserve_id')
-            ;
+            $routing    = $this->getRouting();
+            $imageUrl   = $host . $routing->generate('checkOpenedEmail');
 
-        $oportunityEmails = $q->execute();
+            // Se obtiene una oportunidad por cada reserva diferente
+            $table = Doctrine_Core::getTable('OportunityEmailQueue');
+            $q = $table
+                ->createQuery('o')
+                ->where('o.sended_at IS NULL')
+                ->groupBy('o.reserve_id')
+                ;
 
-        foreach($oportunityEmails as $oportunityEmail) {
+            $oportunityEmails = $q->execute();
 
-            $owner = $oportunityEmail->getOwner();
-            $reserve = $oportunityEmail->getReserve();
+            foreach($oportunityEmails as $oportunityEmail) {
 
-            $acceptUrl  = $host . $routing->generate('opportunityAccept', array(
-                'reserve_id' => $oportunityEmail->getReserve()->getId(),
-                'signature' => $oportunityEmail->getReserve()->getSignature(),
-            ));
+                $owner = $oportunityEmail->getOwner();
+                $reserve = $oportunityEmail->getReserve();
 
-            $this->log("Envio de correo de oportunidad a " . $owner->getFirstname() . " Reserva {$reserve->getId()}");
+                $acceptUrl  = $host . $routing->generate('opportunityAccept', array(
+                    'reserve_id' => $oportunityEmail->getReserve()->getId(),
+                    'signature' => $oportunityEmail->getReserve()->getSignature(),
+                ));
 
-            $desde = $reserve->getDate();
-            $hasta = date('Y-m-d H:i:s', strtotime($desde. " + {$reserve->getDuration()} hours"));
-            $price = number_format($reserve->getPrice(), 0, ',', '.');
+                $this->log("Envio de correo de oportunidad a " . $owner->getFirstname() . " Reserva {$reserve->getId()}");
 
-            $body  = "<p>Hola {$owner->getFirstname()}.</p>";
-            $body .= "<p>La oportunidad es por \${$price} desde {$desde} hasta {$hasta}.</p>";
-            $body .= "<p>Aprueba la oportunidad haciendo click <a href='{$acceptUrl}'>AQUI</a></p>";
-            $body .= "<br>";
-            $body .= "<p>Saludos</p>";
-            $body .= "<img src='{$imageUrl}?id={$oportunityEmail->getId()}'>";
+                $desde = $reserve->getDate();
+                $hasta = date('Y-m-d H:i:s', strtotime($desde. " + {$reserve->getDuration()} hours"));
+                $price = number_format($reserve->getPrice(), 0, ',', '.');
 
-            $message = $this->getMailer()->compose();
-            $message->setSubject("Oportunidad Especial para arrendar tu Auto");
-            $message->setFrom('notificaciones@arriendas.cl', 'Notificaciones Arriendas');
+                $body  = "<p>Hola {$owner->getFirstname()},</p>";
+                $body .= "<p>La oportunidad es por \${$price} desde {$desde} hasta {$hasta}.</p>";
+                $body .= "<p>Aprueba la oportunidad haciendo <strong><a href='{$acceptUrl}'>click aquí</a></strong>.</p>";
+                $body .= "<br>";
+                $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Atentamente</p>";
+                $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Equipo Arriendas.cl</p>";
+                $body .= "<img src='{$imageUrl}?id={$oportunityEmail->getId()}'>";
 
-            $message->setTo($oportunityEmail->getOwner()->getEmail());
-            $message->setBody($body, "text/html");
+                $message = $this->getMailer()->compose();
+                $message->setSubject("Oportunidad especial para arrendar tu auto");
+                $message->setBody($body, "text/html");
+                $message->setFrom('soporte@arriendas.cl', 'Notificaciones Arriendas.cl');
+                $message->setTo(array($oportunityEmail->getOwner()->getEmail() => $oportunityEmail->getOwner()->getFirstname()." ".$oportunityEmail->getOwner()->getLastname()));
+                
 
-            $this->getMailer()->send($message);
+                $this->getMailer()->send($message);
 
-            $oportunityEmail->setSendedAt(date('Y-m-d H:i:s'));
-            $oportunityEmail->save();
+                $oportunityEmail->setSendedAt(date('Y-m-d H:i:s'));
+                $oportunityEmail->save();
+            }
+        } catch (Execption $e) {
+
+            Utils::reportError($e->getMessage(), "profile/OportunityEmailQueueTask");
         }
     }
 }
