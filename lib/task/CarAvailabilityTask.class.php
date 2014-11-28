@@ -102,15 +102,15 @@ EOF;
 
                     if (!$Car->hasReserve($from, $to)) {
 
-                        $CarTodayEmail = new CarTodayEmail();
+                        $CarAvailabilityEmail = new CarAvailabilityEmail();
 
-                        $CarTodayEmail->setCar($Car);
-                        $CarTodayEmail->setSentAt(date("Y-m-d H:i:s"));
-                        $CarTodayEmail->save();
+                        $CarAvailabilityEmail->setCar($Car);
+                        $CarAvailabilityEmail->setSentAt(date("Y-m-d H:i:s"));
+                        $CarAvailabilityEmail->save();
 
                         $url  = $host . $routing->generate('availability', array(
-                            'id' => $CarTodayEmail->getId(),
-                            'signature' => $CarTodayEmail->getSignature(),
+                            'id' => $CarAvailabilityEmail->getId(),
+                            'signature' => $CarAvailabilityEmail->getSignature(),
                         ));
 
                         $this->log("Enviando consulta a Auto ID: ".$Car->getId());
@@ -124,7 +124,7 @@ EOF;
                         $body .= "<br>";
                         $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Atentamente</p>";
                         $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Equipo Arriendas.cl</p>";
-                        $body .= "<img src='{$imageUrl}?id={$CarTodayEmail->getId()}'>";
+                        $body .= "<img src='{$imageUrl}?id={$CarAvailabilityEmail->getId()}'>";
 
                         $message = $this->getMailer()->compose();
                         $message->setSubject($subject);
