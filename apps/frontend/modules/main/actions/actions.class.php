@@ -3414,7 +3414,7 @@ public function calificacionesPendientes(){
         
         foreach($trans_query as $trans){
             $reserve = $trans->getReserve();
-            $this->generarNroFactura($reserve, $trans, $trans_limite);
+            $this->generarNroFactura($reserve, $trans);
             echo "transaction " . $trans->getId() . " actualiza nro_factura a: " . $trans->getNumeroFactura() . "\n";
             echo "reserve " . $reserve->getId() . " actualiza nro_factura a: " . $reserve->getNumeroFactura() . "\n";
             echo '<br>';
@@ -3429,7 +3429,7 @@ public function calificacionesPendientes(){
      * @param type $reserve
      * @param type $order
      */
-    private function generarNroFactura($reserve, $order, $trans_limite){
+    private function generarNroFactura($reserve, $order){
         
         // primero valido que no exista otra factura ya generada 
         // para la misma quincena y mismo user_id (y numero asignado!)
@@ -3476,7 +3476,7 @@ public function calificacionesPendientes(){
             // no hay factura generada durante quincena actual, asigno el siguiente nro.
             // (debo obtener el mayor nro. asignado desde ambas tablas)
             try{
-                $nro_fac_transaction = $this->getNextNumeroFactura($trans_limite);
+                $nro_fac_transaction = $this->getNextNumeroFactura();
                 $order->setNumeroFactura($nro_fac_transaction);
 
             } catch (Exception $ex) {
@@ -3489,7 +3489,7 @@ public function calificacionesPendientes(){
         $montoGarantia = sfConfig::get('app_monto_garantia');
         if($montoLiberacion != $montoGarantia)
         {
-            $nro_fac_reserve = $cant_transac > 0? $this->getNextNumeroFactura($trans_limite) : $nro_fac_transaction + 1;
+            $nro_fac_reserve = $cant_transac > 0? $this->getNextNumeroFactura() : $nro_fac_transaction + 1;
             $reserve->setNumeroFactura($nro_fac_reserve);
             $reserve->save();
         }                    
@@ -3498,7 +3498,7 @@ public function calificacionesPendientes(){
         $conn->commit();
     }
     
-    private function getNextNumeroFactura($trans_limite){
+    private function getNextNumeroFactura(){
         
         // max en transaction
         //$qt = "select max(numero_factura) nro_fac from Transaction where id < " . $trans_limite;
