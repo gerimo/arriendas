@@ -251,8 +251,8 @@ Car:
     charset: utf8
     type: InnoDB
 
-CarTodayEmail:
-    tableName: CarTodayEmail
+CarAvailabilityEmail:
+    tableName: CarAvailabilityEmail
     columns:
         id:
             type: integer(11)
@@ -276,7 +276,7 @@ CarTodayEmail:
             class: Car
             local: car_id
             foreign: id
-            foreignAlias: CarTodayEmails
+            foreignAlias: CarAvailabilityEmails
             onDelete: no action
             onUpdate: no action
     options:

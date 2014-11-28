@@ -3524,11 +3524,11 @@ public function calificacionesPendientes(){
 
         try {
 
-            $CarTodayEmail = Doctrine_Core::getTable('CarTodayEmail')->find($request->getParameter('id'));
+            $CarAvailabilityEmail = Doctrine_Core::getTable('CarAvailabilityEmail')->find($request->getParameter('id'));
 
-            if (is_null($CarTodayEmail->getOpenedAt())) {
-                $CarTodayEmail->setOpenedAt(date("Y-m-d H:i:s"));
-                $CarTodayEmail->save();
+            if (is_null($CarAvailabilityEmail->getOpenedAt())) {
+                $CarAvailabilityEmail->setOpenedAt(date("Y-m-d H:i:s"));
+                $CarAvailabilityEmail->save();
             }
 
         } catch (Exception $e) {

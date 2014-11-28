@@ -6570,18 +6570,18 @@ error_log("BUSCANDO LA MEJOR OPORTUNIDAD");
 
         try {
 
-            $CarTodayEmail = Doctrine_Core::getTable("CarTodayEmail")->find($carTodayEmailId);
-            if (!$CarTodayEmail) {
+            $CarAvailabilityEmail = Doctrine_Core::getTable("CarAvailabilityEmail")->find($carTodayEmailId);
+            if (!$CarAvailabilityEmail) {
                 throw new Exception("No se encontró el registro.", 1);
             }
 
-            if ($CarTodayEmail->getSignature() != $signature) {
+            if ($CarAvailabilityEmail->getSignature() != $signature) {
                 throw new Exception("Las firmas no coinciden. Parece que alguien intenta hacer trampa.", 2);
             }
 
-            if (is_null($CarTodayEmail->getCheckedAt())) {
-                $CarTodayEmail->setCheckedAt(date("Y-m-d H:i:s"));
-                $CarTodayEmail->save();
+            if (is_null($CarAvailabilityEmail->getCheckedAt())) {
+                $CarAvailabilityEmail->setCheckedAt(date("Y-m-d H:i:s"));
+                $CarAvailabilityEmail->save();
             }
 
         } catch (Exception $e) {
