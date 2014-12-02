@@ -1256,6 +1256,7 @@ else
     }
 
     function updateLista() {
+
         if (isValidDate($('#day_from_lista').val())) {
 
             if ($('#day_from_lista').val() == '<?php echo date('d-m-Y') ?>' && isValidTime($('#hour_from_lista').val())) {
@@ -1279,9 +1280,11 @@ else
                 }
             }
         }
+
         var url = "<?php echo url_for('main/listaAjax') ?>";
         $("#tab-lista-data").hide();
         $("#tab-lista-data-spinner").show();
+        
         var dataObj = {
             "region": $("#chooseRegion").val(), 
             "comuna": $("#chooseComuna").val(),
@@ -1293,6 +1296,7 @@ else
             "price": $("input[name=precio_lista]:checked").val(),
             "type": $('input[name=tipo_lista]:checked').map(function() {return $(this).val()}).get().join(),
         }
+        
         $.ajax({
             "url": url,
             "data": dataObj,
@@ -1458,26 +1462,27 @@ if ($day_to) {
 ?> />
 
 <script>
-                        
-    
+
     var openFilters = false;    
+    
     $(document).ready(function() {
 
-           
         $("#footer_search_box_2").click(function(){
             $("#btn-lista").click();
         });
-        
-        
 
         $(".btn-busqueda").click(function() {
+
             var tabId = $(this).attr("data-tab");
+            
             $(".btn-busqueda").removeClass("active");
             $(".tab-data").hide();
             $(".tab-" + tabId).show();
+            
             if(oTable && tabId == "lista"){
                 oTable.fnAdjustColumnSizing();
             }
+
             $(this).addClass("active");
         });
 
@@ -1497,6 +1502,7 @@ if ($day_to) {
                 openFilters = true;
             }
         });
+
         $("#btn_filtro1").click(function() {
             $('#btn_filtro1').css("display", "none");
             $('#map').css("width", "509px");
@@ -1514,9 +1520,10 @@ if ($day_to) {
 
             $(".search_ext_box").slideToggle("slow");
         });
-<?php if ($sf_user->getAttribute('geolocalizacion') == true): ?>
+
+        <?php if ($sf_user->getAttribute('geolocalizacion') == true): ?>
             localizame();
-<?php endif; ?>
+        <?php endif; ?>
 
         $(".buton_more_options").click(function() {
             $(".search_ext_box").each(function() {
@@ -1532,11 +1539,23 @@ if ($day_to) {
                 }
             });
         });
-        
-        
+
+        <?php if ($holiday): ?>
+
+            var tabId = "lista";
+            
+            $(".btn-busqueda").removeClass("active");
+            $(".tab-data").hide();
+            $(".tab-" + tabId).show();
+            
+            if(oTable && tabId == "lista"){
+                oTable.fnAdjustColumnSizing();
+            }
+
+            $("#btn-mapa").hide();
+            $("#btn-lista").addClass("active");
+        <?php endif; ?>
     });
-
-
 </script>
 
 <!--
@@ -1605,8 +1624,8 @@ font-style: italic;'>Arriendo de autos <span class='dest'>vecinos</span> con seg
             <div class="search_sector1">      
                 <!--  busqueda avanzada -->
                 <div class="search_box_1_titleNew">
-                    <button class="btn-busqueda active" data-tab="mapa" >Mapa</button>
-                    <button class="btn-busqueda" id="btn-lista" style="margin-left: -3px;" data-tab="lista" >Lista</button>
+                    <button class="btn-busqueda active" id="btn-mapa" data-tab="mapa" >Mapa</button>
+                    <button class="btn-busqueda" id="btn-lista" style="<?php if (!$holiday) echo 'margin-left: -3px' ?>" data-tab="lista" >Lista</button>
                 </div>
                 <div class="search_box_1_PrincipalNew">
                     <div class="search_box_1_header tab-data tab-mapa">

@@ -252,36 +252,43 @@ Car:
     type: InnoDB
 
 CarAvailabilityEmail:
-    tableName: CarAvailabilityEmail
-    columns:
-        id:
-            type: integer(11)
-            primary: true
-            notnull: true
-            autoincrement: true
-        car_id:
-            type: integer(11)
-            notnull: true
-        checked_at:
-            type: timestamp
-        opened_at:
-            type: timestamp
-        remembered_at:
-            type: timestamp
-        sent_at:
-            type: timestamp
-            notnull: true
-    relations:
-        Car:
-            class: Car
-            local: car_id
-            foreign: id
-            foreignAlias: CarAvailabilityEmails
-            onDelete: no action
-            onUpdate: no action
-    options:
-        charset: utf8
-        type: InnoDB
+  tableName: CarAvailabilityEmail
+  columns:
+    id:
+      type: integer(11)
+      primary: true
+      notnull: true
+      autoincrement: true
+    car_id:
+      type: integer(11)
+      notnull: true
+    checked_at:
+      type: timestamp
+    opened_at:
+      type: timestamp
+    sent_at:
+      type: timestamp
+      notnull: true
+    started_at:
+      type: datetime
+      notnull: true
+    ended_at:
+      type: datetime
+      notnull: true
+    is_active:
+      type: boolean
+      default: true
+  relations:
+    Car:
+      class: Car
+      local: car_id
+      foreign: id
+      foreignAlias: CarAvailabilityEmails
+      onDelete: no action
+      onUpdate: no action
+  options:
+    charset: utf8
+    type: InnoDB
 
 City:
   tableName: City

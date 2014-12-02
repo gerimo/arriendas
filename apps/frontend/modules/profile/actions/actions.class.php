@@ -130,6 +130,33 @@ class profileActions extends sfActions {
         die();
     }
 
+    public function executeToggleActiveCAEAjax(sfWebRequest $req) {
+    
+        $return = array("error" => false);
+    
+        try {
+    
+            $CAEId = $req->getPostParameter("CAEId", null);
+    
+            $CAE = Doctrine_Core::getTable("CarAvailabilityEmail")->find($CAEId);
+            if (!$CAE) {
+                throw new Exception("No se encuentra CAE. ¿Trampa?", 1);
+            }
+
+            $CAE->setIsActive( !$CAE->getIsActive() );
+            $CAE->save();
+        } catch (Exception $e) {
+
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+            /*Utils::reportError($e->getMessage(), "executeToggleActiveCarAjax");*/
+        }
+    
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
     public function executePruebaMail(sfWebRequest $request) {
         require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
 
@@ -1878,7 +1905,7 @@ class profileActions extends sfActions {
 
     public function executeCars(sfWebRequest $request) {
 
-        $this->CAE = $request->getGetParameter("CAE", null);
+        $this->CAESuccess = $request->getGetParameter("CAE", null);
 
         $this->cars = Doctrine_Query::create()
                 ->from('car c')

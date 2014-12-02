@@ -673,15 +673,15 @@ public function executeIndex(sfWebRequest $request) {
 	//Modificacion para setear la cookie de registo de la fecha de ingreso por primera vez del usuario
 	$cookie_ingreso = $this->getRequest()->getCookie('cookie_ingreso');
 	
-	if($cookie_ingreso==NULL) {
+	if ($cookie_ingreso == NULL) {
 	    $this->getResponse()->setCookie('cookie_ingreso',time());
 	}
 	   
-        if ($this->getUser()->getAttribute('geolocalizacion') == null) {
-            $this->getUser()->setAttribute('geolocalizacion', true);
-        } elseif ($this->getUser()->getAttribute('geolocalizacion') == true) {
-            $this->getUser()->setAttribute('geolocalizacion', false);
-        }
+    if ($this->getUser()->getAttribute('geolocalizacion') == null) {
+        $this->getUser()->setAttribute('geolocalizacion', true);
+    } elseif ($this->getUser()->getAttribute('geolocalizacion') == true) {
+        $this->getUser()->setAttribute('geolocalizacion', false);
+    }
         
         $fechaActual = $this->formatearHoraChilena(strftime("%Y%m%d%H%M%S", strtotime('+3 hours', time())));    // sumo 3hs a la hora chilena.
         $this->day_from = (!$this->getUser()->getAttribute("fechainicio"))? date("d-m-Y", strtotime($fechaActual)) : $this->getUser()->getAttribute("fechainicio");
@@ -958,9 +958,17 @@ public function executeIndex(sfWebRequest $request) {
 
         $this->country = Doctrine_Core::getTable('Country')->createQuery('a')->execute();
         $this->regiones = Doctrine_Core::getTable('Regiones')->createQuery('a')->execute();
+
+        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
+        if ($Holiday || date("N") == 6 || date("N") == 7) {
+            $this->holiday = true;
+        } else {
+            $this->holiday = false;
+        }
     }
     
     public function executeListaAjax(sfWebRequest $request){
+
         $day_from = $request->getParameter('day_from');
         $day_to = $request->getParameter('day_to');
         $hour_from = date("H:i", strtotime($request->getParameter('hour_from')));
@@ -972,7 +980,6 @@ public function executeIndex(sfWebRequest $request) {
         $this->getUser()->setAttribute('fechatermino', $day_to);
         $this->getUser()->setAttribute('horainicio', date("g:i A",strtotime($request->getParameter('hour_from'))));
         $this->getUser()->setAttribute('horatermino', date("g:i A",strtotime($request->getParameter('hour_to'))));
-        
         
         $transmission = $request->getParameter('transmission');
         $type = $request->getParameter('type');
@@ -998,6 +1005,7 @@ public function executeIndex(sfWebRequest $request) {
                 break;
             }
         }
+
         $regionCodigo = $request->getParameter("region");
         $comunaCodigoInterno = ($request->getParameter("comuna") != 0 ?$request->getParameter("comuna"):null );
         $comunas = array();
@@ -1011,27 +1019,36 @@ public function executeIndex(sfWebRequest $request) {
                 $comunas[] = $comunaCodigoInterno;
             }
         }
-        
+
         $q = Doctrine_Query::create()
-                ->select('ca.id, mo.name model,
-          br.name brand, ca.uso_vehiculo_id tipo_vehiculo, ca.year year,
-          ca.address address, 
-          owner.firstname firstname,
-          owner.lastname lastname,
-          mo.id_tipo_vehiculo,
-          ca.price_per_day priceday,
-          ca.price_per_hour pricehour
-			')
-                ->from('Car ca')
-                ->innerJoin('ca.Model mo')
-                ->innerJoin('ca.Comunas cm')
-                ->innerJoin('mo.Brand br')
-                ->innerJoin('ca.User owner')                
-                ->Where('ca.activo = ?', 1)
-                ->andWhereIn('ca.seguro_ok', array(4));
+            ->select('ca.id, mo.name model,
+                br.name brand, ca.uso_vehiculo_id tipo_vehiculo, ca.year year,
+                ca.address address, 
+                owner.firstname firstname,
+                owner.lastname lastname,
+                mo.id_tipo_vehiculo,
+                ca.price_per_day priceday,
+                ca.price_per_hour pricehour')
+            ->from('Car ca')
+            ->innerJoin('ca.Model mo')
+            ->innerJoin('ca.Comunas cm')
+            ->innerJoin('mo.Brand br')
+            ->innerJoin('ca.User owner')                
+            ->Where('ca.activo = ?', 1)
+            ->andWhereIn('ca.seguro_ok', array(4));
+
+        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
+        if ($Holiday || date("N") == 6 || date("N") == 7) {
+            $q->innerJoin("ca.CarAvailabilityEmails cae");
+            $q->andWhere("cae.is_active IS TRUE");
+            $q->andWhere("DATE(cae.checked_at) >= DATE(DATE_SUB(cae.started_at, INTERVAL 1 DAY))");
+            $q->andWhere("DATE(cae.checked_at) <= DATE(cae.ended_at)");
+        }
+
         if (count($comunas) > 0) {
             $q->andWhereIn('ca.comuna_id', $comunas);
-        } 
+        }
+
         if (
                 $hour_from != "Hora de inicio" &&
                 $hour_to != "Hora de entrega" &&
@@ -1050,125 +1067,138 @@ public function executeIndex(sfWebRequest $request) {
             $q = $q->andWhere('ca.disponibilidad_semana >= ?', $timeHasWorkday);
             $q = $q->andWhere('ca.disponibilidad_finde >= ?', $timeHasWeekend);
         }
+
         if ($transmission != "") {
             $transmission = explode(",", $transmission);
             $q = $q->andWhereIn('ca.transmission', $transmission);
         }
+
         if ($type != "") {
             $type = explode(",", $type);
             $q = $q->andWhereIn('mo.id_tipo_vehiculo', $type);
         }
-        if($price == 1){
+
+        if ($price == 1){
             $q = $q->orderBy('ca.price_per_day DESC');
-        }else{
+        } else {
             $q = $q->orderBy('ca.price_per_day ASC');
         }
+
         $q->limit(100);
         
         $this->cars = $q->fetchArray();
         $fotos_autos = array();
-        for($j=0;$j<count($this->cars);$j++){
+
+        for ($j = 0; $j < count($this->cars) ; $j++) {
+
             $auto = Doctrine_Core::getTable('car')->find(array($this->cars[$j]['id']));
-            $fotos_autos[$j]['id'] = $auto->getId();
-            $fotos_autos[$j]['photoS3'] = $auto->getPhotoS3();
-            $fotos_autos[$j]['verificationPhotoS3'] = $auto->getVerificationPhotoS3();
-            $i=0;
-            if($auto->getVerificationPhotoS3() == 1){
-                if($auto->getFoto() != null && $auto->getFoto() != "") {
-                    $rutaFoto=$auto->getFoto();
-                    $fotos_autos[$j][$i] = $rutaFoto;
-                    $fotos_autos[$j][$i+1] = "Ver Fotos";
-                    $i=$i+2;
+
+            if (!$auto->hasReserve($day_from." ".$hour_from, $day_to." ".$hour_to)) {
+
+                $fotos_autos[$j]['id'] = $auto->getId();
+                $fotos_autos[$j]['photoS3'] = $auto->getPhotoS3();
+                $fotos_autos[$j]['verificationPhotoS3'] = $auto->getVerificationPhotoS3();
+
+                $i=0;
+                if ($auto->getVerificationPhotoS3() == 1) {
+                    if($auto->getFoto() != null && $auto->getFoto() != "") {
+                        $rutaFoto=$auto->getFoto();
+                        $fotos_autos[$j][$i] = $rutaFoto;
+                        $fotos_autos[$j][$i+1] = "Ver Fotos";
+                        $i=$i+2;
+                    }
+                    if($auto->getSeguroFotoFrente() != null && $auto->getSeguroFotoFrente() != "") {
+                        $rutaFotoFrente=$auto->getSeguroFotoFrente();
+                        $fotos_autos[$j][$i] = $rutaFotoFrente;
+                        $fotos_autos[$j][$i+1] = "Foto Frente";
+                        $i=$i+2;
+                    }
+                    if($auto->getSeguroFotoCostadoDerecho() != null && $auto->getSeguroFotoCostadoDerecho() != "") {
+                        $rutaFotoCostadoDerecho=$auto->getSeguroFotoCostadoDerecho();
+                        $fotos_autos[$j][$i] = $rutaFotoCostadoDerecho;
+                        $fotos_autos[$j][$i+1] = "Foto Costado Derecho";
+                        $i=$i+2;
+                    }
+                    if(strpos($auto->getSeguroFotoCostadoIzquierdo(),"http")!=-1 && $auto->getSeguroFotoCostadoIzquierdo() != "") {
+                        $rutaFotoCostadoIzquierdo=$auto->getSeguroFotoCostadoIzquierdo();
+                        $fotos_autos[$j][$i] = $rutaFotoCostadoIzquierdo;
+                        $fotos_autos[$j][$i+1] = "Foto Costado Izquierdo";
+                        $i=$i+2;
+                    }
+                    if(strpos($auto->getSeguroFotoTraseroDerecho(),"http")!=-1 && $auto->getSeguroFotoTraseroDerecho() != "") {
+                        $rutaFotoTrasera= $auto->getSeguroFotoTraseroDerecho();
+                        $fotos_autos[$j][$i] = $rutaFotoTrasera;
+                        $fotos_autos[$j][$i+1] = "Foto Trasera";
+                        $i=$i+2;
+                    }   
+                    if(strpos($auto->getTablero(),"http")!=-1 && $auto->getTablero() != "") {
+                        $rutaFotoPanel=$auto->getTablero();  
+                        $fotos_autos[$j][$i] = $rutaFotoPanel;
+                        $fotos_autos[$j][$i+1] = "Foto del Panel";
+                        $i=$i+2;
+                    }
+                    if(strpos($auto->getAccesorio1(),"http")!=-1 && $auto->getAccesorio1() != "") {
+                        $rutaFotoAccesorios1= $auto->getAccesorio1();
+                        $fotos_autos[$j][$i] = $rutaFotoAccesorios1;
+                        $fotos_autos[$j][$i+1] = "Foto de Accesorio 1";
+                        $i=$i+2;
+                    }  
+                    if(strpos($auto->getAccesorio2(),"http")!=-1 && $auto->getAccesorio2() != "") {
+                        $rutaFotoAccesorios2=$auto->getAccesorio2();
+                        $fotos_autos[$j][$i] = $rutaFotoAccesorios2;
+                        $fotos_autos[$j][$i+1] = "Foto de Accesorio 2";
+                    }
+                } else {//if verificationPhotoS3 == 0
+                    if($auto->getFoto() != null && $auto->getFoto() != "") {
+                        $rutaFoto=$auto->getFoto();
+                        $fotos_autos[$j][$i] = $rutaFoto;
+                        $fotos_autos[$j][$i+1] = "Ver Fotos";
+                        $i=$i+2;
+                    }
+                    if($auto->getSeguroFotoFrente() != null && $auto->getSeguroFotoFrente() != "") {
+                        $rutaFotoFrente=$auto->getSeguroFotoFrente();
+                        $fotos_autos[$j][$i] = $rutaFotoFrente;
+                        $fotos_autos[$j][$i+1] = "Foto Frente";
+                        $i=$i+2;
+                    }
+                    if($auto->getSeguroFotoCostadoDerecho() != null && $auto->getSeguroFotoCostadoDerecho() != "") {
+                        $rutaFotoCostadoDerecho=$auto->getSeguroFotoCostadoDerecho();
+                        $fotos_autos[$j][$i] = $rutaFotoCostadoDerecho;
+                        $fotos_autos[$j][$i+1] = "Foto Costado Derecho";
+                        $i=$i+2;
+                    }
+                    if($auto->getSeguroFotoCostadoIzquierdo() != null && $auto->getSeguroFotoCostadoIzquierdo() != "") {
+                        $rutaFotoCostadoIzquierdo=$auto->getSeguroFotoCostadoIzquierdo();
+                        $fotos_autos[$j][$i] = $rutaFotoCostadoIzquierdo;
+                        $fotos_autos[$j][$i+1] = "Foto Costado Izquierdo";
+                        $i=$i+2;
+                    }
+                    if($auto->getSeguroFotoTraseroDerecho() != null && $auto->getSeguroFotoTraseroDerecho() != "") {
+                        $rutaFotoTrasera= $auto->getSeguroFotoTraseroDerecho();
+                        $fotos_autos[$j][$i] = $rutaFotoTrasera;
+                        $fotos_autos[$j][$i+1] = "Foto Trasera";
+                        $i=$i+2;
+                    }   
+                    if($auto->getTablero() != null && $auto->getTablero() != "") {
+                        $rutaFotoPanel=$auto->getTablero();  
+                        $fotos_autos[$j][$i] = $rutaFotoPanel;
+                        $fotos_autos[$j][$i+1] = "Foto del Panel";
+                        $i=$i+2;
+                    }
+                    if($auto->getAccesorio1() != null && $auto->getAccesorio1() != "") {
+                        $rutaFotoAccesorios1= $auto->getAccesorio1();
+                        $fotos_autos[$j][$i] = $rutaFotoAccesorios1;
+                        $fotos_autos[$j][$i+1] = "Foto de Accesorio 1";
+                        $i=$i+2;
+                    }  
+                    if($auto->getAccesorio2() != null && $auto->getAccesorio2() != "") {
+                        $rutaFotoAccesorios2=$auto->getAccesorio2();
+                        $fotos_autos[$j][$i] = $rutaFotoAccesorios2;
+                        $fotos_autos[$j][$i+1] = "Foto de Accesorio 2";
+                    }
                 }
-                if($auto->getSeguroFotoFrente() != null && $auto->getSeguroFotoFrente() != "") {
-                    $rutaFotoFrente=$auto->getSeguroFotoFrente();
-                    $fotos_autos[$j][$i] = $rutaFotoFrente;
-                    $fotos_autos[$j][$i+1] = "Foto Frente";
-                    $i=$i+2;
-                }
-                if($auto->getSeguroFotoCostadoDerecho() != null && $auto->getSeguroFotoCostadoDerecho() != "") {
-                    $rutaFotoCostadoDerecho=$auto->getSeguroFotoCostadoDerecho();
-                    $fotos_autos[$j][$i] = $rutaFotoCostadoDerecho;
-                    $fotos_autos[$j][$i+1] = "Foto Costado Derecho";
-                    $i=$i+2;
-                }
-                if(strpos($auto->getSeguroFotoCostadoIzquierdo(),"http")!=-1 && $auto->getSeguroFotoCostadoIzquierdo() != "") {
-                    $rutaFotoCostadoIzquierdo=$auto->getSeguroFotoCostadoIzquierdo();
-                    $fotos_autos[$j][$i] = $rutaFotoCostadoIzquierdo;
-                    $fotos_autos[$j][$i+1] = "Foto Costado Izquierdo";
-                    $i=$i+2;
-                }
-                if(strpos($auto->getSeguroFotoTraseroDerecho(),"http")!=-1 && $auto->getSeguroFotoTraseroDerecho() != "") {
-                    $rutaFotoTrasera= $auto->getSeguroFotoTraseroDerecho();
-                    $fotos_autos[$j][$i] = $rutaFotoTrasera;
-                    $fotos_autos[$j][$i+1] = "Foto Trasera";
-                    $i=$i+2;
-                }   
-                if(strpos($auto->getTablero(),"http")!=-1 && $auto->getTablero() != "") {
-                    $rutaFotoPanel=$auto->getTablero();  
-                    $fotos_autos[$j][$i] = $rutaFotoPanel;
-                    $fotos_autos[$j][$i+1] = "Foto del Panel";
-                    $i=$i+2;
-                }
-                if(strpos($auto->getAccesorio1(),"http")!=-1 && $auto->getAccesorio1() != "") {
-                    $rutaFotoAccesorios1= $auto->getAccesorio1();
-                    $fotos_autos[$j][$i] = $rutaFotoAccesorios1;
-                    $fotos_autos[$j][$i+1] = "Foto de Accesorio 1";
-                    $i=$i+2;
-                }  
-                if(strpos($auto->getAccesorio2(),"http")!=-1 && $auto->getAccesorio2() != "") {
-                    $rutaFotoAccesorios2=$auto->getAccesorio2();
-                    $fotos_autos[$j][$i] = $rutaFotoAccesorios2;
-                    $fotos_autos[$j][$i+1] = "Foto de Accesorio 2";
-                }
-            }else{//if verificationPhotoS3 == 0
-                if($auto->getFoto() != null && $auto->getFoto() != "") {
-                    $rutaFoto=$auto->getFoto();
-                    $fotos_autos[$j][$i] = $rutaFoto;
-                    $fotos_autos[$j][$i+1] = "Ver Fotos";
-                    $i=$i+2;
-                }
-                if($auto->getSeguroFotoFrente() != null && $auto->getSeguroFotoFrente() != "") {
-                    $rutaFotoFrente=$auto->getSeguroFotoFrente();
-                    $fotos_autos[$j][$i] = $rutaFotoFrente;
-                    $fotos_autos[$j][$i+1] = "Foto Frente";
-                    $i=$i+2;
-                }
-                if($auto->getSeguroFotoCostadoDerecho() != null && $auto->getSeguroFotoCostadoDerecho() != "") {
-                    $rutaFotoCostadoDerecho=$auto->getSeguroFotoCostadoDerecho();
-                    $fotos_autos[$j][$i] = $rutaFotoCostadoDerecho;
-                    $fotos_autos[$j][$i+1] = "Foto Costado Derecho";
-                    $i=$i+2;
-                }
-                if($auto->getSeguroFotoCostadoIzquierdo() != null && $auto->getSeguroFotoCostadoIzquierdo() != "") {
-                    $rutaFotoCostadoIzquierdo=$auto->getSeguroFotoCostadoIzquierdo();
-                    $fotos_autos[$j][$i] = $rutaFotoCostadoIzquierdo;
-                    $fotos_autos[$j][$i+1] = "Foto Costado Izquierdo";
-                    $i=$i+2;
-                }
-                if($auto->getSeguroFotoTraseroDerecho() != null && $auto->getSeguroFotoTraseroDerecho() != "") {
-                    $rutaFotoTrasera= $auto->getSeguroFotoTraseroDerecho();
-                    $fotos_autos[$j][$i] = $rutaFotoTrasera;
-                    $fotos_autos[$j][$i+1] = "Foto Trasera";
-                    $i=$i+2;
-                }   
-                if($auto->getTablero() != null && $auto->getTablero() != "") {
-                    $rutaFotoPanel=$auto->getTablero();  
-                    $fotos_autos[$j][$i] = $rutaFotoPanel;
-                    $fotos_autos[$j][$i+1] = "Foto del Panel";
-                    $i=$i+2;
-                }
-                if($auto->getAccesorio1() != null && $auto->getAccesorio1() != "") {
-                    $rutaFotoAccesorios1= $auto->getAccesorio1();
-                    $fotos_autos[$j][$i] = $rutaFotoAccesorios1;
-                    $fotos_autos[$j][$i+1] = "Foto de Accesorio 1";
-                    $i=$i+2;
-                }  
-                if($auto->getAccesorio2() != null && $auto->getAccesorio2() != "") {
-                    $rutaFotoAccesorios2=$auto->getAccesorio2();
-                    $fotos_autos[$j][$i] = $rutaFotoAccesorios2;
-                    $fotos_autos[$j][$i+1] = "Foto de Accesorio 2";
-                }
+            } else {
+                $j--;
             }
         }
 
