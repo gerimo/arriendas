@@ -105,6 +105,7 @@ class paymentActions extends sfActions {
                     $this->error = 'Ha ocurrido un error tratando de procesar el codigo de reserva indicado.<br/>' . $e->getMessage();
                     $this->_log("Formulario", "Error", "Usuario: " . $customer_in_session . ". Error: " . $this->error);
                     $this->ppId = null;
+                    Utils::reportError($e->getMessage(), "payment/executeIndex");
                 }
             }
         } else {

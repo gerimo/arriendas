@@ -130,6 +130,33 @@ class profileActions extends sfActions {
         die();
     }
 
+    public function executeToggleActiveCAEAjax(sfWebRequest $req) {
+    
+        $return = array("error" => false);
+    
+        try {
+    
+            $CAEId = $req->getPostParameter("CAEId", null);
+    
+            $CAE = Doctrine_Core::getTable("CarAvailabilityEmail")->find($CAEId);
+            if (!$CAE) {
+                throw new Exception("No se encuentra CAE. ¿Trampa?", 1);
+            }
+
+            $CAE->setIsActive( !$CAE->getIsActive() );
+            $CAE->save();
+        } catch (Exception $e) {
+
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+            /*Utils::reportError($e->getMessage(), "executeToggleActiveCarAjax");*/
+        }
+    
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
     public function executePruebaMail(sfWebRequest $request) {
         require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
 
@@ -1648,11 +1675,6 @@ class profileActions extends sfActions {
 // $this->user = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")));
 //}
 
-
-
-
-
-
     public function executeGetAvInfo(sfWebRequest $request) {
         $this->setLayout(false);
         sfConfig::set('sf_web_debug', false);
@@ -1882,11 +1904,14 @@ class profileActions extends sfActions {
     }
 
     public function executeCars(sfWebRequest $request) {
-        $cars = Doctrine_Query::create()->from('car c')
+
+        $this->CAESuccess = $request->getGetParameter("CAE", null);
+
+        $this->cars = Doctrine_Query::create()
+                ->from('car c')
                 ->where('c.user_id = ?', $this->getUser()->getAttribute("userid"))
                 ->orderBy('c.activo DESC')
                 ->execute();
-        $this->cars = $cars;
     }
 
     public function executeCar(sfWebRequest $request) {
@@ -4221,6 +4246,7 @@ class profileActions extends sfActions {
                     WHERE r.date > NOW() 
                     AND c.seguro_ok=4
                     AND c.activo=1
+                    AND c.transmission = ?
                     AND m.id_otro_tipo_vehiculo = ? 
                     AND c.price_per_day <= ? 
                     AND c.price_per_day >= ?
@@ -4233,6 +4259,7 @@ class profileActions extends sfActions {
                     GROUP BY r.user_id, DATE(r.date)";
 
                 $query = Doctrine_Query::create()->query($q, array(
+                    $car->getTransmission(),
                     $car->getModel()->getIdOtroTipoVehiculo(),
                     $maxPrice,
                     $minPrice,
@@ -6566,22 +6593,26 @@ error_log("BUSCANDO LA MEJOR OPORTUNIDAD");
 
     public function executeAvailability(sfWebRequest $request) {
 
-        $carTodayEmailId = $request->getGetParameter("id");
+        $carAvailabilityEmailId = $request->getGetParameter("id");
         $signature = $request->getGetParameter("signature");
 
         try {
 
-            $CarTodayEmail = Doctrine_Core::getTable("CarTodayEmail")->find($carTodayEmailId);
-            if (!$CarTodayEmail) {
+            $CarAvailabilityEmail = Doctrine_Core::getTable("CarAvailabilityEmail")->find($carAvailabilityEmailId);
+            if (!$CarAvailabilityEmail) {
                 throw new Exception("No se encontró el registro.", 1);
             }
 
-            if ($CarTodayEmail->getSignature() != $signature) {
+            if ($CarAvailabilityEmail->getSignature() != $signature) {
                 throw new Exception("Las firmas no coinciden. Parece que alguien intenta hacer trampa.", 2);
             }
 
-            $CarTodayEmail->setCheckedAt(date("Y-m-d H:i:s"));
-            $CarTodayEmail->save();
+            if (is_null($CarAvailabilityEmail->getCheckedAt())) {
+                $CarAvailabilityEmail->setCheckedAt(date("Y-m-d H:i:s"));
+                $CarAvailabilityEmail->save();
+            }
+
+            $this->redirect($this->generateUrl("profile/cars")."?CAE=true");
 
         } catch (Exception $e) {
 

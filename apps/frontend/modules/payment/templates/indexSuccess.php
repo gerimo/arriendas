@@ -158,6 +158,10 @@
                                 <input type="radio" name="pp_medio_pago" value="21"/>
                                 <img src="https://s3.amazonaws.com/static.khipu.com/buttons/50x25.png" border="0" alt="Khipu">
                             </div>
+                            <div>
+                                <input type="radio" name="pp_medio_pago" value="20"/>
+                                <?php echo image_tag('paypal/logotipo_paypal_pagos.png') ?>
+                            </div>
                         </div>
                     </div>
                     <div class="contenedorBotonPagar" style="width: 400px;">

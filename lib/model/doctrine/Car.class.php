@@ -301,4 +301,16 @@ where c.id=
 
     return $ret;
   }
+
+    public function getCurrentCarAvailabilityEmails() {
+
+        $q = Doctrine_Core::getTable("CarAvailabilityEmail")
+            ->createQuery('CAE')
+            ->where('CAE.car_id = ?', $this->id)
+            ->andWhere("NOW() > CAE.sent_at")
+            ->andWhere("NOW() < CAE.ended_at")
+            ->andWhere("CAE.checked_at IS NOT NULL");
+
+        return $q->execute();
+    }
 }
