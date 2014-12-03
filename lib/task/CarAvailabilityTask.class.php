@@ -128,8 +128,7 @@ EOF;
                     $message->setFrom('soporte@arriendas.cl', 'Soporte Arriendas.cl');
                     /*$message->setTo(array($User->getEmail() => $User->getFirstname()." ".$User->getLastname()));*/
                     $message->setBcc(array(
-                            "cristobal@arriendas.cl" => "Cristóbal Medina Moenne",
-                            /*"german@arriendas.cl" => "Germán Rimoldi"*/
+                            "cristobal@arriendas.cl" => "Cristóbal Medina Moenne"
                         ));
                     
                     $this->getMailer()->send($message);

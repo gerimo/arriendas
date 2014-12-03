@@ -154,7 +154,7 @@
                 <?php $CAES = $c->getCurrentCarAvailabilityEmails(); ?>
                 <?php if (count($CAES) > 0): ?>
 
-                    <h2>Disponibilidad</h2>
+                    <h2>Disponibilidad de fin de semana / festivo</h2>
                     <div class="car_availability_emails">
                         <?php foreach ($CAES as $CAE): ?>
 
