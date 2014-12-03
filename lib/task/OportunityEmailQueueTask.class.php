@@ -84,7 +84,6 @@ EOF;
                 $message->setFrom('soporte@arriendas.cl', 'Notificaciones Arriendas.cl');
                 $message->setTo(array($oportunityEmail->getOwner()->getEmail() => $oportunityEmail->getOwner()->getFirstname()." ".$oportunityEmail->getOwner()->getLastname()));
                 
-
                 $this->getMailer()->send($message);
 
                 $oportunityEmail->setSendedAt(date('Y-m-d H:i:s'));

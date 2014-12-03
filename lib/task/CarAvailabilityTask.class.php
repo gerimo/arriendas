@@ -1,26 +1,29 @@
 <?php
 
+// Este task debería correr todos los días
+// Este task revisa si mañana es feriado o fin de semana y envía un correo a los dueños
+//  de autos disponibles, preguntando si su auto realmente estrará disponible el fin de semana.
+
 // FALTA VER UNA FORMA DE NO ENVIAR DENUEVO LOS CORREOS SI EL TASK SE LLEGASE A CORRER AGAIN
 
-class AutoMananaTask extends sfBaseTask {
+class CarAvailabilityTask extends sfBaseTask {
 
     protected function configure() {
 
         $this->addOptions(array(
             new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name', 'frontend'),
             new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
-            new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine'),
-            new sfCommandOption('reminder', null, sfCommandOption::PARAMETER_REQUIRED, 'Is a reminder', 0),
+            new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine')
         ));
 
         $this->namespace = 'arriendas';
-        $this->name = 'autoManana';
+        $this->name = 'carAvailability';
         $this->briefDescription = '';
         $this->detailedDescription = <<<EOF
-The [AutoManana|INFO] task does things.
+The [CarAvailability|INFO] task does things.
 Call it with:
 
-  [php symfony arriendas:autoManana|INFO]
+  [php symfony arriendas:carAvailability|INFO]
 EOF;
     }
 
@@ -30,23 +33,19 @@ EOF;
         sfContext::createInstance($config);
 
         // initialize the database connection
-        /*$databaseManager = new sfDatabaseManager($this->configuration);
-        $conn = $databaseManager->getDatabase($options['connection'])->getConnection();*/
+        $databaseManager = new sfDatabaseManager($this->configuration);
+        $conn = $databaseManager->getDatabase($options['connection'])->getConnection();
 
-        $isReminder = $options["reminder"];
+        try {
 
-        if ($options['env'] == 'dev') {
-            $host = 'http://test.arriendas.cl';
-        } else {
-            $host = 'http://www.arriendas.cl';
-        }
+            if ($options['env'] == 'dev') {
+                $host = 'http://test.arriendas.cl';
+            } else {
+                $host = 'http://www.arriendas.cl';
+            }
 
-        $routing = $this->getRouting();
-        $imageUrl = $host . $routing->generate('availabilityEmailOpen');
-
-        if ($isReminder) {
-
-        } else {
+            $routing = $this->getRouting();
+            $imageUrl = $host . $routing->generate('availabilityEmailOpen');
 
             $from = null;
             $to = null;
@@ -55,7 +54,7 @@ EOF;
             $this->log("Revisando si mañana es feriado o sábado...");
 
             $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+".$i." day")));
-            if ($Holiday || date("N", strtotime("+".$i." day")) == 6 || date("N", strtotime("+".$i." day")) == 5) {
+            if ($Holiday || date("N", strtotime("+".$i." day")) == 6) {
 
                 $from = date("Y-m-d", strtotime("+".$i." day"));
                 $to = date("Y-m-d", strtotime("+".$i." day"));
@@ -75,10 +74,10 @@ EOF;
             if (!$from || !$to) {
                 $this->log("Mañana no es feriado ni sábado...");
                 exit;
-            } else {
-                $from .= " 00:00:00";
-                $to .= " 23:59:59";
             }
+
+            $from .= " 00:00:00";
+            $to   .= " 23:59:59";
 
             $q = Doctrine_Core::getTable("Car")
                 ->createQuery('C')
@@ -88,7 +87,7 @@ EOF;
 
             $Cars = $q->execute();
 
-            if (count($Cars) == 0) {
+            if (!$Cars) {
                 $this->log("No hay autos disponibles");
                 exit;
             }
@@ -97,15 +96,17 @@ EOF;
 
                 if (!$Car->hasReserve($from, $to)) {
 
-                    $CarTodayEmail = new CarTodayEmail();
+                    $CarAvailabilityEmail = new CarAvailabilityEmail();
 
-                    $CarTodayEmail->setCar($Car);
-                    $CarTodayEmail->setSentAt(date("Y-m-d H:i:s"));
-                    $CarTodayEmail->save();
+                    $CarAvailabilityEmail->setCar($Car);
+                    $CarAvailabilityEmail->setSentAt(date("Y-m-d H:i:s"));
+                    $CarAvailabilityEmail->setStartedAt($from);
+                    $CarAvailabilityEmail->setEndedAt($to);
+                    $CarAvailabilityEmail->save();
 
                     $url  = $host . $routing->generate('availability', array(
-                        'id' => $CarTodayEmail->getId(),
-                        'signature' => $CarTodayEmail->getSignature(),
+                        'id' => $CarAvailabilityEmail->getId(),
+                        'signature' => $CarAvailabilityEmail->getSignature(),
                     ));
 
                     $this->log("Enviando consulta a Auto ID: ".$Car->getId());
@@ -119,7 +120,7 @@ EOF;
                     $body .= "<br>";
                     $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Atentamente</p>";
                     $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Equipo Arriendas.cl</p>";
-                    $body .= "<img src='{$imageUrl}?id={$CarTodayEmail->getId()}'>";
+                    $body .= "<img src='{$imageUrl}?id={$CarAvailabilityEmail->getId()}'>";
 
                     $message = $this->getMailer()->compose();
                     $message->setSubject($subject);
@@ -127,8 +128,7 @@ EOF;
                     $message->setFrom('soporte@arriendas.cl', 'Soporte Arriendas.cl');
                     /*$message->setTo(array($User->getEmail() => $User->getFirstname()." ".$User->getLastname()));*/
                     $message->setBcc(array(
-                            "cristobal@arriendas.cl" => "Cristóbal Medina Moenne",
-                            /*"german@arriendas.cl" => "Germán Rimoldi"*/
+                            "cristobal@arriendas.cl" => "Cristóbal Medina Moenne"
                         ));
                     
                     $this->getMailer()->send($message);
@@ -137,6 +137,9 @@ EOF;
                     $this->log("Auto ID: ".$Car->getId()." ya posee una reserva");
                 }
             }
+        } catch (Exeception $e) {
+
+            Utils::reportError($e->getMessage(), "profile/CarAvailabilityTask");
         }
     }
 }

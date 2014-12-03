@@ -128,6 +128,11 @@ EOF;
                             $NewReserve->getTransaction()->setCompleted(true);
                             $NewReserve->save();
 
+                            // Cancelamos el envío de oportunidades
+                            $OpportunityQueue = Doctrine_Core::getTable("OportunityQueue")->findOneByReserveId($OriginalReserve->getId());
+                            $OpportunityQueue->setIsActive(false);
+                            $OpportunityQueue->save();
+
                             $Car = $NewReserve->getCar();
                             $Renter = $NewReserve->getRenter();
                             $Owner = $Car->getUser();
