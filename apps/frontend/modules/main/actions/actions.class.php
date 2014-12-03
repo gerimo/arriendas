@@ -2562,7 +2562,7 @@ public function executeIndex(sfWebRequest $request) {
         //$_SESSION['urlback'] = $this->getRequest()->getUri();
 		  sfContext::getInstance()->getLogger()->info($this->getRequest()->getUri());
 		
-        if (isset($_SESSION['login_back_url'])) {
+        /*if (isset($_SESSION['login_back_url'])) {
             $urlpage = explode('/', $_SESSION['login_back_url']);
 
             if ($urlpage[count($urlpage) - 1] != "login" && $urlpage[count($urlpage) - 1] != "doLogin") {
@@ -2572,7 +2572,11 @@ public function executeIndex(sfWebRequest $request) {
         }else{
             //$_SESSION['login_back_url'] = $request->getReferer();
             $_SESSION['login_back_url'] = $this->getRequest()->getUri();
-			}
+			}*/
+                  
+        if (!isset($_SESSION['login_back_url'])) {
+            $_SESSION['login_back_url'] = $this->getRequest()->getUri();
+        }
     }
 
     public function sendRecoverEmail($user) {
@@ -2811,7 +2815,7 @@ El equipo de Arriendas.cl
 
                     sfContext::getInstance()->getLogger()->info($_SESSION['login_back_url']);
 
-                    $this->redirect($_SESSION['login_back_url']);
+                    $this->redirect($_SESSION['login_back_url']);//echo $_SESSION['login_back_url'];die;
 
                     $this->calificacionesPendientes();
                 } else {
@@ -3165,15 +3169,14 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
         if($previousUser) {
 
     	    $user_id= $this->getUser()->getAttribute("userid");
-                $myUser = Doctrine::getTable('User')->findOneById($user_id);
-    	
-                $token_url = sprintf("https://graph.facebook.com/oauth/access_token?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s", $app_id, urlencode($my_url), $app_secret, $code);
+            $myUser = Doctrine::getTable('User')->findOneById($user_id);
+            $token_url = sprintf("https://graph.facebook.com/oauth/access_token?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s", $app_id, urlencode($my_url), $app_secret, $code);
     	    $response = @file_get_contents($token_url);
-                $params = null;
-                parse_str($response, $params);
-                $graph_url = sprintf("https://graph.facebook.com/me?access_token=%s", $params['access_token']);
-                $user = json_decode(file_get_contents($graph_url), true);
-                $photo_url = sprintf("https://graph.facebook.com/%s/picture", $user["id"]);
+            $params = null;
+            parse_str($response, $params);
+            $graph_url = sprintf("https://graph.facebook.com/me?access_token=%s", $params['access_token']);
+            $user = json_decode(file_get_contents($graph_url), true);
+            $photo_url = sprintf("https://graph.facebook.com/%s/picture", $user["id"]);
     	    $myUser->setFacebookId($user["id"]);
     	    $myUser->setPictureFile($photo_url);
     	    $myUser->setConfirmedFb(true);
@@ -3184,7 +3187,7 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
             }else{
                 $this->redirect('main/index');
             }
-	   }
+        }
 
 	
 	//modificacion por problema aleatorio con login with facebook

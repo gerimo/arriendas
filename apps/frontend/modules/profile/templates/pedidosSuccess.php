@@ -22,7 +22,8 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
     var urlRefreshPedidos = <?php echo "'".url_for("profile/pedidosAjax")."';" ?>
     var urlUpdateProfile = <?php echo "'".url_for("profile/edit")."';" ?>
     var urlFBconnect = <?php echo "'".url_for("main/loginFacebook")."';" ?>
-    var urlCarProfile = <?php echo "'".url_for("cars/car/id/")."';" ?>
+    var urlCarProfile = <?php echo "'".url_for("cars/car")."';" ?>
+    var urlLogin = <?php echo "'".url_for("main/login")."';" ?>
     var urlNuevoFlujoCambiar = <?php echo "'".url_for("profile/nuevoFlujoCambiar")."';" ?>
 </script>
 

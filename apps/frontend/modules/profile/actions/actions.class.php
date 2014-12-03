@@ -3157,11 +3157,11 @@ class profileActions extends sfActions {
         
         $idReserve = $request->getPostParameter('idReserve');
         $idUsuario = $request->getPostParameter('idUsuario');
+        $redirectUrl = $request->getPostParameter('redirectUrl');
 
         $errorMessage = "";
 
         if ($idUsuario) {
-            
             $user = Doctrine_Core::getTable('user')->find($idUsuario);
             if ($user->getRut() == "") {
                 $errorMessage = "error:rutnulo";
@@ -3178,6 +3178,7 @@ class profileActions extends sfActions {
             }
         } else {
             $errorMessage = "error:notlogged";
+            $_SESSION['login_back_url'] = $redirectUrl;
             /*$reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
             if ($reserve->getUser()->getRut() == "") {
                 $errorMessage = "error:rutnulo";
