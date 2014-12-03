@@ -948,22 +948,15 @@ public function executeIndex(sfWebRequest $request) {
         $this->fotos_autos = $fotos_autos;
         
         $this->brand =  $this->ordenarBrand(Doctrine_Core::getTable('Brand')->createQuery('a')->execute());
-        //Doctrine_Core::getTable('Brand')->createQuery('a')->execute();
-        /*
-        $this->brand = $q = Doctrine_Query::create()->from('Brand ba')
-                ->innerJoin('ba.Models mo')
-                ->innerJoin('mo.Cars ca')
-                ->execute();
-        */
 
         $this->country = Doctrine_Core::getTable('Country')->createQuery('a')->execute();
         $this->regiones = Doctrine_Core::getTable('Regiones')->createQuery('a')->execute();
 
+        $this->holiday = false;
+
         $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
         if ($Holiday || date("N") == 6 || date("N") == 7) {
             $this->holiday = true;
-        } else {
-            $this->holiday = false;
         }
     }
     
