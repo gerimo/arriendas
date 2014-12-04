@@ -191,6 +191,6 @@ class MessageTable extends Doctrine_Table
             ->andWhere("m.user_id = $user_id")
             ->andWhere("(c.user_to_id=$user_id AND m.looking_user_to=1) OR (c.user_from_id=$user_id AND m.looking_user_from=1)")
             ->orderBy("m.date desc");
-        return $q->execute();
+        return $q->fetchOne();
     }
 }
