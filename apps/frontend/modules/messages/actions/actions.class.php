@@ -426,7 +426,15 @@ class messagesActions extends sfActions {
 
         $this->user_id = $this->getUser()->getAttribute("userid");
         $idConversacion = $request->getParameter("id");
-        $this->comentarios = $request->getParameter("comentarios");
+        
+        // muestro precargado último mensaje enviado (sólo para arrendatarios!)
+        $user = Doctrine_Core::getTable('user')->find($this->user_id);
+        if(!$user->isPropietario()){
+            $mensajes = Doctrine_Core::getTable("Message")->lastMessageSentByUserId($this->user_id);
+            $this->comentarios = $mensajes[0]->getBody();
+        }else{
+            $this->comentarios = $request->getParameter("comentarios");
+        }
 
         $objetoConversacion = Doctrine_Core::getTable("Conversation")->findConversationWithId($this->getUser()->getAttribute("userid"), $idConversacion);
 

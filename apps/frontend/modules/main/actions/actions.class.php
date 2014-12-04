@@ -2838,7 +2838,7 @@ El equipo de Arriendas.cl
 
                     sfContext::getInstance()->getLogger()->info($_SESSION['login_back_url']);
 
-                    $this->redirect($_SESSION['login_back_url']);//echo $_SESSION['login_back_url'];die;
+                    $this->redirect($_SESSION['login_back_url']);
 
                     $this->calificacionesPendientes();
                 } else {
