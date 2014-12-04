@@ -3202,22 +3202,25 @@ class profileActions extends sfActions {
                 $errorMessage = "error:nobirthdate";
             }
         } else {
-            $errorMessage = "error:notlogged";
-            $_SESSION['login_back_url'] = $redirectUrl;
-            /*$reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
-            if ($reserve->getUser()->getRut() == "") {
-                $errorMessage = "error:rutnulo";
-            }
+            if (!$this->getUser()->isAuthenticated()) {
+                $errorMessage = "error:notlogged";
+                $_SESSION['login_back_url'] = $redirectUrl;
+            }else{
+                $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+                if ($reserve->getUser()->getRut() == "") {
+                    $errorMessage = "error:rutnulo";
+                }
 
-            if ($reserve->getUser()->getExtranjero() == 1 && !$reserve->getUser()->getFacebookConfirmado() ) {
-                $errorMessage = "error:extranjero-sin-facebook";
+                if ($reserve->getUser()->getExtranjero() == 1 && !$reserve->getUser()->getFacebookConfirmado() ) {
+                    $errorMessage = "error:extranjero-sin-facebook";
+                }
+                if ($reserve->getUser()->getMenor()) {
+                    $errorMessage = "error:usermenor";
+                }
+                if (is_null($reserve->getUser()->getBirthdate()) || strlen($reserve->getUser()->getBirthdate()) <= 0) {
+                    $errorMessage = "error:nobirthdate";
+                }
             }
-            if ($reserve->getUser()->getMenor()) {
-                $errorMessage = "error:usermenor";
-            }
-            if (is_null($reserve->getUser()->getBirthdate()) || strlen($reserve->getUser()->getBirthdate()) <= 0) {
-                $errorMessage = "error:nobirthdate";
-            }*/
         }
 
         echo $errorMessage;
