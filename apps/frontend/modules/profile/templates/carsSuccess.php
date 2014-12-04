@@ -77,7 +77,7 @@
     <div style="padding: 20px">
         <p style="background-color: yellow; padding: 5px; text-align: center">Hemos registrado tu disponibilidad, ¡gracias!</p>
     </div>
-<?php endif ?>
+<?php endif; ?>
 
 <?php include_component('profile', 'profile') ?>
 

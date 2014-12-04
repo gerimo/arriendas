@@ -44,23 +44,38 @@ abstract class BaseCarAvailabilityEmail extends sfDoctrineRecord {
         $this->setTableName('CarAvailabilityEmail');
       
         $this->hasColumn('id', 'integer', 11, array(
+            'type' => 'integer',
             'primary' => true,
             'autoincrement' => true,
+            'length' => 11,
         ));
         $this->hasColumn('car_id', 'integer', 11, array(
+            'type' => 'integer',
             'notnull' => true
         ));
-        $this->hasColumn('checked_at', 'timestamp');
-        $this->hasColumn('opened_at', 'timestamp');
-        $this->hasColumn('sent_at', 'timestamp');
+        $this->hasColumn('checked_at', 'timestamp', null, array(
+            'type' => 'timestamp',
+        ));
+        $this->hasColumn('opened_at', 'timestamp', null, array(
+            'type' => 'timestamp',
+        ));
+        $this->hasColumn('remembered_at', 'timestamp', null, array(
+            'type' => 'timestamp',
+        ));
+        $this->hasColumn('sent_at', 'timestamp', null, array(
+            'type' => 'timestamp',
+        ));
         $this->hasColumn('started_at', 'datetime', null, array(
+            "type" => "datetime",
             'notnull' => true
         ));
         $this->hasColumn('ended_at', 'datetime', null, array(
+            "type" => "datetime",
             'notnull' => true
         ));
         $this->hasColumn('is_active', 'boolean', null, array(
-            'notnull' => true
+            "type" => "boolean",
+            "default" => true
         ));
 
         $this->index('id_UNIQUE', array(
