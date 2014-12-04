@@ -1030,13 +1030,13 @@ public function executeIndex(sfWebRequest $request) {
             ->Where('ca.activo = ?', 1)
             ->andWhereIn('ca.seguro_ok', array(4));
 
-        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
+        /*$Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
         if ($Holiday || date("N") == 6 || date("N") == 7) {
             $q->innerJoin("ca.CarAvailabilityEmails cae");
             $q->andWhere("cae.is_active IS TRUE");
             $q->andWhere("DATE(cae.checked_at) >= DATE(DATE_SUB(cae.started_at, INTERVAL 1 DAY))");
             $q->andWhere("DATE(cae.checked_at) <= DATE(cae.ended_at)");
-        }
+        }*/
 
         if (count($comunas) > 0) {
             $q->andWhereIn('ca.comuna_id', $comunas);
@@ -1071,7 +1071,7 @@ public function executeIndex(sfWebRequest $request) {
             $q = $q->andWhereIn('mo.id_tipo_vehiculo', $type);
         }
 
-        if ($price == 1){
+        if ($price == 1) {
             $q = $q->orderBy('ca.price_per_day DESC');
         } else {
             $q = $q->orderBy('ca.price_per_day ASC');
