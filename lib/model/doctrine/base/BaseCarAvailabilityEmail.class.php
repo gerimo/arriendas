@@ -59,9 +59,6 @@ abstract class BaseCarAvailabilityEmail extends sfDoctrineRecord {
         $this->hasColumn('opened_at', 'timestamp', null, array(
             'type' => 'timestamp',
         ));
-        $this->hasColumn('remembered_at', 'timestamp', null, array(
-            'type' => 'timestamp',
-        ));
         $this->hasColumn('sent_at', 'timestamp', null, array(
             'type' => 'timestamp',
         ));
