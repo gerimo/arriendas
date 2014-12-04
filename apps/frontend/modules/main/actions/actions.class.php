@@ -1086,12 +1086,11 @@ public function executeIndex(sfWebRequest $request) {
 
             $auto = Doctrine_Core::getTable('car')->find(array($this->cars[$j]['id']));
 
-            if (!$auto->hasReserve($day_from." ".$hour_from, $day_to." ".$hour_to)) {
-
             $fotos_autos[$j]['id'] = $auto->getId();
             $fotos_autos[$j]['photoS3'] = $auto->getPhotoS3();
             $fotos_autos[$j]['verificationPhotoS3'] = $auto->getVerificationPhotoS3();
 
+            $i=0;
             if ($auto->getVerificationPhotoS3() == 1) {
                 if($auto->getFoto() != null && $auto->getFoto() != "") {
                     $rutaFoto=$auto->getFoto();
