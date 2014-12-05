@@ -115,6 +115,7 @@ EOF;
                 ->createQuery('C')
                 ->where('C.activo = 1')
                 ->andWhere('C.seguro_ok = 4')
+                ->andWhereNotIn('C.id', array(398123,398144,398145,397147,398173,398174,397413,397925,397949,398211,398213,397967,397968,398238,398261,398274,398275,397891,398215,397840,396878,398224,398066,398068,397547,398111))
                 ->orderBy('C.ratio_aprobacion DESC')
                 ->limit(30);
 
@@ -181,8 +182,7 @@ EOF;
                     $message->setFrom('soporte@arriendas.cl', 'Soporte Arriendas.cl');
                     $message->setTo(array($User->getEmail() => $firstname." ".$lastname));
                     $message->setBcc(array(
-                            "cristobal@arriendas.cl" => "Cristóbal Medina Moenne",
-                            "german@arriendas.cl" => "Richi Rimoldi"
+                            "cristobal@arriendas.cl" => "Cristóbal Medina Moenne"
                         ));
                     
                     $this->getMailer()->send($message);
