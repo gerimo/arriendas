@@ -38,6 +38,47 @@ EOF;
 
         try {
 
+            $this->log("Chequeando...");
+
+            $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
+            if (date("N") == 6 || date("N") == 7 || $Holiday) {
+                $this->log("Es fin de semana o festivo. Terminado");
+                exit;
+            }
+
+            $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+1 day")));
+            if ($Holiday || date("N", strtotime("+1 day")) == 6) {
+
+                $day  = date("Y-m-d");
+                $i    = 0;
+                $from = $day;
+                
+                do {
+
+                    $to = $day;
+
+                    $i++;
+
+                    $day = date("Y-m-d", strtotime("+".$i." day"));
+
+                    $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime($day)));
+                } while($Holiday || date("N", strtotime($day)) == 6 || date("N", strtotime($day)) == 7);
+            } else {
+
+                $this->log("Mañana no es sabado ni festivo. Terminado");
+                exit;
+            }
+
+            $week = array(
+                1 => "Lunes",
+                2 => "Martes",
+                3 => "Miércoles",
+                4 => "Jueves",
+                5 => "Viernes",
+                6 => "Sábado",
+                7 => "Domingo"
+            );
+
             if ($options['env'] == 'dev') {
                 $host = 'http://test.arriendas.cl';
             } else {
@@ -47,36 +88,7 @@ EOF;
             $routing = $this->getRouting();
             $imageUrl = $host . $routing->generate('availabilityEmailOpen');
 
-            $from = null;
-            $to = null;
-            $i = 1;
-
-            $this->log("Revisando si mañana es feriado o sábado...");
-
-            $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+".$i." day")));
-            if ($Holiday || date("N", strtotime("+".$i." day")) == 6) {
-
-                $from = date("Y-m-d", strtotime("+".$i." day"));
-                $to = date("Y-m-d", strtotime("+".$i." day"));
-                
-                do {
-
-                    if ($i > 1) {
-                        $to = date("Y-m-d", strtotime("+".$i." day"));
-                    }
-
-                    $i++;
-
-                    $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+".$i." day")));
-                } while($Holiday || date("N", strtotime("+".$i." day")) == 6 || date("N", strtotime("+".$i." day")) == 7);
-            }
-
-            if (!$from || !$to) {
-                $this->log("Mañana no es feriado ni sábado...");
-                exit;
-            }
-
-            $from .= " 00:00:00";
+            $from .= " 12:00:00";
             $to   .= " 23:59:59";
 
             $q = Doctrine_Core::getTable("Car")
@@ -100,23 +112,32 @@ EOF;
 
                     $CarAvailabilityEmail->setCar($Car);
                     $CarAvailabilityEmail->setSentAt(date("Y-m-d H:i:s"));
-                    $CarAvailabilityEmail->setStartedAt($from);
-                    $CarAvailabilityEmail->setEndedAt($to);
                     $CarAvailabilityEmail->save();
 
-                    $url  = $host . $routing->generate('availability', array(
+                    $url_all_ava  = $host . $routing->generate('availability', array(
                         'id' => $CarAvailabilityEmail->getId(),
-                        'signature' => $CarAvailabilityEmail->getSignature(),
+                        'o' => 1,
+                        'signature' => $CarAvailabilityEmail->getSignature()
                     ));
 
-                    $this->log("Enviando consulta a Auto ID: ".$Car->getId());
+                    $url_cus_ava  = $host . $routing->generate('availability', array(
+                        'id' => $CarAvailabilityEmail->getId(),
+                        'o' => 0,
+                        'signature' => $CarAvailabilityEmail->getSignature()
+                    ));
+
+                    $this->log("Enviando consulta a auto ID: ".$Car->getId());
 
                     $User = $Car->getUser();
 
-                    $subject = "¡Tenemos un aumento en la demanda! Cuéntanos sobre tu auto patente ".strtoupper($Car->getPatente());
+                    $subject = "¡Se vienen días movidos! Y nos gustaría saber sobre tu auto patente ".strtoupper($Car->getPatente());
 
                     $body = "<p>".$User->getFirstname().",</p>";
-                    $body .= "<p>Tenemos un aumento en la demanda de autos y nos gustaría saber si tu auto patente <strong>".strtoupper($Car->getPatente())."</strong> se encuentra disponible. Para confirmar la disponibilidad haz <strong><a href='{$url}'>click aquí</a></strong>.</p>";
+                    $body .= "<p>Generalmente, los fines de semana y festivos tenemos un aumento considerable de personas que buscan arrendar uno o más autos, pero la disponibilidad de estos no siempre se encuentra actualizada. Con el fin de entregar un mejor servicio tanto a ti como a los arrendatarios, necesitamos que nos cuentes de la disponibilidad de tu auto desde hoy al medio día hasta el ".$week[date("N", strtotime($to))] ." ". date("j", strtotime($to)).".</p>";
+                    $body .= "<p>Si tu auto estará disponible por los siguientes días, por favor, indícanoslo haciendo <a href='{$url_all_ava}'>click aquí</a>.</p>";
+                    $body .= "<p>Si tu auto estará disponible sólo en algún(os) periodo(s) de los siguientes días, puedes indicarnos en <a href='{$url_cus_ava}'>la siguientes sección</a>.</p>";
+                    $body .= "<br>";
+                    $body .= "<p>Indicándonos la disponibilidad de tu auto para los siguientes días aumentas las posibilidades de arrendarlo.</p>";                    
                     $body .= "<br>";
                     $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Atentamente</p>";
                     $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Equipo Arriendas.cl</p>";

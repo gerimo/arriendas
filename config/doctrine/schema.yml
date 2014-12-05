@@ -251,6 +251,39 @@ Car:
     charset: utf8
     type: InnoDB
 
+CarAvailability:
+  tableName: CarAvailability
+  columns:
+    id:
+      type: integer(11)
+      primary: true
+      notnull: true
+      autoincrement: true
+    car_id:
+      type: integer(11)
+      notnull: true
+    day:
+      type: date
+    is_deleted:
+      type: boolean
+    ended_at:
+      type: time
+      notnull: true
+    started_at:
+      type: time
+      notnull: true
+  relations:
+    Car:
+      class: Car
+      local: car_id
+      foreign: id
+      foreignAlias: CarAvailabilities
+      onDelete: no action
+      onUpdate: no action
+  options:
+    charset: utf8
+    type: InnoDB
+
 CarAvailabilityEmail:
   tableName: CarAvailabilityEmail
   columns:
@@ -269,15 +302,6 @@ CarAvailabilityEmail:
     sent_at:
       type: timestamp
       notnull: true
-    started_at:
-      type: datetime
-      notnull: true
-    ended_at:
-      type: datetime
-      notnull: true
-    is_active:
-      type: boolean
-      default: true
   relations:
     Car:
       class: Car
