@@ -116,7 +116,8 @@ EOF;
                 ->where('C.activo = 1')
                 ->andWhere('C.seguro_ok = 4')
                 ->andWhere('C.user_id = 83')
-                ->limit(30);
+                ->orderBy('C.ratio_aprobacion DESC')
+                ->limit(1);
 
             $Cars = $q->execute();
 
@@ -175,7 +176,8 @@ EOF;
                     $message->setFrom('soporte@arriendas.cl', 'Soporte Arriendas.cl');
                     /*$message->setTo(array($User->getEmail() => $User->getFirstname()." ".$User->getLastname()));*/
                     $message->setBcc(array(
-                            "cristobal@arriendas.cl" => "Cristóbal Medina Moenne"
+                            "cristobal@arriendas.cl" => "Cristóbal Medina Moenne",
+                            "german@arriendas.cl" => "Richi Rimoldi"
                         ));
                     
                     $this->getMailer()->send($message);
