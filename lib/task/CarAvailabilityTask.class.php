@@ -116,7 +116,7 @@ EOF;
                 ->where('C.activo = 1')
                 ->andWhere('C.seguro_ok = 4')
                 ->orderBy('C.ratio_aprobacion DESC')
-                ->limit(30);
+                ->limit(1);
 
             $Cars = $q->execute();
 
@@ -159,12 +159,13 @@ EOF;
 
                     $subject = "¿Tienes disponibilidad para recibir clientes este fin de semana?";
 
-                    $body = "<p>".$User->getFirstname().",</p>";
+                    $body = "<p>".ucfirst(strtolower($User->getFirstname())).",</p>";
                     $body .= "<p>Necesitaríamos que nos indiques en qué horarios podrías recibir clientes, para que tu auto figure en las busquedas de mañana.</p>";
-                    $body .= "<p>Si puedes recibir clientes el ".$daysPhrase." entre 8am y 8pm, has <a href='{$url_all_ava}'>click aquí</a>.</p>";
-                    $body .= "<p>Si sólo puedes recibir clientes el ".$days[1]." entre 8am y 8pm, has <a href='{$url_one_ava}'>click aquí</a>.</p>";
-                    $body .= "<p>Si puedes recibir clientes en horarios específicos, has <a href='{$url_cus_ava}'>click aquí</a>.</p>";
-                    $body .= "<br>";
+                    $body .= "<ul>";
+                    $body .= "<li>Si puedes recibir clientes el ".$daysPhrase." entre 8am y 8pm, has <a href='{$url_all_ava}'>click aquí</a>.</li>";
+                    $body .= "<li>Si sólo puedes recibir clientes el ".$days[1]." entre 8am y 8pm, has <a href='{$url_one_ava}'>click aquí</a>.</li>";
+                    $body .= "<li>Si puedes recibir clientes en horarios específicos, has <a href='{$url_cus_ava}'>click aquí</a>.</li>";
+                    $body .= "</ul>";
                     $body .= "<p>Se te informará con un mínimo de 3 horas de anticipación para que puedas gestionar la entrega. Tu auto figurará como disponible para el pago, para reservas iniciadas en esos horarios.</p>";
                     $body .= "<br>";
                     $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Atentamente</p>";
