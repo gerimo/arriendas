@@ -6672,6 +6672,8 @@ error_log("BUSCANDO LA MEJOR OPORTUNIDAD");
 
             $day  = date("Y-m-d", strtotime("+".$i." day", $sentAt));
 
+            error_log($CarAvailabilityEmail->getSentAt());
+            error_log(date("Y-m-d", $CarAvailabilityEmail->getSentAt()));
             error_log($day);
 
             /*$Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", $day));
