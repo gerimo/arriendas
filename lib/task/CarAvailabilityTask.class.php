@@ -116,7 +116,7 @@ EOF;
                 ->where('C.activo = 1')
                 ->andWhere('C.seguro_ok = 4')
                 ->orderBy('C.ratio_aprobacion DESC')
-                ->limit(1);
+                ->limit(30);
 
             $Cars = $q->execute();
 
