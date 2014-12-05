@@ -6668,7 +6668,9 @@ error_log("BUSCANDO LA MEJOR OPORTUNIDAD");
             }
 
             $i    = 1;
-            $day  = date("Y-m-d", strtotime("+".$i." day", strtotime(date("Y-m-d", $CarAvailabilityEmail->getSentAt()))));
+            $sentAt = strtotime(date("Y-m-d", $CarAvailabilityEmail->getSentAt()));
+
+            $day  = date("Y-m-d", strtotime("+".$i." day", $sentAt));
 
             error_log($day);
 
