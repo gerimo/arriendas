@@ -119,7 +119,7 @@ EOF;
 
             $Cars = $q->execute();
 
-            if (!$Cars) {
+            if (count($Cars) == 0) {
                 $this->log("No hay autos disponibles");
                 exit;
             }
