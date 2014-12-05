@@ -155,7 +155,7 @@
             loader.show();
 
             $.post("<?php echo url_for('profile/carAvailabilityDelete') ?>", {"car": car, "day": day}, function(r){
-
+console.log(r);
                 if (!r.error) {
                     from.val("");
                     to.val("");
@@ -166,7 +166,6 @@
         });
 
         $(".main_contenido").height($(".availabilityOfCars").height() * $(".availabilityOfCars").length + $(".misautos_user_item").length * 120 + 300);
-
     });
 </script>
 
