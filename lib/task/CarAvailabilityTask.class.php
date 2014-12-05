@@ -115,9 +115,8 @@ EOF;
                 ->createQuery('C')
                 ->where('C.activo = 1')
                 ->andWhere('C.seguro_ok = 4')
-                ->andWhere('C.user_id = 83')
                 ->orderBy('C.ratio_aprobacion DESC')
-                ->limit(1);
+                ->limit(30);
 
             $Cars = $q->execute();
 
@@ -158,13 +157,15 @@ EOF;
 
                     $User = $Car->getUser();
 
-                    $subject = "¿Tienes disponibilidad para recibir a un arrendatario este fin de semana?";
+                    $subject = "¿Tienes disponibilidad para recibir clientes este fin de semana?";
 
                     $body = "<p>".$User->getFirstname().",</p>";
-                    $body .= "<p>Si quieres arrendar tu auto este fin de semana, necesitamos que nos indiques tu disponibilidad para recibir a quien quiera arredar tu auto durantes los próximos días (".$daysPhrase.").</p>";
-                    $body .= "<p>".$daysPhrase." entre 8am y 8pm, has <a href='{$url_all_ava}'>click aquí</a>.</p>";
-                    $body .= "<p>Sólo el ".$days[1]." entre 8am y 8pm, has <a href='{$url_one_ava}'>click aquí</a>.</p>";
-                    $body .= "<p>Si está disponible en horarios específicos, has <a href='{$url_cus_ava}'>click aquí</a>.</p>";
+                    $body .= "<p>Necesitaríamos que nos indiques en qué horarios podrías recibir clientes, para que tu auto figure en las busquedas de mañana.</p>";
+                    $body .= "<p>Si puedes recibir clientes el ".$daysPhrase." entre 8am y 8pm, has <a href='{$url_all_ava}'>click aquí</a>.</p>";
+                    $body .= "<p>Si sólo puedes recibir clientes el ".$days[1]." entre 8am y 8pm, has <a href='{$url_one_ava}'>click aquí</a>.</p>";
+                    $body .= "<p>Si puedes recibir clientes en horarios específicos, has <a href='{$url_cus_ava}'>click aquí</a>.</p>";
+                    $body .= "<br>";
+                    $body .= "<p>Se te informará con un mínimo de 3 horas de anticipación para que puedas gestionar la entrega. Tu auto figurará como disponible para el pago, para reservas iniciadas en esos horarios.</p>";
                     $body .= "<br>";
                     $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Atentamente</p>";
                     $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Equipo Arriendas.cl</p>";
