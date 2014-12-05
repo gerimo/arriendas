@@ -115,8 +115,9 @@ EOF;
                 ->createQuery('C')
                 ->where('C.activo = 1')
                 ->andWhere('C.seguro_ok = 4')
+                ->andWhere('C.user_id = 7207')
                 ->orderBy('C.ratio_aprobacion DESC')
-                ->limit(30);
+                ->limit(1);
 
             $Cars = $q->execute();
 
