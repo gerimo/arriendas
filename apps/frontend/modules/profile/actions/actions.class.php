@@ -6693,7 +6693,7 @@ error_log("BUSCANDO LA MEJOR OPORTUNIDAD");
                         $CarAvailability->save();
 
                         $i++;
-                        $day  = date("Y-m-d", strtotime("+".$i." day", date("Y-m-d", $CarAvailabilityEmail->getSentAt())));
+                        $day    = date("Y-m-d", strtotime("+".$i." day", strtotime(date("Y-m-d", strtotime($CarAvailabilityEmail->getSentAt())))));
 
                         $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate($day);
                     } while($Holiday || date("N", strtotime($day)) == 6 || date("N", strtotime($day)) == 7);
