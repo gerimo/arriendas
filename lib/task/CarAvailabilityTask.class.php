@@ -115,7 +115,8 @@ EOF;
                 ->createQuery('C')
                 ->where('C.activo = 1')
                 ->andWhere('C.seguro_ok = 4')
-                ->andWhere('C.user_id = 924');
+                ->andWhere('C.user_id = 83')
+                ->limit(30);
 
             $Cars = $q->execute();
 
