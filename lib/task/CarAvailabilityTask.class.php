@@ -115,9 +115,8 @@ EOF;
                 ->createQuery('C')
                 ->where('C.activo = 1')
                 ->andWhere('C.seguro_ok = 4')
-                ->andWhere('C.user_id = 7207')
                 ->orderBy('C.ratio_aprobacion DESC')
-                ->limit(1);
+                ->limit(30);
 
             $Cars = $q->execute();
 
@@ -158,9 +157,12 @@ EOF;
 
                     $User = $Car->getUser();
 
+                    $firstaname = ucfirst(strtolower($User->getFirstname()));
+                    $lastname = ucfirst(strtolower($User->getLastname()));
+
                     $subject = "¿Tienes disponibilidad para recibir clientes este fin de semana?";
 
-                    $body = "<p>".ucfirst(strtolower($User->getFirstname())).",</p>";
+                    $body = "<p>".$firstaname.",</p>";
                     $body .= "<p>Necesitaríamos que nos indiques en qué horarios podrías recibir clientes, para que tu auto figure en las busquedas de mañana.</p>";
                     $body .= "<ul>";
                     $body .= "<li>Si puedes recibir clientes el ".$daysPhrase." entre 8am y 8pm, has <a href='{$url_all_ava}'>click aquí</a>.</li>";
@@ -177,7 +179,7 @@ EOF;
                     $message->setSubject($subject);
                     $message->setBody($body, "text/html");
                     $message->setFrom('soporte@arriendas.cl', 'Soporte Arriendas.cl');
-                    /*$message->setTo(array($User->getEmail() => $User->getFirstname()." ".$User->getLastname()));*/
+                    $message->setTo(array($User->getEmail() => $firstname." ".$lastname));
                     $message->setBcc(array(
                             "cristobal@arriendas.cl" => "Cristóbal Medina Moenne",
                             "german@arriendas.cl" => "Richi Rimoldi"

@@ -955,14 +955,14 @@ public function executeIndex(sfWebRequest $request) {
         $this->holiday = false;
 
         $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
-        if ($Holiday || date("N") == 6 || date("N") == 7 || $idUsuario == 7207 || $idUsuario == 6768) {
+        if ($Holiday || date("N") == 6 || date("N") == 7) {
             $this->holiday = true;
         }
     }
     
     public function executeListaAjax(sfWebRequest $request){
 
-        $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+        /*$idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');*/
 
         $day_from     = $request->getParameter('day_from');
         $day_to       = $request->getParameter('day_to');
@@ -1006,7 +1006,7 @@ public function executeIndex(sfWebRequest $request) {
             ->andWhere('DATE_ADD(R.date, INTERVAL R.duration HOUR) NOT BETWEEN ? AND ?', array($from, $to));*/
 
         $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
-        if ($Holiday || date("N") == 6 || date("N") == 7 || $idUsuario == 7207 || $idUsuario == 6768) {
+        if ($Holiday || date("N") == 6 || date("N") == 7) {
 
             $q->innerJoin("C.CarAvailabilities CA");
             $q->andWhere("CA.is_deleted IS FALSE");
