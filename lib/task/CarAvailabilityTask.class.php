@@ -157,12 +157,12 @@ EOF;
 
                     $User = $Car->getUser();
 
-                    $firstaname = ucfirst(strtolower($User->getFirstname()));
+                    $firstname = ucfirst(strtolower($User->getFirstname()));
                     $lastname = ucfirst(strtolower($User->getLastname()));
 
                     $subject = "¿Tienes disponibilidad para recibir clientes este fin de semana?";
 
-                    $body = "<p>".$firstaname.",</p>";
+                    $body = "<p>".$firstname.",</p>";
                     $body .= "<p>Necesitaríamos que nos indiques en qué horarios podrías recibir clientes, para que tu auto figure en las busquedas de mañana.</p>";
                     $body .= "<ul>";
                     $body .= "<li>Si puedes recibir clientes el ".$daysPhrase." entre 8am y 8pm, has <a href='{$url_all_ava}'>click aquí</a>.</li>";
