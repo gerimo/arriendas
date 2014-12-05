@@ -3599,11 +3599,11 @@ public function calificacionesPendientes(){
                 $CarAvailabilityEmail->save();
             }
             
-            /*$sentAt = strtotime(date("Y-m-d", strtotime($CarAvailabilityEmail->getSentAt())));
+            $sentAt = strtotime(date("Y-m-d", strtotime($CarAvailabilityEmail->getSentAt())));
             $i      = 1;
-            $day    = date("Y-m-d", strtotime("+".$i." day", $sentAt));*/
+            $day    = date("Y-m-d", strtotime("+".$i." day", $sentAt));
 
-            /*$Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate($day);
+            $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate($day);
             if ($Holiday || date("N", strtotime($day)) == 6) {
 
                 $Car  = $CarAvailabilityEmail->getCar();
@@ -3643,13 +3643,12 @@ public function calificacionesPendientes(){
                     $CarAvailability->setEndedAt("20:00:00");
                     $CarAvailability->save();
                 }
-            }*/
-
-            $this->redirect('profile/cars');
-
+            }
         } catch (Exception $e) {
 
             Utils::reportError($e->getMessage(), "profile/executeAvailability");
         }
+
+        $this->redirect('profile/cars');
     }
 }
