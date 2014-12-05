@@ -181,4 +181,16 @@ class MessageTable extends Doctrine_Table
       ->limit($cantMess);
       return $q->execute();
     }
+    
+    public function lastMessageSentByUserId($user_id){
+      
+        $q = Doctrine_Query::create()
+            ->from("Message m , m.Conversation ")
+            ->leftJoin("m.Conversation c")
+            ->where("(c.user_to_id = $user_id OR c.user_from_id = $user_id)")
+            ->andWhere("m.user_id = $user_id")
+            ->andWhere("(c.user_to_id=$user_id AND m.looking_user_to=1) OR (c.user_from_id=$user_id AND m.looking_user_from=1)")
+            ->orderBy("m.date desc");
+        return $q->fetchOne();
+    }
 }

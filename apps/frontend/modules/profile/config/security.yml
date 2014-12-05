@@ -4,4 +4,6 @@ confirmReserve:
   is_secure: false
 cancelReserveConfirmation:
   is_secure: false
+checkCanPay:
+  is_secure: false
 
