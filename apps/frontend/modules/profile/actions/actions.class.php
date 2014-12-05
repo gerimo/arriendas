@@ -6671,11 +6671,7 @@ error_log("BUSCANDO LA MEJOR OPORTUNIDAD");
             $i      = 1;
             $day    = date("Y-m-d", strtotime("+".$i." day", $sentAt));
 
-            error_log($CarAvailabilityEmail->getSentAt());
-            error_log(date("Y-m-d", $CarAvailabilityEmail->getSentAt()));
-            error_log($day);
-
-            /*$Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", $day));
+            $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate($day);
             if ($Holiday || date("N", $day) == 6) {
 
                 $Car  = $CarAvailabilityEmail->getCar();
@@ -6717,7 +6713,7 @@ error_log("BUSCANDO LA MEJOR OPORTUNIDAD");
                 }
             }
 
-            $this->redirect('profile/cars');*/
+            $this->redirect('profile/cars');
 
         } catch (Exception $e) {
 
