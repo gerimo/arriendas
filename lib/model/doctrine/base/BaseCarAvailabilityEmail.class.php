@@ -45,14 +45,14 @@ abstract class BaseCarAvailabilityEmail extends sfDoctrineRecord {
       
         $this->hasColumn('id', 'integer', 11, array(
             'primary' => true,
-            'autoincrement' => true,
+            'autoincrement' => true
         ));
         $this->hasColumn('car_id', 'integer', 11, array(
             'notnull' => true
         ));
-        $this->hasColumn('checked_at', 'timestamp');
-        $this->hasColumn('opened_at', 'timestamp');
-        $this->hasColumn('sent_at', 'timestamp');
+        $this->hasColumn('checked_at', 'timestamp', null, array());
+        $this->hasColumn('opened_at', 'timestamp', null, array());
+        $this->hasColumn('sent_at', 'timestamp', null, array());
         $this->hasColumn('started_at', 'datetime', null, array(
             'notnull' => true
         ));
@@ -60,7 +60,7 @@ abstract class BaseCarAvailabilityEmail extends sfDoctrineRecord {
             'notnull' => true
         ));
         $this->hasColumn('is_active', 'boolean', null, array(
-            'notnull' => true
+            "default" => true
         ));
 
         $this->index('id_UNIQUE', array(

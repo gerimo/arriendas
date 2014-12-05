@@ -1071,7 +1071,7 @@ public function executeIndex(sfWebRequest $request) {
             $q = $q->andWhereIn('mo.id_tipo_vehiculo', $type);
         }
 
-        if ($price == 1){
+        if ($price == 1) {
             $q = $q->orderBy('ca.price_per_day DESC');
         } else {
             $q = $q->orderBy('ca.price_per_day ASC');
@@ -1086,112 +1086,107 @@ public function executeIndex(sfWebRequest $request) {
 
             $auto = Doctrine_Core::getTable('car')->find(array($this->cars[$j]['id']));
 
-            if (!$auto->hasReserve($day_from." ".$hour_from, $day_to." ".$hour_to)) {
+            $fotos_autos[$j]['id'] = $auto->getId();
+            $fotos_autos[$j]['photoS3'] = $auto->getPhotoS3();
+            $fotos_autos[$j]['verificationPhotoS3'] = $auto->getVerificationPhotoS3();
 
-                $fotos_autos[$j]['id'] = $auto->getId();
-                $fotos_autos[$j]['photoS3'] = $auto->getPhotoS3();
-                $fotos_autos[$j]['verificationPhotoS3'] = $auto->getVerificationPhotoS3();
-
-                $i=0;
-                if ($auto->getVerificationPhotoS3() == 1) {
-                    if($auto->getFoto() != null && $auto->getFoto() != "") {
-                        $rutaFoto=$auto->getFoto();
-                        $fotos_autos[$j][$i] = $rutaFoto;
-                        $fotos_autos[$j][$i+1] = "Ver Fotos";
-                        $i=$i+2;
-                    }
-                    if($auto->getSeguroFotoFrente() != null && $auto->getSeguroFotoFrente() != "") {
-                        $rutaFotoFrente=$auto->getSeguroFotoFrente();
-                        $fotos_autos[$j][$i] = $rutaFotoFrente;
-                        $fotos_autos[$j][$i+1] = "Foto Frente";
-                        $i=$i+2;
-                    }
-                    if($auto->getSeguroFotoCostadoDerecho() != null && $auto->getSeguroFotoCostadoDerecho() != "") {
-                        $rutaFotoCostadoDerecho=$auto->getSeguroFotoCostadoDerecho();
-                        $fotos_autos[$j][$i] = $rutaFotoCostadoDerecho;
-                        $fotos_autos[$j][$i+1] = "Foto Costado Derecho";
-                        $i=$i+2;
-                    }
-                    if(strpos($auto->getSeguroFotoCostadoIzquierdo(),"http")!=-1 && $auto->getSeguroFotoCostadoIzquierdo() != "") {
-                        $rutaFotoCostadoIzquierdo=$auto->getSeguroFotoCostadoIzquierdo();
-                        $fotos_autos[$j][$i] = $rutaFotoCostadoIzquierdo;
-                        $fotos_autos[$j][$i+1] = "Foto Costado Izquierdo";
-                        $i=$i+2;
-                    }
-                    if(strpos($auto->getSeguroFotoTraseroDerecho(),"http")!=-1 && $auto->getSeguroFotoTraseroDerecho() != "") {
-                        $rutaFotoTrasera= $auto->getSeguroFotoTraseroDerecho();
-                        $fotos_autos[$j][$i] = $rutaFotoTrasera;
-                        $fotos_autos[$j][$i+1] = "Foto Trasera";
-                        $i=$i+2;
-                    }   
-                    if(strpos($auto->getTablero(),"http")!=-1 && $auto->getTablero() != "") {
-                        $rutaFotoPanel=$auto->getTablero();  
-                        $fotos_autos[$j][$i] = $rutaFotoPanel;
-                        $fotos_autos[$j][$i+1] = "Foto del Panel";
-                        $i=$i+2;
-                    }
-                    if(strpos($auto->getAccesorio1(),"http")!=-1 && $auto->getAccesorio1() != "") {
-                        $rutaFotoAccesorios1= $auto->getAccesorio1();
-                        $fotos_autos[$j][$i] = $rutaFotoAccesorios1;
-                        $fotos_autos[$j][$i+1] = "Foto de Accesorio 1";
-                        $i=$i+2;
-                    }  
-                    if(strpos($auto->getAccesorio2(),"http")!=-1 && $auto->getAccesorio2() != "") {
-                        $rutaFotoAccesorios2=$auto->getAccesorio2();
-                        $fotos_autos[$j][$i] = $rutaFotoAccesorios2;
-                        $fotos_autos[$j][$i+1] = "Foto de Accesorio 2";
-                    }
-                } else {//if verificationPhotoS3 == 0
-                    if($auto->getFoto() != null && $auto->getFoto() != "") {
-                        $rutaFoto=$auto->getFoto();
-                        $fotos_autos[$j][$i] = $rutaFoto;
-                        $fotos_autos[$j][$i+1] = "Ver Fotos";
-                        $i=$i+2;
-                    }
-                    if($auto->getSeguroFotoFrente() != null && $auto->getSeguroFotoFrente() != "") {
-                        $rutaFotoFrente=$auto->getSeguroFotoFrente();
-                        $fotos_autos[$j][$i] = $rutaFotoFrente;
-                        $fotos_autos[$j][$i+1] = "Foto Frente";
-                        $i=$i+2;
-                    }
-                    if($auto->getSeguroFotoCostadoDerecho() != null && $auto->getSeguroFotoCostadoDerecho() != "") {
-                        $rutaFotoCostadoDerecho=$auto->getSeguroFotoCostadoDerecho();
-                        $fotos_autos[$j][$i] = $rutaFotoCostadoDerecho;
-                        $fotos_autos[$j][$i+1] = "Foto Costado Derecho";
-                        $i=$i+2;
-                    }
-                    if($auto->getSeguroFotoCostadoIzquierdo() != null && $auto->getSeguroFotoCostadoIzquierdo() != "") {
-                        $rutaFotoCostadoIzquierdo=$auto->getSeguroFotoCostadoIzquierdo();
-                        $fotos_autos[$j][$i] = $rutaFotoCostadoIzquierdo;
-                        $fotos_autos[$j][$i+1] = "Foto Costado Izquierdo";
-                        $i=$i+2;
-                    }
-                    if($auto->getSeguroFotoTraseroDerecho() != null && $auto->getSeguroFotoTraseroDerecho() != "") {
-                        $rutaFotoTrasera= $auto->getSeguroFotoTraseroDerecho();
-                        $fotos_autos[$j][$i] = $rutaFotoTrasera;
-                        $fotos_autos[$j][$i+1] = "Foto Trasera";
-                        $i=$i+2;
-                    }   
-                    if($auto->getTablero() != null && $auto->getTablero() != "") {
-                        $rutaFotoPanel=$auto->getTablero();  
-                        $fotos_autos[$j][$i] = $rutaFotoPanel;
-                        $fotos_autos[$j][$i+1] = "Foto del Panel";
-                        $i=$i+2;
-                    }
-                    if($auto->getAccesorio1() != null && $auto->getAccesorio1() != "") {
-                        $rutaFotoAccesorios1= $auto->getAccesorio1();
-                        $fotos_autos[$j][$i] = $rutaFotoAccesorios1;
-                        $fotos_autos[$j][$i+1] = "Foto de Accesorio 1";
-                        $i=$i+2;
-                    }  
-                    if($auto->getAccesorio2() != null && $auto->getAccesorio2() != "") {
-                        $rutaFotoAccesorios2=$auto->getAccesorio2();
-                        $fotos_autos[$j][$i] = $rutaFotoAccesorios2;
-                        $fotos_autos[$j][$i+1] = "Foto de Accesorio 2";
-                    }
+            $i=0;
+            if ($auto->getVerificationPhotoS3() == 1) {
+                if($auto->getFoto() != null && $auto->getFoto() != "") {
+                    $rutaFoto=$auto->getFoto();
+                    $fotos_autos[$j][$i] = $rutaFoto;
+                    $fotos_autos[$j][$i+1] = "Ver Fotos";
+                    $i=$i+2;
                 }
-            } else {
-                $j--;
+                if($auto->getSeguroFotoFrente() != null && $auto->getSeguroFotoFrente() != "") {
+                    $rutaFotoFrente=$auto->getSeguroFotoFrente();
+                    $fotos_autos[$j][$i] = $rutaFotoFrente;
+                    $fotos_autos[$j][$i+1] = "Foto Frente";
+                    $i=$i+2;
+                }
+                if($auto->getSeguroFotoCostadoDerecho() != null && $auto->getSeguroFotoCostadoDerecho() != "") {
+                    $rutaFotoCostadoDerecho=$auto->getSeguroFotoCostadoDerecho();
+                    $fotos_autos[$j][$i] = $rutaFotoCostadoDerecho;
+                    $fotos_autos[$j][$i+1] = "Foto Costado Derecho";
+                    $i=$i+2;
+                }
+                if(strpos($auto->getSeguroFotoCostadoIzquierdo(),"http")!=-1 && $auto->getSeguroFotoCostadoIzquierdo() != "") {
+                    $rutaFotoCostadoIzquierdo=$auto->getSeguroFotoCostadoIzquierdo();
+                    $fotos_autos[$j][$i] = $rutaFotoCostadoIzquierdo;
+                    $fotos_autos[$j][$i+1] = "Foto Costado Izquierdo";
+                    $i=$i+2;
+                }
+                if(strpos($auto->getSeguroFotoTraseroDerecho(),"http")!=-1 && $auto->getSeguroFotoTraseroDerecho() != "") {
+                    $rutaFotoTrasera= $auto->getSeguroFotoTraseroDerecho();
+                    $fotos_autos[$j][$i] = $rutaFotoTrasera;
+                    $fotos_autos[$j][$i+1] = "Foto Trasera";
+                    $i=$i+2;
+                }   
+                if(strpos($auto->getTablero(),"http")!=-1 && $auto->getTablero() != "") {
+                    $rutaFotoPanel=$auto->getTablero();  
+                    $fotos_autos[$j][$i] = $rutaFotoPanel;
+                    $fotos_autos[$j][$i+1] = "Foto del Panel";
+                    $i=$i+2;
+                }
+                if(strpos($auto->getAccesorio1(),"http")!=-1 && $auto->getAccesorio1() != "") {
+                    $rutaFotoAccesorios1= $auto->getAccesorio1();
+                    $fotos_autos[$j][$i] = $rutaFotoAccesorios1;
+                    $fotos_autos[$j][$i+1] = "Foto de Accesorio 1";
+                    $i=$i+2;
+                }  
+                if(strpos($auto->getAccesorio2(),"http")!=-1 && $auto->getAccesorio2() != "") {
+                    $rutaFotoAccesorios2=$auto->getAccesorio2();
+                    $fotos_autos[$j][$i] = $rutaFotoAccesorios2;
+                    $fotos_autos[$j][$i+1] = "Foto de Accesorio 2";
+                }
+            } else {//if verificationPhotoS3 == 0
+                if($auto->getFoto() != null && $auto->getFoto() != "") {
+                    $rutaFoto=$auto->getFoto();
+                    $fotos_autos[$j][$i] = $rutaFoto;
+                    $fotos_autos[$j][$i+1] = "Ver Fotos";
+                    $i=$i+2;
+                }
+                if($auto->getSeguroFotoFrente() != null && $auto->getSeguroFotoFrente() != "") {
+                    $rutaFotoFrente=$auto->getSeguroFotoFrente();
+                    $fotos_autos[$j][$i] = $rutaFotoFrente;
+                    $fotos_autos[$j][$i+1] = "Foto Frente";
+                    $i=$i+2;
+                }
+                if($auto->getSeguroFotoCostadoDerecho() != null && $auto->getSeguroFotoCostadoDerecho() != "") {
+                    $rutaFotoCostadoDerecho=$auto->getSeguroFotoCostadoDerecho();
+                    $fotos_autos[$j][$i] = $rutaFotoCostadoDerecho;
+                    $fotos_autos[$j][$i+1] = "Foto Costado Derecho";
+                    $i=$i+2;
+                }
+                if($auto->getSeguroFotoCostadoIzquierdo() != null && $auto->getSeguroFotoCostadoIzquierdo() != "") {
+                    $rutaFotoCostadoIzquierdo=$auto->getSeguroFotoCostadoIzquierdo();
+                    $fotos_autos[$j][$i] = $rutaFotoCostadoIzquierdo;
+                    $fotos_autos[$j][$i+1] = "Foto Costado Izquierdo";
+                    $i=$i+2;
+                }
+                if($auto->getSeguroFotoTraseroDerecho() != null && $auto->getSeguroFotoTraseroDerecho() != "") {
+                    $rutaFotoTrasera= $auto->getSeguroFotoTraseroDerecho();
+                    $fotos_autos[$j][$i] = $rutaFotoTrasera;
+                    $fotos_autos[$j][$i+1] = "Foto Trasera";
+                    $i=$i+2;
+                }   
+                if($auto->getTablero() != null && $auto->getTablero() != "") {
+                    $rutaFotoPanel=$auto->getTablero();  
+                    $fotos_autos[$j][$i] = $rutaFotoPanel;
+                    $fotos_autos[$j][$i+1] = "Foto del Panel";
+                    $i=$i+2;
+                }
+                if($auto->getAccesorio1() != null && $auto->getAccesorio1() != "") {
+                    $rutaFotoAccesorios1= $auto->getAccesorio1();
+                    $fotos_autos[$j][$i] = $rutaFotoAccesorios1;
+                    $fotos_autos[$j][$i+1] = "Foto de Accesorio 1";
+                    $i=$i+2;
+                }  
+                if($auto->getAccesorio2() != null && $auto->getAccesorio2() != "") {
+                    $rutaFotoAccesorios2=$auto->getAccesorio2();
+                    $fotos_autos[$j][$i] = $rutaFotoAccesorios2;
+                    $fotos_autos[$j][$i+1] = "Foto de Accesorio 2";
+                }
             }
         }
 
