@@ -165,7 +165,8 @@
             });
         });
 
-        $(".main_contenido").height($(".availabilityOfCars").height() * $(".availabilityOfCars").length + 300);
+        $(".main_contenido").height($(".availabilityOfCars").height() * $(".availabilityOfCars").length + $(".misautos_user_item").length * 120 + 300);
+
     });
 </script>
 
