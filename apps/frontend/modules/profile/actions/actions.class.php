@@ -6666,11 +6666,10 @@ error_log("BUSCANDO LA MEJOR OPORTUNIDAD");
                 $CarAvailabilityEmail->setCheckedAt(date("Y-m-d H:i:s"));
                 $CarAvailabilityEmail->save();
             }
-
-            $i    = 1;
-            $sentAt = strtotime(date("Y-m-d", $CarAvailabilityEmail->getSentAt()));
-
-            $day  = date("Y-m-d", strtotime("+".$i." day", $sentAt));
+            
+            $sentAt = strtotime(date("Y-m-d", strtotime($CarAvailabilityEmail->getSentAt())));
+            $i      = 1;
+            $day    = date("Y-m-d", strtotime("+".$i." day", $sentAt));
 
             error_log($CarAvailabilityEmail->getSentAt());
             error_log(date("Y-m-d", $CarAvailabilityEmail->getSentAt()));
