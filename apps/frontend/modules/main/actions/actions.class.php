@@ -3397,7 +3397,7 @@ public function calificacionesPendientes(){
      * en tablas Reserve y Transaction
      * @param type $reserve
      * @param type $order
-     */
+     *
     public function executeUpdateManualNroFactura(sfWebRequest $request){
         
         ini_set('memory_limit', '1024M');
@@ -3435,7 +3435,7 @@ public function calificacionesPendientes(){
      * en tablas Reserve y Transaction
      * @param type $reserve
      * @param type $order
-     */
+     *
     private function generarNroFactura($reserve, $order){
         
         // primero valido que no exista otra factura ya generada 
@@ -3521,7 +3521,7 @@ public function calificacionesPendientes(){
 
         $next_numero = ($trans[0]['nro_fac'] > $res[0]['nro_fac']? $trans[0]['nro_fac'] : $res[0]['nro_fac']) + 1;
         return $next_numero;
-    }
+    }*/
 
     public function executeOpenOpportunityEmail(sfWebRequest $request) {
 
