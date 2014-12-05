@@ -102,8 +102,10 @@
 
         
 
-        $(".btnCars-save").click(function(){
+        $(".btnCars-save").click(function(e){
 
+            e.preventDefault();
+            
             var p = $(this).parent();
 
             var car    = p.data("car-id");
@@ -124,7 +126,9 @@
             });
         });
 
-        $(".btnCars-delete").click(function(){
+        $(".btnCars-delete").click(function(e){
+
+            e.preventDefault();
 
             var p = $(this).parent();
 
