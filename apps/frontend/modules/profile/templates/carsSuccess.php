@@ -32,7 +32,7 @@
         padding: 0 10px 0 5px;
     }
 
-    .btn {
+    .btnCars {
         width: 100px;
         height: 26px;
         background-image: url('../images/bt_blue_on_v2.png');
@@ -48,7 +48,7 @@
         padding: 3px 9px;
     }
 
-    .btn:hover {
+    .btnCars:hover {
         background-image: url('../images/bt_blue_hover_v2.png');
         text-decoration: underline;
     }
@@ -67,6 +67,7 @@
     var toggleActiveCAEAjax = <?php echo "'".url_for("profile/toggleActiveCAEAjax")."';" ?>
 
     $(document).on('ready',function(){
+
         $('.mis_autos_verificado').on('click',function(e){
             e.preventDefault();
         });
@@ -99,28 +100,9 @@
             });
         });
 
-        $(".CAEActive").change(function(){
+        
 
-            var CAEId = $(this).parent().parent().data("cae-id");
-            var active = $(this).val();
-
-            $.post(toggleActiveCAEAjax, {"CAEId": CAEId}, function(r){
-
-                if (!r.error) {
-                    if (active == 0) {
-                        $("#CAE"+CAEId+" .circuloActivo").css("display","none");
-                        $("#CAE"+CAEId+" .circuloInactivo").css("display","block");
-                    } else {
-                        $("#CAE"+CAEId+" .circuloInactivo").css("display","none");
-                        $("#CAE"+CAEId+" .circuloActivo").css("display","block");
-                    }
-                }
-            });
-        });
-
-        $('.ui-timepicker-input').timepicker();
-
-        $(".btn-save").click(function(){
+        $(".btnCars-save").click(function(){
 
             var p = $(this).parent();
 
@@ -142,7 +124,7 @@
             });
         });
 
-        $(".btn-delete").click(function(){
+        $(".btnCars-delete").click(function(){
 
             var p = $(this).parent();
 
@@ -164,6 +146,8 @@ console.log(r);
                 loader.hide();
             });
         });
+
+        $('.ui-timepicker-input').timepicker();
 
         $(".main_contenido").height($(".availabilityOfCars").height() * $(".availabilityOfCars").length + $(".misautos_user_item").length * 120 + 300);
     });
@@ -258,8 +242,8 @@ console.log(r);
                                 <input autocomplete="off" class="to time ui-timepicker-input" type="text" <?php if (isset($AOC['to'])): echo "value='".date("H:ia", strtotime($AOC['to']))."'"; endif; ?>></td>
                                 <span class="normal-text">Hasta</span>
                                 <br><br>
-                                <a class="btn btn-delete" href="">Eliminar</a>
-                                <a class="btn btn-save" href="">Guardar</a>
+                                <a class="btnCars btnCars-delete" href="">Eliminar</a>
+                                <a class="btnCars btnCars-save" href="">Guardar</a>
                                 <br><br>
                                 <img class="loader" src="../images/ajax-loader.gif">
                             </div>
