@@ -3603,10 +3603,10 @@ public function calificacionesPendientes(){
             $i      = 1;
             $day    = date("Y-m-d", strtotime("+".$i." day", $sentAt));
 
-            $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate($day);
+            /*$Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate($day);
             if ($Holiday || date("N", strtotime($day)) == 6) {
 
-                /*$Car  = $CarAvailabilityEmail->getCar();
+                $Car  = $CarAvailabilityEmail->getCar();
 
                 if ($option == 2) {
                     
@@ -3642,8 +3642,8 @@ public function calificacionesPendientes(){
                     $CarAvailability->setStartedAt("08:00:00");
                     $CarAvailability->setEndedAt("20:00:00");
                     $CarAvailability->save();
-                }*/
-            }
+                }
+            }*/
 
             $this->redirect('profile/cars');
 
