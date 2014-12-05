@@ -6666,14 +6666,15 @@ error_log("BUSCANDO LA MEJOR OPORTUNIDAD");
                 $CarAvailabilityEmail->save();
             }
 
-            if ($option == 1) {
+            $i    = 1;
+            $day  = date("Y-m-d", strtotime("+".$i." day", date("Y-m-d", $CarAvailabilityEmail->getSentAt())));
 
-                $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+1 day")));
-                if ($Holiday || date("N", strtotime("+1 day")) == 6) {
+            $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", $day));
+            if ($Holiday || date("N", $day) == 6) {
 
-                    $day  = date("Y-m-d");
-                    $i    = 0;
-                    $Car  = $CarAvailabilityEmail->getCar();
+                $Car  = $CarAvailabilityEmail->getCar();
+
+                if ($option == 2) {
                     
                     do {
 
@@ -6685,19 +6686,28 @@ error_log("BUSCANDO LA MEJOR OPORTUNIDAD");
                             $CarAvailability->setDay($day);
                         }
 
-                        if ($i == 0) {
-                            $CarAvailability->setStartedAt("12:00:00");
-                        } else {
-                            $CarAvailability->setStartedAt("00:00:00");
-                        }
-                        $CarAvailability->setEndedAt("23:30:00");
+                        $CarAvailability->setStartedAt("08:00:00");
+                        $CarAvailability->setEndedAt("20:00:00");
                         $CarAvailability->save();
 
                         $i++;
-                        $day = date("Y-m-d", strtotime("+".$i." day"));
+                        $day  = date("Y-m-d", strtotime("+".$i." day", date("Y-m-d", $CarAvailabilityEmail->getSentAt())));
 
                         $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime($day)));
                     } while($Holiday || date("N", strtotime($day)) == 6 || date("N", strtotime($day)) == 7);
+                } elseif ($option == 1) {
+
+                    $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
+                    if (!$CarAvailability) {
+
+                        $CarAvailability = new CarAvailability();
+                        $CarAvailability->setCar($Car);
+                        $CarAvailability->setDay($day);
+                    }
+
+                    $CarAvailability->setStartedAt("08:00:00");
+                    $CarAvailability->setEndedAt("20:00:00");
+                    $CarAvailability->save();
                 }
             }
 

@@ -211,14 +211,14 @@
                 
                 
                     <div class="misautos_btn_sector">
-                        <a href="<?php echo url_for('profile/pedidos') ?>" class="misautos_btn_alqui">Mis Arriendos</a>
+                        <!-- <a href="<?php echo url_for('profile/pedidos') ?>" class="misautos_btn_alqui">Mis Arriendos</a> -->
                     
                         <!-- Obtener variable $ok del Auto, rescatandolo de la DB, por mientras se usará de variable -->
                         <!-- $ok = 0; -->
                         <?php $ok = $c->getSeguroOk(); ?>
                         <?php if($ok <> 4): ?>
                             <div class="divBotonVerificar" style="backgound-color:#ec008c;">
-                                <a href="mailto:soporte@arriendas.cl?subject=Reserva%20un%20horario%20para%20que%20verifiquemos%20tu%20auto" class="misautos_btn_alqui">Verificar</a>
+                                <!-- <a href="mailto:soporte@arriendas.cl?subject=Reserva%20un%20horario%20para%20que%20verifiquemos%20tu%20auto" class="misautos_btn_alqui">Verificar</a> -->
                             </div>
                         <?php else: ?>
                             <div class="divBotonVerificar">
@@ -247,7 +247,7 @@
                 <?php if (isset($availabilityOfCars[$c->getId()])): ?>
 
                     <div class="availabilityOfCars">
-                        <h2>Disponibilidad de fin de semana / festivo</h2>
+                        <h2>Horario para recibir un cliente</h2>
                         
                         <?php foreach ($availabilityOfCars[$c->getId()] as $AOC): ?>
 

@@ -46,14 +46,28 @@ EOF;
                 exit;
             }
 
+            $week = array(
+                1 => "Lunes",
+                2 => "Martes",
+                3 => "Miércoles",
+                4 => "Jueves",
+                5 => "Viernes",
+                6 => "Sábado",
+                7 => "Domingo"
+            );
+
             $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+1 day")));
             if ($Holiday || date("N", strtotime("+1 day")) == 6) {
 
                 $day  = date("Y-m-d");
                 $i    = 0;
                 $from = $day;
-                
+
+                $days = array();
+
                 do {
+
+                    $days[] = $week[date("N", strtotime($day))];
 
                     $to = $day;
 
@@ -69,15 +83,21 @@ EOF;
                 exit;
             }
 
-            $week = array(
-                1 => "Lunes",
-                2 => "Martes",
-                3 => "Miércoles",
-                4 => "Jueves",
-                5 => "Viernes",
-                6 => "Sábado",
-                7 => "Domingo"
-            );
+            $daysCount = count($days);
+            $daysPhrase = "";
+            foreach ($days as $i => $day){
+
+                if ($i > 0) {
+                    
+                    $daysPhrase .= $day;
+                    
+                    if ($i < $daysCount - 2) {
+                        $daysPhrase .= ", ";
+                    } elseif ($i < $daysCount - 1) {
+                        $daysPhrase .= " y ";
+                    }
+                }
+            }
 
             if ($options['env'] == 'dev') {
                 $host = 'http://test.arriendas.cl';
@@ -116,6 +136,12 @@ EOF;
 
                     $url_all_ava  = $host . $routing->generate('availability', array(
                         'id' => $CarAvailabilityEmail->getId(),
+                        'o' => 2,
+                        'signature' => $CarAvailabilityEmail->getSignature()
+                    ));
+
+                    $url_one_ava  = $host . $routing->generate('availability', array(
+                        'id' => $CarAvailabilityEmail->getId(),
                         'o' => 1,
                         'signature' => $CarAvailabilityEmail->getSignature()
                     ));
@@ -130,14 +156,18 @@ EOF;
 
                     $User = $Car->getUser();
 
-                    $subject = "¡Se vienen días movidos! Y nos gustaría saber sobre tu auto patente ".strtoupper($Car->getPatente());
+                    $subject = "¿Tienes disponibilidad para recibir a un arrendatario este fin de semana?";
 
                     $body = "<p>".$User->getFirstname().",</p>";
-                    $body .= "<p>Generalmente, los fines de semana y festivos tenemos un aumento considerable de personas que buscan arrendar uno o más autos, pero la disponibilidad de estos no siempre se encuentra actualizada. Con el fin de entregar un mejor servicio tanto a ti como a los arrendatarios, necesitamos que nos cuentes de la disponibilidad de tu auto desde hoy al medio día hasta el ".$week[date("N", strtotime($to))] ." ". date("j", strtotime($to)).".</p>";
+                    /*$body .= "<p>Generalmente, los fines de semana y festivos tenemos un aumento considerable de personas que buscan arrendar uno o más autos, pero la disponibilidad de estos no siempre se encuentra actualizada. Con el fin de entregar un mejor servicio tanto a ti como a los arrendatarios, necesitamos que nos cuentes de la disponibilidad de tu auto desde hoy al medio día hasta el ".$week[date("N", strtotime($to))] ." ". date("j", strtotime($to)).".</p>";
                     $body .= "<p>Si tu auto estará disponible por los siguientes días, por favor, indícanoslo haciendo <a href='{$url_all_ava}'>click aquí</a>.</p>";
                     $body .= "<p>Si tu auto estará disponible sólo en algún(os) periodo(s) de los siguientes días, puedes indicarnos en <a href='{$url_cus_ava}'>la siguientes sección</a>.</p>";
                     $body .= "<br>";
-                    $body .= "<p>Indicándonos la disponibilidad de tu auto para los siguientes días aumentas las posibilidades de arrendarlo.</p>";                    
+                    $body .= "<p>Indicándonos la disponibilidad de tu auto para los siguientes días aumentas las posibilidades de arrendarlo.</p>";   */                 
+                    $body .= "<p>Si quieres arrendar tu auto este fin de semana, necesitamos que nos indiques tu disponibilidad para recibir a quien quiera arredar tu auto durantes los próximos días (".$daysPhrase.").</p>";
+                    $body .= "<p>".$daysPhrase." entre 8am y 8pm, has <a href='{$url_all_ava}'>click aquí</a>.</p>";
+                    $body .= "<p>Sólo el ".$days[1]." entre 8am y 8pm, has <a href='{$url_one_ava}'>click aquí</a>.</p>";
+                    $body .= "<p>Si está disponible en horarios específicos, has <a href='{$url_cus_ava}'>click aquí</a>.</p>";
                     $body .= "<br>";
                     $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Atentamente</p>";
                     $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Equipo Arriendas.cl</p>";
