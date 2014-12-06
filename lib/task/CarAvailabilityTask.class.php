@@ -40,11 +40,11 @@ EOF;
 
             $this->log("Chequeando...");
 
-            $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
+            /*$Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
             if (date("N") == 6 || date("N") == 7 || $Holiday) {
                 $this->log("Es fin de semana o festivo. Terminado");
                 exit;
-            }
+            }*/
 
             $week = array(
                 1 => "Lunes",
@@ -56,8 +56,8 @@ EOF;
                 7 => "Domingo"
             );
 
-            $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+1 day")));
-            if ($Holiday || date("N", strtotime("+1 day")) == 6) {
+            /*$Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+1 day")));
+            if ($Holiday || date("N", strtotime("+1 day")) == 6) {*/
 
                 $day  = date("Y-m-d");
                 $i    = 0;
@@ -77,11 +77,11 @@ EOF;
 
                     $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime($day)));
                 } while($Holiday || date("N", strtotime($day)) == 6 || date("N", strtotime($day)) == 7);
-            } else {
+            /*} else {
 
                 $this->log("Mañana no es sabado ni festivo. Terminado");
                 exit;
-            }
+            }*/
 
             $daysCount = count($days);
             $daysPhrase = "";
