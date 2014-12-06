@@ -85,7 +85,7 @@ EOF;
 
             $daysCount = count($days);
             $daysPhrase = "";
-            foreach 1($days as $i => $day){
+            foreach ($days as $i => $day){
 
                 /*if ($i > 0) {*/
                     
