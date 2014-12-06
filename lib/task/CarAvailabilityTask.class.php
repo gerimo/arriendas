@@ -99,9 +99,6 @@ EOF;
                 /*}*/
             }
 
-            error_log(print_r($daysPhrase, true));
-            exit;
-
             if ($options['env'] == 'dev') {
                 $host = 'http://test.arriendas.cl';
             } else {
