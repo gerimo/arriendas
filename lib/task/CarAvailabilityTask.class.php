@@ -83,14 +83,11 @@ EOF;
                 exit;
             }*/
 
-            error_log(print_r($days, true));
-            exit;
-
             $daysCount = count($days);
             $daysPhrase = "";
-            foreach ($days as $i => $day){
+            foreach 1($days as $i => $day){
 
-                if ($i > 0) {
+                /*if ($i > 0) {*/
                     
                     $daysPhrase .= $day;
                     
@@ -99,8 +96,11 @@ EOF;
                     } elseif ($i < $daysCount - 1) {
                         $daysPhrase .= " y ";
                     }
-                }
+                /*}*/
             }
+
+            error_log(print_r($daysPhrase, true));
+            exit;
 
             if ($options['env'] == 'dev') {
                 $host = 'http://test.arriendas.cl';
@@ -170,7 +170,7 @@ EOF;
                     $body .= "<p>Necesitaríamos que nos indiques en qué horarios podrías recibir clientes, para que tu auto figure en las busquedas de mañana.</p>";
                     $body .= "<ul>";
                     $body .= "<li>Si puedes recibir clientes el ".$daysPhrase." entre 8am y 8pm, has <a href='{$url_all_ava}'>click aquí</a>.</li>";
-                    $body .= "<li>Si sólo puedes recibir clientes el ".$days[1]." entre 8am y 8pm, has <a href='{$url_one_ava}'>click aquí</a>.</li>";
+                    $body .= "<li>Si sólo puedes recibir clientes el ".$days[0]." entre 8am y 8pm, has <a href='{$url_one_ava}'>click aquí</a>.</li>";
                     $body .= "<li>Si puedes recibir clientes en horarios específicos, has <a href='{$url_cus_ava}'>click aquí</a>.</li>";
                     $body .= "</ul>";
                     $body .= "<p>Se te informará con un mínimo de 3 horas de anticipación para que puedas gestionar la entrega. Tu auto figurará como disponible para el pago, para reservas iniciadas en esos horarios.</p>";

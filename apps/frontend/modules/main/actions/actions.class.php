@@ -3602,7 +3602,7 @@ public function calificacionesPendientes(){
             }
             
             $sentAt = strtotime(date("Y-m-d", strtotime($CarAvailabilityEmail->getSentAt())));
-            $i      = 1;
+            $i      = 0;
             $day    = date("Y-m-d", strtotime("+".$i." day", $sentAt));
 
             $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate($day);
