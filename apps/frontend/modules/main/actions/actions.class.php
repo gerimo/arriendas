@@ -1008,10 +1008,25 @@ public function executeIndex(sfWebRequest $request) {
         $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
         if ($Holiday || date("N") == 6 || date("N") == 7) {
 
-            $q->innerJoin("C.CarAvailabilities CA");
-            $q->andWhere("CA.is_deleted IS FALSE");
-            $q->andWhere("CA.day = ?", date("Y-m-d", strtotime($day_from)));
-            $q->andWhere('? BETWEEN CA.started_at AND CA.ended_at', date("H:i:s", strtotime($hour_from)));
+            $day      = date("Y-m-d");
+            $i        = 0;
+            $weekFrom = $day;
+
+            do {
+
+                $weekTo = $day;
+                $i++;
+                $day = date("Y-m-d", strtotime("+".$i." day"));
+
+                $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime($day)));
+            } while($Holiday || date("N", strtotime($day)) == 6 || date("N", strtotime($day)) == 7);
+
+            if (strtotime($day_from) <= strtotime($weekTo)) {
+                $q->innerJoin("C.CarAvailabilities CA");
+                $q->andWhere("CA.is_deleted IS FALSE");
+                $q->andWhere("CA.day = ?", date("Y-m-d", strtotime($day_from)));
+                $q->andWhere('? BETWEEN CA.started_at AND CA.ended_at', date("H:i:s", strtotime($hour_from)));
+            }
         }
 
         /*$startTime = strtotime($day_from);
