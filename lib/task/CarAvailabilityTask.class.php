@@ -83,6 +83,9 @@ EOF;
                 exit;
             }*/
 
+            error_log(print_r($days, true));
+            exit;
+
             $daysCount = count($days);
             $daysPhrase = "";
             foreach ($days as $i => $day){
