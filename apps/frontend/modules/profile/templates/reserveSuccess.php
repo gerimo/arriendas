@@ -9,8 +9,8 @@
 
 <?php use_javascript('pedidos.js?v=13112014') ?>
 
-<?php use_stylesheet('ReserveSuccess.css') ?>
-<?php use_javascript('ReserveSuccess.js') ?>
+<?php use_stylesheet('ReserveSuccess?v=2.css') ?>
+<?php use_javascript('ReserveSuccess?v=2.js') ?>
 
 <script type="text/javascript">
     var urlEliminarPedidosAjax = <?php echo "'".url_for("profile/eliminarPedidosAjax")."';" ?>

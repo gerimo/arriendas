@@ -65,7 +65,7 @@ opportunityAccept:
 
 availability:
     url: /availability
-    param: { module: profile, action: availability }
+    param: { module: main, action: availability }
 
 availabilityEmailOpen:
     url: /availability/open

@@ -507,6 +507,10 @@ abstract class BaseCar extends sfDoctrineRecord
              'local' => 'id',
              'foreign' => 'Car_id'));
 
+        $this->hasMany('CarAvailability as CarAvailabilities', array(
+             'local' => 'id',
+             'foreign' => 'car_id'));
+
         $this->hasMany('CarAvailabilityEmail as CarAvailabilityEmails', array(
              'local' => 'id',
              'foreign' => 'car_id'));

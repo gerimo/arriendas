@@ -1,6 +1,6 @@
 <?php use_stylesheet('calendario.css') ?>
 <?php use_stylesheet('comunes.css') ?>
-<?php use_stylesheet('mis_autos.css??v=02052014') ?>
+<?php use_stylesheet('mis_autos.css??v=05122014') ?>
 <?php use_stylesheet('registro.css') ?>
 <?php
     $useragent=$_SERVER['HTTP_USER_AGENT'];
@@ -10,6 +10,56 @@
 ?>
 <?php use_javascript('cars.js') ?>
 
+<?php use_stylesheet('jquery.timepicker.css') ?>
+<?php use_javascript('jquery.timepicker.js') ?>
+
+<style>
+
+    h3 {
+        font-size: 14px;
+        font-weight: bold;
+        padding: 20px 0 10px 0;
+        text-align: center;
+    }
+
+    .AOC-container {
+        text-align: center;
+    }
+
+    .normal-text {
+        font-size: 12px;
+        font-weight: normal;
+        padding: 0 10px 0 5px;
+    }
+
+    .btnCars {
+        width: 100px;
+        height: 26px;
+        background-image: url('../images/bt_blue_on_v2.png');
+        border: 1px solid #36cced;
+        border-radius: 1px 1px 1px 1px;
+        color: #FFFFFF;
+        text-shadow: 1px 1px 1px #758386;
+        font-size: 12px;
+        line-height: 23px;
+        text-align: center;
+        text-decoration: none;
+
+        padding: 3px 9px;
+    }
+
+    .btnCars:hover {
+        background-image: url('../images/bt_blue_hover_v2.png');
+        text-decoration: underline;
+    }
+
+    .loader {
+        height: 15px;
+        width: 15px;
+        display: none;
+    }
+</style>
+
 <script type="text/javascript">
     var urlEliminarCarAjax = <?php echo "'".url_for("profile/eliminarCarAjax")."';" ?>
     var toggleActiveCarAjax = <?php echo "'".url_for("profile/toggleActiveCarAjax")."';" ?>
@@ -17,6 +67,7 @@
     var toggleActiveCAEAjax = <?php echo "'".url_for("profile/toggleActiveCAEAjax")."';" ?>
 
     $(document).on('ready',function(){
+
         $('.mis_autos_verificado').on('click',function(e){
             e.preventDefault();
         });
@@ -49,35 +100,65 @@
             });
         });
 
-        $(".CAEActive").change(function(){
+        
 
-            var CAEId = $(this).parent().parent().data("cae-id");
-            var active = $(this).val();
+        $(".btnCars-save").click(function(e){
 
-            $.post(toggleActiveCAEAjax, {"CAEId": CAEId}, function(r){
+            e.preventDefault();
+            
+            var p = $(this).parent();
+
+            var car    = p.data("car-id");
+            var day    = p.data("day");
+            var from   = p.find(".from").val();
+            var to     = p.find(".to").val();
+            var loader = p.find(".loader");
+
+            loader.show();
+
+            $.post("<?php echo url_for('profile/carAvailabilitySave') ?>", {"car": car, "day": day, "from": from, "to": to}, function(r){
+                console.log(r); // JS no esta interpretando el JSON
+                if (r.error) {
+                    alert(r.errorMessage);
+                }
+
+                loader.hide();
+            });
+        });
+
+        $(".btnCars-delete").click(function(e){
+
+            e.preventDefault();
+
+            var p = $(this).parent();
+
+            var car    = p.data("car-id");
+            var day    = p.data("day");
+            var from   = p.find(".from");
+            var to     = p.find(".to");
+            var loader = p.find(".loader");
+
+            loader.show();
+
+            $.post("<?php echo url_for('profile/carAvailabilityDelete') ?>", {"car": car, "day": day}, function(r){
 
                 if (!r.error) {
-                    if (active == 0) {
-                        $("#CAE"+CAEId+" .circuloActivo").css("display","none");
-                        $("#CAE"+CAEId+" .circuloInactivo").css("display","block");
-                    } else {
-                        $("#CAE"+CAEId+" .circuloInactivo").css("display","none");
-                        $("#CAE"+CAEId+" .circuloActivo").css("display","block");
-                    }
+                    from.val("");
+                    to.val("");
                 }
+
+                loader.hide();
             });
-        })
+        });
+
+        $('.ui-timepicker-input').timepicker();
+
+        $(".main_contenido").height($(".availabilityOfCars").height() * $(".availabilityOfCars").length + $(".misautos_user_item").length * 120 + 300);
     });
 </script>
 
 <div class="main_box_1">
 <div class="main_box_2">
-
-<?php if (!is_null($CAESuccess)): ?>
-    <div style="padding: 20px">
-        <p style="background-color: yellow; padding: 5px; text-align: center">Hemos registrado tu disponibilidad, ¡gracias!</p>
-    </div>
-<?php endif; ?>
 
 <?php include_component('profile', 'profile') ?>
 
@@ -118,14 +199,14 @@
                 
                 
                     <div class="misautos_btn_sector">
-                        <a href="<?php echo url_for('profile/pedidos') ?>" class="misautos_btn_alqui">Mis Arriendos</a>
+                        <!-- <a href="<?php echo url_for('profile/pedidos') ?>" class="misautos_btn_alqui">Mis Arriendos</a> -->
                     
                         <!-- Obtener variable $ok del Auto, rescatandolo de la DB, por mientras se usará de variable -->
                         <!-- $ok = 0; -->
                         <?php $ok = $c->getSeguroOk(); ?>
                         <?php if($ok <> 4): ?>
                             <div class="divBotonVerificar" style="backgound-color:#ec008c;">
-                                <a href="mailto:soporte@arriendas.cl?subject=Reserva%20un%20horario%20para%20que%20verifiquemos%20tu%20auto" class="misautos_btn_alqui">Verificar</a>
+                                <!-- <a href="mailto:soporte@arriendas.cl?subject=Reserva%20un%20horario%20para%20que%20verifiquemos%20tu%20auto" class="misautos_btn_alqui">Verificar</a> -->
                             </div>
                         <?php else: ?>
                             <div class="divBotonVerificar">
@@ -151,26 +232,24 @@
                     </a>
                 </div>
 
-                <?php $CAES = $c->getCurrentCarAvailabilityEmails(); ?>
-                <?php if (count($CAES) > 0): ?>
+                <?php if (isset($availabilityOfCars[$c->getId()])): ?>
 
-                    <h2>Disponibilidad de fin de semana / festivo</h2>
-                    <div class="car_availability_emails">
-                        <?php foreach ($CAES as $CAE): ?>
+                    <div class="availabilityOfCars">
+                        <h2>Horario para recibir un cliente</h2>
+                        
+                        <?php foreach ($availabilityOfCars[$c->getId()] as $AOC): ?>
 
-                            <div id="CAE<?php echo $CAE->getId() ?>" data-cae-id="<?php echo $CAE->getId() ?>" style="font-size: 14px; margin: 15px 0; padding: 0 15px">
-                                <span class="cae-select" style="float: right">
-                                    <div class="circuloActivo" style="display: <?= ($CAE->getIsActive() == 1)?"block":"none" ?>"></div>
-                                    <div class="circuloInactivo" style="display: <?= ($CAE->getIsActive() == 0)?"block":"none" ?>" ></div>
-                                    <select class="CAEActive" style="margin-right: 5px">
-                                        <option value="1" <?= ($CAE->getIsActive() == 1)?"selected":"" ?>>Activo</option>
-                                        <option value="0" <?= ($CAE->getIsActive() == 0)?"selected":"" ?>>Inactivo</option>
-                                    </select>
-                                </span>
-                                <span class="cae-date">
-                                    Desde: <strong><?php echo date("d-m-Y H:i", strtotime($CAE->getStartedAt())) ?></strong><br><br>
-                                    Hasta: <strong><?php echo date("d-m-Y H:i", strtotime($CAE->getEndedAt())) ?></strong> 
-                                </span>                                
+                            <h3><?php echo $AOC["dayName"] ." ". date("j", strtotime($AOC["day"])) ?></h3>
+                            <div class="AOC-container" data-car-id="<?php echo $c->getId() ?>" data-day="<?php echo $AOC['day'] ?>">
+                                <span class="normal-text">Desde</span>
+                                <input autocomplete="off" class="from time ui-timepicker-input" type="text" <?php if (isset($AOC['from'])): echo "value='".date("H:ia", strtotime($AOC['from']))."'"; endif; ?>></td>
+                                <input autocomplete="off" class="to time ui-timepicker-input" type="text" <?php if (isset($AOC['to'])): echo "value='".date("H:ia", strtotime($AOC['to']))."'"; endif; ?>></td>
+                                <span class="normal-text">Hasta</span>
+                                <br><br>
+                                <a class="btnCars btnCars-delete" href="">Eliminar</a>
+                                <a class="btnCars btnCars-save" href="">Guardar</a>
+                                <br><br>
+                                <img class="loader" src="../images/ajax-loader.gif">
                             </div>
                         <?php endforeach; ?>
                     </div>

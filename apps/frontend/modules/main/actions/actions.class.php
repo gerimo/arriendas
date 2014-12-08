@@ -962,21 +962,75 @@ public function executeIndex(sfWebRequest $request) {
     
     public function executeListaAjax(sfWebRequest $request){
 
-        $day_from = $request->getParameter('day_from');
-        $day_to = $request->getParameter('day_to');
-        $hour_from = date("H:i", strtotime($request->getParameter('hour_from')));
-        $hour_to = date("H:i", strtotime($request->getParameter('hour_to')));
-        $startTime = strtotime($day_from);
-        $endTime = strtotime($day_to);
+        /*$idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');*/
+
+        $day_from     = $request->getParameter('day_from');
+        $day_to       = $request->getParameter('day_to');
+        $hour_from    = date("H:i", strtotime($request->getParameter('hour_from')));
+        $hour_to      = date("H:i", strtotime($request->getParameter('hour_to')));
+        $transmission = $request->getParameter('transmission');
+        $type         = $request->getParameter('type');
+        $price        = $request->getParameter('price');
+        $regionCodigo = $request->getParameter("region");
+        $comunaCodigoInterno = ($request->getParameter("comuna") != 0 ? $request->getParameter("comuna") : null);
+
+        $from = date("Y-m-d H:i:s", strtotime($day_from." ".$hour_from));
+        $to = date("Y-m-d H:i:s", strtotime($day_to." ".$hour_to));
         
         $this->getUser()->setAttribute('fechainicio', $day_from);
         $this->getUser()->setAttribute('fechatermino', $day_to);
         $this->getUser()->setAttribute('horainicio', date("g:i A",strtotime($request->getParameter('hour_from'))));
         $this->getUser()->setAttribute('horatermino', date("g:i A",strtotime($request->getParameter('hour_to'))));
-        
-        $transmission = $request->getParameter('transmission');
-        $type = $request->getParameter('type');
-        $price = $request->getParameter('price');
+
+        $q = Doctrine_Query::create()
+            ->select('C.id,
+                C.uso_vehiculo_id tipo_vehiculo,
+                C.year year,
+                C.address address,
+                C.price_per_day priceday,
+                C.price_per_hour pricehour,
+                M.name model,
+                M.id_tipo_vehiculo,
+                B.name brand')
+            ->from('Car C')
+            ->innerJoin('C.Model M')
+            ->innerJoin('M.Brand B')
+            ->leftJoin('C.Reserves R')
+            ->leftJoin('R.Transaction T')
+            ->Where('C.activo = 1')
+            ->andWhere('C.seguro_ok = 4');
+            /*->andWhere('T.completed = 0');*/
+            /*->andWhere('? NOT BETWEEN R.date AND DATE_ADD(R.date, INTERVAL R.duration HOUR)', $from)
+            ->andWhere('? NOT BETWEEN R.date AND DATE_ADD(R.date, INTERVAL R.duration HOUR)', $to)
+            ->andWhere('R.date NOT BETWEEN ? AND ?', array($from, $to))
+            ->andWhere('DATE_ADD(R.date, INTERVAL R.duration HOUR) NOT BETWEEN ? AND ?', array($from, $to));*/
+
+        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
+        if ($Holiday || date("N") == 6 || date("N") == 7) {
+
+            $day      = date("Y-m-d");
+            $i        = 0;
+            $weekFrom = $day;
+
+            do {
+
+                $weekTo = $day;
+                $i++;
+                $day = date("Y-m-d", strtotime("+".$i." day"));
+
+                $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime($day)));
+            } while($Holiday || date("N", strtotime($day)) == 6 || date("N", strtotime($day)) == 7);
+
+            if (strtotime($day_from) <= strtotime($weekTo)) {
+                $q->innerJoin("C.CarAvailabilities CA");
+                $q->andWhere("CA.is_deleted IS FALSE");
+                $q->andWhere("CA.day = ?", date("Y-m-d", strtotime($day_from)));
+                $q->andWhere('? BETWEEN CA.started_at AND CA.ended_at', date("H:i:s", strtotime($hour_from)));
+            }
+        }
+
+        /*$startTime = strtotime($day_from);
+        $endTime = strtotime($day_to);
 
         $timeHasWorkday = false;
         $timeHasWeekend = false;
@@ -999,8 +1053,27 @@ public function executeIndex(sfWebRequest $request) {
             }
         }
 
-        $regionCodigo = $request->getParameter("region");
-        $comunaCodigoInterno = ($request->getParameter("comuna") != 0 ?$request->getParameter("comuna"):null );
+        if (
+                $hour_from != "Hora de inicio" &&
+                $hour_to != "Hora de entrega" &&
+                $hour_from != "" &&
+                $hour_to != "" &&
+                $day_from != "Dia de inicio" &&
+                $day_to != "Dia de entrega" &&
+                $day_from != "" &&
+                $day_to != ""
+        ) {
+            $day_from = implode('-', array_reverse(explode('-', $day_from)));
+            $day_to = implode('-', array_reverse(explode('-', $day_to)));
+            $fullstartdate = $day_from . " " . $hour_from;
+            $fullenddate = $day_to . " " . $hour_to;
+
+            $q = $q->andWhere('C.disponibilidad_semana >= ?', $timeHasWorkday);
+            $q = $q->andWhere('C.disponibilidad_finde >= ?', $timeHasWeekend);
+        }*/
+
+        // Comunas
+        
         $comunas = array();
         if (!is_null($regionCodigo)) {
             if (is_null($comunaCodigoInterno)) {
@@ -1013,68 +1086,27 @@ public function executeIndex(sfWebRequest $request) {
             }
         }
 
-        $q = Doctrine_Query::create()
-            ->select('ca.id, mo.name model,
-                br.name brand, ca.uso_vehiculo_id tipo_vehiculo, ca.year year,
-                ca.address address, 
-                owner.firstname firstname,
-                owner.lastname lastname,
-                mo.id_tipo_vehiculo,
-                ca.price_per_day priceday,
-                ca.price_per_hour pricehour')
-            ->from('Car ca')
-            ->innerJoin('ca.Model mo')
-            ->innerJoin('ca.Comunas cm')
-            ->innerJoin('mo.Brand br')
-            ->innerJoin('ca.User owner')                
-            ->Where('ca.activo = ?', 1)
-            ->andWhereIn('ca.seguro_ok', array(4));
-
-        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
-        if ($Holiday || date("N") == 6 || date("N") == 7) {
-            $q->innerJoin("ca.CarAvailabilityEmails cae");
-            $q->andWhere("cae.is_active IS TRUE");
-            $q->andWhere("DATE(cae.checked_at) >= DATE(DATE_SUB(cae.started_at, INTERVAL 1 DAY))");
-            $q->andWhere("DATE(cae.checked_at) <= DATE(cae.ended_at)");
-        }
-
         if (count($comunas) > 0) {
-            $q->andWhereIn('ca.comuna_id', $comunas);
+            $q->andWhereIn('C.comuna_id', $comunas);
         }
 
-        if (
-                $hour_from != "Hora de inicio" &&
-                $hour_to != "Hora de entrega" &&
-                $hour_from != "" &&
-                $hour_from != "" &&
-                $day_from != "Dia de inicio" &&
-                $day_to != "Dia de entrega" &&
-                $day_from != "" &&
-                $day_to != ""
-        ) {
-            $day_from = implode('-', array_reverse(explode('-', $day_from)));
-            $day_to = implode('-', array_reverse(explode('-', $day_to)));
-            $fullstartdate = $day_from . " " . $hour_from;
-            $fullenddate = $day_to . " " . $hour_to;
-
-            $q = $q->andWhere('ca.disponibilidad_semana >= ?', $timeHasWorkday);
-            $q = $q->andWhere('ca.disponibilidad_finde >= ?', $timeHasWeekend);
-        }
-
+        // Transmisión
         if ($transmission != "") {
             $transmission = explode(",", $transmission);
-            $q = $q->andWhereIn('ca.transmission', $transmission);
+            $q->andWhereIn('C.transmission', $transmission);
         }
 
+        // Tipo de auto
         if ($type != "") {
             $type = explode(",", $type);
-            $q = $q->andWhereIn('mo.id_tipo_vehiculo', $type);
+            $q->andWhereIn('M.id_tipo_vehiculo', $type);
         }
 
+        // Ordenar por precio
         if ($price == 1) {
-            $q = $q->orderBy('ca.price_per_day DESC');
+            $q->orderBy('C.price_per_day DESC');
         } else {
-            $q = $q->orderBy('ca.price_per_day ASC');
+            $q->orderBy('C.price_per_day ASC');
         }
 
         $q->limit(100);
@@ -3562,5 +3594,81 @@ public function calificacionesPendientes(){
         echo base64_decode("R0lGODlhAQABAIAAAP///////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACwAAAAAAQABAAACAkQBADs=");
 
         return sfView::NONE;
+    }
+
+    public function executeAvailability(sfWebRequest $request) {
+
+        $carAvailabilityEmailId = $request->getGetParameter("id");
+        $option = $request->getGetParameter("o");
+        $signature = $request->getGetParameter("signature");
+
+        try {
+
+            $CarAvailabilityEmail = Doctrine_Core::getTable("CarAvailabilityEmail")->find($carAvailabilityEmailId);
+
+            if (!$CarAvailabilityEmail) {
+                throw new Exception("No se encontró el registro.", 1);
+            }
+
+            if ($CarAvailabilityEmail->getSignature() != $signature) {
+                throw new Exception("Las firmas no coinciden. ¿Trampa?", 2);
+            }
+
+            if (is_null($CarAvailabilityEmail->getCheckedAt())) {
+                $CarAvailabilityEmail->setCheckedAt(date("Y-m-d H:i:s"));
+                $CarAvailabilityEmail->save();
+            }
+            
+            $sentAt = strtotime(date("Y-m-d", strtotime($CarAvailabilityEmail->getSentAt())));
+            $i      = 0;
+            $day    = date("Y-m-d", strtotime("+".$i." day", $sentAt));
+
+            $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate($day);
+            if ($Holiday || date("N", strtotime($day)) == 6) {
+
+                $Car  = $CarAvailabilityEmail->getCar();
+
+                if ($option == 2) {
+                    
+                    do {
+
+                        $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
+                        if (!$CarAvailability) {
+
+                            $CarAvailability = new CarAvailability();
+                            $CarAvailability->setCar($Car);
+                            $CarAvailability->setDay($day);
+                        }
+
+                        $CarAvailability->setStartedAt("08:00:00");
+                        $CarAvailability->setEndedAt("20:00:00");
+                        $CarAvailability->save();
+
+                        $i++;
+                        $day    = date("Y-m-d", strtotime("+".$i." day", strtotime(date("Y-m-d", strtotime($CarAvailabilityEmail->getSentAt())))));
+
+                        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate($day);
+                    } while($Holiday || date("N", strtotime($day)) == 6 || date("N", strtotime($day)) == 7);
+                } elseif ($option == 1) {
+
+                    $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
+                    if (!$CarAvailability) {
+
+                        $CarAvailability = new CarAvailability();
+                        $CarAvailability->setCar($Car);
+                        $CarAvailability->setDay($day);
+                    }
+
+                    $CarAvailability->setStartedAt("08:00:00");
+                    $CarAvailability->setEndedAt("20:00:00");
+                    $CarAvailability->save();
+                }
+            }
+        } catch (Exception $e) {
+
+            Utils::reportError($e->getMessage(), "profile/executeAvailability");
+        }
+
+        $this->redirect('profile/cars');
     }
 }

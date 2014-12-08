@@ -28,7 +28,7 @@ h1.misautos_titulo_seccion {
 /* msg user items */
 .misautos_user_item {
 	margin-bottom: 40px;
-	height:116px;
+	/*height:116px;*/
 	border-bottom:1px solid #d1d1d1;
 }
 .misautos_user_frame {

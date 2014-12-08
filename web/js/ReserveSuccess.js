@@ -235,6 +235,8 @@ function restarHoras(hora_desde, hora_hasta) {
 }
 
 function durationCheck() {
+
+    return;
     
     var d = new Date();
 
