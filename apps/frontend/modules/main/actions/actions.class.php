@@ -664,6 +664,8 @@ public function executeNotificacion(sfWebRequest $request) {
 }
 
 public function executeIndex(sfWebRequest $request) {
+
+    $this->setLayout("layoutResponsive");
     
     if($request->getParameter('region'))
         $this->region = Doctrine_Core::getTable('Regiones')->findOneBySlug($request->getParameter('region'))->getCodigo();
@@ -959,6 +961,8 @@ public function executeIndex(sfWebRequest $request) {
             $this->holiday = true;
         }
     }
+
+
     
     public function executeListaAjax(sfWebRequest $request){
 
