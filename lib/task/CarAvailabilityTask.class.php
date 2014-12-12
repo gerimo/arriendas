@@ -117,7 +117,7 @@ EOF;
                 ->andWhere('C.seguro_ok = 4')
                 /*->andWhereNotIn('C.id', array(398123,398144,398145,397147,398173,398174,397413,397925,397949,398211,398213,397967,397968,398238,398261,398274,398275,397891,398215,397840,396878,398224,398066,398068,397547,398111,398198,398199,398234,396712,398241,398079,397063,397270,396714,396675,397569,397588,398101,397947,397948,397606,396741,354,398004,396742,396609,397441,398222,396820,396643,398113,398005,398110,397882,397916,396659,397460,397207,397483,396736,397765,397766,397268,397813,397817,398016,398130,397902,396880,397395,396940,396576,397396,397919,398037,396620,396471,397615,397995,397517,397267,396770,397918,397789,397950))*/
                 ->orderBy('C.ratio_aprobacion DESC')
-                ->limit(200);
+                ->limit(1);
 
             $Cars = $q->execute();
 
@@ -176,7 +176,7 @@ EOF;
                     $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Equipo Arriendas.cl</p>";
                     $body .= "<img src='{$imageUrl}?id={$CarAvailabilityEmail->getId()}'>";
 
-                    /*$message = $this->getMailer()->compose();
+                    $message = $this->getMailer()->compose();
                     $message->setSubject($subject);
                     $message->setBody($body, "text/html");
                     $message->setFrom('soporte@arriendas.cl', 'Soporte Arriendas.cl');
@@ -185,7 +185,7 @@ EOF;
                             "cristobal@arriendas.cl" => "Cristóbal Medina Moenne"
                         ));
                     
-                    $this->getMailer()->send($message);*/
+                    $this->getMailer()->send($message);
                 } else {
 
                     $this->log("Auto ID: ".$Car->getId()." ya posee una reserva");
