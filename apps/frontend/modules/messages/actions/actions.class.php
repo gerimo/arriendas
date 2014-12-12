@@ -434,7 +434,7 @@ class messagesActions extends sfActions {
         $user = Doctrine_Core::getTable('user')->find($this->user_id);
         $message = Doctrine_Core::getTable("Message")->lastMessageSentByUserId($this->user_id);
         if(!$user->isPropietario()
-                && !in_array($message->getId(), $objetoConversacion[0]->getMessage()->getPrimaryKeys())){            
+                && $message && !in_array($message->getId(), $objetoConversacion[0]->getMessage()->getPrimaryKeys())){            
             $this->comentarios = $message->getBody();
         }else{
             $this->comentarios = $request->getParameter("comentarios");
