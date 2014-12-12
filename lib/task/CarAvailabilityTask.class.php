@@ -115,7 +115,7 @@ EOF;
                 ->createQuery('C')
                 ->where('C.activo = 1')
                 ->andWhere('C.seguro_ok = 4')
-                /*->andWhereNotIn('C.id', array(398123,398144,398145,397147,398173,398174,397413,397925,397949,398211,398213,397967,397968,398238,398261,398274,398275,397891,398215,397840,396878,398224,398066,398068,397547,398111,398198,398199,398234,396712,398241,398079,397063,397270,396714,396675,397569,397588,398101,397947,397948,397606,396741,354,398004,396742,396609,397441,398222,396820,396643,398113,398005,398110,397882,397916,396659,397460,397207,397483,396736,397765,397766,397268,397813,397817,398016,398130,397902,396880,397395,396940,396576,397396,397919,398037,396620,396471,397615,397995,397517,397267,396770,397918,397789,397950))*/
+                ->andWhereNotIn('C.id', array(398123))
                 ->orderBy('C.ratio_aprobacion DESC')
                 ->limit(1);
 
@@ -167,7 +167,7 @@ EOF;
                     $body .= "<p>Necesitaríamos que nos indiques en qué horarios podrías recibir clientes, para que tu auto figure en las busquedas de mañana.</p>";
                     $body .= "<ul>";
                     $body .= "<li>Si puedes recibir clientes el ".$daysPhrase." entre 8am y 8pm, has <a href='{$url_all_ava}'>click aquí</a>.</li>";
-                    $body .= "<li>Si sólo puedes recibir clientes el ".$days[0]." entre 8am y 8pm, has <a href='{$url_one_ava}'>click aquí</a>.</li>";
+                    $body .= "<li>Si sólo puedes recibir clientes el ".$days[1]." entre 8am y 8pm, has <a href='{$url_one_ava}'>click aquí</a>.</li>";
                     $body .= "<li>Si puedes recibir clientes en horarios específicos, has <a href='{$url_cus_ava}'>click aquí</a>.</li>";
                     $body .= "</ul>";
                     $body .= "<p>Se te informará con un mínimo de 3 horas de anticipación para que puedas gestionar la entrega. Tu auto figurará como disponible para el pago, para reservas iniciadas en esos horarios.</p>";
