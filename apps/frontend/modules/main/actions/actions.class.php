@@ -989,12 +989,14 @@ public function executeIndex(sfWebRequest $request) {
                 C.address address,
                 C.price_per_day priceday,
                 C.price_per_hour pricehour,
+                CO.nombre as comuna,
                 M.name model,
                 M.id_tipo_vehiculo,
                 B.name brand')
             ->from('Car C')
             ->innerJoin('C.Model M')
             ->innerJoin('M.Brand B')
+            ->innerJoin('C.Comunas CO')
             ->leftJoin('C.Reserves R')
             ->leftJoin('R.Transaction T')
             ->Where('C.activo = 1')
