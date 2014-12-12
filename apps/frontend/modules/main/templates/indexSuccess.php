@@ -1301,6 +1301,7 @@ else
             "url": url,
             "data": dataObj,
             "success": function(data) {
+                console.log(data);
                 $("#tab-lista-data").html(data);
                 $("#tab-lista-data").show();
                 $('.gallery a').lightBox({
@@ -1326,8 +1327,6 @@ else
 
 
     function getModel(currentElement, reloadCars) {
-
-        console.log('getModel');
 
         $("#model").html("");
 

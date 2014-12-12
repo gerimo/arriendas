@@ -16,7 +16,14 @@
                     <tbody>
                         <?php for ($i = 0; $i < count($cars); $i++) { ?>
                             <tr class="gradeA">
-                                <td><div class="posicionamiento1">$ <?= number_format(intval($cars[$i]['priceday']), 0, ',', '.'); ?> <span style="font-style: italic;">(por día)</span><br>$ <?= number_format(intval($cars[$i]['pricehour']), 0, ',', '.'); ?> <span style="font-style: italic;">(por hora)</span></div>
+                                <td>
+                                    <div class="posicionamiento1" style="text-align: center; width: 100%">
+                                        $ <?= number_format(intval($cars[$i]['priceday']), 0, ',', '.'); ?> 
+                                        <span style="font-style: italic;">(por día)</span><br>
+                                        $ <?= number_format(intval($cars[$i]['pricehour']), 0, ',', '.'); ?> 
+                                        <span style="font-style: italic;">(por hora)</span><br><br>
+                                        <?php echo $cars[$i]['comuna'] ?>
+                                    </div>
                                 </td>
                                 <td>
                                     <div class="posicionamiento2">
