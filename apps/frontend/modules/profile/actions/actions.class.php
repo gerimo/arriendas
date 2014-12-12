@@ -3221,10 +3221,15 @@ class profileActions extends sfActions {
         // Si es usuario nuevo y el id es par, sigue nuevo flujo
         // test 5474
         // prod 7176
-        if ($this->getUser()->getAttribute('userid') >= 7176 && ($this->getUser()->getAttribute('userid') % 2) == 0) {
+        /*if ($this->getUser()->getAttribute('userid') >= 7176 && ($this->getUser()->getAttribute('userid') % 2) == 0) {
             $this->newFlow = 1;
         } else {
             $this->newFlow = 0;
+        }*/
+        
+        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
+        if ($Holiday || date("N") == 6 || date("N") == 7) {
+            $this->newFlow = 1;
         }
 
         if ($this->getUser()->getAttribute("email") == "cmedinamoenne@gmail.com") {

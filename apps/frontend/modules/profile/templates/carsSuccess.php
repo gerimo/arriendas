@@ -141,7 +141,7 @@
             loader.show();
 
             $.post("<?php echo url_for('profile/carAvailabilityDelete') ?>", {"car": car, "day": day}, function(r){
-console.log(r);
+
                 if (!r.error) {
                     from.val("");
                     to.val("");
