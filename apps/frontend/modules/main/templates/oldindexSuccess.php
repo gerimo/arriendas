@@ -134,21 +134,22 @@ if (preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
         margin-top: 5%;
         width: 33px;
     }
-
 </style>
 
 <?php
-$usuarioLog = 0;
-if (sfContext::getInstance()->getUser()->getAttribute("logged")) {
-    $usuarioLog = 1;
-} else {
-    $usuarioLog = 2;
-}
+
+    $usuarioLog = 0;
+
+    if (sfContext::getInstance()->getUser()->getAttribute("logged")) {
+        $usuarioLog = 1;
+    } else {
+        $usuarioLog = 2;
+    }
 ?>
 
 <script type="text/javascript">
 
-    var usuarioLogeado = "<?php echo $usuarioLog; ?>";
+    var usuarioLogeado = "<?php echo $usuarioLog ?>";
 
     var map;
     var markerCluster;
@@ -165,16 +166,14 @@ if (sfContext::getInstance()->getUser()->getAttribute("logged")) {
     var lastValidCenter;
     var oTable;
 
-    function localizame() {
-        if (navigator.geolocation) { /* Si el navegador tiene geolocalizacion */
+    /*function localizame() {
+
+        if (navigator.geolocation) { // Si el navegador tiene geolocalizacion
             navigator.geolocation.getCurrentPosition(coordenadas, errores);
         } else {
             alert('Oops! Tu navegador no soporta geolocalización. Bájate Chrome, que es gratis!');
         }
-    }
-    
-    
-
+    }*/
 
     function crearMarca(position) {
 
@@ -186,19 +185,22 @@ if (sfContext::getInstance()->getUser()->getAttribute("logged")) {
         return marker;
     }
 
-    function coordenadas(position) {
-        latitud = position.coords.latitude; /*Guardamos nuestra latitud*/
-        longitud = position.coords.longitude; /*Guardamos nuestra longitud*/
-<?php if ($sf_user->getAttribute('geolocalizacion') == true): ?>
-            geolocalizacion = true;
-<?php else: ?>
-            geolocalizacion = false;
-<?php endif; ?>
-        //initialize();
-    }
+    /*function coordenadas(position) {
 
-    function errores(err) {
-        /*Controlamos los posibles errores */
+        latitud = position.coords.latitude; //Guardamos nuestra latitud
+        longitud = position.coords.longitude; //Guardamos nuestra longitud
+
+        <?php if ($sf_user->getAttribute('geolocalizacion') == true): ?>
+            geolocalizacion = true;
+        <?php else: ?>
+            geolocalizacion = false;
+        <?php endif; ?>
+        
+        //initialize();
+    }*/
+
+    /*function errores(err) {
+        //Controlamos los posibles errores
         if (err.code == 0) {
             alert("Oops! Algo ha salido mal");
         }
@@ -211,7 +213,7 @@ if (sfContext::getInstance()->getUser()->getAttribute("logged")) {
         if (err.code == 3) {
             alert("Oops! Hemos superado el tiempo de espera");
         }
-    }
+    }*/
 
     google.maps.event.addDomListener(window, 'load', initialize);
 
@@ -219,38 +221,38 @@ if (sfContext::getInstance()->getUser()->getAttribute("logged")) {
 
         initialize2();
 
-<?php
-if (stripos($_SERVER['SERVER_NAME'], "arrendas") !== FALSE)
-    echo "var center = new google.maps.LatLng(-34.59, -58.401604);";
-else
-//		    echo "var center = new google.maps.LatLng(-33.427224, -70.605558);";
-    echo "var center = new google.maps.LatLng(-33.436024, -70.632858);";
-?>
+        <?php
+            if (stripos($_SERVER['SERVER_NAME'], "arrendas") !== FALSE)
+                echo "var center = new google.maps.LatLng(-34.59, -58.401604);";
+            else
+                echo "var center = new google.maps.LatLng(-33.436024, -70.632858);";
+        ?>
+
         if (geolocalizacion) {
             center = new google.maps.LatLng(latitud, longitud);
         }
 
-<?php if (isset($_GET['ciudad']) && $_GET['ciudad'] == "arica"): ?>
+        <?php if (isset($_GET['ciudad']) && $_GET['ciudad'] == "arica"): ?>
             center = new google.maps.LatLng(-18.32, -70.20);
-<?php endif; ?>
-<?php if (isset($_GET['ciudad']) && $_GET['ciudad'] == "concepcion"): ?>
+        <?php endif; ?>
+        <?php if (isset($_GET['ciudad']) && $_GET['ciudad'] == "concepcion"): ?>
             center = new google.maps.LatLng(-37.00, -72.30);
-<?php endif; ?>
-<?php if (isset($_GET['ciudad']) && $_GET['ciudad'] == "laserena"): ?>
+        <?php endif; ?>
+        <?php if (isset($_GET['ciudad']) && $_GET['ciudad'] == "laserena"): ?>
             center = new google.maps.LatLng(-29.75, -71.10);
-<?php endif; ?>
-<?php if (isset($_GET['ciudad']) && $_GET['ciudad'] == "temuco"): ?>
+        <?php endif; ?>
+        <?php if (isset($_GET['ciudad']) && $_GET['ciudad'] == "temuco"): ?>
             center = new google.maps.LatLng(-38.45, -72.40);
-<?php endif; ?>
-<?php if (isset($_GET['ciudad']) && $_GET['ciudad'] == "valparaiso"): ?>
+        <?php endif; ?>
+        <?php if (isset($_GET['ciudad']) && $_GET['ciudad'] == "valparaiso"): ?>
             center = new google.maps.LatLng(-33.2, -71.4);
-<?php endif; ?>
-<?php if (isset($_GET['ciudad']) && $_GET['ciudad'] == "viña"): ?>
+        <?php endif; ?>
+        <?php if (isset($_GET['ciudad']) && $_GET['ciudad'] == "viña"): ?>
             center = new google.maps.LatLng(-33.0, -71.3);
-<?php endif; ?>
-<?php if (isset($map_clat) && isset($map_clng)): ?>
+        <?php endif; ?>
+        <?php if (isset($map_clat) && isset($map_clng)): ?>
             center = new google.maps.LatLng(<?= $map_clat ?>, <?= $map_clng ?>);
-<?php endif; ?>
+        <?php endif; ?>
 
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: 14,
@@ -343,9 +345,7 @@ else
             infowindow.open(map, marker);
 
             searchMarkers();
-//		              doSearch();
-
-
+            //doSearch();
         });
 
         //Fin Autocomplete
@@ -353,14 +353,11 @@ else
 
     function doReload() {
 
-//        $("#loading").css("display","inline");
-//		$("#loadingSearch").css("display","table");
-
-
+        //$("#loading").css("display","inline");
+        //$("#loadingSearch").css("display","table");
     }
 
-    function mycarousel_initCallback(carousel)
-    {
+    function mycarousel_initCallback(carousel) {
         // Disable autoscrolling if the user clicks the prev or next button.
         carousel.buttonNext.bind('click', function() {
             carousel.startAuto(0);
@@ -383,7 +380,6 @@ else
             carousel.stopAuto();
         }
     }
-    ;
 
     function doSearch() {
 
@@ -445,7 +441,6 @@ else
         }
 
         searchMarkers();
-
     }
 
     //Valida formato fecha
@@ -466,6 +461,7 @@ else
             return false;
         }
     }
+
     function restarHoras(hora_desde, hora_hasta) {
 
         var hora, min, seg;
@@ -484,7 +480,6 @@ else
 
         return dif;
     }
-
 
     function searchMarkers() {
 
@@ -544,7 +539,6 @@ else
 
         $.getJSON(url, function(data) {
 
-
             if (markers) {
                 var i = 0, l = markers.length;
                 var markersLength = markers.length;
@@ -584,7 +578,7 @@ else
 
                 var opcionLogeado = "";
                 if (usuarioLogeado == 1) {//Informacion cuando se esta logeado
-//                    opcionLogeado = '<div class="detalles_user"><a target="_blank" href="http://www.arriendas.cl/profile/publicprofile/id/' + dataCar.userid + '" class="mapcar_user_titulo" title="Ir al perfil de '+dataCar.firstname +'">' + dataCar.firstname + " " + dataCar.lastname + '</a><a target="_blank" href="http://www.arriendas.cl/messages/new/id/' +dataCar.userid + '" class="mapcar_user_message" title="Env&iacute;ale un mensaje a '+ dataCar.firstname +'"></a></div><div class="datos_user"><div class="img_vel_resp"></div><p>Velocidad de Respuesta: <br><b>'+velocidadDeRespuesta+'</b></p><div class="img_reservas_resp"></div><p>Reservas Respondidas: <b>' + dataCar.reservasRespondidas + '</b></p></div>';
+                    //opcionLogeado = '<div class="detalles_user"><a target="_blank" href="http://www.arriendas.cl/profile/publicprofile/id/' + dataCar.userid + '" class="mapcar_user_titulo" title="Ir al perfil de '+dataCar.firstname +'">' + dataCar.firstname + " " + dataCar.lastname + '</a><a target="_blank" href="http://www.arriendas.cl/messages/new/id/' +dataCar.userid + '" class="mapcar_user_message" title="Env&iacute;ale un mensaje a '+ dataCar.firstname +'"></a></div><div class="datos_user"><div class="img_vel_resp"></div><p>Velocidad de Respuesta: <br><b>'+velocidadDeRespuesta+'</b></p><div class="img_reservas_resp"></div><p>Reservas Respondidas: <b>' + dataCar.reservasRespondidas + '</b></p></div>';
                     opcionLogeado = '<div class="detalles_user"><a target="_blank" href="http://www.arriendas.cl/profile/publicprofile/id/' + dataCar.userid + '" class="mapcar_user_titulo" title="Ir al perfil del dueño">Ver perfil del dueño</a><a target="_blank" href="http://www.arriendas.cl/messages/new/id/' + dataCar.userid + '" class="mapcar_user_message" title="Env&iacute;ale un mensaje al dueño"></a></div><div class="datos_user"><div class="img_vel_resp"></div><p>Velocidad de Respuesta: <br><b>' + velocidadDeRespuesta + '</b></p></div>';
                 } else {//Informacion cuando NO se está logeado
                     if (dataCar.verificado) {
@@ -597,20 +591,18 @@ else
                 var urlFotoThumbTipo = "";
                 if (dataCar.photoType == 1) {
                     urlFotoTipo = dataCar.photo;
-//                    urlFotoThumbTipo = "<?php echo url_for('main/s3thumb'); ?>?alto=84&ancho=112&urlFoto=" + dataCar.photo;
+                    //urlFotoThumbTipo = "<?php echo url_for('main/s3thumb'); ?>?alto=84&ancho=112&urlFoto=" + dataCar.photo;
                     urlFotoThumbTipo = dataCar.photo;
                 } else {
                     urlFotoTipo = "<?php echo image_path('../uploads/cars/" + dataCar.photo + "'); ?>";
-
-
                     urlFotoThumbTipo = "http://arriendas.cl/uploads/cars/" + dataCar.photo;
                     //"<?php echo image_path('../uploads/cars/thumbs/" + dataCar.photo + "'); ?>";
                 }
-                var contentString = '<div style="width:380px; height:165px;" class="mapcar_box" id="' + dataCar.id + '">' +
-                        '<div class="mapcar_frame">' +
-                        '<a href="' + urlFotoTipo + '"  class="thickbox"  ><img class="imagemark" width="112" height="84" src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/' + urlFotoThumbTipo + '"/></a>' +
-                        '</div><div class="detalles_car"><div class="titulo"><a target="_blank" title="Ir al perfil del auto" href="<?php echo url_for('arriendo-de-autos/rent-a-car') ?>/' + dataCar.brand + dataCar.model + '/' + dataCar.comuna + '/' + dataCar.id + '">' + dataCar.brand + ' ' + dataCar.model + " " + verificado + calificacionesPositivas + '</a></div><div class="datos_car"><p>Dia: <b>$' + dataCar.price_per_day + ' CLP</b></p><p>Hora: <b>$' + dataCar.price_per_hour + ' CLP</b></p><p>Transmisión: <b>' + dataCar.typeTransmission + '</b></p></div>' + opcionLogeado + '</div><a target="_blank" href="<?php echo url_for('profile/reserve?id=') ?>' + dataCar.id + '" class="mapcar_btn_detalle"></a></div>';
 
+                var contentString = '<div style="width:380px; height:165px;" class="mapcar_box" id="' + dataCar.id + '">' +
+                    '<div class="mapcar_frame">' +
+                    '<a href="' + urlFotoTipo + '"  class="thickbox"  ><img class="imagemark" width="112" height="84" src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/' + urlFotoThumbTipo + '"/></a>' +
+                    '</div><div class="detalles_car"><div class="titulo"><a target="_blank" title="Ir al perfil del auto" href="<?php echo url_for('arriendo-de-autos/rent-a-car') ?>/' + dataCar.brand + dataCar.model + '/' + dataCar.comuna + '/' + dataCar.id + '">' + dataCar.brand + ' ' + dataCar.model + " " + verificado + calificacionesPositivas + '</a></div><div class="datos_car"><p>Dia: <b>$' + dataCar.price_per_day + ' CLP</b></p><p>Hora: <b>$' + dataCar.price_per_hour + ' CLP</b></p><p>Transmisión: <b>' + dataCar.typeTransmission + '</b></p></div>' + opcionLogeado + '</div><a target="_blank" href="<?php echo url_for('profile/reserve?id=') ?>' + dataCar.id + '" class="mapcar_btn_detalle"></a></div>';
 
                 if (infowindow)
                     infowindow.close();
@@ -690,7 +682,7 @@ else
                 nodes += dataCar.brand + ' ' + dataCar.model + ' <span class="title_peq">(' + dataCar.year + ', ' + typeModel + ', ' + dataCar.typeTransmission + ')</span>';
                 nodes += '</a>';
                 nodes += '</li>';
-//                    nodes +=            '<li class="tag_comuna_city">Comuna, Ciudad</li>'
+                //nodes += '<li class="tag_comuna_city">Comuna, Ciudad</li>'
                 nodes += '<li>Día: <b>$' + dataCar.price_per_day + ' - </b>';
                 nodes += 'Hora: <b>$' + dataCar.price_per_hour + '</b></li>';
                 //numStars = dataCar.stars por ejemplo
@@ -699,14 +691,12 @@ else
 
                 var ContestaPedidos = (((dataCar.carPercentile * 20) > 100) ? 100 : (dataCar.carPercentile * 20).toFixed(0));
                 nodes += '<li><span style="font-size: 10px;">Porcentaje de Respuesta: ' + ContestaPedidos + '%</span></li>';
-<?php if (sfContext::getInstance()->getUser()->getAttribute("logged")) { ?>
+                <?php if (sfContext::getInstance()->getUser()->getAttribute("logged")) { ?>
                     //nodes +=            '<li class="sep">Usuario: <a target="_blank" title="Ir al perfil de '+dataCar.firstname+'" class="link_user" href="http://www.arriendas.cl/profile/publicprofile/id/'+dataCar.userid+'">'+dataCar.firstname+' '+dataCar.lastname+'</a></li>';
-<?php } ?>
+                <?php } ?>
                 nodes += '</ul>';
                 nodes += '</div>';
-
             }
-
 
             $('.search_arecomend_window').stop(true, true);
             $("#loader").stop(true, true);
@@ -723,27 +713,26 @@ else
 
             markerCluster = new MarkerClusterer(map, markers, mcOptions);
 
-//            var bounds = new google.maps.LatLngBounds();
-//            for (var i = 0, LtLgLen = markers.length; i < LtLgLen; i++) {
-//              bounds.extend(markers[i].position);
-//            }
-//            map.fitBounds(bounds);
+            //            var bounds = new google.maps.LatLngBounds();
+            //            for (var i = 0, LtLgLen = markers.length; i < LtLgLen; i++) {
+            //              bounds.extend(markers[i].position);
+            //            }
+            //            map.fitBounds(bounds);
 
 
 
 
-//            google.maps.event.addListener(map, 'idle', function() {
-//                google.maps.event.addListener(map, 'dragend', function() {
-//                    searchMarkers();
-//                });
-//                google.maps.event.addListener(map, 'zoom_changed', function() {
-//                    searchMarkers();
-//                });
-//            });
-
+            //            google.maps.event.addListener(map, 'idle', function() {
+            //                google.maps.event.addListener(map, 'dragend', function() {
+            //                    searchMarkers();
+            //                });
+            //                google.maps.event.addListener(map, 'zoom_changed', function() {
+            //                    searchMarkers();
+            //                });
+            //            });
         });
-
     }
+
     function generarBarraEstrellas(num) {
         var gris = "<?php echo image_path('img_search/EstrellaGris.png'); ?>";
         var rosa = "<?php echo image_path('img_search/EstrellaRosada'); ?>";
@@ -759,6 +748,7 @@ else
         }
         return cadena;
     }
+
     /*
      function formatNumber(precio){
      var precioMillones = Math.floor(precio/1000000);
@@ -832,8 +822,6 @@ else
          */
     }
 
-
-
     function var_dump(data, addwhitespace, safety, level) {
         var rtrn = '';
         var dt, it, spaces = '';
@@ -898,13 +886,9 @@ else
             rtrn = rtrn.replace(/ /g, "&nbsp;").replace(/\n/g, "<br>");
         }//end if addwhitespace == html
         return rtrn;
-    }//end function var_dump
+    }
 
-
-
-    //$(document).ready(
     function initialize2() {
-
 
         $('#video').html('	<iframe src="http://player.vimeo.com/video/45668172?title=0&byline=0&portrait=0ll" width="940" height="500" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>')
 
@@ -965,12 +949,10 @@ else
         });
 
 
-//$('#searchTextField').keypress(function (e) {
-//  if (e.which == 13) {
-//  }
-//});
-
-
+        //$('#searchTextField').keypress(function (e) {
+        //  if (e.which == 13) {
+        //  }
+        //});
 
         var date = new Date();
 
@@ -1188,18 +1170,15 @@ else
 
         });
         
-//        $('.gallery a').lightBox({
-//            imageLoading:			'images/img_gallery/lightbox-ico-loading.gif',		
-//            imageBtnPrev:			'images/img_gallery/lightbox-btn-prev.gif',			
-//            imageBtnNext:			'images/img_gallery/lightbox-btn-next.gif',			
-//            imageBtnClose:			'images/img_gallery/lightbox-btn-close.gif',		
-//            imageBlank:				'images/img_gallery/lightbox-blank.gif'	
-//        });
+        //        $('.gallery a').lightBox({
+        //            imageLoading:			'images/img_gallery/lightbox-ico-loading.gif',		
+        //            imageBtnPrev:			'images/img_gallery/lightbox-btn-prev.gif',			
+        //            imageBtnNext:			'images/img_gallery/lightbox-btn-next.gif',			
+        //            imageBtnClose:			'images/img_gallery/lightbox-btn-close.gif',		
+        //            imageBlank:				'images/img_gallery/lightbox-blank.gif'	
+        //        });
 
         /*Fin Código Miguel */
-
-
-
 
         // async load of Zendesk
         var c = document.createElement('link');
@@ -1223,8 +1202,8 @@ else
                 });
             }
         });
-//        $("#chooseRegion").val("13");
-//        updateLista();
+        //        $("#chooseRegion").val("13");
+        //        updateLista();
         
         
         <?php if (isset($region) && isset($comuna)): ?>
@@ -1235,7 +1214,6 @@ else
         <?php else: ?>
             $('#chooseRegion option[value=13]').prop('selected', 'selected').change();
         <?php endif; ?>
-
     }    
                         
     function listadoRegionComuna(region, comuna) {   
@@ -1251,8 +1229,7 @@ else
             $("#chooseComuna").html(options);
             $('#chooseComuna option[value='+comuna+']').prop('selected', 'selected');
             updateLista();
-        });
-        
+        });     
     }
 
     function updateLista() {
@@ -1324,7 +1301,6 @@ else
         });
     }
 
-
     function getModel(currentElement, reloadCars) {
 
         console.log('getModel');
@@ -1349,16 +1325,9 @@ else
 
         })
     }
-
-
-
-
 </script>
 
-
 <style type="text/css">
-
-
 
     #loading {
         z-index:10;
@@ -1427,9 +1396,6 @@ else
     #search{
 
     }
-
-
-
 </style>
 
 <input type="hidden" id="hour_from_hidden"<?php
@@ -1509,6 +1475,7 @@ if ($day_to) {
             $('.search_box_1_maparea').css("width", "511px");
             $('.search_box_1_maparea').css("margin-left", "119px");
         });
+
         $("#btn_filtro2").click(function() {
             $('#btn_filtro1').css("display", "block");
             $('#map').css("width", "628px");
@@ -1557,35 +1524,6 @@ if ($day_to) {
         <?php endif; ?>
     });
 </script>
-
-<!--
-<div style="position: absolute; z-index: 9;">
-    <a href="#" onclick="mostrar_ayuda();" id="btn_ayuda">Instrucciones</a>
-</div>
-<script>
-    
-    function mostrar_ayuda() {
-        alert("dro");
-        document.getElementById("instrucciones_paso1").style.display="visible";
-    }
-    
-</script>
-<div id="instrucciones_paso1" style="z-index:1; position: absolute; margin-top: -123px; margin-left: -3px; display: none;">
-<?php echo image_tag("instrucciones/InstruccionesWeb1.png"); ?>
-    
-</div>
-<div id="instrucciones_paso2" style="z-index:1; position: absolute; margin-top: -123px; margin-left: -3px; display: none;">
-    
-<?php echo image_tag("instrucciones/InstruccionesWeb2.png"); ?>
-    
-</div>x
-<div id="instrucciones_paso3" style="z-index:1; position: absolute; margin-top: -123px; margin-left: -3px; display: none;">
-    
-<?php echo image_tag("instrucciones/InstruccionesWeb3.png"); ?>
-    
-</div>
-
--->
 
 <div class="search_container">
 

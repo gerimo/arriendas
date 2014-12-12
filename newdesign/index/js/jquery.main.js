@@ -155,7 +155,6 @@ function initFitVids() {
 			} else {
 				this.pagerLinks = this.gallery.find(this.options.pagerLinks);
 				this.attachPaginationEvents();
-
 			}
 
 			// autorotation control buttons

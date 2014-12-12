@@ -666,7 +666,16 @@ public function executeNotificacion(sfWebRequest $request) {
 public function executeIndex(sfWebRequest $request) {
 
     $this->setLayout("layoutResponsive");
-    
+
+    if (is_null($this->getUser()->getAttribute('geolocalizacion'))) {
+        $this->getUser()->setAttribute('geolocalizacion', true);
+    } elseif ($this->getUser()->getAttribute('geolocalizacion') == true) {
+        $this->getUser()->setAttribute('geolocalizacion', false);
+    }
+}
+
+public function oldexecuteIndex(sfWebRequest $request) {
+
     if($request->getParameter('region'))
         $this->region = Doctrine_Core::getTable('Regiones')->findOneBySlug($request->getParameter('region'))->getCodigo();
     if($request->getParameter('comuna'))
@@ -1416,6 +1425,157 @@ public function executeIndex(sfWebRequest $request) {
                 ->limit(10);
         $this->offers = $q->execute();
         //echo $q->getSqlQuery();
+    }
+
+    public function executeGetCars(sfWebRequest $request) {
+
+        $return = array("error" => false);
+
+        $from   = $request->getPostParameter('from', null);
+        $to     = $request->getPostParameter('to', null);
+        $swLat  = $request->getPostParameter('swLat', null);
+        $swLng  = $request->getPostParameter('swLng', null);
+        $neLat  = $request->getPostParameter('neLat', null);
+        $neLng  = $request->getPostParameter('neLng', null);
+        $map_center_lat  = $request->getPostParameter('map_center_lat', null);
+        $map_center_lng  = $request->getPostParameter('map_center_lng', null);
+
+        try {
+
+            // Se rescata 'porsiacaso'
+            $this->getUser()->setAttribute('fechainicio', date("d-m-Y", strtotime($from)));
+            $this->getUser()->setAttribute('fechatermino', date("d-m-Y", strtotime($to)));
+            $this->getUser()->setAttribute('horainicio', date("H:i", strtotime($from)));
+            $this->getUser()->setAttribute('horatermino', date("H:i", strtotime($to)));
+
+            $this->getUser()->setAttribute("map_clat", $map_center_lat);
+            $this->getUser()->setAttribute("map_clng", $map_center_lng);
+
+            $q = Doctrine_Query::create()
+                ->select('
+                    ca.id, 
+                    ca.lat lat, 
+                    ca.lng lng, 
+                    ca.year,
+                    co.nombre comuna_nombre,
+                    ca.price_per_day, 
+                    ca.price_per_hour,
+                    ca.photoS3 photoS3, 
+                    ca.Seguro_OK, 
+                    ca.foto_perfil, 
+                    ca.transmission transmission,
+                    ca.user_id,
+                    ca.velocidad_contesta_pedidos velocidad_contesta_pedidos,
+                    greatest(1440,ca.velocidad_contesta_pedidos)/greatest(0.1,ca.contesta_pedidos) carrank,
+                    mo.name modelo, 
+                    mo.id_tipo_vehiculo id_tipo_vehiculo,
+                    br.name brand, 
+                ')
+                ->from('Car ca')
+                ->innerJoin('ca.Model mo')
+                ->innerJoin('ca.Comunas co')
+                ->innerJoin('mo.Brand br')
+                ->Where('ca.activo = 1')
+                ->andWhere('ca.seguro_ok = 4')
+                ->andWhere('ca.lat < ?', $neLat)
+                ->andWhere('ca.lat > ?', $swLat)
+                ->andWhere('ca.lng > ?', $swLng)
+                ->andWhere('ca.lng < ?', $neLng)
+                ->orderBy('carrank ASC')
+                ->addOrderBy('IF(ca.velocidad_contesta_pedidos = 0, 1440, ca.velocidad_contesta_pedidos)  ASC')
+                ->addOrderBy('ca.fecha_subida  ASC')
+                ->limit(33);
+
+            $cars = $q->execute();
+
+            error_log($neLat);
+            error_log($swLat);
+            error_log($swLng);
+            error_log($neLng);
+            error_log("CANTIDAD: ".count($cars));
+
+            foreach ($cars as $i => $car) {
+                if (!$car->hasReserve(date("Y-m-d", strtotime($from)), date("Y-m-d", strtotime($to)))) {
+
+                    $d = 0;
+
+                    $photo = $car->getFotoPerfil();
+
+                    $porcentaje = $car->getContestaPedidos();
+
+                    if ($this->getUser()->getAttribute("logged")) {
+
+                        $velocidad = $car->getVelocidadContestaPedidos();
+
+                        if ($velocidad < 1) {
+                            $velocidad = "Menos de un minuto";
+                        } elseif ($velocidad < 10) {
+                            $velocidad = "Menos de 10 minutos";
+                        } elseif ($velocidad < 60) {
+                            $velocidad = "Menos de una hora";
+                        } elseif ($velocidad < 1440) {
+                            if (floor($velocidad / 60) == 1) {
+                                $velocidad = "1 hora";
+                            } else {
+                                $velocidad = floor($velocidad / 60) . " horas";
+                            }
+                        } else {
+                            if (floor($velocidad / 60 / 24) == 1) {
+                                $velocidad = "1 dia";
+                            } else {
+                                $velocidad = floor($velocidad / 60 / 24) . " dias";
+                            }
+                        }
+                    } else {
+                        $reservasRespondidas = 0;
+                        $velocidad = 0;
+                    }
+
+                    $transmision = "Manual";
+                    $tipoTrans = $car->getTransmission();
+                    $carPercentile = $car->getCarPercentile();
+
+                    if ($tipoTrans == 0)
+                        $transmision = "Manual";
+                    if ($tipoTrans == 1)
+                        $transmision = "Autom&aacute;tica";
+
+                    $return['cars'][] = array('id' => $car->getId(),
+                        'longitude' => $car->getlng(),
+                        'latitude' => $car->getlat(),
+                        'comuna' => strtolower($car->getComunaNombre()),
+                        'brand' => $car->getBrand(),
+                        'model' => $car->getModelo(),
+                        'ano' => $car->getYear(),
+                        'typeModel' => $car->getIdTipoVehiculo(),
+                        'year' => $car->getYear(),
+                        'photoType' => $car->getPhotoS3(),
+                        'photo' => $photo,
+                        'price_per_hour' => $this->transformarPrecioAPuntos(floor($car->getPricePerHour())),
+                        'price_per_day' => $this->transformarPrecioAPuntos(floor($car->getPricePerDay())),
+                        'userid' => $car->getUserId(),
+                        'carRank' => $car->getCarrank(),
+                        'carPercentile' => $carPercentile,
+                        'typeTransmission' => $transmision,
+                        'userVelocidadRespuesta' => $velocidad,
+                        'userContestaPedidos' => $porcentaje,
+                        'cantidadCalificacionesPositivas' => '0',
+                        'd' => $d,
+                        'verificado' => $car->autoVerificado(),
+                    );
+                }
+            }
+
+        } catch (Exception $e) {
+
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+            /*Utils::reportError($e->getMessage(), "profile/executeGetCars");*/
+        }
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
     }
 
     public function executeMap(sfWebRequest $request) {

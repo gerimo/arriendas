@@ -687,12 +687,14 @@ class profileActions extends sfActions {
      * @param sfWebRequest $request
      */
     public function executeAprobarOportunidad(sfWebRequest $request) {
+
         $idReserve = $request->getParameter('idReserve');
         $idCar = $request->getParameter('idCar');
         $idUser = $request->getParameter('idUser');
         
         // chequeos varios
         try{
+
             $oReserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
             if(!$oReserve ){
                 throw new Exception("La oportunidad que intentas aprobar es inexistente.");
@@ -727,7 +729,7 @@ class profileActions extends sfActions {
                 throw new Exception("Ya has aprobado esta oportunidad.");
             }            
             
-        }catch(Exception $ex){
+        } catch (Exception $ex) {
             echo $ex->getMessage();die;
             //$this->redirect('profile/pedidos');
         }
