@@ -5983,17 +5983,13 @@ class profileActions extends sfActions {
         $datehasta = $hasta[0];
         $hourhasta = $hasta[1];
 
-//echo $datehasta.'\n'.$hourhasta;die;
-//print_r($request);die;
-//$duration = $request->getParameter('duration');
-//if($date != ""  && $duration != "")
         if ($datedesde != "" && $datehasta != "" && $hourdesde != "" && $hourhasta != "" &&
                 preg_match('/^(([0-1][0-9])|([2][0-3])):([0-5][0-9]):([0-5][0-9])$/', $hourdesde) &&
                 preg_match('/^(([0-1][0-9])|([2][0-3])):([0-5][0-9]):([0-5][0-9])$/', $hourhasta) &&
                 preg_match('/^\d{4}\-\d{1,2}\-\d{1,2}$/', $datedesde) &&
                 preg_match('/^\d{4}\-\d{1,2}\-\d{1,2}$/', $datehasta)) {
 
-//CORROBORAR SI SE SOLICITO ANTES PERO TIENE DURACION DURANTE EL PEDIDO
+            //CORROBORAR SI SE SOLICITO ANTES PERO TIENE DURACION DURANTE EL PEDIDO
 
             $startDate = date("Y-m-d H:i:s", strtotime($datedesde . " " . $hourdesde));
             $endDate = date("Y-m-d H:i:s", strtotime($datehasta . " " . $hourhasta));
@@ -6005,8 +6001,7 @@ class profileActions extends sfActions {
 
             $carid = $request->getParameter('carid');
 
-
-            $has_reserve = Doctrine_Core::getTable('Reserve')
+            /*$has_reserve = Doctrine_Core::getTable('Reserve')
                     ->createQuery('a')
                     ->where('((a.date <= ? and date_add(a.date, INTERVAL a.duration HOUR) > ?) or (a.date <= ? and date_add(a.date, INTERVAL a.duration HOUR) > ?)) and (a.Car.id = ?)', array($startDate, $startDate, $endDate, $endDate, $carid))
                     ->andWhere('a.id != ?', $idReserva)
@@ -6014,9 +6009,10 @@ class profileActions extends sfActions {
                     ->andWhere('a.complete = ?', false)
                     ->fetchArray();
 
+            if (count($has_reserve) == 0) {*/
 
-
-            if (count($has_reserve) == 0) {
+            $Car = Doctrine_Core::getTable('Car')->find($carid);
+            if(!$Car->hasReserve($startDate, $endDate)) {
 
                 if ($diff > 0) {
 
@@ -6043,7 +6039,6 @@ class profileActions extends sfActions {
             echo 'Por favor ingrese fechas con formato YYYY-MM-DD HH:MM';
         }
         
-        /*if(!empty($request->getParameter('sendReserve'))){*/
         if(!$sf_request->hasParameter('sendReserve')){
             $this->redirect('profile/reserveSend?id=' . $idReserva);
             die();
