@@ -323,7 +323,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo "Pre aprobado<br>(Falta pago)";
                 echo "</div>";
                 echo"</div>";
-                echo"<div class='pagoBoton'>";
+                echo"<div class='pagoBoton' data-carid=". $reserva['carId'] .">";
                 echo "<a href='#'>" . image_tag('img_pedidos/BotonPagar.png', 'class=botonPagar duracion_' . $reserva['duracion'] . ' id=pagar_' . $reserva['idReserve']) . "</a>";
                 echo "</div>";
                 echo "<div><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' >Contactar</a></div>";
@@ -464,7 +464,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo "Pre aprobado<br>(Falta pago)";
                 echo "</div>";
                 echo"</div>";
-                echo"<div class='pagoBoton'>";
+                echo"<div class='pagoBoton' data-carid=". $reserva['carId'] .">";
                 echo "<a href='#'>" . image_tag('img_pedidos/BotonPagar.png', 'class=botonPagar duracion_' . $reserva['duracion'] . ' id=pagar_' . $reserva['idReserve']) . "</a>";
                 echo "</div>";
                 echo "<div><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' >Contactar</a></div>";
@@ -537,7 +537,7 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
                 echo "Pre aprobado<br>(Falta pago)";
                 echo "</div>";
                 echo"</div>";
-                echo"<div class='pagoBoton'>";
+                echo"<div class='pagoBoton' data-carid=". $reserva['carId'] .">";
                 echo "<a href='#'>" . image_tag('img_pedidos/BotonPagar.png', 'class=botonPagar duracion_' . $reserva['duracion'] . ' id=pagar_' . $reserva['idReserve']) . "</a>";
                 echo "</div>";
                 echo "<div><a href=".url_for('messages/new?id='.$reserva['contraparteId'])." class='link-contactar' >Contactar</a></div>";

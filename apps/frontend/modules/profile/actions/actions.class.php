@@ -3241,11 +3241,11 @@ class profileActions extends sfActions {
         
         $idReserve = $request->getPostParameter('idReserve');
         $idUsuario = $request->getPostParameter('idUsuario');
+        $redirectUrl = $request->getPostParameter('redirectUrl');
 
         $errorMessage = "";
 
         if ($idUsuario) {
-            
             $user = Doctrine_Core::getTable('user')->find($idUsuario);
             if ($user->getRut() == "") {
                 $errorMessage = "error:rutnulo";
@@ -3261,20 +3261,24 @@ class profileActions extends sfActions {
                 $errorMessage = "error:nobirthdate";
             }
         } else {
+            if (!$this->getUser()->isAuthenticated()) {
+                $errorMessage = "error:notlogged";
+                $_SESSION['login_back_url'] = $redirectUrl;
+            }else{
+                $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+                if ($reserve->getUser()->getRut() == "") {
+                    $errorMessage = "error:rutnulo";
+                }
 
-            $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
-            if ($reserve->getUser()->getRut() == "") {
-                $errorMessage = "error:rutnulo";
-            }
-
-            if ($reserve->getUser()->getExtranjero() == 1 && !$reserve->getUser()->getFacebookConfirmado() ) {
-                $errorMessage = "error:extranjero-sin-facebook";
-            }
-            if ($reserve->getUser()->getMenor()) {
-                $errorMessage = "error:usermenor";
-            }
-            if (is_null($reserve->getUser()->getBirthdate()) || strlen($reserve->getUser()->getBirthdate()) <= 0) {
-                $errorMessage = "error:nobirthdate";
+                if ($reserve->getUser()->getExtranjero() == 1 && !$reserve->getUser()->getFacebookConfirmado() ) {
+                    $errorMessage = "error:extranjero-sin-facebook";
+                }
+                if ($reserve->getUser()->getMenor()) {
+                    $errorMessage = "error:usermenor";
+                }
+                if (is_null($reserve->getUser()->getBirthdate()) || strlen($reserve->getUser()->getBirthdate()) <= 0) {
+                    $errorMessage = "error:nobirthdate";
+                }
             }
         }
 

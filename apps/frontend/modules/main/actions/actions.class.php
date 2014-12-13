@@ -2614,7 +2614,7 @@ public function executeIndex(sfWebRequest $request) {
         //$_SESSION['urlback'] = $this->getRequest()->getUri();
 		  sfContext::getInstance()->getLogger()->info($this->getRequest()->getUri());
 		
-        if (isset($_SESSION['login_back_url'])) {
+        /*if (isset($_SESSION['login_back_url'])) {
             $urlpage = explode('/', $_SESSION['login_back_url']);
 
             if ($urlpage[count($urlpage) - 1] != "login" && $urlpage[count($urlpage) - 1] != "doLogin") {
@@ -2624,7 +2624,11 @@ public function executeIndex(sfWebRequest $request) {
         }else{
             //$_SESSION['login_back_url'] = $request->getReferer();
             $_SESSION['login_back_url'] = $this->getRequest()->getUri();
-			}
+			}*/
+                  
+        if (!isset($_SESSION['login_back_url'])) {
+            $_SESSION['login_back_url'] = $this->getRequest()->getUri();
+        }
     }
 
     public function sendRecoverEmail($user) {
@@ -3217,15 +3221,14 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
         if($previousUser) {
 
     	    $user_id= $this->getUser()->getAttribute("userid");
-                $myUser = Doctrine::getTable('User')->findOneById($user_id);
-    	
-                $token_url = sprintf("https://graph.facebook.com/oauth/access_token?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s", $app_id, urlencode($my_url), $app_secret, $code);
+            $myUser = Doctrine::getTable('User')->findOneById($user_id);
+            $token_url = sprintf("https://graph.facebook.com/oauth/access_token?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s", $app_id, urlencode($my_url), $app_secret, $code);
     	    $response = @file_get_contents($token_url);
-                $params = null;
-                parse_str($response, $params);
-                $graph_url = sprintf("https://graph.facebook.com/me?access_token=%s", $params['access_token']);
-                $user = json_decode(file_get_contents($graph_url), true);
-                $photo_url = sprintf("https://graph.facebook.com/%s/picture", $user["id"]);
+            $params = null;
+            parse_str($response, $params);
+            $graph_url = sprintf("https://graph.facebook.com/me?access_token=%s", $params['access_token']);
+            $user = json_decode(file_get_contents($graph_url), true);
+            $photo_url = sprintf("https://graph.facebook.com/%s/picture", $user["id"]);
     	    $myUser->setFacebookId($user["id"]);
     	    $myUser->setPictureFile($photo_url);
     	    $myUser->setConfirmedFb(true);
@@ -3236,7 +3239,7 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
             }else{
                 $this->redirect('main/index');
             }
-	   }
+        }
 
 	
 	//modificacion por problema aleatorio con login with facebook
@@ -3423,7 +3426,7 @@ public function calificacionesPendientes(){
      * en tablas Reserve y Transaction
      * @param type $reserve
      * @param type $order
-     */
+     *
     public function executeUpdateManualNroFactura(sfWebRequest $request){
         
         ini_set('memory_limit', '1024M');
@@ -3447,7 +3450,7 @@ public function calificacionesPendientes(){
         
         foreach($trans_query as $trans){
             $reserve = $trans->getReserve();
-            $this->generarNroFactura($reserve, $trans, $trans_limite);
+            $this->generarNroFactura($reserve, $trans);
             echo "transaction " . $trans->getId() . " actualiza nro_factura a: " . $trans->getNumeroFactura() . "\n";
             echo "reserve " . $reserve->getId() . " actualiza nro_factura a: " . $reserve->getNumeroFactura() . "\n";
             echo '<br>';
@@ -3461,8 +3464,8 @@ public function calificacionesPendientes(){
      * en tablas Reserve y Transaction
      * @param type $reserve
      * @param type $order
-     */
-    private function generarNroFactura($reserve, $order, $trans_limite){
+     *
+    private function generarNroFactura($reserve, $order){
         
         // primero valido que no exista otra factura ya generada 
         // para la misma quincena y mismo user_id (y numero asignado!)
@@ -3509,7 +3512,7 @@ public function calificacionesPendientes(){
             // no hay factura generada durante quincena actual, asigno el siguiente nro.
             // (debo obtener el mayor nro. asignado desde ambas tablas)
             try{
-                $nro_fac_transaction = $this->getNextNumeroFactura($trans_limite);
+                $nro_fac_transaction = $this->getNextNumeroFactura();
                 $order->setNumeroFactura($nro_fac_transaction);
 
             } catch (Exception $ex) {
@@ -3522,7 +3525,7 @@ public function calificacionesPendientes(){
         $montoGarantia = sfConfig::get('app_monto_garantia');
         if($montoLiberacion != $montoGarantia)
         {
-            $nro_fac_reserve = $cant_transac > 0? $this->getNextNumeroFactura($trans_limite) : $nro_fac_transaction + 1;
+            $nro_fac_reserve = $cant_transac > 0? $this->getNextNumeroFactura() : $nro_fac_transaction + 1;
             $reserve->setNumeroFactura($nro_fac_reserve);
             $reserve->save();
         }                    
@@ -3531,7 +3534,7 @@ public function calificacionesPendientes(){
         $conn->commit();
     }
     
-    private function getNextNumeroFactura($trans_limite){
+    private function getNextNumeroFactura(){
         
         // max en transaction
         //$qt = "select max(numero_factura) nro_fac from Transaction where id < " . $trans_limite;
@@ -3547,7 +3550,7 @@ public function calificacionesPendientes(){
 
         $next_numero = ($trans[0]['nro_fac'] > $res[0]['nro_fac']? $trans[0]['nro_fac'] : $res[0]['nro_fac']) + 1;
         return $next_numero;
-    }
+    }*/
 
     public function executeOpenOpportunityEmail(sfWebRequest $request) {
 
