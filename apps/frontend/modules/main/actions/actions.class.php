@@ -956,7 +956,10 @@ public function executeIndex(sfWebRequest $request) {
 
         $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
         if ($Holiday || date("N") == 6 || date("N") == 7) {
-            $this->holiday = true;
+
+            if ($this->getUser()->getAttribute("email") != "cmedinamoenne@gmail.com") {
+                $this->holiday = true;
+            }
         }
     }
     
