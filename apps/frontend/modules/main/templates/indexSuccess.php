@@ -141,7 +141,7 @@
 
             infowindow.close();
             marker.setVisible(false);
-            input.className = '';
+            /*input.className = '';*/
 
             var place = autocomplete.getPlace();
 

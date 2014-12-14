@@ -101,7 +101,7 @@ function bindEventsAll(){
 
         var newFlow = 0;
         var idUsuario = $(this).data('userid');
-        var idCar = $(this).data('carid');        
+        var idCar = $(this).closest("div").data('carid');
 
         if (idUsuario) {
             var newFlow = 1;
@@ -115,7 +115,7 @@ function bindEventsAll(){
         $.ajax({
             type: 'post',
             url: urlPagoValidar,
-            data: {idReserve: idReserve, idUsuario: idUsuario}
+            data: {idReserve: idReserve, idUsuario: idUsuario, redirectUrl: urlCarProfile + '/id/' + idCar}
         }).done(function(data) {
             if (data.length > 0) {
                 switch (data) {
@@ -137,6 +137,9 @@ function bindEventsAll(){
                         } else {
                             window.location = urlUpdateProfile + "?redirect=pedidos";
                         }
+                        break;
+                    case 'error:notlogged':
+                        window.location = urlLogin;
                         break;
                     default:
                         alert('Disculpe, ha ocurrido un error. Por favor inténtelo nuevamente mas tarde.');

@@ -23,6 +23,8 @@
     var urlRefreshPedidos = <?php echo "'".url_for("profile/pedidosAjax")."';" ?>
     var urlUpdateProfile = <?php echo "'".url_for("profile/edit")."';" ?>
     var urlFBconnect = <?php echo "'".url_for("main/loginFacebook")."';" ?>
+
+    var urlCarProfile = <?php echo "'".url_for("cars/car")."';" ?>
 </script>
 
 <div style="display:none">

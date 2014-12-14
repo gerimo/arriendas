@@ -3243,11 +3243,11 @@ class profileActions extends sfActions {
         
         $idReserve = $request->getPostParameter('idReserve');
         $idUsuario = $request->getPostParameter('idUsuario');
+        $redirectUrl = $request->getPostParameter('redirectUrl');
 
         $errorMessage = "";
 
         if ($idUsuario) {
-            
             $user = Doctrine_Core::getTable('user')->find($idUsuario);
             if ($user->getRut() == "") {
                 $errorMessage = "error:rutnulo";
@@ -3263,20 +3263,24 @@ class profileActions extends sfActions {
                 $errorMessage = "error:nobirthdate";
             }
         } else {
+            if (!$this->getUser()->isAuthenticated()) {
+                $errorMessage = "error:notlogged";
+                $_SESSION['login_back_url'] = $redirectUrl;
+            }else{
+                $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+                if ($reserve->getUser()->getRut() == "") {
+                    $errorMessage = "error:rutnulo";
+                }
 
-            $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
-            if ($reserve->getUser()->getRut() == "") {
-                $errorMessage = "error:rutnulo";
-            }
-
-            if ($reserve->getUser()->getExtranjero() == 1 && !$reserve->getUser()->getFacebookConfirmado() ) {
-                $errorMessage = "error:extranjero-sin-facebook";
-            }
-            if ($reserve->getUser()->getMenor()) {
-                $errorMessage = "error:usermenor";
-            }
-            if (is_null($reserve->getUser()->getBirthdate()) || strlen($reserve->getUser()->getBirthdate()) <= 0) {
-                $errorMessage = "error:nobirthdate";
+                if ($reserve->getUser()->getExtranjero() == 1 && !$reserve->getUser()->getFacebookConfirmado() ) {
+                    $errorMessage = "error:extranjero-sin-facebook";
+                }
+                if ($reserve->getUser()->getMenor()) {
+                    $errorMessage = "error:usermenor";
+                }
+                if (is_null($reserve->getUser()->getBirthdate()) || strlen($reserve->getUser()->getBirthdate()) <= 0) {
+                    $errorMessage = "error:nobirthdate";
+                }
             }
         }
 
@@ -3849,11 +3853,17 @@ class profileActions extends sfActions {
 
                 //obtiene en que estado se encuentra (pagada(3), preaprobada(2), rechazada(1) y espera(0))
                 if ($transaction[0]['impulsive'] && $transaction[0]['completed'] == 0 && !$oportunityQueue && ($transaction[0]['transaccion_original'] == 0 || $transaction[0]['transaccion_original'] == null) /*&& $horasFaltantes > 2*/) {
-                    if ($horasFaltantes > 2) {
-                        $estado = 7; // Se genera la reserva impulsive, pero no se paga
+
+                    $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
+                    if ($Holiday || date("N") == 6 || date("N") == 7) {
+                        $estado = 7;
                     } else {
-                        $estado = -1; // Se pone -1 para que no tenga estado y no se muestre en pedidos
-                    }
+                        if ($horasFaltantes > 2) {
+                            $estado = 7; // Se genera la reserva impulsive, pero no se paga
+                        } else {
+                            $estado = -1; // Se pone -1 para que no tenga estado y no se muestre en pedidos
+                        }
+                    }                    
                 } else if ($reserva->getConfirmed() == 0 && $reserva->getImpulsive() && ($reserva->getReservaOriginal() == null || $reserva->getReservaOriginal() == 0)) {
                     $estado = 6; // Compra impulsiva, dueño original aún no confirma
                 } else if ($reserva->getConfirmed() && $reserva->getImpulsive() && ($reserva->getReservaOriginal() == null || $reserva->getReservaOriginal() == 0)) {
@@ -5985,17 +5995,13 @@ class profileActions extends sfActions {
         $datehasta = $hasta[0];
         $hourhasta = $hasta[1];
 
-//echo $datehasta.'\n'.$hourhasta;die;
-//print_r($request);die;
-//$duration = $request->getParameter('duration');
-//if($date != ""  && $duration != "")
         if ($datedesde != "" && $datehasta != "" && $hourdesde != "" && $hourhasta != "" &&
                 preg_match('/^(([0-1][0-9])|([2][0-3])):([0-5][0-9]):([0-5][0-9])$/', $hourdesde) &&
                 preg_match('/^(([0-1][0-9])|([2][0-3])):([0-5][0-9]):([0-5][0-9])$/', $hourhasta) &&
                 preg_match('/^\d{4}\-\d{1,2}\-\d{1,2}$/', $datedesde) &&
                 preg_match('/^\d{4}\-\d{1,2}\-\d{1,2}$/', $datehasta)) {
 
-//CORROBORAR SI SE SOLICITO ANTES PERO TIENE DURACION DURANTE EL PEDIDO
+            //CORROBORAR SI SE SOLICITO ANTES PERO TIENE DURACION DURANTE EL PEDIDO
 
             $startDate = date("Y-m-d H:i:s", strtotime($datedesde . " " . $hourdesde));
             $endDate = date("Y-m-d H:i:s", strtotime($datehasta . " " . $hourhasta));
@@ -6007,8 +6013,7 @@ class profileActions extends sfActions {
 
             $carid = $request->getParameter('carid');
 
-
-            $has_reserve = Doctrine_Core::getTable('Reserve')
+            /*$has_reserve = Doctrine_Core::getTable('Reserve')
                     ->createQuery('a')
                     ->where('((a.date <= ? and date_add(a.date, INTERVAL a.duration HOUR) > ?) or (a.date <= ? and date_add(a.date, INTERVAL a.duration HOUR) > ?)) and (a.Car.id = ?)', array($startDate, $startDate, $endDate, $endDate, $carid))
                     ->andWhere('a.id != ?', $idReserva)
@@ -6016,9 +6021,10 @@ class profileActions extends sfActions {
                     ->andWhere('a.complete = ?', false)
                     ->fetchArray();
 
+            if (count($has_reserve) == 0) {*/
 
-
-            if (count($has_reserve) == 0) {
+            $Car = Doctrine_Core::getTable('Car')->find($carid);
+            if(!$Car->hasReserve($startDate, $endDate)) {
 
                 if ($diff > 0) {
 
@@ -6045,7 +6051,6 @@ class profileActions extends sfActions {
             echo 'Por favor ingrese fechas con formato YYYY-MM-DD HH:MM';
         }
         
-        /*if(!empty($request->getParameter('sendReserve'))){*/
         if(!$sf_request->hasParameter('sendReserve')){
             $this->redirect('profile/reserveSend?id=' . $idReserva);
             die();

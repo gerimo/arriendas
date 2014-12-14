@@ -336,9 +336,7 @@ class Reserve extends BaseReserve {
 
 
 
-        if (!$this->getToken()) {
-            $this->setToken(sha1($this->getDuration() . rand(11111, 99999)));
-        }
+        $this->setUniqueToken();
 
 
 
@@ -531,6 +529,25 @@ class Reserve extends BaseReserve {
         }
 
         return $ret;
+    }
+    
+    private function setUniqueToken($try=0){
+        
+        if (!$this->getToken()) {
+            $token = sha1($this->getDuration() . rand(11111, 99999));
+            $res = Doctrine_Core::getTable('Reserve')->findOneBy('token', $token);
+            if(!$res){
+                $this->setToken($token);
+            }else{
+                // ejecuto hasta 10 intentos
+                if($try<10){
+                    $try++; 
+                    $this->setUniqueToken($try);
+                }else{
+                    throw new Exception("No se pudo generar el token para la reserva.");
+                }
+            }
+        }
     }
 
     public function getSignature() {

@@ -1548,52 +1548,57 @@ class User extends BaseUser {
      * @param string $info motivo por el cual fue bloqueado.
      */
     public function setBloqueado($info = null) {
-
-        /* save status */
-        $this->setBlocked(true);
-        parent::save();
-
-        /* send mail */
-        $messageBody = "";
-        if(!is_null($info)){
-            $messageBody .= "<h3>Motivo:</h3>";
-            $messageBody .= "<p>".$info."</p>";
-        }
-        $messageBody .= "<h3>Datos del usuario</h3>";
         
-        $messageBody .= "<p> user_id: " . $this->getId() . "</p>";
-        $messageBody .= "<p> email: " . $this->getEmail() . "</p>";
-        $messageBody .= "<p> first name: " . $this->getFirstname() . "</p>";
-        $messageBody .= "<p> last name: " . $this->getLastname() . "</p>";
-        $messageBody .= "<p> teléfono: " . $this->getTelephone() . "</p>";
-        $messageBody .= "<p> RUT: " . $this->getRut() . "</p>";
-        if (!is_null($this->getCity())) {
-            $messageBody .= "<p> ciudad: " . $this->getCity()->getName() . "</p>";
-            if (!is_null($this->getCity()->getComuna())) {
-                $messageBody .= "<p> comuna: " . $this->getCity()->getComuna()->getNombre() . "</p>";
-            }
-        }
-        $messageBody .= "<h4>Autos</h4>";
-        $messageBody .= "<table border='1' style='border-collapse:collapse;border-spacing:0; width: 350px' >";
-        $messageBody .= "   <tr>";
-        $messageBody .= "       <th>Car ID</th>";
-        $messageBody .= "       <th>Comuna ID</th>";
-        $messageBody .= "   </tr>";
-        foreach ($this->getCars() as $car) {
-            $messageBody .= "   <tr>";
-            $messageBody .= "       <td>" . $car->getId() . "</td>";
-            $messageBody .= "       <td>" . null == $car->getComunaId() ? '' : $car->getComunaId() . "</td>";
-            $messageBody .= "   </tr>";
-        }
-        $messageBody .= "</table>";
+        $already_blocked = $this->getBlocked();
 
-        $mailer = sfContext::getInstance()->getMailer();
-        $message = $mailer->compose();
-        $message->setSubject("Se ha bloqueado un usuario");
-        $message->setFrom('notificaciones@arriendas.cl', 'Notificaciones Arriendas');
-        $message->setTo('soporte@arriendas.cl');
-        $message->setBody($messageBody, "text/html");
-        $mailer->send($message);
+        if(!$already_blocked){
+            
+            /* save status */
+            $this->setBlocked(true);
+            parent::save();
+            
+            /* send mail */
+            $messageBody = "";
+            if(!is_null($info)){
+                $messageBody .= "<h3>Motivo:</h3>";
+                $messageBody .= "<p>".$info."</p>";
+            }
+            $messageBody .= "<h3>Datos del usuario</h3>";
+
+            $messageBody .= "<p> user_id: " . $this->getId() . "</p>";
+            $messageBody .= "<p> email: " . $this->getEmail() . "</p>";
+            $messageBody .= "<p> first name: " . $this->getFirstname() . "</p>";
+            $messageBody .= "<p> last name: " . $this->getLastname() . "</p>";
+            $messageBody .= "<p> teléfono: " . $this->getTelephone() . "</p>";
+            $messageBody .= "<p> RUT: " . $this->getRut() . "</p>";
+            if (!is_null($this->getCity())) {
+                $messageBody .= "<p> ciudad: " . $this->getCity()->getName() . "</p>";
+                if (!is_null($this->getCity()->getComuna())) {
+                    $messageBody .= "<p> comuna: " . $this->getCity()->getComuna()->getNombre() . "</p>";
+                }
+            }
+            $messageBody .= "<h4>Autos</h4>";
+            $messageBody .= "<table border='1' style='border-collapse:collapse;border-spacing:0; width: 350px' >";
+            $messageBody .= "   <tr>";
+            $messageBody .= "       <th>Car ID</th>";
+            $messageBody .= "       <th>Comuna ID</th>";
+            $messageBody .= "   </tr>";
+            foreach ($this->getCars() as $car) {
+                $messageBody .= "   <tr>";
+                $messageBody .= "       <td>" . $car->getId() . "</td>";
+                $messageBody .= "       <td>" . null == $car->getComunaId() ? '' : $car->getComunaId() . "</td>";
+                $messageBody .= "   </tr>";
+            }
+            $messageBody .= "</table>";
+
+            $mailer = sfContext::getInstance()->getMailer();
+            $message = $mailer->compose();
+            $message->setSubject("Se ha bloqueado un usuario");
+            $message->setFrom('notificaciones@arriendas.cl', 'Notificaciones Arriendas');
+            $message->setTo('soporte@arriendas.cl');
+            $message->setBody($messageBody, "text/html");
+            $mailer->send($message);
+        }
     }
     
     /**
