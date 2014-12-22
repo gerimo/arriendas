@@ -342,6 +342,15 @@ p { margin: 0 0 1.2em; }
 	left: 50%;
 	margin: 0 0 0 -17px;
 }
+.from-search select {
+	background-color: white;
+	color: #6d6969;
+	height: 20px;
+	width: 20%;
+	margin: 0 12px 0 0;
+	padding: 3px 7px;
+	border:none;
+}
 .from-search input.direction {
 	width: 40%;
 	margin: 0 10px 0 0;
@@ -354,7 +363,7 @@ p { margin: 0 0 1.2em; }
 	padding: 3px 7px;
 	border:none;
 }
-.from-search input.destination {
+.from-search input.to {
 	width: 24%;
 	margin: 0 13px 0 0;
 	padding: 3px 7px;
@@ -1028,6 +1037,7 @@ p { margin: 0 0 1.2em; }
 .social-networks li a.facebook { background: url(/images/designResponsive/bg-facebook.svg); }
 .social-networks li a.twitter { background: url(/images/designResponsive/bg-twitter.svg); }
 .social-networks li a:hover { opacity: 0.8; }
+
 @media only screen and (min-width:1025px) {
 	.tel-link {
 		cursor: default;
@@ -1215,12 +1225,13 @@ p { margin: 0 0 1.2em; }
 		float:none;
 	}
 	.from-search input.direction { display: none; }
-	.from-search select {
+	.from-search select, input.from, input.to{
+		background-color: rgb(221, 221, 221);
+		border: solid 1px rgb(109, 105, 105) !important;
 		width: 48.5% !important;
 		float: left;
 		font-size: 10px;
 		line-height: 12px;
-		border-width: 1px;
 		height: 22px;
 		margin: 0 4px 5px 0 !important;
 		padding:0 7px 2px;
@@ -1338,6 +1349,15 @@ p { margin: 0 0 1.2em; }
 	.social-networks li a {
 		width: 24px;
 		height: 24px;
+	}
+
+	input[type=checkbox] {
+		/* All browsers except webkit*/
+		transform: scale(1);
+
+		/* Webkit browsers*/
+		-webkit-transform: scale(1);
+		/*padding: 10px;*/
 	}
 }
 

@@ -3027,7 +3027,7 @@ class profileActions extends sfActions {
         throw new sfStopException();
     }
 
-    public function executeReserve(sfWebRequest $request) {
+    public function oldexecuteReserve(sfWebRequest $request) {
 
         if ($this->getRequest()->getParameter('carid') != null)
             $carid = $this->getRequest()->getParameter('carid');
@@ -6736,5 +6736,16 @@ error_log("BUSCANDO LA MEJOR OPORTUNIDAD");
         $this->renderText(json_encode($return));
 
         return sfView::NONE;
+    }
+
+    public function executeReserve(sfWebRequest $request) {
+
+        $this->setLayout("newLayout");
+
+    }
+
+    public function executeSummary(sfWebRequest $request) {
+
+        $this->setLayout("newLayout");
     }
 }

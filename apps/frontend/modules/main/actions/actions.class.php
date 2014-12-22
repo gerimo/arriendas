@@ -10,12 +10,20 @@
  */
 class mainActions extends sfActions {
 
-    /**x
-     * Executes index action
-     *
-     * @param sfRequest $request A request object
-     */
-    //MAIN
+    public function executeIndex(sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+
+        if (is_null($this->getUser()->getAttribute('geolocalizacion'))) {
+            $this->getUser()->setAttribute('geolocalizacion', true);
+        } elseif ($this->getUser()->getAttribute('geolocalizacion') == true) {
+            $this->getUser()->setAttribute('geolocalizacion', false);
+        }
+
+        $this->Region = Doctrine_Core::getTable("Regiones")->findOneByCodigo(13);
+
+        $this->Comunas = Doctrine_Core::getTable("Comunas")->findByPadre(13);
+    }
 	
 	
 public function executeArriendo(sfWebRequest $request){
@@ -661,17 +669,6 @@ public function executeFracaso(sfWebRequest $request) {
 }
 
 public function executeNotificacion(sfWebRequest $request) {
-}
-
-public function executeIndex(sfWebRequest $request) {
-
-    $this->setLayout("layoutResponsive");
-
-    if (is_null($this->getUser()->getAttribute('geolocalizacion'))) {
-        $this->getUser()->setAttribute('geolocalizacion', true);
-    } elseif ($this->getUser()->getAttribute('geolocalizacion') == true) {
-        $this->getUser()->setAttribute('geolocalizacion', false);
-    }
 }
 
 public function oldexecuteIndex(sfWebRequest $request) {
@@ -1431,16 +1428,26 @@ public function oldexecuteIndex(sfWebRequest $request) {
 
     public function executeGetCars(sfWebRequest $request) {
 
-        $return = array("error" => false);
+        $return = array(
+            "error" => false,
+            "cars" => array()
+        );
 
-        $from   = $request->getPostParameter('from', null);
-        $to     = $request->getPostParameter('to', null);
+        $noDateInterval = false;
+
         $swLat  = $request->getPostParameter('swLat', null);
         $swLng  = $request->getPostParameter('swLng', null);
         $neLat  = $request->getPostParameter('neLat', null);
         $neLng  = $request->getPostParameter('neLng', null);
         $map_center_lat  = $request->getPostParameter('map_center_lat', null);
         $map_center_lng  = $request->getPostParameter('map_center_lng', null);
+
+        $from      = $request->getPostParameter('from', null);
+        $to        = $request->getPostParameter('to', null);
+        $automatic = $request->getPostParameter('automatic', null);
+        $low       = $request->getPostParameter('low', null);
+        $pasenger  = $request->getPostParameter('pasenger', null);
+        $comuna    = $request->getPostParameter('commune', null);
 
         try {
 
@@ -1449,9 +1456,22 @@ public function oldexecuteIndex(sfWebRequest $request) {
             $this->getUser()->setAttribute('fechatermino', date("d-m-Y", strtotime($to)));
             $this->getUser()->setAttribute('horainicio', date("H:i", strtotime($from)));
             $this->getUser()->setAttribute('horatermino', date("H:i", strtotime($to)));
+            // fin 'posiacaso'
 
             $this->getUser()->setAttribute("map_clat", $map_center_lat);
             $this->getUser()->setAttribute("map_clng", $map_center_lng);
+
+            if (!$from || !$to) {
+                $noDateInterval = true;
+            }
+
+            if (!$from) {
+                $from = date("Y-m-d H:i:s");
+            }
+
+            if (!$to) {
+                $to = date("Y-m-d H:i:s", strtotime("+1 day", strtotime($from)));
+            }
 
             $q = Doctrine_Query::create()
                 ->select('
@@ -1479,22 +1499,36 @@ public function oldexecuteIndex(sfWebRequest $request) {
                 ->innerJoin('mo.Brand br')
                 ->Where('ca.activo = 1')
                 ->andWhere('ca.seguro_ok = 4')
-                ->andWhere('ca.lat < ?', $neLat)
-                ->andWhere('ca.lat > ?', $swLat)
-                ->andWhere('ca.lng > ?', $swLng)
-                ->andWhere('ca.lng < ?', $neLng)
                 ->orderBy('carrank ASC')
                 ->addOrderBy('IF(ca.velocidad_contesta_pedidos = 0, 1440, ca.velocidad_contesta_pedidos)  ASC')
-                ->addOrderBy('ca.fecha_subida  ASC')
-                ->limit(33);
+                ->addOrderBy('ca.fecha_subida  ASC');                
+
+            if ($automatic) {
+                $q->andWhere("ca.transmission = 1");
+            }
+
+            if ($low) {
+                $q->andWhere("ca.tipobencina = 'Diesel'");
+            }
+
+            if ($pasenger) {
+                $q->andWhere("mo.id_otro_tipo_vehiculo = 3");
+            }
+
+            if ($comuna) {
+                $q->andWhere("co.codigoInterno = ?", $comuna);
+            } else {
+                $q->andWhere('ca.lat < ?', $neLat);
+                $q->andWhere('ca.lat > ?', $swLat);
+                $q->andWhere('ca.lng > ?', $swLng);
+                $q->andWhere('ca.lng < ?', $neLng);
+            }
+
+            if ($noDateInterval) {
+                $q->limit(40);
+            }
 
             $cars = $q->execute();
-
-            error_log($neLat);
-            error_log($swLat);
-            error_log($swLng);
-            error_log($neLng);
-            error_log("CANTIDAD: ".count($cars));
 
             foreach ($cars as $i => $car) {
                 if (!$car->hasReserve(date("Y-m-d", strtotime($from)), date("Y-m-d", strtotime($to)))) {
@@ -1567,7 +1601,6 @@ public function oldexecuteIndex(sfWebRequest $request) {
                     );
                 }
             }
-
         } catch (Exception $e) {
 
             $return["error"] = true;
@@ -3590,7 +3623,7 @@ public function calificacionesPendientes(){
      * en tablas Reserve y Transaction
      * @param type $reserve
      * @param type $order
-     *
+     */
     public function executeUpdateManualNroFactura(sfWebRequest $request){
         
         ini_set('memory_limit', '1024M');
@@ -3628,7 +3661,7 @@ public function calificacionesPendientes(){
      * en tablas Reserve y Transaction
      * @param type $reserve
      * @param type $order
-     *
+     */
     private function generarNroFactura($reserve, $order){
         
         // primero valido que no exista otra factura ya generada 
@@ -3714,7 +3747,7 @@ public function calificacionesPendientes(){
 
         $next_numero = ($trans[0]['nro_fac'] > $res[0]['nro_fac']? $trans[0]['nro_fac'] : $res[0]['nro_fac']) + 1;
         return $next_numero;
-    }*/
+    }
 
     public function executeOpenOpportunityEmail(sfWebRequest $request) {
 
