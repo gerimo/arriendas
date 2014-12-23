@@ -1,6 +1,6 @@
 <?php
 
-/* * z
+/**
  * profile actions.
  *
  * @package    CarSharing
@@ -10,6 +10,26 @@
  */
 
 class profileActions extends sfActions {
+
+    public function executeReserve(sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+
+        $carId = $request->getParameter("c", null);
+
+        if (is_null($carId)) {
+            throw new Exception("Auto no encontrado", 1);
+        }
+
+        $this->Car = Doctrine_Core::getTable('Car')->find($carId);
+
+        $this->Ratings = Doctrine_Core::getTable('Rating')->findByIdOwner($this->Car->getUserId());
+    }
+
+    public function executeSummary(sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+    }
 
     /**
      * Executes index action
@@ -6738,14 +6758,5 @@ error_log("BUSCANDO LA MEJOR OPORTUNIDAD");
         return sfView::NONE;
     }
 
-    public function executeReserve(sfWebRequest $request) {
 
-        $this->setLayout("newLayout");
-
-    }
-
-    public function executeSummary(sfWebRequest $request) {
-
-        $this->setLayout("newLayout");
-    }
 }

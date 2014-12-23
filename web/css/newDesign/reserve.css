@@ -1,0 +1,44 @@
+.reserve-box {
+    border: 2px solid #464646;
+    border-radius: 13px;
+    padding: 10px;
+}
+
+.reserve-box .btn-a-primary {
+    background-color: #ba135f;
+    border: solid 1px #ba135f;
+    color: white !important;
+    font-size: 30px !important;
+    font-weight: 800;
+    margin: 0;
+    max-width: none;
+    padding: 18px 5px !important;
+    width: 100%;
+}
+
+.saved {
+    background: #fdcf22;
+    border-radius: 100%;
+    font-size: 17px;
+    height: 114px;
+    font-weight: 700;
+    line-height: 18px;
+    padding: 22px 0 0;
+    position: absolute;
+    right: -24px;
+    text-align: center;
+    text-transform: uppercase;
+    top: -16px;
+    width: 114px;
+}
+
+.saved strong {
+    display: block;
+    font-size: 45px;
+    line-height: 50px;
+    margin: 0 0 -4px;
+}
+
+.rating-container {
+    border-top: solid 1px #ddd;
+}

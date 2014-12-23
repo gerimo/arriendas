@@ -1,97 +1,3 @@
-.MA {
-    margin: 0;
-    margin: auto;
-}
-
-body {
-    margin: 0;
-    padding: 0;
-}
-
-section {
-    height: 100%;
-    vertical-align: middle;
-    width: 100%;
-}
-
-#footer {
-    background: #00aced;
-    color: #fff;
-    font: 700 20px/24px 'Roboto', sans-serif;
-    font-weight: 300;
-}
-
-#footer h1 {
-    font-size: 20px;
-    font-weight: bold;
-    margin: 20px 0 10px 0;
-    padding: 0;
-    text-transform: uppercase;
-}
-
-#footer ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-#footer li {
-    margin: 0;
-    padding: 0;
-}
-
-#footer a {
-    color: #fff;
-}
-
-#footer a:hover {
-    color: #ddd;
-    text-decoration: none;
-}
-
-#footer p {
-    font-size: 14px;
-    margin: 0;
-    padding: 0;
-}
-
-#footer .fa-facebook:hover {
-    color: #3a5795;
-}
-
-#footer .fa-twitter:hover {
-    color: #55acee;
-}
-
-.row {
-    margin: 0;
-}
-
-.loading {
-    display: none;
-}
-
-.navbar-default {
-    background-color: rgba(0,0,0,0.9);
-    border-color: rgba(0,0,0,0.9);
-}
-
-.navbar-default .navbar-nav a {
-    color: white !important;
-    font-size: 12px;
-    text-transform: uppercase;
-}
-
-.navbar-default .navbar-nav a:hover {
-    color: #9d9d9d !important;
-}
-
-.navbar-default .navbar-nav a.btn-a-primary:hover {
-    background: #ca236f !important;
-    color: #fff !important;
-    text-decoration: none;
-}
-
 #filters-navbar {
     background-color: white;
     border-color: white;
@@ -100,44 +6,6 @@ section {
 
 .active {
     background-color: #ba135f;
-}
-
-.btn-a-primary {
-    background: #ba135f;
-    border: 2px solid #dc89af;
-    color: #eee !important;
-    font-size: 16px !important;
-    font-weight:700;
-    line-height: 19px !important;
-    max-width:200px;
-    min-width: 133px;
-    padding: 6px !important;
-    text-align: center;
-    text-transform: uppercase !important;
-    vertical-align: middle;
-}
-
-.btn-a-primary:hover {
-    background: #ca236f !important;
-    color: #fff !important;
-    text-decoration: none;
-}
-
-.btn-a-action {
-    background: #00aced;
-    border: none;
-    border-radius:0;
-    color: #fff;
-    font: 700 18px/20px 'Open Sans', sans-serif;
-    height: 42px;
-    padding: 5px 10px;
-    text-align:center;
-}
-
-.btn-a-action:hover {
-    background: #06c;
-    color: #fff;
-    text-decoration: none;
 }
 
 #video {
@@ -188,7 +56,7 @@ section {
 }
 
 #section-map-form-search {
-    background: rgba(0,0,0,0.8);
+    background-color: rgba(0, 0, 0, 0.8);
     padding: 75px 0 35px 0;
 }
 
@@ -381,6 +249,10 @@ section {
 }
 
 @media only screen and (max-width:767px) {
+
+    section {
+        padding-top: 50px;
+    }
 
     .navbar-default {
         background-color: rgba(0,0,0,1);

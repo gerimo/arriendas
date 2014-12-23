@@ -1,3 +1,8 @@
+<!-- Google Maps -->
+<script src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;sensor=false" type="text/javascript"></script>
+<script src="js/newDesign/markerclusterer.js" type="text/javascript"></script>
+
+<!-- Varios -->
 <script type="text/javascript">
 
     /*google.maps.event.addDomListener(window, 'load', initialize);*/
@@ -463,7 +468,7 @@
                     article += "<h2><a href='<?php echo url_for("arriendo-de-autos/rent-a-car") ?>/" + dataCar.brand + dataCar.model + "/" + dataCar.comuna + "/" + dataCar.id + "'>"+ dataCar.brand +" "+ dataCar.model +"<small>, "+dataCar.year+"</small></a></h2>";
                     /*article += "<span class='sub-heading'>A 2 km Metro <strong>Tobalaba</strong></span>";*/
                     article += "<p class='price'>$"+ dataCar.price_per_day +"</p>";
-                    article += "<p class='text-right'><a class='btn-a-action' href='<?php echo url_for("profile/reserve?id=") ?>"+ dataCar.id + "' class='reserve'>RESERVAR</a></p>";
+                    article += "<p class='text-right'><a class='btn-a-action' href='<?php echo url_for("profile/reserve?c=") ?>"+ dataCar.id + "' class='reserve'>RESERVAR</a></p>";
                     /*article += "<img src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + contador + "|05a4e7|ffffff' />";*/
                     article += "</div>";
                     article += "</div>";
@@ -519,179 +524,144 @@
             V.pause(); 
         }
     }
-
 </script>
 
-    <nav class="navbar navbar-default navbar-fixed-top navbar-inverse" id="header-navbar" role="navigation">
+<section id="section-home">
+
+    <!-- <video id="video" width="420">
+        <source src="/videos/test.mp4" type="video/mp4">
+        <source src="mov_bbb.ogg" type="video/ogg">
+        Your browser does not support HTML5 video.
+    </video> -->
+
+    <div id="section-home-background">
+        <img id="section-home-background-img" src="/images/newDesign/background-home.jpg">
+    </div>
+
+    <div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
+        
+        <!-- Carousel -->
+        <div id="section-home-carousel">
+            <div>
+                <h1>ARRIENDA EL AUTO DE UN VECINO DESDE $17.000 FINALES</h1>
+                <h2>en precios finales, todo incluído.</h2>
+            </div>
+            <div>
+                <h1>RENT A CAR SIN TARJETA DE CREDITO. MAYOR AHORRO GARANTIZADO</h1>
+                <h2>deposito en garantía opcional. </h2>
+            </div>
+            <div>
+                <h1>PRIMER SISTEMA DE ARRIENDO DE AUTOS ENTRE PERSONAS</h1>
+                <h2>hay un auto en tu comuna</h2>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="section-map">
+
+    <div class="row" id="section-map-form-search">
+
+        <span class="ico-search hidden-xs"><img src="/images/newDesign/ico-search.svg"></span>
+
+        <!-- List -->
+        <div class="col-xs-6 col-sm-3 col-md-3" id="region-container">
+            <select class="region form-control" id="region">
+                <option disabled value="<?php echo $Region->getCodigo() ?>"><?php echo $Region->getNombre() ?></option>
+            </select>
+        </div>
+        <div class="col-xs-6 col-sm-3 col-md-3" id="commune-container">
+            <select class="commune form-control" id="commune">
+                <option value="0">Comuna</option>
+                <?php foreach ($Comunas as $Comuna): ?>
+                    <option value="<?php echo $Comuna->getCodigoInterno() ?>"><?php echo ucwords(strtolower($Comuna->getNombre())) ?></option>
+                <?php endforeach ?>
+            </select>
+        </div>
+        
+        <!-- Map -->
+        <div class="hidden-xs col-sm-6 col-md-6" id="direction-container">
+            <input class="direction form-control" id="direction" placeholder="Dirección" type="text">
+        </div>
+        <div class="col-xs-6 col-sm-2 col-md-2" id="from-container">
+            <input class="from datetimepicker form-control" id="from" placeholder="Desde" type="text">
+        </div>
+        <div class="col-xs-6 col-sm-2 col-md-2" id="to-container">
+            <input class="to datetimepicker form-control" id="to" placeholder="Hasta" type="text">
+        </div>
+
+        <!-- Search -->
+        <div class="col-xs-12 col-sm-2 col-md-2 text-center">
+            <a class="btn-a-action btn-block" href id="search">Buscar</a>
+        </div>
+    </div>
+
+    <div class="hidden-xs row" id="section-map-filters">
+        <div class="col-md-2 text-center">
+            <span class="hidden-xs glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <strong>Filtros</strong>
+        </div>
+        <div class="col-md-7">
+            <ul>
+                <li><input type="checkbox" name="filter" id="automatic"> Automático</li>
+                <li><input type="checkbox" name="filter" id="diesel"> Petrolero</li>
+                <li><input type="checkbox" name="filrer" id="pasenger"> Más de 5 pasajeros</li>
+            </ul>
+        </div>
+        <div class="col-md-3 hidden-xs tabset">
+            <div class="col-md-6 text-center tab active" data-target="#tab-map"><strong><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Mapa</strong></div>
+            <div class="col-md-6 text-center tab" data-target="#tab-list"><strong><span class="glyphicon glyphicon-list" aria-hidden="true"></span> Lista</strong></div>
+        </div>
+    </div>
+
+    <nav class="visible-xs navbar navbar-default" id="filters-navbar" role="navigation">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header">
+            <div class="navbar-filters">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#filters">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="<?php echo url_for('main/index') ?>"><img alt="Arriendas.cl" src="/images/newDesign/logoIndex.svg" height="19" width="123"></a>
+                <h3 class="text-center" style="margin-top: 5px; padding-top: 10px">Filtros</h3>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="header">
+            <div class="collapse navbar-collapse" id="filters">
                 
                 <ul class="nav navbar-nav">
-                    <li><a class="animate" data-target="#section-map" href="">Buscar autos</a></li>
-                    <li><a class="animate" data-target="#section-home" href="">¿Cómo funciona?</a></li>
-                    <li><a class="animate" data-target="#section-home" href="">Compara precios</a></li>
-                    <li><a class="animate" data-target="#section-home" href="">En las noticias</a></li>
-                    <li><a href="<?php echo url_for('como_funciona/index') ?>">Ayuda</a></li>
-                    <!-- <li><a onclick="playPause()">Play / Pause</a></li> -->
-                </ul>
-
-                <ul class="nav navbar-nav navbar-right">
-                    <?php if (!sfContext::getInstance()->getUser()->isAuthenticated()): ?>
-                        <li><a class="btn-a-primary MA" href="<?php echo url_for('main/login') ?>" style="margin-top: 8px">INGRESAR</a></li>
-                    <?php endif ?>
+                    <li><input type="checkbox" name="filter" id="automatic"> Automático</li>
+                    <li><input type="checkbox" name="filter" id="diesel"> Petrolero</li>
+                    <li><input type="checkbox" name="filrer" id="pasenger"> Más de 5 pasajeros</li>
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container -->
     </nav>
 
-    <section id="section-home">
+    <div id="section-map-body">
 
-        <!-- <video id="video" width="420">
-            <source src="/videos/test.mp4" type="video/mp4">
-            <source src="mov_bbb.ogg" type="video/ogg">
-            Your browser does not support HTML5 video.
-        </video> -->
-
-        <div id="section-home-background">
-            <img id="section-home-background-img" src="/images/newDesign/background-home.jpg">
-        </div>
-
-        <div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
-            
-            <!-- Carousel -->
-            <div id="section-home-carousel">
-                <div>
-                    <h1>ARRIENDA EL AUTO DE UN VECINO DESDE $17.000 FINALES</h1>
-                    <h2>en precios finales, todo incluído.</h2>
+        <div class="tab-container hidden-xs" id="tab-map">
+            <div class="row">
+                <div class="col-md-9" id="map">
+                    <div id="map-container"></div>
                 </div>
-                <div>
-                    <h1>RENT A CAR SIN TARJETA DE CREDITO. MAYOR AHORRO GARANTIZADO</h1>
-                    <h2>deposito en garantía opcional. </h2>
-                </div>
-                <div>
-                    <h1>PRIMER SISTEMA DE ARRIENDO DE AUTOS ENTRE PERSONAS</h1>
-                    <h2>hay un auto en tu comuna</h2>
+
+                <div class="col-md-3" id="map-list">
+                    <div id="map-list-loading" class="loading" style="text-align: center; margin-top: 30%"><?php echo image_tag('ajax-loader.gif', array("width" => "80px", "height" => "80px")) ?></div>
+                    <div id="map-list-container"></div>
                 </div>
             </div>
         </div>
-    </section>
 
-    <section id="section-map">
-
-        <div class="row" id="section-map-form-search">
-
-            <span class="ico-search hidden-xs"><img src="/images/newDesign/ico-search.svg"></span>
-
-            <!-- List -->
-            <div class="col-xs-6 col-sm-3 col-md-3" id="region-container">
-                <select class="region form-control" id="region">
-                    <option disabled value="<?php echo $Region->getCodigo() ?>"><?php echo $Region->getNombre() ?></option>
-                </select>
-            </div>
-            <div class="col-xs-6 col-sm-3 col-md-3" id="commune-container">
-                <select class="commune form-control" id="commune">
-                    <option value="0">Comuna</option>
-                    <?php foreach ($Comunas as $Comuna): ?>
-                        <option value="<?php echo $Comuna->getCodigoInterno() ?>"><?php echo ucwords(strtolower($Comuna->getNombre())) ?></option>
-                    <?php endforeach ?>
-                </select>
-            </div>
-            
-            <!-- Map -->
-            <div class="hidden-xs col-sm-6 col-md-6" id="direction-container">
-                <input class="direction form-control" id="direction" placeholder="Dirección" type="text">
-            </div>
-            <div class="col-xs-6 col-sm-2 col-md-2" id="from-container">
-                <input class="from datetimepicker form-control" id="from" placeholder="Desde" type="text">
-            </div>
-            <div class="col-xs-6 col-sm-2 col-md-2" id="to-container">
-                <input class="to datetimepicker form-control" id="to" placeholder="Hasta" type="text">
-            </div>
-
-            <!-- Search -->
-            <div class="col-xs-12 col-sm-2 col-md-2 text-center">
-                <a class="btn-a-action btn-block" href id="search">Buscar</a>
+        <div class="tab-container" id="tab-list">
+            <div class="row" id="list">
+                <div id="list-loading" class="loading" style="text-align: center; margin-top: 10%"><?php echo image_tag('ajax-loader.gif', array("width" => "80px", "height" => "80px")) ?></div>
+                <div class="row" id="list-container"></div>
             </div>
         </div>
-
-        <div class="hidden-xs row" id="section-map-filters">
-            <div class="col-md-2 text-center">
-                <span class="hidden-xs glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                <strong>Filtros</strong>
-            </div>
-            <div class="col-md-7">
-                <ul>
-                    <li><input type="checkbox" name="filter" id="automatic"> Automático</li>
-                    <li><input type="checkbox" name="filter" id="diesel"> Petrolero</li>
-                    <li><input type="checkbox" name="filrer" id="pasenger"> Más de 5 pasajeros</li>
-                </ul>
-            </div>
-            <div class="col-md-3 hidden-xs tabset">
-                <div class="col-md-6 text-center tab active" data-target="#tab-map"><strong><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Mapa</strong></div>
-                <div class="col-md-6 text-center tab" data-target="#tab-list"><strong><span class="glyphicon glyphicon-list" aria-hidden="true"></span> Lista</strong></div>
-            </div>
-        </div>
-
-        <nav class="visible-xs navbar navbar-default" id="filters-navbar" role="navigation">
-            <div class="container">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-filters">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#filters">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <h3 class="text-center" style="margin-top: 5px; padding-top: 10px">Filtros</h3>
-                </div>
-
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse" id="filters">
-                    
-                    <ul class="nav navbar-nav">
-                        <li><input type="checkbox" name="filter" id="automatic"> Automático</li>
-                        <li><input type="checkbox" name="filter" id="diesel"> Petrolero</li>
-                        <li><input type="checkbox" name="filrer" id="pasenger"> Más de 5 pasajeros</li>
-                    </ul>
-                </div><!-- /.navbar-collapse -->
-            </div><!-- /.container -->
-        </nav>
-
-        <div id="section-map-body">
-
-            <div class="tab-container hidden-xs" id="tab-map">
-                <div class="row">
-                    <div class="col-md-9" id="map">
-                        <div id="map-container"></div>
-                    </div>
-
-                    <div class="col-md-3" id="map-list">
-                        <div id="map-list-loading" class="loading" style="text-align: center; margin-top: 30%"><?php echo image_tag('ajax-loader.gif', array("width" => "80px", "height" => "80px")) ?></div>
-                        <div id="map-list-container"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-container" id="tab-list">
-                <div class="row" id="list">
-                    <div id="list-loading" class="loading" style="text-align: center; margin-top: 10%"><?php echo image_tag('ajax-loader.gif', array("width" => "80px", "height" => "80px")) ?></div>
-                    <div class="row" id="list-container"></div>
-                </div>
-            </div>
-        </div>
-    </section>
+    </div>
+</section>
 
 <script>
 
