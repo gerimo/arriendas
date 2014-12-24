@@ -18,6 +18,7 @@
         <!-- Complementos -->
         <link href="/css/newDesign/datetimepicker/jquery.datetimepicker.css" rel="stylesheet" type="text/css">
         <link href="/css/newDesign/slick/slick.css" rel="stylesheet" type="text/css">
+        <link href="/css/newDesign/raty/jquery.raty.css" rel="stylesheet" type="text/css">
 
         <!-- Estilos para todo el proyecto -->
         <link href="/css/newDesign/arriendas.css" rel="stylesheet" type="text/css">
@@ -42,6 +43,7 @@
         <!-- Complementos -->
         <script src="/js/newDesign/datetimepicker/jquery.datetimepicker.js" type="text/javascript"></script>
         <script src="/js/newDesign/slick/slick.min.js" type="text/javascript"></script>
+        <script src="/js/newDesign/raty/jquery.raty.js" type="text/javascript"></script>
 
         <?php include_partial("global/header") ?>
 

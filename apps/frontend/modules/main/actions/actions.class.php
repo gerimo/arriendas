@@ -1576,6 +1576,8 @@ public function oldexecuteIndex(sfWebRequest $request) {
                     if ($tipoTrans == 1)
                         $transmision = "Autom&aacute;tica";
 
+                    $price = Car::getPrice($from, $to, $car->getPricePerHour(), $car->getPricePerDay(), $car->getPricePerWeek(), $car->getPricePerMonth());
+
                     $return['cars'][] = array('id' => $car->getId(),
                         'longitude' => $car->getlng(),
                         'latitude' => $car->getlat(),
@@ -1587,6 +1589,8 @@ public function oldexecuteIndex(sfWebRequest $request) {
                         'year' => $car->getYear(),
                         'photoType' => $car->getPhotoS3(),
                         'photo' => $photo,
+                        'price' => $price,
+                        'priceAPuntos' => $this->transformarPrecioAPuntos(floor($price)),
                         'price_per_hour' => $this->transformarPrecioAPuntos(floor($car->getPricePerHour())),
                         'price_per_day' => $this->transformarPrecioAPuntos(floor($car->getPricePerDay())),
                         'userid' => $car->getUserId(),
@@ -1598,6 +1602,8 @@ public function oldexecuteIndex(sfWebRequest $request) {
                         'cantidadCalificacionesPositivas' => '0',
                         'd' => $d,
                         'verificado' => $car->autoVerificado(),
+                        'from' => date("Y-m-d H:i", strtotime($from)),
+                        'to' => date("Y-m-d H:i", strtotime($to))
                     );
                 }
             }

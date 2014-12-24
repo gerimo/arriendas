@@ -236,6 +236,147 @@
     text-decoration: none;
 }
 
+#filters-navbar .navbar-toggle {
+    float: left;
+}
+
+#section-how-works, #section-compare-prices, #section-on-news {
+    /*background-image: url('/images/newDesign/background-how-works.jpg');*/
+    background-color: white;
+}
+
+#section-home {
+    background-image: url("/images/newDesign/background-home.jpg");
+    background-size: 100% 100%;
+}
+
+#section-testimonials {
+    background-image: url("/images/newDesign/good-way.jpg");
+    background-size: 100% 100%;
+}
+
+.background-img {
+    height: 100%;
+    width: 100%;
+    z-index: -50;   
+}
+
+.title {
+    background: url('/images/newDesign/title-background.png') repeat-x;
+    color: #fff;
+    font: italic 700 24px/26px 'Open Sans', sans-serif;
+    position: relative;
+    padding: 10px 33px 28px 23px;
+    width: 100%;
+}
+
+.title::before {
+    background: url('/images/newDesign/title-left.png') no-repeat;
+    content: "";
+    height: 78px;
+    left: -29px;
+    position: absolute;
+    top: -6px;
+    width: 29px;
+}
+
+.title::after {
+    background: url('/images/newDesign/title-right.png') no-repeat;
+    content: "";
+    height: 78px;
+    position: absolute;
+    right: -25px;
+    top: -6px;
+    width: 25px;
+}
+
+#compare-prices-table {
+    width: 100%;
+}
+
+#compare-prices-table img {
+    height: 20px;
+}
+
+#compare-prices-table th {
+    background-color: #5d5d5d;
+    border-left: solid 5px white;
+    height: 30px;
+    padding: 10px;
+    text-align: center;
+    width: 20%;
+}
+
+#compare-prices-table td {
+    background-color: #edeeee;
+    border-left: solid 5px white;
+    border-top: solid 10px white;
+    color: #5d5d5d;
+    font: 11px/14px 'Roboto', sans-serif;
+    font-weight: 700;
+    height: 30px;
+    letter-spacing: 1px;
+    padding: 10px;
+    text-align: center;
+}
+
+#compare-prices-table .table-transparent {
+    background-color: transparent;
+    color: white;
+}
+
+#compare-prices-table .table-active {
+    background-color: #00aced;
+    color: white;
+}
+
+.table-responsive {
+    border: none;
+}
+
+#section-testimonials {
+    padding: 100px 0 100px 0;
+}
+
+#testimonials-container {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 11px;
+    color: white;
+    text-align: center;
+}
+
+#testimonials-container h1 {
+    font: 700 29px/32px 'Open Sans', sans-serif;
+    margin: 20px 0 50px 0;
+    padding: 0;
+    text-transform: uppercase;
+}
+
+#testimonials-container .testimonial {
+    font: 18px/35px 'Roboto', sans-serif;
+    margin: 0 0 30px 0;
+}
+
+#testimonials-container .testimonial i {
+    font-size: 26px;
+}
+
+#testimonials-container .user {
+    font: 18px/35px 'Roboto', sans-serif;
+    font-weight: bolder;
+    margin: 0;
+    padding: 0;
+    text-align: right;
+}
+
+#testimonials-container .user-type {
+    font: 18px/35px 'Roboto', sans-serif;
+    font-style: italic;
+    margin: 0 0 20px 0;
+    padding: 0;
+    text-align: right;
+}
+
 @media only screen and (min-width:768px) {
 
     #section-map-form-search #search {
@@ -246,6 +387,11 @@
     #region-container, #commune-container, #tab-list {
         display: none;
     }
+
+    /*#section-testimonials {
+        background-image: url('/images/newDesign/good-way.jpg');
+        background-size: 100%;
+    }*/
 }
 
 @media only screen and (max-width:767px) {
@@ -292,5 +438,9 @@
         border-radius: 4px;
         margin-top: 5px;
         padding-top: 8px;
+    }
+
+    .title {
+        font-size: 14px;
     }
 }

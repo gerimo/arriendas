@@ -31,6 +31,7 @@
  * @property Doctrine_Collection $Photoes
  * @property Doctrine_Collection $Reserves
  * @property float $ratio_aprobacion
+ * @property string accesoriosSeguro
  * 
  * @method integer             getId()             Returns the current record's "id" value
  * @method integer             getUserId()         Returns the current record's "User_id" value
@@ -56,6 +57,7 @@
  * @method City                getCity()           Returns the current record's "City" value
  * @method float               getRatioAprobacion() Returns the current record's "ratio_aprobacion" value
  * @method integer             getTransmission()        Returns the current record's "transmission" value
+ * @method accesoriosSeguro    getAccesoriosSeguro() Returns the current record's "accesoriosSeguro" value
  * 
  * @method Doctrine_Collection getAvailabilities() Returns the current record's "Availabilities" collection
  * @method Doctrine_Collection getDamages()        Returns the current record's "Damages" collection
@@ -89,6 +91,7 @@
  * @method Car                 setReserves()       Sets the current record's "Reserves" collection
  * @method Car                 setRatioAprobacion() Sets the current record's "ratio_aprobacion" value
  * @method Car                 setTransmission() Sets the current record's "transmission" value
+ * @method Car                 setAccesoriosSeguro() Sets the current record's "accesoriosSeguro" value
  * 
  * @package    CarSharing
  * @subpackage model

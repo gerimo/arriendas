@@ -23,9 +23,10 @@
         <div class="col-md-3">
             <h1>Arriendo de autos en Santiago</h1>
             <ul>
-                <li><a href="http://arriendas.cl/arriendo-de-autos/region-metropolitana">Rent a Car Santiago Centro</a></li>
-                <li><a href="http://arriendas.cl/arriendo-de-autos/region-metropolitana">Rent a Car Providencia</a></li>
-                <li><a href="http://arriendas.cl/arriendo-de-autos/region-metropolitana">Rent a Car Ñuñoa</a></li>
+                <li><a href="<?php echo url_for('arriendo-de-autos/region-metropolitana').'/providencia' ?>">Rent a Car Providencia</a></li>
+                <li><a href="<?php echo url_for('arriendo-de-autos/region-metropolitana').'/la-florida' ?>">Rent a Car La Florida</a></li>
+                <li><a href="<?php echo url_for('arriendo-de-autos/region-metropolitana').'/nunoa' ?>">Rent a Car Ñuñoa</a></li>
+                <li><a href="<?php echo url_for('arriendo-de-autos/region-metropolitana').'/santiago-centro' ?>">Rent a Car Santiago Centro</a></li>
             </ul>
         </div>
 

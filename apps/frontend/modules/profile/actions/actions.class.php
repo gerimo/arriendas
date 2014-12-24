@@ -16,14 +16,63 @@ class profileActions extends sfActions {
         $this->setLayout("newIndexLayout");
 
         $carId = $request->getParameter("c", null);
+        $f     = strtotime($request->getParameter("f", null));
+        $t     = strtotime($request->getParameter("t", null));
 
         if (is_null($carId)) {
             throw new Exception("Auto no encontrado", 1);
         }
 
+        if ($t <= $f) {
+            throw new Exception("No, no, no", 1);
+        }
+
+        $from = date("Y-m-d H:i", $f);
+        $this->from = date("D d/m/Y H:iA", $f);
+        $to = date("Y-m-d H:i", $t);
+        $this->to = date("D d/m/Y H:iA", $t);
+
         $this->Car = Doctrine_Core::getTable('Car')->find($carId);
 
-        $this->Ratings = Doctrine_Core::getTable('Rating')->findByIdOwner($this->Car->getUserId());
+        if ($this->Car->hasReserve($from, $to)) {
+            throw new Exception("Auto ya posee reserva", 1);            
+        }
+
+        $this->price = Car::getPrice($from, $to, $this->Car->getPricePerHour(), $this->Car->getPricePerDay(), $this->Car->getPricePerWeek(), $this->Car->getPricePerMonth());
+
+        // Reviews (hay que arreglar las clase Rating)
+        $this->reviews = array();
+        $Ratings = Doctrine_Core::getTable('Rating')->findByIdOwner($this->Car->getUserId());
+
+        foreach ($Ratings as $i => $Rating) {
+            $opinion = $Rating->getOpinionAboutOwner();
+            if ($opinion) {
+                $this->reviews[$i]["opinion"] = $Rating->getOpinionAboutOwner();
+                $U = Doctrine_Core::getTable('User')->find($Rating->getIdRenter());
+                $this->reviews[$i]["picture"] = $U->getPictureFile();
+            }
+        }
+
+        // Características
+        $this->passengers = false;
+        if ($this->Car->getModel()->getIdOtroTipoVehiculo() >= 2) {
+            $this->passengers = true;
+        }
+
+        $this->diesel = false;
+        if ($this->Car->getTipobencina() == "Diesel") {
+            $this->diesel = true;
+        }
+
+        $this->airCondition = false;
+        if (explode(",", $this->Car->getAccesoriosSeguro())[0] == "aireAcondicionado") {
+            $this->airCondition = true;
+        }
+
+        $this->transmission = false;
+        if ($this->Car->getTransmission()) {
+            $this->transmission = true;
+        }
     }
 
     public function executeSummary(sfWebRequest $request) {

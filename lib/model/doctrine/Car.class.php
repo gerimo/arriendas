@@ -313,4 +313,47 @@ where c.id=
 
         return $q->execute();
     }
+
+    public static function getPrice($from, $to, $pricePerHour, $pricePerDay, $pricePerWeek, $pricePerMonth) {
+
+        $duration = intval((strtotime($to) - strtotime($from))/3600);
+
+        $days = floor($duration / 24);
+        $hours = ($duration / 24) - $days;
+
+        if ($hours >= 0.25) {
+            $days = $days + 1;
+            $hours = 0;
+        } else {
+            $hours = round($hours * 24, 0);
+        }
+
+        if ($days >= 7 && $pricePerWeek > 0) {
+            $pricePerDay = $pricePerWeek / 7;
+        }
+
+        if ($days >= 30 && $pricePerMonth > 0) {
+            $pricePerDay = $pricePerMonth / 30;
+        }
+        
+        return floor($pricePerDay * $days + $pricePerHour * $hours);
+    }
+
+    public static function getReviews($id) {
+
+        $q = Doctrine_Query::create()
+            ->select("R.opinion_about_owner AS opinion, U.picture_file AS picture")
+            ->from("Car C")
+            ->innerJoin("Rating R ON R.IdOwner = C.user_id")
+            ->innerJoin("User U ON U.id = R.IdRenter")
+            ->where("C.id = ?", $id);
+
+            /*"SELECT R.opinion_about_owner AS opinion, U.picture_file AS picture
+            FROM Car C
+            INNER JOIN Rating R ON R.IdOwner = C.user_id
+            INNER JOIN User U ON R.IdRenter = U.id
+            WHERE C.id = ".$id;*/
+
+        return $q->execute()->toArray();
+    }
 }

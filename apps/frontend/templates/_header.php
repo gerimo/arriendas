@@ -17,9 +17,9 @@
                 
                 <ul class="nav navbar-nav">
                     <li><a class="animate" data-target="#section-map" href="">Buscar autos</a></li>
-                    <li><a class="animate" data-target="#section-home" href="">¿Cómo funciona?</a></li>
-                    <li><a class="animate" data-target="#section-home" href="">Compara precios</a></li>
-                    <li><a class="animate" data-target="#section-home" href="">En las noticias</a></li>
+                    <li><a class="animate" data-target="#section-how-works" href="">¿Cómo funciona?</a></li>
+                    <li><a class="animate" data-target="#section-compare-prices" href="">Compara precios</a></li>
+                    <li><a class="animate" data-target="#section-on-news" href="">En las noticias</a></li>
                     <li><a href="<?php echo url_for('como_funciona/index') ?>">Ayuda</a></li>
                     <!-- <li><a onclick="playPause()">Play / Pause</a></li> -->
                 </ul>
