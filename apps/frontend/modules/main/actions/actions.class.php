@@ -2808,26 +2808,14 @@ public function oldexecuteIndex(sfWebRequest $request) {
 
     public function executeLogin(sfWebRequest $request) {
 
+        $this->setLayout("newIndexLayout");
+
         //si el usuario está login, es redireccionado al main
         if ($this->getUser()->isAuthenticated()) {
             $this->redirect('main/index');
         }
 
-        //echo $this->getContext()->getRequest()->getHost() . $this->getContext()->getRequest()->getScriptName();
-        //$_SESSION['urlback'] = $this->getRequest()->getUri();
-		  sfContext::getInstance()->getLogger()->info($this->getRequest()->getUri());
-		
-        /*if (isset($_SESSION['login_back_url'])) {
-            $urlpage = explode('/', $_SESSION['login_back_url']);
-
-            if ($urlpage[count($urlpage) - 1] != "login" && $urlpage[count($urlpage) - 1] != "doLogin") {
-                //$_SESSION['login_back_url'] = $request->getReferer();
-                $_SESSION['login_back_url'] = $this->getRequest()->getUri();
-            }
-        }else{
-            //$_SESSION['login_back_url'] = $request->getReferer();
-            $_SESSION['login_back_url'] = $this->getRequest()->getUri();
-			}*/
+        sfContext::getInstance()->getLogger()->info($this->getRequest()->getUri());
                   
         if (!isset($_SESSION['login_back_url'])) {
             $_SESSION['login_back_url'] = $this->getRequest()->getUri();

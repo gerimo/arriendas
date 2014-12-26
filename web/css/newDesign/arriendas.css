@@ -7,6 +7,10 @@
     list-style: none;
 }
 
+.BCW {
+    background-color: white;
+}
+
 body {
     font-family: 'Roboto',sans-serif;
     margin: 0;
@@ -40,14 +44,15 @@ header .navbar-default .navbar-nav a.btn-a-primary:hover {
     text-decoration: none;
 }
 
-#footer {
+footer {
     background: #00aced;
     color: #fff;
     font: 700 20px/24px 'Roboto', sans-serif;
     font-weight: 300;
 }
 
-#footer h1 {
+footer h1 {
+    color: white;
     font-size: 20px;
     font-weight: bold;
     margin: 20px 0 10px 0;
@@ -55,37 +60,37 @@ header .navbar-default .navbar-nav a.btn-a-primary:hover {
     text-transform: uppercase;
 }
 
-#footer ul {
+footer ul {
     list-style: none;
     margin: 0;
     padding: 0;
 }
 
-#footer li {
+footer li {
     margin: 0;
     padding: 0;
 }
 
-#footer a {
+footer a {
     color: #fff;
 }
 
-#footer a:hover {
+footer a:hover {
     color: #ddd;
     text-decoration: none;
 }
 
-#footer p {
+footer p {
     font-size: 14px;
     margin: 0;
     padding: 0;
 }
 
-#footer .fa-facebook:hover {
+footer .fa-facebook:hover {
     color: #3a5795;
 }
 
-#footer .fa-twitter:hover {
+footer .fa-twitter:hover {
     color: #55acee;
 }
 
@@ -166,3 +171,20 @@ header .navbar-default .navbar-nav a.btn-a-primary:hover {
     height: 100px;
 }
 
+@media only screen and (min-width:768px) {
+
+    header .navbar-right {
+        background-color: rgba(0, 0, 0, 0);
+        border-color: rgba(0, 0, 0, 0);
+    }
+
+    header .navbar-right a:focus {
+        background-color: rgba(0, 0, 0, 0) !important;
+        border-color: rgba(0, 0, 0, 0) !important;
+    }
+
+    header .navbar-right .dropdown-menu {
+        background-color: rgba(0, 0, 0, 0.8);
+        border-color: rgba(0, 0, 0, 0.8);
+    }
+}
