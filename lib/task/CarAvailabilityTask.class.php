@@ -115,9 +115,9 @@ EOF;
                 ->createQuery('C')
                 ->where('C.activo = 1')
                 ->andWhere('C.seguro_ok = 4')
-                ->andWhereNotIn('C.id', array(398123))
+                /*->andWhereNotIn('C.id', array(398123))*/
                 ->orderBy('C.ratio_aprobacion DESC')
-                ->limit(300);
+                ->limit(150);
 
             $Cars = $q->execute();
 
