@@ -10,12 +10,20 @@
  */
 class mainActions extends sfActions {
 
-    /**x
-     * Executes index action
-     *
-     * @param sfRequest $request A request object
-     */
-    //MAIN
+    public function executeIndex(sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+
+        if (is_null($this->getUser()->getAttribute('geolocalizacion'))) {
+            $this->getUser()->setAttribute('geolocalizacion', true);
+        } elseif ($this->getUser()->getAttribute('geolocalizacion') == true) {
+            $this->getUser()->setAttribute('geolocalizacion', false);
+        }
+
+        $this->Region = Doctrine_Core::getTable("Regiones")->findOneByCodigo(13);
+
+        $this->Comunas = Doctrine_Core::getTable("Comunas")->findByPadre(13);
+    }
 	
 	
 public function executeArriendo(sfWebRequest $request){
@@ -663,8 +671,8 @@ public function executeFracaso(sfWebRequest $request) {
 public function executeNotificacion(sfWebRequest $request) {
 }
 
-public function executeIndex(sfWebRequest $request) {
-    
+public function oldexecuteIndex(sfWebRequest $request) {
+
     if($request->getParameter('region'))
         $this->region = Doctrine_Core::getTable('Regiones')->findOneBySlug($request->getParameter('region'))->getCodigo();
     if($request->getParameter('comuna'))
@@ -962,6 +970,8 @@ public function executeIndex(sfWebRequest $request) {
             }
         }
     }
+
+
     
     public function executeListaAjax(sfWebRequest $request){
 
@@ -1417,6 +1427,199 @@ public function executeIndex(sfWebRequest $request) {
                 ->limit(10);
         $this->offers = $q->execute();
         //echo $q->getSqlQuery();
+    }
+
+    public function executeGetCars(sfWebRequest $request) {
+
+        $return = array(
+            "error" => false,
+            "cars" => array()
+        );
+
+        $noDateInterval = false;
+
+        $swLat  = $request->getPostParameter('swLat', null);
+        $swLng  = $request->getPostParameter('swLng', null);
+        $neLat  = $request->getPostParameter('neLat', null);
+        $neLng  = $request->getPostParameter('neLng', null);
+        $map_center_lat  = $request->getPostParameter('map_center_lat', null);
+        $map_center_lng  = $request->getPostParameter('map_center_lng', null);
+
+        $from      = $request->getPostParameter('from', null);
+        $to        = $request->getPostParameter('to', null);
+        $automatic = $request->getPostParameter('automatic', null);
+        $low       = $request->getPostParameter('low', null);
+        $pasenger  = $request->getPostParameter('pasenger', null);
+        $comuna    = $request->getPostParameter('commune', null);
+
+        try {
+
+            // Se rescata 'porsiacaso'
+            $this->getUser()->setAttribute('fechainicio', date("d-m-Y", strtotime($from)));
+            $this->getUser()->setAttribute('fechatermino', date("d-m-Y", strtotime($to)));
+            $this->getUser()->setAttribute('horainicio', date("H:i", strtotime($from)));
+            $this->getUser()->setAttribute('horatermino', date("H:i", strtotime($to)));
+            // fin 'posiacaso'
+
+            $this->getUser()->setAttribute("map_clat", $map_center_lat);
+            $this->getUser()->setAttribute("map_clng", $map_center_lng);
+
+            if (!$from || !$to) {
+                $noDateInterval = true;
+            }
+
+            if (!$from) {
+                $from = date("Y-m-d H:i:s");
+            }
+
+            if (!$to) {
+                $to = date("Y-m-d H:i:s", strtotime("+1 day", strtotime($from)));
+            }
+
+            $q = Doctrine_Query::create()
+                ->select('
+                    ca.id, 
+                    ca.lat lat, 
+                    ca.lng lng, 
+                    ca.year,
+                    co.nombre comuna_nombre,
+                    ca.price_per_day, 
+                    ca.price_per_hour,
+                    ca.photoS3 photoS3, 
+                    ca.Seguro_OK, 
+                    ca.foto_perfil, 
+                    ca.transmission transmission,
+                    ca.user_id,
+                    ca.velocidad_contesta_pedidos velocidad_contesta_pedidos,
+                    greatest(1440,ca.velocidad_contesta_pedidos)/greatest(0.1,ca.contesta_pedidos) carrank,
+                    mo.name modelo, 
+                    mo.id_tipo_vehiculo id_tipo_vehiculo,
+                    br.name brand, 
+                ')
+                ->from('Car ca')
+                ->innerJoin('ca.Model mo')
+                ->innerJoin('ca.Comunas co')
+                ->innerJoin('mo.Brand br')
+                ->Where('ca.activo = 1')
+                ->andWhere('ca.seguro_ok = 4')
+                ->orderBy('carrank ASC')
+                ->addOrderBy('IF(ca.velocidad_contesta_pedidos = 0, 1440, ca.velocidad_contesta_pedidos)  ASC')
+                ->addOrderBy('ca.fecha_subida  ASC');                
+
+            if ($automatic) {
+                $q->andWhere("ca.transmission = 1");
+            }
+
+            if ($low) {
+                $q->andWhere("ca.tipobencina = 'Diesel'");
+            }
+
+            if ($pasenger) {
+                $q->andWhere("mo.id_otro_tipo_vehiculo = 3");
+            }
+
+            if ($comuna) {
+                $q->andWhere("co.codigoInterno = ?", $comuna);
+            } else {
+                $q->andWhere('ca.lat < ?', $neLat);
+                $q->andWhere('ca.lat > ?', $swLat);
+                $q->andWhere('ca.lng > ?', $swLng);
+                $q->andWhere('ca.lng < ?', $neLng);
+            }
+
+            if ($noDateInterval) {
+                $q->limit(40);
+            }
+
+            $cars = $q->execute();
+
+            foreach ($cars as $i => $car) {
+                if (!$car->hasReserve(date("Y-m-d", strtotime($from)), date("Y-m-d", strtotime($to)))) {
+
+                    $d = 0;
+
+                    $photo = $car->getFotoPerfil();
+
+                    $porcentaje = $car->getContestaPedidos();
+
+                    if ($this->getUser()->getAttribute("logged")) {
+
+                        $velocidad = $car->getVelocidadContestaPedidos();
+
+                        if ($velocidad < 1) {
+                            $velocidad = "Menos de un minuto";
+                        } elseif ($velocidad < 10) {
+                            $velocidad = "Menos de 10 minutos";
+                        } elseif ($velocidad < 60) {
+                            $velocidad = "Menos de una hora";
+                        } elseif ($velocidad < 1440) {
+                            if (floor($velocidad / 60) == 1) {
+                                $velocidad = "1 hora";
+                            } else {
+                                $velocidad = floor($velocidad / 60) . " horas";
+                            }
+                        } else {
+                            if (floor($velocidad / 60 / 24) == 1) {
+                                $velocidad = "1 dia";
+                            } else {
+                                $velocidad = floor($velocidad / 60 / 24) . " dias";
+                            }
+                        }
+                    } else {
+                        $reservasRespondidas = 0;
+                        $velocidad = 0;
+                    }
+
+                    $transmision = "Manual";
+                    $tipoTrans = $car->getTransmission();
+                    $carPercentile = $car->getCarPercentile();
+
+                    if ($tipoTrans == 0)
+                        $transmision = "Manual";
+                    if ($tipoTrans == 1)
+                        $transmision = "Autom&aacute;tica";
+
+                    $price = Car::getPrice($from, $to, $car->getPricePerHour(), $car->getPricePerDay(), $car->getPricePerWeek(), $car->getPricePerMonth());
+
+                    $return['cars'][] = array('id' => $car->getId(),
+                        'longitude' => $car->getlng(),
+                        'latitude' => $car->getlat(),
+                        'comuna' => strtolower($car->getComunaNombre()),
+                        'brand' => $car->getBrand(),
+                        'model' => $car->getModelo(),
+                        'ano' => $car->getYear(),
+                        'typeModel' => $car->getIdTipoVehiculo(),
+                        'year' => $car->getYear(),
+                        'photoType' => $car->getPhotoS3(),
+                        'photo' => $photo,
+                        'price' => $price,
+                        'priceAPuntos' => $this->transformarPrecioAPuntos(floor($price)),
+                        'price_per_hour' => $this->transformarPrecioAPuntos(floor($car->getPricePerHour())),
+                        'price_per_day' => $this->transformarPrecioAPuntos(floor($car->getPricePerDay())),
+                        'userid' => $car->getUserId(),
+                        'carRank' => $car->getCarrank(),
+                        'carPercentile' => $carPercentile,
+                        'typeTransmission' => $transmision,
+                        'userVelocidadRespuesta' => $velocidad,
+                        'userContestaPedidos' => $porcentaje,
+                        'cantidadCalificacionesPositivas' => '0',
+                        'd' => $d,
+                        'verificado' => $car->autoVerificado(),
+                        'from' => date("Y-m-d H:i", strtotime($from)),
+                        'to' => date("Y-m-d H:i", strtotime($to))
+                    );
+                }
+            }
+        } catch (Exception $e) {
+
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+            /*Utils::reportError($e->getMessage(), "profile/executeGetCars");*/
+        }
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
     }
 
     public function executeMap(sfWebRequest $request) {
@@ -2608,26 +2811,14 @@ public function executeIndex(sfWebRequest $request) {
 
     public function executeLogin(sfWebRequest $request) {
 
+        $this->setLayout("newIndexLayout");
+
         //si el usuario está login, es redireccionado al main
         if ($this->getUser()->isAuthenticated()) {
             $this->redirect('main/index');
         }
 
-        //echo $this->getContext()->getRequest()->getHost() . $this->getContext()->getRequest()->getScriptName();
-        //$_SESSION['urlback'] = $this->getRequest()->getUri();
-		  sfContext::getInstance()->getLogger()->info($this->getRequest()->getUri());
-		
-        /*if (isset($_SESSION['login_back_url'])) {
-            $urlpage = explode('/', $_SESSION['login_back_url']);
-
-            if ($urlpage[count($urlpage) - 1] != "login" && $urlpage[count($urlpage) - 1] != "doLogin") {
-                //$_SESSION['login_back_url'] = $request->getReferer();
-                $_SESSION['login_back_url'] = $this->getRequest()->getUri();
-            }
-        }else{
-            //$_SESSION['login_back_url'] = $request->getReferer();
-            $_SESSION['login_back_url'] = $this->getRequest()->getUri();
-			}*/
+        sfContext::getInstance()->getLogger()->info($this->getRequest()->getUri());
                   
         if (!isset($_SESSION['login_back_url'])) {
             $_SESSION['login_back_url'] = $this->getRequest()->getUri();
@@ -3429,7 +3620,7 @@ public function calificacionesPendientes(){
      * en tablas Reserve y Transaction
      * @param type $reserve
      * @param type $order
-     *
+     */
     public function executeUpdateManualNroFactura(sfWebRequest $request){
         
         ini_set('memory_limit', '1024M');
@@ -3467,7 +3658,7 @@ public function calificacionesPendientes(){
      * en tablas Reserve y Transaction
      * @param type $reserve
      * @param type $order
-     *
+     */
     private function generarNroFactura($reserve, $order){
         
         // primero valido que no exista otra factura ya generada 
@@ -3553,7 +3744,7 @@ public function calificacionesPendientes(){
 
         $next_numero = ($trans[0]['nro_fac'] > $res[0]['nro_fac']? $trans[0]['nro_fac'] : $res[0]['nro_fac']) + 1;
         return $next_numero;
-    }*/
+    }
 
     public function executeOpenOpportunityEmail(sfWebRequest $request) {
 

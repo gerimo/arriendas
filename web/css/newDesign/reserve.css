@@ -1,0 +1,296 @@
+.reserve-box {
+    border: 2px solid #464646;
+    border-radius: 13px;
+    padding: 10px;
+}
+
+.reserve-box .btn-a-primary {
+    background-color: #ba135f;
+    border: solid 1px #ba135f;
+    color: white !important;
+    font-size: 30px !important;
+    font-weight: 800;
+    margin: 0;
+    max-width: none;
+    padding: 18px 5px !important;
+    width: 100%;
+}
+
+.saved {
+    background: #fdcf22;
+    border-radius: 100%;
+    font-size: 17px;
+    height: 114px;
+    font-weight: 700;
+    line-height: 18px;
+    padding: 22px 0 0;
+    position: absolute;
+    right: -24px;
+    text-align: center;
+    text-transform: uppercase;
+    top: -16px;
+    width: 114px;
+}
+
+.saved strong {
+    display: block;
+    font-size: 45px;
+    line-height: 50px;
+    margin: 0 0 -4px;
+}
+
+.rating-container {
+    border-top: solid 1px #ddd;
+}
+
+.title-price {
+    color: #c8427f;
+    display: block;
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 55px;
+    margin: 0 0 7px;
+    text-align: center;
+}
+
+.reserve-box-summary, #features {
+    font: 300 22px/28px 'Roboto', sans-serif;
+    line-height: 40px;
+    list-style: none;
+    margin: 0 0 0 15px;
+    padding: 0;
+}
+
+#car-rating {
+    float: right;
+}
+
+#car-rating img {
+    text-align: right;
+    width: 25px;
+}
+
+#reviews .panel-heading a {
+    color: #464646;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+#reviews .panel-heading a:hover,
+#reviews .panel-heading a:active, {
+    color: #464646;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.review {
+    border-top: solid 1px #ddd;
+    min-height: 60px;
+    padding: 10px;
+}
+
+.review img {
+    border-radius: 100%;
+}
+
+#fromTo {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#fromTo li {
+    background: #464646;
+    color: #fff;
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 53px;
+    margin: 15px 0 0 0;
+    text-align: center;
+}
+
+#fromTo .fa-plus {
+    float: right;
+    margin: 10px 15px 0 0;
+}
+
+#warranty-container {
+    color: #6d6969;
+    font-size: 28px;
+    line-height: 35px;
+    margin-top: 40px;
+    padding: 0 0 5px;
+}
+
+#sub-price-container {
+    border-bottom: 1px solid #6d6969;
+    padding-bottom: 5px;
+}
+
+#warranty-form {
+    border-bottom: 1px solid #6d6969;
+}
+
+#warranty-form label {
+    color: #6d6969;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 26px;
+}
+
+#total {
+    border-bottom: 1px solid #6d6969;
+    margin-top: 20px;
+    padding-bottom: 5px;
+}
+
+.price {
+    font-size: 40px;
+    font-weight: 300;
+}
+
+#payments-form .radio {
+    height: 200px;
+    margin: 0;
+    padding: 10px;
+}
+
+#payments-form img {
+    margin-top: 15%;
+    width: 90%;
+}
+
+#btn-pay {
+    background-color: #ba135f;
+    border: solid 1px #ba135f;
+    border-radius: 10px;
+    color: white;
+    font-size: 30px;
+    font-weight: 800;
+    margin: 0 0 50px;
+    padding: 18px 5px !important;
+}
+
+@media only screen and (min-width:768px) {
+    .reserve-title {
+        color: #6d6969;
+        font: 500 36px 'Roboto', sans-serif;
+    }
+
+    .reserve-subtitle {
+        color: #6d6969;
+        font: 300 32px 'Roboto', sans-serif;
+    }
+}
+
+@media only screen and (max-width:767px) {
+    .reserve-title {
+        color: #6d6969;
+        font: 700 18px 'Roboto', sans-serif;
+    }
+
+    .reserve-subtitle {
+        color: #6d6969;
+        font: 500 16px 'Roboto', sans-serif;
+        margin-top: 10px;
+    }
+
+    #features {
+        color: #6d6969;
+        font: 300 12px/16px 'Roboto', sans-serif;
+        line-height: 25px;
+        list-style: none;
+        margin: 0 0 0 5px;
+        padding: 0;
+    }
+
+    .title-price {
+        color: #c8427f;
+        display: block;
+        font-size: 30px;
+        font-weight: 500;
+        line-height: 55px;
+        margin: 0 0 7px;
+        text-align: center;
+    }
+
+    .saved {
+        background: #fdcf22;
+        border-radius: 100%;
+        font-size: 12px;
+        height: 75px;
+        font-weight: 300;
+        line-height: 18px;
+        padding: 22px 0 0;
+        position: absolute;
+        right: 27%;
+        text-align: center;
+        text-transform: uppercase;
+        top: 150%;
+        width: 75px;
+    }
+
+    .saved strong {
+        display: block;
+        font-size: 20px;
+        line-height: 50px;
+        margin: -15px 0 -15px;
+    }
+
+    #car-rating img {
+        width: 20px;
+    }
+
+    #reviews .panel-heading a {
+        color: #464646;
+        font-size: 16px;
+        text-decoration: none;
+    }
+
+    #reviews .panel-heading a:hover,
+    #reviews .panel-heading a:active, {
+        color: #464646;
+        font-size: 16px;
+        text-decoration: none;
+    }
+
+    .review {
+        text-align: center;
+    }
+
+    #fromTo li {
+        background: #464646;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 35px;
+        margin: 15px 0 0 0;
+        text-align: center;
+    }
+
+    #warranty-container {
+        font-size: 18px;
+    }
+
+    #sub-price-container {
+        padding-bottom: 5px;
+    }
+
+    #warranty-form label {
+        font-size: 14px;
+    }
+
+    #total {
+        padding-bottom: 5px;
+    }
+
+    .price {
+        font-size: 28px;
+        font-weight: 300;
+    }
+
+    #payments-form .radio {
+        height: 100px;
+    }
+
+}

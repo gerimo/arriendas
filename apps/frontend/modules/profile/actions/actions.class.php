@@ -1,6 +1,6 @@
 <?php
 
-/* * z
+/**
  * profile actions.
  *
  * @package    CarSharing
@@ -11,30 +11,150 @@
 
 class profileActions extends sfActions {
 
-    /**
-     * Executes index action
-     *
-     * @param sfRequest $request A request object
-     */
-    public function executeDoUpdatePassword(sfWebRequest $request) {
+    public function executeChangePassword(sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+
+        $userId = $this->getUser()->getAttribute("userid");
+
+        $this->User = Doctrine_Core::getTable('user')->find($userId);
+    }
+
+    public function executeDoChangePassword(sfWebRequest $request) {
+
+        $return = array("error" => false);
+
+        $pass1 = $request->getPostParameter('pass1', null);
+        $pass2 = $request->getPostParameter('pass2', null);
 
         try {
 
-            $profile = Doctrine_Core::getTable('User')->find($this->getUser()->getAttribute('userid'));
-            if ($request->getParameter('password') != '') {
-                if ($request->getParameter('password') == $request->getParameter('passwordAgain'))
-                    $profile->setPassword(md5($request->getParameter('password')));
+            if (is_null($pass1) || $pass1 == "") {
+                throw new Exception("Debes ingresar tu nueva contraseña", 2);
             }
-            $profile->save();
+
+            if (is_null($pass2) || $pass2 == "") {
+                throw new Exception("Debes repetir tu nueva contraseña", 2);
+            }
+
+            if ($pass1 != $pass2) {
+                throw new Exception("Las contraseñas no coinciden", 2);
+            }
+
+            $userId = $this->getUser()->getAttribute('userid');
+
+            $User = Doctrine_Core::getTable('User')->find($userId);
+            $User->setPassword(md5($pass1));
+
+            $User->save();
         } catch (Exception $e) {
-            echo $e->getMessage();
+
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+
+            if ($e->getCode() != 2) {
+                Utils::reportError($e->getMessage(), "profile/doChangePassword");
+            }
         }
-        $this->redirect('profile/cars');
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
     }
 
-    public function executeChangePassword(sfWebRequest $request) {
-        $this->user = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")));
+    public function executeEdit(sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+
+        $userId = $this->getUser()->getAttribute("userid");
+
+        $this->redirect = $request->getParameter('redirect');
+        $this->idRedirect = $request->getParameter('id');
+
+        $user = Doctrine_Core::getTable('user')->find($userId);
+
+        $this->userRegion = $user->getRegion();
+
+        $this->userComuna = $user->getComuna();
+
+        $this->user = $user;
+
+        $q = Doctrine_Query::create()
+                ->select('c.*')
+                ->from('Comunas c');
+        $this->comunas = $q->fetchArray();
+
+        $q = Doctrine_Query::create()
+                ->select('r.*')
+                ->from('Regiones r');
+        $this->regiones = $q->fetchArray();
     }
+
+    public function executeReserve(sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+
+        $carId = $request->getParameter("c", null);
+        $f     = strtotime($request->getParameter("f", null));
+        $t     = strtotime($request->getParameter("t", null));
+
+        if (is_null($carId)) {
+            throw new Exception("Auto no encontrado", 1);
+        }
+
+        if ($t <= $f) {
+            throw new Exception("No, no, no", 1);
+        }
+
+        $from = date("Y-m-d H:i", $f);
+        $this->from = date("D d/m/Y H:iA", $f);
+        $to = date("Y-m-d H:i", $t);
+        $this->to = date("D d/m/Y H:iA", $t);
+
+        $this->Car = Doctrine_Core::getTable('Car')->find($carId);
+
+        if ($this->Car->hasReserve($from, $to)) {
+            throw new Exception("Auto ya posee reserva", 1);            
+        }
+
+        $this->price = Car::getPrice($from, $to, $this->Car->getPricePerHour(), $this->Car->getPricePerDay(), $this->Car->getPricePerWeek(), $this->Car->getPricePerMonth());
+
+        // Reviews (hay que arreglar las clase Rating)
+        $this->reviews = array();
+        $Ratings = Doctrine_Core::getTable('Rating')->findByIdOwner($this->Car->getUserId());
+
+        foreach ($Ratings as $i => $Rating) {
+            $opinion = $Rating->getOpinionAboutOwner();
+            if ($opinion) {
+                $this->reviews[$i]["opinion"] = $Rating->getOpinionAboutOwner();
+                $U = Doctrine_Core::getTable('User')->find($Rating->getIdRenter());
+                $this->reviews[$i]["picture"] = $U->getPictureFile();
+            }
+        }
+
+        // Características
+        $this->passengers = false;
+        if ($this->Car->getModel()->getIdOtroTipoVehiculo() >= 2) {
+            $this->passengers = true;
+        }
+
+        $this->diesel = false;
+        if ($this->Car->getTipobencina() == "Diesel") {
+            $this->diesel = true;
+        }
+
+        $this->airCondition = false;
+        if (explode(",", $this->Car->getAccesoriosSeguro())[0] == "aireAcondicionado") {
+            $this->airCondition = true;
+        }
+
+        $this->transmission = false;
+        if ($this->Car->getTransmission()) {
+            $this->transmission = true;
+        }
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////
 
     public function executeUploadImage(sfWebRequest $request) {
         //$this->setLayout(false);
@@ -687,12 +807,14 @@ class profileActions extends sfActions {
      * @param sfWebRequest $request
      */
     public function executeAprobarOportunidad(sfWebRequest $request) {
+
         $idReserve = $request->getParameter('idReserve');
         $idCar = $request->getParameter('idCar');
         $idUser = $request->getParameter('idUser');
         
         // chequeos varios
         try{
+
             $oReserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
             if(!$oReserve ){
                 throw new Exception("La oportunidad que intentas aprobar es inexistente.");
@@ -727,7 +849,7 @@ class profileActions extends sfActions {
                 throw new Exception("Ya has aprobado esta oportunidad.");
             }            
             
-        }catch(Exception $ex){
+        } catch (Exception $ex) {
             echo $ex->getMessage();die;
             //$this->redirect('profile/pedidos');
         }
@@ -1870,34 +1992,7 @@ class profileActions extends sfActions {
         $this->carsPublicProfile = $this->user->getCars();
     }
 
-    public function executeEdit(sfWebRequest $request) {
-
-        $this->redirect = $request->getParameter('redirect');
-        $this->idRedirect = $request->getParameter('id');
-
-        $user = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")));
-
-
-
-        $this->userRegion = $user->getRegion();
-
-        $this->userComuna = $user->getComuna();
-
-        $this->user = $user;
-
-
-        $q = Doctrine_Query::create()
-                ->select('c.*')
-                ->from('Comunas c');
-
-        $this->comunas = $q->fetchArray();
-
-        $q = Doctrine_Query::create()
-                ->select('r.*')
-                ->from('Regiones r');
-
-        $this->regiones = $q->fetchArray();
-    }
+    
 
     public function executePagoDeposito(sfWebRequest $request) {
         
@@ -3025,7 +3120,7 @@ class profileActions extends sfActions {
         throw new sfStopException();
     }
 
-    public function executeReserve(sfWebRequest $request) {
+    public function oldexecuteReserve(sfWebRequest $request) {
 
         if ($this->getRequest()->getParameter('carid') != null)
             $carid = $this->getRequest()->getParameter('carid');
@@ -6735,4 +6830,6 @@ error_log("BUSCANDO LA MEJOR OPORTUNIDAD");
 
         return sfView::NONE;
     }
+
+
 }
