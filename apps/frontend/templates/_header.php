@@ -40,8 +40,8 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><img src="<?php echo $sf_user->getAttribute('picture_file') ?>"> <?php echo $sf_user->getAttribute('firstname') ?> <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">Mi perfil</a></li>
-                                <li><a href="#">Cambiar contraseña</a></li>
+                                <li><a href="<?php echo url_for('profile/edit') ?>">Mi perfil</a></li>
+                                <li><a href="<?php echo url_for('profile/changePassword') ?>">Cambiar contraseña</a></li>
                                 <li class="divider"></li>
                                 <li><a href="<?php echo url_for('main/logout') ?>">Salir</a></li>
                             </ul>

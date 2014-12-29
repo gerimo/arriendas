@@ -29,11 +29,6 @@ input {
     padding: 10px;
 }
 
-.BCW {
-    box-shadow: rgba(50, 50, 50, 0.498039) 4px 4px 20px 0px;
-    padding: 10px 20px 20px 20px;
-}
-
 .forgot {
     color: black;
     margin-top: 21px;
@@ -52,4 +47,15 @@ input {
 
 .fb-title {
     margin-bottom: 20px;
+}
+
+@media only screen and (max-width:767px) {
+
+    hr {
+        margin: 20px 0;
+    }
+
+    input[type="submit"] {
+        display: block;
+    }
 }

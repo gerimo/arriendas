@@ -11,6 +11,85 @@
 
 class profileActions extends sfActions {
 
+    public function executeChangePassword(sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+
+        $userId = $this->getUser()->getAttribute("userid");
+
+        $this->User = Doctrine_Core::getTable('user')->find($userId);
+    }
+
+    public function executeDoChangePassword(sfWebRequest $request) {
+
+        $return = array("error" => false);
+
+        $pass1 = $request->getPostParameter('pass1', null);
+        $pass2 = $request->getPostParameter('pass2', null);
+
+        try {
+
+            if (is_null($pass1) || $pass1 == "") {
+                throw new Exception("Debes ingresar tu nueva contraseña", 2);
+            }
+
+            if (is_null($pass2) || $pass2 == "") {
+                throw new Exception("Debes repetir tu nueva contraseña", 2);
+            }
+
+            if ($pass1 != $pass2) {
+                throw new Exception("Las contraseñas no coinciden", 2);
+            }
+
+            $userId = $this->getUser()->getAttribute('userid');
+
+            $User = Doctrine_Core::getTable('User')->find($userId);
+            $User->setPassword(md5($pass1));
+
+            $User->save();
+        } catch (Exception $e) {
+
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+
+            if ($e->getCode() != 2) {
+                Utils::reportError($e->getMessage(), "profile/doChangePassword");
+            }
+        }
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
+    public function executeEdit(sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+
+        $userId = $this->getUser()->getAttribute("userid");
+
+        $this->redirect = $request->getParameter('redirect');
+        $this->idRedirect = $request->getParameter('id');
+
+        $user = Doctrine_Core::getTable('user')->find($userId);
+
+        $this->userRegion = $user->getRegion();
+
+        $this->userComuna = $user->getComuna();
+
+        $this->user = $user;
+
+        $q = Doctrine_Query::create()
+                ->select('c.*')
+                ->from('Comunas c');
+        $this->comunas = $q->fetchArray();
+
+        $q = Doctrine_Query::create()
+                ->select('r.*')
+                ->from('Regiones r');
+        $this->regiones = $q->fetchArray();
+    }
+
     public function executeReserve(sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
@@ -75,35 +154,7 @@ class profileActions extends sfActions {
         }
     }
 
-    public function executeSummary(sfWebRequest $request) {
-
-        $this->setLayout("newIndexLayout");
-    }
-
-    /**
-     * Executes index action
-     *
-     * @param sfRequest $request A request object
-     */
-    public function executeDoUpdatePassword(sfWebRequest $request) {
-
-        try {
-
-            $profile = Doctrine_Core::getTable('User')->find($this->getUser()->getAttribute('userid'));
-            if ($request->getParameter('password') != '') {
-                if ($request->getParameter('password') == $request->getParameter('passwordAgain'))
-                    $profile->setPassword(md5($request->getParameter('password')));
-            }
-            $profile->save();
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
-        $this->redirect('profile/cars');
-    }
-
-    public function executeChangePassword(sfWebRequest $request) {
-        $this->user = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")));
-    }
+    //////////////////////////////////////////////////////////////////////////////////
 
     public function executeUploadImage(sfWebRequest $request) {
         //$this->setLayout(false);
@@ -1941,34 +1992,7 @@ class profileActions extends sfActions {
         $this->carsPublicProfile = $this->user->getCars();
     }
 
-    public function executeEdit(sfWebRequest $request) {
-
-        $this->redirect = $request->getParameter('redirect');
-        $this->idRedirect = $request->getParameter('id');
-
-        $user = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")));
-
-
-
-        $this->userRegion = $user->getRegion();
-
-        $this->userComuna = $user->getComuna();
-
-        $this->user = $user;
-
-
-        $q = Doctrine_Query::create()
-                ->select('c.*')
-                ->from('Comunas c');
-
-        $this->comunas = $q->fetchArray();
-
-        $q = Doctrine_Query::create()
-                ->select('r.*')
-                ->from('Regiones r');
-
-        $this->regiones = $q->fetchArray();
-    }
+    
 
     public function executePagoDeposito(sfWebRequest $request) {
         

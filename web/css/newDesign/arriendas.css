@@ -9,10 +9,12 @@
 
 .BCW {
     background-color: white;
+    box-shadow: rgba(50, 50, 50, 0.498039) 4px 4px 20px 0px;
+    padding: 10px 20px 20px 20px;
 }
 
 body {
-    font-family: 'Roboto',sans-serif;
+    font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
 }
@@ -105,13 +107,10 @@ footer .fa-twitter:hover {
 .btn-a-primary {
     background: #ba135f;
     border: 2px solid #dc89af;
+    border-radius: 0;
     color: #eee !important;
-    font-size: 16px !important;
-    font-weight:700;
-    line-height: 19px !important;
-    max-width:200px;
-    min-width: 133px;
-    padding: 6px !important;
+    font: 700 16px/19px 'Open Sans', sans-serif;
+    padding: 5px 10px !important;
     text-align: center;
     text-transform: uppercase !important;
     vertical-align: middle;
@@ -125,19 +124,28 @@ footer .fa-twitter:hover {
 
 .btn-a-action {
     background: #00aced;
-    border: none;
-    border-radius:0;
+    border: 2px solid #00accb;
+    border-radius: 0;
     color: #fff;
-    font: 700 18px/20px 'Open Sans', sans-serif;
-    height: 42px;
+    font: 300 18px/20px 'Open Sans', sans-serif;
     padding: 5px 10px;
-    text-align:center;
+    text-align: center;
+    text-transform: uppercase !important;
+    vertical-align: middle;
 }
 
 .btn-a-action:hover {
     background: #06c;
     color: #fff;
     text-decoration: none;
+}
+
+.alert-a-success {
+    color: #3c763d;
+}
+
+.alert-a-danger {
+    color: #a94442;
 }
 
 .space-10 {
