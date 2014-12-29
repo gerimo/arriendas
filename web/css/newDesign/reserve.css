@@ -293,4 +293,9 @@
         height: 100px;
     }
 
+.bbox {
+    box-shadow: rgba(50, 50, 50, 0.498039) 4px 4px 20px 0px;
+    padding: 10px 20px 20px 20px;
+}
+
 }

@@ -1,0 +1,95 @@
+
+.bbox {
+	width: 100px;
+	height: 20px;
+	background-color: blue;
+}
+
+
+.btn-a-primary-small {
+    background: #ba135f;
+    border: 2px solid #dc89af;
+    color: #eee !important;
+    font-size: 16px !important;
+    font-weight:700;
+    line-height: 19px !important;
+    max-width:100%;
+    min-width: 100%;
+    padding: 6px !important;
+    text-align: center;
+    text-transform: uppercase !important;
+    vertical-align: middle;
+
+}
+
+.btn-a-primary-small:hover {
+    background: #ca236f !important;
+    color: #fff !important;
+    text-decoration: none;
+}
+
+.btn-a-action-small {
+    background: #00aced;
+    border: none;
+    border-radius:0;
+    color: #fff;
+    font: 700 18px/20px 'Open Sans', sans-serif;
+    height: 42px;
+    padding: 5px 10px;
+    text-align:center;
+}
+
+.btn-a-action-small:hover {
+    background: #06c;
+    color: #fff;
+    text-decoration: none;
+}
+
+.AM {
+	margin-top:40px;
+}
+
+.checkbo {
+	 display: inline-block;
+	 vertical-align: middle;
+	 margin-top:30px;
+}
+
+.desde {
+	margin-top:8px;
+}
+
+#desdedesde {
+ font-weight:bold;	
+}
+
+.marcamodelo {
+
+}
+
+.precio {
+ color:#ba135f;
+ font-weight:bold;
+ font-size:16px;
+}
+
+.preciosmall {
+ color:black;
+ font-size:12px;
+ margin-top:-15px;
+ font-weight:normal;
+	
+ }
+
+
+.botonpago {
+margin-top:20px;
+}
+
+.wrapper {
+border-top:1px;
+border-bottom:1px;
+background-color:f7f7f7;
+}
+
+
