@@ -291,9 +291,11 @@ if (!$mostrarReservasRealizadas && !$mostrarReservasRecibidas) {
 	echo "<h3>RESERVAS EN PROCESO</h3>";
 	echo '</div>';
 
-    echo '<div class="row wrapper">';
     
         foreach ($reservasRealizadas as $reserva) {
+
+	    echo '<div class="row wrapper">';
+
 
             if (isset($reserva['estado']) && $reserva['estado'] == 7) {
                 
