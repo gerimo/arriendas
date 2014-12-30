@@ -113,6 +113,8 @@ EOF;
 
             $q = Doctrine_Core::getTable("Car")
                 ->createQuery('C')
+                ->innerJoin('C.Comunas CO')
+                ->innerJoin('CO.Regiones R')
                 ->where('C.activo = 1')
                 ->andWhere('C.seguro_ok = 4')
                 ->andWhere('C.region = 13')
