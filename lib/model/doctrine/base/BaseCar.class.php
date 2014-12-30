@@ -9,6 +9,7 @@
  * @property integer $User_id
  * @property string $km
  * @property integer $City_id
+ * @property integer $comuna_id
  * @property string $address
  * @property float $lat
  * @property float $lng
@@ -31,11 +32,13 @@
  * @property Doctrine_Collection $Photoes
  * @property Doctrine_Collection $Reserves
  * @property float $ratio_aprobacion
+ * @property Comunas $Comuna
  * 
  * @method integer             getId()             Returns the current record's "id" value
  * @method integer             getUserId()         Returns the current record's "User_id" value
  * @method string              getKm()             Returns the current record's "km" value
  * @method integer             getCityId()         Returns the current record's "City_id" value
+ * @method integer             getComunaId()       Returns the current record's "comuna_id" value
  * @method integer             getStateId()        Returns the current record's "State_id" value
  * @method string              getAddress()        Returns the current record's "address" value
  * @method float               getLat()            Returns the current record's "lat" value
@@ -56,6 +59,7 @@
  * @method City                getCity()           Returns the current record's "City" value
  * @method float               getRatioAprobacion() Returns the current record's "ratio_aprobacion" value
  * @method integer             getTransmission()        Returns the current record's "transmission" value
+ * @method Comunas             getComuna()         Returns the current record's "Comuna" value
  * 
  * @method Doctrine_Collection getAvailabilities() Returns the current record's "Availabilities" collection
  * @method Doctrine_Collection getDamages()        Returns the current record's "Damages" collection
@@ -65,6 +69,7 @@
  * @method Car                 setUserId()         Sets the current record's "User_id" value
  * @method Car                 setKm()             Sets the current record's "km" value
  * @method Car                 setCityId()         Sets the current record's "City_id" value
+ * @method Car                 setComunaId()         Sets the current record's "Comuna_id" value
  * @method Car                 setStateId()         Sets the current record's "State_id" value
  * @method Car                 setAddress()        Sets the current record's "address" value
  * @method Car                 setLat()            Sets the current record's "lat" value
@@ -89,6 +94,7 @@
  * @method Car                 setReserves()       Sets the current record's "Reserves" collection
  * @method Car                 setRatioAprobacion() Sets the current record's "ratio_aprobacion" value
  * @method Car                 setTransmission() Sets the current record's "transmission" value
+ * @method Car                 setComuna() Sets the current record's "Comuna" value
  * 
  * @package    CarSharing
  * @subpackage model
@@ -181,8 +187,6 @@ abstract class BaseCar extends sfDoctrineRecord
              'length' => 10,
              'scale' => '2',
              ));
-
-
         $this->hasColumn('Model_id', 'integer', 4, array(
              'type' => 'integer',
              'notnull' => true,
@@ -486,6 +490,7 @@ abstract class BaseCar extends sfDoctrineRecord
              'foreign' => 'codigoInterno',
              'onDelete' => 'no action',
              'onUpdate' => 'no action'));
+
         $this->hasOne('City', array(
              'local' => 'City_id',
              'foreign' => 'id',
