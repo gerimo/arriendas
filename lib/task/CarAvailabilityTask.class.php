@@ -115,9 +115,10 @@ EOF;
                 ->createQuery('C')
                 ->where('C.activo = 1')
                 ->andWhere('C.seguro_ok = 4')
+                ->andWhere('C.region = 13')
                 /*->andWhereNotIn('C.id', array(398123))*/
                 ->orderBy('C.ratio_aprobacion DESC')
-                ->limit(150);
+                ->limit(400);
 
             $Cars = $q->execute();
 
@@ -130,7 +131,7 @@ EOF;
 
                 if (!$Car->hasReserve($from, $to)) {
 
-                    $CarAvailabilityEmail = new CarAvailabilityEmail();
+                    /*$CarAvailabilityEmail = new CarAvailabilityEmail();
 
                     $CarAvailabilityEmail->setCar($Car);
                     $CarAvailabilityEmail->setSentAt(date("Y-m-d H:i:s"));
@@ -152,9 +153,9 @@ EOF;
                         'id' => $CarAvailabilityEmail->getId(),
                         'o' => 0,
                         'signature' => $CarAvailabilityEmail->getSignature()
-                    ));
+                    ));*/
 
-                    $this->log("Enviando consulta a auto ID: ".$Car->getId());
+                    /*$this->log("Enviando consulta a auto ID: ".$Car->getId());
 
                     $User = $Car->getUser();
 
@@ -164,7 +165,6 @@ EOF;
                     $subject = "¿Tienes disponibilidad para recibir clientes este fin de semana? [E".$CarAvailabilityEmail->getId()."]";
 
                     $body = "<p>".$firstname.",</p>";
-                    /*$body .= "<p>Necesitaríamos que nos indiques en qué horarios podrías recibir clientes, para que tu auto figure en las busquedas de mañana.</p>";*/
                     $body .= "<p>Necesitaríamos que nos indiques en qué horarios podrías recibir clientes durante los próximos días.</p>";
                     $body .= "<ul>";
                     $body .= "<li>Si puedes recibir clientes el ".$daysPhrase." entre 8am y 8pm, has <a href='{$url_all_ava}'>click aquí</a>.</li>";
@@ -186,7 +186,7 @@ EOF;
                             "cristobal@arriendas.cl" => "Cristóbal Medina Moenne"
                         ));
                     
-                    $this->getMailer()->send($message);
+                    $this->getMailer()->send($message);*/
                 } else {
 
                     $this->log("Auto ID: ".$Car->getId()." ya posee una reserva");
