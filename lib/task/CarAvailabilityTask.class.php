@@ -114,10 +114,9 @@ EOF;
             $q = Doctrine_Core::getTable("Car")
                 ->createQuery('C')
                 ->innerJoin('C.Comunas CO')
-                ->innerJoin('CO.Regiones R')
                 ->where('C.activo = 1')
                 ->andWhere('C.seguro_ok = 4')
-                ->andWhere('C.region = 13')
+                ->andWhere('CO.state_id = 13')
                 /*->andWhereNotIn('C.id', array(398123))*/
                 ->orderBy('C.ratio_aprobacion DESC')
                 ->limit(400);
