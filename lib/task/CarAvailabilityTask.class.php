@@ -132,7 +132,7 @@ EOF;
 
                 if (!$Car->hasReserve($from, $to)) {
 
-                    /*$CarAvailabilityEmail = new CarAvailabilityEmail();
+                    $CarAvailabilityEmail = new CarAvailabilityEmail();
 
                     $CarAvailabilityEmail->setCar($Car);
                     $CarAvailabilityEmail->setSentAt(date("Y-m-d H:i:s"));
@@ -154,9 +154,9 @@ EOF;
                         'id' => $CarAvailabilityEmail->getId(),
                         'o' => 0,
                         'signature' => $CarAvailabilityEmail->getSignature()
-                    ));*/
+                    ));
 
-                    /*$this->log("Enviando consulta a auto ID: ".$Car->getId());
+                    $this->log("Enviando consulta a auto ID: ".$Car->getId());
 
                     $User = $Car->getUser();
 
@@ -187,7 +187,7 @@ EOF;
                             "cristobal@arriendas.cl" => "Cristóbal Medina Moenne"
                         ));
                     
-                    $this->getMailer()->send($message);*/
+                    $this->getMailer()->send($message);
                 } else {
 
                     $this->log("Auto ID: ".$Car->getId()." ya posee una reserva");
