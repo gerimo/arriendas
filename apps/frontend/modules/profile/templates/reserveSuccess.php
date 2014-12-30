@@ -1,3 +1,5 @@
+<link href="/css/newDesign/reserve.css" rel="stylesheet" type="text/css">
+
 <div class="space-100 hidden-xs"></div>
 <div class="space-50 visible-xs"></div>
 
@@ -160,47 +162,45 @@
         </div>
     <?php endif ?>
 
-    <!-- Resumen y garantía -->
-    <div class="row">
-        <div class="col-md-offset-2 col-md-8">
-            <ul id="fromTo">
-                <li><i class="fa fa-plus"></i>Desde: <?php echo $from ?></li>
-                <li><i class="fa fa-plus"></i>Hasta: <?php echo $to ?></li>
-            </ul>
+    <form action="#" id="reserve-form">
 
-            <div id="warranty-container">
-                <div id="sub-price-container">
-                    <span class="price pull-right" data-subtotal-price=""><?php echo '$'.number_format($price, 0, ',', '.') ?></span>SUB TOTAL
+        <!-- Resumen y garantía -->
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                <ul id="fromTo">
+                    <li><i class="fa fa-plus"></i>Desde: <?php echo $from ?></li>
+                    <li><i class="fa fa-plus"></i>Hasta: <?php echo $to ?></li>
+                </ul>
+
+                <div id="warranty-container">
+                    <div id="sub-price-container">
+                        <span class="price pull-right" id="subtotal" data-price="<?php echo $price ?>"><?php echo '$'.number_format($price, 0, ',', '.') ?></span>SUB TOTAL
+                    </div>
+                    
+                    
+                        <div class="radio">
+                            <label>
+                                <input data-price="180000" name="warranty" type="radio">
+                                $180.000 Depósito en Garantía (se devuelve al finalizar el Arriendo)
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input data-price="8700" name="warranty" type="radio">
+                                $8.700 por Eliminar el Depósito en Garantía
+                            </label>                        
+                        </div>
+                    <span class="pull-right">TOTAL <span class="price" data-price="<?php echo $price ?>" id="total"><?php echo '$'.number_format($price, 0, ',', '.') ?></span></span>
                 </div>
-                
-                <form action="#" id="warranty-form">
-                    <div class="radio">
-                        <label>
-                            <input id="radio-1" name="group1" type="radio">
-                            $180.000 Depósito en Garantía (se devuelve al finalizar el Arriendo)
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input id="radio-2" name="group1" type="radio">
-                            $8.700 por Eliminar el Depósito en Garantía
-                        </label>                        
-                    </div>
-                </form>
-                
-                <span class="pull-right" id="total">TOTAL <span class="price" data-total-price=""><?php echo '$'.number_format($price, 0, ',', '.') ?></span></span>
             </div>
         </div>
-    </div>
 
-    <!-- Medio de pago -->
-    <div class="space-50 hidden-xs"></div>
-    <div class="space-20 visible-xs"></div>
-    <h1 class="reserve-title">Medio de pago</h1>
+        <!-- Medio de pago -->
+        <div class="space-50 hidden-xs"></div>
+        <div class="space-20 visible-xs"></div>
+        <h1 class="reserve-title">Medio de pago</h1>
 
-    <form action="#" id="payments-form">
-
-        <div class="row">
+        <div class="row" id="payments">
             <div class="col-xs-6 col-sm-4 col-md-3 radio">
                 <label>
                     <input id="payment7" name="payment-group" type="radio">
@@ -256,13 +256,17 @@
                 </label>
             </div>
         </div>
-    </form>
 
-    <div class="row">
-        <div class="col-md-offset-4 col-md-4">
-            <button class="btn-block" id="btn-pay" type="button">PAGAR <i class="fa fa-chevron-right"></i></button>
+        <div class="row">
+            <div class="col-md-offset-4 col-md-4">
+                <button class="btn-block" id="btn-pay" type="button">PAGAR <i class="fa fa-chevron-right"></i></button>
+            </div>
         </div>
-    </div>
+
+        <input id="car" type="hidden" value="<?php echo $Car->getId() ?>">
+        <input id="from" type="hidden" value="<?php echo $from ?>">
+        <input id="to" type="hidden" value="<?php echo $to ?>">
+    </form>
 </div>
 
 <script>
@@ -279,6 +283,17 @@
             /*readOnly: true,*/
             score: 3,
             size: 12
+        });
+
+        $('input[type=radio][name=warranty]').change(function() {
+
+            var subtotal = $("#subtotal").data("price");
+            var warranty = $(this).data("price");
+
+            var total = subtotal + warranty;
+
+            $("#total").data("price", total);
+            $("#total").html("$"+$.number(total, 0, ',', '.'));
         });
     });
 </script>

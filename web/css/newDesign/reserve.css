@@ -149,15 +149,14 @@
     font-weight: 300;
 }
 
-#payments-form .radio {
-    height: 200px;
+#payments .radio {
+    height: 130px;
     margin: 0;
     padding: 10px;
 }
 
-#payments-form img {
-    margin-top: 15%;
-    width: 90%;
+#payments img {
+    width: 80%;
 }
 
 #btn-pay {

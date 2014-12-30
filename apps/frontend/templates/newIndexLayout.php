@@ -25,7 +25,6 @@
 
         <!-- Estilos para específicos para el index -->
         <link href="/css/newDesign/index.css" rel="stylesheet" type="text/css">
-        <link href="/css/newDesign/reserve.css" rel="stylesheet" type="text/css">
 
         <!-- Fonts -->
         <link href="http://fonts.googleapis.com/css?family=Roboto:400,300,700" rel="stylesheet" type="text/css">
@@ -44,6 +43,7 @@
         <script src="/js/newDesign/datetimepicker/jquery.datetimepicker.js" type="text/javascript"></script>
         <script src="/js/newDesign/slick/slick.min.js" type="text/javascript"></script>
         <script src="/js/newDesign/raty/jquery.raty.js" type="text/javascript"></script>
+        <script src="/js/newDesign/number/jquery.number.min.js" type="text/javascript"></script>
 
         <?php include_partial("global/header") ?>
 

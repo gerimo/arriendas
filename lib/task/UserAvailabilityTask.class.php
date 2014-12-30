@@ -71,6 +71,20 @@ EOF;
                 $this->log("[".date("Y-m-d H:i:s")."] Mañana es fin de semana o festivo.");
 
                 $availabilitiesMissing = $options['expectedAvailabilities'];
+
+                $day        = date("Y-m-d");
+                $daysCount  = 0;
+                $daysPhrase = "";
+                $days       = array();
+
+                do {
+
+                    $days[] = $week[date("N", strtotime($day))];
+
+                    $daysCount++;
+
+                    $day = date("Y-m-d", strtotime("+".$daysCount." day"));
+                } while(date("N", strtotime($day)) == 6 || date("N", strtotime($day)) == 7 || Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime($day))));
             } else {
                 $this->log("[".date("Y-m-d H:i:s")."] No es, ni mañana sera fin de semana o festivo. Terminado");
                 exit;
