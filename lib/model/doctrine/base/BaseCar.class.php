@@ -33,6 +33,7 @@
  * @property Doctrine_Collection $Reserves
  * @property float $ratio_aprobacion
  * @property Comunas $Comuna
+ * @property integer $region
  * 
  * @method integer             getId()             Returns the current record's "id" value
  * @method integer             getUserId()         Returns the current record's "User_id" value
@@ -60,6 +61,7 @@
  * @method float               getRatioAprobacion() Returns the current record's "ratio_aprobacion" value
  * @method integer             getTransmission()        Returns the current record's "transmission" value
  * @method Comunas             getComuna()         Returns the current record's "Comuna" value
+ * @method integer             getRegion()         Returns the current record's "region" value
  * 
  * @method Doctrine_Collection getAvailabilities() Returns the current record's "Availabilities" collection
  * @method Doctrine_Collection getDamages()        Returns the current record's "Damages" collection
@@ -95,6 +97,7 @@
  * @method Car                 setRatioAprobacion() Sets the current record's "ratio_aprobacion" value
  * @method Car                 setTransmission() Sets the current record's "transmission" value
  * @method Car                 setComuna() Sets the current record's "Comuna" value
+ * @method Car                 setRegion() Sets the current record's "region" value
  * 
  * @package    CarSharing
  * @subpackage model
@@ -362,10 +365,10 @@ abstract class BaseCar extends sfDoctrineRecord
              'type' => 'string',
              'length' => 255,
              ));
-       /*$this->hasColumn('region', 'integer', 11, array(
+       $this->hasColumn('region', 'integer', 11, array(
             'type' => 'integer',
             'length' => 11,
-        ));*/
+        ));
        $this->hasColumn('comuna_id', 'integer', 11, array(
              'type' => 'integer',
              'length' => 11,
