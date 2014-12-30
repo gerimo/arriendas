@@ -117,10 +117,11 @@ EOF;
                 ->andWhere('C.seguro_ok = 4')
                 ->andWhere('C.region = 13')
                 /*->andWhereNotIn('C.id', array(398123))*/
-                ->orderBy('C.ratio_aprobacion DESC')
-                ->limit(500);
+                ->orderBy('C.ratio_aprobacion DESC');
 
             $Cars = $q->execute();
+
+            $this->log(count($Cars)." autos encontrados");
 
             if (count($Cars) == 0) {
                 $this->log("No hay autos disponibles");
