@@ -29,13 +29,13 @@
         longitud = position.coords.longitude; // Guardamos nuestra longitud
 
         <?php if ($sf_user->getAttribute('geolocalizacion') == true): ?>
-            geolocalizacion = true;
-        <?php else: ?>
-            geolocalizacion = false;
-        <?php endif; ?>
-    }
+        geolocalizacion = true;
+    <?php else: ?>
+    geolocalizacion = false;
+<?php endif; ?>
+}
 
-    function errores(err) {
+function errores(err) {
 
         // Controlamos los posibles errores
         if (err.code == 0) {
@@ -57,79 +57,79 @@
         var center = null;
 
         <?php if (stripos($_SERVER['SERVER_NAME'], "arrendas") !== FALSE): ?>
-            center = new google.maps.LatLng(-34.59, -58.401604);
-        <?php else: ?>
-            center = new google.maps.LatLng(-33.436024, -70.632858);
-        <?php endif ?>
+        center = new google.maps.LatLng(-34.59, -58.401604);
+    <?php else: ?>
+    center = new google.maps.LatLng(-33.436024, -70.632858);
+<?php endif ?>
 
-        if (geolocalizacion) {
-            center = new google.maps.LatLng(latitud, longitud);
-        }
+if (geolocalizacion) {
+    center = new google.maps.LatLng(latitud, longitud);
+}
 
-        <?php if (isset($_GET['ciudad']) && $_GET['ciudad'] == "arica"): ?>
-            center = new google.maps.LatLng(-18.32, -70.20);
-        <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "concepcion"): ?>
-            center = new google.maps.LatLng(-37.00, -72.30);
-        <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "laserena"): ?>
-            center = new google.maps.LatLng(-29.75, -71.10);
-        <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "temuco"): ?>
-            center = new google.maps.LatLng(-38.45, -72.40);
-        <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "valparaiso"): ?>
-            center = new google.maps.LatLng(-33.2, -71.4);
-        <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "viña"): ?>
-            center = new google.maps.LatLng(-33.0, -71.3);
-        <?php elseif (isset($map_clat) && isset($map_clng)): ?>
-            center = new google.maps.LatLng(<?= $map_clat ?>, <?= $map_clng ?>);
-        <?php endif; ?>
+<?php if (isset($_GET['ciudad']) && $_GET['ciudad'] == "arica"): ?>
+    center = new google.maps.LatLng(-18.32, -70.20);
+<?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "concepcion"): ?>
+    center = new google.maps.LatLng(-37.00, -72.30);
+<?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "laserena"): ?>
+    center = new google.maps.LatLng(-29.75, -71.10);
+<?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "temuco"): ?>
+    center = new google.maps.LatLng(-38.45, -72.40);
+<?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "valparaiso"): ?>
+    center = new google.maps.LatLng(-33.2, -71.4);
+<?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "viña"): ?>
+    center = new google.maps.LatLng(-33.0, -71.3);
+<?php elseif (isset($map_clat) && isset($map_clng)): ?>
+    center = new google.maps.LatLng(<?= $map_clat ?>, <?= $map_clng ?>);
+<?php endif; ?>
 
-        map = new google.maps.Map(document.getElementById('map-container'), {
-            zoom: 14,
-            center: center,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            scrollwheel: false
-        });
+map = new google.maps.Map(document.getElementById('map-container'), {
+    zoom: 14,
+    center: center,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    scrollwheel: false
+});
 
-        var market = null;
+var market = null;
 
-        if (geolocalizacion) {
+if (geolocalizacion) {
 
-            marker = new google.maps.Marker({
-                position: center,
-                map: map,
-                draggable: true,
-            });
-        }
+    marker = new google.maps.Marker({
+        position: center,
+        map: map,
+        draggable: true,
+    });
+}
 
-        lastValidCenter = center;
+lastValidCenter = center;
 
-        google.maps.event.addListener(map, 'idle', function() {
+google.maps.event.addListener(map, 'idle', function() {
 
-            google.maps.event.clearListeners(map, 'idle');
-            console.log("listener idle");
-            searchCars();
-        });
+    google.maps.event.clearListeners(map, 'idle');
+    console.log("listener idle");
+    searchCars();
+});
 
-        google.maps.event.addListener(map, 'dragend', function() {
-            
-            if (strictBounds === null || strictBounds.contains(map.getCenter())) {
-                lastValidCenter = map.getCenter();
-            } else {
-                map.panTo(lastValidCenter);
-            }
-            console.log("listener dragend");
-            searchCars();
-        });
+google.maps.event.addListener(map, 'dragend', function() {
 
-        google.maps.event.addListener(map, 'zoom_changed', function() {
+    if (strictBounds === null || strictBounds.contains(map.getCenter())) {
+        lastValidCenter = map.getCenter();
+    } else {
+        map.panTo(lastValidCenter);
+    }
+    console.log("listener dragend");
+    searchCars();
+});
 
-            if (strictBounds === null || strictBounds.contains(map.getCenter())) {
-                lastValidCenter = map.getCenter();
-            } else {
-                map.panTo(lastValidCenter);
-            }
-            console.log("listener zoom");
-            searchCars();
-        });
+google.maps.event.addListener(map, 'zoom_changed', function() {
+
+    if (strictBounds === null || strictBounds.contains(map.getCenter())) {
+        lastValidCenter = map.getCenter();
+    } else {
+        map.panTo(lastValidCenter);
+    }
+    console.log("listener zoom");
+    searchCars();
+});
 
         //Autocomplete
         var input = document.getElementById('direction');
@@ -170,7 +170,7 @@
                 new google.maps.Point(0, 0),
                 new google.maps.Point(17, 34),
                 new google.maps.Size(35, 35)
-            );
+                );
 
             marker.setIcon(image);
             marker.setPosition(place.geometry.location);
@@ -178,9 +178,9 @@
             var address = '';
             if (place.address_components) {
                 address = [
-                    (place.address_components[0] && place.address_components[0].short_name || ''),
-                    (place.address_components[1] && place.address_components[1].short_name || ''),
-                    (place.address_components[2] && place.address_components[2].short_name || '')
+                (place.address_components[0] && place.address_components[0].short_name || ''),
+                (place.address_components[1] && place.address_components[1].short_name || ''),
+                (place.address_components[2] && place.address_components[2].short_name || '')
                 ].join(' ');
             }
 
@@ -189,9 +189,9 @@
             console.log("listener place change");
             searchCars();
         });
-    }
-        
-    function localizame() {
+}
+
+function localizame() {
         if (navigator.geolocation) { // Si el navegador tiene geolocalizacion
             navigator.geolocation.getCurrentPosition(coordenadas, errores);
         } else {
@@ -339,9 +339,9 @@
             }
 
             if (response.cars.length > 0) {
-            
+
                 for (var i = 0; i < response.cars.length; i++) {
-                    
+
                     var dataCar = response.cars[i];
                     var latLng = new google.maps.LatLng(dataCar.latitude, dataCar.longitude);
                     
@@ -442,20 +442,20 @@
 
                     switch (dataCar.typeModel) {
                         case "1":
-                            typeModel = 'Automóvil';
-                            break;
+                        typeModel = 'Automóvil';
+                        break;
                         case "2":
-                            typeModel = 'Pick-Up';
-                            break;
+                        typeModel = 'Pick-Up';
+                        break;
                         case "3":
-                            typeModel = 'Station Wagon';
-                            break;
+                        typeModel = 'Station Wagon';
+                        break;
                         case "39":
-                            typeModel = 'SUV';
-                            break;
+                        typeModel = 'SUV';
+                        break;
                         case "4":
-                            typeModel = 'Furgón';
-                            break;
+                        typeModel = 'Furgón';
+                        break;
                     }
 
                     article = "<article class='box'>";
@@ -511,7 +511,7 @@
 
             markerCluster = new MarkerClusterer(map, markers, mcOptions);
         }, "json");
-    }
+}
 
     // Video
     function playPause() { 
@@ -539,7 +539,7 @@
     </div> -->
 
     <div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
-        
+
         <!-- Carousel -->
         <div id="section-home-carousel">
             <div>
@@ -597,19 +597,18 @@
     </div>
 
     <div class="hidden-xs row" id="section-map-filters">
-        <div class="col-md-2 text-center">
-            <span class="hidden-xs glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-            <strong>Filtros</strong>
+        <div class=" col-sm-2 col-md-2 text-center">
+            <strong class="heading">Filtros</strong>
         </div>
-        <div class="col-md-7">
+        <div class="col-sm-7 col-md-7">
             <ul>
                 <li><input type="checkbox" name="filter" id="automatic"> Automático</li>
                 <li><input type="checkbox" name="filter" id="diesel"> Petrolero</li>
                 <li><input type="checkbox" name="filrer" id="pasenger"> Más de 5 pasajeros</li>
             </ul>
         </div>
-        <div class="col-md-3 hidden-xs tabset">
-            <div class="col-md-6 text-center tab active" data-target="#tab-map"><strong><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Mapa</strong></div>
+        <div class="col-sm-3 col-md-3 hidden-xs tabset">
+            <div class="col-md-6 text-center tab " data-target="#tab-map"><strong><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Mapa</strong></div>
             <div class="col-md-6 text-center tab" data-target="#tab-list"><strong><span class="glyphicon glyphicon-list" aria-hidden="true"></span> Lista</strong></div>
         </div>
     </div>
@@ -629,7 +628,7 @@
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="filters">
-                
+
                 <ul class="nav navbar-nav">
                     <li><input type="checkbox" name="filter" id="automatic"> Automático</li>
                     <li><input type="checkbox" name="filter" id="diesel"> Petrolero</li>
@@ -663,127 +662,133 @@
     </div>
 </section>
 
-<section id="section-how-works">
+<section id = "fondo">
 
-    <div class="hidden-xs space-40"></div>
+    <section id="section-how-works">
+        <div class="row">
 
-    <div class="row">
-        <div class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-md-offset-1 col-md-4 text-center">
-            <h1 class="title">¿Cómo funciona?</h1>
+            <div class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-md-offset-1 col-md-10">
+                <h1 class="title"><span>¿Cómo Funciona?</span></h1>
+                <iframe class="iframe" src="//player.vimeo.com/video/45668172?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff"  frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>    
+            </div>
+
+
         </div>
-    </div>
+    </section>
 
-    <!-- <iframe class="iframe" src="//player.vimeo.com/video/45668172?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff" width="1000" height="562" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> -->
-</section>
+    <section id="section-compare-prices">
 
-<section id="section-compare-prices">
+        <div class="hidden-xs space-40"></div>
 
-    <div class="hidden-xs space-40"></div>
-
-    <div class="row">
-        <div class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-md-offset-1 col-md-4 text-center">
-            <h1 class="title">Compare precios</h1>
-        </div>
-    </div>
-
-    <div class="visible-xs space-20"></div>
-    <div class="hidden-xs space-60"></div>
-
-    <div class="row">
-        <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 table-responsive">
-            <table id="compare-prices-table">
-                <thead>
-                    <tr>
-                        <th class="table-transparent"></th>
-                        <th><img src="/images/newDesign/logo-avis.svg"></th>
-                        <th><img src="/images/newDesign/logo-hertz.svg"></th>
-                        <th><img src="/images/newDesign/logo-europcar.svg"></th>
-                        <th class="table-active"><img src="/images/newDesign/logo.svg"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>City Car</td>
-                        <td>$ 40.877</td>
-                        <td>$ 33.858</td>
-                        <td>$ 34.580</td>
-                        <td class="table-active">$ 17.000</td>
-                    </tr>
-                    <tr>
-                        <td>Mediano</td>
-                        <td>$ 49.207</td>
-                        <td>$ 51.946</td>
-                        <td>$ 54.081</td>
-                        <td class="table-active">$ 25.000</td>
-                    </tr>
-                    <tr>
-                        <td>Camioneta SUV</td>
-                        <td>$ 89.667</td>
-                        <td>$ 73.337</td>
-                        <td>$ 74.413</td>
-                        <td class="table-active">$ 35.000</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</section>
-
-<section id="section-on-news">
-
-    <div class="hidden-xs space-40"></div>
-
-    <div class="row">
-        <div class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-md-offset-1 col-md-4 text-center">
-            <h1 class="title">Arriendas en las noticias</h1>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-md-offset-4 col-md-4">
-            <div id="section-on-news-carousel">
-                <div><a href="http://www.t13.cl/videos/actualidad/arrienda-tu-auto-es-la-nueva-tendencia-entre-los-chilenos"><img src="images/logos_canais/13.png" alt="Canal 13"></a></div>
-                <div><a href="http://www.cnnchile.com/noticia/2014/01/10/arriendas-el-emprendimiento-que-permite-arrendar-tu-propio-auto"><img src="images/logos_canais/LogoCNN.png" alt="CNN Chile"></a></div>
-                <div><a href="http://www.24horas.cl/nacional/rent-a-car-vecino-la-nueva-forma-de-viajar-906946"><img src="images/logos_canais/logotvn2.png" alt="TVN"></a></div>
-                <div><a href="http://www.emol.com/noticias/economia/2012/07/27/552815/emprendedor-estrenara-primer-sistema-de-arriendo-de-vehiculos-por-hora-de-chile.html"><img src="images/logos_canais/LogoEmol.png" alt="EMOL"></a></div>
-                <div><a href="http://www.lun.com/lunmobile//pages/NewsDetailMobile.aspx?IsNPHR=1&dt=2012-10-23&NewsID=0&BodyId=0&PaginaID=6&Name=6&PagNum=0&SupplementId=0&Anchor=20121023_6_0_0"><img src="images/logos_canais/LogoLUN.png" alt="Las Últimas Noticias"></a></div>
-                <div><a href="http://www.tacometro.cl/prontus_tacometro/site/artic/20121030/pags/20121030152946.html"><img src="images/logos_canais/LogoPublimetro.png" alt="Publimetro"></a></div>
-                <div><a href="http://www.lasegunda.com/Noticias/CienciaTecnologia/2012/08/774751/arriendascl-sistema-de-alquiler-de-autos-por-horas-debuta-en-septiembre"><img src="images/logos_canais/LogoLaSegunda.png" alt="La Segunda"></a></div>
-                <div><a href="http://www.lacuarta.com/noticias/cronica/2013/08/63-157571-9-ahora-puedes-arrendar-el-automovil-de-tu-vecino.shtml"><img src="images/logos_canais/LogoLaCuarta.png" alt="La Cuarta"></a></div>
-                <div><a href="http://www.diariopyme.cl/arrienda-tu-auto-y-gana-dinero-extra-a-fin-de-mes/prontus_diariopyme/2013-06-23/212000.html"><img src="images/logos_canais/LogoDiarioPyme.png" alt="Diario PYME"></a></div>
+        <div class="row">
+            <div class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-md-offset-1 col-md-4 text-center">
+                <h1 class="title">Compare precios</h1>
             </div>
         </div>
-    </div>
-</section>
 
-<section id="section-testimonials">
+        <div class="visible-xs space-20"></div>
 
-    <div class="hidden-xs space-40"></div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 table-responsive">
+                <table id="compare-prices-table">
+                    <thead>
+                        <tr>
+                            <th class="table-transparent"></th>
+                            <th><img src="/images/newDesign/logo-avis.svg"></th>
+                            <th><img src="/images/newDesign/logo-hertz.svg"></th>
+                            <th><img src="/images/newDesign/logo-europcar.svg"></th>
+                            <th class="table-active"><img src="/images/newDesign/logo.svg"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>City Car</td>
+                            <td>$ 40.877</td>
+                            <td>$ 33.858</td>
+                            <td>$ 34.580</td>
+                            <td class="table-active">$ 17.000</td>
+                        </tr>
+                        <tr>
+                            <td>Mediano</td>
+                            <td>$ 49.207</td>
+                            <td>$ 51.946</td>
+                            <td>$ 54.081</td>
+                            <td class="table-active">$ 25.000</td>
+                        </tr>
+                        <tr>
+                            <td>Camioneta SUV</td>
+                            <td>$ 89.667</td>
+                            <td>$ 73.337</td>
+                            <td>$ 74.413</td>
+                            <td class="table-active">$ 35.000</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-    <div class="row">
-        <div class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-md-offset-4 col-md-4" id="testimonials-container">
-            <h1>Testimonios</h1>
-            <div id="section-testimonials-carousel">
-                <div>
-                    <p class="testimonial"><i class="fa fa-quote-left"></i> Puedo arrendar desde mi casa, en cualquier horario, sin tarjeta de crédito. Es el mismo auto que en un rent a car pero 30% más barato. <i class="fa fa-quote-right"></i></p>
-                    <p class="user">Javiera Cruzar,</p>
-                    <p class="user-type">Usuario Arriendas</p>
+        <div class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-md-offset-1 col-md-10 text-center">
+            <p class = "text-table">Precios con IVA, aplicando descuento por reservas en internet, con seguro de daños, 
+                robo y accidentes personales. Muestra tomada 4/4/2013 en sus páginas de internet</p>
+            </div>
+        </section>
+
+        <section id="section-on-news">
+
+            <div class="hidden-xs space-40"></div>
+
+            <div class="row">
+                <div class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-md-offset-1 col-md-4 text-center">
+                    <h1 class="title">Arriendas en las noticias</h1>
                 </div>
-                <div>
-                    <p class="testimonial"><i class="fa fa-quote-left"></i> Puedo arrendar desde mi casa, en cualquier horario, sin tarjeta de crédito. Es el mismo auto que en un rent a car pero 30% más barato. <i class="fa fa-quote-right"></i></p>
-                    <p class="user">Javiera Cruzar,</p>
-                    <p class="user-type">Usuario Arriendas</p>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-md-offset-2 col-md-8">
+                    <div id="section-on-news-carousel">
+                        <div><a href="http://www.t13.cl/videos/actualidad/arrienda-tu-auto-es-la-nueva-tendencia-entre-los-chilenos"><img src="images/logos_canais/13.png" alt="Canal 13"></a></div>
+                        <div><a href="http://www.cnnchile.com/noticia/2014/01/10/arriendas-el-emprendimiento-que-permite-arrendar-tu-propio-auto"><img src="images/logos_canais/LogoCNN.png" alt="CNN Chile"></a></div>
+                        <div><a href="http://www.24horas.cl/nacional/rent-a-car-vecino-la-nueva-forma-de-viajar-906946"><img src="images/logos_canais/logotvn2.png" alt="TVN"></a></div>
+                        <div><a href="http://www.emol.com/noticias/economia/2012/07/27/552815/emprendedor-estrenara-primer-sistema-de-arriendo-de-vehiculos-por-hora-de-chile.html"><img src="images/logos_canais/LogoEmol.png" alt="EMOL"></a></div>
+                        <div><a href="http://www.lun.com/lunmobile//pages/NewsDetailMobile.aspx?IsNPHR=1&dt=2012-10-23&NewsID=0&BodyId=0&PaginaID=6&Name=6&PagNum=0&SupplementId=0&Anchor=20121023_6_0_0"><img src="images/logos_canais/LogoLUN.png" alt="Las Últimas Noticias"></a></div>
+                        <div><a href="http://www.tacometro.cl/prontus_tacometro/site/artic/20121030/pags/20121030152946.html"><img src="images/logos_canais/LogoPublimetro.png" alt="Publimetro"></a></div>
+                        <div><a href="http://www.lasegunda.com/Noticias/CienciaTecnologia/2012/08/774751/arriendascl-sistema-de-alquiler-de-autos-por-horas-debuta-en-septiembre"><img src="images/logos_canais/LogoLaSegunda.png" alt="La Segunda"></a></div>
+                        <div><a href="http://www.lacuarta.com/noticias/cronica/2013/08/63-157571-9-ahora-puedes-arrendar-el-automovil-de-tu-vecino.shtml"><img src="images/logos_canais/LogoLaCuarta.png" alt="La Cuarta"></a></div>
+                        <div><a href="http://www.diariopyme.cl/arrienda-tu-auto-y-gana-dinero-extra-a-fin-de-mes/prontus_diariopyme/2013-06-23/212000.html"><img src="images/logos_canais/LogoDiarioPyme.png" alt="Diario PYME"></a></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <section id="section-testimonials">
+
+        <div class="hidden-xs space-40"></div>
+
+        <div class="row">
+            <div class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6" id="testimonials-container">
+                <h1>Testimonios</h1>
+                <div id="section-testimonials-carousel">
+                    <div>
+                        <p class="testimonial"><i class="fa fa-quote-left"></i> Puedo arrendar desde mi casa, en cualquier horario, sin tarjeta de crédito. Es el mismo auto que en un rent a car pero 30% más barato. <i class="fa fa-quote-right"></i></p>
+                        <p class="user">Javiera Cruzar,</p>
+                        <p class="user-type">Usuario Arriendas</p>
+                    </div>
+                    <div>
+                        <p class="testimonial"><i class="fa fa-quote-left"></i> Puedo arrendar desde mi casa, en cualquier horario, sin tarjeta de crédito. Es el mismo auto que en un rent a car pero 30% más barato. <i class="fa fa-quote-right"></i></p>
+                        <p class="user">Javiera Cruzar,</p>
+                        <p class="user-type">Usuario Arriendas</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="hidden-xs space-40"></div>
-</section>
+        <div class="hidden-xs space-40"></div>
+    </section>
 
-<script>
+    <script>
 
-    $(document).ready(function(){
+        $(document).ready(function(){
 
         /*// Si comuna es visible, se preselecciona comuna más hot
         if ($("#commune").is(':visible')) {            
@@ -813,12 +818,12 @@
             /*speed: 300,*/
             /*variableWidth: true,*/
 
-            dots: true,
             infinite: true,
-            speed: 500,
-            fade: true,
-            slide: 'div',
-            cssEase: 'linear'
+            arrows:true,  
+            slidesToShow: 4,
+            slidesToScroll: 4,
+
+
         });
 
         $('#section-testimonials-carousel').slick({
@@ -828,99 +833,98 @@
         });
     });
 
-    if ($(window).width() > 768) {
+if ($(window).width() > 768) {
 
-        $('#section-home').css({'height': $(window).height()});
-        $('#section-map').css({'height': $(window).height()});
+    $('#section-home').css({'height': $(window).height()});
 
-        $("#map, #map-list, #list").css({height: $(window).height() - $("#section-map-form-search").outerHeight() - $("#section-map-filters").outerHeight()});
+    $("#map, #map-list, #list").css({height: $(window).height() - $("#section-map-form-search").outerHeight() - $("#section-map-filters").outerHeight()});
+}
+
+$("input[type='checkbox']").change(function(){
+    console.log("filter change");
+    searchCars();
+});
+
+$("#search").click(function(e){
+    e.preventDefault();
+    console.log("search click");
+    searchCars();        
+});
+
+$(".tab").click(function(){
+
+    var target = $(this).data("target");
+
+    if (target == "#tab-map") {
+        $("#region-container").hide();
+        $("#commune-container").hide();
+        $("#direction-container").show();
     }
 
-    $("input[type='checkbox']").change(function(){
-        console.log("filter change");
-        searchCars();
-    });
+    if (target == "#tab-list") {
+        $("#direction-container").hide();
+        $("#region-container").show();
+        $("#commune-container").show();
+    }
+});
 
-    $("#search").click(function(e){
-        e.preventDefault();
-        console.log("search click");
-        searchCars();        
-    });
+$('#header .animate').each(function(){
 
-    $(".tab").click(function(){
+    var target  = $(this).data('target');
 
-        var target = $(this).data("target");
-
-        if (target == "#tab-map") {
-            $("#region-container").hide();
-            $("#commune-container").hide();
-            $("#direction-container").show();
-        }
-
-        if (target == "#tab-list") {
-            $("#direction-container").hide();
-            $("#region-container").show();
-            $("#commune-container").show();
-        }
-    });
-
-    $('#header .animate').each(function(){
-
-        var target  = $(this).data('target');
-
-        $(this).on('click', function(e) {
-
-            e.preventDefault();
-
-            $('html, body').animate({
-                scrollTop: $(target).offset().top
-            }, 1250);
-        });
-    });
-
-    $(".ico-search").on('click', function(e) {
+    $(this).on('click', function(e) {
 
         e.preventDefault();
 
         $('html, body').animate({
-            scrollTop: $("#section-map").offset().top
+            scrollTop: $(target).offset().top
         }, 1250);
     });
+});
 
-    $(".tab").on('click', function(){
+$(".ico-search").on('click', function(e) {
 
-        var target = $(this).data("target");
+    e.preventDefault();
 
-        $(".tab").removeClass("active");
-        $(this).addClass("active");
+    $('html, body').animate({
+        scrollTop: $("#section-map").offset().top
+    }, 1250);
+});
 
-        $(".tab-container").hide();
-        $(target).show();
-    });
+$(".tab").on('click', function(){
 
-    $('.datetimepicker').datetimepicker({
-        allowTimes:[
-            "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
-            "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
-            "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
-            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-            "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-            "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-            "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-            "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
-        ],
-        dayOfWeekStart: 1,
-        lang:'es',
-        i18n:{
-            es:{
-                months:[
-                    'Enero','Febrero','Marzo','Abril',
-                    'Mayo','Junio','Julio','Agosto',
-                    'Septiembre','Octubre','Noviembre','Diciembre'
-                ],
-                dayOfWeek:["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"]
-            }
-        },
-        format:'d-m-Y H:i'
-    });
+    var target = $(this).data("target");
+
+    $(".tab").removeClass("active");
+    $(this).addClass("active");
+
+    $(".tab-container").hide();
+    $(target).show();
+});
+
+$('.datetimepicker').datetimepicker({
+    allowTimes:[
+    "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
+    "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
+    "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
+    "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+    "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+    "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
+    "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
+    "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
+    ],
+    dayOfWeekStart: 1,
+    lang:'es',
+    i18n:{
+        es:{
+            months:[
+            'Enero','Febrero','Marzo','Abril',
+            'Mayo','Junio','Julio','Agosto',
+            'Septiembre','Octubre','Noviembre','Diciembre'
+            ],
+            dayOfWeek:["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"]
+        }
+    },
+    format:'d-m-Y H:i'
+});
 </script>
