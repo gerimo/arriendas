@@ -316,7 +316,7 @@ where c.id=
 
     public static function getPrice($from, $to, $pricePerHour, $pricePerDay, $pricePerWeek, $pricePerMonth) {
 
-        $duration = intval((strtotime($to) - strtotime($from))/3600);
+        $duration = floor((strtotime($to) - strtotime($from))/3600);
 
         $days = floor($duration / 24);
         $hours = ($duration / 24) - $days;

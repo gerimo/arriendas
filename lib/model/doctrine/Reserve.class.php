@@ -569,7 +569,7 @@ class Reserve extends BaseReserve {
         $Car = $this->getCar();
 
         $days = floor($this->duration / 24);
-        $hours = ($this->duration / 24) - $days;
+        $hours = $this->duration % 24;
 
         if ($hours >= 0.25) {
             $days = $days + 1;
@@ -589,5 +589,29 @@ class Reserve extends BaseReserve {
         }
         
         return floor($pricePerDay * $days + $Car->getPricePerHour() * $hours);
+    }
+
+
+    public static function calcularMontoLiberacionGarantia($price, $from, $to) {
+
+        $duration = floor((strtotime($to) - strtotime($from))/3600);
+        $days     = floor($duration/24);
+        $hours    = $duration%24;
+        
+        if ($hours >= 6) {
+            if ($days) {
+                $total = ($days * $price) + $price;
+            } else {
+                $total = $price;
+            }            
+        } else {
+            if ($days) {
+                $total = ($days * $price) + (($hours/6) * $price);
+            } else {
+                $total = ($hours/6) * $price;
+            }
+        }
+
+        return round($total);
     }
 }

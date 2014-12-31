@@ -179,6 +179,19 @@ footer .fa-twitter:hover {
     height: 100px;
 }
 
+.ui-dialog-buttonpane {
+    padding: .5em 0 !important;
+    text-align: center !important;
+}
+
+.ui-dialog-buttonset {
+    float: none !important;
+}
+
+.ui-dialog-buttonset button{
+    width: 125px;
+}
+
 @media only screen and (min-width:768px) {
 
     header .navbar-right {

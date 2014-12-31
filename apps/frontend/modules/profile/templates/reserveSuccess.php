@@ -162,34 +162,36 @@
         </div>
     <?php endif ?>
 
-    <form action="#" id="reserve-form">
+    <form action="<?php echo url_for('profile/pay') ?>" id="reserve-form" method="post">
 
         <!-- Resumen y garantía -->
         <div class="row">
             <div class="col-md-offset-2 col-md-8">
                 <ul id="fromTo">
-                    <li><i class="fa fa-plus"></i>Desde: <?php echo $from ?></li>
-                    <li><i class="fa fa-plus"></i>Hasta: <?php echo $to ?></li>
+                    <li><i class="fa fa-plus"></i>Desde: <?php echo $fromHuman ?></li>
+                    <li><i class="fa fa-plus"></i>Hasta: <?php echo $toHuman ?></li>
                 </ul>
 
                 <div id="warranty-container">
-                    <div id="sub-price-container">
-                        <span class="price pull-right" id="subtotal" data-price="<?php echo $price ?>"><?php echo '$'.number_format($price, 0, ',', '.') ?></span>SUB TOTAL
-                    </div>
-                    
+
+                        <div id="sub-price-container">
+                            <span class="price pull-right" id="subtotal" data-price="<?php echo $price ?>"><?php echo '$'.number_format($price, 0, ',', '.') ?></span>SUB TOTAL
+                        </div>
                     
                         <div class="radio">
                             <label>
-                                <input data-price="180000" name="warranty" type="radio">
+                                <input data-price="<?php echo $amountWarranty ?>" name="warranty" type="radio" value="1">
                                 $180.000 Depósito en Garantía (se devuelve al finalizar el Arriendo)
                             </label>
                         </div>
-                        <div class="radio">
-                            <label>
-                                <input data-price="8700" name="warranty" type="radio">
-                                $8.700 por Eliminar el Depósito en Garantía
-                            </label>                        
-                        </div>
+                        <?php if (!$isDebtor): ?>
+                            <div class="radio">
+                                <label>
+                                    <input data-price="<?php echo $amountWarrantyFree ?>" name="warranty" type="radio" value="0">
+                                    $8.700 por Eliminar el Depósito en Garantía
+                                </label>
+                            </div>
+                        <?php endif ?>
                     <span class="pull-right">TOTAL <span class="price" data-price="<?php echo $price ?>" id="total"><?php echo '$'.number_format($price, 0, ',', '.') ?></span></span>
                 </div>
             </div>
@@ -203,56 +205,68 @@
         <div class="row" id="payments">
             <div class="col-xs-6 col-sm-4 col-md-3 radio">
                 <label>
-                    <input id="payment7" name="payment-group" type="radio">
+                    <input id="payment7" name="payment-group" type="radio" value="Banco Falabella">
                     <img src="/images/newDesign/payments/svg_07.svg" alt="">
                 </label>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-3 radio">
                 <label>
-                    <input id="payment8" name="payment-group" type="radio">
+                    <input id="payment8" name="payment-group" type="radio" value="Banco BBVA">
                     <img src="/images/newDesign/payments/svg_08.svg" alt="">
                 </label>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-3 radio">
                 <label>
-                    <input id="payment9" name="payment-group" type="radio">
+                    <input id="payment9" name="payment-group" type="radio" value="Banco BICE">
                     <img src="/images/newDesign/payments/svg_09.svg" alt="">
                 </label>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-3 radio">
                 <label>
-                    <input id="payment10" name="payment-group" type="radio">
+                    <input id="payment10" name="payment-group" type="radio" value="Banco Internacional">
                     <img src="/images/newDesign/payments/svg_10.svg" alt="">
                 </label>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-3 radio">
                 <label>
-                    <input id="payment11" name="payment-group" type="radio">
+                    <input id="payment11" name="payment-group" type="radio" value="Banco Credito e Inversiones">
                     <img src="/images/newDesign/payments/svg_11.svg" alt="">
                 </label>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-3 radio">
                 <label>
-                    <input id="payment12" name="payment-group" type="radio">
+                    <input id="payment12" name="payment-group" type="radio" value="Banco Estado">
                     <img src="/images/newDesign/payments/svg_12.svg" alt="">
                 </label>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-3 radio">
                 <label>
-                    <input id="payment13" name="payment-group" type="radio">
+                    <input id="payment13" name="payment-group" type="radio" value="Banco Scotiabank">
                     <img src="/images/newDesign/payments/svg_13.svg" alt="">
                 </label>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-3 radio">
                 <label>
-                    <input id="payment14" name="payment-group" type="radio">
+                    <input id="payment15" name="payment-group" type="radio" value="Banco Itau">
+                    <img src="/images/newDesign/payments/Itau.png" alt="">
+                </label>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-3 radio">
+                <label>
+                    <input id="payment14" name="payment-group" type="radio" value="Banco Corpbanca">
                     <img src="/images/newDesign/payments/svg_14.svg" alt="">
                 </label>
             </div>
             <div class="col-xs-6 col-sm-4 col-md-3 radio">
                 <label>
-                    <input id="payment15" name="payment-group" type="radio">
+                    <input id="payment15" name="payment-group" type="radio" value="Banco de Chile">
                     <img src="/images/newDesign/payments/svg_15.svg" alt="">
+                </label>
+            </div>
+            <div class="col-xs-6 col-sm-4 col-md-3 radio">
+                <label>
+                    <input id="payment15" name="payment-group" type="radio" value="Banco Santander">
+                    <img src="/images/newDesign/payments/Santander.png" alt="">
                 </label>
             </div>
         </div>
@@ -263,10 +277,19 @@
             </div>
         </div>
 
-        <input id="car" type="hidden" value="<?php echo $Car->getId() ?>">
-        <input id="from" type="hidden" value="<?php echo $from ?>">
-        <input id="to" type="hidden" value="<?php echo $to ?>">
+        <input id="car" name="car" type="hidden" value="<?php echo $Car->getId() ?>">
+        <input id="from" name="from" type="hidden" value="<?php echo $from ?>">
+        <input id="to" name="to" type="hidden" value="<?php echo $to ?>">
     </form>
+
+    <!-- Alert -->
+    <div style="display:none">
+        <div id="dialog-alert" title="">
+            <p></p>
+        </div>
+
+        <?php include_partial('contratosArrendatario') ?>
+    </div>
 </div>
 
 <script>
@@ -287,13 +310,117 @@
 
         $('input[type=radio][name=warranty]').change(function() {
 
-            var subtotal = $("#subtotal").data("price");
-            var warranty = $(this).data("price");
+            var subtotal     = $("#subtotal").data("price");
+            var warrantyType = $(this).val();
+            var price        = $(this).data("price");
+            var total        = 0;
 
-            var total = subtotal + warranty;
+            var from     = new Date($("#from").val());
+            var to       = new Date($("#to").val());
+            var duration = (to - from)/1000/60/60
+            var days     = Math.floor(duration/24);
+            var hours    = duration % 24;
+
+            if (warrantyType == 1) {
+                total = subtotal + price;
+            } else {
+                if (hours >= 6) {
+                    if (days) {
+                        total = subtotal + (days * price) + price;
+                    } else {
+                        total = subtotal + price;
+                    }            
+                } else {
+                    if (days) {
+                        total = subtotal + (days * price) + ((hours/6) * price);
+                    } else {
+                        total = subtotal + (hours/6) * price;
+                    }
+                }
+            }
 
             $("#total").data("price", total);
             $("#total").html("$"+$.number(total, 0, ',', '.'));
         });
+
+        $("#btn-pay").click(function(){
+
+            if (isValidForm()) {
+
+                $("#confirmarContratosArrendatario").dialog({
+                    closeOnText: true,
+                    modal: true,
+                    resizable: true,
+                    title: "Contratos",
+                    width: "90%",
+                    buttons: [
+                        {
+                            text: "Cancelar",
+                            click: function() {
+                                $( this ).dialog( "close" );
+                            }
+                        },
+                        {
+                            text: "Aceptar",
+                            click: function() {
+
+                                var inputs = $("#confirmarContratosArrendatario input[type='checkbox']");
+                                var userAccept = true;
+                                
+                                $.each(inputs, function(index, input){
+
+                                    if (!input.checked) {
+                                        userAccept = false;
+                                    }
+                                });
+
+                                if (userAccept) {
+                                    $("#reserve-form").submit();
+                                }
+                            }
+                        }
+                    ]
+                });
+            }
+        });
     });
+
+    function isValidForm() {
+
+        var warranty = $('input:radio[name=warranty]:checked').val();
+
+        if (warranty === undefined) {
+
+            $("#dialog-alert p").html("Necesitas definir el tipo de garatía");
+            $("#dialog-alert").attr("title", "¡Alerta!");
+            $("#dialog-alert").dialog({
+                buttons: [{
+                    text: "Aceptar",
+                    click: function() {
+                        $( this ).dialog( "close" );
+                    }
+                }]
+            });
+            return false;
+        }
+
+        var payment = $('input:radio[name=payment-group]:checked').val();
+
+        if (payment === undefined) {
+
+            $("#dialog-alert p").html("Necesitas seleccionar tu medio de pago");
+            $("#dialog-alert").attr("title", "¡Alerta!");
+            $("#dialog-alert").dialog({
+                buttons: [{
+                    text: "Aceptar",
+                    click: function() {
+                        $( this ).dialog( "close" );
+                    }
+                }]
+            });
+            return false;
+        }
+
+        return true;
+    }
 </script>

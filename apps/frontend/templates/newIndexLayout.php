@@ -8,6 +8,13 @@
         <?php //include_metas() ?>
         <?php //include_title() ?>
         <?php //include_stylesheets() ?>
+
+        <link href="http://arriendas.assets.s3.amazonaws.com/images/favicon.ico" rel="shortcut icon" type="image/x-icon">
+
+        <!-- JQuery UI -->
+        <link href="/css/newDesign/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css">
+        <link href="/css/newDesign/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" type="text/css">
+        <link href="/css/newDesign/jquery-ui/jquery-ui.theme.min.css" rel="stylesheet" type="text/css">
         
         <!-- Bootstrap -->
         <link href="/css/newDesign/bootstrap.min.css" rel="stylesheet" type="text/css">
@@ -36,6 +43,9 @@
         <!-- JQuery -->
         <script src="/js/newDesign/jquery-2.1.3.min.js" type="text/javascript"></script>
 
+        <!-- JQuery UI -->
+        <script src="/js/newDesign/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+        
         <!-- Bootstrap -->
         <script src="/js/newDesign/bootstrap.min.js" type="text/javascript"></script>
 

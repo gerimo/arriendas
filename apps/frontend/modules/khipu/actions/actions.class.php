@@ -12,7 +12,44 @@ require_once sfConfig::get('sf_lib_dir') . '/vendor/khipu/KhipuService.php';
  */
 class khipuActions extends sfActions {
 
+    public function executeGeneratePayment (sfWebRequest $request) {
+
+        try {
+
+            $reserveId     = $request->getParameter("reserveId");
+            $transactionId = $request->getParameter("transactionId");
+
+            $Reserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
+            $Transaction = Doctrine_Core::getTable('Transaction')->find($transactionId);
+
+            $settings = $this->getSettings();
+                        
+            $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["create-payment-url"]);
+
+            $data = array(
+                'receiver_id'    => $settings["receiver_id"],
+                'subject'        => "Arriendo " . $Reserve->getCar()->getModel()->getBrand()->getName()." ".$Reserve->getCar()->getModel()->getName(),
+                'body'           => "Reserva n° ".$Reserve->getId(),
+                'amount'         => $Reserve->getPrice() + $Reserve->getMontoLiberacion() - $Transaction->getDiscountamount(),
+                'notify_url'     => $this->generateUrl("khipuNotify", array(), true),
+                'return_url'     => $this->generateUrl("khipuReturn", array(), true),
+                'cancel_url'     => $this->generateUrl("khipuCancel", array(), true),
+                'transaction_id' => $transactionId,
+                'picture_url'    => "",
+                'custom'         => "",
+            );
+
+            $url = $khipuService->createPaymentURL($data)->url;
+        } catch (Execption $e) {
+            /*Utils::reportError($e->getMessage(), "khipu/generatePayment");*/
+        }
+
+        $this->redirect($url);
+    }
+
+    /////////////////////////////////////////////////////////////////
     public function executeConfirmPayment(sfWebRequest $request) {
+
         $this->carMarcaModel = urldecode($request->getParameter("carMarcaModel"));
         $this->duracionReserva = urldecode($request->getParameter("duracionReserva"));
         $montoTotalPagoPorDia = $request->getParameter("duracionReservaPagoPorDia");
@@ -53,9 +90,7 @@ class khipuActions extends sfActions {
                     }
                 }
 
-
                 $montoLiberacion = $reserve->getMontoLiberacion();
-
 
                 $this->hasDiscountFB = $order->getDiscountfb();
                 $this->priceMultiply = 1 - (0.05 * $order->getDiscountfb());
@@ -64,12 +99,15 @@ class khipuActions extends sfActions {
 
                 $finalPrice = $order->getPrice() - $order->getDiscountamount() + $montoLiberacion;
                 $finalPrice = number_format($finalPrice, 0, '.', '');
+
                 $this->finalPrice = $finalPrice;
 
                 if ($finalPrice > 0) {
                     /* la transaccion es valida, inicializo pago */
                     $settings = $this->getSettings();
+                    
                     $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["create-payment-url"]);
+
                     $data = array(
                         'receiver_id' => $settings["receiver_id"],
                         'subject' => "Arriendo " . $this->carMarcaModel,
@@ -82,6 +120,9 @@ class khipuActions extends sfActions {
                         'picture_url' => $carImageUrl,
                         'custom' => 'el modelo en color rojo',
                     );
+
+                    $this->redirect($khipuService->createPaymentURL($data)->url);
+
                     $this->checkOutUrl = "#";
                     try {
                         $msg = "Call khipu with url => " . $settings["create-payment-url"] . ", transaction_id:" . $data["transaction_id"] . "   notify_url: " . $data["notify_url"];

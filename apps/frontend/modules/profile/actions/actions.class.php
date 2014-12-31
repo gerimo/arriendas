@@ -11,7 +11,7 @@
 
 class profileActions extends sfActions {
 
-    public function executeChangePassword(sfWebRequest $request) {
+    public function executeChangePassword (sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
 
@@ -20,7 +20,7 @@ class profileActions extends sfActions {
         $this->User = Doctrine_Core::getTable('user')->find($userId);
     }
 
-    public function executeDoChangePassword(sfWebRequest $request) {
+    public function executeDoChangePassword (sfWebRequest $request) {
 
         $return = array("error" => false);
 
@@ -62,7 +62,7 @@ class profileActions extends sfActions {
         return sfView::NONE;
     }
 
-    public function executeEdit(sfWebRequest $request) {
+    public function executeEdit (sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
 
@@ -90,7 +90,93 @@ class profileActions extends sfActions {
         $this->regiones = $q->fetchArray();
     }
 
-    public function executeReserve(sfWebRequest $request) {
+    public function executePay (sfWebRequest $request) {
+
+        $warranty = $request->getPostParameter("warranty", null);
+        $payment  = $request->getPostParameter("payment-group", null);
+
+        $carId = $request->getPostParameter("car", null);
+        $from  = $request->getPostParameter("from", null);
+        $to    = $request->getPostParameter("to", null);
+
+        if (is_null($warranty) || is_null($payment) || is_null($carId) || is_null($from) || is_null($to)) {
+            throw new Exception("No, no, no.", 1);
+        }
+
+        $datesError = $this->validateDates($from, $to);
+        if ($datesError) {
+            throw new Exception($datesError, 1);
+        }
+
+        $Car = Doctrine_Core::getTable('Car')->find($carId);
+        if (!$Car) {
+            throw new Exception("No se encontró el auto.", 1);
+        }
+
+        if ($Car->hasReserve($from, $to)) {
+            throw new Exception("El auto ya posee un reserva en las fechas indicadas.", 1);
+        }
+
+        $deposito = "pagoPorDia";
+        $amountWarranty = Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to);
+        if ($warranty) {
+            $deposito = "depositoGarantia";
+            $amountWarranty = sfConfig::get("app_monto_garantia");
+        }
+
+        $duration = intval((strtotime($to) - strtotime($from))/3600);
+
+        $userId = sfContext::getInstance()->getUser()->getAttribute('userid');
+
+        $User = Doctrine_Core::getTable('User')->find($userId);
+        
+        // Guardo en session // Esto se deja 'xsiaca'
+        $this->getUser()->setAttribute('fechainicio', date("d-m-Y", strtotime($from)));
+        $this->getUser()->setAttribute('fechatermino', date("d-m-Y", strtotime($to)));
+        $this->getUser()->setAttribute('horainicio', date("g:i A",strtotime($from)));
+        $this->getUser()->setAttribute('horatermino', date("g:i A",strtotime($to)));
+
+        $Reserve = new Reserve();
+        $Reserve->setDuration($duration);
+        $Reserve->setDate(date("Y-m-d H:i:s", strtotime($from)));
+        $Reserve->setUser($User);
+        $Reserve->setCar($Car);
+
+        if ($User->getBlocked()) {
+            $Reserve->setVisibleOwner(false);
+            $Reserve->setConfirmed(true);
+        }
+
+        $Reserve->setPrice(Car::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth()));
+        $Reserve->setMontoLiberacion($amountWarranty);
+        $Reserve->setFechaReserva(date("Y-m-d H:i:s"));
+
+        // Flujo nuevo
+        $Reserve->setConfirmed(false);
+        $Reserve->setImpulsive(true);
+
+        $Reserve->save();
+
+        $Transaction = new Transaction();
+        $Transaction->setCar($Car->getModel()->getName()." ".$Car->getModel()->getBrand()->getName());
+        $Transaction->setPrice($Reserve->getPrice());
+        $Transaction->setUser($Reserve->getUser());
+        $Transaction->setDate(date("Y-m-d H:i:s"));
+
+        $TransactionType = Doctrine_Core::getTable('TransactionType')->find(1);
+        $Transaction->setTransactionType($TransactionType);
+        $Transaction->setReserve($Reserve);
+        $Transaction->setCompleted(false);
+        $Transaction->setImpulsive(true);
+        $Transaction->save();
+
+        $this->getRequest()->setParameter("reserveId", $Reserve->getId());
+        $this->getRequest()->setParameter("transactionId", $Transaction->getId());
+
+        $this->forward("khipu", "generatePayment");
+    }
+
+    public function executeReserve (sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
 
@@ -107,9 +193,11 @@ class profileActions extends sfActions {
         }
 
         $from = date("Y-m-d H:i", $f);
-        $this->from = date("D d/m/Y H:iA", $f);
+        $this->from = date("Y-m-d H:i", $f);
+        $this->fromHuman = date("D d/m/Y H:iA", $f);
         $to = date("Y-m-d H:i", $t);
-        $this->to = date("D d/m/Y H:iA", $t);
+        $this->to = date("Y-m-d H:i", $t);
+        $this->toHuman = date("D d/m/Y H:iA", $t);
 
         $this->Car = Doctrine_Core::getTable('Car')->find($carId);
 
@@ -152,6 +240,10 @@ class profileActions extends sfActions {
         if ($this->Car->getTransmission()) {
             $this->transmission = true;
         }
+
+        $this->isDebtor           = sfContext::getInstance()->getUser()->getAttribute('moroso');
+        $this->amountWarranty     = sfConfig::get("app_monto_garantia");
+        $this->amountWarrantyFree = sfConfig::get("app_monto_garantia_por_dia");
     }
 
     //////////////////////////////////////////////////////////////////////////////////
@@ -664,12 +756,6 @@ class profileActions extends sfActions {
         die();
     }
     
-    
-    /**
-     * Action para aprobación de oportunidades directo desde link en email
-     * 
-     * @param sfWebRequest $request
-     */
     public function executeAprobarReserve(sfWebRequest $request) {
         $idReserve = $request->getParameter('idReserve');
         $idUser = $request->getParameter('idUser');
@@ -801,11 +887,6 @@ class profileActions extends sfActions {
         $this->redirect('profile/pedidos');
     }
     
-    /**
-     * Action para aprobación de oportunidades directo desde link en email
-     * 
-     * @param sfWebRequest $request
-     */
     public function executeAprobarOportunidad(sfWebRequest $request) {
 
         $idReserve = $request->getParameter('idReserve');
@@ -1454,10 +1535,6 @@ class profileActions extends sfActions {
         }
     }
 
-    public function executePruebaCss(sfWebRequest $request) {
-        
-    }
-
     public function executeAseguraTuAuto(sfWebRequest $request) {
 
 
@@ -1475,13 +1552,8 @@ class profileActions extends sfActions {
 
         $this->partes = $this->partesAuto();
         $this->nombresPartes = $this->nombrePartesAuto();
-        //var_dump($this->nombresPartes);die();
-        //if($FormularioListo != "ok"){
-        //    $FormularioListo = false;
-        // }
-//        if($FormularioListo){
-        if ($FormularioListo == 'ok') {
 
+        if ($FormularioListo == 'ok') {
 
             //paso 1
             //Cambio por widget para subir fotos de gran tamaño
@@ -1772,7 +1844,7 @@ class profileActions extends sfActions {
             $this->user = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")));
         else
             $this->user = Doctrine_Core::getTable('user')->find(array($request->getParameter('id')));
-//$this->user->getMessegeTo();
+
 
         $this->ratingsCompleted = new Doctrine_Collection('rating');
 
@@ -1791,11 +1863,6 @@ class profileActions extends sfActions {
             }
         }
     }
-
-//public function executeEdit(sfWebRequest $request)
-//{
-// $this->user = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")));
-//}
 
     public function executeGetAvInfo(sfWebRequest $request) {
         $this->setLayout(false);
@@ -1829,9 +1896,6 @@ class profileActions extends sfActions {
             else {
                 $week = "";
             }
-
-//if($week > floor($week))
-//$week = floor($week)+1;
 
             $aaData[] = array('id' => $av->getId(), 'start' => $av->getHourFrom(), 'end' => $av->getHourTo(), 'id' => $av->getId(), 'datefrom' => date("Y-m-d", strtotime($av->getDateFrom())), 'dateto' => date("Y-m-d", strtotime($av->getDateTo())), 'repeat' => $week, 'carid' => $av->getCar()->getId());
         }
@@ -1928,8 +1992,6 @@ class profileActions extends sfActions {
     public function executeProfile(sfWebRequest $request) {
 
         $this->user = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")));
-
-//$this->user->getMessegeTo();
     }
 
     public function executePublicprofile(sfWebRequest $request) {
@@ -1991,8 +2053,6 @@ class profileActions extends sfActions {
         $user = Doctrine_Core::getTable('user')->find(array($publicUserId));
         $this->carsPublicProfile = $this->user->getCars();
     }
-
-    
 
     public function executePagoDeposito(sfWebRequest $request) {
         
@@ -6832,4 +6892,16 @@ error_log("BUSCANDO LA MEJOR OPORTUNIDAD");
     }
 
 
+    // FUNCIONES PRIVADAS
+    private function validateDates ($from, $to) {
+
+        $from = strtotime($from);
+        $to   = strtotime($to);
+
+        if ($from >= $to) {
+            return "La fecha de inicio debe ser menor a la fecha de término.";
+        }
+
+        return false;
+    }
 }
