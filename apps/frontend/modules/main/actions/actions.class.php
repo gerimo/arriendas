@@ -1118,7 +1118,7 @@ public function executeIndex(sfWebRequest $request) {
         
         $this->cars = $q->fetchArray();
         $fotos_autos = array();
-        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));.
+        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
 
         for ($j = 0; $j < count($this->cars) ; $j++) {
 
