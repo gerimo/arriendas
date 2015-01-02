@@ -1120,7 +1120,7 @@ public function executeIndex(sfWebRequest $request) {
         
         $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
         if ($Holiday || date("N") == 6 || date("N") == 7) {
-            foreach ($j = 0; $j < count($cars) ; $j++) {
+            for ($j = 0; $j < count($cars) ; $j++) {
 
                 $auto = Doctrine_Core::getTable('car')->find(array($cars[$j]['id']));
 
