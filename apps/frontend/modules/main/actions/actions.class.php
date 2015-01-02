@@ -1127,7 +1127,9 @@ public function executeIndex(sfWebRequest $request) {
             $auto = Doctrine_Core::getTable('car')->find(array($this->cars[$j]['id']));
 
             if ($Holiday || date("N") == 6 || date("N") == 7) {
+                error_log("Auto: ".$auto->getId());
                 if ($auto->hasReserve($from, $to)) {
+                    error_log("Tiene reserva");
                     continue;
                 }
             }
