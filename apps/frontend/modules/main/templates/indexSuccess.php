@@ -556,13 +556,9 @@ function localizame() {
             </div>
         </div>
     </div>
-</section>
-
-<section id="section-map">
-
     <div class="row" id="section-map-form-search">
 
-        <span class="ico-search hidden-xs"><img src="/images/newDesign/ico-search.svg"></span>
+        <span class="ico-search hidden-xs" data-target="#section-map-form-search"><img src="/images/newDesign/ico-search.svg"></span>
 
         <!-- List -->
         <div class="col-xs-6 col-sm-3 col-md-3" id="region-container">
@@ -595,6 +591,11 @@ function localizame() {
             <a class="btn-a-action btn-block" href id="search">Buscar</a>
         </div>
     </div>
+</section>
+
+<section id="section-map">
+
+
 
     <div class="hidden-xs row" id="section-map-filters">
         <div class=" col-sm-2 col-md-2 text-center">
@@ -664,32 +665,56 @@ function localizame() {
 
 <section id = "fondo">
 
-    <section id="section-how-works">
-        <div class="row">
-
-            <div class="col-xs-offset-1 col-xs-10 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
-                <div class="col-xs-offset-3 col-xs-10 col-sm-offset-0  col-md-offset-0 "> <h2 class="title"><span>¿Cómo Funciona?</span></h2></div>
-                <iframe class="iframe" src="//player.vimeo.com/video/45668172?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff"  frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>    
+    <section id = "mobile">
+        <section id="section-how-works">
+            <div class="row">
+                <div class="col-xs-offset-1 col-xs-10 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
+                    <div class="col-xs-12 col-sm-offset-0  col-md-offset-0 "> <h2 class="title"><span>¿Cómo Funciona?</span></h2></div>
+                    <iframe class="iframe" src="//player.vimeo.com/video/45668172?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff"  frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>    
+                </div>
             </div>
+        </section>
 
-
-        </div>
-    </section>
-
-    <section id="section-compare-prices">
-
-        <div class="row">
-        <div class="col-xs-offset-2 col-xs-10 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
-            <div class="col-xs-offset-1 col-xs-12 col-sm-offset-0 col-md-offset-0">
-               <h2 class="title">Compare precios</h2>
-               </div>
+        <section class="visible-sm visible-md visible-xs"id="section-condition">
+            <div class="row">
+                <div class="col-xs-offset-1 col-xs-10 hidden-sm hidden-md">
+                    <div class="col-xs-12 col-sm-offset-0  col-md-offset-0"> <h2 class="title"><span>Condiciones de Arriendo</span></h2></div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin nisl in rutrum dapibus.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin nisl in rutrum dapibus.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin nisl in rutrum dapibus.</p>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <div class="visible-xs space-20"></div>
+        <div>
+            <?php $U = sfContext::getInstance()->getUser(); ?>
+            <?php if ($sf_user->isAuthenticated()): ?>
+             <section class="visible-sm visible-md hidden-xs"id="section-condition"></section>
+         <?php else: ?>                        
+            <section class="visible-sm visible-md visible-xs"id="section-condition">
+                <div class="row" id = "link-holder">
+                    <a href="<?php echo url_for('main/login') ?>" style="font-size: 18px"><strong>INGRESAR</strong></a>
+                </div>
+            </section>
+        <?php endif ?>
+        <div>
+        </section>
 
-        <div class="row">
-            <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 table-responsive">
+
+        <section class="hidden-xs" id="section-compare-prices">
+
+            <div class="row">
+                <div class="col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
+                    <div class="col-xs-offset-2 col-xs-12 col-sm-offset-0 col-md-offset-0">
+                     <h2 class="title">Compare precios</h2>
+                 </div>
+             </div>
+         </div>
+
+         <div class="visible-xs space-20"></div>
+
+         <div class="row">
+            <div class="hidden-xs col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 table-responsive">
                 <table id="compare-prices-table">
                     <thead>
                         <tr>
@@ -727,70 +752,70 @@ function localizame() {
             </div>
         </div>
 
-        <div class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-md-offset-1 col-md-10 text-center">
+        <div class="hidden-xs col-sm-offset-2 col-sm-8 col-md-offset-1 col-md-10 text-center">
             <p class = "text-table">Precios con IVA, aplicando descuento por reservas en internet, con seguro de daños, 
                 robo y accidentes personales. Muestra tomada 4/4/2013 en sus páginas de internet</p>
             </div>
         </section>
 
-        <section id="section-on-news">
+        <section class="hidden-xs" id="section-on-news">
 
             <div class="hidden-xs space-40"></div>
 
             <div class="row">
-            <div class="col-xs-offset-1 col-xs-8 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
-                 <div class="col-xs-offset-2 col-xs-8 col-sm-offset-0 col-md-offset-0"> <h2 class="title">Arriendas en las noticias</h2></div>
-                </div>
-                </div>
+                <div class="hidden-xs col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
+                   <div class="col-xs-offset-3 col-xs-8 col-sm-offset-0 col-md-offset-0"> <h2 class="title">Arriendas en las noticias</h2></div>
+               </div>
+           </div>
+       </div>
+
+       <div class="row" id = "noticias">
+
+        <div class="hidden-xs col-sm-offset-2 col-sm-8 col-md-offset-2 col-md-8">
+            <div id="section-on-news-carousel">
+                <div class = "normal"><a href="http://www.t13.cl/videos/actualidad/arrienda-tu-auto-es-la-nueva-tendencia-entre-los-chilenos"><img src="images/logos_canais/13.png" alt="Canal 13"></a></div>
+                <div><a href="http://www.cnnchile.com/noticia/2014/01/10/arriendas-el-emprendimiento-que-permite-arrendar-tu-propio-auto"><img src="images/logos_canais/LogoCNN.png" alt="CNN Chile"></a></div>
+                <div class = "normal"><a href="http://www.24horas.cl/nacional/rent-a-car-vecino-la-nueva-forma-de-viajar-906946"><img src="images/logos_canais/logotvn2.png" alt="TVN"></a></div>
+                <div><a href="http://www.emol.com/noticias/economia/2012/07/27/552815/emprendedor-estrenara-primer-sistema-de-arriendo-de-vehiculos-por-hora-de-chile.html"><img src="images/logos_canais/LogoEmol.png" alt="EMOL"></a></div>
+                <div><a href="http://www.lun.com/lunmobile//pages/NewsDetailMobile.aspx?IsNPHR=1&dt=2012-10-23&NewsID=0&BodyId=0&PaginaID=6&Name=6&PagNum=0&SupplementId=0&Anchor=20121023_6_0_0"><img src="images/logos_canais/LogoLUN.png" alt="Las Últimas Noticias"></a></div>
+                <div><a href="http://www.tacometro.cl/prontus_tacometro/site/artic/20121030/pags/20121030152946.html"><img src="images/logos_canais/LogoPublimetro.png" alt="Publimetro"></a></div>
+                <div><a href="http://www.lasegunda.com/Noticias/CienciaTecnologia/2012/08/774751/arriendascl-sistema-de-alquiler-de-autos-por-horas-debuta-en-septiembre"><img src="images/logos_canais/LogoLaSegunda.png" alt="La Segunda"></a></div>
+                <div><a href="http://www.lacuarta.com/noticias/cronica/2013/08/63-157571-9-ahora-puedes-arrendar-el-automovil-de-tu-vecino.shtml"><img src="images/logos_canais/LogoLaCuarta.png" alt="La Cuarta"></a></div>
+                <div><a href="http://www.diariopyme.cl/arrienda-tu-auto-y-gana-dinero-extra-a-fin-de-mes/prontus_diariopyme/2013-06-23/212000.html"><img src="images/logos_canais/LogoDiarioPyme.png" alt="Diario PYME"></a></div>
             </div>
+        </div>
+    </div>
+</section>
+</section>
 
-            <div class="row">
+<section class="hidden-xs" id="section-testimonials">
 
-                <div class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-md-offset-2 col-md-8">
-                    <div id="section-on-news-carousel">
-                        <div><a href="http://www.t13.cl/videos/actualidad/arrienda-tu-auto-es-la-nueva-tendencia-entre-los-chilenos"><img src="images/logos_canais/13.png" alt="Canal 13"></a></div>
-                        <div><a href="http://www.cnnchile.com/noticia/2014/01/10/arriendas-el-emprendimiento-que-permite-arrendar-tu-propio-auto"><img src="images/logos_canais/LogoCNN.png" alt="CNN Chile"></a></div>
-                        <div><a href="http://www.24horas.cl/nacional/rent-a-car-vecino-la-nueva-forma-de-viajar-906946"><img src="images/logos_canais/logotvn2.png" alt="TVN"></a></div>
-                        <div><a href="http://www.emol.com/noticias/economia/2012/07/27/552815/emprendedor-estrenara-primer-sistema-de-arriendo-de-vehiculos-por-hora-de-chile.html"><img src="images/logos_canais/LogoEmol.png" alt="EMOL"></a></div>
-                        <div><a href="http://www.lun.com/lunmobile//pages/NewsDetailMobile.aspx?IsNPHR=1&dt=2012-10-23&NewsID=0&BodyId=0&PaginaID=6&Name=6&PagNum=0&SupplementId=0&Anchor=20121023_6_0_0"><img src="images/logos_canais/LogoLUN.png" alt="Las Últimas Noticias"></a></div>
-                        <div><a href="http://www.tacometro.cl/prontus_tacometro/site/artic/20121030/pags/20121030152946.html"><img src="images/logos_canais/LogoPublimetro.png" alt="Publimetro"></a></div>
-                        <div><a href="http://www.lasegunda.com/Noticias/CienciaTecnologia/2012/08/774751/arriendascl-sistema-de-alquiler-de-autos-por-horas-debuta-en-septiembre"><img src="images/logos_canais/LogoLaSegunda.png" alt="La Segunda"></a></div>
-                        <div><a href="http://www.lacuarta.com/noticias/cronica/2013/08/63-157571-9-ahora-puedes-arrendar-el-automovil-de-tu-vecino.shtml"><img src="images/logos_canais/LogoLaCuarta.png" alt="La Cuarta"></a></div>
-                        <div><a href="http://www.diariopyme.cl/arrienda-tu-auto-y-gana-dinero-extra-a-fin-de-mes/prontus_diariopyme/2013-06-23/212000.html"><img src="images/logos_canais/LogoDiarioPyme.png" alt="Diario PYME"></a></div>
-                    </div>
+    <div class="hidden-xs space-40"></div>
+
+    <div class="row">
+        <div class="hidden-xs col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6" id="testimonials-container">
+            <h1>Testimonios</h1>
+            <div id="section-testimonials-carousel">
+                <div>
+                    <p class="testimonial"><i class="fa fa-quote-left"></i> Puedo arrendar desde mi casa, en cualquier horario, sin tarjeta de crédito. Es el mismo auto que en un rent a car pero 30% más barato. <i class="fa fa-quote-right"></i></p>
+                    <p class="user">Javiera Cruzar,</p>
+                    <p class="user-type">Usuario Arriendas</p>
                 </div>
-            </div>
-        </section>
-    </section>
-
-    <section id="section-testimonials">
-
-        <div class="hidden-xs space-40"></div>
-
-        <div class="row">
-            <div class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6" id="testimonials-container">
-                <h1>Testimonios</h1>
-                <div id="section-testimonials-carousel">
-                    <div>
-                        <p class="testimonial"><i class="fa fa-quote-left"></i> Puedo arrendar desde mi casa, en cualquier horario, sin tarjeta de crédito. Es el mismo auto que en un rent a car pero 30% más barato. <i class="fa fa-quote-right"></i></p>
-                        <p class="user">Javiera Cruzar,</p>
-                        <p class="user-type">Usuario Arriendas</p>
-                    </div>
-                    <div>
-                        <p class="testimonial"><i class="fa fa-quote-left"></i> Puedo arrendar desde mi casa, en cualquier horario, sin tarjeta de crédito. Es el mismo auto que en un rent a car pero 30% más barato. <i class="fa fa-quote-right"></i></p>
-                        <p class="user">Javiera Cruzar,</p>
-                        <p class="user-type">Usuario Arriendas</p>
-                    </div>
+                <div>
+                    <p class="testimonial"><i class="fa fa-quote-left"></i> Puedo arrendar desde mi casa, en cualquier horario, sin tarjeta de crédito. Es el mismo auto que en un rent a car pero 30% más barato. <i class="fa fa-quote-right"></i></p>
+                    <p class="user">Javiera Cruzar,</p>
+                    <p class="user-type">Usuario Arriendas</p>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="hidden-xs space-40"></div>
-    </section>
+    <div class="hidden-xs space-100"></div>
+</section>
 
-    <script>
+<script>
 
-        $(document).ready(function(){
+    $(document).ready(function(){
 
         /*// Si comuna es visible, se preselecciona comuna más hot
         if ($("#commune").is(':visible')) {            
@@ -812,18 +837,20 @@ function localizame() {
 
         $('#section-on-news-carousel').slick({
             /*autoplay: true,*/
-            /*arrows: true,*/
+            arrows: true,
             /*dots: true,*/
             /*infinite: true,*/
-            /*slidesToShow: 1,*/
-            /*slidesToScroll: 1,*/
-            /*speed: 300,*/
-            /*variableWidth: true,*/
-
-            infinite: true,
-            arrows:true,  
             slidesToShow: 4,
             slidesToScroll: 4,
+            /*speed: 300,*/
+            /*variableWidth: true,*/
+            lazyLoad: 'ondemand'
+            /*dots: true,*/
+            /*infinite: true,*/
+            /*speed: 500,*/
+            /*fade: true,*/
+            /*slide: 'div',*/
+            /*cssEase: 'linear'*/
 
 
         });
@@ -877,19 +904,19 @@ $('#header .animate').each(function(){
     $(this).on('click', function(e) {
 
         e.preventDefault();
-
+        var position = $(target).offset().top - 50;
         $('html, body').animate({
-            scrollTop: $(target).offset().top
+            scrollTop: position
         }, 1250);
     });
 });
 
 $(".ico-search").on('click', function(e) {
-
+    var target  = $(this).data('target');
     e.preventDefault();
-
+    var position = $(target).offset().top - 50;
     $('html, body').animate({
-        scrollTop: $("#section-map").offset().top
+        scrollTop: position
     }, 1250);
 });
 

@@ -63,6 +63,7 @@
     background: rgba(0,0,0,0.8);
     z-index: 9;
     padding: 40px 20px;
+
 }
 
 #section-map-form-search .ico-search {
@@ -307,17 +308,47 @@
     float: left;
 }
 
+#link-holder {
+    background: #ba135f;
+    padding: 16px 15px 13px;
+    box-shadow: 0 0 6px rgba(0,0,0,0.3) inset;
+}
+#link-holder a{
+    display: inline-block;
+    color: #fff;
+    text-transform: uppercase;
+    font: 700 17px/20px 'Open Sans', sans-serif;
+    border: 2px solid #fff;
+    padding: 3px 14px 8px;
+}
+#section-condition{
+    padding: 57px 0 0 0;
+    font: 10px/20px 'Roboto', sans-serif;
+    text-align: center;
+    background: url(images/newDesign/bg-terms.png);
+    overflow: hidden;
+    display: none;
+    color: black;
+}
+#section-condition p{
+    text-align: justify;
+}
 
 #section-how-works{
     padding: 57px 0 0 0;
+    text-align: center;
 }
 .video-box{
     max-width: 1170px;
     margin: auto;
 }
+
+
+
 #section-home {
     background-image: url("/images/newDesign/background-home.jpg");
     background-size: 100% 100%;
+    position: relative;
 }
 
 #section-testimonials {
@@ -393,7 +424,7 @@
 }
 
 #section-on-news .title{
-    margin: 0 -86px 28px 0;
+    margin: 0 -86px 60px 0;
 
 }
 
@@ -430,7 +461,7 @@
 #compare-prices-table td {
     background-color: #edeeee;
     border-left: solid 2px white;
-    border-top: solid 18px white;
+    border-top: solid 25px white;
     color: #5d5d5d;
     font: 11px/14px 'Roboto', sans-serif;
     font-weight: 700;
@@ -456,7 +487,7 @@
 
 .text-table{
 
-    margin: 40px 0 40px 0;
+    margin: 58px 0 70px 0;
     max-width: 100%;
     text-align: center;
     color: #5d5d5d;
@@ -479,11 +510,18 @@
 }
 
 #section-on-news-carousel a img{
-    width: 52%;
+    width: 69%;
     height: 60px;
     margin: auto;
 }
-
+#section-on-news-carousel .normal a img{
+    width: 29%;
+    height: 60px;
+    margin: auto;
+}
+#noticias{
+    margin-bottom: 10%;
+}
 #section-testimonials {
     padding: 100px 0 11px 0;
 }
@@ -624,6 +662,14 @@
 
         #section-on-news .title{
             margin: 0 -86px 28px 0;
+        }
+
+        #mobile:after{
+                content: "";
+                position: absolute;
+                background: url(/images/newDesign/border-tabs.png) repeat-x 50% 0;
+                width: 100%;
+                height: 22px;
         }
 
     }
