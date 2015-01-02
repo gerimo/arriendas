@@ -132,6 +132,10 @@
 #section-map-filters .col-md-3{
     width: 25.6%;
 }
+
+
+
+
 #section-map{
     background-color: white;
 }
@@ -283,6 +287,7 @@
     margin: -29px 0 -30px 0px;
     padding: 29px 0 30px 0px;
     text-transform: uppercase;
+    font: 700 25px/30px 'Open Sans', sans-serif
 }
 
 #section-map #section-map-filters .tab {
