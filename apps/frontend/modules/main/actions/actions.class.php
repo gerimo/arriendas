@@ -1118,10 +1118,17 @@ public function executeIndex(sfWebRequest $request) {
         
         $this->cars = $q->fetchArray();
         $fotos_autos = array();
+        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));.
 
         for ($j = 0; $j < count($this->cars) ; $j++) {
 
             $auto = Doctrine_Core::getTable('car')->find(array($this->cars[$j]['id']));
+
+            if ($Holiday || date("N") == 6 || date("N") == 7) {
+                if ($auto->hasReserve($from, $to)) {
+                    continue;
+                }
+            }
 
             $fotos_autos[$j]['id'] = $auto->getId();
             $fotos_autos[$j]['photoS3'] = $auto->getPhotoS3();
