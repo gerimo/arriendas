@@ -237,6 +237,13 @@ Car:
       foreignAlias: Cars
       onDelete: no action
       onUpdate: no action
+    Comunas:
+      class: Comunas
+      local: comuna_id
+      foreign: codigoInterno
+      foreignAlias: Cars
+      onDelete: no action
+      onUpdate: no action
   indexes:
     fk_Car_User:
       fields: [User_id]

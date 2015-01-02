@@ -115,11 +115,13 @@ EOF;
                 ->createQuery('C')
                 ->where('C.activo = 1')
                 ->andWhere('C.seguro_ok = 4')
-                ->andWhereNotIn('C.id', array(398123))
-                ->orderBy('C.ratio_aprobacion DESC')
-                ->limit(199);
+                ->andWhere('C.region = 13')
+                /*->andWhereNotIn('C.id', array(398123))*/
+                ->orderBy('C.ratio_aprobacion DESC');
 
             $Cars = $q->execute();
+
+            $this->log(count($Cars)." autos encontrados");
 
             if (count($Cars) == 0) {
                 $this->log("No hay autos disponibles");
@@ -164,7 +166,7 @@ EOF;
                     $subject = "¿Tienes disponibilidad para recibir clientes este fin de semana? [E".$CarAvailabilityEmail->getId()."]";
 
                     $body = "<p>".$firstname.",</p>";
-                    $body .= "<p>Necesitaríamos que nos indiques en qué horarios podrías recibir clientes, para que tu auto figure en las busquedas de mañana.</p>";
+                    $body .= "<p>Necesitaríamos que nos indiques en qué horarios podrías recibir clientes durante los próximos días.</p>";
                     $body .= "<ul>";
                     $body .= "<li>Si puedes recibir clientes el ".$daysPhrase." entre 8am y 8pm, has <a href='{$url_all_ava}'>click aquí</a>.</li>";
                     $body .= "<li>Si sólo puedes recibir clientes el ".$days[1]." entre 8am y 8pm, has <a href='{$url_one_ava}'>click aquí</a>.</li>";
