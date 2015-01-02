@@ -1116,25 +1116,26 @@ public function executeIndex(sfWebRequest $request) {
 
         $q->limit(100);
         
-        $this->cars = $q->fetchArray();
-        $fotos_autos = array();
+        $cars = $q->fetchArray();
+        
         $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
+        if ($Holiday || date("N") == 6 || date("N") == 7) {
+            for ($j = 0; $j < count($cars) ; $j++) {
+                if (!$auto->hasReserve($from, $to)) {
+                    $this->cars[] = $cars[$j];
+                }
+            }            
+        } else {
+            $this->cars = $cars;
+        }
 
         error_log("Desde: ".$from.", Hasta: ".$to);
+
+        $fotos_autos = array();
 
         for ($j = 0; $j < count($this->cars) ; $j++) {
 
             $auto = Doctrine_Core::getTable('car')->find(array($this->cars[$j]['id']));
-
-            if ($Holiday || date("N") == 6 || date("N") == 7) {
-                error_log("[".$j."] Auto: ".$auto->getId());
-                if ($auto->hasReserve($from, $to)) {
-                    error_log("Tiene reserva");
-                    continue;
-                }
-            }
-
-            error_log("iteracion: ".$j);
 
             $fotos_autos[$j]['id'] = $auto->getId();
             $fotos_autos[$j]['photoS3'] = $auto->getPhotoS3();
