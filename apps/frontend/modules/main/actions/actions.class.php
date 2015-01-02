@@ -1120,7 +1120,7 @@ public function executeIndex(sfWebRequest $request) {
         
         $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
         if ($Holiday || date("N") == 6 || date("N") == 7) {
-            for ($j = 0; $j < count($cars) ; $j++) {
+            foreach ($j = 0; $j < count($cars) ; $j++) {
 
                 $auto = Doctrine_Core::getTable('car')->find(array($cars[$j]['id']));
 
@@ -1132,11 +1132,11 @@ public function executeIndex(sfWebRequest $request) {
             $this->cars = $cars;
         }
 
-        error_log("Desde: ".$from.", Hasta: ".$to);
+        error_log(print_r($this->cars));
 
         $fotos_autos = array();
 
-        for ($j = 0; $j < count($this->cars) ; $j++) {
+        for ($j = 0 ; $j < count($this->cars) ; $j++) {
 
             $auto = Doctrine_Core::getTable('car')->find(array($this->cars[$j]['id']));
 
