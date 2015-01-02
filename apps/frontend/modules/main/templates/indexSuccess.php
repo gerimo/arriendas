@@ -667,8 +667,8 @@ function localizame() {
     <section id="section-how-works">
         <div class="row">
 
-            <div class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-md-offset-1 col-md-10">
-                <div class="col-xs-offset-3 col-xs-7 col-md-offset-2 col-md-8"> <h2 class="title"><span>¿Cómo Funciona?</span></h2></div>
+            <div class="col-xs-offset-1 col-xs-10 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
+                <div class="col-xs-offset-3 col-xs-10 col-sm-offset-0  col-md-offset-0 "> <h2 class="title"><span>¿Cómo Funciona?</span></h2></div>
                 <iframe class="iframe" src="//player.vimeo.com/video/45668172?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff"  frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>    
             </div>
 
@@ -679,8 +679,10 @@ function localizame() {
     <section id="section-compare-prices">
 
         <div class="row">
-            <div class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-md-offset-1 col-md-4 text-center">
-               <div class="col-xs-offset-3 col-xs-6 col-md-offset-1 col-md-10"> <h1 class="title">Compare precios</h1></div><div class="col-xs-offset-3 col-xs-6"> 
+        <div class="col-xs-offset-2 col-xs-10 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
+            <div class="col-xs-offset-1 col-xs-12 col-sm-offset-0 col-md-offset-0">
+               <h2 class="title">Compare precios</h2>
+               </div>
             </div>
         </div>
 
@@ -736,12 +738,14 @@ function localizame() {
             <div class="hidden-xs space-40"></div>
 
             <div class="row">
-                <div class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-md-offset-1 col-md-4 text-center">
-                 <div class="col-xs-offset-1 col-xs-9"> <h2 class="title">Arriendas en las noticias</h2></div>
+            <div class="col-xs-offset-1 col-xs-8 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
+                 <div class="col-xs-offset-2 col-xs-8 col-sm-offset-0 col-md-offset-0"> <h2 class="title">Arriendas en las noticias</h2></div>
+                </div>
                 </div>
             </div>
 
             <div class="row">
+
                 <div class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-md-offset-2 col-md-8">
                     <div id="section-on-news-carousel">
                         <div><a href="http://www.t13.cl/videos/actualidad/arrienda-tu-auto-es-la-nueva-tendencia-entre-los-chilenos"><img src="images/logos_canais/13.png" alt="Canal 13"></a></div>
