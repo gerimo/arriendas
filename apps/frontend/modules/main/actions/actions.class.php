@@ -10,7 +10,7 @@
  */
 class mainActions extends sfActions {
 
-    public function executeIndex(sfWebRequest $request) {
+    public function executeIndex (sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
 
@@ -24,8 +24,68 @@ class mainActions extends sfActions {
 
         $this->Comunas = Doctrine_Core::getTable("Comunas")->findByPadre(13);
     }
+
+    public function executeUploadLicense (sfWebRequest $request) {
+    
+        $return = array("error" => false);
+
+        try {
+    
+            if (isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST") {
+
+                $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
+
+                $name = $_FILES[$request->getParameter('file')]['name'];
+                $size = $_FILES[$request->getParameter('file')]['size'];
+                $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
+
+                list($txt, $ext) = explode(".", $name);
+                
+                if (strlen($name) == 0) {
+                    throw new Exception("Por favor, selecciona una imagen.", 1);   
+                }
+                    
+                if (!in_array($ext, $valid_formats)) {
+                    throw new Exception("Formato de la imagen no permitido.", 1);
+                }
+
+                if ($size >= (5 * 1024 * 1024)) { // Image size max 1 MB
+                    throw new Exception("La imagen excede el máximo de 1 MB permitido.", 1);
+                }
+                    
+                $userId = $this->getUser()->getAttribute("userid");
+                
+                $newImageName = time() . "-" . $userId . "." . $ext;
+
+                $path = sfConfig::get("sf_web_dir") . '/images/license/';
+
+                $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
+
+                if (!move_uploaded_file($tmp, $path . $newImageName)) {
+                    throw new Exception("Problemas al subir la imagen.", 1);
+                }
+
+                $User = Doctrine_Core::getTable('User')->find($userId);
+                $User->setDriverLicenseFile("/images/license/".$newImageName);
+                $User->save();
+            } else {
+                throw new Exception("No, no, no.", 1);
+            }
+    
+        } catch (Exception $e) {
+
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+            /*Utils::reportError($e->getMessage(), "profile/executeGetCars");*/
+        }
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
 	
-	
+	/////////////////////////////////////////////////////////////////////////////
+
 public function executeArriendo(sfWebRequest $request){
     $ciudad = $request->getParameter("autos");
     $objeto_ciudad = Doctrine_Core::getTable("city")->findOneByName($ciudad);
@@ -3111,46 +3171,64 @@ El equipo de Arriendas.cl
         $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
 
         if (isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST") {
+
             $name = $_FILES[$request->getParameter('file')]['name'];
             $size = $_FILES[$request->getParameter('file')]['size'];
-			$tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
+			$tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
+
             if (strlen($name)) {
+
                 list($txt, $ext) = explode(".", $name);
+
                 if (in_array($ext, $valid_formats) || 1==1) {
+
                     if ($size < (5 * 1024 * 1024)) { // Image size max 1 MB
                     
                         $sizewh = getimagesize($tmp);
 						if($sizewh[0] > 194 || $sizewh[1] > 204)
 							//echo '<script>alert(\'La imagen no cumple con las dimensiones especificadas. Puede continuar si lo desea\')</script>';
                     
-                        $userid = $this->getUser()->getAttribute("userid");
-                        $actual_image_name = time() . $userid . "." . $ext;
+                        $userId = $this->getUser()->getAttribute("userid");
+                        $actual_image_name = time() . $userId . "." . $ext;
 
                         $uploadDir = sfConfig::get("sf_web_dir");
-                        $path = $uploadDir . '/images/users/';
-                        $fileName = $actual_image_name . "." . $ext;
+                        $path      = $uploadDir . '/images/users/';
+                        $fileName  = $actual_image_name . "." . $ext;
 
                         $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
-                        if (move_uploaded_file($tmp, $path . $actual_image_name)) {
+
+                        $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
+
+                        if ($uploaded) {
+
                             sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
 
                             echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
                             echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";
-                        }
-                        else
+
+                            $User = Doctrine_Core::getTable('User')->find($userId);
+                            $User->setPictureFile("/images/users/".$actual_image_name);
+                            $User->save();
+                            
+                        } else {
+                            error_log("[".date('Y-m-d H:i:s')."] main/uploadPhoto - Error al subir la imagen.");
                             echo "failed";
-                    }
-                    else
+                        }
+                    } else {
                         echo "Image file size max 1 MB";
-                }
-                else
+                    }
+                } else {
                     echo "Invalid file format..";
-            }
-            else
+                }
+            } else {
                 echo "Please select image..!";
-            exit;
+            }
         }
+
+        exit;
     }
+
+    
 
     public function executeUploadRut(sfWebRequest $request) {
 
@@ -3200,65 +3278,16 @@ El equipo de Arriendas.cl
         $this->selectedModel = new Model();
         $this->selectedState = new State();
         $this->selectedCity = new City();
-		
-		try {
-		
-			$q = Doctrine_Query::create()
-	                ->select('marca')
-	                ->from('Calculator')
-			        ->groupBy('marca');
-	        $this->marcas = $q->execute();
-		
-		} catch(Exception $e) { die($e); }
-    }
-
-    public function executeUploadLicence(sfWebRequest $request) {
-
-//        $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
-
-        if (isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST") {
-            $name = $_FILES[$request->getParameter('file')]['name'];
-            $size = $_FILES[$request->getParameter('file')]['size'];
-			$tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
-            if (strlen($name)) {
-                list($txt, $ext) = explode(".", $name);
-//                if (in_array($ext, $valid_formats) || 1==1) {
-                if (1==1) {
-					if (1==1) {
-                    //if ($size < (5 * 1024 * 1024)) { // Image size max 1 MB
-                    
-                        $sizewh = getimagesize($tmp);
-						//echo($sizewh[1]);
-						if($sizewh[0] > 194 || $sizewh[1] > 204)
-							//echo '<script>alert(\'La imagen no cumple con las dimensiones especificadas. Puede continuar si lo desea\')</script>';                    
-                    
-                        $userid = $this->getUser()->getAttribute("userid");
-                        $actual_image_name = time() . $userid . "." . $ext;
-
-                        $uploadDir = sfConfig::get("sf_web_dir");
-                        $path = $uploadDir . '/images/licence/';
-                        $fileName = $actual_image_name . "." . $ext;
-
-                        $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
-                        if (move_uploaded_file($tmp, $path . $actual_image_name)) {
-                            sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
-
-                            echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
-                            echo "<img src='" . image_path("licence/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";
-                        }
-                        else
-                            echo "FAILED";
-                    }
-                    else
-                        echo "Image file size max 1 MB";
-                }
-                else
-                    echo "Invalid file format..";
-            }
-            else
-                echo "Please select image..!";
-            exit;
-        }
+        
+        try {
+        
+            $q = Doctrine_Query::create()
+                    ->select('marca')
+                    ->from('Calculator')
+                    ->groupBy('marca');
+            $this->marcas = $q->execute();
+        
+        } catch(Exception $e) { die($e); }
     }
 
     public function executePriceJson(sfWebRequest $request){

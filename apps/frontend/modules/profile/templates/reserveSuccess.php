@@ -1,7 +1,20 @@
 <link href="/css/newDesign/reserve.css" rel="stylesheet" type="text/css">
 
-<div class="space-100 hidden-xs"></div>
+<div class="space-30 hidden-xs"></div>
 <div class="space-50 visible-xs"></div>
+
+<?php if (is_null($license)): ?>
+    <div id="license-container">
+        <h1 class="text-center">¡Falta tu licencia de conducir!</h1>
+        <h2 class="text-center">Es necesario que la subas para poder realizar arriendos.</h2>
+        <button class="btn btn-a-white" id="license-bottom">Seleccionar</button>
+    </div>
+    <div class="space-60 hidden-xs"></div>
+    <div class="space-30 visible-xs"></div>
+<?php else: ?>
+    <div class="space-60 hidden-xs"></div>
+    <div class="space-30 visible-xs"></div>
+<?php endif ?>
 
 <div class="container">
 
@@ -26,25 +39,25 @@
 
             <ul id="features">
                 <?php if ($passengers): ?>
-                    <li><i class="fa fa-user"></i> 5 o más pasajeros</li>
+                    <li><span><i class="fa fa-user"></i></span> 5 o más pasajeros</li>
                 <?php else: ?>
-                    <li><i class="fa fa-user"></i> 4 pasajeros</li>
+                    <li><span><i class="fa fa-user"></i></span> 4 pasajeros</li>
                 <?php endif ?>
 
                 <?php if ($diesel): ?>
-                    <li><i class="fa fa-tint"></i> Petrolero</li>
+                    <li><span><i class="fa fa-tint"></i></span> Petrolero</li>
                 <?php else: ?>
-                    <li><i class="fa fa-tint"></i> Bencinero</li>
+                    <li><span><i class="fa fa-tint"></i></span> Bencinero</li>
                 <?php endif ?>
 
                 <?php if ($airCondition): ?>
-                    <li><i class="fa fa-sun-o"></i> Aire acondicionado</li>
+                    <li><span><i class="fa fa-sun-o"></i></span> Aire acondicionado</li>
                 <?php endif ?>
 
                 <?php if ($transmission): ?>
-                    <li><i class="fa fa-gear"></i> Automático</li>
+                    <li><span><i class="fa fa-gear"></i></span> Automático</li>
                 <?php else: ?>
-                    <li><i class="fa fa-gear"></i> Manual</li>
+                    <li><span><i class="fa fa-gear"></i></span> Manual</li>
                 <?php endif ?>
             </ul>
         </div>
@@ -60,65 +73,71 @@
                 <span class="title-price"><?php echo '$'.number_format($price, 0, ',', '.') ?></span>
 
                 <ul class="reserve-box-summary">
-                    <li><i class='fa fa-check'></i> Seguro</li>
-                    <li><i class='fa fa-check'></i> Tags</li>
-                    <li><i class='fa fa-check'></i> Conductor Adicional</li>
-                    <li><i class='fa fa-check'></i> Kilometraje Libre</li>
-                    <li><i class='fa fa-check'></i> Asistencia en ruta 24/7</li>
+                    <li> <i class='fa fa-check'></i> <strong>Calidad Arriendas:</strong> el auto se encuentra verificado por Arriendas.</li>
+                    <li> <i class='fa fa-check'></i> <strong>Garantía Arriendas:</strong> 2 opciones de reemplazo o te devolvemos el dinero.</li>
+                    <li> <i class='fa fa-check'></i> <strong>Ofertas:</strong> recibirás ofertas de otros dueños manteniendo este precio.</li>
                 </ul>
 
-                <a class="btn-a-primary btn-block" href="">Reservar</a>
+                <!-- <a class="btn-a-primary btn-block" href="">Reservar</a> -->
             </div>
         </div>
     </div>
 
     <div class="visible-xs row">
         <div class="col-xs-12">
-            <h1 class="visible-xs reserve-title"><?php echo $Car->getModel()->getBrand()->getName()." ".$Car->getModel()->getName().", <small>".$Car->getYear()."</small>" ?></h1>
-        </div>
-    </div>
-
-    <div class="visible-xs row">
-        
-        <div class="col-xs-6">
-            <h2 class="reserve-subtitle">Características:</h2>
-
-            <ul id="features">
-                <?php if ($passengers): ?>
-                    <li><i class="fa fa-user"></i> 5 o más pasajeros</li>
-                <?php else: ?>
-                    <li><i class="fa fa-user"></i> 4 pasajeros</li>
-                <?php endif ?>
-
-                <?php if ($diesel): ?>
-                    <li><i class="fa fa-tint"></i> Petrolero</li>
-                <?php else: ?>
-                    <li><i class="fa fa-tint"></i> Bencinero</li>
-                <?php endif ?>
-
-                <?php if ($airCondition): ?>
-                    <li><i class="fa fa-sun-o"></i> A/C</li>
-                <?php endif ?>
-
-                <?php if ($transmission): ?>
-                    <li><i class="fa fa-gear"></i> Automático</li>
-                <?php else: ?>
-                    <li><i class="fa fa-gear"></i> Manual</li>
-                <?php endif ?>
-            </ul>
-        </div>
-        <div class="col-xs-6">
-            <div class="text-center">
-                <span class="price" id="price" data-price="<?php echo $price ?>"><?php echo '$'.number_format($price, 0, ',', '.') ?></span>
-            </div>
-
-            <div class="text-center">
-                <span class="saved"><strong>40%</strong> AHORRO</span>
-            </div>
+            <h1 class="reserve-title"><?php echo $Car->getModel()->getBrand()->getName()." ".$Car->getModel()->getName().", <small>".$Car->getYear()."</small>" ?></h1>
         </div>
     </div>
 
     <div class="visible-xs space-30"></div>
+
+    <div class="visible-xs row">
+        <div class="col-xs-12">
+            <span class="title-price" id="price" data-price="<?php echo $price ?>"><?php echo '$'.number_format($price, 0, ',', '.') ?></span>
+            <span class="saved"><strong>40%</strong> AHORRO</span>
+        </div>
+    </div>
+
+    <div class="visible-xs space-30"></div>
+
+    <div class="visible-xs row">
+        
+        <div class="col-xs-12">
+
+            <h2 class="reserve-subtitle">Características:</h2>
+
+            <div class="row" id="features">
+                <?php if ($passengers): ?>
+                    <div class="col-xs-6"><i class="fa fa-user"></i> 5 o más pasajeros</div>
+                <?php else: ?>
+                    <div class="col-xs-6"><i class="fa fa-user"></i> 4 pasajeros</div>
+                <?php endif ?>
+
+                <?php if ($diesel): ?>
+                    <div class="col-xs-6"><i class="fa fa-tint"></i> Petrolero</div>
+                <?php else: ?>
+                    <div class="col-xs-6"><i class="fa fa-tint"></i> Bencinero</div>
+                <?php endif ?>
+
+                <?php if ($airCondition): ?>
+                    <div class="col-xs-6"><i class="fa fa-sun-o"></i> A/C</div>
+                <?php endif ?>
+
+                <?php if ($transmission): ?>
+                    <div class="col-xs-6"><i class="fa fa-gear"></i> Automático</div>
+                <?php else: ?>
+                    <div class="col-xs-6"><i class="fa fa-gear"></i> Manual</div>
+                <?php endif ?>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <p><strong>Calidad Arriendas:</strong> el auto se encuentra verificado por Arriendas.</p>
+            <p><strong>Garantía Arriendas:</strong> 2 opciones de reemplazo o te devolvemos el dinero.</p>
+            <p><strong>Ofertas:</strong> recibirás ofertas de otros dueños manteniendo este precio.</p>
+        </div>
+    </div>
+
+    <div class="space-30"></div>
 
     <!-- Reviews -->
     <?php if (count($reviews) > 0): ?>
@@ -126,17 +145,10 @@
         <div class="panel-group" id="reviews" role="tablist" aria-multiselectable="true">
             <div class="panel panel-default">
                 <div class="panel-heading" role="tab" id="headingOne">
-                    <!-- <div class="row">
-                        <div class="col-xs-6 col-sm-6 col-md-6"> -->
-                            <div id="car-rating"></div>
-                            <a data-toggle="collapse" data-parent="#reviews" href="#reviewsCollapseOne" aria-expanded="true" aria-controls="reviewsCollapseOne">
-                                <i class="fa fa-eye"></i> Ver Reviews
-                            </a>
-                        <!-- </div>
-                        <div class="col-xs-6 col-sm-6 col-md-6 text-right"> -->
-                            
-                        <!-- </div>
-                    </div> -->
+                    <a data-toggle="collapse" data-parent="#reviews" href="#reviewsCollapseOne" aria-expanded="true" aria-controls="reviewsCollapseOne">
+                        Reviews (<?php echo count($reviews) ?>) 
+                        <span id="car-rating"></span>
+                    </a>
                 </div>
         
                 <div id="reviewsCollapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
@@ -168,8 +180,8 @@
         <div class="row">
             <div class="col-md-offset-2 col-md-8">
                 <ul id="fromTo">
-                    <li><i class="fa fa-plus"></i>Desde: <?php echo $fromHuman ?></li>
-                    <li><i class="fa fa-plus"></i>Hasta: <?php echo $toHuman ?></li>
+                    <li></i>Desde: <?php echo $fromHuman ?></li>
+                    <li></i>Hasta: <?php echo $toHuman ?></li>
                 </ul>
 
                 <div id="warranty-container">
@@ -292,12 +304,18 @@
     </div>
 </div>
 
+<div style="display:none">
+    <form action="<?php echo url_for('main/uploadLicense?photo=license&width=194&height=204&file=license-file') ?>" enctype="multipart/form-data" id="license-form" method="post">
+        <input id="license-file" name="license-file" type="file">
+        <input type="submit">
+    </form>
+</div>
 <script>
     $(document).ready(function(){
     
         // Carousel
         $('#car-images-carousel').slick({
-            dots: true,
+            dots: false,
             infinite: true
         });
 
@@ -382,6 +400,34 @@
                     ]
                 });
             }
+        });
+
+        $("#license-bottom").click(function(e){
+            $("#license-file").click();
+        });
+
+        $("#license-file").change(function(e) {
+
+            $("#license-form").ajaxForm({
+                dataType: "json",
+                success: function(r) {
+                    
+                    if (r.error) {
+                        $("#dialog-alert p").html(r.errorMessage);
+                        $("#dialog-alert").attr("title", "Problemas al subir la imagen");
+                        $("#dialog-alert").dialog({
+                            buttons: [{
+                                text: "Aceptar",
+                                click: function() {
+                                    $( this ).dialog( "close" );
+                                }
+                            }]
+                        });
+                    } else {
+                        $("#license-container").remove();
+                    }
+                }
+            }).submit();
         });
     });
 

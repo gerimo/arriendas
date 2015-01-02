@@ -4,24 +4,29 @@
 <div class="visible-xs space-50"></div>
 
 <div class="row">
-    <div class="col-md-offset-4 col-md-4 BCW">
+    <div class="col-md-offset-4 col-md-4">
 
-        <h2>Cambiar contraseña</h2>
+        <div class="BCW">
 
-        <input class="form-control" id="password" name="password" type="password" placeholder="Nueva contraseña">
-        <input class="form-control" id="passwordAgain" name="passwordAgain" type="password" placeholder="Repita nueva contraseña">
+            <h1>Seguridad</h1>
+            
+            <h2>Cambiar contraseña</h2>
 
-        <div class="alert"></div>
+            <input class="form-control" id="password" name="password" type="password" placeholder="Nueva contraseña">
+            <input class="form-control" id="passwordAgain" name="passwordAgain" type="password" placeholder="Repita nueva contraseña">
 
-        <div class="row">
-            <div class="col-md-offset-7 col-md-5" style="padding: 0">
-                <button class="btn-a-primary btn-block" id="change">Cambiar</button>
+            <div class="alert"></div>
+
+            <div class="row">
+                <div class="col-md-offset-7 col-md-5" style="padding: 0">
+                    <button class="btn-a-primary btn-block" id="change">Cambiar</button>
+                </div>
             </div>
+
+            <hr>
+
+            <p class="note"><strong>Nota:</strong> Al cambiar su contraseña, podrá iniciar sesión tanto con Facebook cómo con su correo asociado a la cuenta de Facebook.</p>
         </div>
-
-        <hr>
-
-        <p class="note"><strong>Nota:</strong> Al cambiar su contraseña, podrá iniciar sesión tanto con Facebook cómo con su correo asociado a la cuenta de Facebook.</p>
     </div>
 </div>
 

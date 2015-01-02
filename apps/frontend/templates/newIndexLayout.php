@@ -30,12 +30,9 @@
         <!-- Estilos para todo el proyecto -->
         <link href="/css/newDesign/arriendas.css" rel="stylesheet" type="text/css">
 
-        <!-- Estilos para específicos para el index -->
-        <link href="/css/newDesign/index.css" rel="stylesheet" type="text/css">
-
         <!-- Fonts -->
-        <link href="http://fonts.googleapis.com/css?family=Roboto:400,300,700" rel="stylesheet" type="text/css">
-        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,700italic,800,400italic" rel="stylesheet" type="text/css">
+        <link href="http://fonts.googleapis.com/css?family=Roboto:300,350,400,500,600,700,800" rel="stylesheet" type="text/css">
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,500,600,700,800,400italic,700italic" rel="stylesheet" type="text/css">
     </head>
 
     <body>
@@ -54,6 +51,7 @@
         <script src="/js/newDesign/slick/slick.min.js" type="text/javascript"></script>
         <script src="/js/newDesign/raty/jquery.raty.js" type="text/javascript"></script>
         <script src="/js/newDesign/number/jquery.number.min.js" type="text/javascript"></script>
+        <script src="/js/newDesign/jquery-form/jquery.form.min.js" type="text/javascript"></script>
 
         <?php include_partial("global/header") ?>
 

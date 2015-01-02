@@ -1,3 +1,5 @@
+<link href="/css/newDesign/index.css" rel="stylesheet" type="text/css">
+
 <!-- Google Maps -->
 <script src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;sensor=false" type="text/javascript"></script>
 <script src="js/newDesign/markerclusterer.js" type="text/javascript"></script>

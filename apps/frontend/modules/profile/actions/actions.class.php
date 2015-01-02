@@ -62,6 +62,97 @@ class profileActions extends sfActions {
         return sfView::NONE;
     }
 
+    public function executeDoEdit (sfWebRequest $request) {
+
+        $return = array("error" => false);
+    
+        try {
+    
+            $firstname      = $request->getPostParameter("firstname", null);
+            $lastname       = $request->getPostParameter("lastname", null);
+            $motherLastname = $request->getPostParameter("motherLastname", null);
+            $email          = $request->getPostParameter("email", null);
+            $emailAgain     = $request->getPostParameter("emailAgain", null);
+            $rut            = $request->getPostParameter("rut", null);
+            $foreign        = $request->getPostParameter("foreign", null);
+            $telephone      = $request->getPostParameter("telephone", null);
+            $birth          = $request->getPostParameter("birth", null);
+            $address        = $request->getPostParameter("address", null);
+            $commune        = $request->getPostParameter("commune", null);
+            $region         = $request->getPostParameter("region", null);
+
+            $userId = $this->getUser()->getAttribute("userid");
+
+            $User = Doctrine_Core::getTable('User')->find($userId);
+    
+            if (is_null($firstname) || $firstname == "") {
+                throw new Exception("Debes indicar tu nombre", 1);
+            }
+
+            if (is_null($lastname) || $lastname == "") {
+                throw new Exception("Debes indicar tu apllellido paterno", 1);
+            }
+
+            if (is_null($motherLastname) || $motherLastname == "") {
+                throw new Exception("Debes indicar tu apellido materno", 1);
+            }
+
+            if (is_null($email) || $email == "") {
+                throw new Exception("Debes indicar tu correo electrónico", 1);
+            }
+
+            if (is_null($rut) || $rut == "") {
+                throw new Exception("Debes indicar tu RUT", 1);
+            }
+
+            if (is_null($foreign) || $foreign == "") {
+                throw new Exception("Debes indicar tu nacionalidad", 1);
+            }
+
+            if (is_null($telephone) || $telephone == "") {
+                throw new Exception("Debes indicar un teléfono", 1);
+            }
+
+            if (is_null($birth) || $birth == "") {
+                throw new Exception("Debes indicar tu fecha de nacimiento", 1);
+            }
+
+            if (is_null($address) || $address == "") {
+                throw new Exception("Debes indicar tu dirección", 1);
+            }
+
+            if (is_null($commune) || $commune == "") {
+                throw new Exception("Debes indicar tu comuna", 1);
+            }
+
+            if (is_null($region) || $region == "") {
+                throw new Exception("Debes indicar tu región", 1);
+            }
+
+            $User->setFirstname($firstname);
+            $User->setLastname($lastname);
+            $User->setApellidoMaterno($motherLastname);
+            $User->setFirstname($firstname);
+            $User->setEmail($email);
+            $User->setRut($rut);
+            $User->setExtranjero($foreign);
+            $User->setTelephone($telephone);
+            $User->setBirthdate($birth);
+            $User->setAddress($address);
+
+            $User->save();
+    
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorCode"] = $e->getCode();
+            $return["errorMessage"] = $e->getMessage();
+        }
+    
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
     public function executeEdit (sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
@@ -241,6 +332,10 @@ class profileActions extends sfActions {
             $this->transmission = true;
         }
 
+        $userId = $this->getUser()->getAttribute("userid");
+        $User = Doctrine_Core::getTable('User')->find($userId);
+
+        $this->license            = $User->getDriverLicenseFile();
         $this->isDebtor           = sfContext::getInstance()->getUser()->getAttribute('moroso');
         $this->amountWarranty     = sfConfig::get("app_monto_garantia");
         $this->amountWarrantyFree = sfConfig::get("app_monto_garantia_por_dia");
