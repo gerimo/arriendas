@@ -608,8 +608,8 @@ function localizame() {
             </ul>
         </div>
         <div class="col-sm-3 col-md-3 hidden-xs tabset">
-            <div class="col-md-6 text-center tab " data-target="#tab-map"><strong><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Mapa</strong></div>
-            <div class="col-md-6 text-center tab" data-target="#tab-list"><strong><span class="glyphicon glyphicon-list" aria-hidden="true"></span> Lista</strong></div>
+            <div class="col-sm-6 col-md-6 text-center tab active" data-target="#tab-map"><strong><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Mapa</strong></div>
+            <div class="col-sm-6 col-md-6 text-center tab" data-target="#tab-list"><strong><span class="glyphicon glyphicon-list" aria-hidden="true"></span> Lista</strong></div>
         </div>
     </div>
 
@@ -642,11 +642,11 @@ function localizame() {
 
         <div class="tab-container hidden-xs" id="tab-map">
             <div class="row">
-                <div class="col-md-9" id="map">
+                <div class="col-sm-9 col-md-9" id="map">
                     <div id="map-container"></div>
                 </div>
 
-                <div class="col-md-3" id="map-list">
+                <div class="col-sm-3 col-md-3" id="map-list">
                     <div id="map-list-loading" class="loading" style="text-align: center; margin-top: 30%"><?php echo image_tag('ajax-loader.gif', array("width" => "80px", "height" => "80px")) ?></div>
                     <div id="map-list-container"></div>
                 </div>
@@ -668,7 +668,7 @@ function localizame() {
         <div class="row">
 
             <div class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-md-offset-1 col-md-10">
-                <h1 class="title"><span>¿Cómo Funciona?</span></h1>
+                <div class="col-xs-offset-3 col-xs-7 col-md-offset-2 col-md-8"> <h2 class="title"><span>¿Cómo Funciona?</span></h2></div>
                 <iframe class="iframe" src="//player.vimeo.com/video/45668172?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff"  frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>    
             </div>
 
@@ -678,11 +678,9 @@ function localizame() {
 
     <section id="section-compare-prices">
 
-        <div class="hidden-xs space-40"></div>
-
         <div class="row">
             <div class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-md-offset-1 col-md-4 text-center">
-                <h1 class="title">Compare precios</h1>
+               <div class="col-xs-offset-3 col-xs-6 col-md-offset-1 col-md-10"> <h1 class="title">Compare precios</h1></div><div class="col-xs-offset-3 col-xs-6"> 
             </div>
         </div>
 
@@ -739,7 +737,7 @@ function localizame() {
 
             <div class="row">
                 <div class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-md-offset-1 col-md-4 text-center">
-                    <h1 class="title">Arriendas en las noticias</h1>
+                 <div class="col-xs-offset-1 col-xs-9"> <h2 class="title">Arriendas en las noticias</h2></div>
                 </div>
             </div>
 
@@ -837,7 +835,7 @@ if ($(window).width() > 768) {
 
     $('#section-home').css({'height': $(window).height()});
 
-    $("#map, #map-list, #list").css({height: $(window).height() - $("#section-map-form-search").outerHeight() - $("#section-map-filters").outerHeight()});
+    $("#map, #map-list").css({height: $(window).height() - $("#section-map-form-search").outerHeight() - $("#section-map-filters").outerHeight()});
 }
 
 $("input[type='checkbox']").change(function(){
