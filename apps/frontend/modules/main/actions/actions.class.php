@@ -1120,6 +1120,8 @@ public function executeIndex(sfWebRequest $request) {
         $fotos_autos = array();
         $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
 
+        error_log("Desde: ".$from.", Hasta: ".$to);
+
         for ($j = 0; $j < count($this->cars) ; $j++) {
 
             $auto = Doctrine_Core::getTable('car')->find(array($this->cars[$j]['id']));
