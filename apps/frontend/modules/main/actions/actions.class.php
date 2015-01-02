@@ -1134,8 +1134,6 @@ public function executeIndex(sfWebRequest $request) {
             $this->cars = $cars;
         }
 
-        error_log(print_r($this->cars, true));
-
         $fotos_autos = array();
 
         for ($j = 0 ; $j < count($this->cars) ; $j++) {
