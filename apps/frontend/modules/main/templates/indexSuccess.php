@@ -668,7 +668,7 @@ function localizame() {
     <section id = "mobile">
         <section id="section-how-works">
             <div class="row">
-                <div class="col-xs-offset-1 col-xs-10 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
+            <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
                     <div class="col-xs-12 col-sm-offset-0  col-md-offset-0 "> <h2 class="title"><span>¿Cómo Funciona?</span></h2></div>
                     <iframe class="iframe" src="//player.vimeo.com/video/45668172?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff"  frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>    
                 </div>

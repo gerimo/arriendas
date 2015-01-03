@@ -588,7 +588,7 @@
             padding-top: 1px;
         }
         #section-map-form-search{
-            position: static;   
+            position: absolute;   
         }
 
         .navbar-default {

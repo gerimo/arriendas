@@ -25,7 +25,7 @@
                         <li><a class="animate" href="">Mis autos</a></li>
                         <li><a class="animate" href="">Oportunidades</a></li>
                     <?php else: ?>
-                        <li><a class="animate" data-target="#section-map" href="">Buscar autos</a></li>
+                        <li><a class="animate" data-target="#section-map-form-search" href="">Buscar autos</a></li>
                         <li><a class="animate" data-target="#section-how-works" href="">¿Cómo funciona?</a></li>
                         <li><a class="animate" data-target="#section-compare-prices" href="">Compara precios</a></li>
                         <li><a class="animate" data-target="#section-on-news" href="">En las noticias</a></li>
