@@ -1,3 +1,25 @@
+.tamano {
+	size:10px;
+}
+
+.peditulos h2{
+	color: #ba135f;
+}
+
+.peditulos{
+	margin-top:0px;
+	}
+
+.direccion {
+	color: #ba135f;
+	font-size: 12px !important;
+	}
+
+.aprobado {
+	color: black;
+	
+}
+
 
 .bbox {
 	width: 100px;
@@ -45,6 +67,47 @@
     text-decoration: none;
 }
 
+
+.ext-btn-a-primary-small {
+    background: #00aced;
+    border: 2px solid #5bc8f0;
+    color: #eee !important;
+    font-size: 16px !important;
+    font-weight:700;
+    line-height: 19px !important;
+    max-width:100%;
+    min-width: 100%;
+    padding: 6px !important;
+    text-align: center;
+    text-transform: uppercase !important;
+    vertical-align: middle;
+
+}
+
+.ext-btn-a-primary-small:hover {
+    background: #5bc8f0 !important;
+    color: #fff !important;
+    text-decoration: none;
+}
+
+.ext-btn-a-action-small {
+    background: #00aced;
+    border: none;
+    border-radius:0;
+    color: #fff;
+    font: 700 18px/20px 'Open Sans', sans-serif;
+    height: 42px;
+    padding: 5px 10px;
+    text-align:center;
+}
+
+.ext-btn-a-action-small:hover {
+    background: #06c;
+    color: #fff;
+    text-decoration: none;
+}
+
+
 .AM {
 	margin-top:40px;
 }
@@ -67,10 +130,11 @@
 
 }
 
-.precio {
+.preciolarge {
  color:#ba135f;
  font-weight:bold;
  font-size:16px;
+ margin-top:11px;
 }
 
 .preciosmall {
@@ -87,9 +151,8 @@ margin-top:20px;
 }
 
 .wrapper {
-border-top:1px;
-border-bottom:1px;
 background-color:f7f7f7;
+inline-block;
 }
 
 
