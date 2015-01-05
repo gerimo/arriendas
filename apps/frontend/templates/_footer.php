@@ -47,7 +47,7 @@
 
     <div class="row">
         <div class="hidden-xs col-sm-12 col-md-12 text-center"> 
-            <p class = "direccion">Providencia 229, Providencia, Santiago de Chile (entrada por Perez Espinoza)</p>
+            <p class = "direccion">Manuel Montt 404, Providencia, Santiago de Chile</p>
         </div>
     </div>
 
@@ -85,7 +85,7 @@
         <div class="col-xs-12 visible-xs hidden-sm visible-md">
             <h1><strong>Contacto</strong><h1>
             <p>Télefono (02) 2333-3714</p>
-            <p>Providencia 229 (entrada por Perez Espinoza)</p>
+            <p>Manuel Montt 404</p>
             <p>Providencia, Santiago/Chile </p>
             <a class="fa fa-facebook fa-3x" href="#">facebook</a>
             <a class="fa fa-twitter fa-3x" href="#">twitter</a>

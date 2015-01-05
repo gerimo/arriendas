@@ -47,7 +47,7 @@
                             </ul>
                         </li>
                     <?php else: ?>                        
-                        <li><a href="<?php echo url_for('main/login') ?>" style="font-size: 18px"><strong>INGRESAR</strong></a></li>
+                        <li><a class="btn-a-primary" href="<?php echo url_for('main/login') ?>">INGRESAR</a></li>
                     <?php endif ?>
                 </ul>
 

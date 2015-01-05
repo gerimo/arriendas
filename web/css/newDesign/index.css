@@ -1,3 +1,9 @@
+.btn-a-primary{
+    font-size: 16px !important;
+    padding : 8px 21px !important;
+    margin: 5px;
+}
+
 #filters-navbar {
     background-color: white;
     border-color: white;
