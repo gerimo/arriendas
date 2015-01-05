@@ -46,8 +46,12 @@
     </div>
 
     <div class="row">
-        <div class="hidden-xs col-sm-12 col-md-12 text-center"> 
-            <p class = "direccion">Manuel Montt 404, Providencia, Santiago de Chile</p>
+        <div class="hidden-xs col-sm-12 col-md-12 text-center" id="address"> 
+            <p class= "direccion">Manuel Montt 404, Providencia, Santiago de Chile</p>
+            <p>
+                <i class="fa fa-phone"></i> <a href="tel:0223333714">(02) 2333-3714</a> 
+                <i class="fa fa-support"></i> <a href="mailto:soporte@arriendas.cl">soporte@arriendas.cl</a>
+            </p>
         </div>
     </div>
 
@@ -57,27 +61,12 @@
         </div>
     </div>
 
-    <div class="row">      
-        <div class="hidden-xs col-sm-12 col-md-12 text-center">
-            <h1><strong>Contactanos</strong><h1>
-        </div>
-    </div>
-
     <div class="row">
         <div class="hidden-xs col-sm-12 col-md-12 text-center">
         <p>
                 <a class="fa fa-facebook fa-3x" href="#">facebook</a>
                 <a class="fa fa-twitter fa-3x" href="#">twitter</a>
-                </p>
-        </div>
-    </div>
-
-    <div class="row">      
-        <div class="hidden-xs col-sm-12 col-md-12 text-center">
-            <p>
-                <i class="fa fa-phone"></i> <a href="tel:0223333714">(02) 2333-3714</a> 
-                <i class="fa fa-support"></i> <a href="mailto:soporte@arriendas.cl">soporte@arriendas.cl</a>
-            </p>
+        </p>
         </div>
     </div>
 

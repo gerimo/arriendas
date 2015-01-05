@@ -667,94 +667,92 @@ function localizame() {
 
 <section id = "fondo">
 
-    <section id = "mobile">
-        <section id="section-how-works">
-            <div class="row">
-                <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
-                    <div class="col-xs-12 col-sm-offset-0  col-md-offset-0 "> <h2 class="title"><span>¿Cómo Funciona?</span></h2></div>
-                    <iframe class="iframe" src="//player.vimeo.com/video/45668172?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff"  frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>    
-                </div>
-            </div>
-        </section>
 
-        <section class="hidde-sm hidden-md visible-xs"id="section-condition">
-            <div class="row">
-                <div class="col-xs-offset-1 col-xs-10 hidden-sm hidden-md">
-                    <div class="col-xs-12 col-sm-offset-0  col-md-offset-0"> <h2 class="title"><span>Condiciones de Arriendo</span></h2></div>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin nisl in rutrum dapibus.</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin nisl in rutrum dapibus.</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin nisl in rutrum dapibus.</p>
-                </div>
-            </div>
-            <div class="visible-xs hidden-sm hidden-md space-40"></div>
-        </section>
-
-        <div>
-            <?php $U = sfContext::getInstance()->getUser(); ?>
-            <?php if ($sf_user->isAuthenticated()): ?>
-               <section class="hidden-sm hidden-md hidden-xs"id="section-condition"></section>
-           <?php else: ?>                        
-            <section class="visible-xs hidden-sm hidden-md text-center">
-                <div class="row" id = "link-holder">
-                    <a href="<?php echo url_for('main/login') ?>" style="font-size: 18px"><strong>INGRESAR</strong></a>
-                </div>
-            </section>
-
-        <?php endif ?>
-        <div>
-        </section>
-
-
-        <section class="hidden-xs" id="section-compare-prices">
-
-            <div class="row">
-                <div class="col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
-                    <div class="col-xs-offset-2 col-xs-12 col-sm-offset-0 col-md-offset-0">
-                       <h2 class="title">Compare precios</h2>
-                   </div>
-               </div>
-           </div>
-
-           <div class="visible-xs space-20"></div>
-
-           <div class="row">
-            <div class="hidden-xs col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 table-responsive text-center">
-                <table id="compare-prices-table">
-                    <thead>
-                        <tr>
-                            <th class="table-transparent text-"></th>
-                            <th><img src="/images/newDesign/logo-avis.svg"></th>
-                            <th><img src="/images/newDesign/logo-hertz.svg"></th>
-                            <th><img src="/images/newDesign/logo-europcar.svg"></th>
-                            <th class="table-active"><img src="/images/newDesign/logo.svg"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><span class = "td">City Car</span></td>
-                            <td><span class = "td">$ 40.877</span></td>
-                            <td><span class = "td">$ 33.858</span></td>
-                            <td><span class = "td">$ 34.580</span></td>
-                            <td class = "last"><span class = "td">$ 17.000</span></td>
-                        </tr>
-                        <tr>
-                            <td><span class = "td">Mediano</span></td>
-                            <td><span class = "td">$ 49.207</span></td>
-                            <td><span class = "td">$ 51.946</span></td>
-                            <td><span class = "td">$ 54.081</span></td>
-                            <td class = "last"><span class = "td">$ 25.000</span></td>
-                        </tr>
-                        <tr>
-                            <td><span class = "td">Camioneta SUV</span></td>
-                            <td><span class = "td">$ 89.667</span></td>
-                            <td><span class = "td">$ 73.337</span></td>
-                            <td><span class = "td">$ 74.413</span></td>
-                            <td class = "last" ><span class = "td">$ 35.000</span></td>
-                        </tr>
-                    </tbody>
-                </table>
+    <section id="section-how-works">
+        <div class="row">
+            <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
+                <div class="col-xs-12 col-sm-offset-0  col-md-offset-0 "> <h2 class="title"><span>¿Cómo Funciona?</span></h2></div>
+                <iframe class="iframe" src="//player.vimeo.com/video/45668172?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff"  frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>    
             </div>
         </div>
+    </section>
+
+    <section id="section-compare-prices">
+
+        <div class="row text-center">
+            <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
+                <div class="col-xs-12 col-sm-offset-0  col-md-offset-0">
+                   <h2 class="title">Compare precios</h2>
+               </div>
+           </div>
+       </div>
+
+       <div class="visible-xs space-20"></div>
+
+       <div class="row">
+        <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 table-responsive text-center">
+            <table id="compare-prices-table">
+                <thead>
+                    <tr>
+                        <th class="table-transparent text-"></th>
+                        <th><img src="/images/newDesign/logo-avis.svg"></th>
+                        <th><img src="/images/newDesign/logo-hertz.svg"></th>
+                        <th><img src="/images/newDesign/logo-europcar.svg"></th>
+                        <th class="table-active"><img src="/images/newDesign/logo.svg"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class = "td">City Car</span></td>
+                        <td><span class = "td">$ 40.877</span></td>
+                        <td><span class = "td">$ 33.858</span></td>
+                        <td><span class = "td">$ 34.580</span></td>
+                        <td class = "last"><span class = "td">$ 17.000</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class = "td">Mediano</span></td>
+                        <td><span class = "td">$ 49.207</span></td>
+                        <td><span class = "td">$ 51.946</span></td>
+                        <td><span class = "td">$ 54.081</span></td>
+                        <td class = "last"><span class = "td">$ 25.000</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class = "td">Camioneta SUV</span></td>
+                        <td><span class = "td">$ 89.667</span></td>
+                        <td><span class = "td">$ 73.337</span></td>
+                        <td><span class = "td">$ 74.413</span></td>
+                        <td class = "last" ><span class = "td">$ 35.000</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <section class="hidde-sm hidden-md visible-xs"id="section-condition">
+        <div class="row">
+            <div class="col-xs-offset-1 col-xs-10 hidden-sm hidden-md">
+                <div class="col-xs-12 col-sm-offset-0  col-md-offset-0"> <h2 class="title"><span>Condiciones de Arriendo</span></h2></div>
+                <p>Debes tener al menos 24 años para poder arrendar.</p>
+                <p>Tienes que contar con una licencia de conducir valida .</p>
+                <p>Debes pagar con una cuenta bancaria a tu nombre (no puede ser de un tercero).</p>
+            </div>
+        </div>
+        <div class="visible-xs hidden-sm hidden-md space-40"></div>
+    </section>
+
+    <div>
+        <?php $U = sfContext::getInstance()->getUser(); ?>
+        <?php if ($sf_user->isAuthenticated()): ?>
+           <section class="hidden-sm hidden-md hidden-xs"id="section-condition"></section>
+       <?php else: ?>                        
+        <section class="visible-xs hidden-sm hidden-md text-center">
+            <div class="row" id = "link-holder">
+                <a href="<?php echo url_for('main/login') ?>" style="font-size: 18px"><strong>INGRESAR</strong></a>
+            </div>
+        </section>
+
+    <?php endif ?>
+    <div>
 
         <div class="hidden-xs col-sm-offset-2 col-sm-8 col-md-offset-1 col-md-10 text-center">
             <p class = "text-table">Precios con IVA, aplicando descuento por reservas en internet, con seguro de daños, 
