@@ -23,7 +23,7 @@
                         <li><a href="<?php echo url_for("profile/cars") ?>">Mis autos</a></li>
                         <li><a href="<?php echo url_for("profile/oportunidades") ?>">Oportunidades</a></li>
                     <?php else: ?>
-                        <li><a class="animate" data-target="#section-map" href="">Buscar autos</a></li>
+                        <li><a class="animate" data-target="#section-map-form-search" href="">Buscar autos</a></li>
                         <li><a class="animate" data-target="#section-how-works" href="">¿Cómo funciona?</a></li>
                         <li><a class="animate" data-target="#section-compare-prices" href="">Compara precios</a></li>
                         <li><a class="animate" data-target="#section-on-news" href="">En las noticias</a></li>
@@ -44,11 +44,16 @@
                                 <li><a href="<?php echo url_for('main/logout') ?>">Salir</a></li>
                             </ul>
                         </li>
-                    <?php else: ?>
-                        <li><a href="<?php echo url_for('main/login') ?>" style="font-size: 18px"><strong>INGRESAR</strong></a></li>
+                    <?php else: ?>                        
+                        <li><a class="btn-a-primary" href="<?php echo url_for('main/login') ?>">INGRESAR</a></li>
                     <?php endif ?>
                 </ul>
-            </div>
-        </div>
+
+                <ul class="nav navbar-nav navbar-right">
+                <li><a><span class="glyphicon glyphicon-earphone"></span>(02) 2 333 37 14</a></li>
+                </ul>
+
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container -->
     </nav>
 </header>
