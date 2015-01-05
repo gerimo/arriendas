@@ -60,6 +60,9 @@ footer {
 
 footer .direccion{
     font: 700 20px/24px 'Roboto', sans-serif;
+}
+
+footer #address{
     margin: 57px 0 51px;
 }
 
