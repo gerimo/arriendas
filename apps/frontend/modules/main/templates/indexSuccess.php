@@ -460,11 +460,11 @@ function localizame() {
 
                     article = "<article class='box'>";
                     article += "<div class='row'>";
-                    article += "<div class='col-md-4 image'>";
+                    article += "<div class='col-xs-4 col-md-4 image'>";
                     article += "<img class='car' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_134,h_99,c_fill,g_center/" + urlFotoThumbTipo + "' height='99' width='134' alt=''>";
                     article += "<img class='marker' src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + contador + "|05a4e7|ffffff'>"
                     article += "</div>";
-                    article += "<div class='col-md-8 text'>";
+                    article += "<div class='col-xs-8 col-md-8 text'>";
                     article += "<h2><a href='<?php echo url_for("arriendo-de-autos/rent-a-car") ?>/" + dataCar.brand + dataCar.model + "/" + dataCar.comuna + "/" + dataCar.id + "'>"+ dataCar.brand +" "+ dataCar.model +"<small>, "+dataCar.year+"</small></a></h2>";
                     /*article += "<span class='sub-heading'>A 2 km Metro <strong>Tobalaba</strong></span>";*/
                     article += "<p class='price'>$"+ dataCar.priceAPuntos +"</p>";
@@ -668,14 +668,14 @@ function localizame() {
     <section id = "mobile">
         <section id="section-how-works">
             <div class="row">
-            <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
+                <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
                     <div class="col-xs-12 col-sm-offset-0  col-md-offset-0 "> <h2 class="title"><span>¿Cómo Funciona?</span></h2></div>
                     <iframe class="iframe" src="//player.vimeo.com/video/45668172?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff"  frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>    
                 </div>
             </div>
         </section>
 
-        <section class="visible-sm visible-md visible-xs"id="section-condition">
+        <section class="hidde-sm hidden-md visible-xs"id="section-condition">
             <div class="row">
                 <div class="col-xs-offset-1 col-xs-10 hidden-sm hidden-md">
                     <div class="col-xs-12 col-sm-offset-0  col-md-offset-0"> <h2 class="title"><span>Condiciones de Arriendo</span></h2></div>
@@ -684,18 +684,20 @@ function localizame() {
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin nisl in rutrum dapibus.</p>
                 </div>
             </div>
+            <div class="visible-xs hidden-sm hidden-md space-40"></div>
         </section>
 
         <div>
             <?php $U = sfContext::getInstance()->getUser(); ?>
             <?php if ($sf_user->isAuthenticated()): ?>
-             <section class="visible-sm visible-md hidden-xs"id="section-condition"></section>
-         <?php else: ?>                        
-            <section class="visible-sm visible-md visible-xs"id="section-condition">
+               <section class="hidden-sm hidden-md hidden-xs"id="section-condition"></section>
+           <?php else: ?>                        
+            <section class="visible-xs hidden-sm hidden-md text-center">
                 <div class="row" id = "link-holder">
                     <a href="<?php echo url_for('main/login') ?>" style="font-size: 18px"><strong>INGRESAR</strong></a>
                 </div>
             </section>
+
         <?php endif ?>
         <div>
         </section>
@@ -706,19 +708,19 @@ function localizame() {
             <div class="row">
                 <div class="col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
                     <div class="col-xs-offset-2 col-xs-12 col-sm-offset-0 col-md-offset-0">
-                     <h2 class="title">Compare precios</h2>
-                 </div>
-             </div>
-         </div>
+                       <h2 class="title">Compare precios</h2>
+                   </div>
+               </div>
+           </div>
 
-         <div class="visible-xs space-20"></div>
+           <div class="visible-xs space-20"></div>
 
-         <div class="row">
-            <div class="hidden-xs col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 table-responsive">
+           <div class="row">
+            <div class="hidden-xs col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 table-responsive text-center">
                 <table id="compare-prices-table">
                     <thead>
                         <tr>
-                            <th class="table-transparent"></th>
+                            <th class="table-transparent text-"></th>
                             <th><img src="/images/newDesign/logo-avis.svg"></th>
                             <th><img src="/images/newDesign/logo-hertz.svg"></th>
                             <th><img src="/images/newDesign/logo-europcar.svg"></th>
@@ -727,25 +729,25 @@ function localizame() {
                     </thead>
                     <tbody>
                         <tr>
-                            <td>City Car</td>
-                            <td>$ 40.877</td>
-                            <td>$ 33.858</td>
-                            <td>$ 34.580</td>
-                            <td class="table-active">$ 17.000</td>
+                            <td><span class = "td">City Car</span></td>
+                            <td><span class = "td">$ 40.877</span></td>
+                            <td><span class = "td">$ 33.858</span></td>
+                            <td><span class = "td">$ 34.580</span></td>
+                            <td class = "last"><span class = "td">$ 17.000</span></td>
                         </tr>
                         <tr>
-                            <td>Mediano</td>
-                            <td>$ 49.207</td>
-                            <td>$ 51.946</td>
-                            <td>$ 54.081</td>
-                            <td class="table-active">$ 25.000</td>
+                            <td><span class = "td">Mediano</span></td>
+                            <td><span class = "td">$ 49.207</span></td>
+                            <td><span class = "td">$ 51.946</span></td>
+                            <td><span class = "td">$ 54.081</span></td>
+                            <td class = "last"><span class = "td">$ 25.000</span></td>
                         </tr>
                         <tr>
-                            <td>Camioneta SUV</td>
-                            <td>$ 89.667</td>
-                            <td>$ 73.337</td>
-                            <td>$ 74.413</td>
-                            <td class="table-active">$ 35.000</td>
+                            <td><span class = "td">Camioneta SUV</span></td>
+                            <td><span class = "td">$ 89.667</span></td>
+                            <td><span class = "td">$ 73.337</span></td>
+                            <td><span class = "td">$ 74.413</span></td>
+                            <td class = "last" ><span class = "td">$ 35.000</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -764,12 +766,12 @@ function localizame() {
 
             <div class="row">
                 <div class="hidden-xs col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
-                   <div class="col-xs-offset-3 col-xs-8 col-sm-offset-0 col-md-offset-0"> <h2 class="title">Arriendas en las noticias</h2></div>
-               </div>
-           </div>
-       </div>
+                 <div class="col-xs-offset-3 col-xs-8 col-sm-offset-0 col-md-offset-0"> <h2 class="title">Arriendas en las noticias</h2></div>
+             </div>
+         </div>
+     </div>
 
-       <div class="row" id = "noticias">
+     <div class="row" id = "noticias">
 
         <div class="hidden-xs col-sm-offset-2 col-sm-8 col-md-offset-2 col-md-8">
             <div id="section-on-news-carousel">
@@ -793,7 +795,7 @@ function localizame() {
     <div class="hidden-xs space-40"></div>
 
     <div class="row">
-        <div class="hidden-xs col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6" id="testimonials-container">
+        <div class="hidden-xs col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 text-center" id="testimonials-container">
             <h1>Testimonios</h1>
             <div id="section-testimonials-carousel">
                 <div>

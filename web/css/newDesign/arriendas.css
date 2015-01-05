@@ -46,11 +46,21 @@ header .navbar-default .navbar-nav a.btn-a-primary:hover {
     text-decoration: none;
 }
 
+header .glyphicon{
+    right: 5px;
+}
+
 footer {
     background: #00aced;
     color: #fff;
     font: 700 20px/24px 'Roboto', sans-serif;
     font-weight: 300;
+    padding: 0 75px;
+}
+
+footer .direccion{
+    font: 700 20px/24px 'Roboto', sans-serif;
+    margin: 57px 0 51px;
 }
 
 footer h1 {
@@ -60,6 +70,22 @@ footer h1 {
     margin: 20px 0 10px 0;
     padding: 0;
     text-transform: uppercase;
+}
+
+footer h3 {
+    border-top: 1px solid #fff;
+    margin: 0 0 15px;
+    font: 700 20px/24px 'Roboto', sans-serif;
+    text-transform: uppercase;
+}
+
+footer h3 span{
+    position: relative;
+    top: -11px;
+    background: #00aced;
+    padding: 0 10px;
+    max-width: 500px;
+    display: inline-block;
 }
 
 footer ul {
@@ -88,12 +114,16 @@ footer p {
     padding: 0;
 }
 
-footer .fa-facebook:hover {
-    color: #3a5795;
+footer .fa-facebook , .fa-twitter{
+    background: url(/images/newDesign/bg-facebook.svg);
+    height: 35px;
+    width: 35px;
+    text-indent: -9999px;
+    margin: 0 4px;
 }
 
-footer .fa-twitter:hover {
-    color: #55acee;
+footer .fa-twitter {
+    background: url(/images/newDesign/bg-twitter.svg);
 }
 
 .row {
@@ -194,5 +224,28 @@ footer .fa-twitter:hover {
     header .navbar-right .dropdown-menu {
         background-color: rgba(0, 0, 0, 0.8);
         border-color: rgba(0, 0, 0, 0.8);
+    }
+}
+
+@media only screen and (max-width:767px){
+
+    footer {
+        padding: 0;
+    }
+
+    footer h1{
+        margin: 10px 0 10px 0;
+        font-size: 12px;
+    }
+
+    footer p{
+        margin: 0 0 4px; 
+        font: 300 12px/14px "Roboto", sans-serif;
+        text-transform: none;
+    }
+
+    footer .fa-facebook , .fa-twitter{
+        width: 24px;
+        height: 24px;
     }
 }

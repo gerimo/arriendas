@@ -87,7 +87,7 @@
     color: white;
     font-family: 'Open Sans', sans-serif;
     font-size: 15px;
-    padding: 29px 0px 26px 33px;
+    padding: 29px 0px 26px 0px;
 }
 
 #section-map-filters .heading {
@@ -95,8 +95,9 @@
     font: 700 24px/26px 'Open Sans', sans-serif;
     color: #fff;
     position: relative;
-    padding: 0 40px 0 0;
+    padding: 0 30px 0 30px;
 }
+
 #section-map-filters .heading:before {
     content: "";
     position: absolute;
@@ -109,6 +110,7 @@
     -webkit-transform: rotate(-25deg);
     transform: rotate(-25deg);
 }
+
 #section-map-filters .heading:after {
     content: "";
     position: absolute;
@@ -121,43 +123,20 @@
     -o-transform: rotate(22deg);
     transform: rotate(22deg);
 }
-#section-map-filters .col-md-7, #section-map-filters .col-md-2{
-    padding: 0;
-}
-#section-map-filters .col-md-7{
-    width: 60.4%;
-}
-#section-map-filters .col-md-2{
-    width: 14%;
-}
-#section-map-filters .col-md-3{
-    width: 25.6%;
-}
-
-
-
 
 #section-map{
-    background-color: white;
+    position: relative;
 }
-#section-map:after{
+
+#section-map:before{
     content: "";
+    bottom: -11px;
     position: absolute;
     background: url(/images/newDesign/border-tabs.png) repeat-x 50% 0;
     width: 100%;
     height: 22px;
-
 }
 
-#section-testimonials:after{
-    content: "";
-    position: absolute;
-    background: url(/images/newDesign/border-tabs.png) repeat-x 50% 0;
-    width: 100%;
-    height: 22px;
-    left: 0;
-
-}
 #section-map-filters ul {
     margin-top: 4px;
     margin-left: -10%;
@@ -174,7 +153,6 @@
 #section-map-body div {
     padding: 0;
 }
-
 
 #map-container {
     height: 100%;
@@ -304,10 +282,6 @@
     text-decoration: none;
 }
 
-#filters-navbar .navbar-toggle {
-    float: left;
-}
-
 #link-holder {
     background: #ba135f;
     padding: 16px 15px 13px;
@@ -321,6 +295,7 @@
     border: 2px solid #fff;
     padding: 3px 14px 8px;
 }
+
 #section-condition{
     padding: 57px 0 0 0;
     font: 10px/20px 'Roboto', sans-serif;
@@ -329,9 +304,6 @@
     overflow: hidden;
     display: none;
     color: black;
-}
-#section-condition p{
-    text-align: justify;
 }
 
 #section-how-works{
@@ -343,8 +315,6 @@
     margin: auto;
 }
 
-
-
 #section-home {
     background-image: url("/images/newDesign/background-home.jpg");
     background-size: 100% 100%;
@@ -355,12 +325,17 @@
     background-image: url("/images/newDesign/good-way.jpg");
     background-size: 100% 100%;
 }
+#fondo{
+    background: url(/images/newDesign/bg-pricebox.jpg) no-repeat 0 0 / 100% 100%;
+    background-size: 100% 100%;
+}
 
 .background-img {
     height: 100%;
     width: 100%;
     z-index: -50;   
 }
+
 .slick-prev, .slick-next {
     height: 29px;
     width: 31px;
@@ -428,21 +403,21 @@
 
 }
 
-#fondo{
-    background: url(/images/newDesign/bg-pricebox.jpg) no-repeat 0 0 / 100% 100%;
-
-}
-
 .iframe{
     width: 100%;
     height: 562px;
 }
+
 #section-compare-prices{
     padding: 57px 0 0 0;
 }
 
 #compare-prices-table {
     width: 100%;
+    text-align: center;
+    color: #5d5d5d;
+    font: 11px/14px 'Roboto', sans-serif;
+    letter-spacing: 1px;
 }
 
 #compare-prices-table img {
@@ -457,18 +432,23 @@
     text-align: center;
     width: 20%;
 }
-
 #compare-prices-table td {
-    background-color: #edeeee;
-    border-left: solid 2px white;
-    border-top: solid 25px white;
-    color: #5d5d5d;
-    font: 11px/14px 'Roboto', sans-serif;
+    padding: 0 0 3px 3px;
+    height: 62px;
+}
+
+.td {
+    background: #edeeee; 
+    display: block;
+    height: 100%;
+    padding: 11px 18px;
     font-weight: 700;
-    height: 40px;
-    letter-spacing: 1px;
-    padding: 10px;
     text-align: center;
+}
+
+.last .td{
+    background-color: #00aced;
+    color: white;
 }
 
 #compare-prices-table .table-transparent {
@@ -487,13 +467,11 @@
 
 .text-table{
 
-    margin: 58px 0 70px 0;
+    margin: 47px 0 70px 0;
     max-width: 100%;
-    text-align: center;
     color: #5d5d5d;
     font: 11px/14px 'Roboto', sans-serif;
     letter-spacing: 1px;
-
 }
 
 #section-on-news{
@@ -530,7 +508,6 @@
     background-color: rgba(0, 0, 0, 0.5);
     border-radius: 11px;
     color: white;
-    text-align: center;
 }
 
 #testimonials-container h1 {
@@ -565,6 +542,16 @@
     text-align: right;
 }
 
+#section-testimonials:after{
+    content: "";
+    position: absolute;
+    background: url(/images/newDesign/border-tabs.png) repeat-x 50% 0;
+    width: 100%;
+    height: 22px;
+    left: 0;
+}
+
+
 @media only screen and (min-width:768px) {
 
     #section-map-form-search #search {
@@ -588,7 +575,7 @@
             padding-top: 1px;
         }
         #section-map-form-search{
-            position: absolute;   
+
         }
 
         .navbar-default {
@@ -606,7 +593,7 @@
 
         #section-map-form-search {
             background: white;
-            padding: 5px 0 5px 0;
+            padding: 5px 0 0 0;
         }
 
         #section-map-form-search select, #section-map-form-search input {
@@ -664,19 +651,42 @@
             margin: 0 -86px 28px 0;
         }
 
-        #mobile:after{
-                content: "";
-                position: absolute;
-                background: url(/images/newDesign/border-tabs.png) repeat-x 50% 0;
-                width: 100%;
-                height: 22px;
-        }
-
     }
 
+    @media only screen and (max-width:864px) {
+        #section-map #section-map-filters .tabset {
 
-    @media only screen and (max-width:999px) {sss
-        #section-map-filters {
-            padding: 29px 0 -1px 18px;
+            font: 700 22px/30px 'Open Sans', sans-serif;
         }
+
+
+        #section-map-filters li {
+            font: 600 15px/20px 'Open Sans', sans-serif;
+        }
+
+        #section-map-filters .heading {
+
+            padding: 0 30px 0 10px;
+        }
+
+        .btn-a-action {
+            font: 300 14px/20px 'Open Sans', sans-serif;
+        }
+
+        .box .price{
+            font: 700 13px/22px 'Roboto', sans-serif;
+        }
+
+        .box .text h2{
+            font: 700 13px/20px 'Roboto', sans-serif;
+        }
+        #section-home-carousel h1{
+            font-size: 25px;
+        }
+
+        #section-home-carousel h2{
+            font-size: 19px;
+            margin: 0 0 170px 0;
+        }
+
     }

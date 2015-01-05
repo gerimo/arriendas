@@ -50,6 +50,11 @@
                         <li><a href="<?php echo url_for('main/login') ?>" style="font-size: 18px"><strong>INGRESAR</strong></a></li>
                     <?php endif ?>
                 </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                <li><a><span class="glyphicon glyphicon-earphone"></span>(02) 2 333 37 14</a></li>
+                </ul>
+
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container -->
     </nav>

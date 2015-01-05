@@ -1,7 +1,7 @@
 <footer id="footer">
     <div class="row">
 
-        <div class="col-md-3">
+        <div class="hidden-xs col-sm-3 col-md-3">
             <h1>Usuarios</h1>
             <ul>
                 <?php if(sfContext::getInstance()->getUser()->isAuthenticated()): ?>
@@ -12,15 +12,9 @@
                     <li><a href="<?php echo url_for('main/login') ?>" title="Ingresar">Ingresar</a></li>
                 <?php endif ?>
             </ul>
-
-            <h1>Síguenos en</h1>
-            <p>
-                <a href="#"><i class="fa fa-facebook fa-3x"></i></a>
-                <a href="#"><i class="fa fa-twitter fa-3x"></i></a>
-            </p>
         </div>
 
-        <div class="col-md-3">
+        <div class="hidden-xs col-sm-3 col-md-3">
             <h1>Arriendo de autos en Santiago</h1>
             <ul>
                 <li><a href="<?php echo url_for('arriendo-de-autos/region-metropolitana').'/providencia' ?>">Rent a Car Providencia</a></li>
@@ -30,7 +24,7 @@
             </ul>
         </div>
 
-        <div class="col-md-3">
+        <div class="hidden-xs col-sm-3 col-md-3">
             <h1>Acerca de Arriendas</h1>
             <ul>
                 <li><a href="<?php echo url_for('main/compania') ?>" title="La compañía Arriendas.cl">La Compañía</a></li>
@@ -40,7 +34,7 @@
             </ul>
         </div>
 
-        <div class="col-md-3">
+        <div class="hidden-xs col-sm-3 col-md-3">
             <h1>Herramientas</h1>
             <ul>
                 <li><a href="<?php echo url_for('profile/addCar') ?>" title="Sube tu auto">Sube tu auto</a></li>
@@ -51,15 +45,50 @@
         </div>
     </div>
 
-    <hr>
+    <div class="row">
+        <div class="hidden-xs col-sm-12 col-md-12 text-center"> 
+            <p class = "direccion">Providencia 229, Providencia, Santiago de Chile (entrada por Perez Espinoza)</p>
+        </div>
+    </div>
+
+    <div class="row">      
+        <div class="hidden-xs col-sm-12 col-md-12 text-center">
+            <h3 class = "follow"><span>Síguenos en</span></h3>
+        </div>
+    </div>
+
+    <div class="row">      
+        <div class="hidden-xs col-sm-12 col-md-12 text-center">
+            <h1><strong>Contactanos</strong><h1>
+        </div>
+    </div>
 
     <div class="row">
-        <div class="col-md-12 text-center">
-            <p>Providencia 229, Providencia, Santiago de Chile (entrada por Perez Espinoza)</p>
+        <div class="hidden-xs col-sm-12 col-md-12 text-center">
+        <p>
+                <a class="fa fa-facebook fa-3x" href="#">facebook</a>
+                <a class="fa fa-twitter fa-3x" href="#">twitter</a>
+                </p>
+        </div>
+    </div>
+
+    <div class="row">      
+        <div class="hidden-xs col-sm-12 col-md-12 text-center">
             <p>
                 <i class="fa fa-phone"></i> <a href="tel:0223333714">(02) 2333-3714</a> 
                 <i class="fa fa-support"></i> <a href="mailto:soporte@arriendas.cl">soporte@arriendas.cl</a>
             </p>
+        </div>
+    </div>
+
+    <div class="row">      
+        <div class="col-xs-12 visible-xs hidden-sm visible-md">
+            <h1><strong>Contacto</strong><h1>
+            <p>Télefono (02) 2333-3714</p>
+            <p>Providencia 229 (entrada por Perez Espinoza)</p>
+            <p>Providencia, Santiago/Chile </p>
+            <a class="fa fa-facebook fa-3x" href="#">facebook</a>
+            <a class="fa fa-twitter fa-3x" href="#">twitter</a>
         </div>
     </div>
 </footer>
