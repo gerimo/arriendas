@@ -4,7 +4,6 @@
     <nav class="navbar navbar-default navbar-fixed-top navbar-inverse" id="header-navbar" role="navigation">
         <div class="container">
 
-            <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header">
                     <span class="sr-only">Toggle navigation</span>
@@ -15,15 +14,14 @@
                 <a class="navbar-brand" href="<?php echo url_for('main/index') ?>"><img alt="Arriendas.cl" src="/images/newDesign/logoIndex.svg" height="19" width="123"></a>
             </div>
 
-            <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="header">
                 
                 <ul class="nav navbar-nav">
 
                     <?php if ($sf_user->isAuthenticated()): ?>
-                        <li><a class="animate" href="">Inicio</a></li>
-                        <li><a class="animate" href="">Mis autos</a></li>
-                        <li><a class="animate" href="">Oportunidades</a></li>
+                        <li><a href="<?php echo url_for("main/index") ?>">Inicio</a></li>
+                        <li><a href="<?php echo url_for("profile/cars") ?>">Mis autos</a></li>
+                        <li><a href="<?php echo url_for("profile/oportunidades") ?>">Oportunidades</a></li>
                     <?php else: ?>
                         <li><a class="animate" data-target="#section-map" href="">Buscar autos</a></li>
                         <li><a class="animate" data-target="#section-how-works" href="">¿Cómo funciona?</a></li>
@@ -46,11 +44,11 @@
                                 <li><a href="<?php echo url_for('main/logout') ?>">Salir</a></li>
                             </ul>
                         </li>
-                    <?php else: ?>                        
+                    <?php else: ?>
                         <li><a href="<?php echo url_for('main/login') ?>" style="font-size: 18px"><strong>INGRESAR</strong></a></li>
                     <?php endif ?>
                 </ul>
-            </div><!-- /.navbar-collapse -->
-        </div><!-- /.container -->
+            </div>
+        </div>
     </nav>
 </header>
