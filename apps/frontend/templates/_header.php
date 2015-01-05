@@ -50,7 +50,7 @@
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
-                <li><a><span class="glyphicon glyphicon-earphone"></span>(02) 2 333 37 14</a></li>
+                <li><a href="tel:+0223333714"><span class="glyphicon glyphicon-earphone"></span>(02) 2 333 37 14</a></li>
                 </ul>
 
             </div><!-- /.navbar-collapse -->
