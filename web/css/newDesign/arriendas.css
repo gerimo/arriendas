@@ -76,6 +76,10 @@ header .glyphicon{
     right: 5px;
 }
 
+header .glyphicon{
+    right: 5px;
+}
+
 footer {
     background: #00aced;
     color: #fff;
@@ -295,6 +299,29 @@ footer .fa-twitter {
         margin-left: -15px;
         margin-right: -15px;
         padding: 20px 20px 20px 20px;
+    }
+}
+
+@media only screen and (max-width:767px){
+
+    footer {
+        padding: 0;
+    }
+
+    footer h1{
+        margin: 10px 0 10px 0;
+        font-size: 12px;
+    }
+
+    footer p{
+        margin: 0 0 4px; 
+        font: 300 12px/14px "Roboto", sans-serif;
+        text-transform: none;
+    }
+
+    footer .fa-facebook , .fa-twitter{
+        width: 24px;
+        height: 24px;
     }
 }
 

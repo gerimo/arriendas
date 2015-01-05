@@ -31,13 +31,13 @@
         longitud = position.coords.longitude; // Guardamos nuestra longitud
 
         <?php if ($sf_user->getAttribute('geolocalizacion') == true): ?>
-            geolocalizacion = true;
-        <?php else: ?>
-            geolocalizacion = false;
-        <?php endif; ?>
-    }
+        geolocalizacion = true;
+    <?php else: ?>
+    geolocalizacion = false;
+<?php endif; ?>
+}
 
-    function errores(err) {
+function errores(err) {
 
         // Controlamos los posibles errores
         if (err.code == 0) {
@@ -59,79 +59,79 @@
         var center = null;
 
         <?php if (stripos($_SERVER['SERVER_NAME'], "arrendas") !== FALSE): ?>
-            center = new google.maps.LatLng(-34.59, -58.401604);
-        <?php else: ?>
-            center = new google.maps.LatLng(-33.436024, -70.632858);
-        <?php endif ?>
+        center = new google.maps.LatLng(-34.59, -58.401604);
+    <?php else: ?>
+    center = new google.maps.LatLng(-33.436024, -70.632858);
+<?php endif ?>
 
-        if (geolocalizacion) {
-            center = new google.maps.LatLng(latitud, longitud);
-        }
+if (geolocalizacion) {
+    center = new google.maps.LatLng(latitud, longitud);
+}
 
-        <?php if (isset($_GET['ciudad']) && $_GET['ciudad'] == "arica"): ?>
-            center = new google.maps.LatLng(-18.32, -70.20);
-        <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "concepcion"): ?>
-            center = new google.maps.LatLng(-37.00, -72.30);
-        <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "laserena"): ?>
-            center = new google.maps.LatLng(-29.75, -71.10);
-        <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "temuco"): ?>
-            center = new google.maps.LatLng(-38.45, -72.40);
-        <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "valparaiso"): ?>
-            center = new google.maps.LatLng(-33.2, -71.4);
-        <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "viña"): ?>
-            center = new google.maps.LatLng(-33.0, -71.3);
-        <?php elseif (isset($map_clat) && isset($map_clng)): ?>
-            center = new google.maps.LatLng(<?= $map_clat ?>, <?= $map_clng ?>);
-        <?php endif; ?>
+<?php if (isset($_GET['ciudad']) && $_GET['ciudad'] == "arica"): ?>
+    center = new google.maps.LatLng(-18.32, -70.20);
+<?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "concepcion"): ?>
+    center = new google.maps.LatLng(-37.00, -72.30);
+<?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "laserena"): ?>
+    center = new google.maps.LatLng(-29.75, -71.10);
+<?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "temuco"): ?>
+    center = new google.maps.LatLng(-38.45, -72.40);
+<?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "valparaiso"): ?>
+    center = new google.maps.LatLng(-33.2, -71.4);
+<?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "viña"): ?>
+    center = new google.maps.LatLng(-33.0, -71.3);
+<?php elseif (isset($map_clat) && isset($map_clng)): ?>
+    center = new google.maps.LatLng(<?= $map_clat ?>, <?= $map_clng ?>);
+<?php endif; ?>
 
-        map = new google.maps.Map(document.getElementById('map-container'), {
-            zoom: 14,
-            center: center,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            scrollwheel: false
-        });
+map = new google.maps.Map(document.getElementById('map-container'), {
+    zoom: 14,
+    center: center,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    scrollwheel: false
+});
 
-        var market = null;
+var market = null;
 
-        if (geolocalizacion) {
+if (geolocalizacion) {
 
-            marker = new google.maps.Marker({
-                position: center,
-                map: map,
-                draggable: true,
-            });
-        }
+    marker = new google.maps.Marker({
+        position: center,
+        map: map,
+        draggable: true,
+    });
+}
 
-        lastValidCenter = center;
+lastValidCenter = center;
 
-        google.maps.event.addListener(map, 'idle', function() {
+google.maps.event.addListener(map, 'idle', function() {
 
-            google.maps.event.clearListeners(map, 'idle');
-            console.log("listener idle");
-            searchCars();
-        });
+    google.maps.event.clearListeners(map, 'idle');
+    console.log("listener idle");
+    searchCars();
+});
 
-        google.maps.event.addListener(map, 'dragend', function() {
-            
-            if (strictBounds === null || strictBounds.contains(map.getCenter())) {
-                lastValidCenter = map.getCenter();
-            } else {
-                map.panTo(lastValidCenter);
-            }
-            console.log("listener dragend");
-            searchCars();
-        });
+google.maps.event.addListener(map, 'dragend', function() {
 
-        google.maps.event.addListener(map, 'zoom_changed', function() {
+    if (strictBounds === null || strictBounds.contains(map.getCenter())) {
+        lastValidCenter = map.getCenter();
+    } else {
+        map.panTo(lastValidCenter);
+    }
+    console.log("listener dragend");
+    searchCars();
+});
 
-            if (strictBounds === null || strictBounds.contains(map.getCenter())) {
-                lastValidCenter = map.getCenter();
-            } else {
-                map.panTo(lastValidCenter);
-            }
-            console.log("listener zoom");
-            searchCars();
-        });
+google.maps.event.addListener(map, 'zoom_changed', function() {
+
+    if (strictBounds === null || strictBounds.contains(map.getCenter())) {
+        lastValidCenter = map.getCenter();
+    } else {
+        map.panTo(lastValidCenter);
+    }
+    console.log("listener zoom");
+    searchCars();
+});
 
         //Autocomplete
         var input = document.getElementById('direction');
@@ -172,7 +172,7 @@
                 new google.maps.Point(0, 0),
                 new google.maps.Point(17, 34),
                 new google.maps.Size(35, 35)
-            );
+                );
 
             marker.setIcon(image);
             marker.setPosition(place.geometry.location);
@@ -180,9 +180,9 @@
             var address = '';
             if (place.address_components) {
                 address = [
-                    (place.address_components[0] && place.address_components[0].short_name || ''),
-                    (place.address_components[1] && place.address_components[1].short_name || ''),
-                    (place.address_components[2] && place.address_components[2].short_name || '')
+                (place.address_components[0] && place.address_components[0].short_name || ''),
+                (place.address_components[1] && place.address_components[1].short_name || ''),
+                (place.address_components[2] && place.address_components[2].short_name || '')
                 ].join(' ');
             }
 
@@ -191,9 +191,9 @@
             console.log("listener place change");
             searchCars();
         });
-    }
-        
-    function localizame() {
+}
+
+function localizame() {
         if (navigator.geolocation) { // Si el navegador tiene geolocalizacion
             navigator.geolocation.getCurrentPosition(coordenadas, errores);
         } else {
@@ -341,9 +341,9 @@
             }
 
             if (response.cars.length > 0) {
-            
+
                 for (var i = 0; i < response.cars.length; i++) {
-                    
+
                     var dataCar = response.cars[i];
                     var latLng = new google.maps.LatLng(dataCar.latitude, dataCar.longitude);
                     
@@ -444,20 +444,20 @@
 
                     switch (dataCar.typeModel) {
                         case "1":
-                            typeModel = 'Automóvil';
-                            break;
+                        typeModel = 'Automóvil';
+                        break;
                         case "2":
-                            typeModel = 'Pick-Up';
-                            break;
+                        typeModel = 'Pick-Up';
+                        break;
                         case "3":
-                            typeModel = 'Station Wagon';
-                            break;
+                        typeModel = 'Station Wagon';
+                        break;
                         case "39":
-                            typeModel = 'SUV';
-                            break;
+                        typeModel = 'SUV';
+                        break;
                         case "4":
-                            typeModel = 'Furgón';
-                            break;
+                        typeModel = 'Furgón';
+                        break;
                     }
 
                     article = "<article class='box'>";
@@ -513,7 +513,7 @@
 
             markerCluster = new MarkerClusterer(map, markers, mcOptions);
         }, "json");
-    }
+}
 
     // Video
     function playPause() { 
@@ -541,7 +541,7 @@
     </div> -->
 
     <div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
-        
+
         <!-- Carousel -->
         <div id="section-home-carousel">
             <div>
