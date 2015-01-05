@@ -22,6 +22,7 @@
                         <li><a href="<?php echo url_for("main/index") ?>">Inicio</a></li>
                         <li><a href="<?php echo url_for("profile/cars") ?>">Mis autos</a></li>
                         <li><a href="<?php echo url_for("profile/oportunidades") ?>">Oportunidades</a></li>
+                        <li><a href="<?php echo url_for("profile/reserves") ?>">Reservas</a></li>
                     <?php else: ?>
                         <li><a class="animate" data-target="#section-map" href="">Buscar autos</a></li>
                         <li><a class="animate" data-target="#section-how-works" href="">¿Cómo funciona?</a></li>

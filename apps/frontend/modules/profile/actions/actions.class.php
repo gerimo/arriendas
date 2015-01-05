@@ -341,6 +341,15 @@ class profileActions extends sfActions {
         $this->amountWarrantyFree = sfConfig::get("app_monto_garantia_por_dia");
     }
 
+    public function executeReserves(sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+        
+        $userId = sfContext::getInstance()->getUser()->getAttribute('userid');
+
+
+    }
+
     //////////////////////////////////////////////////////////////////////////////////
 
     public function executeUploadImage(sfWebRequest $request) {
@@ -4055,7 +4064,7 @@ class profileActions extends sfActions {
         $this->reservasRecibidasOportunidades = $oportunidades;
     }
 
-    public function executePedidos(sfWebRequest $request) {
+    public function oldexecutePedidos(sfWebRequest $request) {
         
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
         //$idUsuario = 885;
