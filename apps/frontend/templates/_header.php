@@ -22,6 +22,7 @@
                         <li><a href="<?php echo url_for("main/index") ?>">Inicio</a></li>
                         <li><a href="<?php echo url_for("profile/cars") ?>">Mis autos</a></li>
                         <li><a href="<?php echo url_for("profile/oportunidades") ?>">Oportunidades</a></li>
+                        <li><a href="<?php echo url_for("profile/reserves") ?>">Reservas</a></li>
                     <?php else: ?>
                         <li><a class="animate" data-target="#section-map-form-search" href="">Buscar autos</a></li>
                         <li><a class="animate" data-target="#section-how-works" href="">¿Cómo funciona?</a></li>
@@ -50,7 +51,7 @@
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
-                <li><a href="tel:+0223333714"><span class="glyphicon glyphicon-earphone"></span>(02) 2 333 37 14</a></li>
+                <li><a href="tel:+56223333714"><span class="glyphicon glyphicon-earphone"></span>(02) 2 333 37 14</a></li>
                 </ul>
 
             </div><!-- /.navbar-collapse -->
