@@ -1693,6 +1693,7 @@ public function oldexecuteIndex(sfWebRequest $request) {
 
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
+            error_log("ERROR: ".$e->getMessage());
             /*Utils::reportError($e->getMessage(), "profile/executeGetCars");*/
         }
 
