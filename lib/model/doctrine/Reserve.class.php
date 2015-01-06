@@ -614,4 +614,36 @@ class Reserve extends BaseReserve {
 
         return round($total);
     }
+
+    public static function getReserves($userId) {
+
+        $q = Doctrine_Core::getTable("Reserve")
+            ->createQuery('R')
+            ->innerJoin('R.Transaction T')
+            ->where('R.user_id = ?', $userId)
+            ->andWhere("T.completed = 1");
+
+        return $q->execute();
+    }
+
+    public function getOpportunities() {
+
+        $Opportunities = array();
+
+        $q = Doctrine_Core::getTable("Reserve")
+            ->createQuery('R')
+            ->where('R.reserva_original = ?', $this->id)
+            ->orderBy('R.fecha_reserva ASC');
+
+        $Reserves = $q->execute();
+
+        foreach ($Reserves as $Reserve) {
+
+            if (!$Reserve->getCar()->hasReserve($this->date, date("Y-m-d H:i:s", strtotime("+".$this->duration." hour", strtotime($this->date))))) {
+                $Opportunities[] = $Reserve;
+            }
+        }
+
+        return $Opportunities;
+    }
 }

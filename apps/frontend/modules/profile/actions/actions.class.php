@@ -341,6 +341,84 @@ class profileActions extends sfActions {
         $this->amountWarrantyFree = sfConfig::get("app_monto_garantia_por_dia");
     }
 
+    public function executeReserveChange (sfWebRequest $request) {
+    
+        $return = array("error" => false);
+    
+        $reserveId     = $request->getPostParameter("reserveId", null);
+        $opportunityId = $request->getPostParameter("opportunityId", null);
+
+        try {
+    
+            if (is_null($reserveId) || $reserveId == "") {
+                throw new Exception("Falta la reserva", 2);
+            }
+
+            if (is_null($opportunityId) || $opportunityId == "") {
+                throw new Exception("Falta la oportunidad", 2);
+            }            
+    
+        } catch (Exception $e) {
+
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+
+            if ($e->getCode() == 2) {
+                /*Utils::reportError($e->getMessage(), "profile/reserveChange");*/
+            }
+        }
+    
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
+    public function executeReserveExtend (sfWebRequest $request) {
+    
+        $return = array("error" => false);
+    
+        $reserveId = $request->getPostParameter("reserveId", null);
+        
+        try {
+    
+            if (is_null($reserveId) || $reserveId == "") {
+                throw new Exception("Falta la reserva", 2);
+            }            
+    
+        } catch (Exception $e) {
+
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+
+            if ($e->getCode() == 2) {
+                /*Utils::reportError($e->getMessage(), "profile/reserveChange");*/
+            }
+        }
+    
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
+    public function executeReserves(sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+        
+        $userId = sfContext::getInstance()->getUser()->getAttribute('userid');
+
+        $this->Reserves = Reserve::getReserves($userId);
+        $this->Opportunities = array();
+
+        foreach ($this->Reserves as $Reserve) {
+
+            $this->Opportunities[$Reserve->getId()] = array($Reserve);
+
+            foreach ($Reserve->getOpportunities() as $O) {
+                $this->Opportunities[$Reserve->getId()][] = $O;
+            }
+        }
+    }
+
     //////////////////////////////////////////////////////////////////////////////////
 
     public function executeUploadImage(sfWebRequest $request) {
@@ -4055,7 +4133,7 @@ class profileActions extends sfActions {
         $this->reservasRecibidasOportunidades = $oportunidades;
     }
 
-    public function executePedidos(sfWebRequest $request) {
+    public function oldexecutePedidos(sfWebRequest $request) {
         
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
         //$idUsuario = 885;
@@ -6544,8 +6622,8 @@ class profileActions extends sfActions {
 
         $this->error = false;
 
-        $originalReserveId = $request->getGetParameter("reserve_id");
-        $signature = $request->getGetParameter("signature");
+        $originalReserveId = $request->getGetParameter("reserve_id", null);
+        $signature = $request->getGetParameter("signature", null);
 
         try {
 
@@ -6576,7 +6654,7 @@ class profileActions extends sfActions {
                         $reserve->setUser($originalReserve->getUser());
                         $reserve->setCar($car);
                         $reserve->setPrice($originalReserve->getPrice());
-                        $reserve->setFechaReserva($originalReserve->getFechaReserva());
+                        $reserve->setFechaReserva(date("Y-m-d H:i:s"));
                         $reserve->setConfirmed(true);
                         $reserve->setImpulsive(true);
                         $reserve->setComentario('Reserva oportunidad - nuevo flujo');
@@ -6610,6 +6688,8 @@ class profileActions extends sfActions {
         } catch ( Exception $e ) {
             $this->error = "ERROR: ".$e->getMessage();
         }
+
+        error_log($this->error);
 
         $this->redirect('pedidos');
     }
