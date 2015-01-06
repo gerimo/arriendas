@@ -15,12 +15,22 @@
 }
 
 #video {
-    height: 100%;
-    position: fixed;
-    width: 100%;
+    position: fixed; 
+    bottom: 0px; 
+    right: 0px; 
+    min-width: 100%; 
+    min-height: 100%; 
+    width: auto; 
+    height: auto; 
     z-index: -100;
 }
 
+#section-home {
+    position: relative;
+}
+
+
+/*
 #section-home-background {
     height: 100%;
     left: 0px;
@@ -34,6 +44,7 @@
     height: 100%;
     width: 100%;
 }
+*/
 
 #section-home-carousel {
     margin-top: 30%;
@@ -321,21 +332,18 @@
     margin: auto;
 }
 
-#section-home {
-    background-image: url("/images/newDesign/background-home.jpg");
-    background-size: 100% 100%;
-    position: relative;
-}
-
 #section-testimonials {
     background-image: url("/images/newDesign/good-way.jpg");
     background-size: 100% 100%;
 }
-#fondo{
+#section-how-works, #section-compare-prices, #section-condition{
     background: url(/images/newDesign/bg-pricebox.jpg) no-repeat 0 0 / 100% 100%;
-    background-size: 100% 100%;
+    background-size: 100% 102%;
 }
 
+#section-on-news{
+    background: url(/images/newDesign/bg-pricebox.jpg) no-repeat 0 0 / 100% 100%;
+}
 .background-img {
     height: 100%;
     width: 100%;
@@ -577,13 +585,6 @@
 
     @media only screen and (max-width:767px) {
 
-        #section-home {
-            padding-top: 1px;
-        }
-        #section-map-form-search{
-
-        }
-
         .navbar-default {
             background-color: rgba(0,0,0,1);
             border-color: rgba(0,0,0,1);
@@ -700,3 +701,4 @@
         }
 
     }
+
