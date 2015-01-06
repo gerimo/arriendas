@@ -952,16 +952,6 @@ $('.datetimepicker').datetimepicker({
 
     
     
-function franco(){
-    
-    var d = mktime(11, 14);
-
-    if (date("h:i:sa") >= date("h:i:sa", d)) {
-        console.log("dsakdhaskdsakjdak");
-    }
-}
-
-franco();
 
 
 </script>
