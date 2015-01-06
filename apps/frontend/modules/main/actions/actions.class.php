@@ -1559,7 +1559,7 @@ public function oldexecuteIndex(sfWebRequest $request) {
                     ca.lat lat, 
                     ca.lng lng, 
                     ca.year,
-                    co.nombre comuna_nombre,
+                    co.name comuna_nombre,
                     ca.price_per_day, 
                     ca.price_per_hour,
                     ca.photoS3 photoS3, 
@@ -1575,7 +1575,7 @@ public function oldexecuteIndex(sfWebRequest $request) {
                 ')
                 ->from('Car ca')
                 ->innerJoin('ca.Model mo')
-                ->innerJoin('ca.Comunas co')
+                ->innerJoin('ca.Commune co')
                 ->innerJoin('mo.Brand br')
                 ->Where('ca.activo = 1')
                 ->andWhere('ca.seguro_ok = 4')
@@ -1596,7 +1596,7 @@ public function oldexecuteIndex(sfWebRequest $request) {
             }
 
             if ($comuna) {
-                $q->andWhere("co.codigoInterno = ?", $comuna);
+                $q->andWhere("co.code = ?", $comuna);
             } else {
                 $q->andWhere('ca.lat < ?', $neLat);
                 $q->andWhere('ca.lat > ?', $swLat);
@@ -1661,7 +1661,7 @@ public function oldexecuteIndex(sfWebRequest $request) {
                     $return['cars'][] = array('id' => $car->getId(),
                         'longitude' => $car->getlng(),
                         'latitude' => $car->getlat(),
-                        'comuna' => strtolower($car->getComunaNombre()),
+                        'comuna' => $car->getCommune()->getName(),
                         'brand' => $car->getBrand(),
                         'model' => $car->getModelo(),
                         'ano' => $car->getYear(),
