@@ -4,6 +4,11 @@
     margin: 5px;
 }
 
+header .navbar-default {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-color: rgba(0, 0, 0, 0.8);
+}
+
 #filters-navbar {
     background-color: white;
     border-color: white;
