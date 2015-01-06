@@ -35,6 +35,7 @@
  * @property string accesoriosSeguro
  * @property Comunas $Comuna
  * @property integer $region
+ * @property Commune $commune
  * 
  * @method integer             getId()             Returns the current record's "id" value
  * @method integer             getUserId()         Returns the current record's "User_id" value
@@ -63,7 +64,7 @@
  * @method integer             getTransmission()        Returns the current record's "transmission" value
  * @method accesoriosSeguro    getAccesoriosSeguro() Returns the current record's "accesoriosSeguro" value
  * @method Comunas             getComuna()         Returns the current record's "Comuna" value
- * @method integer             getRegion()
+ * @method Commune             getCommune()        Returns the current record's "commune" value
  * 
  * @method Doctrine_Collection getAvailabilities() Returns the current record's "Availabilities" collection
  * @method Doctrine_Collection getDamages()        Returns the current record's "Damages" collection
@@ -100,7 +101,7 @@
  * @method Car                 setTransmission() Sets the current record's "transmission" value
  * @method Car                 setAccesoriosSeguro() Sets the current record's "accesoriosSeguro" value
  * @method Car                 setComuna() Sets the current record's "Comuna" value
- * @method Car                 setRegion()
+ * @method Car                 setCommune() Sets the current record's "commune" value
  * 
  * @package    CarSharing
  * @subpackage model
@@ -449,6 +450,17 @@ abstract class BaseCar extends sfDoctrineRecord
         $this->hasColumn('ratio_aprobacion', 'float', null, array(
             'type' => 'float'
             ));
+
+      $this->hasColumn('commune_id', 'integer', 11, array(
+            'notnull' => true
+      ));
+      $this->index('fk_Car_Commune', array(
+            'fields' => array(
+                0 => 'commune_id',
+            ),
+      ));
+
+
         $this->index('fk_Car_User', array(
              'fields' => 
              array(
@@ -527,5 +539,12 @@ abstract class BaseCar extends sfDoctrineRecord
         $this->hasMany('CarAvailabilityEmail as CarAvailabilityEmails', array(
              'local' => 'id',
              'foreign' => 'car_id'));
+
+        $this->hasOne('Commune', array(
+            'local' => 'commune_id',
+            'foreign' => 'id',
+            'onDelete' => 'no action',
+            'onUpdate' => 'no action'
+        ));
     }
 }
