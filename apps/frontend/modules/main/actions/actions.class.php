@@ -1593,6 +1593,8 @@ public function oldexecuteIndex(sfWebRequest $request) {
 
             $cars = $q->execute();
 
+            error_log("autos: ".count($cars));
+
             foreach ($cars as $i => $car) {
                 if (!$car->hasReserve(date("Y-m-d", strtotime($from)), date("Y-m-d", strtotime($to)))) {
 
