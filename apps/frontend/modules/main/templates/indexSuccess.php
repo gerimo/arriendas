@@ -868,7 +868,7 @@
 
     $('#header .animate').each(function(){
 
-        var target  = $(this).data('target');
+        var target = $(this).data('target');
 
         $(this).on('click', function(e) {
 

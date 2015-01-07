@@ -1,3 +1,15 @@
+reserves:
+    url: /reservas
+    param: { module: profile, action: reserves }
+
+reserve_change:
+    url: /reserve/change
+    param: { module: profile, action: reserveChange }
+
+reserve_extend:
+    url: /reserve/extend
+    param: { module: profile, action: reserveExtend }
+
 # You can find more information about this file on the symfony website:
 # http://www.symfony-project.org/reference/1_4/en/10-Routing
 
