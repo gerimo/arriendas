@@ -244,6 +244,13 @@ Car:
       foreignAlias: Cars
       onDelete: no action
       onUpdate: no action
+    Commune:
+      class: Commune
+      local: commune_id
+      foreign: id
+      foreignAlias: Cars
+      onDelete: no action
+      onUpdate: no action
   indexes:
     fk_Car_User:
       fields: [User_id]
@@ -352,6 +359,38 @@ City:
     id_UNIQUE:
       fields: [id]
       type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+Commune:
+  tableName: Commune
+  columns:
+    id:
+      type: integer(11)
+      primary: true
+      notnull: true
+      autoincrement: true
+    code:
+      type: integer(11)
+      notnull: true
+    name:
+      type: string(255)
+      notnull: true
+    region_id:
+      type: integer(11)
+      notnull: true
+    slug:
+      type: string(100)
+      notnull: true
+  relations:
+    Region:
+      class: Region
+      local: region_id
+      foreign: id
+      foreignAlias: Communes
+      onDelete: no action
+      onUpdate: no action
   options:
     charset: utf8
     type: InnoDB
@@ -806,6 +845,27 @@ Reserve:
     id_UNIQUE:
       fields: [id]
       type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+Region:
+  tableName: Region
+  columns:
+    id:
+      type: integer(11)
+      primary: true
+      notnull: true
+      autoincrement: true
+    is_active:
+      type: boolean
+      default: true
+    name:
+      type: string(255)
+      notnull: true
+    natural_order:
+      type: integer(11)
+      notnull: true
   options:
     charset: utf8
     type: InnoDB
