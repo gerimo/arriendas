@@ -1,0 +1,31 @@
+
+body {
+	background-image: url('/images/newDesign/background.jpg');
+}
+
+input, select, button, .alert {
+    margin-top: 15px;
+}
+
+hr {
+    margin: 30px 0 30px 0;
+}
+
+h1 {
+    color: rgb(70, 70, 70);
+    font-weight: 300;
+    margin: 0 0 20px 0;
+    padding: 0;
+}
+
+h2 {
+	color: rgb(70, 70, 70);
+    font-size: 19px;
+    font-weight: normal;
+}
+
+.error-message {
+    color: red;
+    margin: 0;
+    padding: 10px;
+}

@@ -1,6 +1,10 @@
 # You can find more information about this file on the symfony website:
 # http://www.symfony-project.org/reference/1_4/en/10-Routing
 
+user_register:
+    url: /registro
+    param: { module: main, action: register }
+
 index_by_city:
   url:    /c/:c
   param:  { module: main, action: index }

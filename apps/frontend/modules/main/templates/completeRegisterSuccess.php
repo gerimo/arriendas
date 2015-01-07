@@ -120,8 +120,7 @@ option:first-child
       sel.style.color = "#000";              
     }
 
-    $(document).ready(function() 
-    { 
+    $(document).ready(function() { 
 
 	
         $( ".datepicker" ).datepicker({

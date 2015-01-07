@@ -10,6 +10,133 @@
  */
 class mainActions extends sfActions {
 
+    public function executeDoRegister(sfWebRequest $request) {//echo $request->getParameter('foreign');die;ex$return = array("error" => false);
+
+        $return = array("error" => false);
+
+        try {
+
+            $firstname      = $request->getPostParameter("firstname", null);
+            $lastname       = $request->getPostParameter("lastname", null);
+            $motherLastname = $request->getPostParameter("motherLastname", null);
+            $email          = $request->getPostParameter("email", null);
+            $emailAgain     = $request->getPostParameter("emailAgain", null);
+            $rut            = $request->getPostParameter("rut", null);
+            $password       = $request->getPostParameter("password", null);
+            $foreign        = $request->getPostParameter("foreign", null);
+            $telephone      = $request->getPostParameter("telephone", null);
+            $birth          = $request->getPostParameter("birth", null);
+            $address        = $request->getPostParameter("address", null);
+            $commune        = $request->getPostParameter("commune", null);
+            $region         = $request->getPostParameter("region", null);
+
+            if (is_null($firstname) || $firstname == "") {
+                throw new Exception("Debes indicar tu nombre", 1);
+            }
+
+            if (is_null($lastname) || $lastname == "") {
+                throw new Exception("Debes indicar tu apllellido paterno", 1);
+            }
+
+            if (is_null($motherLastname) || $motherLastname == "") {
+                throw new Exception("Debes indicar tu apellido materno", 1);
+            }
+
+            if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+                throw new Exception("Debes ingresar un mail válido", 1);
+            }
+
+            if(!filter_var($emailAgain, FILTER_VALIDATE_EMAIL)){
+                throw new Exception("Debes ingresar un mail válido", 1);
+            }
+
+            if (is_null($email) || $email == "") {
+                throw new Exception("Debes indicar tu correo electrónico", 1);
+            }
+
+            if (is_null($emailAgain) || $emailAgain == "") {
+                throw new Exception("Debes confirmar tu correo electrónico", 1);
+            }
+
+            if (is_null($rut) || $rut == "") {
+                throw new Exception("Debes indicar tu RUT", 1);
+            }
+
+            if (is_null($foreign) || $foreign == "") {
+                throw new Exception("Debes indicar tu nacionalidad", 1);
+            }
+
+            if (is_null($telephone) || $telephone == "") {
+                throw new Exception("Debes indicar un teléfono", 1);
+            }
+
+            if (is_null($birth) || $birth == "") {
+                throw new Exception("Debes indicar tu fecha de nacimiento", 1);
+            }
+
+            if (is_null($address) || $address == "") {
+                throw new Exception("Debes indicar tu dirección", 1);
+            }
+
+            if (is_null($commune) || $commune == "") {
+                throw new Exception("Debes indicar tu comuna", 1);
+            }
+
+            if (is_null($region) || $region == "") {
+                throw new Exception("Debes indicar tu región", 1);
+            }
+
+            if ($email != $emailAgain ) {
+                throw new Exception("Los emails no coinciden", 1);
+            }
+            
+            $User = new User();
+
+            $User->setUsername($email);
+            $User->setFirstname($firstname);
+            $User->setLastname($lastname);
+            $User->setApellidoMaterno($motherLastname);
+            $User->setFirstname($firstname);
+            $User->setEmail($email);
+
+            //Verificacion de rut ?
+            $User->setRut($rut);
+            $User->setPassword(md5($password));
+            $User->setExtranjero($foreign);
+            $User->setTelephone($telephone);
+
+            //verificacion de edad ?
+            $User->setBirthdate($birth);
+            $User->setAddress($address);
+            $User->setHash(substr(md5($email), 0, 6));
+
+            $User->save();
+
+            if(!$foreign){
+                $basePath = sfConfig::get('sf_root_dir');
+                $userid = $User->getId();
+                $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$rut.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
+                exec($comando);
+            }
+
+            $this->redirect('main/registerVerify');
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorCode"] = $e->getCode();
+            $return["errorMessage"] = $e->getMessage();
+        }
+        $this->renderText(json_encode($return));
+        return sfView::NONE;
+}
+
+    public function executeGetComunas(sfWebRequest $request) {
+        $this->setLayout(false);
+        $idRegion = $request->getParameter('idRegion');
+        if ($idRegion) {
+            $this->comunas = Doctrine::getTable('comunas')->findByPadre($idRegion);
+        }
+    }
+
     public function executeIndex (sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
@@ -23,6 +150,22 @@ class mainActions extends sfActions {
         $this->Region = Doctrine_Core::getTable("Regiones")->findOneByCodigo(13);
 
         $this->Comunas = Doctrine_Core::getTable("Comunas")->findByPadre(13);
+    }
+
+    public function executeRegister(sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+
+        //$this->Regions = Doctrine_Core::getTable("Regions")->getRegionsByNaturalOrder();
+
+        if (!isset($_SESSION['reg_back'])) {
+            $urlpage = split('/', $request->getReferer());
+
+            if ($urlpage[count($urlpage) - 1] != "register" && $urlpage[count($urlpage) - 1] != "doRegister") {
+                $_SESSION['reg_back'] = $request->getReferer();
+            }
+        }
+        
     }
 
     public function executeUploadLicense (sfWebRequest $request) {
@@ -2628,108 +2771,9 @@ public function oldexecuteIndex(sfWebRequest $request) {
 	
 	
 
-    public function executeDoRegister(sfWebRequest $request) {//echo $request->getParameter('foreign');die;
-        
-        if ($this->getRequest()->getMethod() != sfRequest::POST) {
-            sfView::SUCCESS;
-        } else {
-
-            $code = trim($_POST['code']);
-            if ($_SESSION['captcha'] != $code) {
-               // $this->forward('main','register');
-            }
-
-            $q = Doctrine::getTable('user')->createQuery('u')->where('u.username = ?', array($this->getRequestParameter('username')));
-
-            $user = $q->fetchOne();
-
-            if (!$user) {
-
-                if ($request->getParameter('username') != null &&
-                        $request->getParameter('firstname') != null &&
-                        $request->getParameter('lastname') != null &&
-                        $request->getParameter('email') != null &&
-                        $request->getParameter('password') != null &&
-                        $request->getParameter('email') == $request->getParameter('emailAgain') 
-                ) {
-
-
-                    $u = new User();
-                    $u->setFirstname($request->getParameter('firstname'));
-                    $u->setLastname($request->getParameter('lastname'));
-                    $u->setEmail($request->getParameter('email'));
-                    $u->setUsername($request->getParameter('username'));
-                    $u->setPassword(md5($request->getParameter('password')));
-                    $u->setCountry($request->getParameter('country'));
-                    $u->setHash(substr(md5($request->getParameter('username')), 0, 6));
-
-		    if($request->getParameter("propietario")=="on") {
-			$u->setPropietario(true);
-		    }
-		    
-                    if ($request->getParameter('main') != NULL)
-                        $u->setPictureFile($request->getParameter('main'));
-
-                    if ($request->getParameter('licence') != NULL)
-                        $u->setDriverLicenseFile($request->getParameter('licence'));
-                    
-                    if ($request->getParameter('rut') != NULL)
-                        $u->setRutFile($request->getParameter('rut'));
-
-                    $u->save();
-                    
-                      $this->getUser()->setFlash('msg', 'Autenticado');
-                      $this->getUser()->setAuthenticated(true);
-                      $this->getUser()->setAttribute("logged", true);
-                      $this->getUser()->setAttribute("userid", $u->getId());
-                      $this->getUser()->setAttribute("firstname", $u->getFirstName());
-                      $this->getUser()->setAttribute("name", current(explode(' ' , $u->getFirstName())) . " " . substr($u->getLastName(), 0, 1) . '.');
-					  $this->getUser()->setAttribute("email", $u->getEmail());
-
-                    $this->getRequest()->setParameter('userid', $u->getId());
-					$this->getUser()->setAttribute("fecha_registro", $u->getFechaRegistro());
-					$this->logMessage($u->getFechaRegistro(), 'err');
-
-					
-                    
-                    $this->forward('main', 'completeRegister');
-                }
-                else {
-                    $this->getUser()->setFlash('msg', 'Uno de los datos ingresados es incorrecto');
-                    $this->forward('main','register');
-                }
-
-                //$this->getUser()->setAttribute("centrodecosto", $user->getCentrodecosto());
-                //$this->getUser()->setAttribute("rol", $user->getRolId());
-                //$this->getUser()->setAttribute("cliente", $user->getClienteId());
-                //ponerle credenciales
-                //$this->getUser()->setAttribute("name", $user->getFirstName()." ".$user->getLastName());
-                //$this->getUser()->setAttribute("salesman", $user->getSalesman());
-            } else {
-                $this->getUser()->setFlash('show', true);
-                $this->getUser()->setFlash('msg', 'El nombre de usuario ya existe');
-                $this->forward('main', 'register');
-            }
-        }
-
-        return sfView::NONE;
-    }
-
-    public function executeRegister(sfWebRequest $request) {
+    
 
     
-        if (!isset($_SESSION['reg_back'])) {
-            $urlpage = split('/', $request->getReferer());
-
-            if ($urlpage[count($urlpage) - 1] != "register" && $urlpage[count($urlpage) - 1] != "doRegister") {
-                $_SESSION['reg_back'] = $request->getReferer();
-            }
-        }
-        
-    }
-
-	
-	
     public function executeCompleteRegister(sfWebRequest $request) {
 
         if (!isset($_SESSION['reg_back'])) {
@@ -2750,12 +2794,9 @@ public function oldexecuteIndex(sfWebRequest $request) {
             die;
         }
     
-   }
+    }
 
-	
-	
-
-    public function executeDoCompleteRegister(sfWebRequest $request) {
+    /*public function executeDoCompleteRegister(sfWebRequest $request) {
         
         if ($this->getRequest()->getMethod() != sfRequest::POST) {
             sfView::SUCCESS;
@@ -2800,7 +2841,6 @@ public function oldexecuteIndex(sfWebRequest $request) {
                 echo $e->getMessage();
             }
             
-            /* validacion judicial */
             $foreign = $request->getParameter('foreign');
             if(!$foreign){
                 $basePath = sfConfig::get('sf_root_dir');
@@ -2812,21 +2852,11 @@ public function oldexecuteIndex(sfWebRequest $request) {
                 exec($comando);
             }
 
-            $this->redirect('main/registerVerify');
-
-		
-//        if($request->getParameter('redirect') && $request->getParameter('idRedirect')){
-  //          $this->redirect('profile/'.$request->getParameter('redirect')."?id=".$request->getParameter('idRedirect'));
-   //     }else{
-    //        $this->redirect('profile/cars');
-     //   }
-		
+            $this->redirect('main/registerVerify');		
 		
             return sfView::NONE;
         }
-    }
-
-	
+    }*/
 	
     public function executeAddCarFromRegister(sfWebRequest $request) {
         
@@ -2983,32 +3013,6 @@ public function oldexecuteIndex(sfWebRequest $request) {
             $name = tmlentities($user->getFirstName());
             $verificacion = $url.$this->getController()->genUrl('main/registerVerify').'?activate='.$user->getHash().'&username='.$user->getUsername();
 
-            /*
-            $mail = '<body>Hola ' . htmlentities($user->getFirstName()) . ',<br/> Bienvenido a Arriendas.cl!<br/><br/>	
-
-Haciendo click <a href="' . $url .
-                    $this->getController()->genUrl('main/registerVerify') . '?activate=' . $user->getHash() . '&username=' . $user->getUsername() . '">aqu&iacute;</a> confirmar&aacute;s la validez de tu direcci&oacute;n de mail.<br/><br/>
-
-Puedes ver autos cerca tuyo haciendo click <a href="http://'.$url.'">aquí</a>.<br/><br/>
-
-El equipo de Arriendas.cl
-<br><br>
-<em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em>
-</body>';
-
-
-            $to = $user->getEmail();
-            $subject = "Bienvenido a Arriendas.cl!";
-
-// compose headers
-            $headers = "From: \"Arriendas Reservas\" <no-reply@arriendas.cl>\r\n";
-            $headers .= "Content-type: text/html\r\n";
-            $headers .= "X-Mailer: PHP/" . phpversion();
-
-
-// send email
-            $this->mailSmtp($to, $subject, $mail, $headers);
-			*/ 
             require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
             $mail = new Email();
             $mail->setSubject('Bienvenido a Arriendas.cl!');
@@ -3586,14 +3590,6 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
 
     public function executePanel(sfWebRequest $request) {
         $this->user = Doctrine::getTable('User')->findOneById($this->getUser()->getAttribute('user_id'));
-    }
-
-    public function executeGetComunas(sfWebRequest $request) {
-        $this->setLayout(false);
-        $idRegion = $request->getParameter('idRegion');
-        if ($idRegion) {
-            $this->comunas = Doctrine::getTable('comunas')->findByPadre($idRegion);
-        }
     }
 
     public function executeCaptcha() {
