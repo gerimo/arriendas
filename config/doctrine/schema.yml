@@ -945,6 +945,9 @@ Transaction:
       default: null
     numero_factura:
       type: integer(7)
+    selected:
+      type: boolean
+      default: false
   relations:
     User:
       class: User

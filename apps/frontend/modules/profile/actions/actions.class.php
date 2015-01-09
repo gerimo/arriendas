@@ -181,6 +181,250 @@ class profileActions extends sfActions {
         $this->regiones = $q->fetchArray();
     }
 
+    public function executeOpportunities (sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+
+        $Cars = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")))->getCars();
+
+        /*$mKey = 0;
+        $minKey = 0;
+        $cities = array();
+
+        $usos = array();
+        $auxReserves = array();
+        $radio1 = 8;
+        $radio2 = 4;
+        $activeCars = array();*/
+
+        foreach ($Cars as $car) {
+            //autos para que postule a la oportunidad
+
+            if ($car->getSeguroOk() == 4) {
+                $activeCars[] = $car;
+            }
+
+            if ($car->getActivo() == 1) {
+                
+                //mostramos solo las oportunidades cuando un auto no está ya arrendado
+                $q = Doctrine_Query::create()
+                        ->select('r.date, date_add(r.date, INTERVAL r.duration HOUR) as endingDate')
+                        ->from('reserve r')
+                        ->leftJoin('r.Transaction t')
+                        ->leftJoin('r.Car c')
+                        ->where('t.completed = ?', true)
+                        ->andwhere('date_add(r.date, INTERVAL r.duration HOUR) > NOW()')
+                        ->andwhere('c.id =?', $car->getId());
+                //->andwhere('r.date >= NOW()');
+                $payed_dates = $q->fetchArray();
+
+                $dateRestriction = array();
+                foreach ($payed_dates as $payed_date) {
+                    $dateRestriction[] = "'" . $payed_date['date'] . "' NOT BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) 
+                                        AND '" . $payed_date['endingDate'] . "' NOT BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) 
+                                        AND r.date NOT BETWEEN '" . $payed_date['date'] . "' AND '" . $payed_date['endingDate'] . "' 
+                                        AND DATE_ADD(r.date, INTERVAL r.duration HOUR) NOT BETWEEN '" . $payed_date['date'] . "' AND '" . $payed_date['endingDate'] . "'";
+                }
+
+                //si no tiene reservas, creo una restricción 
+                //inocua para que no caiga la consulta
+                if (count($dateRestriction) == 0) {
+                    $dateRestriction[] = '1=1';
+                }
+
+                $car_lat = $car->getLat();
+                $car_lng = $car->getLng();
+                $maxPrice = $car->getPricePerDay() * 2;
+                $minPrice = $car->getPricePerDay() * 0.67;
+
+                //la consulta considera dos radios. Si es para hoy o mañana 8 kms, 
+                //si es para otra fecha solo 4kms
+                $q = "
+                    SELECT * 
+                    FROM reserve r 
+                    JOIN r.Car c 
+                    JOIN c.Model m 
+                    WHERE r.date > NOW() 
+                    AND c.seguro_ok=4
+                    AND c.activo=1
+                    AND c.transmission = ?
+                    AND m.id_otro_tipo_vehiculo = ? 
+                    AND c.price_per_day <= ? 
+                    AND c.price_per_day >= ?
+                    AND (
+                            (r.date <= DATE_ADD(NOW(),INTERVAL 2 DAY) AND distancia (?,?,c.lat,c.lng) < ?)
+                            OR
+                            (r.date > DATE_ADD(NOW(),INTERVAL 2 DAY) AND distancia (?,?,c.lat,c.lng) < ?)
+                        ) 
+                    AND " . implode(" AND ", $dateRestriction) . " 
+                    GROUP BY r.user_id, DATE(r.date)";
+
+                $query = Doctrine_Query::create()->query($q, array(
+                    $car->getTransmission(),
+                    $car->getModel()->getIdOtroTipoVehiculo(),
+                    $maxPrice,
+                    $minPrice,
+                    $car_lat,
+                    $car_lng,
+                    $radio1,
+                    $car_lat,
+                    $car_lng,
+                    $radio2
+                        )
+                );
+                $reserve = $query->toArray();
+                $auxReserves = array_merge($auxReserves, $reserve);
+            }
+        }
+
+        $auxIdsIncluidos = array();
+        $reservasAConsiderar = array();
+        foreach ($auxReserves as $r) {
+            if (!in_array($r['id'], $auxIdsIncluidos) && $r['User_id'] != $this->getUser()->getAttribute("userid")) {
+
+                $reservasAConsiderar[] = $r;
+                $auxIdsIncluidos[] = $r['id'];
+            }
+        }
+
+        $reservasRecibidas = null;
+        foreach ($reservasAConsiderar as $i => $reserva) {
+
+            $reserva = Doctrine_Core::getTable('reserve')->find($reserva['id']);
+
+            /* el usuario que hizo la reserva no tiene que estar blockeado */
+            if (!$reserva->getUser()->getBlocked() && $reserva->getCar()->getUserId() != $this->getUser()->getAttribute("userid") ) {
+                //obtiene el id de la reserva
+                $reservasRecibidas[$i]['idReserve'] = $reserva->getId();
+                $reservasRecibidas[$i]['signature'] = $reserva->getSignature();
+                if ($reserva->getImpulsive()) {
+                    $reservasRecibidas[$i]['isImpulsive'] = 1;
+                } else {
+                    $reservasRecibidas[$i]['isImpulsive'] = 0;
+                }
+
+                $this->logMessage("reserva recibida a considerar:" . $reservasRecibidas[$i]['idReserve']);
+
+                /* es una oportunidad y esta disponible */
+                if ($reserva->getConfirmed() == false) {
+                    $q = "SELECT SUM(r.confirmed) as SUM FROM Reserve r INNER JOIN r.Car c ON  c.id = r.car_id ";
+                    $q .= "WHERE r.date = ? AND r.user_id = ? AND c.user_id = ?";
+                    $query = Doctrine_Query::create()->query($q, array($reserva->getDate(), $reserva->getUserId(), $this->getUser()->getAttribute("userid")));
+                    $sum = $query->toArray();
+                    $sum = array_pop($sum);
+                    /* no aprobo la reserva antes */
+                    if($sum['SUM'] == 0){
+                        $reservasRecibidas[$i]['estado'] = 0;
+                    }
+                }
+
+                /* oportunidad disponible */
+                if ($reserva->getConfirmed() == true && $reserva->getComentario() == sfConfig::get("app_comment_oportunidad")) {
+                        $reservasRecibidas[$i]['estado'] = 0;
+                }
+
+                /* oportunidad ya no disponible */
+                if ($reserva->getConfirmed() == true 
+                        && date('Y-m-d', strtotime($reserva->getFechaReserva())) == date("Y-m-d") 
+                        && (is_null($reserva->getComentario()) || trim($reserva->getComentario()) == "null")) {
+                    $reservasRecibidas[$i]['estado'] = 1;
+                }
+                
+                // verifico si la oportunidad aplica, o por el contrario
+                // ya no debería mostrarla porque ya se aprobó una oportunidad igual antes
+                // (oportunidades múltiples generadas por el mismo arrendatario)
+                $reserva_igual = Doctrine_Query::create()
+                        ->from('Reserve r')
+                        ->leftJoin('r.Car c')
+                        ->where('r.confirmed = ?', true)
+                        ->andwhere('r.date = ?', $reserva->getDate())
+                        ->andwhere('r.user_id = ?', $reserva->getUserId())
+                        ->andwhere('c.user_id =?', $this->getUser()->getAttribute("userid"))
+                        ->fetchOne();
+                
+                if($reserva_igual){
+                    $reservasRecibidas[$i]['estado'] = 1;
+                }
+
+
+                //fecha y hora de inicio y término
+                $reservasRecibidas[$i]['userId'] = $reserva->getUserId();
+                $reservasRecibidas[$i]['posicion'] = $reserva->getDate();
+                $reservasRecibidas[$i]['fechaInicio'] = $reserva->getFechaInicio();
+                $reservasRecibidas[$i]['horaInicio'] = $reserva->getHoraInicio();
+                $reservasRecibidas[$i]['fechaTermino'] = $reserva->getFechaTermino();
+                $reservasRecibidas[$i]['horaTermino'] = $reserva->getHoraTermino();
+                $reservasRecibidas[$i]['tiempoArriendo'] = $reserva->getTiempoArriendoTexto();
+                $reservasRecibidas[$i]['duracion'] = $reserva->getDuration();
+                $reservasRecibidas[$i]['token'] = $reserva->getToken();
+                //obtiene valor
+                $carId = $reserva->getCarId();
+                $carClass = Doctrine_Core::getTable('car')->findOneById($carId);
+                if ($carClass->getPricePerDay() < $Cars[$mKey]->getPricePerDay()) {
+                    $car = $carClass;
+                } else {
+                    $car = $cars[$mKey];
+                }
+                $ownPrice = $this->calcularMontoTotal($reserva->getDuration(), $car->getPricePerHour(), $car->getPricePerDay(), $car->getPricePerWeek(), $car->getPricePerMonth());
+                $reservasRecibidas[$i]['valor'] = number_format(intval($ownPrice), 0, '', '.');
+
+                $propietarioId = $reserva->getUserId();
+                $reservasRecibidas[$i]['carId'] = $carId;
+                $propietarioClass = Doctrine_Core::getTable('user')->findOneById($propietarioId);
+                $reservasRecibidas[$i]['contraparteId'] = $propietarioId;
+                $reservasRecibidas[$i]['nombre'] = $propietarioClass->getFirstname();
+                $reservasRecibidas[$i]['apellido'] = $propietarioClass->getLastname();
+                $reservasRecibidas[$i]['telefono'] = $propietarioClass->getTelephone();
+                $reservasRecibidas[$i]['direccion'] = $propietarioClass->getAddress();
+                $reservasRecibidas[$i]['facebook'] = $propietarioClass->getFacebookId();
+                $reservasRecibidas[$i]['urlFoto'] = $propietarioClass->getPictureFile();
+                $reservasRecibidas[$i]['apellidoCorto'] = $reservasRecibidas[$i]['apellido'][0] . ".";
+                $reservasRecibidas[$i]['comuna'] = $carClass->getNombreComuna();
+            }
+        }
+
+        $reservasRecibidasAux = array();
+        //quita los arreglos null
+        if (isset($reservasRecibidas)) {
+            $reservasRecibidas = array_filter($reservasRecibidas);
+        }
+
+        //ordena las reservas recibidas
+        if (isset($reservasRecibidas)) {
+            $j = 0;
+
+            do {
+                $menor = 0;
+                for ($i = 0; $i < count($reservasRecibidas); $i++) {
+
+                    if (isset($reservasRecibidas[$menor]['posicion'])) {
+                        if (isset($reservasRecibidas[$i]) && $reservasRecibidas[$i]['posicion'] < $reservasRecibidas[$menor]['posicion']) {
+                            $menor = $i;
+                        }
+                    } else {
+                        if (isset($reservasRecibidas[$i])) {
+                            $menor = $i;
+                        }
+                    }
+                }
+                if (isset($reservasRecibidas[$menor])) {
+                    $reservasRecibidasAux[$j] = $reservasRecibidas[$menor];
+                }
+
+                //elimina la posicion del array
+                unset($reservasRecibidas[$menor]);
+                if ($reservasRecibidas) {
+                    $reservasRecibidas = array_values($reservasRecibidas);
+                }
+                $j++;
+            } while ($reservasRecibidas);
+        }
+        $this->logMessage("cant oportunidades: ".count($reservasRecibidasAux));
+
+        $this->reservasRecibidas = $reservasRecibidasAux;
+        $this->cars = $activeCars;
+    }
+
     public function executePay (sfWebRequest $request) {
 
         $warranty = $request->getPostParameter("warranty", null);
@@ -264,7 +508,7 @@ class profileActions extends sfActions {
         $this->getRequest()->setParameter("reserveId", $Reserve->getId());
         $this->getRequest()->setParameter("transactionId", $Transaction->getId());
 
-        $this->forward("khipu", "generatePayment");
+        $this->redirect("khipu/generatePayment");
     }
 
     public function executeReserve (sfWebRequest $request) {
@@ -345,18 +589,143 @@ class profileActions extends sfActions {
     
         $return = array("error" => false);
     
-        $reserveId     = $request->getPostParameter("reserveId", null);
-        $opportunityId = $request->getPostParameter("opportunityId", null);
+        $newReserveId = $request->getPostParameter("newReserveId", null);
 
         try {
     
-            if (is_null($reserveId) || $reserveId == "") {
+            if (is_null($newReserveId) || $newReserveId == "") {
                 throw new Exception("Falta la reserva", 2);
             }
 
-            if (is_null($opportunityId) || $opportunityId == "") {
-                throw new Exception("Falta la oportunidad", 2);
-            }            
+            $NewReserve = Doctrine_Core::getTable('Reserve')->find($newReserveId);
+
+            if (!$NewReserve->getTransaction()->select()) {
+                throw new Exception("No se pudo realizar el cambio. Por favor, intentalo nuevamente más tarde.", 1);
+            }
+
+            /*$oq = Doctrine_Core::getTable("OportunityQueue")->findOneByReserveId($reserveId);
+            $oq->setIsActive(false);
+            $oq->save();
+
+            $Renter = $r->getUser();
+            $Owner = $r->getCar()->getUser();
+
+            $functions = new Functions;
+            $formulario = $functions->generarFormulario(NULL, $r->getToken());
+            $reporte = $functions->generarReporte($reserve->getCar()->getId());
+            $contrato = $functions->generarContrato($r->getToken());
+            $pagare = $functions->generarPagare($r->getToken());
+
+            // DOCUMENTOS DUEÑO
+
+            $subject = "¡Has ganado la oportunidad!";
+
+            $body = "<p>".$Owner->getFirstname().",</p>";
+            $body .= "<p>Han aceptado tu postulación por un total de <strong>".number_format(($r->getPrice()), 0, ',', '.')."</strong>, desde ".$r->getFechaInicio()." ".$r->getHoraInicio()." hasta ".$r->getFechaTermino()." ".$r->getHoraTermino().". Te recomendamos que llames al arrendatario cuanto antes. Sus datos son los siguientes:</p>";
+            $body .= "<table>";
+            $body .= "<tr><th style='text-align: left'>Nombre</th><td>".$Renter->getFirstname()." ".$Renter->getLastname()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Teléfono</th><td>".$Renter->getTelephone()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Correo electrónico</th><td>".$Renter->getEmail()."</td></tr>";
+            $body .= "</table>";
+            $body .= "<br><br>";
+            $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Atentamente</p>";
+            $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Equipo Arriendas.cl</p>";
+
+            $mail = new Email();
+            $message = $mail->getMessage()
+                ->setSubject($subject)
+                ->setBody($body, 'text/html')
+                ->setFrom(array("soporte@arriendas.cl" => "Soporte Arriendas.cl"))
+                ->setTo(array($Owner->getEmail() => $Owner->getFirstName()." ".$Owner->getLastname()))
+                ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
+                ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
+                ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+            
+            if (!is_null($Renter->getDriverLicenseFile())) {
+                $filepath = $Renter->getDriverLicenseFile();
+                if (is_file($filepath)) {
+                    $message->attach(Swift_Attachment::fromPath($Renter->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$Renter->getLicenceFileName()));
+                }
+            }
+            
+            $mailer->send($message);
+
+            // DOCUMENTOS ARRENDATARIO
+
+            $subject = "Has cambiado el auto de tu reserva";
+
+            $body = "<p>Hola ".$Renter->getFirstname().",</p>";
+            $body .= "<p>Has cambiado el auto de tu reserva y esta ya esta confirmada. Recuerda que debes llenar el <strong>Formulario de entrega</strong> Y <strong>Devolución</strong> del vehículo.</p>";
+            $body .= "<p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p>";
+            $body .= "<h3>Datos del propietario</h3>";
+            $body .= "<table>";
+            $body .= "<tr><th style='text-align: left'>Nombre</th><td>".$Owner->getFirstname()." ".$Owner->getLastname()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Teléfono</th><td>".$Owner->getTelephone()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Correo electrónico</th><td>".$Owner->getEmail()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Dirección</th><td>".$Owner->getAddress()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Marca</th><td>".$r->getCar()->getModel()->getBrand()->getName()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Modelo</th><td>".$r->getCar()->getModel()->getName()."</td></tr>";
+            $body .= "</table>";
+            $body .= "<p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
+            $body .= "<br><br>";
+            $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Atentamente</p>";
+            $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Equipo Arriendas.cl</p>";
+
+            $mail = new Email();
+            $message = $mail->getMessage()
+                ->setSubject($subject)
+                ->setBody($body, 'text/html')
+                ->setFrom(array("soporte@arriendas.cl" => "Soporte Arriendas.cl"))
+                ->setTo(array($Renter->getEmail() => $Renter->getFirstName()." ".$Renter->getLastname()))
+                ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
+                ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
+                ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'))
+                ->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
+                
+            $mailer->send($message);
+
+            // DOCUMENTOS SOPORTE
+
+            $subject = "Ha habido un cambio de auto en la Reserva ".$originalReserve->getId();
+
+            $body = "<h3>Datos del propietario</h3>";
+            $body .= "<table>";
+            $body .= "<tr><th style='text-align: left'>Nombre</th><td>".$Owner->getFirstname()." ".$Owner->getLastname()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Teléfono</th><td>".$Owner->getTelephone()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Correo electrónico</th><td>".$Owner->getEmail()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Dirección</th><td>".$Owner->getAddress()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Marca</th><td>".$r->getCar()->getModel()->getBrand()->getName()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Modelo</th><td>".$r->getCar()->getModel()->getName()."</td></tr>";
+            $body .= "</table>";
+            $body .= "<h3>Datos del arrendatario</h3>";
+            $body .= "<table>";
+            $body .= "<tr><th style='text-align: left'>Nombre</th><td>".$Renter->getFirstname()." ".$Renter->getLastname()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Teléfono</th><td>".$Renter->getTelephone()."</td></tr>";
+            $body .= "<tr><th style='text-align: left'>Correo electrónico</th><td>".$Renter->getEmail()."</td></tr>";
+            $body .= "</table>";
+            $body .= "<br><br>";
+            $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Atentamente</p>";
+            $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Equipo Arriendas.cl</p>";
+
+            $mail = new Email();
+            $message = $mail->getMessage()
+                ->setSubject($subject)
+                ->setBody($body, 'text/html')
+                ->setFrom(array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl"))
+                ->setTo(array("soporte@arriendas.cl" => "Soporte Arriendas.cl"))
+                ->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"))
+                ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
+                ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
+                ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+            
+            if (!is_null($Renter->getDriverLicenseFile())) {
+                $filepath = $Renter->getDriverLicenseFile();
+                if (is_file($filepath)) {
+                    $message->attach(Swift_Attachment::fromPath($Renter->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$Renter->getLicenceFileName()));
+                }
+            }
+
+            $mailer->send($message);*/
     
         } catch (Exception $e) {
 
@@ -378,13 +747,58 @@ class profileActions extends sfActions {
         $return = array("error" => false);
     
         $reserveId = $request->getPostParameter("reserveId", null);
-        
+        $from      = $request->getPostParameter("from", null);
+        $to        = $request->getPostParameter("to", null);
+
         try {
     
             if (is_null($reserveId) || $reserveId == "") {
-                throw new Exception("Falta la reserva", 2);
-            }            
-    
+                throw new Exception("Falta la reserva", 1);
+            }
+
+            $Reserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
+
+            if (is_null($from) || $from == "") {
+                throw new Exception("Falta fecha desde", 1);
+            }
+
+            if (date("d-m-Y H:i", strtotime($Reserve->getFechaTermino2())) != $from) {
+                throw new Exception("No está permitido cambiar la fecha de Inicio", 1);
+            }
+
+            if (is_null($to) || $to == "") {
+                throw new Exception("Falta fecha hasta", 1);
+            }
+
+            $Car = $Reserve->getSelectedCar();
+
+            $NewReserve = $Reserve->copy(true);
+            $NewReserve->setId(null);
+            $NewReserve->setDate($Reserve->getFechaTermino2());
+            $NewReserve->setDuration(Utils::calculateDuration($from, $to));
+            $NewReserve->setPrice(Car::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth()));
+            $NewReserve->setComentario("Reserva extendida");
+            $NewReserve->setCar($Car);
+            $NewReserve->setFechaReserva(date("Y-m-d H:i:s"));
+            $NewReserve->setIdPadre($Reserve->getId());
+            $NewReserve->setExtendUserId($this->getUser()->getAttribute("userid"));
+            $NewReserve->setNumeroFactura(0);
+            $NewReserve->save();
+
+            $NewTransaction = $Reserve->getTransaction()->copy(true);
+            $NewTransaction->setId(null);
+            $NewTransaction->setCar($Car->getModel()->getName()." ".$Car->getModel()->getBrand()->getName());
+            $NewTransaction->setPrice($NewReserve->getPrice());
+            $NewTransaction->setDate(date("Y-m-d H:i:s"));
+            $NewTransaction->setReserve($NewReserve);
+            $NewTransaction->setCompleted(false);
+            $NewTransaction->setNumeroFactura(0);
+            $NewTransaction->save();
+
+            $this->getRequest()->setParameter("reserveId", $NewReserve->getId());
+            $this->getRequest()->setParameter("transactionId", $NewTransaction->getId());
+
+            $this->forward("khipu", "generatePayment");
         } catch (Exception $e) {
 
             $return["error"] = true;
@@ -400,18 +814,16 @@ class profileActions extends sfActions {
         return sfView::NONE;
     }
 
-    public function executeReserves(sfWebRequest $request) {
+    public function executeReserves (sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
         
         $userId = sfContext::getInstance()->getUser()->getAttribute('userid');
 
-        $this->Reserves = Reserve::getReserves($userId);
+        $this->Reserves = Reserve::getReservesByUser($userId);
         $this->Opportunities = array();
 
         foreach ($this->Reserves as $Reserve) {
-
-            $this->Opportunities[$Reserve->getId()] = array($Reserve);
 
             foreach ($Reserve->getOpportunities() as $O) {
                 $this->Opportunities[$Reserve->getId()][] = $O;
@@ -4194,7 +4606,7 @@ class profileActions extends sfActions {
                     $estado = 6; // Compra impulsiva, dueño original aún no confirma
                 } else if ($reserva->getConfirmed() && $reserva->getImpulsive() && ($reserva->getReservaOriginal() == null || $reserva->getReservaOriginal() == 0)) {
                     $estado = 5; // Compra impulsiva, dueño original confirmó
-                } else if ($reserva->getConfirmed() && $reserva->getImpulsive() && !$reserva->getCar()->hasReserve($reserva->getInicio(), $reserva->getTermino())) {
+                } else if ($reserva->getConfirmed() && $reserva->getImpulsive() && !$reserva->getCar()->hasReserve($reserva->getFechaInicio2(), $reserva->getFechaTermino2())) {
                     $estado = 4; // Dueños que desean la oportunidad
                 } else if (isset($transaction[0]) && $transaction[0]['completed'] == 1 && $reserva->getConfirmed()) { // la reserva está pagada
                     $estado = 3;

@@ -1,3 +1,7 @@
+opportunities:
+    url: /oportunidades
+    param: { module: profile, action: opportunities }
+
 reserves:
     url: /reservas
     param: { module: profile, action: reserves }

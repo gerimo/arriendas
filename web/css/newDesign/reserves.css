@@ -1,3 +1,15 @@
 .btn-a-action {
     margin-top: -5px;
 }
+
+#extend-alert {
+    line-height: 28px;
+}
+
+#extend-loading {
+    width: 33px;
+}
+
+#payExtend {
+    margin-left: 10px;
+}
