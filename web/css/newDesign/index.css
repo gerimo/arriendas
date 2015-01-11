@@ -1,9 +1,3 @@
-.btn-a-primary{
-    font-size: 16px !important;
-    padding : 8px 21px !important;
-    margin: 5px;
-}
-
 header .navbar-default {
     background-color: rgba(0, 0, 0, 0.8);
     border-color: rgba(0, 0, 0, 0.8);
@@ -15,7 +9,7 @@ header .navbar-default {
     margin: 0;
 }
 
-.active {
+.activo {
     background-color: #ba135f;
 }
 
@@ -34,8 +28,6 @@ header .navbar-default {
     position: relative;
 }
 
-
-/*
 #section-home-background {
     height: 100%;
     left: 0px;
@@ -44,15 +36,18 @@ header .navbar-default {
     width: 100%;
     z-index: -100;
 }
-
 #section-home-background-img {
-    height: 100%;
-    width: 100%;
+    height: auto;
+    width: auto;
 }
-*/
+
+#section-home-carousel h1 {
+    margin-top: 30%;
+}
 
 #section-home-carousel {
-    margin-top: 30%;
+    padding-top: 250px;
+
 }
 
 #section-home-carousel h1 {
@@ -707,3 +702,12 @@ header .navbar-default {
 
     }
 
+    @media only screen and (max-width:992px) {
+
+    #section-home {
+        background-image: url("/images/newDesign/background-home.jpg");
+        background-size: 100% 100%;
+    }
+
+    
+}

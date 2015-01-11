@@ -3733,7 +3733,7 @@ class profileActions extends sfActions {
                 //var_dump($this->reserve);
                 //die();
                 $this->car = Doctrine_Core::getTable('car')->find(array($this->reserve->getCarId()));
-                $this->model = Doctrine_Core::getTable('Model')->find(array($this->car->getModel()->getId()));
+                $this->model = Doctrine_Core::getTable('Model')->find(array($this->car->getModels()->getId()));
                 $this->user = $this->car->getUser();
 
                 $this->trans = Doctrine_Core::getTable("Transaction")->getTransactionByReserve($this->reserve->getId());

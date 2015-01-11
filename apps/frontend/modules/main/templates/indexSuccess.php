@@ -10,7 +10,6 @@
     /*google.maps.event.addDomListener(window, 'load', initialize);*/
 
     var usuarioLogeado = "<?php echo $usuarioLog; ?>";
-
     var geolocalizacion; // coordenadas
     var latitud; // coordenadas
     var lastValidCenter; // initialize
@@ -26,18 +25,16 @@
     var neLng; // searchCars
 
     function coordenadas(position) {
-
         latitud  = position.coords.latitude; // Guardamos nuestra latitud
         longitud = position.coords.longitude; // Guardamos nuestra longitud
-
         <?php if ($sf_user->getAttribute('geolocalizacion') == true): ?>
         geolocalizacion = true;
-    <?php else: ?>
-    geolocalizacion = false;
-<?php endif; ?>
-}
+        <?php else: ?>
+        geolocalizacion = false;
+        <?php endif; ?>
+    }
 
-function errores(err) {
+    function errores(err) {
 
         // Controlamos los posibles errores
         if (err.code == 0) {
@@ -60,78 +57,74 @@ function errores(err) {
 
         <?php if (stripos($_SERVER['SERVER_NAME'], "arrendas") !== FALSE): ?>
         center = new google.maps.LatLng(-34.59, -58.401604);
-    <?php else: ?>
-    center = new google.maps.LatLng(-33.436024, -70.632858);
-<?php endif ?>
+        <?php else: ?>
+            center = new google.maps.LatLng(-33.436024, -70.632858);
+        <?php endif ?>
+        if (geolocalizacion) {
+            center = new google.maps.LatLng(latitud, longitud);
+        }
 
-if (geolocalizacion) {
-    center = new google.maps.LatLng(latitud, longitud);
-}
+        <?php if (isset($_GET['ciudad']) && $_GET['ciudad'] == "arica"): ?>
+            center = new google.maps.LatLng(-18.32, -70.20);
+        <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "concepcion"): ?>
+            center = new google.maps.LatLng(-37.00, -72.30);
+        <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "laserena"): ?>
+            center = new google.maps.LatLng(-29.75, -71.10);
+        <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "temuco"): ?>
+            center = new google.maps.LatLng(-38.45, -72.40);
+        <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "valparaiso"): ?>
+            center = new google.maps.LatLng(-33.2, -71.4);
+        <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "viña"): ?>
+            center = new google.maps.LatLng(-33.0, -71.3);
+        <?php elseif (isset($map_clat) && isset($map_clng)): ?>
+            center = new google.maps.LatLng(<?= $map_clat ?>, <?= $map_clng ?>);
+        <?php endif; ?>
 
-<?php if (isset($_GET['ciudad']) && $_GET['ciudad'] == "arica"): ?>
-    center = new google.maps.LatLng(-18.32, -70.20);
-<?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "concepcion"): ?>
-    center = new google.maps.LatLng(-37.00, -72.30);
-<?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "laserena"): ?>
-    center = new google.maps.LatLng(-29.75, -71.10);
-<?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "temuco"): ?>
-    center = new google.maps.LatLng(-38.45, -72.40);
-<?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "valparaiso"): ?>
-    center = new google.maps.LatLng(-33.2, -71.4);
-<?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "viña"): ?>
-    center = new google.maps.LatLng(-33.0, -71.3);
-<?php elseif (isset($map_clat) && isset($map_clng)): ?>
-    center = new google.maps.LatLng(<?= $map_clat ?>, <?= $map_clng ?>);
-<?php endif; ?>
+        map = new google.maps.Map(document.getElementById('map-container'), {
+            zoom: 14,
+            center: center,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            scrollwheel: false
+        });
 
-map = new google.maps.Map(document.getElementById('map-container'), {
-    zoom: 14,
-    center: center,
-    mapTypeId: google.maps.MapTypeId.ROADMAP,
-    scrollwheel: false
-});
+        var market = null;
 
-var market = null;
+        if (geolocalizacion) {
 
-if (geolocalizacion) {
+            marker = new google.maps.Marker({
+                position: center,
+                map: map,
+                draggable: true,
+            });
+        }
 
-    marker = new google.maps.Marker({
-        position: center,
-        map: map,
-        draggable: true,
-    });
-}
+        lastValidCenter = center;
 
-lastValidCenter = center;
+        google.maps.event.addListener(map, 'idle', function() {
 
-google.maps.event.addListener(map, 'idle', function() {
+            google.maps.event.clearListeners(map, 'idle');
+            searchCars();
+        });
 
-    google.maps.event.clearListeners(map, 'idle');
-    console.log("listener idle");
-    searchCars();
-});
+        google.maps.event.addListener(map, 'dragend', function() {
 
-google.maps.event.addListener(map, 'dragend', function() {
+            if (strictBounds === null || strictBounds.contains(map.getCenter())) {
+                lastValidCenter = map.getCenter();
+            } else {
+                map.panTo(lastValidCenter);
+            }
+            searchCars();
+        });
 
-    if (strictBounds === null || strictBounds.contains(map.getCenter())) {
-        lastValidCenter = map.getCenter();
-    } else {
-        map.panTo(lastValidCenter);
-    }
-    console.log("listener dragend");
-    searchCars();
-});
+        google.maps.event.addListener(map, 'zoom_changed', function() {
 
-google.maps.event.addListener(map, 'zoom_changed', function() {
-
-    if (strictBounds === null || strictBounds.contains(map.getCenter())) {
-        lastValidCenter = map.getCenter();
-    } else {
-        map.panTo(lastValidCenter);
-    }
-    console.log("listener zoom");
-    searchCars();
-});
+            if (strictBounds === null || strictBounds.contains(map.getCenter())) {
+                lastValidCenter = map.getCenter();
+            } else {
+                map.panTo(lastValidCenter);
+            }
+            searchCars();
+        });
 
         //Autocomplete
         var input = document.getElementById('direction');
@@ -188,12 +181,11 @@ google.maps.event.addListener(map, 'zoom_changed', function() {
 
             infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
             infowindow.open(map, marker);
-            console.log("listener place change");
             searchCars();
         });
-}
+    }
 
-function localizame() {
+    function localizame() {
         if (navigator.geolocation) { // Si el navegador tiene geolocalizacion
             navigator.geolocation.getCurrentPosition(coordenadas, errores);
         } else {
@@ -202,6 +194,21 @@ function localizame() {
     }
 
     function searchCars() {
+
+        if ($("#from").val() > $("#to").val()) {
+
+            $("#dialog-alert p").html("danger danger cuidado!");
+            $("#dialog-alert").attr("title", "OJO PIOJO");
+            $("#dialog-alert").dialog({
+                buttons: [{
+                    text: "Aceptar",
+                    click: function() {
+                        $( this ).dialog( "close" );
+                    }
+                }]
+            });
+            return false;
+        }
 
         $('#map-list-container, #list-container').hide();
         $(".loading").show();
@@ -297,7 +304,6 @@ function localizame() {
             $('.loading').hide();
             $("#map-list-container, #list-container").show();
 
-            console.log("errooooor");
             return false;
         }
 
@@ -315,8 +321,6 @@ function localizame() {
             pasenger: pasenger,
             commune: commune
         }
-
-        console.log(parameters);
 
         $.post("<?php echo url_for('main/getCars') ?>", parameters, function(response){
 
@@ -494,10 +498,7 @@ function localizame() {
                     listContent += "</article>";*/
                 }
             } else {
-                /*mapListContent += "<article class='box'>";*/
                 mapListContent += "<h2 style='text-align: center'>No hemos encontrado vehículos</h2>";
-                /*mapListContent += "</article>";*/
-
                 listContent += "<h2 style='text-align: center'>No hemos encontrado vehículos</h2>";
             }
 
@@ -513,33 +514,19 @@ function localizame() {
 
             markerCluster = new MarkerClusterer(map, markers, mcOptions);
         }, "json");
-}
-
-    // Video
-    function playPause() { 
-
-        var V = document.getElementById("video");
-
-        if (V.paused) {
-            V.play(); 
-        } else {
-            V.pause(); 
-        }
     }
 </script>
 
 <section id="section-home">
 
-
-    <div class="col-sm-12 col-md-12">
+    <div class="hidden-xs hidden-sm col-md-12">
         <video id="video" autoplay >
             <source src="/videos/video.mp4" type="video/mp4">
-                <source src="mov_bbb.ogg" type="video/ogg">
-                    Your browser does not support HTML5 video.
-                </video> 
-            </div>
+                Your browser does not support HTML5 video.
+            </video> 
+        </div>
 
-    <!-- <div id="section-home-background">
+   <!--  <div class="col-xs-12 m hidden-md" id="section-home-background">
         <img id="section-home-background-img" src="/images/newDesign/background-home.jpg">
     </div> -->
 
@@ -579,16 +566,16 @@ function localizame() {
                 <?php endforeach ?>
             </select>
         </div>
-    
-    <!-- Map -->
-    <div class="hidden-xs col-sm-6 col-md-6" id="direction-container">
-        <input class="direction form-control" id="direction" placeholder="Dirección" type="text">
-    </div>
-    <div class="col-xs-6 col-sm-2 col-md-2" id="from-container">
-        <input class="from datetimepicker form-control" id="from" placeholder="Desde" type="text" value="<?php echo date("d-m-Y h:i", (strtotime ("+4 Hours"))); ?>" >
-    </div>
-    <div class="col-xs-6 col-sm-2 col-md-2" id="to-container">
-        <input class="to datetimepicker form-control" id="to" placeholder="Hasta" type="text" value="<?php echo date("d-m-Y h:i",(strtotime ("+24 Hours")))?>" >
+
+        <!-- Map -->
+        <div class="hidden-xs col-sm-6 col-md-6" id="direction-container">
+            <input class="direction form-control" id="direction" placeholder="Dirección" type="text">
+        </div>
+        <div class="col-xs-6 col-sm-2 col-md-2" id="from-container">
+            <input class="from daepicker form-control" id="from" placeholder="Desde" type="text" value="<?php if(date("H:i") >= "20:00" || date("H:i") <= "08:00"):echo date("d-m-Y 08:00",(strtotime ("+12 Hours"))); else:echo date("d-m-Y H:i", (strtotime ("+4 Hours"))); endif; ?>" >
+        </div>
+        <div class="col-xs-6 col-sm-2 col-md-2" id="to-container">
+            <input class="to datetimepicker form-control" id="to" placeholder="Hasta" type="text" value="<?php if(date("H:i") >= "20:00" || date("H:i") <= "08:00"):echo date("d-m-Y 08:00",(strtotime ("+32 Hours"))); else:echo date("d-m-Y H:i", (strtotime ("+24 Hours"))); endif; ?>" >
         </div>
 
         <!-- Search -->
@@ -611,7 +598,7 @@ function localizame() {
             </ul>
         </div>
         <div class="col-sm-3 col-md-3 hidden-xs tabset">
-            <div class="col-sm-6 col-md-6 text-center tab active" data-target="#tab-map"><strong><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Mapa</strong></div>
+            <div class="col-sm-6 col-md-6 text-center tab activo" data-target="#tab-map"><strong><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Mapa</strong></div>
             <div class="col-sm-6 col-md-6 text-center tab" data-target="#tab-list"><strong><span class="glyphicon glyphicon-list" aria-hidden="true"></span> Lista</strong></div>
         </div>
     </div>
@@ -731,7 +718,7 @@ function localizame() {
             <div class="col-xs-offset-1 col-xs-10 hidden-sm hidden-md">
                 <div class="col-xs-12 col-sm-offset-0  col-md-offset-0"> <h2 class="title"><span>Condiciones de Arriendo</span></h2></div>
                 <p>Debes tener al menos 24 años para poder arrendar.</p>
-                <p>Tienes que contar con una licencia de conducir valida .</p>
+                <p>Tienes que contar con una licencia de conducir valida.</p>
                 <p>Debes pagar con una cuenta bancaria a tu nombre (no puede ser de un tercero).</p>
             </div>
         </div>
@@ -785,7 +772,7 @@ function localizame() {
     <div class="hidden-xs space-40"></div>
 
     <div class="row">
-        <div class="hidden-xs col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 text-center" id="testimonials-container">
+        <div class="hidden-xs col-sm-offset-3 col-sm-6 col-md-offset-3 col-md-6 text-center" id="testimonials-container">
             <h1>Testimonios</h1>
             <div id="section-testimonials-carousel">
                 <div>
@@ -804,6 +791,12 @@ function localizame() {
 
     <div class="hidden-xs space-100"></div>
 </section>
+
+<div style="display:none">
+    <div id="dialog-alert" title="">
+        <p></p>
+    </div>
+</div>
 
 <script>
 
@@ -854,104 +847,110 @@ function localizame() {
         });
     });
 
-if ($(window).width() > 768) {
+    if ($(window).width() > 768) {
 
-    $('#section-home').css({'height': $(window).height()});
+        $('#section-home').css({'height': $(window).height()});
 
-    $("#map, #map-list").css({height: $(window).height() - $("#section-map-form-search").outerHeight() - $("#section-map-filters").outerHeight()});
-}
-
-$("input[type='checkbox']").change(function(){
-    console.log("filter change");
-    searchCars();
-});
-
-$("#search").click(function(e){
-    e.preventDefault();
-    console.log("search click");
-    searchCars();        
-});
-
-$(".tab").click(function(){
-
-    var target = $(this).data("target");
-
-    if (target == "#tab-map") {
-        $("#region-container").hide();
-        $("#commune-container").hide();
-        $("#direction-container").show();
+        $("#map, #map-list").css({height: $(window).height() - $("#section-map-form-search").outerHeight() - $("#section-map-filters").outerHeight()});
     }
 
-    if (target == "#tab-list") {
-        $("#direction-container").hide();
-        $("#region-container").show();
-        $("#commune-container").show();
-    }
-});
+    $("input[type='checkbox']").change(function(){
+        searchCars();
+    });
 
-$('#header .animate').each(function(){
+    $("#search").click(function(e){
+        e.preventDefault();
+        searchCars();        
+    });
 
-    var target  = $(this).data('target');
+    $(".tab").click(function(){
 
-    $(this).on('click', function(e) {
+        var target = $(this).data("target");
 
+        if (target == "#tab-map") {
+            $("#region-container").hide();
+            $("#commune-container").hide();
+            $("#direction-container").show();
+        }
+
+        if (target == "#tab-list") {
+            $("#direction-container").hide();
+            $("#region-container").show();
+            $("#commune-container").show();
+        }
+    });
+
+    $('#header .animate').each(function(){
+
+        var target  = $(this).data('target');
+
+        $(this).on('click', function(e) {
+
+            e.preventDefault();
+            var position = $(target).offset().top - 50;
+            $('html, body').animate({
+                scrollTop: position
+            }, 1250);
+        });
+    });
+
+    $(".ico-search").on('click', function(e) {
+        var target  = $(this).data('target');
         e.preventDefault();
         var position = $(target).offset().top - 50;
         $('html, body').animate({
             scrollTop: position
         }, 1250);
     });
-});
 
-$(".ico-search").on('click', function(e) {
-    var target  = $(this).data('target');
-    e.preventDefault();
-    var position = $(target).offset().top - 50;
-    $('html, body').animate({
-        scrollTop: position
-    }, 1250);
-});
+    $(".tab").on('click', function(){
 
-$(".tab").on('click', function(){
+        var target = $(this).data("target");
 
-    var target = $(this).data("target");
+        $(".tab").removeClass("active");
+        $(this).addClass("active");
 
-    $(".tab").removeClass("active");
-    $(this).addClass("active");
+        $(".tab-container").hide();
+        $(target).show();
+    });
 
-    $(".tab-container").hide();
-    $(target).show();
-});
+    $('.datetimepicker').datetimepicker({
+        allowTimes:[
+        "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
+        "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
+        "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
+        "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+        "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+        "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
+        "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
+        "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
+        ],
+        dayOfWeekStart: 1,
+        lang:'es',
+        i18n:{
+            es:{
+                months:[
+                'Enero','Febrero','Marzo','Abril',
+                'Mayo','Junio','Julio','Agosto',
+                'Septiembre','Octubre','Noviembre','Diciembre'
+                ],
+                dayOfWeek:["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"]
+            }
+        },
+        format:'d-m-Y H:i'
+    });
 
-$('.datetimepicker').datetimepicker({
-    allowTimes:[
-    "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
-    "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
-    "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
-    "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-    "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-    "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-    "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-    "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
-    ],
-    dayOfWeekStart: 1,
-    lang:'es',
-    i18n:{
-        es:{
-            months:[
-            'Enero','Febrero','Marzo','Abril',
-            'Mayo','Junio','Julio','Agosto',
-            'Septiembre','Octubre','Noviembre','Diciembre'
-            ],
-            dayOfWeek:["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"]
-        }
-    },
-    format:'d-m-Y H:i'
-});
+    $('#to').datetimepicker({
+        format:'d-m-Y H:i',
+        minDate : "<?php echo date('d-m-Y H:i', (strtotime ('+24 Hours'))); ?>",
+    });
 
+    $('#from').datetimepicker({
+        format:'d-m-Y H:i',
+        minDate : "<?php echo date('d-m-Y') ?>",
+    });
 
-    
-    
+     
 
 
 </script>

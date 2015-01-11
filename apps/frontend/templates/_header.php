@@ -46,12 +46,14 @@
                             </ul>
                         </li>
                     <?php else: ?>                        
-                        <li><a class="btn-a-primary" href="<?php echo url_for('main/login') ?>">INGRESAR</a></li>
+                        <li><a class="btn-a-secondary" href="<?php echo url_for('main/login') ?>">INGRESAR</a></li>
                     <?php endif ?>
                 </ul>
-
                 <ul class="nav navbar-nav navbar-right">
-                <li><a href="tel:+56223333714"><span class="glyphicon glyphicon-earphone"></span>(02) 2 333 37 14</a></li>
+                    <li><a href="tel:+56223333714"><span class="glyphicon glyphicon-earphone"></span>(02) 2 333 37 14</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    
                 </ul>
 
             </div><!-- /.navbar-collapse -->

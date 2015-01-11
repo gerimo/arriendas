@@ -1542,7 +1542,6 @@ public function oldexecuteIndex(sfWebRequest $request) {
                     ca.lat lat, 
                     ca.lng lng, 
                     ca.year,
-                    co.name comuna_nombre,
                     ca.price_per_day, 
                     ca.price_per_hour,
                     ca.photoS3 photoS3, 
@@ -1552,6 +1551,7 @@ public function oldexecuteIndex(sfWebRequest $request) {
                     ca.user_id,
                     ca.velocidad_contesta_pedidos velocidad_contesta_pedidos,
                     greatest(1440,ca.velocidad_contesta_pedidos)/greatest(0.1,ca.contesta_pedidos) carrank,
+                    co.name comuna_nombre,
                     mo.name modelo, 
                     mo.id_tipo_vehiculo id_tipo_vehiculo,
                     br.name brand, 
@@ -1564,7 +1564,8 @@ public function oldexecuteIndex(sfWebRequest $request) {
                 ->andWhere('ca.seguro_ok = 4')
                 ->orderBy('carrank ASC')
                 ->addOrderBy('IF(ca.velocidad_contesta_pedidos = 0, 1440, ca.velocidad_contesta_pedidos)  ASC')
-                ->addOrderBy('ca.fecha_subida  ASC');                
+                ->addOrderBy('ca.fecha_subida  ASC')
+                ->limit(33);
 
             if ($automatic) {
                 $q->andWhere("ca.transmission = 1");
@@ -1587,9 +1588,9 @@ public function oldexecuteIndex(sfWebRequest $request) {
                 $q->andWhere('ca.lng < ?', $neLng);
             }
 
-            if ($noDateInterval) {
+            /*if ($noDateInterval) {
                 $q->limit(40);
-            }
+            }*/
 
             $cars = $q->execute();
 
