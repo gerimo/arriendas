@@ -22,7 +22,7 @@ class Reserve extends BaseReserve {
         return date("Y-m-d H:i:s", strtotime("+".$this->getDuration()." hour", strtotime($this->getDate())));
     }
 
-    public function getOpportunities() {
+    public function getOpportunities($withOriginalCar = true) {
 
         $Opportunities = array();
 
@@ -37,7 +37,11 @@ class Reserve extends BaseReserve {
 
         foreach ($Reserves as $Reserve) {
 
-            if ($Reserve->getReservaOriginal() == 0 || !$Reserve->getCar()->hasReserve($this->date, date("Y-m-d H:i:s", strtotime("+".$this->duration." hour", strtotime($this->date))))) {
+            if ($Reserve->getReservaOriginal() == 0) {
+                if ($withOriginalCar) {
+                    $Opportunities[] = $Reserve;
+                }
+            } elseif (!$Reserve->getCar()->hasReserve($this->getFechaInicio2(), $this->getFechaTermino2())) {
                 $Opportunities[] = $Reserve;
             }
         }
@@ -65,12 +69,12 @@ class Reserve extends BaseReserve {
             ->createQuery('R')
             ->innerJoin('R.Transaction T')
             ->where('R.id = ? OR R.reserva_original = ?', array($this->id, $this->id))
-            ->andWhere('T.selected = 1')
-            ->limit(1);
+            ->andWhere('T.selected = 1');
 
-        $Reserve = $q->execute();
-
-        return $Reserve[0]->getCar();
+        /*return $q->fetchOne()->getCar();*/
+        $Reserves = $q->execute();
+        
+        return $Reserves->getFirst()->getCar();
     }
 
     public function getSignature() {
@@ -101,6 +105,21 @@ class Reserve extends BaseReserve {
         }
 
         return round($total);
+    }
+
+    public static function getPaidReserves($userId) {
+        
+        $q = Doctrine_Core::getTable("Reserve")
+            ->createQuery('R')
+            ->innerJoin('R.Transaction T')
+            ->innerJoin('R.Car C')
+            ->where('C.user_id = ?', $userId)
+            ->andWhere('R.reserva_original = 0')
+            ->andWhere('R.confirmed = 0')
+            ->andWhere("T.completed = 1")
+            ->addOrderBy("R.fecha_reserva ASC");
+
+        return $q->execute();
     }
 
     public static function getReservesByUser($userId) {

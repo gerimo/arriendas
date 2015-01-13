@@ -1,21 +1,55 @@
+# You can find more information about this file on the symfony website:
+# http://www.symfony-project.org/reference/1_4/en/10-Routing
+
+homepage:
+    url: /
+    param: { module: main, action: index }
+
+login:
+    url: /login
+    param: { module: main, action: login }
+
+login_do:
+    url: /login/do
+    param: { module: main, action: loginDo }
+
+logout:
+    url: /logout
+    param: { module: main, action: logout }
+
 opportunities:
     url: /oportunidades
-    param: { module: profile, action: opportunities }
+    param: { module: opportunities, action: index }
+
+opportunities_approve:
+    url: /oportunidades/aprobar
+    param: { module: opportunities, action: approve }
+
+reserve_approve:
+    url: /reserva/aprobar
+    param: { module: reserves, action: approve }
+
+reserve_change:
+    url: /reserva/cambiar
+    param: { module: reserves, action: change }
+
+reserve_extend:
+    url: /reserva/extender
+    param: { module: reserves, action: extend }
+
+reserve_extend_get_price:
+    url: /reserva/extender/obtenerPrecio
+    param: { module: reserves, action: getExtendPrice }
+
+reserve_pay:
+    url: /reserva/pagar
+    param: { module: reserves, action: pay }
 
 reserves:
     url: /reservas
-    param: { module: profile, action: reserves }
+    param: { module: reserves, action: index }
 
-reserve_change:
-    url: /reserve/change
-    param: { module: profile, action: reserveChange }
-
-reserve_extend:
-    url: /reserve/extend
-    param: { module: profile, action: reserveExtend }
-
-# You can find more information about this file on the symfony website:
-# http://www.symfony-project.org/reference/1_4/en/10-Routing
+# old Design
 
 index_by_city:
   url:    /c/:c
@@ -95,25 +129,16 @@ facebook_login:
 region-comuna:
     url: /arriendo-de-autos/:region/:comuna
     param: {module: main, action: index }
- 
-# default rules
-homepage:
-  url:   /
-  param: { module: main, action: index }
 
 fbShare:
   url:    /fb/:id/
   param:  { module: main, action: fbShare }
-  
+
 # generic rules
 # please, remove them by adding more specific rules
-default_index:
-  url:   /:module
-  param: { action: index }
+# default_index:
+#   url:   /:module
+#   param: { action: index }
 
 default:
   url:   /:module/:action/*
-
-
-
-

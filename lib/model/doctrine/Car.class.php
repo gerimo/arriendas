@@ -24,9 +24,54 @@ class Car extends BaseCar {
         return $q->execute();
     }
 
+    public function getOpportunities() {
+
+        $maxDistance = 4;
+        $maxOpportunitiesAllowed = 5;
+        $Opportunities = array();
+
+        // Obtención de reservas que cuenten con las características
+        $q = Doctrine_Core::getTable("Reserve")
+            ->createQuery('R')
+            ->innerJoin('R.Car C')
+            ->innerJoin('C.Model M')
+            ->where('R.user_id != ?', $this->getUser()->getId())
+            ->andWhere('R.confirmed = 0')
+            ->andWhere('R.reserva_original = 0')
+            ->andWhere('R.date >= NOW()')
+            ->andWhere('R.impulsive = 1')
+            ->andWhere('C.transmission = ?', $this->transmission)
+            /*->andWhere('distancia(C.lat, C.lng, ?, ?) < ?', array($this->lat, $this->lng, $maxDistance))*/
+            ->addOrderBy('R.date ASC');
+        
+        if ($this->getModel()->getIdOtroTipoVehiculo() == 1) {
+            $q->andWhere('M.id_otro_tipo_vehiculo IN (1,2)');
+        } else {
+            $q->andWhere('M.id_otro_tipo_vehiculo = ?', $this->getModel()->getIdOtroTipoVehiculo());
+        }
+
+        $Reserves = $q->execute();
+
+        // Revisamos que las reservas no tengan ya el máximo de oportunidades permitidas y
+        // Revisamos que el auto no tenga ya una reserva confirmada en la fecha de la oportunidad
+        foreach ($Reserves as $Reserve) {
+
+            if (count($Reserve->getOpportunities(false)) < $maxOpportunitiesAllowed && 
+                !$this->hasReserve($Reserve->getFechaInicio2(), $Reserve->getFechaTermino2())) {
+
+                $Opportunities[] = $Reserve;
+            }
+        }
+
+        return $Opportunities;
+    }
+
     // Métodos estáticos
 
     public static function getPrice($from, $to, $pricePerHour, $pricePerDay, $pricePerWeek, $pricePerMonth) {
+
+        $from = date("Y-m-d H:i:s", strtotime($from));
+        $to   = date("Y-m-d H:i:s", strtotime($to));
 
         $duration = Utils::calculateDuration($from, $to);
         $days     = floor($duration / 24);

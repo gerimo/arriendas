@@ -15,7 +15,7 @@
 
         <div class="text-center">
             <h2>Ingresa con tu usuario Arriendas</h2>
-            <form action="<?php echo url_for("main/doLogin") ?>" class="clearfix" id="login-form" method="post">
+            <form action="<?php echo url_for("login_do") ?>" class="clearfix" id="login-form" method="post">
 
                 <input class="form-control" id="username" name="username" placeholder="Correo electrónico" type="text">
 

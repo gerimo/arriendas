@@ -174,7 +174,7 @@
         </div>
     <?php endif ?>
 
-    <form action="<?php echo url_for('profile/pay') ?>" id="reserve-form" method="post">
+    <form action="<?php echo url_for('reserve_pay') ?>" id="reserve-form" method="post">
 
         <!-- Resumen y garantía -->
         <div class="row">

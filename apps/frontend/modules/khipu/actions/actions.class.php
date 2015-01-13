@@ -16,8 +16,6 @@ class khipuActions extends sfActions {
 
         try {
 
-            error_log("R: ".$request->getParameter("reserveId"));
-
             $reserveId     = $request->getParameter("reserveId");
             $transactionId = $request->getParameter("transactionId");
 
@@ -46,7 +44,6 @@ class khipuActions extends sfActions {
             Utils::reportError($e->getMessage(), "khipu/generatePayment");
         }
 
-        error_log($url);
         $this->redirect($url);
     }
 

@@ -1,7 +1,7 @@
 <?php
 
-class Functions
-{
+class Functions {
+    
     public function generarContrato($tokenReserva) {
     //Obtenemos el ID de la reserva
 //    $idReserva=  $request->getParameter("idReserva");
