@@ -260,9 +260,10 @@
             <div class="col-xs-6 col-sm-4 col-md-3 radio">
                 <label>
                     <input id="payment15" name="payment-group" type="radio" value="Banco Itau">
-                    <img src="/images/newDesign/payments/Itau.png" alt="">
+                    <img width="100" height="100" src="/images/newDesign/payments/Itau.png" alt="">
                 </label>
             </div>
+             
             <div class="col-xs-6 col-sm-4 col-md-3 radio">
                 <label>
                     <input id="payment14" name="payment-group" type="radio" value="Banco Corpbanca">
@@ -369,7 +370,7 @@
                     closeOnText: true,
                     modal: true,
                     resizable: true,
-                    title: "Contratos",
+                    title: "Condiciones de arriendo",
                     width: "90%",
                     buttons: [
                         {
@@ -384,7 +385,7 @@
 
                                 var inputs = $("#confirmarContratosArrendatario input[type='checkbox']");
                                 var userAccept = true;
-                                
+                                btn-pay
                                 $.each(inputs, function(index, input){
 
                                     if (!input.checked) {

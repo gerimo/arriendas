@@ -39,7 +39,7 @@
         </div>
 
         <div class="text-center register-here">
-            <a href="<?php echo url_for('main/register')?>">Registrate aquí</a>
+            <a href="<?php echo url_for('user_register')?>">Registrate aquí</a>
         </div>
     </div>
 </div>

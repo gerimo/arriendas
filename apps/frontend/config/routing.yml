@@ -49,7 +49,16 @@ reserves:
     url: /reservas
     param: { module: reserves, action: index }
 
+user_register:
+    url: /registro
+    param: { module: main, action: register }
+
+user_register_complete:
+    url: /registro/completar
+    param: { module: main, action: completeRegister }
+
 # old Design
+
 
 index_by_city:
   url:    /c/:c
