@@ -13,11 +13,11 @@ class profileActions extends sfActions {
 
     public function executeChangePassword (sfWebRequest $request) {
 
-        $this->setLayout("newIndexLayout");
+            $this->setLayout("newIndexLayout");
 
-        $userId = $this->getUser()->getAttribute("userid");
+            $userId = $this->getUser()->getAttribute("userid");
 
-        $this->User = Doctrine_Core::getTable('user')->find($userId);
+            $this->User = Doctrine_Core::getTable('user')->find($userId);
     }
 
     public function executeDoChangePassword (sfWebRequest $request) {
@@ -3077,6 +3077,7 @@ class profileActions extends sfActions {
       /* */
 
     public function executeTransactions(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
 
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
         //$idUsuario = 885;

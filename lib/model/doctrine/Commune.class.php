@@ -10,6 +10,16 @@
  * @author     Your name here
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
-class Commune extends BaseCommune
-{
+class Commune extends BaseCommune {
+
+	public static function getByRegion($regionId) {
+
+		$q = Doctrine_Core::getTable("Commune")
+            ->createQuery('C')
+            ->innerJoin('C.Region R')
+            ->where('R.id = ?', $regionId)
+            ->orderBy('C.name ASC');
+
+        return $q->fetchArray();
+	}
 }

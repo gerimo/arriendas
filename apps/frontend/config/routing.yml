@@ -12,6 +12,9 @@ reserve_extend:
 
 # You can find more information about this file on the symfony website:
 # http://www.symfony-project.org/reference/1_4/en/10-Routing
+user_register_complete:
+    url: /registro/completar/
+    param: { module: main, action: completeRegister }
 
 user_register:
     url: /registro

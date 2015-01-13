@@ -1,0 +1,174 @@
+body {
+	background-image: url('/images/newDesign/background.jpg');
+}
+
+p{
+	color: rgb(70, 70, 70);
+	text-align: center;
+	font-size: 150%;
+	font-family: 'roboto';
+}
+
+h1{
+	text-align: center;
+	font-family: 'roboto';
+	font-size: 90%;
+	text-decoration: none;
+}
+
+.text-info{
+	color: rgb(70, 70, 70);
+}
+
+.precioPorHora{
+	text-align: center;
+	font-family: 'roboto';
+	color: #ba135f;
+}
+
+.precioPorDia{
+	text-align: center;
+	font-family: 'roboto';
+	color: #ba135f;
+}
+
+.btn-a-primary{
+	font-family: 'roboto';
+	font-size: 16px !important;
+    padding : 8px 21px !important;
+    margin: 5px;
+}
+
+h2{
+	font-family: 'roboto';
+	text-align: center;
+}
+/*
+#FondoReferidos{
+    margin: 0 auto;
+    width: 920px;
+}
+
+#subFondo{
+    background-color: white;
+    float: left;
+    width: 920px;
+    padding: 20px;
+    height: auto ! important;
+    min-height: 200px;
+    -webkit-box-shadow: 1px 1px 10px rgba(50, 50, 50, 0.4);
+    -moz-box-shadow: 1px 1px 10px rgba(50, 50, 50, 0.4);
+    box-shadow: 1px 1px 10px rgba(50, 50, 50, 0.4);
+    padding-bottom: 40px;
+}
+#Enunciado{
+    float: left;
+    width: 800px;
+    text-align: center;
+    font-size: 17px;
+    margin-left: 50px;
+    font-style: italic;
+    line-height: 20px;
+    margin-top: 16px;
+}
+*/
+#botonCargar{
+	font-family: 'roboto';
+    width: 166px;
+    height: 74px;
+    margin-top: 134px;
+    font-size: 16px !important;
+    padding : 8px 21px !important;
+    margin: 5px;
+}
+/*
+input#botonVolver{
+    margin: 0px;
+    border: 0px;
+    padding: 0px;
+    cursor: pointer;
+    background-image: url("http://www.arriendas.cl/images/Home/BotonIngresa.png");
+    background-color: white;
+    width: 164px;
+    height: 72px;
+}
+p.textoPie{
+    float: left;
+    text-align: left;
+}
+
+h1{
+	margin: 0px 0px 0px 0px;
+	border-bottom: none;
+	font-size: 20px;
+}
+.regis_box_info {
+	width: 450px;
+	float: left;
+	margin-left: 20px;
+	padding-bottom: 20px;
+}
+
+.c1{
+	float: left;
+	margin-bottom: 0px;
+	margin-right: 0px;
+	margin-left: 10px;
+	width: 425px;
+	height: 80px;
+}
+.c1 label{
+	font-size: 14px;
+	margin-bottom: 2px;
+	text-align: left;
+}
+.c1 .c2{
+	margin-right: 15px;
+}
+.regis_botones {
+	float: left;
+	margin-top: 0px;
+	width: 170px;
+	height: 78px;
+	margin-left: -6px;
+}
+input#botonCalcular{
+	margin: 0px;
+	padding: 0px;
+	border: 0px;
+	cursor: pointer;
+	background-image: url("../../images/Home/Calcular.png");
+	background-color: white;
+    width: 146px;
+    height: 67px;
+}
+
+#resultados{
+	float: left;
+	text-align: left;
+	padding-left: 10px;
+	width: 220px;
+	height: 170px;
+	padding-top: 30px;
+	margin-left: 30px;
+}
+*/
+#ajax_loader{
+	float: left;
+	margin-left: 30px;
+	margin-top: 18px;
+	width: 40px;
+	height: 40px;
+}
+
+.img_loader{
+	display: none;
+	width: 40px;
+	height: 40px;
+}
+
+.img_subeunauto{
+	float: left;
+	margin-top: 15px;
+	margin-left: -17px;
+}

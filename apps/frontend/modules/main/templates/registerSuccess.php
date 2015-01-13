@@ -1,55 +1,32 @@
-<link href="/css/newDesign/register.css" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/completeRegister.css" rel="stylesheet" type="text/css">
 
 <div class="hidden-xs space-100"></div>
 <div class="visible-xs space-50"></div>
 <div class="row">
-    <div class="col-md-offset-3 col-md-6">
-        <div class="BCW" id="message" style="display: none">
-            <p>Registro satisfactorio. Hemos enviado...</p>
-        </div>
-        <div class="BCW">
+    <div class="col-md-offset-4 col-md-4">
+
+        <div class="BCW" id="frm">
             <h1>Registro</h1>
-            <h2>Datos Personales</h2>
 
             <input class="form-control" id="firstname" name="firstname" type="text" placeholder="Nombre">
             <input class="form-control" id="lastname" name="lastname" type="text" placeholder="Apellido paterno">
-            <input class="form-control" id="motherLastname" name="motherLastname" type="text" placeholder="Apellido materno">
             <input class="form-control" id="email" name="email" type="text" placeholder="Email">
             <input class="form-control" id="emailAgain" name="emailAgain" type="text" placeholder="Confirma tu email">
             <input class="form-control" id="password" name="password" type="password" placeholder="Contraseña">
 
-            <select class="form-control" id="foreign" name="foreign" >
-                <option value="0">Chileno</option>
-                <option value="1">Extranjero</option>
-            </select>
-
-
-            <input class="form-control" id="rut" name="rut" type="text" placeholder="RUT">
-            <input class="form-control" id="telephone" name="telephone" placeholder="Teléfono" ype="text">
-            <input class="datetimepicker form-control" id="birth" name="birth" placeholder="Fecha de nacimiento" type="text">
-            <input class="form-control" id="address" name="address" placeholder="Dirección #111" type="text">
-
-            <select class="form-control" id="region" name="region" onchange="cargarComunas(this.value)">
-                <?php foreach ($Regions as $r): ?>
-                    <option value="<?php echo $r["codigo"] ?>"><?php echo $r["nombre"] ?></option>
-                <?php endforeach ?>
-            </select>
-
-            <select class="form-control" id="commune" name="commune">
-                <option value="0">Selecciona tu comuna</option>
-            </select>
-
             <div class="alert"></div>
 
             <div class="row">
-
-                    <div class="col-md-offset-7 col-md-5" style="padding: 0">
-                        <button class="btn-a-primary btn-block" id="save" onclick="validateForm()">Registrar</button>
-                    </div>
+                <div class="col-md-offset-7 col-md-5" style="padding: 0">
+                    <button class="btn-a-primary btn-block" id="save" onclick="validateForm()">Siguiente</button>
+                </div>
             </div>
+        </div>
 
-            <hr>
-
+        <!-- Mensaje desplegable -->
+        <div class="BCW" id="message" style="display: none">
+            <p class="text-center"></p>
+            <p class="text-center"><?php echo link_to("Volver al inicio","main/index"); ?> </p>
         </div>
     </div>
 </div>
@@ -57,79 +34,55 @@
 <script type="text/javascript">
 $(document).ready(function() { 
 
-    /*$('#rut').live('focusout', function() {
-        var run = $(this).val();
-        var partes = run.split(" ");
-        var run_sinEspacios = "";
-
-        for(var i=0;i<partes.length;i++){
-            run_sinEspacios = run_sinEspacios+partes[i];
-        }
-        var partes = run_sinEspacios.split(".");
-        var run_sinPuntos_sinEspacios = "";
-
-        for(var i=0;i<partes.length;i++){
-            run_sinPuntos_sinEspacios = run_sinPuntos_sinEspacios+partes[i];
-        }
-        var partes = run_sinPuntos_sinEspacios.split("-");
-        var run_sinGuion_sinPuntos_sinEspacios = "";
-
-        for(var i=0;i<partes.length;i++){
-            run_sinGuion_sinPuntos_sinEspacios = run_sinGuion_sinPuntos_sinEspacios+partes[i];
-        }
-        var ultimoCaracter = run_sinGuion_sinPuntos_sinEspacios.slice(-1);
-        var restoCadena = run_sinGuion_sinPuntos_sinEspacios.slice(0,-1);
-
-        var runCorregido = restoCadena+"-"+ultimoCaracter;
-
-        $("#rut").attr("value",runCorregido);
-
-    });
-*/
-
-    // Funcion que deshabilita el input "rut", cuando es un extranjero.
     $('#foreign').click(function() {
         $('#rut').val('');
         if($('#rut').attr('disabled')){
             $('#rut').attr('disabled', false);
-            $('#rut').css('background-color', '#FFFFFF');
             $("#rut").parent("label").find("span").text('Rut');
         }else{
             $('#rut').attr('disabled', true);
-            $('#rut').css('background-color', '#FFFADC');
             $("#rut").parent("label").find("span").text('');
             }
     });
 });
-    function cargarComunas(idRegion){
     
-        $.ajax({
-            method: 'POST' ,
-            url: <?php echo "'" . url_for('main/getComunas') . "'"; ?>,
-            data: 'idRegion=' + idRegion,
-            success: function(data){
-                $('#commune').html(data);
-            }
-        });
-    }
+    $("#region").change(function(){
+
+        var regionId = $(this).val();
+
+        $("#commune").attr("disabled", true);
+
+        if (regionId > 0) {
+            $.post("<?php echo url_for('main/getCommunes') ?>", {"regionId": regionId}, function(r){
+
+                if (r.error) {
+                    console.log(r.errorMessage);
+                } else {
+
+                    var html = "<option selected value='0'>Selecciona tu comuna</option>";
+
+                    $.each(r.communes, function(k, v){
+                        html += "<option value='"+v.id+"'>"+v.name+"</option>";
+                    });
+
+                    $("#commune").html(html);
+                }
+
+                $("#commune").removeAttr("disabled");
+
+            }, 'json');
+        }
+    });
 
     function validateForm() {
 
         var firstname      = $("#firstname").val();
         var lastname       = $("#lastname").val();
-        var motherLastname = $("#motherLastname").val();
         var email          = $("#email").val();
         var emailAgain     = $("#emailAgain").val();
-        var rut            = $("#rut").val();
         var password       = $("#password").val();
-        var foreign        = $("#foreign option:selected").val();
-        var telephone      = $("#telephone").val();
-        var birth          = $("#birth").val();
-        var address        = $("#address").val();
-        var commune        = $("#commune option:selected").val();
-        var region         = $("#region option:selected").val();
 
-        $.post("<?php echo url_for('main/doRegister') ?>", {"firstname": firstname, "lastname": lastname, "motherLastname": motherLastname, "email": email, "emailAgain": emailAgain, "rut": rut, "password": password, "foreign": foreign, "telephone": telephone, "birth": birth, "address": address, "commune": commune, "region": region}, function(r){
+        $.post("<?php echo url_for('main/doRegister') ?>", {"firstname": firstname, "lastname": lastname, "email": email, "emailAgain": emailAgain, "password": password}, function(r){
 
             $(".alert").removeClass("alert-a-danger");
             $(".alert").removeClass("alert-a-success");
@@ -138,12 +91,12 @@ $(document).ready(function() {
                 $(".alert").addClass("alert-a-danger");
                 $(".alert").html(r.errorMessage);
             } else {
-                $(".alert").addClass("alert-a-success");
-                $(".alert").html("Cambios guardados satisfactoriamente");
+                window.location.href = r.url_complete;
             }
 
         }, 'json');
     }
+
 
     $('.datetimepicker').datetimepicker({
         dayOfWeekStart: 1,
@@ -161,4 +114,23 @@ $(document).ready(function() {
         timepicker: false,
         format:'d-m-Y'
     });
+
+    function postAndRedirect(url, postData) {
+        var postFormStr = "<form method='POST' action='" + url + "'>\n";
+
+        for (var key in postData)
+        {
+            if (postData.hasOwnProperty(key))
+            {
+                postFormStr += "<input type='hidden' name='" + key + "' value='" + postData[key] + "'></input>";
+            }
+        }
+
+        postFormStr += "</form>";
+
+        var formElement = $(postFormStr);
+
+        $('body').append(formElement);
+        $(formElement).submit();
+    }
 </script>

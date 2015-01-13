@@ -3,11 +3,11 @@ body {
 }
 
 h1 {
-    text-align: center;
     color: rgb(70, 70, 70);
     font-weight: 300;
     margin: 0 0 20px 0;
     padding: 0;
+    text-align: center;
 }
 
 h2 {
@@ -33,4 +33,21 @@ input, select, button {
 @media only screen and (max-width:767px) {
 
 
+}
+
+.btn-a-action {
+    background: #00aced;
+    border: 2px solid #00accb;
+    border-radius: 0;
+    color: #fff;
+    font: 300 17px/19px 'Open Sans', sans-serif;
+    padding: 5px 10px;
+    text-align: center;
+    text-transform: uppercase !important;
+    vertical-align: middle;
+}
+
+.final-ask {
+    color: rgb(70, 70, 70);
+    font-size:20px;
 }

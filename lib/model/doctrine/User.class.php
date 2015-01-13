@@ -1613,4 +1613,42 @@ class User extends BaseUser {
     }
     
 
+    public function getSignature() {
+
+        return md5("Arriendas ~ ".$this->fecha_registro);
+    }
+
+    public static function emailExist($email) {
+
+        $m = Doctrine_Core::getTable("user")->findOneByEmail($email);
+        
+        if($m){
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function rutExist($rut) {
+
+        $m = Doctrine_Core::getTable("user")->findOneByRut($rut);
+        
+        if($m){
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function userExist($id) {
+
+        $m = Doctrine_Core::getTable("user")->findOneById($id);
+        
+        if($m){
+            error_log("EXISTE");
+            return true;
+        }
+
+        return false;
+    }
 }
