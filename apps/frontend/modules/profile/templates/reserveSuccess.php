@@ -657,6 +657,7 @@
             },
             format:'D d/m/Y H:i',
             timepicker: true,
+            validateOnBlur: false,
             onSelectDate: function() {
             
                 var desde = "Hasta: ";

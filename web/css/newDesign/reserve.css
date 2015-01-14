@@ -53,6 +53,9 @@
     font-style: italic;
 }
 
+#gallery ul{
+    list-style: none;
+}
 .text-capitalize{
     font-size: 31px;
     line-height: 40px;

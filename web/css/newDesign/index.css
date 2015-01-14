@@ -143,16 +143,19 @@ header .navbar-default {
 
 #section-map{
     position: relative;
+    -webkit-box-shadow: 2px 2px 20px rgba(50, 50, 50, 0.5); 
+    -moz-box-shadow: 2px 2px 20px rgba(50, 50, 50, 0.5);
+    box-shadow: 2px 2px 20px rgba(50, 50, 50, 0.5);
 }
 
-#section-map:before{
+/*#section-map:before{
     content: "";
     bottom: -11px;
     position: absolute;
     background: url(/images/newDesign/border-tabs.png) repeat-x 50% 0;
     width: 100%;
     height: 22px;
-}
+}*/
 
 #section-map-filters ul {
     margin-top: 4px;
