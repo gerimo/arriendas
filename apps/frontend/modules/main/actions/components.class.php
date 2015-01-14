@@ -1,7 +1,7 @@
 <?php
 
-class mainComponents extends sfComponents {
-	
-	public function executeTerminosycondiciones() {}
-}
+    class mainComponents extends sfComponents {
+        
+        public function executeTerminosycondiciones() {}
+    }
 ?>

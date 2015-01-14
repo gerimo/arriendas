@@ -12,7 +12,7 @@
 
             <div class="col-md-5 text-center">
 
-                <div class="hidden-xs space-50"></div>
+                <div class="hidden-xs space-10"></div>
                 <div class="regis_foto_frame">
 
                     <div id="previewmain" style="width: 100%">
@@ -30,7 +30,7 @@
                     <a id="linkmain" href=""><i class="fa fa-edit"></i> editar</a>
                 </div>
 
-                <div class="hidden-xs space-50"></div>
+                <div class="hidden-xs space-70"></div>
                 <div class="visible-xs space-30"></div>
                 <div class="regis_foto_frame">
                     <div id="previewlicence">
@@ -46,8 +46,6 @@
             </div>
 
             <div class="col-md-6">
-
-                <h2>Información personal</h2>
 
                 <?php if ($sf_user->getFlash('show')): ?>
                     <div style="border:1px solid #FF0000; background: #fcdfff;  width:360px; display:table;margin-bottom:20px; padding:20px;font-size:14px;">
@@ -69,11 +67,11 @@
                 <?php endif ?>
 
                 <div class="form-inline clearfix">
-                    <input class="form-control" id="run" name="run" placeholder="RUT" value="<?php if ($user->getRut()) echo $user->getRut() ?>" type="text">
-                    <select class="form-control pull-right" name="foreign" id="foreign">
+                    <select class="form-control" name="foreign" id="foreign">
                         <option value="0" <?php echo $user->getExtranjero() == 0 ? "selected" : ""; ?> >Chileno</option>
                         <option value="1" <?php echo $user->getExtranjero() == 1 ? "selected" : ""; ?> >Extranjero</option>
                     </select>
+                    <input class="form-control" id="run" name="run" placeholder="RUT" value="<?php if ($user->getRut()) echo $user->getRut() ?>" type="text">
                 </div>
 
                 <input class="form-control" name="telephone" id="telephone" placeholder="Teléfono" value="<?php if ($user->getTelephone()) echo $user->getTelephone() ?>" title="Celular" type="text">

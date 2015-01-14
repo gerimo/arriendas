@@ -1,0 +1,21 @@
+
+body {
+	background-image: url('/images/newDesign/background.jpg');
+}
+
+input, select, button, .alert {
+    margin-top: 15px;
+}
+
+h2 {
+	font-family: 'roboto';
+	text-align: center;;
+    color: rgb(70, 70, 70);
+    font-weight: 300;
+    margin: 0 0 20px 0;
+    padding: 0;
+}
+
+table{
+	font-family: 'roboto';
+}

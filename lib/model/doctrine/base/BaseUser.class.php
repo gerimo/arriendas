@@ -91,6 +91,7 @@
  * @method Doctrine_Collection getMessage()               Returns the current record's "Message" collection
  * @method Doctrine_Collection getReserves()              Returns the current record's "Reserves" collection
  * @method Doctrine_Collection getTransactions()          Returns the current record's "Transactions" collection
+ * @method timestamp           getFechaRegistro()         Returns the current record's "fecha_registro" value
  *
  * @method User                setId()                    Sets the current record's "id" value
  * @method User                setUsername()              Sets the current record's "username" value

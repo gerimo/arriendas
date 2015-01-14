@@ -11,7 +11,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="<?php echo url_for('main/index') ?>"><img alt="Arriendas.cl" src="/images/newDesign/logoIndex.svg" height="19" width="123"></a>
+                <a class="navbar-brand" href="<?php echo url_for('homepage') ?>"><img alt="Arriendas.cl" src="/images/newDesign/logoIndex.svg" height="19" width="123"></a>
             </div>
 
             <div class="collapse navbar-collapse" id="header">
@@ -19,10 +19,10 @@
                 <ul class="nav navbar-nav">
 
                     <?php if ($sf_user->isAuthenticated()): ?>
-                        <li><a href="<?php echo url_for("main/index") ?>">Inicio</a></li>
-                        <li><a href="<?php echo url_for("profile/cars") ?>">Mis autos</a></li>
-                        <li><a href="<?php echo url_for("profile/oportunidades") ?>">Oportunidades</a></li>
-                        <li><a href="<?php echo url_for("profile/reserves") ?>">Reservas</a></li>
+                        <li><a href="<?php echo url_for("homepage") ?>" data-target="homepage">Inicio</a></li>
+                        <li><a href="<?php echo url_for("profile/cars") ?>" data-target="cars">Mis autos</a></li>
+                        <li><a href="<?php echo url_for("opportunities") ?>" data-target="opportunities">Oportunidades</a></li>
+                        <li><a href="<?php echo url_for("reserves") ?>" data-target="reserves">Reservas</a></li>
                     <?php else: ?>
                         <li><a class="animate" data-target="#section-map-form-search" href="">Buscar autos</a></li>
                         <li><a class="animate" data-target="#section-how-works" href="">¿Cómo funciona?</a></li>
@@ -37,12 +37,12 @@
                 <ul class="nav navbar-nav navbar-right">
                     <?php if ($sf_user->isAuthenticated()): ?>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><img src="<?php echo $sf_user->getAttribute('picture_file') ?>"> <?php echo $sf_user->getAttribute('firstname') ?> <span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><!--<img src="<?php echo $sf_user->getAttribute('picture_file') ?>">--> <?php echo $sf_user->getAttribute('firstname') ?> <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="<?php echo url_for('profile/edit') ?>">Mi perfil</a></li>
                                 <li><a href="<?php echo url_for('profile/changePassword') ?>">Seguridad</a></li>
                                 <li class="divider"></li>
-                                <li><a href="<?php echo url_for('main/logout') ?>">Salir</a></li>
+                                <li><a href="<?php echo url_for('logout') ?>">Salir</a></li>
                             </ul>
                         </li>
                     <?php else: ?>                        

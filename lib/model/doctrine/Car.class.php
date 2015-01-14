@@ -10,8 +10,110 @@
  * @author     Your name here
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
  */
-class Car extends BaseCar
-{
+class Car extends BaseCar {
+
+    public function getCurrentCarAvailabilityEmails() {
+
+        $q = Doctrine_Core::getTable("CarAvailabilityEmail")
+            ->createQuery('CAE')
+            ->where('CAE.car_id = ?', $this->getId())
+            ->andWhere("NOW() > CAE.sent_at")
+            ->andWhere("NOW() < CAE.ended_at")
+            ->andWhere("CAE.checked_at IS NOT NULL");
+
+        return $q->execute();
+    }
+
+    public function getOpportunities() {
+
+        $maxDistance = 4;
+        $maxOpportunitiesAllowed = 5;
+        $Opportunities = array();
+
+        // Obtención de reservas que cuenten con las características
+        $q = Doctrine_Core::getTable("Reserve")
+            ->createQuery('R')
+            ->innerJoin('R.Car C')
+            ->innerJoin('C.Model M')
+            ->where('R.user_id != ?', $this->getUser()->getId())
+            ->andWhere('R.confirmed = 0')
+            ->andWhere('R.reserva_original = 0')
+            ->andWhere('R.date >= NOW()')
+            ->andWhere('R.impulsive = 1')
+            ->andWhere('C.transmission = ?', $this->transmission)
+            /*->andWhere('distancia(C.lat, C.lng, ?, ?) < ?', array($this->lat, $this->lng, $maxDistance))*/
+            ->addOrderBy('R.date ASC');
+        
+        if ($this->getModel()->getIdOtroTipoVehiculo() == 1) {
+            $q->andWhere('M.id_otro_tipo_vehiculo IN (1,2)');
+        } else {
+            $q->andWhere('M.id_otro_tipo_vehiculo = ?', $this->getModel()->getIdOtroTipoVehiculo());
+        }
+
+        $Reserves = $q->execute();
+
+        // Revisamos que las reservas no tengan ya el máximo de oportunidades permitidas y
+        // Revisamos que el auto no tenga ya una reserva confirmada en la fecha de la oportunidad
+        foreach ($Reserves as $Reserve) {
+
+            if (count($Reserve->getOpportunities(false)) < $maxOpportunitiesAllowed && 
+                !$this->hasReserve($Reserve->getFechaInicio2(), $Reserve->getFechaTermino2())) {
+
+                $Opportunities[] = $Reserve;
+            }
+        }
+
+        return $Opportunities;
+    }
+
+    // Métodos estáticos
+
+    public static function getPrice($from, $to, $pricePerHour, $pricePerDay, $pricePerWeek, $pricePerMonth) {
+
+        $from = date("Y-m-d H:i:s", strtotime($from));
+        $to   = date("Y-m-d H:i:s", strtotime($to));
+
+        $duration = Utils::calculateDuration($from, $to);
+        $days     = floor($duration / 24);
+        $hours    = $duration % 24;
+
+        if ($hours >= 6) {
+            $days = $days + 1;
+            $hours = 0;
+        } else {
+            $hours = round($hours * 24, 0);
+        }
+
+        if ($days >= 7 && $pricePerWeek > 0) {
+            $pricePerDay = $pricePerWeek / 7;
+        }
+
+        if ($days >= 30 && $pricePerMonth > 0) {
+            $pricePerDay = $pricePerMonth / 30;
+        }
+        
+        return floor($pricePerDay * $days + $pricePerHour * $hours);
+    }
+
+    public static function getReviews($id) {
+
+        $q = Doctrine_Query::create()
+            ->select("R.opinion_about_owner AS opinion, U.picture_file AS picture")
+            ->from("Car C")
+            ->innerJoin("Rating R ON R.IdOwner = C.user_id")
+            ->innerJoin("User U ON U.id = R.IdRenter")
+            ->where("C.id = ?", $id);
+
+            /*"SELECT R.opinion_about_owner AS opinion, U.picture_file AS picture
+            FROM Car C
+            INNER JOIN Rating R ON R.IdOwner = C.user_id
+            INNER JOIN User U ON R.IdRenter = U.id
+            WHERE C.id = ".$id;*/
+
+        return $q->execute()->toArray();
+    }
+
+/////////////////////////////////////////////////////////
  
   //TODO
   public function ingresarCalificacion($idUsuario, $recomienda, $comentarioRecomienda, $desperfecto, $comentarioDesperfecto,
@@ -301,59 +403,4 @@ where c.id=
 
     return $ret;
   }
-
-    public function getCurrentCarAvailabilityEmails() {
-
-        $q = Doctrine_Core::getTable("CarAvailabilityEmail")
-            ->createQuery('CAE')
-            ->where('CAE.car_id = ?', $this->getId())
-            ->andWhere("NOW() > CAE.sent_at")
-            ->andWhere("NOW() < CAE.ended_at")
-            ->andWhere("CAE.checked_at IS NOT NULL");
-
-        return $q->execute();
-    }
-
-    public static function getPrice($from, $to, $pricePerHour, $pricePerDay, $pricePerWeek, $pricePerMonth) {
-
-        $duration = floor((strtotime($to) - strtotime($from))/3600);
-
-        $days = floor($duration / 24);
-        $hours = ($duration / 24) - $days;
-
-        if ($hours >= 0.25) {
-            $days = $days + 1;
-            $hours = 0;
-        } else {
-            $hours = round($hours * 24, 0);
-        }
-
-        if ($days >= 7 && $pricePerWeek > 0) {
-            $pricePerDay = $pricePerWeek / 7;
-        }
-
-        if ($days >= 30 && $pricePerMonth > 0) {
-            $pricePerDay = $pricePerMonth / 30;
-        }
-        
-        return floor($pricePerDay * $days + $pricePerHour * $hours);
-    }
-
-    public static function getReviews($id) {
-
-        $q = Doctrine_Query::create()
-            ->select("R.opinion_about_owner AS opinion, U.picture_file AS picture")
-            ->from("Car C")
-            ->innerJoin("Rating R ON R.IdOwner = C.user_id")
-            ->innerJoin("User U ON U.id = R.IdRenter")
-            ->where("C.id = ?", $id);
-
-            /*"SELECT R.opinion_about_owner AS opinion, U.picture_file AS picture
-            FROM Car C
-            INNER JOIN Rating R ON R.IdOwner = C.user_id
-            INNER JOIN User U ON R.IdRenter = U.id
-            WHERE C.id = ".$id;*/
-
-        return $q->execute()->toArray();
-    }
 }

@@ -203,6 +203,9 @@ Car:
       type: boolean
       notnull: true
       default: 1
+    disabled_until:
+      type: timestamp
+      default: null  
     verification_id:
       type: integer(11)
     fecha_subida:
@@ -945,6 +948,9 @@ Transaction:
       default: null
     numero_factura:
       type: integer(7)
+    selected:
+      type: boolean
+      default: false
   relations:
     User:
       class: User

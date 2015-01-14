@@ -25,6 +25,7 @@
  * @property Reserve $Reserve
  * @property string $codpagocompra
  * @property integer $metodo_id
+ * @property boolean $selected
  * 
  * @method integer         getId()                 Returns the current record's "id" value
  * @method string          getCar()                Returns the current record's "car" value
@@ -46,6 +47,7 @@
  * @method boolean         getImpulsive()          Returns the current record's "impulsive" value
  * @method integer         getTransaccionOriginal()      Returns the current record's "transaccion_original" value
  * @method integer         getNumeroFactura()      Returns the current record's "numero_factura" value
+ * @method boolean         getSelected()           Returns the current record's "selected" value
  * 
  * @method Transaction     setId()                 Sets the current record's "id" value
  * @method Transaction     setCar()                Sets the current record's "car" value
@@ -67,6 +69,7 @@
  * @method Transaction     setImpulsive()          Sets the current record's "impulsive" value
  * @method integer         setTransaccionOriginal()      Sets the current record's "transaccion_original" value
  * @method integer         setNumeroFactura()      Sets the current record's "numero_factura" value
+ * @method boolean         setSelected()           Sets the current record's "selected" value
  * 
  * @package    CarSharing
  * @subpackage model
@@ -199,6 +202,11 @@ abstract class BaseTransaction extends sfDoctrineRecord
             'length' => 11,
             'default' => 'null',
             ));
+        $this->hasColumn('selected', 'boolean', null, array(
+            'type' => 'boolean',
+            'default' => false,
+            ));
+
         $this->option('charset', 'utf8');
         $this->option('type', 'InnoDB');
     }

@@ -41,13 +41,14 @@ class khipuActions extends sfActions {
 
             $url = $khipuService->createPaymentURL($data)->url;
         } catch (Execption $e) {
-            /*Utils::reportError($e->getMessage(), "khipu/generatePayment");*/
+            Utils::reportError($e->getMessage(), "khipu/generatePayment");
         }
 
         $this->redirect($url);
     }
 
     /////////////////////////////////////////////////////////////////
+    
     public function executeConfirmPayment(sfWebRequest $request) {
 
         $this->carMarcaModel = urldecode($request->getParameter("carMarcaModel"));
@@ -174,6 +175,7 @@ class khipuActions extends sfActions {
         $response = $khipuService->notificationValidation($data);
 
         if ($response == 'VERIFIED' && $data["receiver_id"] == $settings["receiver_id"]) {
+            
             /* Los parametros son correctos, ahora falta verificar que transacion_id, custom, subject y amount correspondan al pedido */
             $this->_log("NotifyPayment", "INFO", "cobro verificado");
             $this->_log("NotifyPayment", "INFO", "respuesta: ".  serialize($response));
@@ -199,7 +201,6 @@ class khipuActions extends sfActions {
                     ->andwhere('r.id <> ?', $reserve->getId())
                     ->andwhere('? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR ? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR r.date BETWEEN ? AND ? OR DATE_ADD(r.date, INTERVAL r.duration HOUR) BETWEEN ? AND ?', $rangeDates)
                     ->execute();
-
 
             $opcionLiberacion = $reserve->getLiberadoDeGarantia();
             if ($opcionLiberacion == 0) {
@@ -366,7 +367,9 @@ class khipuActions extends sfActions {
     }
 
     public function executePaymentInformation(sfWebRequest $request) {
+
         $customer_in_session = $this->getUser()->getAttribute('userid');
+        
         if ($customer_in_session) {
 
             $settings = $this->getSettings();
@@ -405,7 +408,9 @@ class khipuActions extends sfActions {
     }
 
     public function executeProcessPayment(sfWebRequest $request) {
+
         $customer_in_session = $this->getUser()->getAttribute('userid');
+
         if ($customer_in_session) {
 
             $khipuTransaction = $this->getUser()->getAttribute("khipu-transaction");

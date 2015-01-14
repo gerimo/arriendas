@@ -94,7 +94,7 @@ EOF;
                             $Car = $OpportunityReserve->getCar();
 
                             // El auto se considera sólo si no está ya tomado por otra reserva
-                            if (!$Car->hasReserve($OpportunityReserve->getInicio(), $OpportunityReserve->getTermino())) {
+                            if (!$Car->hasReserve($OpportunityReserve->getFechaInicio2(), $OpportunityReserve->getFechaTermino2())) {
 
                                 // OJO. se considera sólo el precio por hora. averiguar como considerar el precio por día
                                 $moreSaving[$OpportunityReserve->getId()] = ($Car->getPricePerHour() * $OpportunityReserve->getDuration()) - $OpportunityReserve->getPrice();

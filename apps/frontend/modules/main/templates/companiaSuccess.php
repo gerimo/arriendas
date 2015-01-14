@@ -1,69 +1,55 @@
-<style type="text/css">
-#Fondo{
-    margin: 0 auto;
-    width: 920px;
-}
-#subFondo{
-    background-color: white;
-    float: left;
-    width: 920px;
-    padding: 20px;
-    height: auto ! important;
-    min-height: 200px;
-    -webkit-box-shadow: 1px 1px 10px rgba(50, 50, 50, 0.4);
-    -moz-box-shadow: 1px 1px 10px rgba(50, 50, 50, 0.4);
-    box-shadow: 1px 1px 10px rgba(50, 50, 50, 0.4);
-    padding-bottom: 40px;
-}
-#Enunciado{
-    float: left;
-    width: 800px;
-    text-align: center;
-    font-size: 17px;
-    margin-left: 50px;
-    font-style: italic;
-    line-height: 20px;
-    margin-top: 16px;
-}
+<link href="/css/newDesign/compania.css" rel="stylesheet" type="text/css">
 
-p.textoPie{
-    float: left;
-    text-align: left;
-    margin-top: 20px;
-}
+<div class="hidden-xs space-100"></div>
+<div class="visible-xs space-50"></div>
+<div class="row">
+    <div class="col-md-offset-2 col-md-8">
+        <div class="BCW">
+        	<h1>Sobre Arriendas.cl</h1>
+        	<p class="text-center Enunciado "> 
+        		<em>Creemos en el valor de compartir y en poder acceder a un auto sin la necesidad de comprarlo.<br><br>
+            	Nuestra visión es convertirnos en la primera alternativa a la compra de un auto para todos los usuarios.<br><br>
+            	Para los dueños de autos <i>Arriendas.cl</i> es una verdadera alternativa para gestionar tu propio negocio y armar un equipo.<br><br>
+            	¡Empieza tu propio negocio hoy!<br><br></em>
+        	</p>
+        	
+             <div class="row">
+                <div class="col-md-offset-0 col-md-10" style="margin-top: 16px;">
+                    <div class="col-md-offset-5 "> <h2 class="title">Nuestros Partners</h2></div>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 15px;">
+                <div class="col-md-offset-2 col-md-9">
+                    <div id="section-on-partners-carousel">
+                         <div class="normal"><a href="#"><img src="/images/newDesign/bci-seguros.png"  alt="bci-seguros"></a></div> 
+                         <div class="normal"><a href="#"><img src="/images/newDesign/wayra1.png" alt="wayra"></a></div> 
+                         <div class="normal"><a href="#"><img src="/images/newDesign/telefonica1.png" alt="telefonica"></a></div> 
+                         <div class="normal"><a href="#"><img src="/images/newDesign/Startupchile.png" alt="Startupchile" style="height: 48px;"></a></div>
+                         <div class="normal"><a href="#"><img src="/images/newDesign/australincuba.png" alt="austral-incuba"></a></div>           
+                    </div>
+                </div>
+            </div>                                              
+             
+        	<div class="row">
+	        	<p class="direccion text-center col-md-offset-3 col-md-6">
+		            <b>Visítanos en cualquier momento:</b>
+					<br><em>Manuel Montt 1404 (Piso 3)<br>Providencia, Santiago</em>
+				</p>
+			</div>
 
-iframe[name='google_conversion_frame'] { 
-    height: 0 !important;
-    width: 0 !important; 
-    line-height: 0 !important; 
-    font-size: 0 !important;
-    margin-top: -13px;
-    float: left;
-}
-
-</style>
-
-<div id="Fondo">
-    <div id="subFondo">
-        <div id="Enunciado">
-            <b>Sobre Arriendas.cl</b><br><br>
-            <p style="margin-top:20px;">Creemos en el valor de compartir y en poder acceder a un auto sin la necesidad de comprarlo.<br><br>
-            Nuestra visión es convertirnos en la primera alternativa a la compra de un auto para todos los usuarios.<br><br>
-            Para los dueños de autos Arriendas.cl es una verdadera alternativa para gestionar tu propio negocio y armar un equipo.<br><br>
-            ¡Empieza tu propio negocio hoy!<br><br>
-            <p class="textoPie">
-            <b style="margin-bottom:0px;float: left;">Visítanos en cualquier momento:</b>
-			<br>Providencia 229 (entrada por Perez Espinoza)<br>Providencia, Santiago
-			</p>
-			
-			<p class="textoPie" style="
-    float: right;
-">
-<b style="margin-bottom:0px;float: left;">Socios estratégicos:</b>
-<br><?php echo image_tag("austral_incuba.png"); ?>
-</p>
-            </p>
         </div>
-    <br /><br />
     </div>
-</div> 
+</div>
+<div class="hidden-xs space-100"></div>
+
+<script >
+    $(document).ready(function(){
+        $('#section-on-partners-carousel').slick({
+            //autoplay: true,
+            arrows: true,
+            slidesToShow: 4,
+            slidesToScroll: 4,
+            lazyLoad: 'ondemand'
+        });
+    });
+</script>

@@ -1,7 +1,7 @@
 <?php
 
-class Functions
-{
+class Functions {
+    
     public function generarContrato($tokenReserva) {
     //Obtenemos el ID de la reserva
 //    $idReserva=  $request->getParameter("idReserva");
@@ -1197,11 +1197,12 @@ p{
         $first_day = date('Ym01');
         $actual_day = date('j');
         $day_15 = date('Ymd', strtotime($first_day. ' + 14 days'));
-        if($actual_day <= 15){
+
+        if ($actual_day <= 15) {
             // primera quincena
             $quincena_from = $first_day;
             $quincena_to = $day_15;
-        }else{
+        } else {
             // segunda quincena
             $quincena_from = $day_15;
             $quincena_to = date('Ymt', strtotime($quincena_from));  //t returns the number of days in the month of a given date
@@ -1223,31 +1224,29 @@ p{
         $conn->beginTransaction();
         
         $nro_fac_transaction = 0;
-        if($cant_transac > 0)
-        {
+        if($cant_transac > 0) {
             // hay factura generada durante quincena actual, asigno mismo nro.
             $trans = $trans_query->fetchOne();
             $nro_fac_transaction = $trans->getNumeroFactura();
             $order->setNumeroFactura($nro_fac_transaction);
-        }else{                    
+        } else {
             // no hay factura generada durante quincena actual, asigno el siguiente nro.
             // (debo obtener el mayor nro. asignado desde ambas tablas)
-            try{
+            try {
                 $nro_fac_transaction = $this->getNextNumeroFactura();
-
 		        $order->setNumeroFactura($nro_fac_transaction);
-
             } catch (Exception $ex) {
                 echo $ex->getMessage();
             }
         }
+
         $order->save();
         
         $montoLiberacion = $reserve->getMontoLiberacion();
         $montoGarantia = sfConfig::get('app_monto_garantia');
-        if($montoLiberacion != $montoGarantia)
-        {
-            $nro_fac_reserve = $cant_transac > 0? $this->getNextNumeroFactura() : $nro_fac_transaction + 1;
+
+        if ($montoLiberacion != $montoGarantia) {
+            $nro_fac_reserve = $cant_transac > 0 ? $this->getNextNumeroFactura() : $nro_fac_transaction + 1;
             $reserve->setNumeroFactura($nro_fac_reserve);
             $reserve->save();
         }                    
@@ -1268,7 +1267,8 @@ p{
         $query2 = Doctrine_Query::create()->query($qr);
         $res = $query2->toArray();
 
-        $next_numero = ($trans[0]['nro_fac'] > $res[0]['nro_fac']? $trans[0]['nro_fac'] : $res[0]['nro_fac']) + 1;
+        $next_numero = ($trans[0]['nro_fac'] > $res[0]['nro_fac'] ? $trans[0]['nro_fac'] : $res[0]['nro_fac']) + 1;
+
         return $next_numero;
     }
 
