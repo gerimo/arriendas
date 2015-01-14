@@ -58,6 +58,14 @@
                     <label class="radio">
                         <input type="radio" name="como" value="facebook" />Por Facebook
                     </label>
+
+                    <label class="radio">
+                        <input type="radio" name="como" value="google" />Por un amigo
+                    </label>
+
+                    <label class="radio">
+                        <input type="radio" id="another" name="como" value="otro" />Otro
+                    </label>
                 </div>
             </div>
 
@@ -101,7 +109,7 @@
             $("#rut").parent("label").find("span").text('Rut');
         }
     });
-    
+
     $("#region").change(function(){
 
         var regionId = $(this).val();

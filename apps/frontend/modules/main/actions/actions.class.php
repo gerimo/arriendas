@@ -17,6 +17,230 @@ class mainActions extends sfActions {
         $this->Comunas = Doctrine_Core::getTable("Comunas")->findByPadre(13);
     }
 
+    public function executeCompleteRegister(sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+
+        //$userId = $request->getParameter('userId');
+        $userId_session = $this->getUser()->getAttribute("userid");
+        $User = Doctrine_Core::getTable('user')->find($userId_session);
+
+        if ((!is_null($User) && !$User->getConfirmed()) || $User->getConfirmedFb()) {
+            $this->Regions = Region::getRegionsByNaturalOrder();
+            $this->User = $User;
+        } else {
+            $this->redirect('main/index');
+        }
+    }
+
+    public function executeDoCompleteRegister(sfWebRequest $request) {
+        
+        $return = array("error" => false);
+
+        try {
+
+            //$motherLastname = $request->getPostParameter("motherLastname", null);
+            $como           = $request->getPostParameter("como", null);
+            $userId         = $request->getPostParameter("userId", null);
+            $rut            = $request->getPostParameter("rut", null);
+            $foreign        = $request->getPostParameter("foreign", null);
+            $telephone      = $request->getPostParameter("telephone", null);
+            $birth          = $request->getPostParameter("birth", null);
+            $address        = $request->getPostParameter("address", null);
+            $commune        = $request->getPostParameter("commune", null);
+            $region         = $request->getPostParameter("region", null);
+
+            if(!$foreign) {
+                if (is_null($rut) || $rut == "") {
+                    throw new Exception("Debes indicar tu RUT", 1);
+                }            
+            }
+            if (is_null($foreign) || $foreign == "") {
+                throw new Exception("Debes indicar tu nacionalidad", 1);
+            }
+            //borrar
+            if (is_null($userId) || $userId == "") {
+                throw new Exception("userId", 1);
+            }
+
+            if (is_null($telephone) || $telephone == "") {
+                throw new Exception("Debes indicar un teléfono", 1);
+            }
+
+            if (is_null($birth) || $birth == "") {
+                throw new Exception("Debes indicar tu fecha de nacimiento", 1);
+            }
+
+            if (is_null($address) || $address == "") {
+                throw new Exception("Debes indicar tu dirección", 1);
+            }
+
+            if (is_null($commune) || $commune == "") {
+                throw new Exception("Debes indicar tu comuna", 1);
+            }
+
+            if (is_null($region) || $region == "") {
+                throw new Exception("Debes indicar tu región", 1);
+            }
+            if(!$foreign) {
+                if (!Utils::validateRUT($rut)) {
+                    throw new Exception("el rut ingresado es inválido", 1);
+                } else {
+                    if(User::rutExist($rut)) {
+                        throw new Exception("el rut ingresado ya se encuentra registrado", 1);
+                    }
+                }
+            }
+
+            if (is_null($como) || $como == "") {
+                throw new Exception("Debes indicar como conociste Arriendas.cl", 1);
+            }
+
+
+            $User = Doctrine_Core::getTable('user')->find($userId);
+                $User->setComo($como);
+                $User->setRut($rut);
+                $User->setExtranjero($foreign);
+                $User->setTelephone($telephone);
+                $User->setBirthdate($birth);
+                $User->setAddress($address);
+                $User->setComuna($commune);
+                $User->setRegion($Region);
+                $User->setConfirmed(true);
+            
+            // Chequeo Judicial
+            if(!$foreign){
+                $basePath = sfConfig::get('sf_root_dir');
+                $userid = $User->getId();
+                $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$rut.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
+                exec($comando);
+            }
+
+            $finish_message = "Felicitaciones!<br><br>Tu cuenta a sido activada, ahora puede ingresar con su nombre de usuario y contrase&ntilde;a. <br><br><b>¿Qué quieres hacer ahora?</b>";
+            $return["message"] = $finish_message;
+            $User->save();
+
+            // Login automático
+            $this->getUser()->setFlash('msg', 'Autenticado');
+            $this->getUser()->setAuthenticated(true);
+            $this->getUser()->setAttribute("logged", true);
+            $this->getUser()->setAttribute("userid", $User->getId());
+            $this->getUser()->setAttribute("firstname", $User->getFirstName());
+            $this->getUser()->setAttribute("name", current(explode(' ' , $User->getFirstName())) . " " . substr($User->getLastName(), 0, 1) . '.');
+            $this->getUser()->setAttribute("email", $User->getEmail());
+
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorCode"] = $e->getCode();
+            $return["errorMessage"] = $e->getMessage();
+        }
+        $this->renderText(json_encode($return));
+        return sfView::NONE;
+    }
+
+    public function executeDoRegister(sfWebRequest $request) {//echo $request->getParameter('foreign');die;ex$return = array("error" => false);
+
+        $return = array("error" => false);
+
+        try {
+
+            $firstname      = $request->getPostParameter("firstname", null);
+            $lastname       = $request->getPostParameter("lastname", null);
+            $email          = $request->getPostParameter("email", null);
+            $emailAgain     = $request->getPostParameter("emailAgain", null);
+            $password       = $request->getPostParameter("password", null);
+
+            if (is_null($firstname) || $firstname == "") {
+                throw new Exception("Debes indicar tu nombre", 1);
+            }
+
+            if (is_null($lastname) || $lastname == "") {
+                throw new Exception("Debes indicar tu apllellido paterno", 1);
+            }
+            if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+                throw new Exception("Debes ingresar un mail válido", 1);
+            }
+
+            if(!filter_var($emailAgain, FILTER_VALIDATE_EMAIL)){
+                throw new Exception("Debes ingresar un mail válido", 1);
+            }
+
+            if (is_null($email) || $email == "") {
+                throw new Exception("Debes indicar tu correo electrónico", 1);
+            }
+
+            if (is_null($emailAgain) || $emailAgain == "") {
+                throw new Exception("Debes confirmar tu correo electrónico", 1);
+            }
+
+             if ($email != $emailAgain ) {
+                throw new Exception("Los emails no coinciden", 1);
+            }
+            
+            if ($email == $emailAgain ) {
+                if (User::emailExist($email)) {
+                throw new Exception("El Email ya se encuantra registrado", 1);
+                }
+            }
+
+            $User = new User();
+
+            $User->setUsername($email);
+            $User->setFirstname($firstname);
+            $User->setLastname($lastname);
+            $User->setEmail($email);
+            $User->setPassword(md5($password));
+            $User->setHash(substr(md5($email), 0, 6));
+            $User->save();
+
+            $url = $this->generateUrl('user_register_complete');
+            $this->getUser()->setAttribute("userid", $User->getId());
+
+            $return["url_complete"] = $url;
+
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorCode"] = $e->getCode();
+            $return["errorMessage"] = $e->getMessage();
+        }
+
+        $this->renderText(json_encode($return));
+        return sfView::NONE;
+    }
+
+    public function executeGetCommunes(sfWebRequest $request) {//echo $request->getParameter('foreign');die;ex$return = array("error" => false);
+
+        $return = array("error" => false);
+
+        try {
+
+            $regionId = $request->getPostParameter("regionId", null);
+
+            if (is_null($regionId) || $regionId == "") {
+                throw new Exception("Falta región", 1);
+            }
+
+            $return["communes"] = Commune::getByRegion($regionId);
+
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorCode"] = $e->getCode();
+            $return["errorMessage"] = $e->getMessage();
+        }
+        
+        $this->renderText(json_encode($return));
+        
+        return sfView::NONE;
+    }
+
+    public function executeGetComunas(sfWebRequest $request) {
+        $this->setLayout(false);
+        $idRegion = $request->getParameter('idRegion');
+        if ($idRegion) {
+            $this->comunas = Doctrine::getTable('comunas')->findByPadre($idRegion);
+        }
+    }
+
     public function executeLogin (sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
@@ -212,6 +436,21 @@ class mainActions extends sfActions {
         return $this->redirect('homepage');
     }
 
+    public function executeRegister(sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+
+        $this->Regions = Region::getRegionsByNaturalOrder();
+
+        if (!isset($_SESSION['reg_back'])) {
+            $urlpage = split('/', $request->getReferer());
+
+            if ($urlpage[count($urlpage) - 1] != "register" && $urlpage[count($urlpage) - 1] != "doRegister") {
+                $_SESSION['reg_back'] = $request->getReferer();
+            }
+        }
+    }
+
     public function executeUploadLicense (sfWebRequest $request) {
     
         $return = array("error" => false);
@@ -271,340 +510,6 @@ class mainActions extends sfActions {
         return sfView::NONE;
     }
 
-    public function executeCompleteRegister(sfWebRequest $request) {
-
-        $this->setLayout("newIndexLayout");
-
-        //$userId = $request->getParameter('userId');
-        $userId_session = $this->getUser()->getAttribute("userid");
-        $User = Doctrine_Core::getTable('user')->find($userId_session);
-
-        if ((!is_null($User) && !$User->getConfirmed()) || $User->getConfirmedFb()) {
-            $this->Regions = Region::getRegionsByNaturalOrder();
-            $this->User = $User;
-        } else {
-            $this->redirect('main/index');
-        }
-    }
-
-    /*public function executeCompleteRegisterVerify(sfWebRequest $request) {
-        $return = array("error" => false);
-
-        try {
-
-            //$motherLastname = $request->getPostParameter("motherLastname", null);
-            $como           = $request->getPostParameter("como", null);
-            $userId         = $request->getPostParameter("userId", null);
-            $rut            = $request->getPostParameter("rut", null);
-            $foreign        = $request->getPostParameter("foreign", null);
-            $telephone      = $request->getPostParameter("telephone", null);
-            $birth          = $request->getPostParameter("birth", null);
-            $address        = $request->getPostParameter("address", null);
-            $commune        = $request->getPostParameter("commune", null);
-            $region         = $request->getPostParameter("region", null);
-
-            if(!$foreign) {
-                if (is_null($rut) || $rut == "") {
-                    throw new Exception("Debes indicar tu RUT", 1);
-                }            
-            }
-            if (is_null($foreign) || $foreign == "") {
-                throw new Exception("Debes indicar tu nacionalidad", 1);
-            }
-            //borrar
-            if (is_null($userId) || $userId == "") {
-                throw new Exception("userId", 1);
-            }
-
-            if (is_null($telephone) || $telephone == "") {
-                throw new Exception("Debes indicar un teléfono", 1);
-            }
-
-            if (is_null($birth) || $birth == "") {
-                throw new Exception("Debes indicar tu fecha de nacimiento", 1);
-            }
-
-            if (is_null($address) || $address == "") {
-                throw new Exception("Debes indicar tu dirección", 1);
-            }
-
-            if (is_null($commune) || $commune == "") {
-                throw new Exception("Debes indicar tu comuna", 1);
-            }
-
-            if (is_null($region) || $region == "") {
-                throw new Exception("Debes indicar tu región", 1);
-            }
-            if(!$foreign) {
-                if (!Utils::validateRUT($rut)) {
-                    throw new Exception("el rut ingresado es inválido", 1);
-                } else {
-                    if(User::rutExist($rut)) {
-                        throw new Exception("el rut ingresado ya se encuentra registrado", 1);
-                    }
-                }
-            }
-
-            if (is_null($como) || $como == "") {
-                throw new Exception("Debes indicar como conociste Arriendas.cl", 1);
-            }
-
-
-            $User = Doctrine_Core::getTable('user')->find($userId);
-                $User->setComo($como);
-                $User->setRut($rut);
-                $User->setExtranjero($foreign);
-                $User->setTelephone($telephone);
-                $User->setBirthdate($birth);
-                $User->setAddress($address);
-                $User->setComuna($commune);
-                $User->setRegion($Region);
-                $User->setConfirmed(true);
-            
-            // Chequeo Judicial
-            if(!$foreign){
-                $basePath = sfConfig::get('sf_root_dir');
-                $userid = $User->getId();
-                $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$rut.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
-                exec($comando);
-            }
-            $finish_message = "Felicitaciones!<br><br>Su cuenta a sido activada, ahora puede ingresar con su nombre de usuario y contrase&ntilde;a. <br><br><b>Que quieres hacer ahora?</b>";
-            $return["message"] = $finish_message;
-            $User->save();
-
-        } catch (Exception $e) {
-            $return["error"] = true;
-            $return["errorCode"] = $e->getCode();
-            $return["errorMessage"] = $e->getMessage();
-        }
-        $this->renderText(json_encode($return));
-        return sfView::NONE;
-    }*/
-
-    public function executeDoCompleteRegister(sfWebRequest $request) {
-        
-        $return = array("error" => false);
-
-        try {
-
-            //$motherLastname = $request->getPostParameter("motherLastname", null);
-            $como           = $request->getPostParameter("como", null);
-            $userId         = $request->getPostParameter("userId", null);
-            $rut            = $request->getPostParameter("rut", null);
-            $foreign        = $request->getPostParameter("foreign", null);
-            $telephone      = $request->getPostParameter("telephone", null);
-            $birth          = $request->getPostParameter("birth", null);
-            $address        = $request->getPostParameter("address", null);
-            $commune        = $request->getPostParameter("commune", null);
-            $region         = $request->getPostParameter("region", null);
-
-            if(!$foreign) {
-                if (is_null($rut) || $rut == "") {
-                    throw new Exception("Debes indicar tu RUT", 1);
-                }            
-            }
-            if (is_null($foreign) || $foreign == "") {
-                throw new Exception("Debes indicar tu nacionalidad", 1);
-            }
-            //borrar
-            if (is_null($userId) || $userId == "") {
-                throw new Exception("userId", 1);
-            }
-
-            if (is_null($telephone) || $telephone == "") {
-                throw new Exception("Debes indicar un teléfono", 1);
-            }
-
-            if (is_null($birth) || $birth == "") {
-                throw new Exception("Debes indicar tu fecha de nacimiento", 1);
-            }
-
-            if (is_null($address) || $address == "") {
-                throw new Exception("Debes indicar tu dirección", 1);
-            }
-
-            if (is_null($commune) || $commune == "") {
-                throw new Exception("Debes indicar tu comuna", 1);
-            }
-
-            if (is_null($region) || $region == "") {
-                throw new Exception("Debes indicar tu región", 1);
-            }
-            if(!$foreign) {
-                if (!Utils::validateRUT($rut)) {
-                    throw new Exception("el rut ingresado es inválido", 1);
-                } else {
-                    if(User::rutExist($rut)) {
-                        throw new Exception("el rut ingresado ya se encuentra registrado", 1);
-                    }
-                }
-            }
-
-            if (is_null($como) || $como == "") {
-                throw new Exception("Debes indicar como conociste Arriendas.cl", 1);
-            }
-
-
-            $User = Doctrine_Core::getTable('user')->find($userId);
-                $User->setComo($como);
-                $User->setRut($rut);
-                $User->setExtranjero($foreign);
-                $User->setTelephone($telephone);
-                $User->setBirthdate($birth);
-                $User->setAddress($address);
-                $User->setComuna($commune);
-                $User->setRegion($Region);
-                $User->setConfirmed(true);
-            
-            // Chequeo Judicial
-            if(!$foreign){
-                $basePath = sfConfig::get('sf_root_dir');
-                $userid = $User->getId();
-                $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$rut.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
-                exec($comando);
-            }
-
-            $finish_message = "Felicitaciones!<br><br>Su cuenta a sido activada, ahora puede ingresar con su nombre de usuario y contrase&ntilde;a. <br><br><b>Que quieres hacer ahora?</b>";
-            $return["message"] = $finish_message;
-            $User->save();
-
-            // Login automático
-            $this->getUser()->setFlash('msg', 'Autenticado');
-            $this->getUser()->setAuthenticated(true);
-            $this->getUser()->setAttribute("logged", true);
-            $this->getUser()->setAttribute("userid", $User->getId());
-            $this->getUser()->setAttribute("firstname", $User->getFirstName());
-            $this->getUser()->setAttribute("name", current(explode(' ' , $User->getFirstName())) . " " . substr($User->getLastName(), 0, 1) . '.');
-            $this->getUser()->setAttribute("email", $User->getEmail());
-
-        } catch (Exception $e) {
-            $return["error"] = true;
-            $return["errorCode"] = $e->getCode();
-            $return["errorMessage"] = $e->getMessage();
-        }
-        $this->renderText(json_encode($return));
-        return sfView::NONE;
-    }
-
-    public function executeDoRegister(sfWebRequest $request) {//echo $request->getParameter('foreign');die;ex$return = array("error" => false);
-
-        $return = array("error" => false);
-
-        try {
-
-            $firstname      = $request->getPostParameter("firstname", null);
-            $lastname       = $request->getPostParameter("lastname", null);
-            $email          = $request->getPostParameter("email", null);
-            $emailAgain     = $request->getPostParameter("emailAgain", null);
-            $password       = $request->getPostParameter("password", null);
-
-            if (is_null($firstname) || $firstname == "") {
-                throw new Exception("Debes indicar tu nombre", 1);
-            }
-
-            if (is_null($lastname) || $lastname == "") {
-                throw new Exception("Debes indicar tu apllellido paterno", 1);
-            }
-            if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-                throw new Exception("Debes ingresar un mail válido", 1);
-            }
-
-            if(!filter_var($emailAgain, FILTER_VALIDATE_EMAIL)){
-                throw new Exception("Debes ingresar un mail válido", 1);
-            }
-
-            if (is_null($email) || $email == "") {
-                throw new Exception("Debes indicar tu correo electrónico", 1);
-            }
-
-            if (is_null($emailAgain) || $emailAgain == "") {
-                throw new Exception("Debes confirmar tu correo electrónico", 1);
-            }
-
-             if ($email != $emailAgain ) {
-                throw new Exception("Los emails no coinciden", 1);
-            }
-            
-            if ($email == $emailAgain ) {
-                if (User::emailExist($email)) {
-                throw new Exception("El Email ya se encuantra registrado", 1);
-                }
-            }
-
-            $User = new User();
-
-            $User->setUsername($email);
-            $User->setFirstname($firstname);
-            $User->setLastname($lastname);
-            $User->setEmail($email);
-            $User->setPassword(md5($password));
-            $User->setHash(substr(md5($email), 0, 6));
-            $User->save();
-
-            $url = $this->generateUrl('user_register_complete');
-            $this->getUser()->setAttribute("userid", $User->getId());
-
-            $return["url_complete"] = $url;
-
-        } catch (Exception $e) {
-            $return["error"] = true;
-            $return["errorCode"] = $e->getCode();
-            $return["errorMessage"] = $e->getMessage();
-        }
-
-        $this->renderText(json_encode($return));
-        return sfView::NONE;
-    }
-
-    public function executeGetCommunes(sfWebRequest $request) {//echo $request->getParameter('foreign');die;ex$return = array("error" => false);
-
-        $return = array("error" => false);
-
-        try {
-
-            $regionId = $request->getPostParameter("regionId", null);
-
-            if (is_null($regionId) || $regionId == "") {
-                throw new Exception("Falta región", 1);
-            }
-
-            $return["communes"] = Commune::getByRegion($regionId);
-
-        } catch (Exception $e) {
-            $return["error"] = true;
-            $return["errorCode"] = $e->getCode();
-            $return["errorMessage"] = $e->getMessage();
-        }
-        
-        $this->renderText(json_encode($return));
-        
-        return sfView::NONE;
-    }
-
-    public function executeGetComunas(sfWebRequest $request) {
-        $this->setLayout(false);
-        $idRegion = $request->getParameter('idRegion');
-        if ($idRegion) {
-            $this->comunas = Doctrine::getTable('comunas')->findByPadre($idRegion);
-        }
-    }
-
-    public function executeRegister(sfWebRequest $request) {
-
-        $this->setLayout("newIndexLayout");
-
-        $this->Regions = Region::getRegionsByNaturalOrder();
-
-        if (!isset($_SESSION['reg_back'])) {
-            $urlpage = split('/', $request->getReferer());
-
-            if ($urlpage[count($urlpage) - 1] != "register" && $urlpage[count($urlpage) - 1] != "doRegister") {
-                $_SESSION['reg_back'] = $request->getReferer();
-            }
-        }
-
-    }
-	
 	/////////////////////////////////////////////////////////////////////////////
 
 public function executeArriendo(sfWebRequest $request){
