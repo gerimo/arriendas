@@ -44,13 +44,23 @@
             </ul>
         </div>
     </div>
-
+    
+    <?php if(date("H:i") > "19:00" || date("H:i") < "09:00"):
+            $telefono = "tel:0223333714";
+            $telefonoText = "(02) 2333-3714"; 
+          else:
+            $telefono = "tel:0226402900";
+            $telefonoText = "(02) 2 640 29 00";
+          endif;
+    ?>
+               
+    
     <div class="row">
         <div class="hidden-xs col-sm-12 col-md-12 text-center" id="address"> 
             <p class= "direccion">Manuel Montt 1404, Providencia, Santiago de Chile</p>
             <p>
-                <i class="fa fa-phone"></i> <a href="tel:0223333714">(02) 2333-3714</a> 
-                <i class="fa fa-support"></i> <a href="mailto:soporte@arriendas.cl">soporte@arriendas.cl</a>
+                <i class="fa fa-phone"></i> <a href="<?php echo $telefono?>"><?php echo $telefonoText?></a> 
+                <i class="fa fa-support"></i> <a href="mailto:soporte@arrienda<?php echo $telefonoText?>s.cl">soporte@arriendas.cl</a>
             </p>
         </div>
     </div>
@@ -64,8 +74,8 @@
     <div class="row">
         <div class="hidden-xs col-sm-12 col-md-12 text-center">
         <p>
-                <a class="fa fa-facebook fa-3x" href="#">facebook</a>
-                <a class="fa fa-twitter fa-3x" href="#">twitter</a>
+                <a class="fa fa-facebook fa-3x" href="https://www.facebook.com/arriendaschile?fref=ts">facebook</a>
+                <a class="fa fa-twitter fa-3x" href="https://twitter.com/arriendas">twitter</a>
         </p>
         </div>
     </div>
@@ -73,11 +83,12 @@
     <div class="row">      
         <div class="col-xs-12 visible-xs hidden-sm visible-md">
             <h1><strong>Contacto</strong><h1>
-            <p>Télefono (02) 2333-3714</p>
+            <p><a href=<?php echo $telefono?>><?php echo $telefonoText?></a></p>
             <p>Manuel Montt 1404</p>
             <p>Providencia, Santiago/Chile </p>
-            <a class="fa fa-facebook fa-3x" href="#">facebook</a>
-            <a class="fa fa-twitter fa-3x" href="#">twitter</a>
+            <a class="fa fa-facebook fa-3x" href="https://www.facebook.com/arriendaschile?fref=ts">facebook</a>
+            <a class="fa fa-twitter fa-3x" href="https://twitter.com/arriendas">twitter</a>
         </div>
     </div>
 </footer>
+

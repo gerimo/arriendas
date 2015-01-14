@@ -285,10 +285,10 @@ class profileActions extends sfActions {
 
         $from = date("Y-m-d H:i", $f);
         $this->from = date("Y-m-d H:i", $f);
-        $this->fromHuman = date("D d/m/Y H:iA", $f);
+        $this->fromHuman = date("D d/m/Y H:i", $f);
         $to = date("Y-m-d H:i", $t);
         $this->to = date("Y-m-d H:i", $t);
-        $this->toHuman = date("D d/m/Y H:iA", $t);
+        $this->toHuman = date("D d/m/Y H:i", $t);
 
         $this->Car = Doctrine_Core::getTable('Car')->find($carId);
 
@@ -308,7 +308,8 @@ class profileActions extends sfActions {
                 $this->reviews[$i]["opinion"] = $Rating->getOpinionAboutOwner();
                 $U = Doctrine_Core::getTable('User')->find($Rating->getIdRenter());
                 $this->reviews[$i]["picture"] = $U->getPictureFile();
-            }
+                $this->reviews[$i]["star"] = $Rating->getOpCleaningAboutOwner();
+             }
         }
 
         // Características
@@ -339,6 +340,54 @@ class profileActions extends sfActions {
         $this->isDebtor           = sfContext::getInstance()->getUser()->getAttribute('moroso');
         $this->amountWarranty     = sfConfig::get("app_monto_garantia");
         $this->amountWarrantyFree = sfConfig::get("app_monto_garantia_por_dia");
+
+        //imagenes
+        $arrayImagenes = null;
+        $i = 0;
+        if ($this->Car->getSeguroFotoFrente() != null && $this->Car->getSeguroFotoFrente() != "") {
+            $rutaFotoFrente = $this->Car->getSeguroFotoFrente();
+            $arrayImagenes[$i] = $rutaFotoFrente;
+            $i++;
+        }
+        if ($this->Car->getSeguroFotoCostadoDerecho() != null && $this->Car->getSeguroFotoCostadoDerecho() != "") {
+            $rutaFotoCostadoDerecho = $this->Car->getSeguroFotoCostadoDerecho();
+            $arrayImagenes[$i] = $rutaFotoCostadoDerecho;
+            $i++;
+        }
+        if (strpos($this->Car->getSeguroFotoCostadoIzquierdo(), "http") != -1 && $this->Car->getSeguroFotoCostadoIzquierdo() != "") {
+            $rutaFotoCostadoIzquierdo = $this->Car->getSeguroFotoCostadoIzquierdo();
+            $arrayImagenes[$i] = $rutaFotoCostadoIzquierdo;
+            $i++;
+        }
+        if (strpos($this->Car->getSeguroFotoTraseroDerecho(), "http") != -1 && $this->Car->getSeguroFotoTraseroDerecho() != "") {
+            $rutaFotoTrasera = $this->Car->getSeguroFotoTraseroDerecho();
+            $arrayImagenes[$i] = $rutaFotoTrasera;
+            $i++;
+        }
+        if (strpos($this->Car->getTablero(), "http") != -1 && $this->Car->getTablero() != "") {
+            $rutaFotoPanel = $this->Car->getTablero();
+            $arrayImagenes[$i] = $rutaFotoPanel;
+            $i++;
+        }
+        if (strpos($this->Car->getAccesorio1(), "http") != -1 && $this->Car->getAccesorio1() != "") {
+            $rutaFotoAccesorios1 = $this->Car->getAccesorio1();
+            $arrayImagenes[$i] = $rutaFotoAccesorios1;
+            $i++;
+        }
+        if (strpos($this->Car->getAccesorio2(), "http") != -1 && $this->Car->getAccesorio2() != "") {
+            $rutaFotoAccesorios2 = $this->Car->getAccesorio2();
+            $arrayImagenes[$i] = $rutaFotoAccesorios2;
+        }
+        $this->arrayFotos = $arrayImagenes;
+        $arrayFotoDanios = null;
+        $arrayDescripcionDanios = null;
+        $danios = Doctrine_Core::getTable('damage')->findByCar(array($this->Car->getId()));
+        for ($i = 0; $i < count($danios); $i++) {
+            $arrayFotoDanios[$i] = $danios[$i]->getUrlFoto();
+            $arrayDescripcionDanios[$i] = $danios[$i]->getDescription();
+        }
+        $this->arrayFotosDanios = $arrayFotoDanios;
+        $this->arrayDescripcionesDanios = $arrayDescripcionDanios;
     }
 
     public function executeReserveChange (sfWebRequest $request) {
@@ -1603,7 +1652,8 @@ class profileActions extends sfActions {
     }
 
     public function executeCalificaciones(sfWebRequest $request) {
-
+        error_log("cal1");
+        $this->setLayout("newIndexLayout");
         //Obtención de la data
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid'); //id del usuario actual
         $claseUsuario = Doctrine_Core::getTable('user')->findOneById($idUsuario);

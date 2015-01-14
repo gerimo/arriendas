@@ -520,7 +520,7 @@
 <section id="section-home">
 
     <div class="hidden-xs hidden-sm col-md-12">
-        <video id="video" autoplay >
+        <video id="video" autoplay loop >
             <source src="/videos/video.mp4" type="video/mp4">
                 Your browser does not support HTML5 video.
             </video> 
@@ -817,7 +817,8 @@
         $('#section-home-carousel').slick({
             autoplay: true,
             arrows: false,
-            speed: 450
+            speed: 450,
+            infinite: true
         });
 
         $('#section-on-news-carousel').slick({
@@ -861,6 +862,11 @@
     $("#search").click(function(e){
         e.preventDefault();
         searchCars();        
+    });
+
+    $("#commune").change(function(e){
+        e.preventDefault();
+        searchCars(); 
     });
 
     $(".tab").click(function(){
@@ -949,6 +955,8 @@
         format:'d-m-Y H:i',
         minDate : "<?php echo date('d-m-Y') ?>",
     });
+
+   
 
      
 

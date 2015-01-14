@@ -9,9 +9,6 @@
 
 
 
-<?php include_component('profile', 'profile') ?>
-
-
 <!--  contenido de la seccion -->
 <div class="main_contenido">
 
@@ -56,7 +53,6 @@
 
 </div><!-- main_contenido -->
 
-        <?php include_component('profile', 'colDer') ?>
 
 </div><!-- main_box_2 -->
 <div class="clear"></div>

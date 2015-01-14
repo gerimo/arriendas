@@ -49,8 +49,16 @@
                         <li><a class="btn-a-secondary" href="<?php echo url_for('main/login') ?>">INGRESAR</a></li>
                     <?php endif ?>
                 </ul>
+                <?php if(date("H:i") > "19:00" || date("H:i") < "09:00"):
+                        $telefono = "tel:0223333714";
+                        $telefonoText = "(02) 2333-3714"; 
+                      else:
+                        $telefono = "tel:0226402900";
+                        $telefonoText = "(02) 2 640 29 00";
+                      endif;
+                ?>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="tel:+56223333714"><span class="glyphicon glyphicon-earphone"></span>(02) 2 333 37 14</a></li>
+                    <li><a id="telefono" href="<?php echo $telefono?>"><span class="glyphicon glyphicon-earphone"></span><?php echo $telefonoText?></a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     
@@ -60,3 +68,5 @@
         </div><!-- /.container -->
     </nav>
 </header>
+
+

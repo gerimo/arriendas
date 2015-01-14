@@ -8,8 +8,6 @@ carSuccess:
 
 pedidosAjaxSuccess:
     has_layout: false
-all:
-  layout: profile
 
 
 

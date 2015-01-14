@@ -1,4 +1,4 @@
-<link href="/css/newDesign/reserves.css" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/index.css" rel="stylesheet" type="text/css">
 
 <div class="hidden-xs space-100"></div>
 <div class="visible-xs space-50"></div>
