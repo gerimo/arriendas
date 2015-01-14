@@ -46,15 +46,15 @@
                             </ul>
                         </li>
                     <?php else: ?>                        
-                        <li><a class="btn-a-secondary" href="<?php echo url_for('main/login') ?>">INGRESAR</a></li>
+                        <li><a class="btn-a-secondary" href="<?php echo url_for('login') ?>">INGRESAR</a></li>
                     <?php endif ?>
                 </ul>
                 <?php if(date("H:i") > "19:00" || date("H:i") < "09:00"):
                         $telefono = "tel:0223333714";
-                        $telefonoText = "(02) 2333-3714"; 
+                        $telefonoText = "(02) 2333 3714"; 
                       else:
                         $telefono = "tel:0226402900";
-                        $telefonoText = "(02) 2 640 29 00";
+                        $telefonoText = "(02) 2640 2900";
                       endif;
                 ?>
                 <ul class="nav navbar-nav navbar-right">
