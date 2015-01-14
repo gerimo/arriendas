@@ -2463,11 +2463,14 @@ public function oldexecuteIndex(sfWebRequest $request) {
 	
 	//TERMINOS
     public function executeTerminos(sfWebRequest $request) {
-        
+        $this->setLayout("newIndexLayout");
     }
 	
 	//COMPANIA
     public function executeCompania(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+
+
         
     }
 	
@@ -2860,7 +2863,7 @@ public function oldexecuteIndex(sfWebRequest $request) {
     //////////////////FORGOT//////////////////////////////
 
     public function executeForgot(sfWebRequest $request) {
-        
+        $this->setLayout("newIndexLayout");
     }
 	
     public function executeActivate(sfWebRequest $request) {
@@ -2938,7 +2941,6 @@ public function oldexecuteIndex(sfWebRequest $request) {
     }
 
     public function executeDoRecover(sfWebRequest $request) {
-
         $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ?', $this->getRequestParameter('email'));
         $user = $q->fetchOne();
         if ($user != null) {

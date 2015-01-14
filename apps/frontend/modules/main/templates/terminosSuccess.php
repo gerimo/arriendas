@@ -1,56 +1,19 @@
-<style type="text/css">
-#FondoReferidos{
-    margin: 0 auto;
-    width: 920px;
-}
-#subFondo{
-    background-color: white;
-    float: left;
-    width: 920px;
-    padding: 20px;
-    height: auto ! important;
-    min-height: 200px;
-    -webkit-box-shadow: 1px 1px 10px rgba(50, 50, 50, 0.4);
-    -moz-box-shadow: 1px 1px 10px rgba(50, 50, 50, 0.4);
-    box-shadow: 1px 1px 10px rgba(50, 50, 50, 0.4);
-    padding-bottom: 40px;
-}
-#Enunciado{
-    float: left;
-    width: 800px;
-    text-align: center;
-    font-size: 17px;
-    margin-left: 50px;
-    font-style: italic;
-    line-height: 20px;
-    margin-top: 16px;
-}
-#botonCargar{
-    width: 166px;
-    margin: 0 auto;
-    height: 74px;
-    margin-top: 134px;
-}
-input#botonVolver{
-    margin: 0px;
-    border: 0px;
-    padding: 0px;
-    cursor: pointer;
-    background-image: url("http://www.arriendas.cl/images/Home/BotonIngresa.png");
-    background-color: white;
-    width: 164px;
-    height: 72px;
-}
+<link href="/css/newDesign/terminosycondiciones.css" rel="stylesheet" type="text/css">
 
-</style>
-<div id="FondoReferidos">
-    <div id="subFondo">
-        <div id="Enunciado">
-            <b>Términos y Condiciones</b><br><br>
-            <p style="margin-top:20px;">
-                <?php include_partial('main/terminosycondiciones') ?>
-            </p>
+<div class="hidden-xs space-100"></div>
+<div class="visible-xs space-50"></div>
+<div class="row">
+    <div class="col-md-offset-3 col-md-6">
+        <div class="BCW">
+        	<div class="Encabezado">
+	            <h1>Terminos y Condiciones</h1>
+	            <span class="col-md-offset-8">Actualizado el 13-Enero-2015</span>
+	        </div>
+            <div class="contenido">
+            	<?php include_partial('main/terminosycondiciones') ?>
+            </div>	
         </div>
     <br /><br />
     </div>
 </div> 
+<div class="hidden-xs space-100"></div>

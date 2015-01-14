@@ -807,7 +807,7 @@
 
         $('#section-on-news-carousel').slick({
             /*autoplay: true,*/
-            /*arrows: true,*/
+            arrows: true,
             /*dots: true,*/
             /*infinite: true,*/
             /*slidesToShow: 1,*/
