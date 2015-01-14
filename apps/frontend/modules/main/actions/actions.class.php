@@ -49,6 +49,7 @@ class mainActions extends sfActions {
             $address        = $request->getPostParameter("address", null);
             $commune        = $request->getPostParameter("commune", null);
             $region         = $request->getPostParameter("region", null);
+            $anotherText    = $request->getPostParameter("anotherText", null);
 
             if(!$foreign) {
                 if (is_null($rut) || $rut == "") {
@@ -98,7 +99,17 @@ class mainActions extends sfActions {
 
 
             $User = Doctrine_Core::getTable('user')->find($userId);
-                $User->setComo($como);
+
+                if($como=='otro'){
+                    if($anotherText!='' || $anotherText!=null){
+                        $User->setComo($anotherText);
+                    } else {
+                        $User->setComo($como);
+                    }
+                } else {
+                    $User->setComo($como);
+                }
+
                 $User->setRut($rut);
                 $User->setExtranjero($foreign);
                 $User->setTelephone($telephone);
@@ -116,7 +127,7 @@ class mainActions extends sfActions {
                 exec($comando);
             }
 
-            $finish_message = "Felicitaciones!<br><br>Tu cuenta a sido activada, ahora puede ingresar con su nombre de usuario y contrase&ntilde;a. <br><br><b>¿Qué quieres hacer ahora?</b>";
+            $finish_message = "Felicitaciones!<br><br>Tu cuenta a sido activada, ahora puedes ingresar con tu nombre de usuario y contrase&ntilde;a. <br><br><b>¿Qué quieres hacer ahora?</b>";
             $return["message"] = $finish_message;
             $User->save();
 
@@ -2921,15 +2932,15 @@ public function oldexecuteIndex(sfWebRequest $request) {
 	
     public function executeAddCarFromRegister(sfWebRequest $request) {
         
-          $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+        $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+        error_log($idUsuario);
+
         $usuario = Doctrine_Core::getTable('user')->findOneById($idUsuario);
 
 		$usuario->setPropietario(true);
    	    $this->getUser()->setAttribute("propietario",true);			    
 		$usuario->save();
-		
-		            $this->redirect('profile/addCar');
-		
+		$this->redirect('profile/addCar');
         return sfView::NONE;
    
     }
