@@ -51,8 +51,12 @@ input, select, button {
     color: rgb(70, 70, 70);
     font-size:20px;
 }
-
-.another{
+#another-radio{
+    margin-bottom: 0px;
+}
+#another-text{
+    margin-top: 0px;
+    padding-left: 10px;
     max-width: 100px;
     max-height: 30px;
 }

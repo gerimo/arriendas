@@ -16,7 +16,7 @@
 
             <select class="form-control" id="foreign" name="foreign" >
                 <option value="0">Chileno - extranjero con rut</option>
-                <option value="1">Extranjero - I dont have a RUT number</option>
+                <option value="1">Extranjero - I don't have a RUT number</option>
             </select>
 
             <input class="form-control" id="rut" name="rut" type="text" placeholder="RUT">
@@ -64,8 +64,9 @@
                     </label>
 
                     <label class="radio">
-                        <input type="radio" id="another" name="como" value="otro" />Otro
+                        <input type="radio" id="another-radio" name="como" value="otro" />Otro
                     </label>
+                    <input class="control-form another" id="another-text" placeholder="especifica">
                 </div>
             </div>
 
@@ -110,6 +111,26 @@
         }
     });
 
+    $(document).ready(function(){  
+        $("#another-text").attr('disabled', true);
+        $("input:radio[name=como]").click(function() {  
+            if($('input:radio[name=como]:checked').val() == 'otro'){
+                $('#another-text').attr('disabled', false);
+                $("#another-text").parent("label").find("span").text('Rut');
+            } else {
+                $('#another-text').val('');
+                $('#another-text').attr('disabled', true);
+                $("#another-text").parent("label").find("span").text('');
+            }
+        });  
+      
+        $("#radio_desactivar").click(function() {  
+            $("#radio").attr('checked', false);  
+        });  
+  
+    }); 
+
+
     $("#region").change(function(){
 
         var regionId = $(this).val();
@@ -140,6 +161,7 @@
 
     function validateForm() {
         var como           = $('input:radio[name=como]:checked').val();
+        var anotherText   = $("#another-text").val();
         var userId         = $("#save").data("id"); 
         var rut            = $("#rut").val();
         var foreign        = $("#foreign option:selected").val();
@@ -149,7 +171,7 @@
         var commune        = $("#commune option:selected").val();
         var region         = $("#region option:selected").val();
 
-        $.post("<?php echo url_for('main/doCompleteRegister') ?>", {"como": como, "userId": userId, "rut": rut, "foreign": foreign, "telephone": telephone, "birth": birth, "address": address, "commune": commune, "region": region}, function(r){
+        $.post("<?php echo url_for('main/doCompleteRegister') ?>", {"como": como, "anotherText": anotherText, "userId": userId, "rut": rut, "foreign": foreign, "telephone": telephone, "birth": birth, "address": address, "commune": commune, "region": region}, function(r){
 
             $(".alert").removeClass("alert-a-danger");
             $(".alert").removeClass("alert-a-success");
@@ -161,6 +183,7 @@
                 $("#message p:first-child").html(r.message);
                 $("#message").removeAttr("style");
                 $("#frm").css("display", "none");
+                window.scrollTo(0, 0);
             }
 
         }, 'json');
