@@ -2984,11 +2984,14 @@ public function oldexecuteIndex(sfWebRequest $request) {
 	
 	//TERMINOS
     public function executeTerminos(sfWebRequest $request) {
-        
+        $this->setLayout("newIndexLayout");
     }
 	
 	//COMPANIA
     public function executeCompania(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+
+
         
     }
 	
@@ -3059,7 +3062,7 @@ public function oldexecuteIndex(sfWebRequest $request) {
     //////////////////FORGOT//////////////////////////////
 
     public function executeForgot(sfWebRequest $request) {
-        
+        $this->setLayout("newIndexLayout");
     }
 	
     public function executeActivate(sfWebRequest $request) {
