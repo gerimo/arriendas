@@ -1,6 +1,18 @@
 # You can find more information about this file on the symfony website:
 # http://www.symfony-project.org/reference/1_4/en/10-Routing
 
+about_company:
+    url: /nosotros
+    param: { module: main, action: compania }
+
+cars:
+    url: /misAutos
+    param: { module: profile, action: cars }
+
+forgot_password:
+    url: /recuperar-contrasena
+    param: { module: main, action: forgot }
+
 homepage:
     url: /
     param: { module: main, action: index }
@@ -56,6 +68,14 @@ user_register:
 user_register_complete:
     url: /registro/completar
     param: { module: main, action: completeRegister }
+
+terms_and_conditions:
+    url: /terminos-y-condiciones
+    param: { module: main, action: terminos }
+
+
+
+
 
 # old Design
 
