@@ -51,7 +51,7 @@ h3 {
 	font-weight: bold;
 }
 
-.btn-a-action {
+/*.btn-a-action {
     background-image: url('/images/newDesign/bt_blue_on_v2.png');
     border: 2px solid #36cced;
     border-radius: 1;
@@ -84,7 +84,7 @@ h3 {
 .btn-a-action:hover{
 	background-image: url('/images/newDesign/bt_blue_hover_v2.png');
 	
-}
+}*/
 .plomo{
 
 	background: #FAFAFA;

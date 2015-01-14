@@ -58,40 +58,50 @@
                                     <div class="availabilityOfCars">
                                         <h2>Horario para recibir un cliente</h2>   
                                         <?php foreach ($availabilityOfCars[$c->getId()] as $AOC): ?>
-
-                                            <h3><?php echo $AOC["dayName"] ." ". date("j", strtotime($AOC["day"])) ?></h3>
-                                            <div class="AOC-container" data-car-id="<?php echo $c->getId() ?>" data-day="<?php echo $AOC['day'] ?>">
-                                                <div class='col-md-offset-2 col-md-4'>
-                                                    <div class="date-group">
-                                                        <span>Desde:</span>
-                                                        <div class='input-group date'>
-                                                            <input id="from<?php echo $c->getId() ?>" class="from datetimepicker form-control" type="text" <?php if (isset($AOC['from'])):echo "value='".date("H:i", strtotime($AOC['from']))."'";endif; ?>>
-                                                            <!--span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span-->
+                                            <div class="row">
+                                                <h3><?php echo $AOC["dayName"] ." ". date("j", strtotime($AOC["day"])) ?></h3>
+                                                <div class="AOC-container" data-car-id="<?php echo $c->getId() ?>" data-day="<?php echo $AOC['day'] ?>">
+                                                    <div class='col-md-offset-3 col-md-4'>
+                                                        <div class="date-group">
+                                                            <span>Desde:</span>
+                                                            <div class='input-group date'>
+                                                                <input id="from<?php echo $c->getId() ?>" class="from datetimepicker form-control" type="text" <?php if (isset($AOC['from'])):echo "value='".date("H:i", strtotime($AOC['from']))."'";endif; ?>>
+                                                                <!--span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span-->
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="date-group">
-                                                        <span>Hasta:</span>
-                                                        <div class='input-group date'>
-                                                            <input id="to<?php echo $c->getId() ?>" class="to datetimepicker form-control" type="text" <?php if (isset($AOC['to'])): echo "value='".date("H:i", strtotime($AOC['to']))."'"; endif; ?>>
-                                                            <!--span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span-->
+                                                    <div class="col-md-4">
+                                                        <div class="date-group">
+                                                            <span>Hasta:</span>
+                                                            <div class='input-group date'>
+                                                                <input id="to<?php echo $c->getId() ?>" class="to datetimepicker form-control" type="text" <?php if (isset($AOC['to'])): echo "value='".date("H:i", strtotime($AOC['to']))."'"; endif; ?>>
+                                                                <!--span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span-->
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <br></br>
-                                                <br></br>
-                                                
-                                                <div class="botones col-md-10">
-                                                    <a class="btn-a-action col-md-offset-5 col-md-2 btnCars-delete-availability" href="">Eliminar</a>
-                                                    <a class="btn-a-action col-md-offset-1 col-md-2 btnCars-save-availability" href="">Guardar</a>
-                                                    <br/>
-                                                </div>
+                                                    <br>
+                                                    <div class="hidden-xs space-10">
+                                                    <br><br>
+                                                    <br><br>
+                                                    </div>
+                                                    <div class="botones col-md-12 hidden-xs" style="margin-top:22px">
+                                                        <a class="btn-a-action col-md-offset-4 col-md-2 btnCars-delete-availability" href="">Eliminar</a>
+                                                        <a style="margin-left: 87px" class="btn-a-action col-md-offset-1 col-md-2 btnCars-save-availability" href="">Guardar</a>
+                                                        <br/>
+                                                    </div>
+                                                    <div class="visible-xs">
+                                                        <a class="btn-a-action btn-block btnCars-delete-availability" href="">Eliminar</a>
+                                                        <a class="btn-a-action btn-block btnCars-save-availability" href="">Guardar</a>
+                                                        <br/>
+                                                    </div>
 
-                                            </div><!--fin AOC-container-->
-                                            <br/>
-                                            <br/>
-                                            <br>
+                                                </div><!--fin AOC-container-->
+                                            </div>
+                                                <div class="hidden-xs space-10">    
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                            </div>
                                         <?php endforeach; ?>
                                     </div><!--fin availabilityOfCars-->
                                 <?php else: ?>                                    
@@ -101,7 +111,7 @@
                                                 <div class='date-group'>
                                                     <span>Inactivo Hasta:</span>
                                                     <div class="input-group date ">
-                                                        <input id="todisabled<?php echo $c->getId() ?>" class="todisabled form-control" type="text" value="<?php echo date("d-m-Y", strtotime($c->getDisabledUntil())) ?>">
+                                                        <input id="todisabled<?php echo $c->getId() ?>" class="todisabled form-control" type="text" value="<?php echo $c->getDisabledUntil() ? date('d-m-Y',strtotime($c->getDisabledUntil())): "";?>">
                                                         <!--span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span-->
                                                         </span>
                                                     </div><!-- fin input-group date-->
