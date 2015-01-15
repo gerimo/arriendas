@@ -30,17 +30,20 @@ class Car extends BaseCar {
             ->innerJoin('R.Car C')
             ->innerJoin('C.Model M')
             ->where('C.user_id != ?', $this->getUser()->id)
+            ->andWhere('C.activo = 1')
+            ->andWhere('C.seguro_ok = 4')
             ->andWhere('R.confirmed = 0')
-            ->andWhere('R.comentario = null OR R.comentario = "Reserva extendida"')
+            ->andWhere('R.comentario = "null"') // Es original
             ->andWhere('NOW() < DATE_ADD(R.date, INTERVAL 2 HOUR)')
             ->andWhere('T.completed = 1')
             ->andWhere('C.transmission = ?', $this->transmission)
-            ->andWhere('distancia(C.lat, C.lng, ?, ?) < ?', array($this->lat, $this->lng, $maxDistance));
+            ->andWhere('distancia(C.lat, C.lng, ?, ?) < ?', array($this->lat, $this->lng, $maxDistance))
+            ;
         
-        if ($this->getModel()->getIdOtroTipoVehiculo() == 1) {
+        if ($this->getModel()->getIdOtroTipoVehiculo() == 2) {
             $q->andWhere('M.id_otro_tipo_vehiculo IN (1,2)');
         } else {
-            $q->andWhere('M.id_otro_tipo_vehiculo = ?', $this->getModel()->getIdOtroTipoVehiculo());
+            $q->andWhere('M.id_otro_tipo_vehiculo = ?', $this->getModel()->getIdOtroTipoVehiculo());  
         }
 
         $Reserves = $q->execute();
@@ -86,8 +89,6 @@ class Car extends BaseCar {
         if ($hours >= 6) {
             $days = $days + 1;
             $hours = 0;
-        } else {
-            $hours = round($hours * 24, 0);
         }
 
         if ($days >= 7 && $pricePerWeek > 0) {

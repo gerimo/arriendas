@@ -320,8 +320,6 @@ class mainActions extends sfActions {
             foreach ($cars as $i => $car) {
                 if (!$car->hasReserve(date("Y-m-d H:i:s", strtotime($from)), date("Y-m-d H:i:s", strtotime($to)))) {
 
-                    error_log("Procesando auto [".$i."]: ".$car->getId());
-
                     $d = 0;
 
                     $photo = $car->getFotoPerfil();
@@ -395,7 +393,6 @@ class mainActions extends sfActions {
                         'from' => date("Y-m-d H:i", strtotime($from)),
                         'to' => date("Y-m-d H:i", strtotime($to))
                     );
-                    error_log("asd");
                 }
             }
         } catch (Exception $e) {
@@ -628,8 +625,6 @@ class mainActions extends sfActions {
             $this->getUser()->setAttribute('telephone',null);
             $this->getUser()->setAttribute('comuna',null);
             $this->getUser()->setAttribute('region',null);*/
-
-            error_log("[logout] ID: ".$this->getUser()->getAttribute('userid'));
 
             /*unset($_SESSION["login_back_url"]);
             error_log("-- [logout] ".$_SESSION["login_back_url"]);*/
@@ -2890,7 +2885,6 @@ class mainActions extends sfActions {
     public function executeAddCarFromRegister(sfWebRequest $request) {
         
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
-        error_log($idUsuario);
 
         $usuario = Doctrine_Core::getTable('user')->findOneById($idUsuario);
 
