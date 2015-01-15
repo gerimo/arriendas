@@ -56,7 +56,7 @@ class Car extends BaseCar {
 
         // Revisamos que las reservas no tengan ya el máximo de oportunidades permitidas y
         // Revisamos que el auto no tenga ya una reserva confirmada en la fecha de la oportunidad
-        foreach ($Reserves as $Reserve) {
+        /*foreach ($Reserves as $Reserve) {
 
             $ChangeOptions = $Reserve->getChangeOptions(false);
 
@@ -78,7 +78,9 @@ class Car extends BaseCar {
             }
         }
 
-        return $Opportunities;
+        return $Opportunities;*/
+
+        return $Reserves;
     }
 
     // Métodos estáticos
