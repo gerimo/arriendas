@@ -30,7 +30,8 @@
                             <p class="text-center"><span class="glyphicon glyphicon-earphone"></span> <?php echo $PaidReserve->getUser()->getTelephone() ?></p>
                         </div>
                         <div class="col-md-3 text-center">
-                            <button class="approve btn-a-primary" data-reserve-id="<?php echo $PaidReserve->getId() ?>">Aprobar</button>
+                            <button class="approve btn-a-primary btn-block" data-reserve-id="<?php echo $PaidReserve->getId() ?>">Aprobar</button>
+                            <a class="reject" data-reserve-id="<?php echo $PaidReserve->getId() ?>">Rechazar</a>
                         </div>
                     </div>
                 <?php endforeach ?>
@@ -246,16 +247,39 @@
             } else {
 
                 location.reload();
-                /*var buttonCheck = "<i class='fa fa-check'></i>";
-                var buttonChange = "<button class='change btn-a-action btn-block' data-reserve-id='"+newReserveId+"' disabled>Cambiar</button>";
-
-                panelBody.find("i").replaceWith(buttonChange);
-                button.replaceWith(buttonCheck);*/
             }
 
             $(".change").removeAttr("disabled");
         }, "json");
     });
+
+    $(document).on("click", ".reject", function(e){
+
+        e.preventDefault;
+
+        var reserveId = $(this).data("reserve-id");
+
+        $.post("<?php echo url_for('reserve_reject') ?>", {"reserveId": reserveId}, function(r){
+
+            if (r.error) {
+
+                $("#dialog-alert p").html(r.errorMessage);
+                $("#dialog-alert").attr("title", "Problemas al rechazar la reserva");
+                $("#dialog-alert").dialog({
+                    buttons: [{
+                        text: "Aceptar",
+                        click: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }]
+                });
+
+            } else {
+
+                location.reload();
+            }
+        }, "json");
+    })
 
     $(document).on("click", "#payExtend", function(){
 

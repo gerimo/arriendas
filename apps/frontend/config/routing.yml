@@ -57,6 +57,10 @@ reserve_pay:
     url: /reserva/pagar
     param: { module: reserves, action: pay }
 
+reserve_reject:
+    url: /reserva/rechazar
+    param: { module: reserves, action: reject }
+
 reserves:
     url: /reservas
     param: { module: reserves, action: index }

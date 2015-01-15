@@ -421,6 +421,32 @@ class reservesActions extends sfActions {
         $this->forward("khipu", "generatePayment");
     }
 
+    public function executeReject (sfWebRequest $request) {
+
+        $return = array("error" => false);
+    
+        $reserveId = $request->getPostParameter("reserveId", null);
+
+        try {
+
+            if (is_null($reserveId) || $reserveId == "") {
+                throw new Exception("Falta la reserva", 1);
+            }
+
+            $Reserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
+
+            $Reserve->setCanceled(true);
+            $Reserve->save();
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+        }
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
     // FUNCIONES PRIVADAS
     private function validateDates ($from, $to) {
 
