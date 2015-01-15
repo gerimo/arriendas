@@ -32,8 +32,7 @@
                     $base_url = $sf_request->getUriPrefix().$sf_request->getRelativeUrlRoot();
                     if ($arrayFotos != null) {  
                         $cantidadFotos = count($arrayFotos);
-                        
-                        ?>
+                                                ?>
                         <div class="item active">   
                            <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/c_fill,g_center/<?= $base_url ?>/uploads/verificaciones/<?= $arrayFotos[0]?>" >
                         </div>
