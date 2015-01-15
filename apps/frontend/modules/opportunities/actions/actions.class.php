@@ -68,6 +68,7 @@ class opportunitiesActions extends sfActions {
             $OT = $OriginalReserve->getTransaction()->copy(true);
             $OT->setCar($Car->getModel()->getBrand()->getName() ." ". $Car->getModel()->getName());
             $OT->setReserve($O);
+            $OT->setDate(date("Y-m-d H:i:s"));
             $OT->setCompleted(false);
             $OT->setImpulsive(true);
             $OT->setTransaccionOriginal($OriginalReserve->getTransaction()->getId());
