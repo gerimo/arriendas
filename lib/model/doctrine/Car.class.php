@@ -40,8 +40,8 @@ class Car extends BaseCar {
             ->andWhere('C.activo = 1')
             ->andWhere('C.seguro_ok = 4')
             ->andWhere('R.confirmed = 0')
-            /*->andWhere('R.comentario = null') // Es original*/
-            /*->andWhere('NOW() < DATE_ADD(R.date, INTERVAL 2 HOUR)')*/
+            ->andWhere('R.comentario = null') // Es original
+            ->andWhere('NOW() < DATE_ADD(R.date, INTERVAL 2 HOUR)')
             ->andWhere('T.completed = 1')
             /*->andWhere('C.transmission = ?', $this->transmission)*/
             /*->andWhere('distancia(C.lat, C.lng, ?, ?) < ?', array($this->lat, $this->lng, $maxDistance))*/
