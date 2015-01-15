@@ -88,11 +88,13 @@
                                                     <p><?php if ($CO->getCar()->getTransmission()) echo "Automático"; else echo "Mecánico"; ?></p>
                                                 </div>
                                                 <div class="col-md-3 text-center">
-                                                    <p><?php echo $CO->getCar()->getAddress() .", ". $CO->getCar()->getCommune() ?></p>
+                                                    <p><?php echo $CO->getCar()->getAddress() .", ". $CO->getCar()->getCommune()->name ?></p>
                                                 </div>
                                                 <div class="col-md-3 text-center">
-                                                    <p><?php echo $CO->getCar()->getUser()->getFirstname() ." ". $CO->getCar()->getUser()->getLastname() ?></p>
-                                                    <p><span class="glyphicon glyphicon-earphone"></span> <?php echo $CO->getCar()->getUser()->getTelephone() ?></p>
+                                                    <p><?php echo $CO->getCar()->getUser()->getFirstname() ." ". substr($CO->getCar()->getUser()->lastname, 0, 1) ?></p>
+                                                    <?php if ($CO->getTransaction()->completed): ?>
+                                                        <p><span class="glyphicon glyphicon-earphone"></span> <?php echo $CO->getCar()->getUser()->getTelephone() ?></p>
+                                                    <?php endif ?>
                                                 </div>
                                             </div>
                                             <div class="col-md-3 text-center">

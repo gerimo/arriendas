@@ -338,6 +338,8 @@ class reservesActions extends sfActions {
 
     public function executePay (sfWebRequest $request) {
 
+        $userId = sfContext::getInstance()->getUser()->getAttribute('userid');
+
         $warranty = $request->getPostParameter("warranty", null);
         $payment  = $request->getPostParameter("payment-group", null);
 
@@ -352,6 +354,11 @@ class reservesActions extends sfActions {
         $datesError = $this->validateDates($from, $to);
         if ($datesError) {
             throw new Exception($datesError, 1);
+        }
+
+        $User = Doctrine_Core::getTable('User')->find($userId);
+        if ($User->getBlockled()) {
+            throw new Exception("Usuario no autorizado para generar pagos", 1);            
         }
 
         $Car = Doctrine_Core::getTable('Car')->find($carId);
@@ -370,11 +377,7 @@ class reservesActions extends sfActions {
             $amountWarranty = sfConfig::get("app_monto_garantia");
         }
 
-        $duration = intval((strtotime($to) - strtotime($from))/3600);
-
-        $userId = sfContext::getInstance()->getUser()->getAttribute('userid');
-
-        $User = Doctrine_Core::getTable('User')->find($userId);
+        $duration = intval((strtotime($to) - strtotime($from))/3600);        
         
         // Guardo en session // Esto se deja 'xsiaca'
         $this->getUser()->setAttribute('fechainicio', date("d-m-Y", strtotime($from)));

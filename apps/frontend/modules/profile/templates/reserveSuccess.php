@@ -351,7 +351,9 @@
                <span class=" pull-right secure-payment"><span class="icon-svg_21"></span> Pago seguro</span> 
             </div>
             <div class="col-md-3">
-                <button class="btn-block" id="btn-pay" type="button">PAGAR <i class="fa fa-chevron-right"></i></button>
+                <?php if (!$User->getBlocked()): ?>
+                    <button class="btn-block" id="btn-pay" type="button">PAGAR <i class="fa fa-chevron-right"></i></button>
+                <?php endif ?>
             </div>
         </div>
 
