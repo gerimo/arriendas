@@ -46,18 +46,20 @@ class opportunitiesActions extends sfActions {
             }
 
             $Car = Doctrine_Core::getTable('Car')->find($carId);
+            $OriginalReserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
+
+            if ($Car->hasReserve($OriginalReserve->getFechaInicio2(), $OriginalReserve->getFechaTermino2())) {
+                throw new Exception("El auto seleccionado para postular ya posee una reserva en las fechas de la postulación", 1);                
+            }
 
             if ($Car->getUserId() != $this->getUser()->getAttribute("userid")) {
                 throw new Exception("No! No! No!", 1);
-            }
-
-            $OriginalReserve = Doctrine_Core::getTable('Reserve')->find($reserveId);            
+            }            
 
             $O = $OriginalReserve->copy(true);
             $O->setCar($Car);
-            $O->setUser($Car->getUser());
             $O->setFechaReserva(date("Y-m-d H:i:s"));
-            $O->setConfirmed(false);
+            $O->setConfirmed(true);
             $O->setImpulsive(true);
             $O->setComentario('Reserva oportunidad');
             $O->setReservaOriginal($OriginalReserve->getId());
@@ -66,7 +68,6 @@ class opportunitiesActions extends sfActions {
 
             $OT = $OriginalReserve->getTransaction()->copy(true);
             $OT->setCar($Car->getModel()->getBrand()->getName() ." ". $Car->getModel()->getName());
-            $OT->setUser($Car->getUser());
             $OT->setReserve($O);
             $OT->setCompleted(false);
             $OT->setImpulsive(true);

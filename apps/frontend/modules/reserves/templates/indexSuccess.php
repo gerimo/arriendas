@@ -10,10 +10,10 @@
 
             <?php if (count($PaidReserves) > 0): ?>
 
-                <h1>Reservas pagadas <small>(pendientes de tu aprobación)</small> (<?php echo count($PaidReserves) ?>)</h1>
+                <h1>Reservas pagadas <small>(pendientes de tu aprobación) (<?php echo count($PaidReserves) ?>)</small></h1>
 
                 <?php foreach ($PaidReserves as $PaidReserve): ?>
-                    <div class="row">
+                    <div class="row paid-reserve-container">
                         <div class="col-md-3">
                             <p class="text-center">Desde</p>
                             <p class="text-center"><strong><?php echo date("d-m-Y H:i", strtotime($PaidReserve->getDate())) ?></strong></p>
@@ -57,42 +57,48 @@
                                         <p class="price"><strong><?php echo '$'.number_format($Reserve->getPrice(), 0, ',', '.') ?></strong></p>
                                         <a href="#">Descargar contratos</a>
                                     </div>
-                                    <div class="col-md-3 text-center"><button class="extend btn-a-primary btn-block" data-reserve-id="<?php echo $Reserve->getId() ?>" data-reserve-to="<?php echo date("d-m-Y H:i", strtotime($Reserve->getFechaTermino2())) ?>">Extender</button></div>
+                                    <div class="col-md-3 text-center">
+                                        <?php if ($Reserve->getConfirmed()): ?>
+                                            <button class="extend btn-a-primary btn-block" data-reserve-id="<?php echo $Reserve->getId() ?>" data-reserve-to="<?php echo date("d-m-Y H:i", strtotime($Reserve->getFechaTermino2())) ?>">Extender</button>
+                                        <?php else: ?>
+                                            <p>En espera de confirmación</p>
+                                        <?php endif ?>
+                                    </div>
                                 </div>
-                                <a class="btn-block text-center" data-toggle="collapse" data-parent="#reserves" href="#collapse-<?php echo $Reserve->getId() ?>" aria-expanded="true" aria-controls="collapse-<?php echo $Reserve->getId() ?>" data-number-of-opportunities="<?php echo count($Opportunities[$Reserve->getId()]) ?>">
-                                    <?php if ($key == 0): ?>
-                                        <i class="fa fa-chevron-up"></i> Ocultar auto<?php if (count($Opportunities[$Reserve->getId()]) > 1) echo "s" ?>
+                                <a class="btn-block text-center" data-toggle="collapse" data-parent="#reserves" href="#collapse-<?php echo $Reserve->getId() ?>" aria-expanded="true" aria-controls="collapse-<?php echo $Reserve->getId() ?>" data-number-of-opportunities="<?php echo count($ChangeOptions[$Reserve->getId()]) ?>">
+                                    <?php if ($key >= 0): ?>
+                                        <i class="fa fa-chevron-up"></i> Ocultar auto<?php if (count($ChangeOptions[$Reserve->getId()]) > 1) echo "s" ?>
                                     <?php else: ?>
-                                        <i class="fa fa-chevron-down"></i> Mostrar auto<?php if (count($Opportunities[$Reserve->getId()]) > 1) echo "s" ?>
+                                        <i class="fa fa-chevron-down"></i> Mostrar auto<?php if (count($ChangeOptions[$Reserve->getId()]) > 1) echo "s" ?>
                                     <?php endif ?>
                                 </a>
                             </div>
-                            <div id="collapse-<?php echo $Reserve->getId() ?>" data-reserve-id="<?php echo $Reserve->getId() ?>" class="panel-collapse collapse <?php if ($key == 0) echo 'in' ?>" role="tabpanel" aria-labelledby="reserve-<?php echo $Reserve->getId() ?>">
+                            <div id="collapse-<?php echo $Reserve->getId() ?>" data-reserve-id="<?php echo $Reserve->getId() ?>" class="panel-collapse collapse <?php if ($key >= 0) echo 'in' ?>" role="tabpanel" aria-labelledby="reserve-<?php echo $Reserve->getId() ?>">
                                 <div class="panel-body">
 
-                                    <?php foreach ($Opportunities[$Reserve->getId()] as $O): ?>
+                                    <?php foreach ($ChangeOptions[$Reserve->getId()] as $CO): ?>
                                         <div class="row">
                                             <div class="col-md-9">
                                                 <div class="col-md-3 text-center">
-                                                    <img src="/uploads/cars/thumbs/<?php echo $O->getCar()->getFotoPerfil() ?>" width="75%">
+                                                    <img src="/uploads/cars/thumbs/<?php echo $CO->getCar()->getFotoPerfil() ?>" width="75%">
                                                 </div>
                                                 <div class="col-md-3 text-center">
-                                                    <p><?php echo $O->getCar()->getModel()->getBrand()->getName() ." ". $O->getCar()->getModel()->getName() ?></p>
-                                                    <p><?php if ($O->getCar()->getTransmission()) echo "Automático"; else echo "Mecánico"; ?></p>
+                                                    <p><?php echo $CO->getCar()->getModel()->getBrand()->getName() ." ". $CO->getCar()->getModel()->getName() ?></p>
+                                                    <p><?php if ($CO->getCar()->getTransmission()) echo "Automático"; else echo "Mecánico"; ?></p>
                                                 </div>
                                                 <div class="col-md-3 text-center">
-                                                    <p><?php echo $O->getCar()->getAddress() .", ". $O->getCar()->getCommune() ?></p>
+                                                    <p><?php echo $CO->getCar()->getAddress() .", ". $CO->getCar()->getCommune() ?></p>
                                                 </div>
                                                 <div class="col-md-3 text-center">
-                                                    <p><?php echo $O->getCar()->getUser()->getFirstname() ." ". $O->getCar()->getUser()->getLastname() ?></p>
-                                                    <p><span class="glyphicon glyphicon-earphone"></span> <?php echo $O->getUser()->getTelephone() ?></p>
+                                                    <p><?php echo $CO->getCar()->getUser()->getFirstname() ." ". $CO->getCar()->getUser()->getLastname() ?></p>
+                                                    <p><span class="glyphicon glyphicon-earphone"></span> <?php echo $CO->getCar()->getUser()->getTelephone() ?></p>
                                                 </div>
                                             </div>
                                             <div class="col-md-3 text-center">
-                                                <?php if ($O->getTransaction()->getSelected()): ?>
+                                                <?php if ($CO->getTransaction()->getCompleted()): ?>
                                                     <i class="selected fa fa-check"></i>
                                                 <?php else: ?>
-                                                    <button class="change btn-a-action btn-block" data-reserve-id="<?php echo $O->getId() ?>">Cambiar</button>
+                                                    <button class="change btn-a-action btn-block" data-reserve-id="<?php echo $CO->getId() ?>">Cambiar</button>
                                                 <?php endif ?>
                                             </div>
                                         </div>
@@ -220,6 +226,8 @@
         var panelBody = $(this).parent().parent().parent();
         var newReserveId = $(this).data("reserve-id");
 
+        $(".change").attr("disabled", true);
+
         $.post("<?php echo url_for('reserve_change') ?>", {"newReserveId": newReserveId}, function(r){
 
             if (r.error) {
@@ -237,12 +245,15 @@
 
             } else {
 
-                var buttonCheck = "<i class='fa fa-check'></i>";
-                var buttonChange = "<button class='change btn-a-action' data-reserve-id=''>Cambiar</button>";
+                location.reload();
+                /*var buttonCheck = "<i class='fa fa-check'></i>";
+                var buttonChange = "<button class='change btn-a-action btn-block' data-reserve-id='"+newReserveId+"' disabled>Cambiar</button>";
 
                 panelBody.find("i").replaceWith(buttonChange);
-                button.replaceWith(buttonCheck);
+                button.replaceWith(buttonCheck);*/
             }
+
+            $(".change").removeAttr("disabled");
         }, "json");
     });
 

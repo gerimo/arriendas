@@ -4,12 +4,11 @@
 <div class="visible-xs space-50"></div>
 <div class="row">
     <div class="col-md-offset-4 col-md-4">
-      <div class="BCW">
-          <h1>PAGO EXITOSO</h1>
-          <div class="contenido text-center">
-            <h2><b>TU PAGO SE RECIBIÓ EXITOSAMENTE!</b></h2>
-            <p>Antes y despu&eacute;s de realizar la reserva, debes firmar el 
-              <a href='http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/tokenReserve/<?php echo $tokenReserve; ?>' target='_blank'>informe de da&ntilde;os impreso.</a>
+        <div class="BCW">
+            <h1>PAGO EXITOSO</h1>
+            <div class="contenido text-center">
+                <h2><b>¡TU PAGO SE RECIBIÓ EXITOSAMENTE!</b></h2>
+            <p>Antes y después de realizar la reserva, debes firmar el <a href='http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/tokenReserve/<?php echo $tokenReserve; ?>' target='_blank'>informe de daños impreso</a>.
             </p>
             <br>
             <p class="Owner text-center">
@@ -27,10 +26,10 @@
             <p>Te enviamos estos datos a tu correo</p>
         </div>  
         <div class="row hidden-xs">
-          <a class="col-md-offset-7 col-md-4 btn-a-action" href="<?php echo url_for("profile/pedidos")?>">Siguiente</a>
+          <a class="col-md-offset-7 col-md-4 btn-a-action" href="<?php echo url_for("reserves")?>">Siguiente</a>
         </div>
         <div class="row visible-xs" style="margin-top: 8px">
-          <a class="btn-block btn-a-action" href="<?php echo url_for("profile/pedidos")?>">Siguiente</a>
+          <a class="btn-block btn-a-action" href="<?php echo url_for("reserves")?>">Siguiente</a>
         </div> 
       </div>
     </div>

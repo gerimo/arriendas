@@ -289,9 +289,9 @@ class mainActions extends sfActions {
                 ->innerJoin('mo.Brand br')
                 ->Where('ca.activo = 1')
                 ->andWhere('ca.seguro_ok = 4')
-                ->orderBy('carrank ASC')
-                ->addOrderBy('IF(ca.velocidad_contesta_pedidos = 0, 1440, ca.velocidad_contesta_pedidos)  ASC')
-                ->addOrderBy('ca.fecha_subida  ASC')
+                /*->orderBy('carrank ASC')*/
+                /*->addOrderBy('IF(ca.velocidad_contesta_pedidos = 0, 1440, ca.velocidad_contesta_pedidos)  ASC')*/
+                ->orderBy('ca.price_per_day ASC')
                 ->limit(33);
 
             if ($automatic) {
