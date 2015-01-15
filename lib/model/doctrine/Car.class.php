@@ -239,6 +239,7 @@ public function hasReserve($from, $to, $userId = false) {
         ->createQuery('R')
         ->leftJoin('R.Transaction T')
         ->where('T.completed = 1')
+        ->andWhere('R.confirmed = 1')
         ->andWhere('R.car_id = ?', $this->id)
         ->andWhere('(? BETWEEN R.date AND DATE_ADD(R.date, INTERVAL R.duration HOUR)) OR (? BETWEEN R.date AND DATE_ADD(R.date, INTERVAL R.duration HOUR)) OR (R.date BETWEEN ? AND ?) OR (DATE_ADD(R.date, INTERVAL R.duration HOUR) BETWEEN ? AND ?)', array($from, $to, $from, $to, $from, $to));
 
