@@ -44,7 +44,8 @@ class Car extends BaseCar {
             ->andWhere('NOW() < DATE_ADD(R.date, INTERVAL 2 HOUR)')
             ->andWhere('T.completed = 1')
             ->andWhere('C.transmission = ?', $this->transmission)
-            ->andWhere('distancia(C.lat, C.lng, ?, ?) < ?', array($this->lat, $this->lng, $maxDistance));
+            /*->andWhere('distancia(C.lat, C.lng, ?, ?) < ?', array($this->lat, $this->lng, $maxDistance))*/
+            ;
         
         if ($this->getModel()->getIdOtroTipoVehiculo() == 1) {
             $q->andWhere('M.id_otro_tipo_vehiculo IN (1,2)');
