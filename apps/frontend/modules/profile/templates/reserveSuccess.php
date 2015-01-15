@@ -237,7 +237,7 @@
             <div class="step-list col-md-offset-1 col-md-10">
                 <span class="num duracion">2</span>   
                 <h2><span class="dis">2.- </span>DURACION Y PRECIO</h2>
-                <span class="text">Arriendo de Auto Chevrolet Spark a 20.000 el Día por 48 horas en Providencia en Santiago.</span>
+                <span class="text">Arriendo de Auto <?php echo $Car->getModel()->getBrand()->getName()." ".$Car->getModel()->getName() ?> a <?php echo number_format(round($Car->getPricePerDay()), 0, '', '.') ?> el Día por 48 horas en <?php echo $Car->getCommune();?>, Santiago.</span>
                 <input class="datetimepicker btn-block" id="fromH" type="button" value="Desde: <?php echo $fromHuman ?>"></input>
                 <input class="datetimepicker btn-block" id="toH" type="button" value="Hasta: <?php echo $toHuman ?>"></input>
 
