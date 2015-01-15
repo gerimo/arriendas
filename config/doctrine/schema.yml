@@ -204,7 +204,7 @@ Car:
       notnull: true
       default: 1
     disabled_until:
-      type: timestamp
+      type: date
       default: null  
     verification_id:
       type: integer(11)

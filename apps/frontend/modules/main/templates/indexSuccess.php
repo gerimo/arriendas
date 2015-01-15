@@ -197,8 +197,8 @@
 
         if ($("#from").val() > $("#to").val()) {
 
-            $("#dialog-alert p").html("danger danger cuidado!");
-            $("#dialog-alert").attr("title", "OJO PIOJO");
+            $("#dialog-alert p").html('Fecha "Hasta" debe ser posterior a la fecha "Desde"');
+            $("#dialog-alert").attr('title','Fecha "Hasta" mal ingresada');
             $("#dialog-alert").dialog({
                 buttons: [{
                     text: "Aceptar",
@@ -473,7 +473,7 @@
                     article += "<div class='col-xs-8 col-md-8 text'>";
                     article += "<h2><a href='<?php echo url_for("arriendo-de-autos/rent-a-car") ?>/" + dataCar.brand + dataCar.model + "/" + dataCar.comuna + "/" + dataCar.id + "'>"+ dataCar.brand +" "+ dataCar.model +"<small>, "+dataCar.year+"</small></a></h2>";
                     /*article += "<span class='sub-heading'>A 2 km Metro <strong>Tobalaba</strong></span>";*/
-                    article += "<p class='price'>$"+ dataCar.priceAPuntos +"</p>";
+                    article += "<p class='price'>$"+ dataCar.priceAPuntos +" TOTAL</p>";
                     article += "<p class='text-right'><a class='btn-a-action' href='<?php echo url_for("profile/reserve?c=") ?>"+ dataCar.id + "/f/"+dataCar.from+"/t/"+dataCar.to+"' class='reserve' target='_blank'>RESERVAR</a></p>";
                     /*article += "<img src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + contador + "|05a4e7|ffffff' />";*/
                     article += "</div>";
@@ -598,8 +598,8 @@
             </ul>
         </div>
         <div class="col-sm-3 col-md-3 hidden-xs tabset">
-            <div class="col-sm-6 col-md-6 text-center tab activo" data-target="#tab-map"><strong><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Mapa</strong></div>
-            <div class="col-sm-6 col-md-6 text-center tab" data-target="#tab-list"><strong><span class="glyphicon glyphicon-list" aria-hidden="true"></span> Lista</strong></div>
+            <div class="map col-sm-6 col-md-6 text-center tab activo" data-target="#tab-map"><strong><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Mapa</strong></div>
+            <div class="list col-sm-6 col-md-6 text-center tab" data-target="#tab-list"><strong><span class="glyphicon glyphicon-list" aria-hidden="true"></span> Lista</strong></div>
         </div>
     </div>
 
@@ -709,7 +709,7 @@
     </div>
     <div class="hidden-xs col-sm-offset-2 col-sm-8 col-md-offset-1 col-md-10 text-center">
         <p class = "text-table">Precios con IVA, aplicando descuento por reservas en internet, con seguro de daños, 
-            robo y accidentes personales. Muestra tomada 4/4/2013 en sus páginas de internet</p>
+            robo y accidentes personales. Muestra tomada 1/1/2015 en sus páginas de internet</p>
         </div>
     </div>
 
@@ -753,15 +753,15 @@
 
     <div class="hidden-xs col-sm-offset-2 col-sm-8 col-md-offset-2 col-md-8">
         <div id="section-on-news-carousel">
-            <div class = "normal"><a href="http://www.t13.cl/videos/actualidad/arrienda-tu-auto-es-la-nueva-tendencia-entre-los-chilenos"><img src="images/logos_canais/13.png" alt="Canal 13"></a></div>
-            <div><a href="http://www.cnnchile.com/noticia/2014/01/10/arriendas-el-emprendimiento-que-permite-arrendar-tu-propio-auto"><img src="images/logos_canais/LogoCNN.png" alt="CNN Chile"></a></div>
-            <div class = "normal"><a href="http://www.24horas.cl/nacional/rent-a-car-vecino-la-nueva-forma-de-viajar-906946"><img src="images/logos_canais/logotvn2.png" alt="TVN"></a></div>
-            <div><a href="http://www.emol.com/noticias/economia/2012/07/27/552815/emprendedor-estrenara-primer-sistema-de-arriendo-de-vehiculos-por-hora-de-chile.html"><img src="images/logos_canais/LogoEmol.png" alt="EMOL"></a></div>
-            <div><a href="http://www.lun.com/lunmobile//pages/NewsDetailMobile.aspx?IsNPHR=1&dt=2012-10-23&NewsID=0&BodyId=0&PaginaID=6&Name=6&PagNum=0&SupplementId=0&Anchor=20121023_6_0_0"><img src="images/logos_canais/LogoLUN.png" alt="Las Últimas Noticias"></a></div>
-            <div><a href="http://www.tacometro.cl/prontus_tacometro/site/artic/20121030/pags/20121030152946.html"><img src="images/logos_canais/LogoPublimetro.png" alt="Publimetro"></a></div>
-            <div><a href="http://www.lasegunda.com/Noticias/CienciaTecnologia/2012/08/774751/arriendascl-sistema-de-alquiler-de-autos-por-horas-debuta-en-septiembre"><img src="images/logos_canais/LogoLaSegunda.png" alt="La Segunda"></a></div>
-            <div><a href="http://www.lacuarta.com/noticias/cronica/2013/08/63-157571-9-ahora-puedes-arrendar-el-automovil-de-tu-vecino.shtml"><img src="images/logos_canais/LogoLaCuarta.png" alt="La Cuarta"></a></div>
-            <div><a href="http://www.diariopyme.cl/arrienda-tu-auto-y-gana-dinero-extra-a-fin-de-mes/prontus_diariopyme/2013-06-23/212000.html"><img src="images/logos_canais/LogoDiarioPyme.png" alt="Diario PYME"></a></div>
+            <div class = "normal"><a href="http://www.t13.cl/videos/actualidad/arrienda-tu-auto-es-la-nueva-tendencia-entre-los-chilenos" target='_blank'><img src="images/logos_canais/13.png" alt="Canal 13"></a></div>
+            <div><a href="http://www.cnnchile.com/noticia/2014/01/10/arriendas-el-emprendimiento-que-permite-arrendar-tu-propio-auto" target='_blank'><img src="images/logos_canais/LogoCNN.png" alt="CNN Chile"></a></div>
+            <div class = "normal"><a href="http://www.24horas.cl/nacional/rent-a-car-vecino-la-nueva-forma-de-viajar-906946" target='_blank'><img src="images/logos_canais/logotvn2.png" alt="TVN"></a></div>
+            <div><a href="http://www.emol.com/noticias/economia/2012/07/27/552815/emprendedor-estrenara-primer-sistema-de-arriendo-de-vehiculos-por-hora-de-chile.html" target='_blank'><img src="images/logos_canais/LogoEmol.png" alt="EMOL"></a></div>
+            <div><a href="http://www.lun.com/lunmobile//pages/NewsDetailMobile.aspx?IsNPHR=1&dt=2012-10-23&NewsID=0&BodyId=0&PaginaID=6&Name=6&PagNum=0&SupplementId=0&Anchor=20121023_6_0_0" target='_blank'><img src="images/logos_canais/LogoLUN.png" alt="Las Últimas Noticias"></a></div>
+            <div><a href="http://www.tacometro.cl/prontus_tacometro/site/artic/20121030/pags/20121030152946.html" target='_blank'><img src="images/logos_canais/LogoPublimetro.png" alt="Publimetro"></a></div>
+            <div><a href="http://www.lasegunda.com/Noticias/CienciaTecnologia/2012/08/774751/arriendascl-sistema-de-alquiler-de-autos-por-horas-debuta-en-septiembre" target='_blank'><img src="images/logos_canais/LogoLaSegunda.png" alt="La Segunda"></a></div>
+            <div><a href="http://www.lacuarta.com/noticias/cronica/2013/08/63-157571-9-ahora-puedes-arrendar-el-automovil-de-tu-vecino.shtml" target='_blank'><img src="images/logos_canais/LogoLaCuarta.png" alt="La Cuarta"></a></div>
+            <div><a href="http://www.diariopyme.cl/arrienda-tu-auto-y-gana-dinero-extra-a-fin-de-mes/prontus_diariopyme/2013-06-23/212000.html" target='_blank'><img src="images/logos_canais/LogoDiarioPyme.png" alt="Diario PYME"></a></div>
         </div>
     </div>
 </div>
@@ -799,6 +799,10 @@
 <script>
 
     $(document).ready(function(){
+
+        $("#from").val(rounMinutos($("#from").val()));
+        $("#to").val(rounMinutos($("#to").val()));        
+
 
         /*// Si comuna es visible, se preselecciona comuna más hot
         if ($("#commune").is(':visible')) {            
@@ -875,12 +879,17 @@
             $("#region-container").hide();
             $("#commune-container").hide();
             $("#direction-container").show();
+            $(".list").removeClass('activo');
+            $(".map").addClass('activo');
+
         }
 
         if (target == "#tab-list") {
             $("#direction-container").hide();
             $("#region-container").show();
             $("#commune-container").show();
+            $(".map").removeClass('activo');
+            $(".list").addClass('activo');
         }
     });
 
@@ -954,7 +963,34 @@
         minDate : "<?php echo date('d-m-Y') ?>",
     });
 
-   
+    function rounMinutos(valor){
+        var fechaH = valor
+
+        var split = fechaH.split(" ");
+        var f = split[0];
+        var h = split[1];
+
+        var split3 = h.split(":");
+        var hora = split3[0];
+        var min = split3[1];
+
+        if(min > "14" && min < "45"){
+            min = "30";
+        }else if(min > "45"){
+            min = "00";
+            var a = parseInt(hora)+1;
+            hora = a.toString();
+        }else{
+            min = "00";
+        }
+
+        fecha = f+" "+hora+":"+min;
+
+        return fecha;
+    }
+    
+
+
 
      
 

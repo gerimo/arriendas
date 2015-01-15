@@ -25,7 +25,7 @@
         <div class="col-md-offset-1">
             <p>Te enviamos estos datos a tu correo</p>
         </div>  
-        <div class="row hidden-xs">
+        <div class="row hidden-xs" style="margin-top: 10px">
           <a class="col-md-offset-7 col-md-4 btn-a-action" href="<?php echo url_for("reserves")?>">Siguiente</a>
         </div>
         <div class="row visible-xs" style="margin-top: 8px">

@@ -252,13 +252,16 @@ textarea.textoMensaje{
 }
 .texto{
 	margin-left: 5px;
-	margin-top: 5px;
-	padding: 5px;
-	height: auto ! important;
-	min-height: 28px;
-	height: 28px;
-	border: 1px solid #BCBEB0;
-	background-color: white;
+    margin-top: 5px;
+    padding: 5px;
+    float: left;
+    float: left;
+    width: 374px;
+    height: auto ! important;
+    min-height: 28px;
+    height: 28px;
+    border: 1px solid #BCBEB0;
+    background-color: white;
 }
 .horaFecha{
 	float: right;

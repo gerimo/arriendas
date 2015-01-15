@@ -42,7 +42,15 @@ p {
 }
 
 .panel-body {
-    padding: 5px
+    padding: 0 0 15px 0;
+}
+
+.panel-body .row {
+    margin-top: 15px;
+}
+
+.col {
+    vertical-align: middle;
 }
 
 #extend-alert {

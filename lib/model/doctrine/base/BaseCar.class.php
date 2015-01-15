@@ -36,7 +36,7 @@
  * @property Comunas $Comuna
  * @property integer $region
  * @property Commune $commune
- * @property datetime disabled_until
+ * @property date disabled_until
  * 
  * @method integer             getId()             Returns the current record's "id" value
  * @method integer             getUserId()         Returns the current record's "User_id" value
@@ -422,7 +422,7 @@ abstract class BaseCar extends sfDoctrineRecord
              'default' => 1,
              ));
         $this->hasColumn('disabled_until', 'timestamp', null, array(
-             'type' => 'timestamp',
+             'type' => 'date',
              'default' => null
              ));
        $this->hasColumn('verification_id', 'integer', 11, array(

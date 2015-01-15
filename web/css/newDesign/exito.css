@@ -4,5 +4,10 @@
 }
 .Owner{
 	font-size: 15px;
-	color:#EC008C
+	color:#ba135f
+}
+.BCW h1 {
+   color: #ba135f;
+   text-align: center;
+   font-weight: 500;
 }
