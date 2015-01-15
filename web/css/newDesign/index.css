@@ -586,6 +586,13 @@ header .navbar-default {
         }*/
     }
 
+    #testimonials-container {
+        margin: auto;
+        max-width: 550px;
+        padding: 10px 40px;
+        width: 50%;
+    }
+
     @media only screen and (max-width:767px) {
 
         .navbar-default {

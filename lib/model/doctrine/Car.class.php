@@ -33,16 +33,16 @@ class Car extends BaseCar {
         // Obtención de reservas que cuenten con las características
         $q = Doctrine_Core::getTable("Reserve")
             ->createQuery('R')
+            ->innerJoin('R.Transaction T')
             ->innerJoin('R.Car C')
             ->innerJoin('C.Model M')
-            ->where('R.user_id != ?', $this->getUser()->getId())
+            ->where('C.user_id != ?', $this->getUser()->id)
             ->andWhere('R.confirmed = 0')
-            ->andWhere('R.reserva_original = 0')
-            ->andWhere('R.date >= NOW()')
-            ->andWhere('R.impulsive = 1')
+            ->andWhere('R.comentario = null OR R.comentario = "Reserva extendida"')
+            ->andWhere('NOW() < DATE_ADD(R.date, INTERVAL 2 HOUR)')
+            ->andWhere('T.completed = 1')
             ->andWhere('C.transmission = ?', $this->transmission)
-            /*->andWhere('distancia(C.lat, C.lng, ?, ?) < ?', array($this->lat, $this->lng, $maxDistance))*/
-            ->addOrderBy('R.date ASC');
+            ->andWhere('distancia(C.lat, C.lng, ?, ?) < ?', array($this->lat, $this->lng, $maxDistance));
         
         if ($this->getModel()->getIdOtroTipoVehiculo() == 1) {
             $q->andWhere('M.id_otro_tipo_vehiculo IN (1,2)');
@@ -56,10 +56,23 @@ class Car extends BaseCar {
         // Revisamos que el auto no tenga ya una reserva confirmada en la fecha de la oportunidad
         foreach ($Reserves as $Reserve) {
 
-            if (count($Reserve->getOpportunities(false)) < $maxOpportunitiesAllowed && 
+            $ChangeOptions = $Reserve->getChangeOptions(false);
+
+            if (count($ChangeOptions) < $maxOpportunitiesAllowed && 
                 !$this->hasReserve($Reserve->getFechaInicio2(), $Reserve->getFechaTermino2())) {
 
-                $Opportunities[] = $Reserve;
+                // Revisamos que el usuario no haya ya postulado a la oportunidad
+                $itsPresent = false;
+                foreach ($ChangeOptions as $CO) {
+                    if ($CO->getCar()->getUser()->id == $this->getUser()->id) {
+                        $itsPresent = true;
+                        break;
+                    }
+                }
+
+                if (!$itsPresent) {
+                    $Opportunities[] = $Reserve;
+                }
             }
         }
 
@@ -220,14 +233,18 @@ class Car extends BaseCar {
 
   }
   
-public function hasReserve($from, $to) {
+public function hasReserve($from, $to, $userId = false) {
 
     $q = Doctrine_Core::getTable("Reserve")
         ->createQuery('R')
         ->leftJoin('R.Transaction T')
         ->where('T.completed = 1')
-        ->andWhere('R.car_id = ?', $this->getId())
+        ->andWhere('R.car_id = ?', $this->id)
         ->andWhere('(? BETWEEN R.date AND DATE_ADD(R.date, INTERVAL R.duration HOUR)) OR (? BETWEEN R.date AND DATE_ADD(R.date, INTERVAL R.duration HOUR)) OR (R.date BETWEEN ? AND ?) OR (DATE_ADD(R.date, INTERVAL R.duration HOUR) BETWEEN ? AND ?)', array($from, $to, $from, $to, $from, $to));
+
+    if ($userId) {
+      $q->andWhere('R.user_id != ?', $userId);
+    }
 
     $checkAvailability = $q->execute();
 

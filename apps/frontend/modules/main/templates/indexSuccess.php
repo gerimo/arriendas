@@ -771,20 +771,18 @@
 
     <div class="hidden-xs space-40"></div>
 
-    <div class="row">
-        <div class="hidden-xs col-sm-offset-3 col-sm-6 col-md-offset-3 col-md-6 text-center" id="testimonials-container">
-            <h1>Testimonios</h1>
-            <div id="section-testimonials-carousel">
-                <div>
-                    <p class="testimonial"><i class="fa fa-quote-left"></i> Puedo arrendar desde mi casa, en cualquier horario, sin tarjeta de crédito. Es el mismo auto que en un rent a car pero 30% más barato. <i class="fa fa-quote-right"></i></p>
-                    <p class="user">Javiera Cruzar,</p>
-                    <p class="user-type">Usuario Arriendas</p>
-                </div>
-                <div>
-                    <p class="testimonial"><i class="fa fa-quote-left"></i> Puedo arrendar desde mi casa, en cualquier horario, sin tarjeta de crédito. Es el mismo auto que en un rent a car pero 30% más barato. <i class="fa fa-quote-right"></i></p>
-                    <p class="user">Javiera Cruzar,</p>
-                    <p class="user-type">Usuario Arriendas</p>
-                </div>
+    <div id="testimonials-container">
+        <h1>Testimonios</h1>
+        <div id="section-testimonials-carousel">
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Puedo arrendar desde mi casa, en cualquier horario, sin tarjeta de crédito. Es el mismo auto que en un rent a car pero 30% más barato. <i class="fa fa-quote-right"></i></p>
+                <p class="user">Javiera Cruzar,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Puedo arrendar desde mi casa, en cualquier horario, sin tarjeta de crédito. Es el mismo auto que en un rent a car pero 30% más barato. <i class="fa fa-quote-right"></i></p>
+                <p class="user">Javiera Cruzar,</p>
+                <p class="user-type">Usuario Arriendas</p>
             </div>
         </div>
     </div>

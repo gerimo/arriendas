@@ -11,12 +11,12 @@ class reservesActions extends sfActions {
         $this->PaidReserves = Reserve::getPaidReserves($userId);
 
         $this->Reserves = Reserve::getReservesByUser($userId);
-        $this->Opportunities = array();
+        $this->ChangeOptions = array();
 
         foreach ($this->Reserves as $Reserve) {
 
-            foreach ($Reserve->getOpportunities() as $O) {
-                $this->Opportunities[$Reserve->getId()][] = $O;
+            foreach ($Reserve->getChangeOptions() as $ChangeOption) {
+                $this->ChangeOptions[$Reserve->getId()][] = $ChangeOption;
             }
         }
     }
@@ -56,7 +56,7 @@ class reservesActions extends sfActions {
             $Reserve->save();
 
             $Transaction = $Reserve->getTransaction();
-            $Transaction->setSelected(true);
+            /*$Transaction->setSelected(true);*/
             $Transaction->save();
 
             // Correos de aprobación
@@ -261,25 +261,24 @@ class reservesActions extends sfActions {
             throw new Exception("Falta fecha hasta", 1);
         }
 
-        $Car = $Reserve->getSelectedCar();
+        $Car = $Reserve->getCar();
 
         $NewReserve = $Reserve->copy(true);
+        $NewReserve->setCar($Car);
         $NewReserve->setDate($Reserve->getFechaTermino2());
         $NewReserve->setDuration(Utils::calculateDuration($from, $to));
-        $NewReserve->setPrice(Car::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth()));
+        $NewReserve->setPrice(Car::getPrice($from, $to, $Car->price_per_hour, $Car->price_per_day, $Car->price_per_week, $Car->price_per_month));
         $NewReserve->setComentario("Reserva extendida");
-        $NewReserve->setCar($Car);
         $NewReserve->setFechaReserva(date("Y-m-d H:i:s"));
-        $NewReserve->setIdPadre($Reserve->getId());
+        $NewReserve->setIdPadre($Reserve->id);
         $NewReserve->setExtendUserId($this->getUser()->getAttribute("userid"));
         $NewReserve->setNumeroFactura(0);
-        error_log("asd1");
+        $NewReserve->setConfirmed(false);
         $NewReserve->save();
-        error_log("asd2");
+
         $NewTransaction = $Reserve->getTransaction()->copy(true);
-        $NewTransaction->setCar($Car->getModel()->getBrand()->getName()." ".$Car->getModel()->getName());
         $NewTransaction->setPrice($NewReserve->getPrice());
-        $NewTransaction->setDate(date("Y-m-d H:i:s"));
+        $NewTransaction->setDate($Reserve->getFechaTermino2());
         $NewTransaction->setReserve($NewReserve);
         $NewTransaction->setCompleted(false);
         $NewTransaction->setNumeroFactura(0);

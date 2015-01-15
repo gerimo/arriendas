@@ -14,25 +14,20 @@ class Transaction extends BaseTransaction {
 
     public function select() {
 
-        if ($this->transaccion_original) {
-            $originalTransactionId = $this->transaccion_original;
-        } else {
-            $originalTransactionId = $this->id;
-        }
-
         try {
 
             $q = Doctrine_Query::create()
                 ->update('Transaction T')
-                ->set('T.selected', '?', false)
-                ->where('T.id = ? OR T.transaccion_original = ?', array($originalTransactionId, $originalTransactionId));
+                ->set('T.completed', 0)
+                ->where('T.user_id = ?', $this->user_id)
+                ->andWhere('DATE(T.date) = ?', date("Y-m-d", strtotime($this->date)));
 
             $q->execute();
         } catch (Exception $e) {
             return false;
         }
 
-        $this->selected = true;
+        $this->completed = true;
         $this->save();
 
         return true;
