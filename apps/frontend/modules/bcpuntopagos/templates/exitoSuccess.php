@@ -7,8 +7,7 @@
       <div class="BCW">
           <h1>PAGO EXITOSO</h1>
           <div class="contenido text-center">
-            <h2><b>TU PAGO SE RECIBIÓ EXITOSAMENTE!</b></h2>
-            <p>Antes y despu&eacute;s de realizar la reserva, debes firmar el 
+            <p>Antes y después de realizar la reserva, debes firmar el 
               <a href='http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/tokenReserve/<?php echo $tokenReserve; ?>' target='_blank'>informe de da&ntilde;os impreso.</a>
             </p>
             <br>
@@ -26,11 +25,11 @@
         <div class="col-md-offset-1">
             <p>Te enviamos estos datos a tu correo</p>
         </div>  
-        <div class="row hidden-xs">
-          <a class="col-md-offset-7 col-md-4 btn-a-action" href="<?php echo url_for("profile/pedidos")?>">Siguiente</a>
+        <div class="row hidden-xs" style="margin-top: 10px">
+          <a class="col-md-offset-7 col-md-4 btn-a-action" href="<?php echo url_for("reserves")?>">Siguiente</a>
         </div>
         <div class="row visible-xs" style="margin-top: 8px">
-          <a class="btn-block btn-a-action" href="<?php echo url_for("profile/pedidos")?>">Siguiente</a>
+          <a class="btn-block btn-a-action" href="<?php echo url_for("reserves")?>">Siguiente</a>
         </div> 
       </div>
     </div>

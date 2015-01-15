@@ -149,7 +149,7 @@ class mainActions extends sfActions {
         return sfView::NONE;
     }
 
-    public function executeDoRegister(sfWebRequest $request) {//echo $request->getParameter('foreign');die;ex$return = array("error" => false);
+    public function executeDoRegister(sfWebRequest $request) {
 
         $return = array("error" => false);
 
@@ -219,7 +219,198 @@ class mainActions extends sfActions {
         return sfView::NONE;
     }
 
-    public function executeGetCommunes(sfWebRequest $request) {//echo $request->getParameter('foreign');die;ex$return = array("error" => false);
+    public function executeGetCars(sfWebRequest $request) {
+
+        $return = array(
+            "error" => false,
+            "cars" => array()
+        );
+
+        $noDateInterval = false;
+
+        $swLat  = $request->getPostParameter('swLat', null);
+        $swLng  = $request->getPostParameter('swLng', null);
+        $neLat  = $request->getPostParameter('neLat', null);
+        $neLng  = $request->getPostParameter('neLng', null);
+        $map_center_lat  = $request->getPostParameter('map_center_lat', null);
+        $map_center_lng  = $request->getPostParameter('map_center_lng', null);
+
+        $from      = $request->getPostParameter('from', null);
+        $to        = $request->getPostParameter('to', null);
+        $automatic = $request->getPostParameter('automatic', null);
+        $low       = $request->getPostParameter('low', null);
+        $pasenger  = $request->getPostParameter('pasenger', null);
+        $comuna    = $request->getPostParameter('commune', null);
+
+        try {
+
+            $this->getUser()->setAttribute('fechainicio', date("d-m-Y", strtotime($from)));
+            $this->getUser()->setAttribute('fechatermino', date("d-m-Y", strtotime($to)));
+            $this->getUser()->setAttribute('horainicio', date("H:i", strtotime($from)));
+            $this->getUser()->setAttribute('horatermino', date("H:i", strtotime($to)));
+            $this->getUser()->setAttribute("map_clat", $map_center_lat);
+            $this->getUser()->setAttribute("map_clng", $map_center_lng);
+
+            if (!$from || !$to) {
+                $noDateInterval = true;
+            }
+
+            if (!$from) {
+                $from = date("Y-m-d H:i:s");
+            }
+
+            if (!$to) {
+                $to = date("Y-m-d H:i:s", strtotime("+1 day", strtotime($from)));
+            }
+
+            $q = Doctrine_Query::create()
+                ->select('
+                    ca.id, 
+                    ca.lat lat, 
+                    ca.lng lng, 
+                    ca.year,
+                    ca.price_per_day, 
+                    ca.price_per_hour,
+                    ca.photoS3 photoS3, 
+                    ca.Seguro_OK, 
+                    ca.foto_perfil, 
+                    ca.transmission transmission,
+                    ca.user_id,
+                    ca.velocidad_contesta_pedidos velocidad_contesta_pedidos,
+                    greatest(1440,ca.velocidad_contesta_pedidos)/greatest(0.1,ca.contesta_pedidos) carrank,
+                    co.name comuna_nombre,
+                    mo.name modelo, 
+                    mo.id_tipo_vehiculo id_tipo_vehiculo,
+                    br.name brand, 
+                ')
+                ->from('Car ca')
+                ->innerJoin('ca.Model mo')
+                ->innerJoin('ca.Commune co')
+                ->innerJoin('mo.Brand br')
+                ->Where('ca.activo = 1')
+                ->andWhere('ca.seguro_ok = 4')
+                ->orderBy('carrank ASC')
+                ->addOrderBy('IF(ca.velocidad_contesta_pedidos = 0, 1440, ca.velocidad_contesta_pedidos)  ASC')
+                ->addOrderBy('ca.fecha_subida  ASC')
+                ->limit(33);
+
+            if ($automatic) {
+                $q->andWhere("ca.transmission = 1");
+            }
+
+            if ($low) {
+                $q->andWhere("ca.tipobencina = 'Diesel'");
+            }
+
+            if ($pasenger) {
+                $q->andWhere("mo.id_otro_tipo_vehiculo = 3");
+            }
+
+            if ($comuna) {
+                $q->andWhere("co.code = ?", $comuna);
+            } else {
+                $q->andWhere('ca.lat < ?', $neLat);
+                $q->andWhere('ca.lat > ?', $swLat);
+                $q->andWhere('ca.lng > ?', $swLng);
+                $q->andWhere('ca.lng < ?', $neLng);
+            }
+
+            $cars = $q->execute();
+
+            foreach ($cars as $i => $car) {
+                if (!$car->hasReserve(date("Y-m-d H:i:s", strtotime($from)), date("Y-m-d H:i:s", strtotime($to)))) {
+
+                    error_log("Procesando auto [".$i."]: ".$car->getId());
+
+                    $d = 0;
+
+                    $photo = $car->getFotoPerfil();
+
+                    $porcentaje = $car->getContestaPedidos();
+
+                    if ($this->getUser()->getAttribute("logged")) {
+
+                        $velocidad = $car->getVelocidadContestaPedidos();
+
+                        if ($velocidad < 1) {
+                            $velocidad = "Menos de un minuto";
+                        } elseif ($velocidad < 10) {
+                            $velocidad = "Menos de 10 minutos";
+                        } elseif ($velocidad < 60) {
+                            $velocidad = "Menos de una hora";
+                        } elseif ($velocidad < 1440) {
+                            if (floor($velocidad / 60) == 1) {
+                                $velocidad = "1 hora";
+                            } else {
+                                $velocidad = floor($velocidad / 60) . " horas";
+                            }
+                        } else {
+                            if (floor($velocidad / 60 / 24) == 1) {
+                                $velocidad = "1 dia";
+                            } else {
+                                $velocidad = floor($velocidad / 60 / 24) . " dias";
+                            }
+                        }
+                    } else {
+                        $reservasRespondidas = 0;
+                        $velocidad = 0;
+                    }
+
+                    $transmision = "Manual";
+                    $tipoTrans = $car->getTransmission();
+                    $carPercentile = $car->getCarPercentile();
+
+                    if ($tipoTrans == 0)
+                        $transmision = "Manual";
+                    if ($tipoTrans == 1)
+                        $transmision = "Autom&aacute;tica";
+
+                    $price = Car::getPrice($from, $to, $car->getPricePerHour(), $car->getPricePerDay(), $car->getPricePerWeek(), $car->getPricePerMonth());
+
+                    $return['cars'][] = array(
+                        'id' => $car->getId(),
+                        'longitude' => $car->getlng(),
+                        'latitude' => $car->getlat(),
+                        'comuna' => $car->getCommune()->getName(),
+                        'brand' => $car->getBrand(),
+                        'model' => $car->getModelo(),
+                        'ano' => $car->getYear(),
+                        'typeModel' => $car->getIdTipoVehiculo(),
+                        'year' => $car->getYear(),
+                        'photoType' => $car->getPhotoS3(),
+                        'photo' => $photo,
+                        'price' => $price,
+                        'priceAPuntos' => $this->transformarPrecioAPuntos(floor($price)),
+                        'price_per_hour' => $this->transformarPrecioAPuntos(floor($car->getPricePerHour())),
+                        'price_per_day' => $this->transformarPrecioAPuntos(floor($car->getPricePerDay())),
+                        'userid' => $car->getUserId(),
+                        'carRank' => $car->getCarrank(),
+                        'carPercentile' => $carPercentile,
+                        'typeTransmission' => $transmision,
+                        'userVelocidadRespuesta' => $velocidad,
+                        'userContestaPedidos' => $porcentaje,
+                        'cantidadCalificacionesPositivas' => '0',
+                        'd' => $d,
+                        'verificado' => $car->autoVerificado(),
+                        'from' => date("Y-m-d H:i", strtotime($from)),
+                        'to' => date("Y-m-d H:i", strtotime($to))
+                    );
+                    error_log("asd");
+                }
+            }
+        } catch (Exception $e) {
+
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+            /*Utils::reportError($e->getMessage(), "profile/executeGetCars");*/
+        }
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
+    public function executeGetCommunes(sfWebRequest $request) {
 
         $return = array("error" => false);
 
@@ -523,11 +714,12 @@ class mainActions extends sfActions {
 
 	/////////////////////////////////////////////////////////////////////////////
 
-public function executeArriendo(sfWebRequest $request){
-    $ciudad = $request->getParameter("autos");
-    $objeto_ciudad = Doctrine_Core::getTable("city")->findOneByName($ciudad);
+    public function executeArriendo(sfWebRequest $request){
+    
+        $ciudad = $request->getParameter("autos");
+        $objeto_ciudad = Doctrine_Core::getTable("city")->findOneByName($ciudad);
 
-            $q = Doctrine_Query::create()
+        $q = Doctrine_Query::create()
                 ->select('ca.id, mo.name model,
           br.name brand, ca.uso_vehiculo_id tipo_vehiculo, ca.year year,
           ca.address address, ci.name city,
@@ -547,6 +739,7 @@ public function executeArriendo(sfWebRequest $request){
                 ->where('ca.activo = ?', 1)
                 ->andWhere('ca.seguro_ok = ?', 4)
                 ->andWhere('ca.city_id = ?', $objeto_ciudad->getId());
+        
         $this->cars = $q->fetchArray();
 
         $fotos_autos = array();
@@ -656,537 +849,536 @@ public function executeArriendo(sfWebRequest $request){
         }
 
         $this->fotos_autos = $fotos_autos;
+    }
 
-}
-
-public function executeFbShare(sfWebRequest $request){
-	$this->forward ('main', 'index');
-}
+    public function executeFbShare(sfWebRequest $request){
+    	$this->forward ('main', 'index');
+    }
 
 
-public function executePruebaImagen(sfWebRequest $request){
+    public function executePruebaImagen(sfWebRequest $request){
 
-}
-
+    }
 
 
 
-public function executeSubirImagenS3(sfWebRequest $request){
 
-}
+    public function executeSubirImagenS3(sfWebRequest $request){
 
-public function executeSubirImagenS3Ajax(sfWebRequest $request){
+    }
 
-    // Incluimos la clase de Amazon S3
-    require sfConfig::get('sf_app_lib_dir')."/amazonS3/config.php";
+    public function executeSubirImagenS3Ajax(sfWebRequest $request){
+
+        // Incluimos la clase de Amazon S3
+        require sfConfig::get('sf_app_lib_dir')."/amazonS3/config.php";
+                    
+        // Nombre del Bucket en Amazon S3
+        $bucket = "arriendas.prueba";
+            
+        // Cuando presiono el boton Upload
+        foreach($_FILES['images']['error'] as $key => $error){
+            if($error == UPLOAD_ERR_OK){
+                // Recibo las variables por POST
                 
-    // Nombre del Bucket en Amazon S3
-    $bucket = "arriendas.prueba";
-        
-    // Cuando presiono el boton Upload
-    foreach($_FILES['images']['error'] as $key => $error){
-        if($error == UPLOAD_ERR_OK){
-            // Recibo las variables por POST
-            
-            var_dump($_FILES['images']);
-            //die();
-            
-            $fileName = $_FILES['images']['name'][$key];
+                var_dump($_FILES['images']);
+                //die();
+                
+                $fileName = $_FILES['images']['name'][$key];
 
-            //asignar nombre aleatorio
-            $fileName = explode(".", $fileName);
-            //echo $fileName[0]. ' '.$fileName[1];
-            $fileName = md5(mt_rand()).'.'.$fileName[1];
+                //asignar nombre aleatorio
+                $fileName = explode(".", $fileName);
+                //echo $fileName[0]. ' '.$fileName[1];
+                $fileName = md5(mt_rand()).'.'.$fileName[1];
 
-            //almacenar en la base de datos
+                //almacenar en la base de datos
 
-            $fileTempName = $_FILES['images']['tmp_name'][$key];
-            
-            // Creo un nuevo bucket de Amazon S3
-            $s3->putBucket($bucket, S3::ACL_PUBLIC_READ);
-            
-            // Muevo el archivo de su ruta temporal a su ruta definitiva
-            if ($s3->putObjectFile($fileTempName, $bucket, $fileName, S3::ACL_PUBLIC_READ)) {
-                echo "<strong>Archivo subido correctamente.</strong>";
-            }else{
-                echo "<strong>No se pudo subir el archivo.</strong>";
+                $fileTempName = $_FILES['images']['tmp_name'][$key];
+                
+                // Creo un nuevo bucket de Amazon S3
+                $s3->putBucket($bucket, S3::ACL_PUBLIC_READ);
+                
+                // Muevo el archivo de su ruta temporal a su ruta definitiva
+                if ($s3->putObjectFile($fileTempName, $bucket, $fileName, S3::ACL_PUBLIC_READ)) {
+                    echo "<strong>Archivo subido correctamente.</strong>";
+                }else{
+                    echo "<strong>No se pudo subir el archivo.</strong>";
+                }
             }
         }
+
+        die();
+
     }
 
-    die();
+    public function executeFechaServidor(sfWebRequest $request){
+        $fechaActual = strftime("%Y-%m-%d %H:%M:%S");
+        echo $fechaActual;
+        die();
+    }
 
-}
+    public function executeComparaPrecios(sfWebRequest $request){
+        
+    }
 
-public function executeFechaServidor(sfWebRequest $request){
-    $fechaActual = strftime("%Y-%m-%d %H:%M:%S");
-    echo $fechaActual;
-    die();
-}
+    public function executeMailCalificaciones(sfWebRequest $request){
+        $mailCalificaciones= Doctrine_Core::getTable("mailCalificaciones")->findByEnviado(false);
+        $cont = 0;
+        
+        require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
 
-public function executeComparaPrecios(sfWebRequest $request){
-    
-}
+        foreach ($mailCalificaciones as $calificaciones){
+            $fechaEnvio = strtotime($calificaciones->getDate());
+            $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
 
-public function executeMailCalificaciones(sfWebRequest $request){
-    $mailCalificaciones= Doctrine_Core::getTable("mailCalificaciones")->findByEnviado(false);
-    $cont = 0;
-    
-    require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
+            if($fechaEnvio<$fechaActual){
+                $cont ++;
+                //echo $calificaciones->getId()."<br>";
 
-    foreach ($mailCalificaciones as $calificaciones){
-        $fechaEnvio = strtotime($calificaciones->getDate());
-        $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
+                //enviar mail
+                $calificaciones->enviarMailCalificaciones();
 
-        if($fechaEnvio<$fechaActual){
-            $cont ++;
-            //echo $calificaciones->getId()."<br>";
+                //actualizar campo enviado
+                $calificaciones->setEnviado(true);
+                $calificaciones->save();
+            }
 
-            //enviar mail
-            $calificaciones->enviarMailCalificaciones();
-
-            //actualizar campo enviado
-            $calificaciones->setEnviado(true);
-            $calificaciones->save();
         }
 
+        return $this->renderText("Enviados ".$cont." mail");
+    }
+     
+
+    public function executeVerificacionSeguro(sfWebRequest $request) {
+        //Verificamos el estado de la tabla Security Tokens
+        //$tokens= Doctrine_Core::getTable("SecurityTokens")->findOneById($request->getParameter("idToken"));
+        //$url="http://www.arriendas.cl/main/verificacionSeguro?idAuto=456";
+        
+        //Ejecutamos el cambio correspondientes
+        $auto= Doctrine_Core::getTable("car")->findOneById($request->getParameter("idAuto"));
+        $auto->setSeguroOK("4");
+        $auto->setFechaValidacion(strftime("%Y/%m/%d"));
+        $auto->save();
+        $this->getResponse()->setHttpHeader('Access-Control-Allow-Origin', '*');
+        $this->getResponse()->setHttpHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+        $this->getResponse()->setHttpHeader('Access-Control-Allow-Headers', 'X-Requested-With');
+        return $this->renderText("OK");
+     }
+ 
+    /*
+    Esta funcion recibe el ID de un daño almacenado en la tabla Damages, y devuelve el PNG correspondiente
+    a la vista superior del auto con el daño marcado con una X
+    */
+
+    public function executeGenerarMapaDanio(sfWebRequest $request) {
+        $idDanio= $request->getParameter("idDanio");
+        $danio= Doctrine_Core::getTable("damage")->findOneById($idDanio);
+        require sfConfig::get("sf_app_lib_dir")."/wideimage/WideImage.php";
+        $image = WideImage::load(sfConfig::get("sf_web_dir")."/images/autoFotoDanios.png");
+        $marca= WideImage::load(sfConfig::get("sf_web_dir")."/images/x_mark.png");
+        $new= $image->merge($marca,$danio->getCoordX()-10,-477.48*$danio->getLat()-42668,100);
+        $this->getResponse()->setContentType('image/png');
+        return $new->output('png');
     }
 
-    return $this->renderText("Enviados ".$cont." mail");
-}
- 
-
-public function executeVerificacionSeguro(sfWebRequest $request) {
-    //Verificamos el estado de la tabla Security Tokens
-    //$tokens= Doctrine_Core::getTable("SecurityTokens")->findOneById($request->getParameter("idToken"));
-    //$url="http://www.arriendas.cl/main/verificacionSeguro?idAuto=456";
-    
-    //Ejecutamos el cambio correspondientes
-    $auto= Doctrine_Core::getTable("car")->findOneById($request->getParameter("idAuto"));
-    $auto->setSeguroOK("4");
-    $auto->setFechaValidacion(strftime("%Y/%m/%d"));
-    $auto->save();
-    $this->getResponse()->setHttpHeader('Access-Control-Allow-Origin', '*');
-    $this->getResponse()->setHttpHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    $this->getResponse()->setHttpHeader('Access-Control-Allow-Headers', 'X-Requested-With');
-    return $this->renderText("OK");
- }
- 
-/*
-Esta funcion recibe el ID de un daño almacenado en la tabla Damages, y devuelve el PNG correspondiente
-a la vista superior del auto con el daño marcado con una X
-*/
-
-public function executeGenerarMapaDanio(sfWebRequest $request) {
-    $idDanio= $request->getParameter("idDanio");
-    $danio= Doctrine_Core::getTable("damage")->findOneById($idDanio);
-    require sfConfig::get("sf_app_lib_dir")."/wideimage/WideImage.php";
-    $image = WideImage::load(sfConfig::get("sf_web_dir")."/images/autoFotoDanios.png");
-    $marca= WideImage::load(sfConfig::get("sf_web_dir")."/images/x_mark.png");
-    $new= $image->merge($marca,$danio->getCoordX()-10,-477.48*$danio->getLat()-42668,100);
-    $this->getResponse()->setContentType('image/png');
-    return $new->output('png');
-}
 
 
-
-public function executeGenerarDaniosAuto(sfWebRequest $request) {
-    $idAuto= $request->getParameter("idAuto");
-    $danios= Doctrine_Core::getTable("damage")->findByCarId($idAuto);
-    require sfConfig::get("sf_app_lib_dir")."/wideimage/WideImage.php";
-    $image = WideImage::load(sfConfig::get("sf_web_dir")."/images/autoFotoDanios.png");
-    $i=1;
-    foreach($danios as $danio) {
-	$canvas = $image->getCanvas();
-	$canvas->useFont(sfConfig::get("sf_web_dir").'/fonts/Arial.ttf', 16, $image->allocateColor(0, 0, 0));
-	$canvas->writeText($danio->getCoordX()-10, -477.48*$danio->getLat()-42668, $i);
-	$i++;
-    }
-    $this->getResponse()->setContentType('image/png');
-    return $image->output('png');    
-}
-
-public function executeGenerarReporte(sfWebRequest $request) {
-
-    //Creamos la instancia de la libreria mPDF
-    require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
-   $this->getResponse()->setContentType('application/pdf');
-    $pdf= new mPDF();
-
-    //Generamos el HTML correspondiente
-    $request->setParameter("idAuto",$request->getParameter("idAuto"));
-    $html=$this->getController()->getPresentationFor("main","informeDanios");
-    $pdf->WriteHTML($html,0);
-    return $this->renderText($pdf->Output());
- //   return $this->renderText($html);
-}
-
-public function executeGenerarReporteResumen(sfWebRequest $request){
-    //Creamos la instancia de la libreria mPDF
-    require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
-    $this->getResponse()->setContentType('application/pdf');
-    $pdf= new mPDF();
-
-    //Generamos el HTML correspondiente
-    $request->setParameter("idAuto",$request->getParameter("idAuto"));
-    $html=$this->getController()->getPresentationFor("main","reporteResumen");
-    $pdf->WriteHTML($html,0);
-    return $this->renderText($pdf->Output());
-}
-
-public function executeGenerarReporteDanios(sfWebRequest $request){
-    //Creamos la instancia de la libreria mPDF
-    require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
-    $this->getResponse()->setContentType('application/pdf');
-    $pdf= new mPDF();
-
-    //Generamos el HTML correspondiente
-    $request->setParameter("idAuto",$request->getParameter("idAuto"));
-    $html=$this->getController()->getPresentationFor("main","reporteDanios");
-    $pdf->WriteHTML($html,0);
-    return $this->renderText($pdf->Output());
-}
-
-public function executeGenerarFormularioEntregaDevolucion(sfWebRequest $request) {
-    //Creamos la instancia de la libreria mPDF
-    require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
-    $this->getResponse()->setContentType('application/pdf');
-    $pdf= new mPDF();
-
-    //Generamos el HTML correspondiente
-    $request->setParameter("idReserve",$request->getParameter("idReserve"));
-    $request->setParameter("tokenReserve",$request->getParameter("tokenReserve"));
-    $html=$this->getController()->getPresentationFor("main","formularioEntrega");
-    $pdf->WriteHTML($html,0);
-    return $this->renderText($pdf->Output());
-    //return $this->renderText($html);
-}
-
-public function executeFormularioEntrega(sfWebRequest $request){
-    //se asume que se recibe el id de la tabla reserva desde la página anterior
-        //$idReserve = 605;
-        $idReserve= $request->getParameter("idReserve");
-        $tokenReserve= $request->getParameter("tokenReserve");
-
-        //id del usuario que accede al sitio
-        $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
-
-		if (!$tokenReserve){
-			$reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
-		}else{
-			$reserve = Doctrine_Core::getTable('reserve')->findOneByToken($tokenReserve);
-		};
-
-        sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
-        $this->url = public_path("");
-
-        $entrega = $reserve->getDate();
-        $duracion = $reserve->getDuration();
-
-        $entrega = strtotime($entrega);
-        $this->fechaEntrega = date("d/m/y",$entrega);
-        $this->horaEntrega = date("H:i",$entrega);
-
-        $this->fechaDevolucion = date("d/m/y",$entrega+($duracion*60*60));
-        $this->horaDevolucion = date("H:i",$entrega+($duracion*60*60));
-
-        $carId = $reserve->getCarId();
-        $arrendadorId = $reserve->getUserId();
-
-        $carClass = Doctrine_Core::getTable('car')->findOneById($carId);
-
-        $propietarioId = $carClass->getUserId();
-
-        $modeloId = $carClass->getModel();
-
-        $car['duracion'] = $reserve->getTiempoArriendoTexto();
-
-        $car['id'] = $carId;
-        $car['marca'] = $carClass->getModel()->getBrand();
-        $car['modelo'] = $carClass->getModel();
-        $car['patente'] = $carClass->getPatente();
-
-        $arrendadorClass = Doctrine_Core::getTable('user')->findOneById($arrendadorId);
-        $propietarioClass = Doctrine_Core::getTable('user')->findOneById($propietarioId);
-
-        if($propietarioId == $idUsuario){
-            $car['propietario'] = true;
-        }else{
-            $car['propietario'] = false;
+    public function executeGenerarDaniosAuto(sfWebRequest $request) {
+        $idAuto= $request->getParameter("idAuto");
+        $danios= Doctrine_Core::getTable("damage")->findByCarId($idAuto);
+        require sfConfig::get("sf_app_lib_dir")."/wideimage/WideImage.php";
+        $image = WideImage::load(sfConfig::get("sf_web_dir")."/images/autoFotoDanios.png");
+        $i=1;
+        foreach($danios as $danio) {
+    	$canvas = $image->getCanvas();
+    	$canvas->useFont(sfConfig::get("sf_web_dir").'/fonts/Arial.ttf', 16, $image->allocateColor(0, 0, 0));
+    	$canvas->writeText($danio->getCoordX()-10, -477.48*$danio->getLat()-42668, $i);
+    	$i++;
         }
+        $this->getResponse()->setContentType('image/png');
+        return $image->output('png');    
+    }
 
-        $arrendador['nombreCompleto'] = $arrendadorClass->getFirstname()." ".$arrendadorClass->getLastname();
-        $arrendador['rut'] = $arrendadorClass->getRut();
-        $arrendador['direccion'] = $arrendadorClass->getAddress();
-        $arrendador['telefono'] = $arrendadorClass->getTelephone();
+    public function executeGenerarReporte(sfWebRequest $request) {
 
-        $comunaId = $arrendadorClass->getComuna();
-        $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
-        $arrendador['comuna'] = ucfirst(strtolower($comunaClass['nombre']));
+        //Creamos la instancia de la libreria mPDF
+        require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
+       $this->getResponse()->setContentType('application/pdf');
+        $pdf= new mPDF();
 
-        $propietario['nombreCompleto'] = $propietarioClass->getFirstname()." ".$propietarioClass->getLastname();
-        $propietario['rut'] = $propietarioClass->getRut();
-        $propietario['direccion'] = $propietarioClass->getAddress();
-        $propietario['telefono'] = $propietarioClass->getTelephone();
+        //Generamos el HTML correspondiente
+        $request->setParameter("idAuto",$request->getParameter("idAuto"));
+        $html=$this->getController()->getPresentationFor("main","informeDanios");
+        $pdf->WriteHTML($html,0);
+        return $this->renderText($pdf->Output());
+     //   return $this->renderText($html);
+    }
 
-        $comunaId = $propietarioClass->getComuna();
-        $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
-        $propietario['comuna'] = ucfirst(strtolower($comunaClass['nombre']));
+    public function executeGenerarReporteResumen(sfWebRequest $request){
+        //Creamos la instancia de la libreria mPDF
+        require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
+        $this->getResponse()->setContentType('application/pdf');
+        $pdf= new mPDF();
 
-        //echo $carId;
-        $damageClass = Doctrine_Core::getTable('damage')->findByCarId($carId);
-        //$damageClass = Doctrine_Core::getTable('damage')->findByCarId(553);
-        $descripcionDanios = null;
-        $i = 0;
-        foreach ($damageClass as $damage) {
-            $descripcionDanios[$i] = $damage->getDescription();
-            $i++;
+        //Generamos el HTML correspondiente
+        $request->setParameter("idAuto",$request->getParameter("idAuto"));
+        $html=$this->getController()->getPresentationFor("main","reporteResumen");
+        $pdf->WriteHTML($html,0);
+        return $this->renderText($pdf->Output());
+    }
+
+    public function executeGenerarReporteDanios(sfWebRequest $request){
+        //Creamos la instancia de la libreria mPDF
+        require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
+        $this->getResponse()->setContentType('application/pdf');
+        $pdf= new mPDF();
+
+        //Generamos el HTML correspondiente
+        $request->setParameter("idAuto",$request->getParameter("idAuto"));
+        $html=$this->getController()->getPresentationFor("main","reporteDanios");
+        $pdf->WriteHTML($html,0);
+        return $this->renderText($pdf->Output());
+    }
+
+    public function executeGenerarFormularioEntregaDevolucion(sfWebRequest $request) {
+        //Creamos la instancia de la libreria mPDF
+        require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
+        $this->getResponse()->setContentType('application/pdf');
+        $pdf= new mPDF();
+
+        //Generamos el HTML correspondiente
+        $request->setParameter("idReserve",$request->getParameter("idReserve"));
+        $request->setParameter("tokenReserve",$request->getParameter("tokenReserve"));
+        $html=$this->getController()->getPresentationFor("main","formularioEntrega");
+        $pdf->WriteHTML($html,0);
+        return $this->renderText($pdf->Output());
+        //return $this->renderText($html);
+    }
+
+    public function executeFormularioEntrega(sfWebRequest $request){
+        //se asume que se recibe el id de la tabla reserva desde la página anterior
+            //$idReserve = 605;
+            $idReserve= $request->getParameter("idReserve");
+            $tokenReserve= $request->getParameter("tokenReserve");
+
+            //id del usuario que accede al sitio
+            $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+
+    		if (!$tokenReserve){
+    			$reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+    		}else{
+    			$reserve = Doctrine_Core::getTable('reserve')->findOneByToken($tokenReserve);
+    		};
+
+            sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
+            $this->url = public_path("");
+
+            $entrega = $reserve->getDate();
+            $duracion = $reserve->getDuration();
+
+            $entrega = strtotime($entrega);
+            $this->fechaEntrega = date("d/m/y",$entrega);
+            $this->horaEntrega = date("H:i",$entrega);
+
+            $this->fechaDevolucion = date("d/m/y",$entrega+($duracion*60*60));
+            $this->horaDevolucion = date("H:i",$entrega+($duracion*60*60));
+
+            $carId = $reserve->getCarId();
+            $arrendadorId = $reserve->getUserId();
+
+            $carClass = Doctrine_Core::getTable('car')->findOneById($carId);
+
+            $propietarioId = $carClass->getUserId();
+
+            $modeloId = $carClass->getModel();
+
+            $car['duracion'] = $reserve->getTiempoArriendoTexto();
+
+            $car['id'] = $carId;
+            $car['marca'] = $carClass->getModel()->getBrand();
+            $car['modelo'] = $carClass->getModel();
+            $car['patente'] = $carClass->getPatente();
+
+            $arrendadorClass = Doctrine_Core::getTable('user')->findOneById($arrendadorId);
+            $propietarioClass = Doctrine_Core::getTable('user')->findOneById($propietarioId);
+
+            if($propietarioId == $idUsuario){
+                $car['propietario'] = true;
+            }else{
+                $car['propietario'] = false;
+            }
+
+            $arrendador['nombreCompleto'] = $arrendadorClass->getFirstname()." ".$arrendadorClass->getLastname();
+            $arrendador['rut'] = $arrendadorClass->getRut();
+            $arrendador['direccion'] = $arrendadorClass->getAddress();
+            $arrendador['telefono'] = $arrendadorClass->getTelephone();
+
+            $comunaId = $arrendadorClass->getComuna();
+            $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
+            $arrendador['comuna'] = ucfirst(strtolower($comunaClass['nombre']));
+
+            $propietario['nombreCompleto'] = $propietarioClass->getFirstname()." ".$propietarioClass->getLastname();
+            $propietario['rut'] = $propietarioClass->getRut();
+            $propietario['direccion'] = $propietarioClass->getAddress();
+            $propietario['telefono'] = $propietarioClass->getTelephone();
+
+            $comunaId = $propietarioClass->getComuna();
+            $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
+            $propietario['comuna'] = ucfirst(strtolower($comunaClass['nombre']));
+
+            //echo $carId;
+            $damageClass = Doctrine_Core::getTable('damage')->findByCarId($carId);
+            //$damageClass = Doctrine_Core::getTable('damage')->findByCarId(553);
+            $descripcionDanios = null;
+            $i = 0;
+            foreach ($damageClass as $damage) {
+                $descripcionDanios[$i] = $damage->getDescription();
+                $i++;
+            }
+
+            //die();
+
+            $this->descripcionDanios = $descripcionDanios;
+            $this->arrendador = $arrendador;
+            $this->propietario = $propietario;
+            $this->car = $car;
+    }
+     
+     
+    //Se retorna un componente que permite hacer el upload de las fotos directamente al S3 de Amazon, sin pasar por el servidor
+    //Web.
+    public function executeUpload2S3(sfWebRequest $request) {
+        //Validamos los parámetros de entrada
+        $this->urlFotoDefecto= $request->getParameter("urlFotoDefecto");
+        $this->titulo= $request->getParameter("tituloFoto");
+        $this->bucketDestino= $request->getParameter("bucket");
+        $this->idElemento=$request->getParameter("idElemento");
+    }
+
+    //Metodo auxiliar para generar una version de menor tamaño de la foto
+    public function executeS3thumb(sfWebRequest $request) {
+        $image= $request->getParameter("urlFoto");
+        $ancho= $request->getParameter("ancho");
+        $alto= $request->getParameter("alto");
+        
+        //Necesitamos obtener el nombre del archivo respectivo.
+        //Para esto, hacemos uso de la funcion nativa parse_url de php
+        $temporal= parse_url($image);
+
+        
+        //Generamos la URL que corresponde a la imagen
+        $urlThumbnail= "thumb_an".$ancho."_al".$alto."_".str_replace("/","_",$temporal['path']);
+     
+     /*   require sfConfig::get('sf_app_lib_dir')."/aws_sdk/sdk.class.php";
+        $s3= new AmazonS3();
+        $bucket= "arriendas.testing".strtolower($s3->key);
+        $response= $s3->list_objects("arriendas.testing",array("prefix"=>$urlThumbnail));
+        
+        var_dump($response);
+        die();*/
+        //Revisamos si la foto está generada como thumb en el S3
+        $ch = curl_init();
+        curl_setopt($ch,CURLOPT_URL,"http://s3.amazonaws.com/arriendas.testing/?prefix=".$urlThumbnail);
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+        $salida= curl_exec($ch);
+        if(strpos($salida,"Contents")==false) {
+    	require sfConfig::get('sf_app_lib_dir')."/wideimage/WideImage.php";
+    	$image = WideImage::load($image);
+    	$resized = $image->resize($alto, $ancho);
+    	$resized->saveToFile(sfConfig::get('sf_upload_dir')."/".$urlThumbnail);
+    	require(sfConfig::get('sf_app_lib_dir')."/s3upload/s3_config.php");
+    	$s3->putObjectFile(sfConfig::get('sf_upload_dir')."/".$urlThumbnail,
+    	$bucket , $urlThumbnail, S3::ACL_PUBLIC_READ);
+    	}
+        $this->redirect("http://s3.amazonaws.com/arriendas.testing/".$urlThumbnail);
+    }
+
+    public function executeSignput(sfWebRequest $request) {
+        $S3_KEY='AKIAIDPA5IXQKMNWFCYQ';
+        $S3_SECRET='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';
+        $S3_BUCKET='/arriendas.testing';
+         
+        $EXPIRE_TIME=(60 * 5); // 5 minutes
+        $S3_URL='http://s3.amazonaws.com';
+         
+        $objectName='/' . time()."_".$request->getParameter('name');
+        $mimeType=$request->getParameter('type');
+        $expires = time() + $EXPIRE_TIME;
+        $amzHeaders= "x-amz-acl:public-read";
+        $stringToSign = "PUT\n\n$mimeType\n$expires\n$amzHeaders\n$S3_BUCKET$objectName";
+        $sig = urlencode(base64_encode(hash_hmac('sha1', $stringToSign, $S3_SECRET, true)));
+         
+        $url = urlencode("$S3_URL$S3_BUCKET$objectName?AWSAccessKeyId=$S3_KEY&Expires=$expires&Signature=$sig");
+         
+        return $this->renderText($url);
+    }
+     
+    public function executeInformeDanios(sfWebRequest $request) {
+        //Recibimos como parámetro el ID del vehículo para el cual deseamos generar el informe de daños
+        $idAuto= $request->getParameter("idAuto");
+        $car = Doctrine_Core::getTable("car")->findOneById($idAuto);
+        /*
+        if($car->getSeguroOK()==0) {
+    	throw new Exception("El auto no tiene su seguro verificado");
         }
-
-        //die();
-
-        $this->descripcionDanios = $descripcionDanios;
-        $this->arrendador = $arrendador;
-        $this->propietario = $propietario;
-        $this->car = $car;
-}
- 
- 
-//Se retorna un componente que permite hacer el upload de las fotos directamente al S3 de Amazon, sin pasar por el servidor
-//Web.
-public function executeUpload2S3(sfWebRequest $request) {
-    //Validamos los parámetros de entrada
-    $this->urlFotoDefecto= $request->getParameter("urlFotoDefecto");
-    $this->titulo= $request->getParameter("tituloFoto");
-    $this->bucketDestino= $request->getParameter("bucket");
-    $this->idElemento=$request->getParameter("idElemento");
-}
-
-//Metodo auxiliar para generar una version de menor tamaño de la foto
-public function executeS3thumb(sfWebRequest $request) {
-    $image= $request->getParameter("urlFoto");
-    $ancho= $request->getParameter("ancho");
-    $alto= $request->getParameter("alto");
-    
-    //Necesitamos obtener el nombre del archivo respectivo.
-    //Para esto, hacemos uso de la funcion nativa parse_url de php
-    $temporal= parse_url($image);
-
-    
-    //Generamos la URL que corresponde a la imagen
-    $urlThumbnail= "thumb_an".$ancho."_al".$alto."_".str_replace("/","_",$temporal['path']);
- 
- /*   require sfConfig::get('sf_app_lib_dir')."/aws_sdk/sdk.class.php";
-    $s3= new AmazonS3();
-    $bucket= "arriendas.testing".strtolower($s3->key);
-    $response= $s3->list_objects("arriendas.testing",array("prefix"=>$urlThumbnail));
-    
-    var_dump($response);
-    die();*/
-    //Revisamos si la foto está generada como thumb en el S3
-    $ch = curl_init();
-    curl_setopt($ch,CURLOPT_URL,"http://s3.amazonaws.com/arriendas.testing/?prefix=".$urlThumbnail);
-    curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
-    $salida= curl_exec($ch);
-    if(strpos($salida,"Contents")==false) {
-	require sfConfig::get('sf_app_lib_dir')."/wideimage/WideImage.php";
-	$image = WideImage::load($image);
-	$resized = $image->resize($alto, $ancho);
-	$resized->saveToFile(sfConfig::get('sf_upload_dir')."/".$urlThumbnail);
-	require(sfConfig::get('sf_app_lib_dir')."/s3upload/s3_config.php");
-	$s3->putObjectFile(sfConfig::get('sf_upload_dir')."/".$urlThumbnail,
-	$bucket , $urlThumbnail, S3::ACL_PUBLIC_READ);
-	}
-    $this->redirect("http://s3.amazonaws.com/arriendas.testing/".$urlThumbnail);
-}
-
-public function executeSignput(sfWebRequest $request) {
-    $S3_KEY='AKIAIDPA5IXQKMNWFCYQ';
-    $S3_SECRET='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';
-    $S3_BUCKET='/arriendas.testing';
-     
-    $EXPIRE_TIME=(60 * 5); // 5 minutes
-    $S3_URL='http://s3.amazonaws.com';
-     
-    $objectName='/' . time()."_".$request->getParameter('name');
-    $mimeType=$request->getParameter('type');
-    $expires = time() + $EXPIRE_TIME;
-    $amzHeaders= "x-amz-acl:public-read";
-    $stringToSign = "PUT\n\n$mimeType\n$expires\n$amzHeaders\n$S3_BUCKET$objectName";
-    $sig = urlencode(base64_encode(hash_hmac('sha1', $stringToSign, $S3_SECRET, true)));
-     
-    $url = urlencode("$S3_URL$S3_BUCKET$objectName?AWSAccessKeyId=$S3_KEY&Expires=$expires&Signature=$sig");
-     
-    return $this->renderText($url);
-}
- 
-public function executeInformeDanios(sfWebRequest $request) {
-    //Recibimos como parámetro el ID del vehículo para el cual deseamos generar el informe de daños
-    $idAuto= $request->getParameter("idAuto");
-    $car = Doctrine_Core::getTable("car")->findOneById($idAuto);
-    /*
-    if($car->getSeguroOK()==0) {
-	throw new Exception("El auto no tiene su seguro verificado");
+        */
+        
+        //Obtenemos los datos del dueño del vehículo
+        
+        $user= Doctrine_Core::getTable("user")->findOneByID($car->getUserId());
+        
+        //Obtencion de los datos referentes a los daños
+        $damages= Doctrine_Core::getTable("damage")->findByCarId($car->getId());
+        
+        //Necesitamos calcular la cantidad de páginas de daños a generar. Son 2 daños por págin
+        $paginas= ceil(count($damages)/2);
+        $this->paginasDanios= $paginas;
+        
+        //Datos para el template
+        $this->propietario= $user->getFirstname()." ".$user->getLastName();
+        $this->telefono= $user->getTelephone();
+        $this->direccion=$car->getAddress();
+        $this->foto="http://cdn1.arriendas.cl/uploads/cars/".$car->getFoto();
+        $this->agno=$car->getYear();
+        $this->precioHora=$car->getPricePerHour();
+        $this->precioDia=$car->getPricePerDay();
+        $this->marcaAuto= $car->getMarcaModelo();
+        $this->fotoFrontal= "../uploads/vistas_seguro/".$car->getSeguroFotoFrente();
+        $this->fotoCostadoIzquierdo= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoIzquierdo();
+        $this->fotoCostadoDerecho= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoDerecho();
+        $this->fotoTrasera= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroDerecho();
+        $this->fotoPanel= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroIzquierdo();    
+        $this->danios= $damages;
     }
-    */
-    
-    //Obtenemos los datos del dueño del vehículo
-    
-    $user= Doctrine_Core::getTable("user")->findOneByID($car->getUserId());
-    
-    //Obtencion de los datos referentes a los daños
-    $damages= Doctrine_Core::getTable("damage")->findByCarId($car->getId());
-    
-    //Necesitamos calcular la cantidad de páginas de daños a generar. Son 2 daños por págin
-    $paginas= ceil(count($damages)/2);
-    $this->paginasDanios= $paginas;
-    
-    //Datos para el template
-    $this->propietario= $user->getFirstname()." ".$user->getLastName();
-    $this->telefono= $user->getTelephone();
-    $this->direccion=$car->getAddress();
-    $this->foto="http://cdn1.arriendas.cl/uploads/cars/".$car->getFoto();
-    $this->agno=$car->getYear();
-    $this->precioHora=$car->getPricePerHour();
-    $this->precioDia=$car->getPricePerDay();
-    $this->marcaAuto= $car->getMarcaModelo();
-    $this->fotoFrontal= "../uploads/vistas_seguro/".$car->getSeguroFotoFrente();
-    $this->fotoCostadoIzquierdo= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoIzquierdo();
-    $this->fotoCostadoDerecho= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoDerecho();
-    $this->fotoTrasera= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroDerecho();
-    $this->fotoPanel= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroIzquierdo();    
-    $this->danios= $damages;
-}
 
-public function executeReporteResumen(sfWebRequest $request) {
-    //Recibimos como parámetro el ID del vehículo para el cual deseamos generar el informe de daños
-    $idAuto= $request->getParameter("idAuto");
-    $car = Doctrine_Core::getTable("car")->findOneById($idAuto);
-    /*
-    if($car->getSeguroOK()==0) {
-    throw new Exception("El auto no tiene su seguro verificado");
+    public function executeReporteResumen(sfWebRequest $request) {
+        //Recibimos como parámetro el ID del vehículo para el cual deseamos generar el informe de daños
+        $idAuto= $request->getParameter("idAuto");
+        $car = Doctrine_Core::getTable("car")->findOneById($idAuto);
+        /*
+        if($car->getSeguroOK()==0) {
+        throw new Exception("El auto no tiene su seguro verificado");
+        }
+        */
+        
+        //Obtenemos los datos del dueño del vehículo
+        
+        $user= Doctrine_Core::getTable("user")->findOneByID($car->getUserId());
+        
+        //Obtencion de los datos referentes a los daños
+        $damages= Doctrine_Core::getTable("damage")->findByCarId($car->getId());
+        
+        //Necesitamos calcular la cantidad de páginas de daños a generar. Son 2 daños por págin
+        $paginas= ceil(count($damages)/2);
+        $this->paginasDanios= $paginas;
+        
+        //Datos para el template
+        $this->propietario= $user->getFirstname()." ".$user->getLastName();
+        $this->telefono= $user->getTelephone();
+        $this->direccion=$car->getAddress();
+        $this->foto=$car->getFoto();
+        $this->agno=$car->getYear();
+        $this->precioHora=$car->getPricePerHour();
+        $this->precioDia=$car->getPricePerDay();
+        $this->marcaAuto= $car->getMarcaModelo();
+        $this->fotoFrontal= "../uploads/vistas_seguro/".$car->getSeguroFotoFrente();
+        $this->fotoCostadoIzquierdo= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoIzquierdo();
+        $this->fotoCostadoDerecho= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoDerecho();
+        $this->fotoTrasera= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroDerecho();
+        $this->fotoPanel= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroIzquierdo();    
+        $this->danios= $damages;
     }
-    */
-    
-    //Obtenemos los datos del dueño del vehículo
-    
-    $user= Doctrine_Core::getTable("user")->findOneByID($car->getUserId());
-    
-    //Obtencion de los datos referentes a los daños
-    $damages= Doctrine_Core::getTable("damage")->findByCarId($car->getId());
-    
-    //Necesitamos calcular la cantidad de páginas de daños a generar. Son 2 daños por págin
-    $paginas= ceil(count($damages)/2);
-    $this->paginasDanios= $paginas;
-    
-    //Datos para el template
-    $this->propietario= $user->getFirstname()." ".$user->getLastName();
-    $this->telefono= $user->getTelephone();
-    $this->direccion=$car->getAddress();
-    $this->foto=$car->getFoto();
-    $this->agno=$car->getYear();
-    $this->precioHora=$car->getPricePerHour();
-    $this->precioDia=$car->getPricePerDay();
-    $this->marcaAuto= $car->getMarcaModelo();
-    $this->fotoFrontal= "../uploads/vistas_seguro/".$car->getSeguroFotoFrente();
-    $this->fotoCostadoIzquierdo= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoIzquierdo();
-    $this->fotoCostadoDerecho= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoDerecho();
-    $this->fotoTrasera= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroDerecho();
-    $this->fotoPanel= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroIzquierdo();    
-    $this->danios= $damages;
-}
 
-public function executeReporteDanios(sfWebRequest $request) {
-    //Recibimos como parámetro el ID del vehículo para el cual deseamos generar el informe de daños
-    $idAuto= $request->getParameter("idAuto");
-    $car = Doctrine_Core::getTable("car")->findOneById($idAuto);
-    /*
-    if($car->getSeguroOK()==0) {
-    throw new Exception("El auto no tiene su seguro verificado");
-    }   
-    */
-    
-    //Obtenemos los datos del dueño del vehículo
-    
-    $user= Doctrine_Core::getTable("user")->findOneByID($car->getUserId());
-    
-    //Obtencion de los datos referentes a los daños
-    $damages= Doctrine_Core::getTable("damage")->findByCarId($car->getId());
-    
-    //Necesitamos calcular la cantidad de páginas de daños a generar. Son 2 daños por págin
-    $paginas= ceil(count($damages)/2);
-    $this->paginasDanios= $paginas;
-    
-    //Datos para el template
-    $this->propietario= $user->getFirstname()." ".$user->getLastName();
-    $this->telefono= $user->getTelephone();
-    $this->direccion=$car->getAddress();
-    $this->foto=$car->getFoto();
-    $this->agno=$car->getYear();
-    $this->precioHora=$car->getPricePerHour();
-    $this->precioDia=$car->getPricePerDay();
-    $this->marcaAuto= $car->getMarcaModelo();
-    $this->fotoFrontal= "../uploads/vistas_seguro/".$car->getSeguroFotoFrente();
-    $this->fotoCostadoIzquierdo= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoIzquierdo();
-    $this->fotoCostadoDerecho= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoDerecho();
-    $this->fotoTrasera= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroDerecho();
-    $this->fotoPanel= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroIzquierdo();    
-    $this->danios= $damages;
-}
- 
-public function executeTestDamage(sfWebRequest $request) {
-    $damage= Doctrine_Core::getTable("damage")->findOneById(21);
-    $damage->setUrlFoto("Estoesunaprueba.jpg");
-    $damage->save();
-    echo $damage->getUrlFoto();
-    die();
-}
-
-
-public function executeReferidos(sfWebRequest $request) {
-
-}
-
-public function executeReferidos2(sfWebRequest $request) {
-
-}
-
-public function executeAgradecimiento(sfWebRequest $request) {
-
-}
-    
-public function executeInvitaciones(sfWebRequest $request) {
-    
-}
-    
-public function executeExito(sfWebRequest $request) {
-}
-
-public function executeFracaso(sfWebRequest $request) {
-}
-
-public function executeNotificacion(sfWebRequest $request) {
-}
-
-public function oldexecuteIndex(sfWebRequest $request) {
-
-    if($request->getParameter('region'))
-        $this->region = Doctrine_Core::getTable('Regiones')->findOneBySlug($request->getParameter('region'))->getCodigo();
-    if($request->getParameter('comuna'))
-        $this->comuna = Doctrine_Core::getTable('Comunas')->findOneBySlug($request->getParameter('comuna'))->getCodigoInterno();
-
-	//Modificacion para setear la cookie de registo de la fecha de ingreso por primera vez del usuario
-	$cookie_ingreso = $this->getRequest()->getCookie('cookie_ingreso');
-	
-	if ($cookie_ingreso == NULL) {
-	    $this->getResponse()->setCookie('cookie_ingreso',time());
-	}
-	   
-    if ($this->getUser()->getAttribute('geolocalizacion') == null) {
-        $this->getUser()->setAttribute('geolocalizacion', true);
-    } elseif ($this->getUser()->getAttribute('geolocalizacion') == true) {
-        $this->getUser()->setAttribute('geolocalizacion', false);
+    public function executeReporteDanios(sfWebRequest $request) {
+        //Recibimos como parámetro el ID del vehículo para el cual deseamos generar el informe de daños
+        $idAuto= $request->getParameter("idAuto");
+        $car = Doctrine_Core::getTable("car")->findOneById($idAuto);
+        /*
+        if($car->getSeguroOK()==0) {
+        throw new Exception("El auto no tiene su seguro verificado");
+        }   
+        */
+        
+        //Obtenemos los datos del dueño del vehículo
+        
+        $user= Doctrine_Core::getTable("user")->findOneByID($car->getUserId());
+        
+        //Obtencion de los datos referentes a los daños
+        $damages= Doctrine_Core::getTable("damage")->findByCarId($car->getId());
+        
+        //Necesitamos calcular la cantidad de páginas de daños a generar. Son 2 daños por págin
+        $paginas= ceil(count($damages)/2);
+        $this->paginasDanios= $paginas;
+        
+        //Datos para el template
+        $this->propietario= $user->getFirstname()." ".$user->getLastName();
+        $this->telefono= $user->getTelephone();
+        $this->direccion=$car->getAddress();
+        $this->foto=$car->getFoto();
+        $this->agno=$car->getYear();
+        $this->precioHora=$car->getPricePerHour();
+        $this->precioDia=$car->getPricePerDay();
+        $this->marcaAuto= $car->getMarcaModelo();
+        $this->fotoFrontal= "../uploads/vistas_seguro/".$car->getSeguroFotoFrente();
+        $this->fotoCostadoIzquierdo= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoIzquierdo();
+        $this->fotoCostadoDerecho= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoDerecho();
+        $this->fotoTrasera= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroDerecho();
+        $this->fotoPanel= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroIzquierdo();    
+        $this->danios= $damages;
     }
+     
+    public function executeTestDamage(sfWebRequest $request) {
+        $damage= Doctrine_Core::getTable("damage")->findOneById(21);
+        $damage->setUrlFoto("Estoesunaprueba.jpg");
+        $damage->save();
+        echo $damage->getUrlFoto();
+        die();
+    }
+
+
+    public function executeReferidos(sfWebRequest $request) {
+
+    }
+
+    public function executeReferidos2(sfWebRequest $request) {
+
+    }
+
+    public function executeAgradecimiento(sfWebRequest $request) {
+
+    }
+        
+    public function executeInvitaciones(sfWebRequest $request) {
+        
+    }
+        
+    public function executeExito(sfWebRequest $request) {
+    }
+
+    public function executeFracaso(sfWebRequest $request) {
+    }
+
+    public function executeNotificacion(sfWebRequest $request) {
+    }
+
+    public function oldexecuteIndex(sfWebRequest $request) {
+
+        if($request->getParameter('region'))
+            $this->region = Doctrine_Core::getTable('Regiones')->findOneBySlug($request->getParameter('region'))->getCodigo();
+        if($request->getParameter('comuna'))
+            $this->comuna = Doctrine_Core::getTable('Comunas')->findOneBySlug($request->getParameter('comuna'))->getCodigoInterno();
+
+    	//Modificacion para setear la cookie de registo de la fecha de ingreso por primera vez del usuario
+    	$cookie_ingreso = $this->getRequest()->getCookie('cookie_ingreso');
+    	
+    	if ($cookie_ingreso == NULL) {
+    	    $this->getResponse()->setCookie('cookie_ingreso',time());
+    	}
+    	   
+        if ($this->getUser()->getAttribute('geolocalizacion') == null) {
+            $this->getUser()->setAttribute('geolocalizacion', true);
+        } elseif ($this->getUser()->getAttribute('geolocalizacion') == true) {
+            $this->getUser()->setAttribute('geolocalizacion', false);
+        }
         
         $fechaActual = $this->formatearHoraChilena(strftime("%Y%m%d%H%M%S", strtotime('+3 hours', time())));    // sumo 3hs a la hora chilena.
         $this->day_from = (!$this->getUser()->getAttribute("fechainicio"))? date("d-m-Y", strtotime($fechaActual)) : $this->getUser()->getAttribute("fechainicio");
@@ -1467,8 +1659,6 @@ public function oldexecuteIndex(sfWebRequest $request) {
             }
         }
     }
-
-
     
     public function executeListaAjax(sfWebRequest $request){
 
@@ -1799,48 +1989,6 @@ public function oldexecuteIndex(sfWebRequest $request) {
         return $this->renderText(json_encode($_output));
         //return $this->renderText(json_encode(array('error'=>'Faltan par?metros para realizar la consulta')));
     }
-    
-    public function executeGetComunasSearch(sfWebRequest $request) {
-        sfConfig::set('sf_web_debug', false);
-        $_output;
-        $_output[] = array("optionValue" => 0, "optionDisplay" => "Elegir Comuna");
-//        $chooseRegionChangeCount = $this->getUser()->getAttribute("chooseRegionChangeCount");
-//        if(is_null($chooseRegionChangeCount)){
-//            $chooseRegionChangeCount = 0;
-//        }
-//        $user_id = $this->getUser()->getAttribute("userid");
-//        if($chooseRegionChangeCount > 2 && !is_null($user_id)){
-//                $myUser = Doctrine::getTable('User')->findOneById($user_id);
-//                $myUser->setBlocked(true);
-//                $myUser->save();
-//        }elseif ($this->getUser()->isAuthenticated()) {
-//            $chooseRegionChangeCount++;
-//            $this->getUser()->setAttribute("chooseRegionChangeCount", $chooseRegionChangeCount);
-//        }
-        if ($request->getParameter('codigo')) {
-            // el dropdown debe mostrar únicamente las comunas donde hay Cars con seguro_ok = 4 y activo = 1
-            //$comunas = Doctrine_Core::getTable('Comunas')->findByPadre($request->getParameter('codigo'));
-            
-            $sql =  " SELECT co.codigoInterno, co.nombre
-                FROM Comunas co
-                WHERE co.padre = ". $request->getParameter('codigo')
-                    . " AND co.codigoInterno in (
-                    SELECT DISTINCT ca.comuna_id
-                    FROM Car ca
-                    WHERE ca.activo = 1
-                        AND ca.seguro_ok = 4
-                    )";
-            
-            $query = Doctrine_Manager::getInstance()->connection();  
-            $comunas = $query->fetchAll($sql);
-            
-            foreach ($comunas as $c) {
-                //$_output[] = array("optionValue" => $c->getCodigoInterno(), "optionDisplay" => $c->getNombre());
-                $_output[] = array("optionValue" => $c['codigoInterno'], "optionDisplay" => $c['nombre']);
-            }
-        }
-        return $this->renderText(json_encode($_output));
-    }
 
     public function executeIndexOld(sfWebRequest $request) {
 
@@ -1926,203 +2074,11 @@ public function oldexecuteIndex(sfWebRequest $request) {
         //echo $q->getSqlQuery();
     }
 
-    public function executeGetCars(sfWebRequest $request) {
-
-        $return = array(
-            "error" => false,
-            "cars" => array()
-        );
-
-        $noDateInterval = false;
-
-        $swLat  = $request->getPostParameter('swLat', null);
-        $swLng  = $request->getPostParameter('swLng', null);
-        $neLat  = $request->getPostParameter('neLat', null);
-        $neLng  = $request->getPostParameter('neLng', null);
-        $map_center_lat  = $request->getPostParameter('map_center_lat', null);
-        $map_center_lng  = $request->getPostParameter('map_center_lng', null);
-
-        $from      = $request->getPostParameter('from', null);
-        $to        = $request->getPostParameter('to', null);
-        $automatic = $request->getPostParameter('automatic', null);
-        $low       = $request->getPostParameter('low', null);
-        $pasenger  = $request->getPostParameter('pasenger', null);
-        $comuna    = $request->getPostParameter('commune', null);
-
-        try {
-
-            // Se rescata 'porsiacaso'
-            $this->getUser()->setAttribute('fechainicio', date("d-m-Y", strtotime($from)));
-            $this->getUser()->setAttribute('fechatermino', date("d-m-Y", strtotime($to)));
-            $this->getUser()->setAttribute('horainicio', date("H:i", strtotime($from)));
-            $this->getUser()->setAttribute('horatermino', date("H:i", strtotime($to)));
-            // fin 'posiacaso'
-
-            $this->getUser()->setAttribute("map_clat", $map_center_lat);
-            $this->getUser()->setAttribute("map_clng", $map_center_lng);
-
-            if (!$from || !$to) {
-                $noDateInterval = true;
-            }
-
-            if (!$from) {
-                $from = date("Y-m-d H:i:s");
-            }
-
-            if (!$to) {
-                $to = date("Y-m-d H:i:s", strtotime("+1 day", strtotime($from)));
-            }
-
-            $q = Doctrine_Query::create()
-                ->select('
-                    ca.id, 
-                    ca.lat lat, 
-                    ca.lng lng, 
-                    ca.year,
-                    ca.price_per_day, 
-                    ca.price_per_hour,
-                    ca.photoS3 photoS3, 
-                    ca.Seguro_OK, 
-                    ca.foto_perfil, 
-                    ca.transmission transmission,
-                    ca.user_id,
-                    ca.velocidad_contesta_pedidos velocidad_contesta_pedidos,
-                    greatest(1440,ca.velocidad_contesta_pedidos)/greatest(0.1,ca.contesta_pedidos) carrank,
-                    co.name comuna_nombre,
-                    mo.name modelo, 
-                    mo.id_tipo_vehiculo id_tipo_vehiculo,
-                    br.name brand, 
-                ')
-                ->from('Car ca')
-                ->innerJoin('ca.Model mo')
-                ->innerJoin('ca.Commune co')
-                ->innerJoin('mo.Brand br')
-                ->Where('ca.activo = 1')
-                ->andWhere('ca.seguro_ok = 4')
-                ->orderBy('carrank ASC')
-                ->addOrderBy('IF(ca.velocidad_contesta_pedidos = 0, 1440, ca.velocidad_contesta_pedidos)  ASC')
-                ->addOrderBy('ca.fecha_subida  ASC')
-                ->limit(33);
-
-            if ($automatic) {
-                $q->andWhere("ca.transmission = 1");
-            }
-
-            if ($low) {
-                $q->andWhere("ca.tipobencina = 'Diesel'");
-            }
-
-            if ($pasenger) {
-                $q->andWhere("mo.id_otro_tipo_vehiculo = 3");
-            }
-
-            if ($comuna) {
-                $q->andWhere("co.code = ?", $comuna);
-            } else {
-                $q->andWhere('ca.lat < ?', $neLat);
-                $q->andWhere('ca.lat > ?', $swLat);
-                $q->andWhere('ca.lng > ?', $swLng);
-                $q->andWhere('ca.lng < ?', $neLng);
-            }
-
-            /*if ($noDateInterval) {
-                $q->limit(40);
-            }*/
-
-            $cars = $q->execute();
-
-            foreach ($cars as $i => $car) {
-                if (!$car->hasReserve(date("Y-m-d", strtotime($from)), date("Y-m-d", strtotime($to)))) {
-
-                    $d = 0;
-
-                    $photo = $car->getFotoPerfil();
-
-                    $porcentaje = $car->getContestaPedidos();
-
-                    if ($this->getUser()->getAttribute("logged")) {
-
-                        $velocidad = $car->getVelocidadContestaPedidos();
-
-                        if ($velocidad < 1) {
-                            $velocidad = "Menos de un minuto";
-                        } elseif ($velocidad < 10) {
-                            $velocidad = "Menos de 10 minutos";
-                        } elseif ($velocidad < 60) {
-                            $velocidad = "Menos de una hora";
-                        } elseif ($velocidad < 1440) {
-                            if (floor($velocidad / 60) == 1) {
-                                $velocidad = "1 hora";
-                            } else {
-                                $velocidad = floor($velocidad / 60) . " horas";
-                            }
-                        } else {
-                            if (floor($velocidad / 60 / 24) == 1) {
-                                $velocidad = "1 dia";
-                            } else {
-                                $velocidad = floor($velocidad / 60 / 24) . " dias";
-                            }
-                        }
-                    } else {
-                        $reservasRespondidas = 0;
-                        $velocidad = 0;
-                    }
-
-                    $transmision = "Manual";
-                    $tipoTrans = $car->getTransmission();
-                    $carPercentile = $car->getCarPercentile();
-
-                    if ($tipoTrans == 0)
-                        $transmision = "Manual";
-                    if ($tipoTrans == 1)
-                        $transmision = "Autom&aacute;tica";
-
-                    $price = Car::getPrice($from, $to, $car->getPricePerHour(), $car->getPricePerDay(), $car->getPricePerWeek(), $car->getPricePerMonth());
-
-                    $return['cars'][] = array('id' => $car->getId(),
-                        'longitude' => $car->getlng(),
-                        'latitude' => $car->getlat(),
-                        'comuna' => $car->getCommune()->getName(),
-                        'brand' => $car->getBrand(),
-                        'model' => $car->getModelo(),
-                        'ano' => $car->getYear(),
-                        'typeModel' => $car->getIdTipoVehiculo(),
-                        'year' => $car->getYear(),
-                        'photoType' => $car->getPhotoS3(),
-                        'photo' => $photo,
-                        'price' => $price,
-                        'priceAPuntos' => $this->transformarPrecioAPuntos(floor($price)),
-                        'price_per_hour' => $this->transformarPrecioAPuntos(floor($car->getPricePerHour())),
-                        'price_per_day' => $this->transformarPrecioAPuntos(floor($car->getPricePerDay())),
-                        'userid' => $car->getUserId(),
-                        'carRank' => $car->getCarrank(),
-                        'carPercentile' => $carPercentile,
-                        'typeTransmission' => $transmision,
-                        'userVelocidadRespuesta' => $velocidad,
-                        'userContestaPedidos' => $porcentaje,
-                        'cantidadCalificacionesPositivas' => '0',
-                        'd' => $d,
-                        'verificado' => $car->autoVerificado(),
-                        'from' => date("Y-m-d H:i", strtotime($from)),
-                        'to' => date("Y-m-d H:i", strtotime($to))
-                    );
-                }
-            }
-        } catch (Exception $e) {
-
-            $return["error"] = true;
-            $return["errorMessage"] = $e->getMessage();
-            /*Utils::reportError($e->getMessage(), "profile/executeGetCars");*/
-        }
-
-        $this->renderText(json_encode($return));
-
-        return sfView::NONE;
-    }
+    
 
     public function executeMap(sfWebRequest $request) {
 
-	$modelo = new Model();
+	   $modelo = new Model();
 
         //$this->setLayout(true);
         //      sfConfig::set('sf_web_debug', false);
@@ -2589,6 +2545,7 @@ public function oldexecuteIndex(sfWebRequest $request) {
 
         $this->cars = $q->execute();
     }
+
     public function getPhotoUser($idUser){
         $claseUsuario = Doctrine_Core::getTable('user')->findOneById($idUser);
         if($claseUsuario->getFacebookId()!=null && $claseUsuario->getFacebookId()!=""){
