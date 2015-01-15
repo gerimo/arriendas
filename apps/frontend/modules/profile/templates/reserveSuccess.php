@@ -29,22 +29,23 @@
             <div class="carousel-inner" role="listbox">
                 
                     <?php
-                    $arrayFotos = $arrayImagenes;
                     $base_url = $sf_request->getUriPrefix().$sf_request->getRelativeUrlRoot();
-                    if ($arregloFoto != null) {  
+                    if ($arrayFotos != null) {  
                         $cantidadFotos = count($arrayFotos);
+                        
                         ?>
                         <div class="item active">
-                            <img src="http://www.arriendas.cl/main/s3thumb?alto=40&ancho=40&urlFoto=<?= $arrayFotos[$i]; ?>">
-                            <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_40,h_40,c_fill,g_center/<?= $base_url ?>/uploads/verificaciones/thumbs/<?= $arrayFotos[$i]?>">
-                       </div>
+
+                            <img src="http://www.arriendas.cl/main/s3thumb?alto=40&ancho=40&urlFoto=<?= $arrayFotos[0]; ?>">
+<!--                             <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_40,h_40,c_fill,g_center/<?= $base_url ?>/uploads/verificaciones/thumbs/<?= $arrayFotos[0]?>">
+ -->                       </div>
                        <?php
                         for ($i = 1; $i < $cantidadFotos; $i++) {
                         ?>
                         <div class="item ">
                             <img src="http://www.arriendas.cl/main/s3thumb?alto=40&ancho=40&urlFoto=<?= $arrayFotos[$i]; ?>">
-                            <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_40,h_40,c_fill,g_center/<?= $base_url ?>/uploads/verificaciones/thumbs/<?= $arrayFotos[$i]?>"> 
-                       </div>
+<!--                             <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_40,h_40,c_fill,g_center/<?= $base_url ?>/uploads/verificaciones/thumbs/<?= $arrayFotos[$i]?>"> 
+ -->                       </div>
                         <?php
                         }
                     }
