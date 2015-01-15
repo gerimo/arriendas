@@ -98,9 +98,9 @@ class Car extends BaseCar {
         if ($hours >= 6) {
             $days = $days + 1;
             $hours = 0;
-        } else {
+        }/* else {
             $hours = round($hours * 24, 0);
-        }
+        }*/
 
         if ($days >= 7 && $pricePerWeek > 0) {
             $pricePerDay = $pricePerWeek / 7;
