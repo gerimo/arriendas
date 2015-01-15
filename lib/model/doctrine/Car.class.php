@@ -92,6 +92,9 @@ class Car extends BaseCar {
         $days     = floor($duration / 24);
         $hours    = $duration % 24;
 
+        error_log("days: ".$days);
+        error_log("hours: ".$hours);
+
         if ($hours >= 6) {
             $days = $days + 1;
             $hours = 0;
