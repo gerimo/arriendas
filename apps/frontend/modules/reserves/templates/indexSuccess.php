@@ -79,17 +79,17 @@
                                     <?php foreach ($ChangeOptions[$Reserve->getId()] as $CO): ?>
                                         <div class="row">
                                             <div class="col-md-9">
-                                                <div class="col col-md-3 text-center">
+                                                <div class="col-md-3 text-center">
                                                     <img src="/uploads/cars/thumbs/<?php echo $CO->getCar()->getFotoPerfil() ?>" width="75%">
                                                 </div>
-                                                <div class="col col-md-3 text-center">
+                                                <div class="col-md-3 text-center">
                                                     <p><?php echo $CO->getCar()->getModel()->getBrand()->getName() ." ". $CO->getCar()->getModel()->getName() ?></p>
                                                     <p><?php if ($CO->getCar()->getTransmission()) echo "Automático"; else echo "Mecánico"; ?></p>
                                                 </div>
-                                                <div class="col col-md-3 text-center">
+                                                <div class="col-md-3 text-center">
                                                     <p><?php echo $CO->getCar()->getAddress() .", ". $CO->getCar()->getCommune() ?></p>
                                                 </div>
-                                                <div class="col col-md-3 text-center">
+                                                <div class="col-md-3 text-center">
                                                     <p><?php echo $CO->getCar()->getUser()->getFirstname() ." ". $CO->getCar()->getUser()->getLastname() ?></p>
                                                     <p><span class="glyphicon glyphicon-earphone"></span> <?php echo $CO->getCar()->getUser()->getTelephone() ?></p>
                                                 </div>

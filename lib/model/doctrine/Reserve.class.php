@@ -30,7 +30,7 @@ class Reserve extends BaseReserve {
             ->createQuery('R')
             ->innerJoin('R.Transaction T')
             ->where('R.user_id = ?', $this->getUser()->id)
-            ->andWhere('DATE(R.date) = ?', date("Y-m-d", strtotime($this->date)))
+            ->andWhere('DATE_FORMAT(R.date, "%Y-%m-%d %H:%i") = ?', date("Y-m-d H:i", strtotime($this->date)))
             ->orderBy('T.completed DESC')
             ->addOrderBy('R.fecha_reserva ASC');
 
