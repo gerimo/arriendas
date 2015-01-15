@@ -98,6 +98,11 @@
     font-weight: 300;
 }
 
+.carousel-inner > .item > img {
+        display: block;
+        width: 100%;
+        height: auto;
+}
 
 .availability{
     padding: 68px 0 32px 15px;

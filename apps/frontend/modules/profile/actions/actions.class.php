@@ -491,15 +491,15 @@ class profileActions extends sfActions {
             $arrayImagenes[$i] = $rutaFotoAccesorios2;
         }
         $this->arrayFotos = $arrayImagenes;
-        $arrayFotoDanios = null;
-        $arrayDescripcionDanios = null;
-        $danios = Doctrine_Core::getTable('damage')->findByCar(array($this->Car->getId()));
-        for ($i = 0; $i < count($danios); $i++) {
-            $arrayFotoDanios[$i] = $danios[$i]->getUrlFoto();
-            $arrayDescripcionDanios[$i] = $danios[$i]->getDescription();
-        }
-        $this->arrayFotosDanios = $arrayFotoDanios;
-        $this->arrayDescripcionesDanios = $arrayDescripcionDanios;
+        // $arrayFotoDanios = null;
+        // $arrayDescripcionDanios = null;
+        // $danios = Doctrine_Core::getTable('damage')->findByCar(array($this->Car->getId()));
+        // for ($i = 0; $i < count($danios); $i++) {
+        //     $arrayFotoDanios[$i] = $danios[$i]->getUrlFoto();
+        //     $arrayDescripcionDanios[$i] = $danios[$i]->getDescription();
+        // }
+        // $this->arrayFotosDanios = $arrayFotoDanios;
+        // $this->arrayDescripcionesDanios = $arrayDescripcionDanios;
     }
 
 
