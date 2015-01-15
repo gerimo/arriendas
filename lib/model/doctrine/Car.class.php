@@ -47,12 +47,11 @@ class Car extends BaseCar {
             ->andWhere('distancia(C.lat, C.lng, ?, ?) < ?', array($this->lat, $this->lng, $maxDistance))
             ;
         
-        error_log("TIPO: ".$this->getModel()->getIdOtroTipoVehiculo());
-        /*if ($this->getModel()->getIdOtroTipoVehiculo() == 1) {
+        if ($this->getModel()->getIdOtroTipoVehiculo() == 2) {
             $q->andWhere('M.id_otro_tipo_vehiculo IN (1,2)');
         } else {
             $q->andWhere('M.id_otro_tipo_vehiculo = ?', $this->getModel()->getIdOtroTipoVehiculo());  
-        }*/
+        }
 
         $Reserves = $q->execute();
 
