@@ -20,11 +20,11 @@
     <?php endif ?>
 
 <div class="container">
+    <div class="hidden-xs col-sm-12 col-md-12"><h1 class="hidden-xs text-capitalize"><?php echo $Car->getModel()->getBrand()->getName()." "
+        .$Car->getModel()->getName()." <span>".$Car->getCommune().","."</span>"." "
+        ."<span>".$Car->getYear()."</span>" ?></h1></div>
 
-    <div class="col-xs-offset-0 col-xs-12 col-sn-12 col-md-offset-0 col-md-5 carousal-area">
-        <h1 class="hidden-xs text-capitalize"><?php echo $Car->getModel()->getBrand()->getName()." "
-        .$Car->getModel()->getName()."</br> <span>".$Car->getCommune().","."</span>"." "
-        ."<span>".$Car->getYear()."</span>" ?></h1>
+    <div class="col-xs-offset-0 col-xs-12 col-sm-12 col-md-offset-0 col-md-5 carousal-area">
         <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner" role="listbox">
                 
