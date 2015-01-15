@@ -12,14 +12,17 @@
  */
 class Commune extends BaseCommune {
 
-	public static function getByRegion($regionId) {
+    public static function getByRegion($regionId = false) {
 
-		$q = Doctrine_Core::getTable("Commune")
+        $q = Doctrine_Core::getTable("Commune")
             ->createQuery('C')
             ->innerJoin('C.Region R')
-            ->where('R.id = ?', $regionId)
             ->orderBy('C.name ASC');
 
-        return $q->fetchArray();
-	}
+        if ($regionId) {
+            $q->where('R.id = ?', $regionId);
+        }
+
+        return $q->execute();
+    }
 }
