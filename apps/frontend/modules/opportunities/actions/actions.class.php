@@ -63,7 +63,6 @@ class opportunitiesActions extends sfActions {
             $O->setImpulsive(true);
             $O->setComentario('Reserva oportunidad');
             $O->setReservaOriginal($OriginalReserve->getId());
-            $O->setNumeroFactura(0);
             $O->save();
 
             $OT = $OriginalReserve->getTransaction()->copy(true);
@@ -72,7 +71,6 @@ class opportunitiesActions extends sfActions {
             $OT->setCompleted(false);
             $OT->setImpulsive(true);
             $OT->setTransaccionOriginal($OriginalReserve->getTransaction()->getId());
-            $OT->setNumeroFactura(0);
             $OT->save();
 
         } catch(Exception $e) {
