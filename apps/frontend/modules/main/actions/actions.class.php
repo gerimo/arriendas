@@ -21,9 +21,7 @@ class mainActions extends sfActions {
             $this->getUser()->setAttribute('geolocalizacion', false);
         }
 
-        $this->Region = Doctrine_Core::getTable("Regiones")->findOneByCodigo(13);
-
-        $this->Comunas = Doctrine_Core::getTable("Comunas")->findByPadre(13);
+        $this->Region = Doctrine_Core::getTable("Region")->find(13);
     }
 
     public function executeCompleteRegister(sfWebRequest $request) {
