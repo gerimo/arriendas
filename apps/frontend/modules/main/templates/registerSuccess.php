@@ -32,19 +32,19 @@
 </div>
 <div class="hidden-xs space-100"></div>  
 <script type="text/javascript">
-$(document).ready(function() { 
+    $(document).ready(function() { 
 
-    $('#foreign').click(function() {
-        $('#rut').val('');
-        if($('#rut').attr('disabled')){
-            $('#rut').attr('disabled', false);
-            $("#rut").parent("label").find("span").text('Rut');
-        }else{
-            $('#rut').attr('disabled', true);
-            $("#rut").parent("label").find("span").text('');
-            }
+        $('#foreign').click(function() {
+            $('#rut').val('');
+            if($('#rut').attr('disabled')){
+                $('#rut').attr('disabled', false);
+                $("#rut").parent("label").find("span").text('Rut');
+            }else{
+                $('#rut').attr('disabled', true);
+                $("#rut").parent("label").find("span").text('');
+                }
+        });
     });
-});
     
     $("#region").change(function(){
 

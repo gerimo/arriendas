@@ -53,6 +53,9 @@
     font-style: italic;
 }
 
+#gallery ul{
+    list-style: none;
+}
 .text-capitalize{
     font-size: 31px;
     line-height: 40px;
@@ -95,9 +98,14 @@
     font-weight: 300;
 }
 
+.carousel-inner > .item > img {
+        display: block;
+        width: 100%;
+        height: auto;
+}
 
 .availability{
-    padding: 68px 0 32px 15px;
+    padding: 0px 0 32px 15px;
 }
 
 .car-sep h2{
@@ -169,7 +177,6 @@
     top: 7px;
 }
 
-.reserve-area { padding-top: 40px; }
 .reserve-area .saved {
     position: absolute;
     right: -12px;
@@ -743,10 +750,19 @@ background: #f8f8f8;
 
 
 #payments .radio {
-    height: 130px;
+    height: 20px;
     margin: 0;
-    padding: 10px 0px 0 31px;
+    padding: 0px 0px 0 31px;
     font-weight: 400;
+}
+
+#payments .title-payment{
+    font-family: 'Roboto';
+    font-weight: normal;
+    font-size: 18px;
+    text-decoration: none;
+    color: #333;
+    
 }
 
 .radio label{

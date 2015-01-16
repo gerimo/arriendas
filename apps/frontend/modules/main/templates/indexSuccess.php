@@ -197,8 +197,8 @@
 
         if ($("#from").val() > $("#to").val()) {
 
-            $("#dialog-alert p").html("danger danger cuidado!");
-            $("#dialog-alert").attr("title", "OJO PIOJO");
+            $("#dialog-alert p").html('Fecha "Hasta" debe ser posterior a la fecha "Desde"');
+            $("#dialog-alert").attr('title','Fecha "Hasta" mal ingresada');
             $("#dialog-alert").dialog({
                 buttons: [{
                     text: "Aceptar",
@@ -471,9 +471,9 @@
                     article += "<img class='marker' src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + contador + "|05a4e7|ffffff'>"
                     article += "</div>";
                     article += "<div class='col-xs-8 col-md-8 text'>";
-                    article += "<h2><a href='<?php echo url_for("arriendo-de-autos/rent-a-car") ?>/" + dataCar.brand + dataCar.model + "/" + dataCar.comuna + "/" + dataCar.id + "'>"+ dataCar.brand +" "+ dataCar.model +"<small>, "+dataCar.year+"</small></a></h2>";
+                    article += "<h2><a target='_blank' href='<?php echo url_for("profile/reserve?c=") ?>"+ dataCar.id + "/f/"+dataCar.from+"/t/"+dataCar.to+"'>"+ dataCar.brand +" "+ dataCar.model +"<small>, "+dataCar.year+"</small></a></h2>";
                     /*article += "<span class='sub-heading'>A 2 km Metro <strong>Tobalaba</strong></span>";*/
-                    article += "<p class='price'>$"+ dataCar.priceAPuntos +"</p>";
+                    article += "<p class='price'>$"+ dataCar.priceAPuntos +" <small>Total</small></p>";
                     article += "<p class='text-right'><a class='btn-a-action' href='<?php echo url_for("profile/reserve?c=") ?>"+ dataCar.id + "/f/"+dataCar.from+"/t/"+dataCar.to+"' class='reserve' target='_blank'>RESERVAR</a></p>";
                     /*article += "<img src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + contador + "|05a4e7|ffffff' />";*/
                     article += "</div>";
@@ -602,8 +602,8 @@
             </ul>
         </div>
         <div class="col-sm-3 col-md-3 hidden-xs tabset">
-            <div class="col-sm-6 col-md-6 text-center tab activo" data-target="#tab-map"><strong><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Mapa</strong></div>
-            <div class="col-sm-6 col-md-6 text-center tab" data-target="#tab-list"><strong><span class="glyphicon glyphicon-list" aria-hidden="true"></span> Lista</strong></div>
+            <div class="map col-sm-6 col-md-6 text-center tab activo" data-target="#tab-map"><strong><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Mapa</strong></div>
+            <div class="list col-sm-6 col-md-6 text-center tab" data-target="#tab-list"><strong><span class="glyphicon glyphicon-list" aria-hidden="true"></span> Lista</strong></div>
         </div>
     </div>
 
@@ -713,7 +713,7 @@
     </div>
     <div class="hidden-xs col-sm-offset-2 col-sm-8 col-md-offset-1 col-md-10 text-center">
         <p class = "text-table">Precios con IVA, aplicando descuento por reservas en internet, con seguro de daños, 
-            robo y accidentes personales. Muestra tomada 4/4/2013 en sus páginas de internet</p>
+            robo y accidentes personales. Muestra tomada 1/1/2015 en sus páginas de internet</p>
         </div>
     </div>
 
@@ -775,20 +775,18 @@
 
     <div class="hidden-xs space-40"></div>
 
-    <div class="row">
-        <div class="hidden-xs col-sm-offset-3 col-sm-6 col-md-offset-3 col-md-6 text-center" id="testimonials-container">
-            <h1>Testimonios</h1>
-            <div id="section-testimonials-carousel">
-                <div>
-                    <p class="testimonial"><i class="fa fa-quote-left"></i> Puedo arrendar desde mi casa, en cualquier horario, sin tarjeta de crédito. Es el mismo auto que en un rent a car pero 30% más barato. <i class="fa fa-quote-right"></i></p>
-                    <p class="user">Javiera Cruzar,</p>
-                    <p class="user-type">Usuario Arriendas</p>
-                </div>
-                <div>
-                    <p class="testimonial"><i class="fa fa-quote-left"></i> Puedo arrendar desde mi casa, en cualquier horario, sin tarjeta de crédito. Es el mismo auto que en un rent a car pero 30% más barato. <i class="fa fa-quote-right"></i></p>
-                    <p class="user">Javiera Cruzar,</p>
-                    <p class="user-type">Usuario Arriendas</p>
-                </div>
+    <div id="testimonials-container">
+        <h1>Testimonios</h1>
+        <div id="section-testimonials-carousel">
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Puedo arrendar desde mi casa, en cualquier horario, sin tarjeta de crédito. Es el mismo auto que en un rent a car pero 30% más barato. <i class="fa fa-quote-right"></i></p>
+                <p class="user">Javiera Cruzar,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Puedo arrendar desde mi casa, en cualquier horario, sin tarjeta de crédito. Es el mismo auto que en un rent a car pero 30% más barato. <i class="fa fa-quote-right"></i></p>
+                <p class="user">Javiera Cruzar,</p>
+                <p class="user-type">Usuario Arriendas</p>
             </div>
         </div>
     </div>
@@ -805,11 +803,16 @@
 <script>
 
     $(document).ready(function(){
-            
+
+        $("#from").val(rounMinutos($("#from").val()));
+        $("#to").val(rounMinutos($("#to").val()));        
+
+
         /*// Si comuna es visible, se preselecciona comuna más hot
         if ($("#commune").is(':visible')) {            
             $("#commune option[value=93]").attr("selected", true);
         }*/
+
         localizame();
         initialize();
 
@@ -877,20 +880,25 @@
         searchCars(); 
     });
 
-    $(".tab").click(function(target){
-        
+    $(".tab").click(function(){
+
         var target = $(this).data("target");
 
         if (target == "#tab-map") {
             $("#region-container").hide();
             $("#commune-container").hide();
             $("#direction-container").show();
+            $(".list").removeClass('activo');
+            $(".map").addClass('activo');
+
         }
 
         if (target == "#tab-list") {
             $("#direction-container").hide();
             $("#region-container").show();
             $("#commune-container").show();
+            $(".map").removeClass('activo');
+            $(".list").addClass('activo');
         }
     });
 
@@ -928,8 +936,7 @@
         $(target).show();
     });
 
-
-     $('#to').datetimepicker({
+    $('#to').datetimepicker({
         allowTimes:[
         "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
         "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
@@ -942,7 +949,7 @@
         ],
         dayOfWeekStart: 1,
         lang:'es',
-        minDate : "<?php echo date('d-m-Y H:i', (strtotime ('+24 Hours'))); ?>",
+        minDate : "<?php echo date('d-m-Y', (strtotime ('+24 Hours'))); ?>",
         format:'d-m-Y H:i'
     });
 
@@ -963,5 +970,37 @@
         dayOfWeekStart: 1,
         lang:'es'
     });
+
+    function rounMinutos(valor){
+        var fechaH = valor
+
+        var split = fechaH.split(" ");
+        var f = split[0];
+        var h = split[1];
+
+        var split3 = h.split(":");
+        var hora = split3[0];
+        var min = split3[1];
+
+        if(min > "14" && min < "45"){
+            min = "30";
+        }else if(min > "45"){
+            min = "00";
+            var a = parseInt(hora)+1;
+            hora = a.toString();
+        }else{
+            min = "00";
+        }
+
+        fecha = f+" "+hora+":"+min;
+
+        return fecha;
+    }
+    
+
+
+
+     
+
 
 </script>

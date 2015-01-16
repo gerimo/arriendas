@@ -19,9 +19,12 @@ class mainActions extends sfActions {
             $this->getUser()->setAttribute('geolocalizacion', true);
         } elseif ($this->getUser()->getAttribute('geolocalizacion') == true) {
             $this->getUser()->setAttribute('geolocalizacion', false);
-        
         }
-    }   
+
+        $this->Region = Doctrine_Core::getTable("Regiones")->findOneByCodigo(13);
+
+        $this->Comunas = Doctrine_Core::getTable("Comunas")->findByPadre(13);
+    }
 
     public function executeCompleteRegister(sfWebRequest $request) {
 
@@ -295,9 +298,9 @@ class mainActions extends sfActions {
                 ->innerJoin('mo.Brand br')
                 ->Where('ca.activo = 1')
                 ->andWhere('ca.seguro_ok = 4')
-                ->orderBy('carrank ASC')
-                ->addOrderBy('IF(ca.velocidad_contesta_pedidos = 0, 1440, ca.velocidad_contesta_pedidos)  ASC')
-                ->addOrderBy('ca.fecha_subida  ASC')
+                /*->orderBy('carrank ASC')*/
+                /*->addOrderBy('IF(ca.velocidad_contesta_pedidos = 0, 1440, ca.velocidad_contesta_pedidos)  ASC')*/
+                ->orderBy('ca.price_per_day ASC')
                 ->limit(33);
 
             if ($automatic) {
@@ -325,8 +328,6 @@ class mainActions extends sfActions {
 
             foreach ($cars as $i => $car) {
                 if (!$car->hasReserve(date("Y-m-d H:i:s", strtotime($from)), date("Y-m-d H:i:s", strtotime($to)))) {
-
-                    //error_log("Procesando auto [".$i."]: ".$car->getId());
 
                     $d = 0;
 
@@ -401,7 +402,6 @@ class mainActions extends sfActions {
                         'from' => date("Y-m-d H:i", strtotime($from)),
                         'to' => date("Y-m-d H:i", strtotime($to))
                     );
-                    //error_log("asd");
                 }
             }
         } catch (Exception $e) {
@@ -635,8 +635,6 @@ class mainActions extends sfActions {
             $this->getUser()->setAttribute('comuna',null);
             $this->getUser()->setAttribute('region',null);*/
 
-            error_log("[logout] ID: ".$this->getUser()->getAttribute('userid'));
-
             /*unset($_SESSION["login_back_url"]);
             error_log("-- [logout] ".$_SESSION["login_back_url"]);*/
         }
@@ -724,6 +722,7 @@ class mainActions extends sfActions {
     
         $ciudad = $request->getParameter("autos");
         $objeto_ciudad = Doctrine_Core::getTable("city")->findOneByName($ciudad);
+
         $q = Doctrine_Query::create()
                 ->select('ca.id, mo.name model,
           br.name brand, ca.uso_vehiculo_id tipo_vehiculo, ca.year year,
@@ -1062,9 +1061,7 @@ class mainActions extends sfActions {
     public function executeFormularioEntrega(sfWebRequest $request){
         //se asume que se recibe el id de la tabla reserva desde la página anterior
             //$idReserve = 605;
-            error_log($idReserve);
             $idReserve= $request->getParameter("idReserve");
-            error_log($idReserve);
             $tokenReserve= $request->getParameter("tokenReserve");
 
             //id del usuario que accede al sitio
@@ -2897,7 +2894,6 @@ class mainActions extends sfActions {
     public function executeAddCarFromRegister(sfWebRequest $request) {
         
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
-        error_log($idUsuario);
 
         $usuario = Doctrine_Core::getTable('user')->findOneById($idUsuario);
 

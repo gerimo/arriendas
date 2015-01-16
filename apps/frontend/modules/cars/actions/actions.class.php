@@ -10,11 +10,14 @@
  */
 class carsActions extends sfActions {
 
-    /**
-     * Executes index action
-     *
-     * @param sfRequest $request A request object
-     */
+    public function executeCreate(sfWebRequest $request){
+          $this->setLayout("newIndexLayout");
+          $this->Communes = Commune::getByRegion(false);
+        
+    }
+
+    ////////////////////////////////////////
+
     public function executeIndex(sfWebRequest $request) {
 
 
@@ -35,20 +38,20 @@ class carsActions extends sfActions {
     }
 
     public function recortar_texto($texto, $limite=100){   
-    $texto = trim($texto);
-    $texto = strip_tags($texto);
-    $tamano = strlen($texto);
-    $resultado = '';
-    if($tamano <= $limite){
-        return $texto;
-    }else{
-        $texto = substr($texto, 0, $limite);
-        $palabras = explode(' ', $texto);
-        $resultado = implode(' ', $palabras);
-        $resultado .= '...';
-    }   
-    return $resultado;
-  }
+        $texto = trim($texto);
+        $texto = strip_tags($texto);
+        $tamano = strlen($texto);
+        $resultado = '';
+        if($tamano <= $limite){
+            return $texto;
+        }else{
+            $texto = substr($texto, 0, $limite);
+            $palabras = explode(' ', $texto);
+            $resultado = implode(' ', $palabras);
+            $resultado .= '...';
+        }   
+        return $resultado;
+    }
 
     public function executeCar(sfWebRequest $request) {
 
@@ -162,8 +165,7 @@ class carsActions extends sfActions {
         $this->arrayFotosDanios = $arrayFotoDanios;
         $this->arrayDescripcionesDanios = $arrayDescripcionDanios;
     }
-    
-    
+
     public function executeGetByReserserVehicleType(sfWebRequest $request) {
         $availableCars = array();
         $reserve = Doctrine_Core::getTable('reserve')->find($request->getParameter("reserve_id"));
@@ -182,5 +184,6 @@ class carsActions extends sfActions {
         $this->getResponse()->setContentType('application/json');
         return $this->renderText(json_encode($availableCars));
     }
+
 
 }

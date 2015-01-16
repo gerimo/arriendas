@@ -387,6 +387,8 @@ class profileActions extends sfActions {
         $f     = strtotime($request->getParameter("f", null));
         $t     = strtotime($request->getParameter("t", null));
 
+        $userId = $this->getUser()->getAttribute("userid");
+
         if (is_null($carId)) {
             throw new Exception("Auto no encontrado", 1);
         }
@@ -402,6 +404,7 @@ class profileActions extends sfActions {
         $this->to = date("Y-m-d H:i", $t);
         $this->toHuman = date("D d/m/Y H:i", $t);
 
+        $this->User = Doctrine_Core::getTable('User')->find($userId);
         $this->Car = Doctrine_Core::getTable('Car')->find($carId);
 
         if ($this->Car->hasReserve($from, $to)) {
@@ -491,15 +494,15 @@ class profileActions extends sfActions {
             $arrayImagenes[$i] = $rutaFotoAccesorios2;
         }
         $this->arrayFotos = $arrayImagenes;
-        $arrayFotoDanios = null;
-        $arrayDescripcionDanios = null;
-        $danios = Doctrine_Core::getTable('damage')->findByCar(array($this->Car->getId()));
-        for ($i = 0; $i < count($danios); $i++) {
-            $arrayFotoDanios[$i] = $danios[$i]->getUrlFoto();
-            $arrayDescripcionDanios[$i] = $danios[$i]->getDescription();
-        }
-        $this->arrayFotosDanios = $arrayFotoDanios;
-        $this->arrayDescripcionesDanios = $arrayDescripcionDanios;
+        // $arrayFotoDanios = null;
+        // $arrayDescripcionDanios = null;
+        // $danios = Doctrine_Core::getTable('damage')->findByCar(array($this->Car->getId()));
+        // for ($i = 0; $i < count($danios); $i++) {
+        //     $arrayFotoDanios[$i] = $danios[$i]->getUrlFoto();
+        //     $arrayDescripcionDanios[$i] = $danios[$i]->getDescription();
+        // }
+        // $this->arrayFotosDanios = $arrayFotoDanios;
+        // $this->arrayDescripcionesDanios = $arrayDescripcionDanios;
     }
 
 

@@ -1,3 +1,10 @@
+body {
+    background-image: url('/images/newDesign/background.jpg');
+}
+
+h1.text-center{
+    margin-bottom: 10px;
+}
 
 .encabezadoConversacion{
 	float: left;
@@ -138,6 +145,11 @@ input.botonEliminarConversacion:hover{
 	margin-bottom: 20px;
 }
 
+textarea.form-control{
+    height: 120px;
+    width: 100%;
+}
+
 textarea.textoMensaje{
 	resize:none;
 	margin-left: 15px;
@@ -146,7 +158,7 @@ textarea.textoMensaje{
 	padding: 10px;
 	height: 110px;
 }
-.enviarMensaje{
+/*.enviarMensaje{
 	cursor: pointer;
 	float: right;
 	margin: 0px;
@@ -162,7 +174,7 @@ textarea.textoMensaje{
 	width: 140px;
 	height: 66px;
 	margin-right: 2px;
-}
+}*/
 .volverAtras{
 	cursor: pointer;
 	float: left;
@@ -181,13 +193,13 @@ textarea.textoMensaje{
 	margin-top: 5px;
 	font-size: 10px;
 }
-#ajax_loader{
+/*#ajax_loader{
 	float: left;
 	margin-left: 290px;
-	margin-top: 12px;
+	margin-top: 0px;
 	width: 40px;
 	height: 40px;
-}
+}*/
 .img_loader{
 	display: none;
 	width: 40px;
@@ -252,13 +264,16 @@ textarea.textoMensaje{
 }
 .texto{
 	margin-left: 5px;
-	margin-top: 5px;
-	padding: 5px;
-	height: auto ! important;
-	min-height: 28px;
-	height: 28px;
-	border: 1px solid #BCBEB0;
-	background-color: white;
+    margin-top: 5px;
+    padding: 5px;
+    float: left;
+    float: left;
+    width: 374px;
+    height: auto ! important;
+    min-height: 28px;
+    height: 28px;
+    border: 1px solid #BCBEB0;
+    background-color: white;
 }
 .horaFecha{
 	float: right;

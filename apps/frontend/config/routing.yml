@@ -5,9 +5,14 @@ about_company:
     url: /nosotros
     param: { module: main, action: compania }
 
+car_create:
+   url: /auto/crear
+   param: { module: cars, action: create }
+
 cars:
-    url: /misAutos
+    url: /mis-autos
     param: { module: profile, action: cars }
+    #param: { module: cars, action: index }
 
 forgot_password:
     url: /recuperar-contrasena
@@ -37,6 +42,10 @@ opportunities_approve:
     url: /oportunidades/aprobar
     param: { module: opportunities, action: approve }
 
+reserve:
+    url: /reserva/:c/:f/:t
+    param: { module: profile, action: reserve }
+
 reserve_approve:
     url: /reserva/aprobar
     param: { module: reserves, action: approve }
@@ -56,6 +65,10 @@ reserve_extend_get_price:
 reserve_pay:
     url: /reserva/pagar
     param: { module: reserves, action: pay }
+
+reserve_reject:
+    url: /reserva/rechazar
+    param: { module: reserves, action: reject }
 
 reserves:
     url: /reservas

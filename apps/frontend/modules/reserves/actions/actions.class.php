@@ -11,12 +11,12 @@ class reservesActions extends sfActions {
         $this->PaidReserves = Reserve::getPaidReserves($userId);
 
         $this->Reserves = Reserve::getReservesByUser($userId);
-        $this->Opportunities = array();
+        $this->ChangeOptions = array();
 
         foreach ($this->Reserves as $Reserve) {
 
-            foreach ($Reserve->getOpportunities() as $O) {
-                $this->Opportunities[$Reserve->getId()][] = $O;
+            foreach ($Reserve->getChangeOptions() as $ChangeOption) {
+                $this->ChangeOptions[$Reserve->getId()][] = $ChangeOption;
             }
         }
     }
@@ -56,7 +56,7 @@ class reservesActions extends sfActions {
             $Reserve->save();
 
             $Transaction = $Reserve->getTransaction();
-            $Transaction->setSelected(true);
+            /*$Transaction->setSelected(true);*/
             $Transaction->save();
 
             // Correos de aprobación
@@ -68,6 +68,41 @@ class reservesActions extends sfActions {
             if ($e->getCode() == 2) {
                 /*Utils::reportError($e->getMessage(), "profile/reserveChange");*/
             }
+        }
+    
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
+    public function executeCalculatePrice (sfWebRequest $request) {
+
+        $return = array("error" => false);
+
+        $carId = $request->getPostParameter("carId", null);
+        $from  = $request->getPostParameter("from", null);
+        $to    = $request->getPostParameter("to", null);
+
+        try {
+
+            $datesError = $this->validateDates($from, $to);
+            if ($datesError) {
+                throw new Exception($datesError, 1);
+            }
+
+            if (is_null($carId) || $carId == '' || $carId == 0) {
+                throw new Exception("No se encontró el auto", 1);
+            }
+
+            $Car = Doctrine_Core::getTable('car')->findOneById($carId);
+            if (!$Car) {
+                throw new Exception("El auto no existe", 1);
+            }
+
+            $return["price"] = Car::getPrice($from, $to, $Car->price_per_hour, $Car->price_per_day, $Car->price_per_week, $Car->price_per_month);
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
         }
     
         $this->renderText(json_encode($return));
@@ -261,28 +296,32 @@ class reservesActions extends sfActions {
             throw new Exception("Falta fecha hasta", 1);
         }
 
-        $Car = $Reserve->getSelectedCar();
+        $Car = $Reserve->getCar();        
 
         $NewReserve = $Reserve->copy(true);
+        $NewReserve->setCar($Car);
         $NewReserve->setDate($Reserve->getFechaTermino2());
         $NewReserve->setDuration(Utils::calculateDuration($from, $to));
-        $NewReserve->setPrice(Car::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth()));
+        $NewReserve->setPrice(Car::getPrice($from, $to, $Car->price_per_hour, $Car->price_per_day, $Car->price_per_week, $Car->price_per_month));
         $NewReserve->setComentario("Reserva extendida");
-        $NewReserve->setCar($Car);
         $NewReserve->setFechaReserva(date("Y-m-d H:i:s"));
-        $NewReserve->setIdPadre($Reserve->getId());
+        $NewReserve->setIdPadre($Reserve->id);
         $NewReserve->setExtendUserId($this->getUser()->getAttribute("userid"));
-        $NewReserve->setNumeroFactura(0);
-        error_log("asd1");
+        $NewReserve->setConfirmed(false);
+
+        if ($Reserve->getLiberadoDeGarantia()) {
+            $NewReserve->montoLiberacion(0);
+        } else {
+            $NewReserve->montoLiberacion(Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to));
+        }
+
         $NewReserve->save();
-        error_log("asd2");
+
         $NewTransaction = $Reserve->getTransaction()->copy(true);
-        $NewTransaction->setCar($Car->getModel()->getBrand()->getName()." ".$Car->getModel()->getName());
         $NewTransaction->setPrice($NewReserve->getPrice());
-        $NewTransaction->setDate(date("Y-m-d H:i:s"));
+        $NewTransaction->setDate($Reserve->getFechaTermino2());
         $NewTransaction->setReserve($NewReserve);
         $NewTransaction->setCompleted(false);
-        $NewTransaction->setNumeroFactura(0);
         $NewTransaction->save();
 
         $this->getRequest()->setParameter("reserveId", $NewReserve->getId());
@@ -326,6 +365,10 @@ class reservesActions extends sfActions {
 
             $Car = $Reserve->getCar();
 
+            if ($Car->hasReserve($from, $to)) {
+                throw new Exception("La extensión no se puede realizar debido a que el auto ya posee una reserva en la fecha consultada", 1);
+            }
+
             $return["price"] = Car::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth());
         } catch (Exception $e) {
             $return["error"] = true;
@@ -338,6 +381,8 @@ class reservesActions extends sfActions {
     }
 
     public function executePay (sfWebRequest $request) {
+
+        $userId = sfContext::getInstance()->getUser()->getAttribute('userid');
 
         $warranty = $request->getPostParameter("warranty", null);
         $payment  = $request->getPostParameter("payment-group", null);
@@ -355,6 +400,11 @@ class reservesActions extends sfActions {
             throw new Exception($datesError, 1);
         }
 
+        $User = Doctrine_Core::getTable('User')->find($userId);
+        if ($User->getBlockled()) {
+            throw new Exception("Usuario no autorizado para generar pagos", 1);            
+        }
+
         $Car = Doctrine_Core::getTable('Car')->find($carId);
         if (!$Car) {
             throw new Exception("No se encontró el auto.", 1);
@@ -364,19 +414,6 @@ class reservesActions extends sfActions {
             throw new Exception("El auto ya posee un reserva en las fechas indicadas.", 1);
         }
 
-        $deposito = "pagoPorDia";
-        $amountWarranty = Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to);
-        if ($warranty) {
-            $deposito = "depositoGarantia";
-            $amountWarranty = sfConfig::get("app_monto_garantia");
-        }
-
-        $duration = intval((strtotime($to) - strtotime($from))/3600);
-
-        $userId = sfContext::getInstance()->getUser()->getAttribute('userid');
-
-        $User = Doctrine_Core::getTable('User')->find($userId);
-        
         // Guardo en session // Esto se deja 'xsiaca'
         $this->getUser()->setAttribute('fechainicio', date("d-m-Y", strtotime($from)));
         $this->getUser()->setAttribute('fechatermino', date("d-m-Y", strtotime($to)));
@@ -384,7 +421,7 @@ class reservesActions extends sfActions {
         $this->getUser()->setAttribute('horatermino', date("g:i A",strtotime($to)));
 
         $Reserve = new Reserve();
-        $Reserve->setDuration($duration);
+        $Reserve->setDuration(Utils::calculateDuration($from, $to));
         $Reserve->setDate(date("Y-m-d H:i:s", strtotime($from)));
         $Reserve->setUser($User);
         $Reserve->setCar($Car);
@@ -392,6 +429,14 @@ class reservesActions extends sfActions {
         if ($User->getBlocked()) {
             $Reserve->setVisibleOwner(false);
             $Reserve->setConfirmed(true);
+        }
+
+        if ($warranty) {
+            $amountWarranty = sfConfig::get("app_monto_garantia");
+            $Reserve->setLiberadoDeGarantia(false);
+        } else {
+            $amountWarranty = Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to);
+            $Reserve->setLiberadoDeGarantia(true);
         }
 
         $Reserve->setPrice(Car::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth()));
@@ -420,6 +465,32 @@ class reservesActions extends sfActions {
         $this->getRequest()->setParameter("transactionId", $Transaction->getId());
 
         $this->forward("khipu", "generatePayment");
+    }
+
+    public function executeReject (sfWebRequest $request) {
+
+        $return = array("error" => false);
+    
+        $reserveId = $request->getPostParameter("reserveId", null);
+
+        try {
+
+            if (is_null($reserveId) || $reserveId == "") {
+                throw new Exception("Falta la reserva", 1);
+            }
+
+            $Reserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
+
+            $Reserve->setCanceled(true);
+            $Reserve->save();
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+        }
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
     }
 
     // FUNCIONES PRIVADAS
