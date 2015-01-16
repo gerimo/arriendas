@@ -124,9 +124,10 @@ class Reserve extends BaseReserve {
             ->innerJoin('R.Transaction T')
             ->innerJoin('R.Car C')
             ->where('C.user_id = ?', $userId)
-            ->andWhere('R.confirmed = 0')
+            /*->andWhere('R.confirmed = 0')*/
             ->andWhere('R.canceled = 0')
             ->andWhere("T.completed = 1")
+            ->andWhere('NOW() < DATE_ADD(R.date, INTERVAL R.duration+4 HOUR)')
             ->addOrderBy("R.fecha_reserva ASC");
 
         return $q->execute();

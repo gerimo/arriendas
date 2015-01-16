@@ -30,8 +30,12 @@
                             <p class="text-center"><span class="glyphicon glyphicon-earphone"></span> <?php echo $PaidReserve->getUser()->getTelephone() ?></p>
                         </div>
                         <div class="col-md-3 text-center">
-                            <button class="approve btn-a-primary btn-block" data-reserve-id="<?php echo $PaidReserve->getId() ?>">Aprobar</button>
-                            <a class="reject" data-reserve-id="<?php echo $PaidReserve->getId() ?>">Rechazar</a>
+                            <?php if ($PaidReserve->confirmed): ?>
+                                <button class="btn-a-action btn-block" disabled>CONFIRMADA</button>
+                            <?php else: ?>
+                                <button class="approve btn-a-primary btn-block" data-reserve-id="<?php echo $PaidReserve->getId() ?>">Aprobar</button>
+                                <a class="reject" data-reserve-id="<?php echo $PaidReserve->getId() ?>">Rechazar</a>
+                            <?php endif ?>
                         </div>
                     </div>
                 <?php endforeach ?>

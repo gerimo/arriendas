@@ -261,7 +261,7 @@ class reservesActions extends sfActions {
             throw new Exception("Falta fecha hasta", 1);
         }
 
-        $Car = $Reserve->getCar();
+        $Car = $Reserve->getCar();        
 
         $NewReserve = $Reserve->copy(true);
         $NewReserve->setCar($Car);
@@ -272,8 +272,14 @@ class reservesActions extends sfActions {
         $NewReserve->setFechaReserva(date("Y-m-d H:i:s"));
         $NewReserve->setIdPadre($Reserve->id);
         $NewReserve->setExtendUserId($this->getUser()->getAttribute("userid"));
-        $NewReserve->setNumeroFactura(0);
         $NewReserve->setConfirmed(false);
+
+        if ($Reserve->getLiberadoDeGarantia()) {
+            $NewReserve->montoLiberacion(0);
+        } else {
+            $NewReserve->montoLiberacion(Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to));
+        }
+
         $NewReserve->save();
 
         $NewTransaction = $Reserve->getTransaction()->copy(true);
@@ -281,7 +287,6 @@ class reservesActions extends sfActions {
         $NewTransaction->setDate($Reserve->getFechaTermino2());
         $NewTransaction->setReserve($NewReserve);
         $NewTransaction->setCompleted(false);
-        $NewTransaction->setNumeroFactura(0);
         $NewTransaction->save();
 
         $this->getRequest()->setParameter("reserveId", $NewReserve->getId());
@@ -374,15 +379,6 @@ class reservesActions extends sfActions {
             throw new Exception("El auto ya posee un reserva en las fechas indicadas.", 1);
         }
 
-        $deposito = "pagoPorDia";
-        $amountWarranty = Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to);
-        if ($warranty) {
-            $deposito = "depositoGarantia";
-            $amountWarranty = sfConfig::get("app_monto_garantia");
-        }
-
-        $duration = intval((strtotime($to) - strtotime($from))/3600);        
-        
         // Guardo en session // Esto se deja 'xsiaca'
         $this->getUser()->setAttribute('fechainicio', date("d-m-Y", strtotime($from)));
         $this->getUser()->setAttribute('fechatermino', date("d-m-Y", strtotime($to)));
@@ -390,7 +386,7 @@ class reservesActions extends sfActions {
         $this->getUser()->setAttribute('horatermino', date("g:i A",strtotime($to)));
 
         $Reserve = new Reserve();
-        $Reserve->setDuration($duration);
+        $Reserve->setDuration(Utils::calculateDuration($from, $to));
         $Reserve->setDate(date("Y-m-d H:i:s", strtotime($from)));
         $Reserve->setUser($User);
         $Reserve->setCar($Car);
@@ -398,6 +394,14 @@ class reservesActions extends sfActions {
         if ($User->getBlocked()) {
             $Reserve->setVisibleOwner(false);
             $Reserve->setConfirmed(true);
+        }
+
+        if ($warranty) {
+            $amountWarranty = sfConfig::get("app_monto_garantia");
+            $Reserve->setLiberadoDeGarantia(false);
+        } else {
+            $amountWarranty = Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to);
+            $Reserve->setLiberadoDeGarantia(true);
         }
 
         $Reserve->setPrice(Car::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth()));
