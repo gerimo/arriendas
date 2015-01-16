@@ -1,5 +1,7 @@
 <?php
 
+require_once sfConfig::get('sf_lib_dir') . '/vendor/mobile-detect/Mobile_Detect.php';
+
 class mainActions extends sfActions {
 
     public function executeIndex (sfWebRequest $request) {
@@ -228,6 +230,8 @@ class mainActions extends sfActions {
 
     public function executeGetCars(sfWebRequest $request) {
 
+        
+
         $return = array(
             "error" => false,
             "cars" => array()
@@ -298,8 +302,16 @@ class mainActions extends sfActions {
                 ->andWhere('ca.seguro_ok = 4')
                 /*->orderBy('carrank ASC')*/
                 /*->addOrderBy('IF(ca.velocidad_contesta_pedidos = 0, 1440, ca.velocidad_contesta_pedidos)  ASC')*/
-                ->orderBy('ca.price_per_day ASC')
-                ->limit(33);
+                ->orderBy('ca.price_per_day ASC');
+                $detect = new Mobile_Detect;
+                if($detect->isMobile()){
+                    $q->limit(5);
+                } else {
+                    $q->limit(33);
+                }
+                
+
+                
 
             if ($automatic) {
                 $q->andWhere("ca.transmission = 1");

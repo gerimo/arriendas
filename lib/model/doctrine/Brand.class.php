@@ -12,4 +12,12 @@
  */
 class Brand extends BaseBrand
 {
+	public static function getBrand() {
+
+        $q = Doctrine_Core::getTable("Brand")
+            ->createQuery('B')
+            ->orderBy('B.name ASC');
+
+        return $q->execute();
+    }
 }

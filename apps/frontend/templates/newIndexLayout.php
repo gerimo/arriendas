@@ -65,6 +65,7 @@
         <script src="/js/newDesign/jquery-form/jquery.form.min.js" type="text/javascript"></script>
         <script src="/js/newDesign/datatables/jquery.dataTables.min.js" type="text/javascript"></script>
         <script src="/js/newDesign/datatables/dataTables.responsive.min.js" type="text/javascript"></script>
+        <script src="/js/newDesign/formToWizard/formToWizard.js" type="text/javascript"></script>
 
         <!-- Utils -->
         <script src="/js/newDesign/utils.js" type="text/javascript"></script>
