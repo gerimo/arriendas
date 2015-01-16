@@ -325,6 +325,10 @@ class reservesActions extends sfActions {
 
             $Car = $Reserve->getCar();
 
+            if ($Car->hasReserve($from, $to)) {
+                throw new Exception("La extensión no se puede realizar debido a que el auto ya posee una reserva en la fecha consultada", 1);
+            }
+
             $return["price"] = Car::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth());
         } catch (Exception $e) {
             $return["error"] = true;
