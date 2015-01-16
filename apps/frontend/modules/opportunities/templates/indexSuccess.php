@@ -8,7 +8,7 @@
 
         <div class="BCW">
 
-            <h1>Oportunidades (<?php echo count($Opportunities) ?>)</h1>
+            <h1>Oportunidades <small>(<?php echo count($Opportunities) ?>)</small></h1>
 
             <table class="display responsive no-wrap" id="opportunities" cellspacing="0" width="100%">
                 <thead>
@@ -36,7 +36,7 @@
                             <td><?php echo date("Y-m-d H:i", strtotime($Opp["Reserve"]->getFechaTermino2())) ?></td>
                             <td><?php echo '$'.number_format(Car::getPrice($Opp["Reserve"]->getFechaInicio2(), $Opp["Reserve"]->getFechaTermino2(), $Opp["Reserve"]->getCar()->getPricePerHour(), $Opp["Reserve"]->getCar()->getPricePerDay(), $Opp["Reserve"]->getCar()->getPricePerWeek(), $Opp["Reserve"]->getCar()->getPricePerMonth()), 0, ',', '.') ?></td>
                             <td><?php echo $Opp["Reserve"]->getUser()->getFirstname() ." ". $Opp["Reserve"]->getUser()->getLastname() ?></td>
-                            <td><button class="approve btn-a-primary">Aprobar</button></td>
+                            <td><button class="approve btn-a-primary">Postular</button></td>
                         </tr>
                     <?php endforeach ?>
                 </tbody>
@@ -104,11 +104,29 @@
             });
         }
 
+        $(this).attr("disabled", true);
+
         var carId     = $("input[name='optionsCars']:checked").val();
         var reserveId = $(this).parent().parent().data("reserve-id");
 
         $.post("<?php echo url_for('opportunities_approve') ?>", {"reserveId": reserveId, "carId": carId}, function(r){
-console.log(r);
+
+            if (r.error) {
+                $("#dialog-alert p").html(r.errorMessage);
+                $("#dialog-alert").attr("title", "Problemas con la aprobación");
+                $("#dialog-alert").dialog({
+                    buttons: [{
+                        text: "Aceptar",
+                        click: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }]
+                });
+            } else {
+                location.reload();
+            }
+
+            $(this).removeAttr("disabled");
 
         }, "json");
     });

@@ -13,6 +13,10 @@ p {
     margin-top: 10px;
 }
 
+.reject {
+    cursor: pointer;
+}
+
 .btn-a-primary {
     margin-top: 8px;
 }
@@ -21,15 +25,33 @@ p {
     margin-top: 20px;
 }
 
+.fa-check {
+    color: #00aced !important;
+    font-size: 45px;
+}
+
+.paid-reserve-container {
+    border: solid 1px #ddd;
+    margin-top: 20px;
+}
+
+.panel-group .panel+.panel {
+    margin-top: 20px;
+}
+
 .panel-default > .panel-heading {
     background-color: rgb(255, 255, 255);
-    border: solid 1px rgb(250, 250, 250);
+    /*border: solid 1px rgb(200, 200, 200);*/
     border-radius: 0 !important;
-    padding: 5px 5px 5px 0;
+    padding: 5px 0 0 0;
 }
 
 .panel-body {
-    padding: 5px;
+    padding: 0 0 15px 0;
+}
+
+.panel-body .row {
+    margin-top: 15px;
 }
 
 #extend-alert {

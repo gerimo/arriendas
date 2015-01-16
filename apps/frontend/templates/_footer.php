@@ -86,8 +86,8 @@
             <p><a href=<?php echo $telefono?>><?php echo $telefonoText?></a></p>
             <p>Manuel Montt 1404</p>
             <p>Providencia, Santiago/Chile </p>
-            <a class="fa fa-facebook fa-3x" href="https://www.facebook.com/arriendaschile?fref=ts">facebook</a>
-            <a class="fa fa-twitter fa-3x" href="https://twitter.com/arriendas">twitter</a>
+            <a class="fa fa-facebook fa-3x" href="https://www.facebook.com/arriendaschile?fref=ts" target="_blank">facebook</a>
+            <a class="fa fa-twitter fa-3x" href="https://twitter.com/arriendas" target="_blank">twitter</a>
         </div>
     </div>
 </footer>

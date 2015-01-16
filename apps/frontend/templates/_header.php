@@ -20,7 +20,7 @@
 
                     <?php if ($sf_user->isAuthenticated()): ?>
                         <li><a href="<?php echo url_for("homepage") ?>" data-target="homepage">Inicio</a></li>
-                        <li><a href="<?php echo url_for("profile/cars") ?>" data-target="cars">Mis autos</a></li>
+                        <li><a href="<?php echo url_for("cars") ?>" data-target="cars">Mis autos</a></li>
                         <li><a href="<?php echo url_for("opportunities") ?>" data-target="opportunities">Oportunidades</a></li>
                         <li><a href="<?php echo url_for("reserves") ?>" data-target="reserves">Reservas</a></li>
                     <?php else: ?>
