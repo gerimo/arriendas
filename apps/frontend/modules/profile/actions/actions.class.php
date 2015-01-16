@@ -6021,8 +6021,8 @@ class profileActions extends sfActions {
 
             if (count($has_reserve) == 0) {*/
 
-            $Car = Doctrine_Core::getTable('Car')->find($carid);
-            if(!$Car->hasReserve($startDate, $endDate)) {
+            /*$Car = Doctrine_Core::getTable('Car')->find($carid);
+            if(!$Car->hasReserve($startDate, $endDate)) {*/
 
                 if ($diff > 0) {
 
@@ -6042,9 +6042,9 @@ class profileActions extends sfActions {
                 } else {
                     echo 'Fecha de retiro debe ser mayor a fecha de entrega';
                 }
-            } else {
+            /*} else {
                 echo 'Ya hay una reserva confirmada para ese horario';
-            }
+            }*/
         } else {
             echo 'Por favor ingrese fechas con formato YYYY-MM-DD HH:MM';
         }
