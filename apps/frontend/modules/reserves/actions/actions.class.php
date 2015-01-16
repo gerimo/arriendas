@@ -385,13 +385,13 @@ class reservesActions extends sfActions {
         $userId = sfContext::getInstance()->getUser()->getAttribute('userid');
 
         $warranty = $request->getPostParameter("warranty", null);
-        $payment  = $request->getPostParameter("payment-group", null);
+        $payment  = $request->getPostParameter("payment-group", null); // Se saco la selección de khipu
 
         $carId = $request->getPostParameter("car", null);
         $from  = $request->getPostParameter("from", null);
         $to    = $request->getPostParameter("to", null);
 
-        if (is_null($warranty) || is_null($payment) || is_null($carId) || is_null($from) || is_null($to)) {
+        if (is_null($warranty) || is_null($carId) || is_null($from) || is_null($to)) {
             throw new Exception("No, no, no.", 1);
         }
 
@@ -401,7 +401,7 @@ class reservesActions extends sfActions {
         }
 
         $User = Doctrine_Core::getTable('User')->find($userId);
-        if ($User->getBlockled()) {
+        if ($User->getBlocked()) {
             throw new Exception("Usuario no autorizado para generar pagos", 1);            
         }
 
