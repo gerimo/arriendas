@@ -2315,7 +2315,7 @@ class profileActions extends sfActions {
             $user = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")));
             if (!$user->getSendReserveLastWeek($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")))) {
                 if ($user->getConfirmedSms() == 1) {
-                    $texto = "Has emitido tu primera reserva de la semana en Arriendas.cl - Ante cualquier duda llamanos al 2 2333-3714 o escribenos a soporte@arriendas.cl";
+                    $texto = "Has emitido tu primera reserva de la semana en Arriendas.cl - Ante cualquier duda llamanos al 2 2640-2900 o escribenos a soporte@arriendas.cl";
                     $this->enviarSMS($user->getTelephone(), $texto);
                 }
             }
@@ -2324,7 +2324,7 @@ class profileActions extends sfActions {
                 $mail3->setSubject('Servicio al Cliente - Tu reserva en Arriendas.cl');
                 $mail3->setBody("<p>Hola $nameRenter:</p>
                 <p>Recuerda completar tu perfil y subir la imagen de tu licencia (arriba a la derecha, opción 'Mi Perfil').</p>
-                <p>Ante cualquier pregunta llámanos al 2 2333-3714.</p>");
+                <p>Ante cualquier pregunta llámanos al 2 2640-2900.</p>");
                 $mail3->setTo($correoRenter);
                 $mail3->submit();
             }
@@ -4550,7 +4550,7 @@ class profileActions extends sfActions {
         $mail->setBody("<p>Hola $name,</p>
         <p>Has subido un auto!</p>
         <p>Para verlo publicado responde a este correo escribiendo tu DIRECCION, COMUNA y NUMERO DE CELULAR.</p>
-        <p>Ante cualquier duda, llámanos al 2333-3714.</p>");
+        <p>Ante cualquier duda, llámanos al 2 2640-2900.</p>");
         $mail->setTo($correo);
         $mail->setCc('soporte@arriendas.cl');
         $mail->submit();
