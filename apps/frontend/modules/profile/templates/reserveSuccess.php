@@ -3,21 +3,21 @@
 <div class="space-30 hidden-xs"></div>
 <div class="space-50 visible-xs"></div>
 
-    <?php if (is_null($license)): ?>
-        <div class="row" id="license-container">
-            <div class="col-xs-12 col-md-offset-4 col-md-4">
-                <h1>¡FALTA TU CÉDULA DE CONDUCIR!</h1>
-                <h2>Es necesario que la subas una vez para seguirrealizando arriendos.</h2>
-                <a href="#" class="upload-link" id="license-bottom">
-                    <span class="icon-svg_17"></span>
-                    <strong class="text">(la puedes sacar con tu celular)</strong>
-                </a>
-            </div>
+<?php if (is_null($license)): ?>
+    <div class="row" id="license-container">
+        <div class="col-xs-12 col-md-offset-4 col-md-4">
+            <h1>¡FALTA TU CÉDULA DE CONDUCIR!</h1>
+            <h2>Es necesario que la subas una vez para seguirrealizando arriendos.</h2>
+            <a href="#" class="upload-link" id="license-bottom">
+                <span class="icon-svg_17"></span>
+                <strong class="text">(la puedes sacar con tu celular)</strong>
+            </a>
         </div>
-        <div class="space-60 hidden-xs"></div>
-    <?php else: ?>
-        <div class="space-60 hidden-xs"></div>
-    <?php endif ?>
+    </div>
+    <div class="space-60 hidden-xs"></div>
+<?php else: ?>
+    <div class="space-60 hidden-xs"></div>
+<?php endif ?>
 
 <div class="container">
 
@@ -52,6 +52,7 @@
                             <?php
                         } else {
                             ?>
+
                             <div id="gallery">
                                 <ul>
                                     <?php
@@ -68,7 +69,6 @@
                                     ?>
                                 </ul>
                             </div>
-
                             <?php
                         }
                     }
@@ -80,36 +80,41 @@
         </div>
     </div> 
 
-     <div class="hidden-xs hidden-sm col-md-3 car-sep">
-            <div class="availability">
-                <h2>Disponibilidad:</h2>
-                <span class="timing">L - V: Completa<br>S - D: Completa</span>
-                <h2>Ubicación:</h2>
-                <span class="km-area"><em>A <a href="#">1.5 km</a></em> del Metro</span>
-            </div>
-            <ul id="features">
-                <h2>Características:</h2>
-                <?php if ($passengers): ?>
-                    <li><span class="icon-svg_01"></span> 5 o más pasajeros</li>
-                <?php else: ?>
-                    <li><span class="icon-svg_01"></span> 4 pasajeros</li>
-                <?php endif ?>
-                <?php if ($diesel): ?>
-                    <li><span><i class="fa fa-tint"></i></span> Petrolero</li>
-                <?php else: ?>
-                    <li><span><i class="fa fa-tint"></i></span> Bencinero</li>
-                <?php endif ?>
+    <div class="hidden-xs hidden-sm col-md-3 car-sep">
 
-                <?php if ($airCondition): ?>
-                    <li><span class="icon-svg_03"></span> Aire acondicionado</li>
-                <?php endif ?>
+        <!-- Se quitó disponibilidad y ubucación
+        <div class="availability">
+            <h2>Disponibilidad:</h2>
+            <span class="timing">L - V: Completa<br>S - D: Completa</span>
+            <h2>Ubicación:</h2>
+            <span class="km-area"><em>A <a href="#">1.5 km</a></em> del Metro</span>
+        </div>
+        -->
+        <div class="space-50 hidden-xs"></div>
 
-                <?php if ($transmission): ?>
-                    <li><span class="icon-svg"></span> Automático</li>
-                <?php else: ?>
-                    <li><span class="icon-svg"></span> Manual</li>
-                <?php endif ?>
-            </ul>
+        <ul id="features">
+            <h2>Características:</h2>
+            <?php if ($passengers): ?>
+                <li><span class="icon-svg_01"></span> 5 o más pasajeros</li>
+            <?php else: ?>
+                <li><span class="icon-svg_01"></span> 4 pasajeros</li>
+            <?php endif ?>
+            <?php if ($diesel): ?>
+                <li><span><i class="fa fa-tint"></i></span> Petrolero</li>
+            <?php else: ?>
+                <li><span><i class="fa fa-tint"></i></span> Bencinero</li>
+            <?php endif ?>
+
+            <?php if ($airCondition): ?>
+                <li><span class="icon-svg_03"></span> Aire acondicionado</li>
+            <?php endif ?>
+
+            <?php if ($transmission): ?>
+                <li><span class="icon-svg"></span> Automático</li>
+            <?php else: ?>
+                <li><span class="icon-svg"></span> Manual</li>
+            <?php endif ?>
+        </ul>
     </div>
 
     <div class="hidden-xs col-sm-12 col-md-4 reserve-area">
@@ -199,12 +204,9 @@
                 </div>
             </div>
         </div>
-    </div> 
-
-</div>
-
+    </div>
     
-    <!-- Reviews -->
+    <!-- Reviews 
     <?php if (count($reviews) > 0): ?>
         <div class="row">
             <div class="panel-group col-md-offset-1 col-md-10" id="reviews">
@@ -236,6 +238,7 @@
             </div>
         </div>
     <?php endif ?>
+    -->
 
     <div class="space-100 hidden-xs"></div>
 
@@ -258,7 +261,7 @@
         </ul>
     </div>
 
-    <form action="<?php echo url_for('profile/pay') ?>" id="reserve-form" method="post">
+    <form action="<?php echo url_for('reserve_pay') ?>" id="reserve-form" method="post">
 
         <!-- Resumen y garantía -->
         <div class="row">
@@ -300,77 +303,96 @@
         <div class="space-20 visible-xs"></div>
 
         <div class="row" id="payments">
-            <div class="col-xs-12 col-md-offset-1 col-md-10">
+            <div class="col-xs-12 col-md-offset-1 col-md-11">
                 <span class="nums">3</span>
                 <h1 class="tres"><span class="dis">3.- </span>MEDIO DE PAGO</h1>
-                <div class="col-xs-6 col-sm-4 col-md-3 radio">
-                    <label>
-                        <input id="payment7" name="payment-group" type="radio" value="Banco Falabella">
-                        <img src="/images/newDesign/payments/svg_07.svg" alt="">
-                    </label>
-                </div>
-                <div class="col-xs-6 col-sm-4 col-md-3 radio">
-                    <label>
-                        <input id="payment8" name="payment-group" type="radio" value="Banco BBVA">
-                        <img src="/images/newDesign/payments/svg_08.svg" alt="">
-                    </label>
-                </div>
-                <div class="col-xs-6 col-sm-4 col-md-3 radio">
-                    <label>
-                        <input id="payment9" name="payment-group" type="radio" value="Banco BICE">
-                        <img src="/images/newDesign/payments/svg_09.svg" alt="">
-                    </label>
-                </div>
-                <div class="col-xs-6 col-sm-4 col-md-3 radio">
-                    <label>
-                        <input id="payment10" name="payment-group" type="radio" value="Banco Internacional">
-                        <img src="/images/newDesign/payments/svg_10.svg" alt="">
-                    </label>
-                </div>
-                <div class="col-xs-6 col-sm-4 col-md-3 radio">
-                    <label>
-                        <input id="payment11" name="payment-group" type="radio" value="Banco Credito e Inversiones">
-                        <img src="/images/newDesign/payments/svg_11.svg" alt="">
-                    </label>
-                </div>
-                <div class="col-xs-6 col-sm-4 col-md-3 radio">
-                    <label>
-                        <input id="payment12" name="payment-group" type="radio" value="Banco Estado">
-                        <img src="/images/newDesign/payments/svg_12.svg" alt="">
-                    </label>
-                </div>
-                <div class="col-xs-6 col-sm-4 col-md-3 radio">
-                    <label>
-                        <input id="payment13" name="payment-group" type="radio" value="Banco Scotiabank">
-                        <img src="/images/newDesign/payments/svg_13.svg" alt="">
-                    </label>
-                </div>
-                    
-                <div class="col-xs-6 col-sm-4 col-md-3 radio">
-                    <label>
-                        <input id="payment14" name="payment-group" type="radio" value="Banco Corpbanca">
-                        <img src="/images/newDesign/payments/svg_14.svg" alt="">
-                    </label>
-                </div>
-                <div class="col-xs-6 col-sm-4 col-md-3 radio">
-                    <label>
-                        <input id="payment15" name="payment-group" type="radio" value="Banco de Chile">
-                        <img src="/images/newDesign/payments/svg_15.svg" alt="">
-                    </label>
-                </div>
-                <div class="col-xs-6 col-sm-4 col-md-3 radio">
-                    <label>
-                        <input id="payment15" name="payment-group" type="radio" value="Banco Itau">
-                        <img src="/images/newDesign/payments/Itau.png" alt="">
-                    </label>
-                </div>
-                <div class="col-xs-6 col-sm-4 col-md-3 radio">
-                    <label>
-                        <input id="payment15" name="payment-group" type="radio" value="Banco Santander">
-                        <img src="/images/newDesign/payments/Santander.png" alt="">
-                    </label>
+
+                <div class="hidden-xs space-30"></div>
+                <div class="visible-xs space-50"></div>
+
+                <div class="row">
+                    <div class="col-lg-4 col-sm-6 col-xs-4">
+                        <label>
+                            <img class="img-responsive" src="/images/newDesign/payments/svg_07.svg" alt="">
+                        </label>
+                    </div>
+
+                    <div class="col-lg-4 col-sm-6 col-xs-4">
+                        <label>
+                            <div class="visible-sm space-40"></div>
+                            <img class="img-responsive" src="/images/newDesign/payments/svg_08.svg" alt="">
+                        </label>
+                    </div>
+                    <div class="col-lg-4 col-sm-6 col-xs-4">
+                        <label>
+                            <img class="img-responsive" src="/images/newDesign/payments/svg_09.svg" alt="">
+                        </label>
+                    </div>
                 </div>
 
+                <div class="hidden-xs space-50"></div>
+
+                <div class="row">
+                    <div class="col-lg-4 col-sm-6 col-xs-4">
+                        <label>
+                            <div class="visible-xs space-30"></div>
+                            <img class="img-responsive" src="/images/newDesign/payments/svg_10.svg" alt="">
+                        </label>
+                    </div> 
+
+                    <div class="col-lg-4 col-sm-6 col-xs-4">
+                        <label>
+                            <div class="visible-xs space-20"></div>
+                            <img class="img-responsive" src="/images/newDesign/payments/svg_11.svg" alt="">
+                        </label>
+                    </div>
+
+                    <div class="col-lg-4 col-sm-6 col-xs-4">
+                        <label>
+                            <div class="visible-xs space-40"></div>
+                            <img class="img-responsive" src="/images/newDesign/payments/svg_12.svg" alt="">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="hidden-xs space-50"></div>
+
+                <div class="row">
+                    <div class="col-lg-4 col-sm-6 col-xs-4">
+                        <label>
+                            <div class="visible-xs space-30"></div>
+                            <div class="visible-sm space-50"></div>
+                            <img class="img-responsive" src="/images/newDesign/payments/svg_13.svg" alt="">
+                        </label>
+                    </div>
+                        
+                    <div class="col-lg-4 col-sm-6 col-xs-4">
+                        <label>
+                            <div class="visible-xs space-30"></div>
+                            <img class="img-responsive" src="/images/newDesign/payments/svg_14.svg" alt="">
+                        </label>
+                    </div>
+
+                    <div class="col-lg-4 col-sm-6 col-xs-4">
+                        <label>
+                            <div class="visible-xs space-30"></div>
+                            <div class="visible-sm space-50"></div>
+                            <img class="img-responsive" src="/images/newDesign/payments/svg_15.svg" alt="">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="hidden-xs space-50"></div>
+
+                <div class="row">
+                    <div class="col-lg-4 col-sm-6 col-xs-4">
+                        <label>
+                            <div class="visible-xs space-30"></div>
+                            <img class="img-responsive" src="/images/newDesign/payments/Santander.png" alt="">
+                        </label>
+                    </div>
+                </div>
+    
             </div>    
         </div>
         <div class="space-100 hidden-xs"></div>
@@ -387,15 +409,15 @@
         <input id="from" name="from" type="hidden" value="<?php echo $from ?>">
         <input id="to" name="to" type="hidden" value="<?php echo $to ?>">
     </form>
+</div>
 
-    <!-- Alert -->
-    <div style="display:none">
-        <div id="dialog-alert" title="">
-            <p></p>
-        </div>
-
-        <?php include_partial('contratosArrendatario') ?>
+<!-- Alert -->
+<div style="display:none">
+    <div id="dialog-alert" title="">
+        <p></p>
     </div>
+
+    <?php include_partial('contratosArrendatario') ?>
 </div>
 
 <div style="display:none">
@@ -404,9 +426,11 @@
         <input type="submit">
     </form>
 </div>
+
 <script>
-    $(document).ready(function(){
-    
+
+    $(document).ready(function(){       
+
         // Carousel
         $('#car-images-carousel').slick({
             dots: false,
@@ -426,19 +450,12 @@
             var warrantyType = $(this).val();
             var price        = $(this).data("price");
             var total        = 0;
-            // $this->to = date("Y-m-d H:i", $t);
-            // $this->toHuman = date("D d/m/Y H:iA", $t);
             
-            console.log($("#from").val());
-            console.log($("#to").val());
             var from     = new Date($("#from").val());
             var to       = new Date($("#to").val());
             var duration = (to - from)/1000/60/60
             var days     = Math.floor(duration/24);
             var hours    = duration % 24;
-
-            console.log(from);
-            console.log(to);
 
             if (warrantyType == 1) {
                 total = subtotal + price;
@@ -548,23 +565,7 @@
                     }
                 }]
             });
-            return false;
-        }
 
-        var payment = $('input:radio[name=payment-group]:checked').val();
-
-        if (payment === undefined) {
-
-            $("#dialog-alert p").html("Necesitas seleccionar tu medio de pago");
-            $("#dialog-alert").attr("title", "¡Alerta!");
-            $("#dialog-alert").dialog({
-                buttons: [{
-                    text: "Aceptar",
-                    click: function() {
-                        $( this ).dialog( "close" );
-                    }
-                }]
-            });
             return false;
         }
 
@@ -592,6 +593,45 @@
             "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
         ],
         dayOfWeekStart: 1,
+        minDate: "<?php echo date('d-m-Y') ?>",
+        minTime: "<?php echo date('H:i') ?>",
+        i18n:{
+            es:{
+                months:[
+                'Enero','Febrero','Marzo','Abril',
+                'Mayo','Junio','Julio','Agosto',
+                'Septiembre','Octubre','Noviembre','Diciembre'
+                ],
+                daysShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"],
+                dayOfWeek:["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"]
+            }
+        },
+        lang:'es',
+        format:'D d/m/Y H:i',
+        timepicker: true,
+        validateOnBlur: false,
+        defaultDate: ' ',
+        onSelectDate: function() {
+            refreshDate(true);
+        },
+
+        onSelectTime: function() {
+            refreshDate(true);
+        }
+    });
+
+    $("#toH").datetimepicker({ 
+        allowTimes:[
+            "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
+            "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
+            "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
+            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+            "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+            "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
+            "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
+            "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
+        ],
+        dayOfWeekStart: 1,
         lang:'es',
         i18n:{
             es:{
@@ -600,7 +640,7 @@
                 'Mayo','Junio','Julio','Agosto',
                 'Septiembre','Octubre','Noviembre','Diciembre'
                 ],
-                dayOfWeek:["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"]
+                dayOfWeek:["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"]
             }
         },
         format:'D d/m/Y H:i',
@@ -608,103 +648,84 @@
         validateOnBlur: false,
         defaultDate: ' ',
         onSelectDate: function() {
-        
-            var desde = "Desde: ";
-            var fromh = $("#fromH").val();
-            var nuevo = desde + fromh;
-            $("#fromH").val(nuevo);
-
-            formatoFecha($("#fromH").val());
-
-            $("#from").val(fecha.format("Y-m-d H:i"));
+            refreshDate(false);
         },
 
         onSelectTime: function() {
-        
-            var desde = "Desde: ";
-            var fromh = $("#fromH").val();
-            var nuevo = desde + fromh;
-            $("#fromH").val(nuevo);
-
-            formatoFecha($("#fromH").val());
-
-            $("#from").val(fecha.format("Y-m-d H:i"));
+            refreshDate(false);
         }
     });
 
-    $("#toH").datetimepicker({ 
-            allowTimes:[
-                "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
-                "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
-                "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
-                "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-                "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-                "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-                "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-                "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
-            ],
-            dayOfWeekStart: 1,
-            lang:'es',
-            i18n:{
-                es:{
-                    months:[
-                    'Enero','Febrero','Marzo','Abril',
-                    'Mayo','Junio','Julio','Agosto',
-                    'Septiembre','Octubre','Noviembre','Diciembre'
-                    ],
-                    dayOfWeek:["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"]
-                }
-            },
-            format:'D d/m/Y H:i',
-            timepicker: true,
-            onSelectDate: function() {
-            
-                var desde = "Hasta: ";
-                var fromh = $("#toH").val();
-                var nuevo = desde + fromh;
-                $("#toH").val(nuevo);
+    function getRentalPrice() {
 
-                formatoFecha($("#toH").val());
+        var carId = $("#car").val();
+        var from  = $("#from").val();
+        var to    = $("#to").val();
 
-                $("#to").val(fecha.format("Y-m-d H:i"));
-            },
-            onSelectTime: function() {
-            
-                var desde = "Hasta: ";
-                var fromh = $("#toH").val();
-                var nuevo = desde + fromh;
-                $("#toH").val(nuevo);
+        $.post("<?php echo url_for('reserves/calculatePrice') ?>", {"carId": carId, "from": from, "to": to}, function(r){
+            console.error(r);
+            if (r.error) {
+                $("#dialog-alert p").html(r.errorMessage);
+                $("#dialog-alert").attr("title", "¡Alerta!");
+                $("#dialog-alert").dialog({
+                    buttons: [{
+                        text: "Aceptar",
+                        click: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }]
+                });
 
-                formatoFecha($("#toH").val());
+                setDefaultDateH();
 
-                $("#to").val(fecha.format("Y-m-d H:i"));
+            } else {
+                $("#subtotal").html("$"+$.number(r.price, 0, ',', '.'));
+                $("#subtotal").data('price', r.price);
             }
 
-
-        });
-
-
+        }, 'json');
+    }
 
     function formatoFecha(fecha){
-        var fechaH = fecha;
-
-        var split = fechaH.split(" ");
-        var f = split[2];
-        var h = split[3];
+        
+        var split = fecha.split(" ");
+        var f = split[1];
+        var h = split[2];
 
         var split2 = f.split("/");
         var dia = split2[0];
-        var mes = split2[1];
+        var mes = split2[1]-1;
         var ano = split2[2];
 
         var split3 = h.split(":");
         var hora = split3[0];
-        var min = split3[1];
+        var min  = split3[1];
 
-        fecha = new Date(ano, mes, dia, hora, min, 0, 0);
-
-        return fecha;
+        var date = new Date(ano, mes, dia, hora, min, 0, 0);
+        return date;
     }
 
+    function refreshDate(isFrom) {
 
+        if (isFrom) {
+            var desde = "Desde: ";
+            var fromh = $("#fromH").val();
+            var nuevo = desde + fromh;
+            $("#fromH").val(nuevo);
+            $("#from").val(formatoFecha(fromh).format("Y-m-d H:i"));
+        } else {            
+            var hasta = "Hasta: ";
+            var toh = $("#toH").val();
+            var nuevo = hasta + toh;
+            $("#toH").val(nuevo);
+            $("#to").val(formatoFecha(toh).format("Y-m-d H:i"));
+        }
+
+        getRentalPrice();
+    }
+
+    function setDefaultDateH(){
+        $("#toH").val('<?php echo $toHuman ?>');
+        $("#fromH").val('<?php echo $fromHuman ?>');
+    }
 </script>

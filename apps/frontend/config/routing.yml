@@ -37,6 +37,10 @@ opportunities_approve:
     url: /oportunidades/aprobar
     param: { module: opportunities, action: approve }
 
+reserve:
+    url: /reserva/:c/:f/:t
+    param: { module: profile, action: reserve }
+
 reserve_approve:
     url: /reserva/aprobar
     param: { module: reserves, action: approve }

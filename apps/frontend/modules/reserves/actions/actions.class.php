@@ -75,6 +75,41 @@ class reservesActions extends sfActions {
         return sfView::NONE;
     }
 
+    public function executeCalculatePrice (sfWebRequest $request) {
+
+        $return = array("error" => false);
+
+        $carId = $request->getPostParameter("carId", null);
+        $from  = $request->getPostParameter("from", null);
+        $to    = $request->getPostParameter("to", null);
+
+        try {
+
+            $datesError = $this->validateDates($from, $to);
+            if ($datesError) {
+                throw new Exception($datesError, 1);
+            }
+
+            if (is_null($carId) || $carId == '' || $carId == 0) {
+                throw new Exception("No se encontró el auto", 1);
+            }
+
+            $Car = Doctrine_Core::getTable('car')->findOneById($carId);
+            if (!$Car) {
+                throw new Exception("El auto no existe", 1);
+            }
+
+            $return["price"] = Car::getPrice($from, $to, $Car->price_per_hour, $Car->price_per_day, $Car->price_per_week, $Car->price_per_month);
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+        }
+    
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
     public function executeChange (sfWebRequest $request) {
     
         $return = array("error" => false);

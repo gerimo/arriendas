@@ -743,10 +743,19 @@ background: #f8f8f8;
 
 
 #payments .radio {
-    height: 130px;
+    height: 20px;
     margin: 0;
-    padding: 10px 0px 0 31px;
+    padding: 0px 0px 0 31px;
     font-weight: 400;
+}
+
+#payments .title-payment{
+    font-family: 'Roboto';
+    font-weight: normal;
+    font-size: 18px;
+    text-decoration: none;
+    color: #333;
+    
 }
 
 .radio label{
