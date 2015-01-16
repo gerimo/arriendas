@@ -7135,6 +7135,7 @@ error_log("BUSCANDO LA MEJOR OPORTUNIDAD");
 
     
     // FUNCIONES PRIVADAS
+    // FUNCIONES PRIVADAS
     private function validateDates ($from, $to) {
 
         $from = strtotime($from);

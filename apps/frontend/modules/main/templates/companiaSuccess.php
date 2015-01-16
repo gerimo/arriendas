@@ -21,11 +21,11 @@
             <div class="row" style="margin-top: 15px;">
                 <div class="col-md-offset-2 col-md-9">
                     <div id="section-on-partners-carousel">
-                         <div class="normal"><a href="#"><img src="/images/newDesign/bci-seguros.png"  alt="bci-seguros"></a></div> 
-                         <div class="normal"><a href="#"><img src="/images/newDesign/wayra1.png" alt="wayra"></a></div> 
-                         <div class="normal"><a href="#"><img src="/images/newDesign/telefonica1.png" alt="telefonica"></a></div> 
-                         <div class="normal"><a href="#"><img src="/images/newDesign/Startupchile.png" alt="Startupchile" style="height: 48px;"></a></div>
-                         <div class="normal"><a href="#"><img src="/images/newDesign/australincuba.png" alt="austral-incuba"></a></div>           
+                         <div class="normal"><a ><img src="/images/newDesign/partners/bci-seguros.png"  alt="bci-seguros"></a></div> 
+                         <div class="normal"><a ><img src="/images/newDesign/partners/wayra1.png" alt="wayra"></a></div> 
+                         <div class="normal"><a ><img src="/images/newDesign/partners/telefonica1.png" alt="telefonica"></a></div> 
+                         <div class="normal"><a ><img src="/images/newDesign/partners/Startupchile.png" alt="Startupchile" style="height: 48px;"></a></div>
+                         <div class="normal"><a ><img src="/images/newDesign/partners/australincuba.png" alt="austral-incuba"></a></div>           
                     </div>
                 </div>
             </div>                                              

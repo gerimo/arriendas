@@ -2,7 +2,7 @@
 
 <!-- Google Maps -->
 <script src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;sensor=false" type="text/javascript"></script>
-<script src="js/newDesign/markerclusterer.js" type="text/javascript"></script>
+<script src="/js/newDesign/markerclusterer.js" type="text/javascript"></script>
 
 <!-- Varios -->
 <script type="text/javascript">
@@ -555,14 +555,18 @@
         <!-- List -->
         <div class="col-xs-6 col-sm-3 col-md-3" id="region-container">
             <select class="region form-control" id="region">
-                <option disabled value="<?php echo $Region->getCodigo() ?>"><?php echo $Region->getNombre() ?></option>
+                <option disabled value="<?php echo $Region->id ?>"><?php echo $Region->name ?></option>
             </select>
         </div>
         <div class="col-xs-6 col-sm-3 col-md-3" id="commune-container">
             <select class="commune form-control" id="commune">
                 <option value="0">Comuna</option>
-                <?php foreach ($Comunas as $Comuna): ?>
-                    <option value="<?php echo $Comuna->getCodigoInterno() ?>"><?php echo ucwords(strtolower($Comuna->getNombre())) ?></option>
+                <?php foreach ($Region->getCommunes() as $Commune): ?>
+                    <?php if ($hasCommune && $Commune->id == $hasCommune): ?>
+                        <option selected value="<?php echo $Commune->id ?>"><?php echo ucwords(strtolower($Commune->name)) ?></option> 
+                    <?php else: ?>
+                        <option value="<?php echo $Commune->id ?>"><?php echo ucwords(strtolower($Commune->name)) ?></option>
+                    <?php endif ?>
                 <?php endforeach ?>
             </select>
         </div>
@@ -753,15 +757,15 @@
 
     <div class="hidden-xs col-sm-offset-2 col-sm-8 col-md-offset-2 col-md-8">
         <div id="section-on-news-carousel">
-            <div class = "normal"><a href="http://www.t13.cl/videos/actualidad/arrienda-tu-auto-es-la-nueva-tendencia-entre-los-chilenos"><img src="images/logos_canais/13.png" alt="Canal 13"></a></div>
-            <div><a href="http://www.cnnchile.com/noticia/2014/01/10/arriendas-el-emprendimiento-que-permite-arrendar-tu-propio-auto"><img src="images/logos_canais/LogoCNN.png" alt="CNN Chile"></a></div>
-            <div class = "normal"><a href="http://www.24horas.cl/nacional/rent-a-car-vecino-la-nueva-forma-de-viajar-906946"><img src="images/logos_canais/logotvn2.png" alt="TVN"></a></div>
-            <div><a href="http://www.emol.com/noticias/economia/2012/07/27/552815/emprendedor-estrenara-primer-sistema-de-arriendo-de-vehiculos-por-hora-de-chile.html"><img src="images/logos_canais/LogoEmol.png" alt="EMOL"></a></div>
-            <div><a href="http://www.lun.com/lunmobile//pages/NewsDetailMobile.aspx?IsNPHR=1&dt=2012-10-23&NewsID=0&BodyId=0&PaginaID=6&Name=6&PagNum=0&SupplementId=0&Anchor=20121023_6_0_0"><img src="images/logos_canais/LogoLUN.png" alt="Las Últimas Noticias"></a></div>
-            <div><a href="http://www.tacometro.cl/prontus_tacometro/site/artic/20121030/pags/20121030152946.html"><img src="images/logos_canais/LogoPublimetro.png" alt="Publimetro"></a></div>
-            <div><a href="http://www.lasegunda.com/Noticias/CienciaTecnologia/2012/08/774751/arriendascl-sistema-de-alquiler-de-autos-por-horas-debuta-en-septiembre"><img src="images/logos_canais/LogoLaSegunda.png" alt="La Segunda"></a></div>
-            <div><a href="http://www.lacuarta.com/noticias/cronica/2013/08/63-157571-9-ahora-puedes-arrendar-el-automovil-de-tu-vecino.shtml"><img src="images/logos_canais/LogoLaCuarta.png" alt="La Cuarta"></a></div>
-            <div><a href="http://www.diariopyme.cl/arrienda-tu-auto-y-gana-dinero-extra-a-fin-de-mes/prontus_diariopyme/2013-06-23/212000.html"><img src="images/logos_canais/LogoDiarioPyme.png" alt="Diario PYME"></a></div>
+            <div class = "normal"><a href="http://www.t13.cl/videos/actualidad/arrienda-tu-auto-es-la-nueva-tendencia-entre-los-chilenos"><img src="/images/newDesign/logos_canais/13.png" alt="Canal 13"></a></div>
+            <div><a href="http://www.cnnchile.com/noticia/2014/01/10/arriendas-el-emprendimiento-que-permite-arrendar-tu-propio-auto"><img src="/images/newDesign/logos_canais/LogoCNN.png" alt="CNN Chile"></a></div>
+            <div class = "normal"><a href="http://www.24horas.cl/nacional/rent-a-car-vecino-la-nueva-forma-de-viajar-906946"><img src="/images/newDesign/logos_canais/logotvn2.png" alt="TVN"></a></div>
+            <div><a href="http://www.emol.com/noticias/economia/2012/07/27/552815/emprendedor-estrenara-primer-sistema-de-arriendo-de-vehiculos-por-hora-de-chile.html"><img src="/images/newDesign/logos_canais/LogoEmol.png" alt="EMOL"></a></div>
+            <div><a href="http://www.lun.com/lunmobile//pages/NewsDetailMobile.aspx?IsNPHR=1&dt=2012-10-23&NewsID=0&BodyId=0&PaginaID=6&Name=6&PagNum=0&SupplementId=0&Anchor=20121023_6_0_0"><img src="/images/newDesign/logos_canais/LogoLUN.png" alt="Las Últimas Noticias"></a></div>
+            <div><a href="http://www.tacometro.cl/prontus_tacometro/site/artic/20121030/pags/20121030152946.html"><img src="/images/newDesign/logos_canais/LogoPublimetro.png" alt="Publimetro"></a></div>
+            <div><a href="http://www.lasegunda.com/Noticias/CienciaTecnologia/2012/08/774751/arriendascl-sistema-de-alquiler-de-autos-por-horas-debuta-en-septiembre"><img src="/images/newDesign/logos_canais/LogoLaSegunda.png" alt="La Segunda"></a></div>
+            <div><a href="http://www.lacuarta.com/noticias/cronica/2013/08/63-157571-9-ahora-puedes-arrendar-el-automovil-de-tu-vecino.shtml"><img src="/images/newDesign/logos_canais/LogoLaCuarta.png" alt="La Cuarta"></a></div>
+            <div><a href="http://www.diariopyme.cl/arrienda-tu-auto-y-gana-dinero-extra-a-fin-de-mes/prontus_diariopyme/2013-06-23/212000.html"><img src="/images/newDesign/logos_canais/LogoDiarioPyme.png" alt="Diario PYME"></a></div>
         </div>
     </div>
 </div>
@@ -801,12 +805,11 @@
 <script>
 
     $(document).ready(function(){
-
+            
         /*// Si comuna es visible, se preselecciona comuna más hot
         if ($("#commune").is(':visible')) {            
             $("#commune option[value=93]").attr("selected", true);
         }*/
-
         localizame();
         initialize();
 
@@ -838,7 +841,6 @@
             /*slide: 'div',*/
             /*cssEase: 'linear'*/
 
-
         });
 
         $('#section-testimonials-carousel').slick({
@@ -846,6 +848,12 @@
             arrows: false,
             speed: 450
         });
+
+        //cuando se carga desde haber elegido un rent-a-car-especifico
+        <?php if($hasCommune):?>
+            $('div[data-target="#tab-list"]').click();
+        <?php endif?>
+
     });
 
     if ($(window).width() > 768) {
@@ -869,8 +877,8 @@
         searchCars(); 
     });
 
-    $(".tab").click(function(){
-
+    $(".tab").click(function(target){
+        
         var target = $(this).data("target");
 
         if (target == "#tab-map") {
@@ -920,7 +928,8 @@
         $(target).show();
     });
 
-    $('.datetimepicker').datetimepicker({
+
+     $('#to').datetimepicker({
         allowTimes:[
         "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
         "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
@@ -933,32 +942,26 @@
         ],
         dayOfWeekStart: 1,
         lang:'es',
-        i18n:{
-            es:{
-                months:[
-                'Enero','Febrero','Marzo','Abril',
-                'Mayo','Junio','Julio','Agosto',
-                'Septiembre','Octubre','Noviembre','Diciembre'
-                ],
-                dayOfWeek:["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"]
-            }
-        },
+        minDate : "<?php echo date('d-m-Y H:i', (strtotime ('+24 Hours'))); ?>",
         format:'d-m-Y H:i'
     });
 
-    $('#to').datetimepicker({
-        format:'d-m-Y H:i',
-        minDate : "<?php echo date('d-m-Y H:i', (strtotime ('+24 Hours'))); ?>",
-    });
-
     $('#from').datetimepicker({
+        allowTimes:[
+        "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
+        "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
+        "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
+        "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+        "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+        "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
+        "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
+        "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
+        ],
         format:'d-m-Y H:i',
         minDate : "<?php echo date('d-m-Y') ?>",
+        minTime : "<?php echo date('H:i') ?>",
+        dayOfWeekStart: 1,
+        lang:'es'
     });
-
-   
-
-     
-
 
 </script>

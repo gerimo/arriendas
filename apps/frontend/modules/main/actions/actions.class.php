@@ -6,16 +6,22 @@ class mainActions extends sfActions {
 
         $this->setLayout("newIndexLayout");
 
+        $this->hasCommune = false;
+
+        if ($request->hasParameter('region','comuna')){
+            $communeSlug = $request->getParameter('comuna');
+            $this->hasCommune = Doctrine_Core::getTable('Commune')->findOneBySlug($communeSlug)->id;
+        }
+
+        $this->Region = Doctrine_Core::getTable("Region")->find(13);
+
         if (is_null($this->getUser()->getAttribute('geolocalizacion'))) {
             $this->getUser()->setAttribute('geolocalizacion', true);
         } elseif ($this->getUser()->getAttribute('geolocalizacion') == true) {
             $this->getUser()->setAttribute('geolocalizacion', false);
+        
         }
-
-        $this->Region = Doctrine_Core::getTable("Regiones")->findOneByCodigo(13);
-
-        $this->Comunas = Doctrine_Core::getTable("Comunas")->findByPadre(13);
-    }
+    }   
 
     public function executeCompleteRegister(sfWebRequest $request) {
 
@@ -320,7 +326,7 @@ class mainActions extends sfActions {
             foreach ($cars as $i => $car) {
                 if (!$car->hasReserve(date("Y-m-d H:i:s", strtotime($from)), date("Y-m-d H:i:s", strtotime($to)))) {
 
-                    error_log("Procesando auto [".$i."]: ".$car->getId());
+                    //error_log("Procesando auto [".$i."]: ".$car->getId());
 
                     $d = 0;
 
@@ -395,7 +401,7 @@ class mainActions extends sfActions {
                         'from' => date("Y-m-d H:i", strtotime($from)),
                         'to' => date("Y-m-d H:i", strtotime($to))
                     );
-                    error_log("asd");
+                    //error_log("asd");
                 }
             }
         } catch (Exception $e) {
@@ -718,7 +724,6 @@ class mainActions extends sfActions {
     
         $ciudad = $request->getParameter("autos");
         $objeto_ciudad = Doctrine_Core::getTable("city")->findOneByName($ciudad);
-
         $q = Doctrine_Query::create()
                 ->select('ca.id, mo.name model,
           br.name brand, ca.uso_vehiculo_id tipo_vehiculo, ca.year year,
@@ -1057,7 +1062,9 @@ class mainActions extends sfActions {
     public function executeFormularioEntrega(sfWebRequest $request){
         //se asume que se recibe el id de la tabla reserva desde la página anterior
             //$idReserve = 605;
+            error_log($idReserve);
             $idReserve= $request->getParameter("idReserve");
+            error_log($idReserve);
             $tokenReserve= $request->getParameter("tokenReserve");
 
             //id del usuario que accede al sitio

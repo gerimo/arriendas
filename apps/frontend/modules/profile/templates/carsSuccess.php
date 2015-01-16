@@ -59,7 +59,7 @@
                                         <h2>Horario para recibir un cliente</h2>   
                                         <?php foreach ($availabilityOfCars[$c->getId()] as $AOC): ?>
                                             <div class="row">
-                                                <h3><?php echo $AOC["dayName"] ." ". date("j", strtotime($AOC["day"])) ?></h3>
+                                                <h3 class="col-md-offset-1"><?php echo $AOC["dayName"] ." ". date("j", strtotime($AOC["day"])) ?></h3>
                                                 <div class="AOC-container" data-car-id="<?php echo $c->getId() ?>" data-day="<?php echo $AOC['day'] ?>">
                                                     <div class='col-md-offset-3 col-md-4'>
                                                         <div class="date-group">

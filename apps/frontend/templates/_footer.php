@@ -38,8 +38,7 @@
             <h1>Herramientas</h1>
             <ul>
                 <li><a href="<?php echo url_for('profile/addCar') ?>" title="Sube tu auto">Sube tu auto</a></li>
-                <li><a href="http://www.arriendas.cl" title="Busca un auto">Busca un auto</a></li>
-                <li><a class="item_thm fancybox" href="<?php echo url_for('main/referidos') ?>">Gana dinero invitando Amigos</a></li>
+                <li><a href="<?php echo url_for('/#section-map-form-search') ?>" title="Busca un auto">Busca un auto</a></li>
                 <li><a class="item_thm fancybox" href="<?php echo url_for('main/valueyourcar') ?>">¿Cuánto puedo ganar con mi auto?</a></li>
             </ul>
         </div>
@@ -91,4 +90,5 @@
         </div>
     </div>
 </footer>
+
 

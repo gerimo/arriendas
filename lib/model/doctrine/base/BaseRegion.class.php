@@ -9,12 +9,14 @@
  * @property string $name
  * @property integer $natural_order
  * @property boolean $is_active
+ * @property Doctrine_Collection $Region
  * 
  * @method integer       getId()               Returns the current record's "id" value
  * @method boolean       getIsActive()         Returns the current record's "is_active" value
  * @method string        getName()             Returns the current record's "name" value
  * @method integer       getNaturalOrder()     Returns the current record's "natural_order" value
- *
+
+ * @method Regiones     setRegion()           Sets the current record's "Region" collection
  * @method Region        setId()               Sets the current record's "id" value
  * @method Region        setIsActive()         Sets the current record's "is_active" value
  * @method Region        setName()             Sets the current record's "name" value
@@ -59,5 +61,9 @@ abstract class BaseRegion extends sfDoctrineRecord {
     public function setUp() {
 
         parent::setUp();
+
+        $this->hasMany('Commune as communes', array(
+             'local' => 'id',
+             'foreign' => 'region_id'));
     }
 }

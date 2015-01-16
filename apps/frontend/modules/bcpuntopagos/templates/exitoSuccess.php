@@ -5,14 +5,15 @@
 <div class="row">
     <div class="col-md-offset-4 col-md-4">
       <div class="BCW">
-          <h1>PAGO EXITOSO</h1>
+      
+          <h1>¡PAGO EXITOSO!</h1>
           <div class="contenido text-center">
             <p>Antes y después de realizar la reserva, debes firmar el 
-              <a href='http://www.arriendas.cl/main/generarFormularioEntregaDevolucion/tokenReserve/<?php echo $tokenReserve; ?>' target='_blank'>informe de da&ntilde;os impreso.</a>
+              <a href='http://local.arriendas.cl/main/generarFormularioEntregaDevolucion/tokenReserve/<?php echo $tokenReserve; ?>' target='_blank'>informe de daños impreso.</a>
             </p>
             <br>
             <p class="Owner text-center">
-              <b>Datos del due&ntilde;o del auto</b>
+              <b>Datos del dueño del auto</b>
             </p>
             <p>
               <b>Nombre:</b> <?php echo $nameOwner ?> <?php echo $lastnameOwner ?>
@@ -25,7 +26,7 @@
         <div class="col-md-offset-1">
             <p>Te enviamos estos datos a tu correo</p>
         </div>  
-        <div class="row hidden-xs" style="margin-top: 10px">
+        <div class="row hidden-xs" style="margin-top: 30px">
           <a class="col-md-offset-7 col-md-4 btn-a-action" href="<?php echo url_for("reserves")?>">Siguiente</a>
         </div>
         <div class="row visible-xs" style="margin-top: 8px">
