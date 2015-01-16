@@ -18,7 +18,7 @@
     color: rgb(70, 70, 70);
     font-size: 32px;
     font-weight: 300;
-    margin: 15px 0 40px 0;
+    margin: 30px 0 40px 0;
     padding: 0 0 6px 0px;
 }
 
@@ -179,10 +179,24 @@ footer .fa-twitter {
     vertical-align: middle;
 }
 
-.btn-a-primary:hover {
+.btn-a-secondary:hover {
     background: #ca236f !important;
     color: #fff !important;
     text-decoration: none;
+}
+
+.btn-a-secondary {
+    font-size: 16px !important;
+    margin: 5px;
+    background: #ba135f;
+    border: 2px solid #dc89af;
+    border-radius: 0;
+    color: #eee !important;
+    font: 700 16px/19px 'Open Sans', sans-serif;
+    padding: 8px 21px !important;
+    text-align: center;
+    text-transform: uppercase !important;
+    vertical-align: middle;
 }
 
 .btn-a-action {

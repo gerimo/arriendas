@@ -1,28 +1,49 @@
 <?php
 
-/**
- * cars actions.
- *
- * @package    CarSharing
- * @subpackage cars
- * @author     Your name here
- * @version    SVN: $Id: actions.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
- */
 class carsActions extends sfActions {
 
-    /**
-     * Executes index action
-     *
-     * @param sfRequest $request A request object
-     */
-    public function executeIndex(sfWebRequest $request) {
+    public function executeCreate(sfWebRequest $request){
+          $this->setLayout("newIndexLayout");
+          $this->Communes = Commune::getByRegion(false);
+          $this->Brands = Brand::getBrand();
+    }
 
+    public function executeGetModels(sfWebRequest $request) {
+
+        $return = array("error" => false);
+
+        try {
+
+            $brandId = $request->getPostParameter("brandId", null);
+
+            if (is_null($brandId) || $brandId == "" || $brandId == 0) {
+                throw new Exception("Falta marca", 1);
+            }
+
+            $return["models"] = Model::getByBrand($brandId);
+
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorCode"] = $e->getCode();
+            $return["errorMessage"] = $e->getMessage();
+        }
+
+        error_log("T: ".count($return["models"]));
+
+        $this->renderText(json_encode($return));
+        
+        return sfView::NONE;
+    }
+
+    ////////////////////////////////////////
+
+    public function executeIndex(sfWebRequest $request) {
 
         $q = Doctrine_Query::create()
                 ->select('ca.id , av.id idav , mo.name model, 
-		  br.name brand, ca.year year, 
-		  ca.address address, ci.name city, 
-		  st.name state, co.name country'
+                    br.name brand, ca.year year, 
+                    ca.address address, ci.name city, 
+                    st.name state, co.name country'
                 )
                 ->from('Car ca')
                 ->innerJoin('ca.Availabilities av')
@@ -31,24 +52,25 @@ class carsActions extends sfActions {
                 ->innerJoin('ca.City ci')
                 ->innerJoin('ci.State st')
                 ->innerJoin('st.Country co');
+                
         $this->cars = $q->execute();
     }
 
     public function recortar_texto($texto, $limite=100){   
-    $texto = trim($texto);
-    $texto = strip_tags($texto);
-    $tamano = strlen($texto);
-    $resultado = '';
-    if($tamano <= $limite){
-        return $texto;
-    }else{
-        $texto = substr($texto, 0, $limite);
-        $palabras = explode(' ', $texto);
-        $resultado = implode(' ', $palabras);
-        $resultado .= '...';
-    }   
-    return $resultado;
-  }
+        $texto = trim($texto);
+        $texto = strip_tags($texto);
+        $tamano = strlen($texto);
+        $resultado = '';
+        if($tamano <= $limite){
+            return $texto;
+        }else{
+            $texto = substr($texto, 0, $limite);
+            $palabras = explode(' ', $texto);
+            $resultado = implode(' ', $palabras);
+            $resultado .= '...';
+        }   
+        return $resultado;
+    }
 
     public function executeCar(sfWebRequest $request) {
 
@@ -62,10 +84,10 @@ class carsActions extends sfActions {
 
         //Versi�n anterior: No se ocupa.
 
-		$this->df = ''; if($request->getParameter('df')) $this->df = $request->getParameter('df');
-		$this->hf = ''; if($request->getParameter('hf')) $this->df = $request->getParameter('hf');
-		$this->dt = ''; if($request->getParameter('dt')) $this->df = $request->getParameter('dt');
-		$this->ht = ''; if($request->getParameter('ht')) $this->df = $request->getParameter('ht');
+        $this->df = ''; if($request->getParameter('df')) $this->df = $request->getParameter('df');
+        $this->hf = ''; if($request->getParameter('hf')) $this->df = $request->getParameter('hf');
+        $this->dt = ''; if($request->getParameter('dt')) $this->df = $request->getParameter('dt');
+        $this->ht = ''; if($request->getParameter('ht')) $this->df = $request->getParameter('ht');
 
         /*
         //si el due�o del auto lo ve, es redireccionado
@@ -79,15 +101,15 @@ class carsActions extends sfActions {
         $this->velocidadMensajes = $this->user->getVelocidadRespuesta_mensajes();
 
         /*
-        $this->nombreAcortado =	$this->recortar_texto($this->user->getFirstname()." ". $this->user->getLastname(), 15);*/
+        $this->nombreAcortado = $this->recortar_texto($this->user->getFirstname()." ". $this->user->getLastname(), 15);*/
         $this->primerNombre = ucwords(current(explode(' ' ,$this->user->getFirstname())));
         $this->inicialApellido = ucwords(substr($this->user->getLastName(), 0, 1)).".";
-    	//Modificaci�n para llevar el conteo de la cantidad de consulas que recibe el perfil del auto
-    	$q= Doctrine_Query::create()
-    	    ->update("car")
-    	    ->set("consultas","consultas + 1")
-    	    ->where("id = ?",$request->getParameter('id'));
-    	$q->execute();
+        //Modificaci�n para llevar el conteo de la cantidad de consulas que recibe el perfil del auto
+        $q= Doctrine_Query::create()
+            ->update("car")
+            ->set("consultas","consultas + 1")
+            ->where("id = ?",$request->getParameter('id'));
+        $q->execute();
 
         //Cargamos las fotos por defecto de los autos
         $auto= Doctrine_Core::getTable('car')->find(array($request->getParameter('id')));
@@ -162,8 +184,7 @@ class carsActions extends sfActions {
         $this->arrayFotosDanios = $arrayFotoDanios;
         $this->arrayDescripcionesDanios = $arrayDescripcionDanios;
     }
-    
-    
+
     public function executeGetByReserserVehicleType(sfWebRequest $request) {
         $availableCars = array();
         $reserve = Doctrine_Core::getTable('reserve')->find($request->getParameter("reserve_id"));
@@ -182,5 +203,4 @@ class carsActions extends sfActions {
         $this->getResponse()->setContentType('application/json');
         return $this->renderText(json_encode($availableCars));
     }
-
 }

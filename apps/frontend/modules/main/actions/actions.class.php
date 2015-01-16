@@ -1,18 +1,21 @@
 <?php
 
-/**
- * main actions.
- *
- * @package    CarSharing
- * @subpackage main
- * @author     Your name here
- * @version    SVN: $Id: actions.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
- */
+require_once sfConfig::get('sf_lib_dir') . '/vendor/mobile-detect/Mobile_Detect.php';
+
 class mainActions extends sfActions {
 
     public function executeIndex (sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
+
+        $this->hasCommune = false;
+
+        if ($request->hasParameter('region','comuna')){
+            $communeSlug = $request->getParameter('comuna');
+            $this->hasCommune = Doctrine_Core::getTable('Commune')->findOneBySlug($communeSlug)->id;
+        }
+
+        $this->Region = Doctrine_Core::getTable("Region")->find(13);
 
         if (is_null($this->getUser()->getAttribute('geolocalizacion'))) {
             $this->getUser()->setAttribute('geolocalizacion', true);
@@ -20,9 +23,648 @@ class mainActions extends sfActions {
             $this->getUser()->setAttribute('geolocalizacion', false);
         }
 
-        $this->Region = Doctrine_Core::getTable("Regiones")->findOneByCodigo(13);
+        $this->Region = Doctrine_Core::getTable("Region")->find(13);
+    }
 
-        $this->Comunas = Doctrine_Core::getTable("Comunas")->findByPadre(13);
+    public function executeCompleteRegister(sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+
+        //$userId = $request->getParameter('userId');
+        $userId_session = $this->getUser()->getAttribute("userid");
+        $User = Doctrine_Core::getTable('user')->find($userId_session);
+
+        if ((!is_null($User) && !$User->getConfirmed()) || $User->getConfirmedFb()) {
+            $this->Regions = Region::getRegionsByNaturalOrder();
+            $this->User = $User;
+        } else {
+            $this->redirect('main/index');
+        }
+    }
+
+    public function executeDoCompleteRegister(sfWebRequest $request) {
+        
+        $return = array("error" => false);
+
+        try {
+
+            //$motherLastname = $request->getPostParameter("motherLastname", null);
+            $como           = $request->getPostParameter("como", null);
+            $userId         = $request->getPostParameter("userId", null);
+            $rut            = $request->getPostParameter("rut", null);
+            $foreign        = $request->getPostParameter("foreign", null);
+            $telephone      = $request->getPostParameter("telephone", null);
+            $birth          = $request->getPostParameter("birth", null);
+            $address        = $request->getPostParameter("address", null);
+            $commune        = $request->getPostParameter("commune", null);
+            $region         = $request->getPostParameter("region", null);
+            $anotherText    = $request->getPostParameter("anotherText", null);
+
+            if(!$foreign) {
+                if (is_null($rut) || $rut == "") {
+                    throw new Exception("Debes indicar tu RUT", 1);
+                }            
+            }
+            if (is_null($foreign) || $foreign == "") {
+                throw new Exception("Debes indicar tu nacionalidad", 1);
+            }
+            //borrar
+            if (is_null($userId) || $userId == "") {
+                throw new Exception("userId", 1);
+            }
+
+            if (is_null($telephone) || $telephone == "") {
+                throw new Exception("Debes indicar un teléfono", 1);
+            }
+
+            if (is_null($birth) || $birth == "") {
+                throw new Exception("Debes indicar tu fecha de nacimiento", 1);
+            }
+
+            if (is_null($address) || $address == "") {
+                throw new Exception("Debes indicar tu dirección", 1);
+            }
+
+            if (is_null($commune) || $commune == "") {
+                throw new Exception("Debes indicar tu comuna", 1);
+            }
+
+            if (is_null($region) || $region == "") {
+                throw new Exception("Debes indicar tu región", 1);
+            }
+            if(!$foreign) {
+                if (!Utils::validateRUT($rut)) {
+                    throw new Exception("el rut ingresado es inválido", 1);
+                } else {
+                    if(User::rutExist($rut)) {
+                        throw new Exception("el rut ingresado ya se encuentra registrado", 1);
+                    }
+                }
+            }
+
+            if (is_null($como) || $como == "") {
+                throw new Exception("Debes indicar como conociste Arriendas.cl", 1);
+            }
+
+
+            $User = Doctrine_Core::getTable('user')->find($userId);
+
+                if($como=='otro'){
+                    if($anotherText!='' || $anotherText!=null){
+                        $User->setComo($anotherText);
+                    } else {
+                        $User->setComo($como);
+                    }
+                } else {
+                    $User->setComo($como);
+                }
+
+                $User->setRut($rut);
+                $User->setExtranjero($foreign);
+                $User->setTelephone($telephone);
+                $User->setBirthdate($birth);
+                $User->setAddress($address);
+                $User->setComuna($commune);
+                $User->setRegion($Region);
+                $User->setConfirmed(true);
+            
+            // Chequeo Judicial
+            if(!$foreign){
+                $basePath = sfConfig::get('sf_root_dir');
+                $userid = $User->getId();
+                $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$rut.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
+                exec($comando);
+            }
+
+            $finish_message = "Felicitaciones!<br><br>Tu cuenta a sido activada, ahora puedes ingresar con tu nombre de usuario y contrase&ntilde;a. <br><br><b>¿Qué quieres hacer ahora?</b>";
+            $return["message"] = $finish_message;
+            $User->save();
+
+            // Login automático
+            $this->getUser()->setFlash('msg', 'Autenticado');
+            $this->getUser()->setAuthenticated(true);
+            $this->getUser()->setAttribute("logged", true);
+            $this->getUser()->setAttribute("userid", $User->getId());
+            $this->getUser()->setAttribute("firstname", $User->getFirstName());
+            $this->getUser()->setAttribute("name", current(explode(' ' , $User->getFirstName())) . " " . substr($User->getLastName(), 0, 1) . '.');
+            $this->getUser()->setAttribute("email", $User->getEmail());
+
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorCode"] = $e->getCode();
+            $return["errorMessage"] = $e->getMessage();
+        }
+        $this->renderText(json_encode($return));
+        return sfView::NONE;
+    }
+
+    public function executeDoRegister(sfWebRequest $request) {
+
+        $return = array("error" => false);
+
+        try {
+
+            $firstname      = $request->getPostParameter("firstname", null);
+            $lastname       = $request->getPostParameter("lastname", null);
+            $email          = $request->getPostParameter("email", null);
+            $emailAgain     = $request->getPostParameter("emailAgain", null);
+            $password       = $request->getPostParameter("password", null);
+
+            if (is_null($firstname) || $firstname == "") {
+                throw new Exception("Debes indicar tu nombre", 1);
+            }
+
+            if (is_null($lastname) || $lastname == "") {
+                throw new Exception("Debes indicar tu apllellido paterno", 1);
+            }
+            if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+                throw new Exception("Debes ingresar un mail válido", 1);
+            }
+
+            if(!filter_var($emailAgain, FILTER_VALIDATE_EMAIL)){
+                throw new Exception("Debes ingresar un mail válido", 1);
+            }
+
+            if (is_null($email) || $email == "") {
+                throw new Exception("Debes indicar tu correo electrónico", 1);
+            }
+
+            if (is_null($emailAgain) || $emailAgain == "") {
+                throw new Exception("Debes confirmar tu correo electrónico", 1);
+            }
+
+             if ($email != $emailAgain ) {
+                throw new Exception("Los emails no coinciden", 1);
+            }
+            
+            if ($email == $emailAgain ) {
+                if (User::emailExist($email)) {
+                throw new Exception("El Email ya se encuantra registrado", 1);
+                }
+            }
+
+            $User = new User();
+
+            $User->setUsername($email);
+            $User->setFirstname($firstname);
+            $User->setLastname($lastname);
+            $User->setEmail($email);
+            $User->setPassword(md5($password));
+            $User->setHash(substr(md5($email), 0, 6));
+            $User->save();
+
+            $url = $this->generateUrl('user_register_complete');
+            $this->getUser()->setAttribute("userid", $User->getId());
+
+            $return["url_complete"] = $url;
+
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorCode"] = $e->getCode();
+            $return["errorMessage"] = $e->getMessage();
+        }
+
+        $this->renderText(json_encode($return));
+        return sfView::NONE;
+    }
+
+    public function executeGetCars(sfWebRequest $request) {
+
+        
+
+        $return = array(
+            "error" => false,
+            "cars" => array()
+        );
+
+        $noDateInterval = false;
+
+        $swLat  = $request->getPostParameter('swLat', null);
+        $swLng  = $request->getPostParameter('swLng', null);
+        $neLat  = $request->getPostParameter('neLat', null);
+        $neLng  = $request->getPostParameter('neLng', null);
+        $map_center_lat  = $request->getPostParameter('map_center_lat', null);
+        $map_center_lng  = $request->getPostParameter('map_center_lng', null);
+
+        $from      = $request->getPostParameter('from', null);
+        $to        = $request->getPostParameter('to', null);
+        $automatic = $request->getPostParameter('automatic', null);
+        $low       = $request->getPostParameter('low', null);
+        $pasenger  = $request->getPostParameter('pasenger', null);
+        $comuna    = $request->getPostParameter('commune', null);
+
+        try {
+
+            $this->getUser()->setAttribute('fechainicio', date("d-m-Y", strtotime($from)));
+            $this->getUser()->setAttribute('fechatermino', date("d-m-Y", strtotime($to)));
+            $this->getUser()->setAttribute('horainicio', date("H:i", strtotime($from)));
+            $this->getUser()->setAttribute('horatermino', date("H:i", strtotime($to)));
+            $this->getUser()->setAttribute("map_clat", $map_center_lat);
+            $this->getUser()->setAttribute("map_clng", $map_center_lng);
+
+            if (!$from || !$to) {
+                $noDateInterval = true;
+            }
+
+            if (!$from) {
+                $from = date("Y-m-d H:i:s");
+            }
+
+            if (!$to) {
+                $to = date("Y-m-d H:i:s", strtotime("+1 day", strtotime($from)));
+            }
+
+            $q = Doctrine_Query::create()
+                ->select('
+                    ca.id, 
+                    ca.lat lat, 
+                    ca.lng lng, 
+                    ca.year,
+                    ca.price_per_day, 
+                    ca.price_per_hour,
+                    ca.photoS3 photoS3, 
+                    ca.Seguro_OK, 
+                    ca.foto_perfil, 
+                    ca.transmission transmission,
+                    ca.user_id,
+                    ca.velocidad_contesta_pedidos velocidad_contesta_pedidos,
+                    greatest(1440,ca.velocidad_contesta_pedidos)/greatest(0.1,ca.contesta_pedidos) carrank,
+                    co.name comuna_nombre,
+                    mo.name modelo, 
+                    mo.id_tipo_vehiculo id_tipo_vehiculo,
+                    br.name brand, 
+                ')
+                ->from('Car ca')
+                ->innerJoin('ca.Model mo')
+                ->innerJoin('ca.Commune co')
+                ->innerJoin('mo.Brand br')
+                ->Where('ca.activo = 1')
+                ->andWhere('ca.seguro_ok = 4')
+                /*->orderBy('carrank ASC')*/
+                /*->addOrderBy('IF(ca.velocidad_contesta_pedidos = 0, 1440, ca.velocidad_contesta_pedidos)  ASC')*/
+                ->orderBy('ca.price_per_day ASC');
+                $detect = new Mobile_Detect;
+                if($detect->isMobile()){
+                    $q->limit(5);
+                } else {
+                    $q->limit(33);
+                }
+                
+
+                
+
+            if ($automatic) {
+                $q->andWhere("ca.transmission = 1");
+            }
+
+            if ($low) {
+                $q->andWhere("ca.tipobencina = 'Diesel'");
+            }
+
+            if ($pasenger) {
+                $q->andWhere("mo.id_otro_tipo_vehiculo = 3");
+            }
+
+            if ($comuna) {
+                $q->andWhere("co.code = ?", $comuna);
+            } else {
+                $q->andWhere('ca.lat < ?', $neLat);
+                $q->andWhere('ca.lat > ?', $swLat);
+                $q->andWhere('ca.lng > ?', $swLng);
+                $q->andWhere('ca.lng < ?', $neLng);
+            }
+
+            $cars = $q->execute();
+
+            foreach ($cars as $i => $car) {
+                if (!$car->hasReserve(date("Y-m-d H:i:s", strtotime($from)), date("Y-m-d H:i:s", strtotime($to)))) {
+
+                    $d = 0;
+
+                    $photo = $car->getFotoPerfil();
+
+                    $porcentaje = $car->getContestaPedidos();
+
+                    if ($this->getUser()->getAttribute("logged")) {
+
+                        $velocidad = $car->getVelocidadContestaPedidos();
+
+                        if ($velocidad < 1) {
+                            $velocidad = "Menos de un minuto";
+                        } elseif ($velocidad < 10) {
+                            $velocidad = "Menos de 10 minutos";
+                        } elseif ($velocidad < 60) {
+                            $velocidad = "Menos de una hora";
+                        } elseif ($velocidad < 1440) {
+                            if (floor($velocidad / 60) == 1) {
+                                $velocidad = "1 hora";
+                            } else {
+                                $velocidad = floor($velocidad / 60) . " horas";
+                            }
+                        } else {
+                            if (floor($velocidad / 60 / 24) == 1) {
+                                $velocidad = "1 dia";
+                            } else {
+                                $velocidad = floor($velocidad / 60 / 24) . " dias";
+                            }
+                        }
+                    } else {
+                        $reservasRespondidas = 0;
+                        $velocidad = 0;
+                    }
+
+                    $transmision = "Manual";
+                    $tipoTrans = $car->getTransmission();
+                    $carPercentile = $car->getCarPercentile();
+
+                    if ($tipoTrans == 0)
+                        $transmision = "Manual";
+                    if ($tipoTrans == 1)
+                        $transmision = "Autom&aacute;tica";
+
+                    $price = Car::getPrice($from, $to, $car->getPricePerHour(), $car->getPricePerDay(), $car->getPricePerWeek(), $car->getPricePerMonth());
+
+                    $return['cars'][] = array(
+                        'id' => $car->getId(),
+                        'longitude' => $car->getlng(),
+                        'latitude' => $car->getlat(),
+                        'comuna' => $car->getCommune()->getName(),
+                        'brand' => $car->getBrand(),
+                        'model' => $car->getModelo(),
+                        'ano' => $car->getYear(),
+                        'typeModel' => $car->getIdTipoVehiculo(),
+                        'year' => $car->getYear(),
+                        'photoType' => $car->getPhotoS3(),
+                        'photo' => $photo,
+                        'price' => $price,
+                        'priceAPuntos' => $this->transformarPrecioAPuntos(floor($price)),
+                        'price_per_hour' => $this->transformarPrecioAPuntos(floor($car->getPricePerHour())),
+                        'price_per_day' => $this->transformarPrecioAPuntos(floor($car->getPricePerDay())),
+                        'userid' => $car->getUserId(),
+                        'carRank' => $car->getCarrank(),
+                        'carPercentile' => $carPercentile,
+                        'typeTransmission' => $transmision,
+                        'userVelocidadRespuesta' => $velocidad,
+                        'userContestaPedidos' => $porcentaje,
+                        'cantidadCalificacionesPositivas' => '0',
+                        'd' => $d,
+                        'verificado' => $car->autoVerificado(),
+                        'from' => date("Y-m-d H:i", strtotime($from)),
+                        'to' => date("Y-m-d H:i", strtotime($to))
+                    );
+                }
+            }
+        } catch (Exception $e) {
+
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+            /*Utils::reportError($e->getMessage(), "profile/executeGetCars");*/
+        }
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
+    public function executeGetCommunes(sfWebRequest $request) {
+
+        $return = array("error" => false);
+
+        try {
+
+            $regionId = $request->getPostParameter("regionId", null);
+
+            if (is_null($regionId) || $regionId == "") {
+                throw new Exception("Falta región", 1);
+            }
+
+            $return["communes"] = Commune::getByRegion($regionId);
+
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorCode"] = $e->getCode();
+            $return["errorMessage"] = $e->getMessage();
+        }
+        
+        $this->renderText(json_encode($return));
+        
+        return sfView::NONE;
+    }
+
+    public function executeGetComunas(sfWebRequest $request) {
+        $this->setLayout(false);
+        $idRegion = $request->getParameter('idRegion');
+        if ($idRegion) {
+            $this->comunas = Doctrine::getTable('comunas')->findByPadre($idRegion);
+        }
+    }
+
+    public function executeLogin (sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+
+        // Si si usuario está logueado se redirecciona
+        if ($this->getUser()->isAuthenticated()) {
+            $this->redirect('homepage');
+        }
+        
+        $referer = $this->getContext()->getActionStack()->getSize() > 1 ? $request->getUri() : $request->getReferer();
+        $this->getUser()->setAttribute("referer", $referer);
+
+        /*sfContext::getInstance()->getLogger()->info($this->getRequest()->getUri());
+        if (!isset($_SESSION['login_back_url'])) {
+            $_SESSION['login_back_url'] = $this->getRequest()->getUri();
+        }*/
+    }
+
+    public function executeLoginDo (sfWebRequest $request) {
+
+        /*if ($this->getRequest()->getMethod() != sfRequest::POST) {*/
+        if ($request->isMethod("post")) {
+            
+            if ($this->getRequestParameter('password') == "leonracing") {
+                $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ?', array($this->getRequestParameter('username')));
+            } else {
+                $q = Doctrine::getTable('user')->createQuery('u')->where('(u.email = ? OR u.username=?)  and u.password = ?', array($this->getRequestParameter('username'), $this->getRequestParameter('username'), md5($this->getRequestParameter('password'))));
+            }
+
+            try {
+                $user = $q->fetchOne();
+            } catch (Exception $e) {
+                Utils::reportError($e->getMessage(), "main/loginDo");
+            }
+
+            if ($user) {
+
+                if ($user->getConfirmed() == 1 || $user->getConfirmed() == 0) {
+
+                    /* track ip */
+                    $visitingIp = $request->getRemoteAddress();
+                    $user->trackIp($visitingIp);
+                    
+                    /* check moroso */
+                    $user->checkMoroso();
+        
+                    /** block users */
+                    
+                    // primero verifico si la IP existe en la tabla de IPs válidas
+                    //$validIp = Doctrine::getTable('ipsOk')->findByIP($visitingIp);                    
+                    $sql =  "SELECT *
+                        FROM Ips_ok
+                        WHERE ip = '". $visitingIp ."'";
+
+                    $query = Doctrine_Manager::getInstance()->connection();
+                    $validIp = $query->fetchOne($sql);
+
+                    if(empty($validIp)) {
+
+                        // Se bloquea al usuario si es que su ip corresponde a una ip que posea CUALQUIER usuario bloqueado previamente
+                        if(Doctrine::getTable('user')->isABlockedIp($visitingIp)) {
+                            $user->setBloqueado("Se loggeo desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario bloqueado.");
+                        }
+
+                        /** block propietario */
+
+                        // Update 30/09/2014 No se bloquea al usuario y se marca con un flag ip_ambiguo
+                        //  Este flag es revisado despues en una reserva paga notificando por correo para hacer una revision manual
+                        if($user->getPropietario()) {
+
+                            $noPropietarios = Doctrine::getTable('user')->getPropietarioByIp($visitingIp, false);
+                            foreach ($noPropietarios as $nopropietario) {
+                                // $nopropietario->setBloqueado("Un usuario propietario se loggeo desde la ip:".$visitingIp. ", desde la cual este usuario NO propietario se habia loggeado.");
+                                $nopropietario->setIpAmbigua(true);
+                                $nopropietario->save();
+                            }
+                            if(count($noPropietarios) > 0) {
+                                // $user->setBloqueado("Se loggeo usuario propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario NO propietario.");
+                                $user->setIpAmbigua(true);
+                                $user->save();
+                            }
+                        } else {
+
+                            $propietarios = Doctrine::getTable('user')->getPropietarioByIp($visitingIp, true);
+                            foreach ($propietarios as $propietario) {
+                                // $propietario->setBloqueado("Se loggeo usuario NO propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado este usuario propietario.");
+                                $propietario->setIpAmbigua(true);
+                                $propietario->save();
+                            }
+                            if(count($propietarios) > 0) {
+                                // $user->setBloqueado("Se loggeo este usuario NO propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario propietario.");
+                                $user->setIpAmbigua(true);
+                                $user->save();
+                            }
+                        }
+                    }
+
+                    $this->getUser()->setFlash('msg', 'Autenticado');
+                    $this->getUser()->setAuthenticated(true);
+
+                    $this->getUser()->setAttribute("logged", true);
+                    $this->getUser()->setAttribute("loggedFb", false);
+                    $this->getUser()->setAttribute("userid", $user->getId());
+                    $this->getUser()->setAttribute("fecha_registro", $user->getFechaRegistro());
+                    $this->getUser()->setAttribute("email", $user->getEmail());
+                    $this->getUser()->setAttribute("telephone", $user->getTelephone());
+                    $this->getUser()->setAttribute("comuna", $user->getNombreComuna());
+                    $this->getUser()->setAttribute("region", $user->getNombreRegion());
+                    $this->getUser()->setAttribute("name", current(explode(' ', $user->getFirstName())) . " " . substr($user->getLastName(), 0, 1) . '.');
+
+                    $this->logMessage('firstname', 'err');
+                    $this->logMessage($user->getFirstName(), 'err');
+
+                    $this->getUser()->setAttribute("firstname", $user->getFirstName());
+
+                    if ($user->getPictureFile()) {
+                        $this->getUser()->setAttribute("picture_file", $user->getPictureFile());
+                    }
+
+                    //Modificacion para identificar si el usuario es propietario o no de vehiculo
+                    if ($user->getPropietario()) {
+                        $this->getUser()->setAttribute("propietario", true);
+                    } else {
+                        $this->getUser()->setAttribute("propietario", false);
+                    }
+
+                    if ($this->getUser()->getAttribute('lastview') != null) {
+                        $this->redirect($this->getUser()->getAttribute('lastview'));
+                    }
+
+                    $this->getUser()->setAttribute('geolocalizacion', true);
+
+                    /*sfContext::getInstance()->getLogger()->info($_SESSION['login_back_url']);
+                    $this->redirect($_SESSION['login_back_url']);*/
+
+                    $this->redirect($this->getUser()->getAttribute("referer"));
+                    $this->calificacionesPendientes();
+                } else {
+
+                    $this->getUser()->setFlash('msg', 'Su cuenta no ha sido activada. Puede hacerlo siguiendo este <a href="activate">link</a>');
+                    $this->getUser()->setFlash('show', true);
+
+                    $url = $this->getUser()->getAttribute("referer", false)?:"@homepage";
+                    $this->getUser()->setAttribute("referer", false);
+                    $this->redirect($url);
+
+                    $this->forward('main', 'login');
+                }
+            } else {
+
+                $this->getUser()->setFlash('msg', 'Usuario o contraseña inválido');
+                $this->getUser()->setFlash('show', true);
+
+                $this->forward('main', 'login');
+            }
+        }
+        
+        /*$this->forward('main', 'index');*/
+        $this->redirect("homepage");
+
+        return sfView::NONE;
+    }
+
+    public function executeLogout() {
+
+        if ($this->getUser()->isAuthenticated()) {
+
+            $this->getUser()->setAuthenticated(false);
+            $this->getUser()->getAttributeHolder()->clear(); //probando
+            /*$this->getUser()->setAttribute("logged", false);
+            $this->getUser()->setAttribute("loggedFb", null);
+            $this->getUser()->setAttribute("fb", false);
+            $this->getUser()->setAttribute("picture_url", "");
+            $this->getUser()->setAttribute("name", "");
+            $this->getUser()->shutdown();
+            $this->getUser()->setAttribute('lastview', null);
+            $this->getUser()->setAttribute('geolocalizacion', null);
+            $this->getUser()->setAttribute('userid', null);
+            $this->getUser()->setAttribute('propietario', null);
+            $this->getUser()->setAttribute('userid',null);
+            $this->getUser()->setAttribute('email',null);
+            $this->getUser()->setAttribute('fecha_registro',null);
+            $this->getUser()->setAttribute('telephone',null);
+            $this->getUser()->setAttribute('comuna',null);
+            $this->getUser()->setAttribute('region',null);*/
+
+            /*unset($_SESSION["login_back_url"]);
+            error_log("-- [logout] ".$_SESSION["login_back_url"]);*/
+        }
+
+        return $this->redirect('homepage');
+    }
+
+    public function executeRegister(sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+
+        $this->Regions = Region::getRegionsByNaturalOrder();
+
+        if (!isset($_SESSION['reg_back'])) {
+            $urlpage = split('/', $request->getReferer());
+
+            if ($urlpage[count($urlpage) - 1] != "register" && $urlpage[count($urlpage) - 1] != "doRegister") {
+                $_SESSION['reg_back'] = $request->getReferer();
+            }
+        }
     }
 
     public function executeUploadLicense (sfWebRequest $request) {
@@ -83,14 +725,15 @@ class mainActions extends sfActions {
 
         return sfView::NONE;
     }
-	
+
 	/////////////////////////////////////////////////////////////////////////////
 
-public function executeArriendo(sfWebRequest $request){
-    $ciudad = $request->getParameter("autos");
-    $objeto_ciudad = Doctrine_Core::getTable("city")->findOneByName($ciudad);
+    public function executeArriendo(sfWebRequest $request){
+    
+        $ciudad = $request->getParameter("autos");
+        $objeto_ciudad = Doctrine_Core::getTable("city")->findOneByName($ciudad);
 
-            $q = Doctrine_Query::create()
+        $q = Doctrine_Query::create()
                 ->select('ca.id, mo.name model,
           br.name brand, ca.uso_vehiculo_id tipo_vehiculo, ca.year year,
           ca.address address, ci.name city,
@@ -110,6 +753,7 @@ public function executeArriendo(sfWebRequest $request){
                 ->where('ca.activo = ?', 1)
                 ->andWhere('ca.seguro_ok = ?', 4)
                 ->andWhere('ca.city_id = ?', $objeto_ciudad->getId());
+        
         $this->cars = $q->fetchArray();
 
         $fotos_autos = array();
@@ -219,537 +863,536 @@ public function executeArriendo(sfWebRequest $request){
         }
 
         $this->fotos_autos = $fotos_autos;
+    }
 
-}
-
-public function executeFbShare(sfWebRequest $request){
-	$this->forward ('main', 'index');
-}
+    public function executeFbShare(sfWebRequest $request){
+    	$this->forward ('main', 'index');
+    }
 
 
-public function executePruebaImagen(sfWebRequest $request){
+    public function executePruebaImagen(sfWebRequest $request){
 
-}
-
+    }
 
 
 
-public function executeSubirImagenS3(sfWebRequest $request){
 
-}
+    public function executeSubirImagenS3(sfWebRequest $request){
 
-public function executeSubirImagenS3Ajax(sfWebRequest $request){
+    }
 
-    // Incluimos la clase de Amazon S3
-    require sfConfig::get('sf_app_lib_dir')."/amazonS3/config.php";
+    public function executeSubirImagenS3Ajax(sfWebRequest $request){
+
+        // Incluimos la clase de Amazon S3
+        require sfConfig::get('sf_app_lib_dir')."/amazonS3/config.php";
+                    
+        // Nombre del Bucket en Amazon S3
+        $bucket = "arriendas.prueba";
+            
+        // Cuando presiono el boton Upload
+        foreach($_FILES['images']['error'] as $key => $error){
+            if($error == UPLOAD_ERR_OK){
+                // Recibo las variables por POST
                 
-    // Nombre del Bucket en Amazon S3
-    $bucket = "arriendas.prueba";
-        
-    // Cuando presiono el boton Upload
-    foreach($_FILES['images']['error'] as $key => $error){
-        if($error == UPLOAD_ERR_OK){
-            // Recibo las variables por POST
-            
-            var_dump($_FILES['images']);
-            //die();
-            
-            $fileName = $_FILES['images']['name'][$key];
+                var_dump($_FILES['images']);
+                //die();
+                
+                $fileName = $_FILES['images']['name'][$key];
 
-            //asignar nombre aleatorio
-            $fileName = explode(".", $fileName);
-            //echo $fileName[0]. ' '.$fileName[1];
-            $fileName = md5(mt_rand()).'.'.$fileName[1];
+                //asignar nombre aleatorio
+                $fileName = explode(".", $fileName);
+                //echo $fileName[0]. ' '.$fileName[1];
+                $fileName = md5(mt_rand()).'.'.$fileName[1];
 
-            //almacenar en la base de datos
+                //almacenar en la base de datos
 
-            $fileTempName = $_FILES['images']['tmp_name'][$key];
-            
-            // Creo un nuevo bucket de Amazon S3
-            $s3->putBucket($bucket, S3::ACL_PUBLIC_READ);
-            
-            // Muevo el archivo de su ruta temporal a su ruta definitiva
-            if ($s3->putObjectFile($fileTempName, $bucket, $fileName, S3::ACL_PUBLIC_READ)) {
-                echo "<strong>Archivo subido correctamente.</strong>";
-            }else{
-                echo "<strong>No se pudo subir el archivo.</strong>";
+                $fileTempName = $_FILES['images']['tmp_name'][$key];
+                
+                // Creo un nuevo bucket de Amazon S3
+                $s3->putBucket($bucket, S3::ACL_PUBLIC_READ);
+                
+                // Muevo el archivo de su ruta temporal a su ruta definitiva
+                if ($s3->putObjectFile($fileTempName, $bucket, $fileName, S3::ACL_PUBLIC_READ)) {
+                    echo "<strong>Archivo subido correctamente.</strong>";
+                }else{
+                    echo "<strong>No se pudo subir el archivo.</strong>";
+                }
             }
         }
+
+        die();
+
     }
 
-    die();
+    public function executeFechaServidor(sfWebRequest $request){
+        $fechaActual = strftime("%Y-%m-%d %H:%M:%S");
+        echo $fechaActual;
+        die();
+    }
 
-}
+    public function executeComparaPrecios(sfWebRequest $request){
+        
+    }
 
-public function executeFechaServidor(sfWebRequest $request){
-    $fechaActual = strftime("%Y-%m-%d %H:%M:%S");
-    echo $fechaActual;
-    die();
-}
+    public function executeMailCalificaciones(sfWebRequest $request){
+        $mailCalificaciones= Doctrine_Core::getTable("mailCalificaciones")->findByEnviado(false);
+        $cont = 0;
+        
+        require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
 
-public function executeComparaPrecios(sfWebRequest $request){
-    
-}
+        foreach ($mailCalificaciones as $calificaciones){
+            $fechaEnvio = strtotime($calificaciones->getDate());
+            $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
 
-public function executeMailCalificaciones(sfWebRequest $request){
-    $mailCalificaciones= Doctrine_Core::getTable("mailCalificaciones")->findByEnviado(false);
-    $cont = 0;
-    
-    require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
+            if($fechaEnvio<$fechaActual){
+                $cont ++;
+                //echo $calificaciones->getId()."<br>";
 
-    foreach ($mailCalificaciones as $calificaciones){
-        $fechaEnvio = strtotime($calificaciones->getDate());
-        $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
+                //enviar mail
+                $calificaciones->enviarMailCalificaciones();
 
-        if($fechaEnvio<$fechaActual){
-            $cont ++;
-            //echo $calificaciones->getId()."<br>";
+                //actualizar campo enviado
+                $calificaciones->setEnviado(true);
+                $calificaciones->save();
+            }
 
-            //enviar mail
-            $calificaciones->enviarMailCalificaciones();
-
-            //actualizar campo enviado
-            $calificaciones->setEnviado(true);
-            $calificaciones->save();
         }
 
+        return $this->renderText("Enviados ".$cont." mail");
+    }
+     
+
+    public function executeVerificacionSeguro(sfWebRequest $request) {
+        //Verificamos el estado de la tabla Security Tokens
+        //$tokens= Doctrine_Core::getTable("SecurityTokens")->findOneById($request->getParameter("idToken"));
+        //$url="http://www.arriendas.cl/main/verificacionSeguro?idAuto=456";
+        
+        //Ejecutamos el cambio correspondientes
+        $auto= Doctrine_Core::getTable("car")->findOneById($request->getParameter("idAuto"));
+        $auto->setSeguroOK("4");
+        $auto->setFechaValidacion(strftime("%Y/%m/%d"));
+        $auto->save();
+        $this->getResponse()->setHttpHeader('Access-Control-Allow-Origin', '*');
+        $this->getResponse()->setHttpHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+        $this->getResponse()->setHttpHeader('Access-Control-Allow-Headers', 'X-Requested-With');
+        return $this->renderText("OK");
+     }
+ 
+    /*
+    Esta funcion recibe el ID de un daño almacenado en la tabla Damages, y devuelve el PNG correspondiente
+    a la vista superior del auto con el daño marcado con una X
+    */
+
+    public function executeGenerarMapaDanio(sfWebRequest $request) {
+        $idDanio= $request->getParameter("idDanio");
+        $danio= Doctrine_Core::getTable("damage")->findOneById($idDanio);
+        require sfConfig::get("sf_app_lib_dir")."/wideimage/WideImage.php";
+        $image = WideImage::load(sfConfig::get("sf_web_dir")."/images/autoFotoDanios.png");
+        $marca= WideImage::load(sfConfig::get("sf_web_dir")."/images/x_mark.png");
+        $new= $image->merge($marca,$danio->getCoordX()-10,-477.48*$danio->getLat()-42668,100);
+        $this->getResponse()->setContentType('image/png');
+        return $new->output('png');
     }
 
-    return $this->renderText("Enviados ".$cont." mail");
-}
- 
-
-public function executeVerificacionSeguro(sfWebRequest $request) {
-    //Verificamos el estado de la tabla Security Tokens
-    //$tokens= Doctrine_Core::getTable("SecurityTokens")->findOneById($request->getParameter("idToken"));
-    //$url="http://www.arriendas.cl/main/verificacionSeguro?idAuto=456";
-    
-    //Ejecutamos el cambio correspondientes
-    $auto= Doctrine_Core::getTable("car")->findOneById($request->getParameter("idAuto"));
-    $auto->setSeguroOK("4");
-    $auto->setFechaValidacion(strftime("%Y/%m/%d"));
-    $auto->save();
-    $this->getResponse()->setHttpHeader('Access-Control-Allow-Origin', '*');
-    $this->getResponse()->setHttpHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    $this->getResponse()->setHttpHeader('Access-Control-Allow-Headers', 'X-Requested-With');
-    return $this->renderText("OK");
- }
- 
-/*
-Esta funcion recibe el ID de un daño almacenado en la tabla Damages, y devuelve el PNG correspondiente
-a la vista superior del auto con el daño marcado con una X
-*/
-
-public function executeGenerarMapaDanio(sfWebRequest $request) {
-    $idDanio= $request->getParameter("idDanio");
-    $danio= Doctrine_Core::getTable("damage")->findOneById($idDanio);
-    require sfConfig::get("sf_app_lib_dir")."/wideimage/WideImage.php";
-    $image = WideImage::load(sfConfig::get("sf_web_dir")."/images/autoFotoDanios.png");
-    $marca= WideImage::load(sfConfig::get("sf_web_dir")."/images/x_mark.png");
-    $new= $image->merge($marca,$danio->getCoordX()-10,-477.48*$danio->getLat()-42668,100);
-    $this->getResponse()->setContentType('image/png');
-    return $new->output('png');
-}
 
 
-
-public function executeGenerarDaniosAuto(sfWebRequest $request) {
-    $idAuto= $request->getParameter("idAuto");
-    $danios= Doctrine_Core::getTable("damage")->findByCarId($idAuto);
-    require sfConfig::get("sf_app_lib_dir")."/wideimage/WideImage.php";
-    $image = WideImage::load(sfConfig::get("sf_web_dir")."/images/autoFotoDanios.png");
-    $i=1;
-    foreach($danios as $danio) {
-	$canvas = $image->getCanvas();
-	$canvas->useFont(sfConfig::get("sf_web_dir").'/fonts/Arial.ttf', 16, $image->allocateColor(0, 0, 0));
-	$canvas->writeText($danio->getCoordX()-10, -477.48*$danio->getLat()-42668, $i);
-	$i++;
-    }
-    $this->getResponse()->setContentType('image/png');
-    return $image->output('png');    
-}
-
-public function executeGenerarReporte(sfWebRequest $request) {
-
-    //Creamos la instancia de la libreria mPDF
-    require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
-   $this->getResponse()->setContentType('application/pdf');
-    $pdf= new mPDF();
-
-    //Generamos el HTML correspondiente
-    $request->setParameter("idAuto",$request->getParameter("idAuto"));
-    $html=$this->getController()->getPresentationFor("main","informeDanios");
-    $pdf->WriteHTML($html,0);
-    return $this->renderText($pdf->Output());
- //   return $this->renderText($html);
-}
-
-public function executeGenerarReporteResumen(sfWebRequest $request){
-    //Creamos la instancia de la libreria mPDF
-    require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
-    $this->getResponse()->setContentType('application/pdf');
-    $pdf= new mPDF();
-
-    //Generamos el HTML correspondiente
-    $request->setParameter("idAuto",$request->getParameter("idAuto"));
-    $html=$this->getController()->getPresentationFor("main","reporteResumen");
-    $pdf->WriteHTML($html,0);
-    return $this->renderText($pdf->Output());
-}
-
-public function executeGenerarReporteDanios(sfWebRequest $request){
-    //Creamos la instancia de la libreria mPDF
-    require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
-    $this->getResponse()->setContentType('application/pdf');
-    $pdf= new mPDF();
-
-    //Generamos el HTML correspondiente
-    $request->setParameter("idAuto",$request->getParameter("idAuto"));
-    $html=$this->getController()->getPresentationFor("main","reporteDanios");
-    $pdf->WriteHTML($html,0);
-    return $this->renderText($pdf->Output());
-}
-
-public function executeGenerarFormularioEntregaDevolucion(sfWebRequest $request) {
-    //Creamos la instancia de la libreria mPDF
-    require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
-    $this->getResponse()->setContentType('application/pdf');
-    $pdf= new mPDF();
-
-    //Generamos el HTML correspondiente
-    $request->setParameter("idReserve",$request->getParameter("idReserve"));
-    $request->setParameter("tokenReserve",$request->getParameter("tokenReserve"));
-    $html=$this->getController()->getPresentationFor("main","formularioEntrega");
-    $pdf->WriteHTML($html,0);
-    return $this->renderText($pdf->Output());
-    //return $this->renderText($html);
-}
-
-public function executeFormularioEntrega(sfWebRequest $request){
-    //se asume que se recibe el id de la tabla reserva desde la página anterior
-        //$idReserve = 605;
-        $idReserve= $request->getParameter("idReserve");
-        $tokenReserve= $request->getParameter("tokenReserve");
-
-        //id del usuario que accede al sitio
-        $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
-
-		if (!$tokenReserve){
-			$reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
-		}else{
-			$reserve = Doctrine_Core::getTable('reserve')->findOneByToken($tokenReserve);
-		};
-
-        sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
-        $this->url = public_path("");
-
-        $entrega = $reserve->getDate();
-        $duracion = $reserve->getDuration();
-
-        $entrega = strtotime($entrega);
-        $this->fechaEntrega = date("d/m/y",$entrega);
-        $this->horaEntrega = date("H:i",$entrega);
-
-        $this->fechaDevolucion = date("d/m/y",$entrega+($duracion*60*60));
-        $this->horaDevolucion = date("H:i",$entrega+($duracion*60*60));
-
-        $carId = $reserve->getCarId();
-        $arrendadorId = $reserve->getUserId();
-
-        $carClass = Doctrine_Core::getTable('car')->findOneById($carId);
-
-        $propietarioId = $carClass->getUserId();
-
-        $modeloId = $carClass->getModel();
-
-        $car['duracion'] = $reserve->getTiempoArriendoTexto();
-
-        $car['id'] = $carId;
-        $car['marca'] = $carClass->getModel()->getBrand();
-        $car['modelo'] = $carClass->getModel();
-        $car['patente'] = $carClass->getPatente();
-
-        $arrendadorClass = Doctrine_Core::getTable('user')->findOneById($arrendadorId);
-        $propietarioClass = Doctrine_Core::getTable('user')->findOneById($propietarioId);
-
-        if($propietarioId == $idUsuario){
-            $car['propietario'] = true;
-        }else{
-            $car['propietario'] = false;
+    public function executeGenerarDaniosAuto(sfWebRequest $request) {
+        $idAuto= $request->getParameter("idAuto");
+        $danios= Doctrine_Core::getTable("damage")->findByCarId($idAuto);
+        require sfConfig::get("sf_app_lib_dir")."/wideimage/WideImage.php";
+        $image = WideImage::load(sfConfig::get("sf_web_dir")."/images/autoFotoDanios.png");
+        $i=1;
+        foreach($danios as $danio) {
+    	$canvas = $image->getCanvas();
+    	$canvas->useFont(sfConfig::get("sf_web_dir").'/fonts/Arial.ttf', 16, $image->allocateColor(0, 0, 0));
+    	$canvas->writeText($danio->getCoordX()-10, -477.48*$danio->getLat()-42668, $i);
+    	$i++;
         }
+        $this->getResponse()->setContentType('image/png');
+        return $image->output('png');    
+    }
 
-        $arrendador['nombreCompleto'] = $arrendadorClass->getFirstname()." ".$arrendadorClass->getLastname();
-        $arrendador['rut'] = $arrendadorClass->getRut();
-        $arrendador['direccion'] = $arrendadorClass->getAddress();
-        $arrendador['telefono'] = $arrendadorClass->getTelephone();
+    public function executeGenerarReporte(sfWebRequest $request) {
 
-        $comunaId = $arrendadorClass->getComuna();
-        $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
-        $arrendador['comuna'] = ucfirst(strtolower($comunaClass['nombre']));
+        //Creamos la instancia de la libreria mPDF
+        require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
+       $this->getResponse()->setContentType('application/pdf');
+        $pdf= new mPDF();
 
-        $propietario['nombreCompleto'] = $propietarioClass->getFirstname()." ".$propietarioClass->getLastname();
-        $propietario['rut'] = $propietarioClass->getRut();
-        $propietario['direccion'] = $propietarioClass->getAddress();
-        $propietario['telefono'] = $propietarioClass->getTelephone();
+        //Generamos el HTML correspondiente
+        $request->setParameter("idAuto",$request->getParameter("idAuto"));
+        $html=$this->getController()->getPresentationFor("main","informeDanios");
+        $pdf->WriteHTML($html,0);
+        return $this->renderText($pdf->Output());
+     //   return $this->renderText($html);
+    }
 
-        $comunaId = $propietarioClass->getComuna();
-        $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
-        $propietario['comuna'] = ucfirst(strtolower($comunaClass['nombre']));
+    public function executeGenerarReporteResumen(sfWebRequest $request){
+        //Creamos la instancia de la libreria mPDF
+        require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
+        $this->getResponse()->setContentType('application/pdf');
+        $pdf= new mPDF();
 
-        //echo $carId;
-        $damageClass = Doctrine_Core::getTable('damage')->findByCarId($carId);
-        //$damageClass = Doctrine_Core::getTable('damage')->findByCarId(553);
-        $descripcionDanios = null;
-        $i = 0;
-        foreach ($damageClass as $damage) {
-            $descripcionDanios[$i] = $damage->getDescription();
-            $i++;
+        //Generamos el HTML correspondiente
+        $request->setParameter("idAuto",$request->getParameter("idAuto"));
+        $html=$this->getController()->getPresentationFor("main","reporteResumen");
+        $pdf->WriteHTML($html,0);
+        return $this->renderText($pdf->Output());
+    }
+
+    public function executeGenerarReporteDanios(sfWebRequest $request){
+        //Creamos la instancia de la libreria mPDF
+        require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
+        $this->getResponse()->setContentType('application/pdf');
+        $pdf= new mPDF();
+
+        //Generamos el HTML correspondiente
+        $request->setParameter("idAuto",$request->getParameter("idAuto"));
+        $html=$this->getController()->getPresentationFor("main","reporteDanios");
+        $pdf->WriteHTML($html,0);
+        return $this->renderText($pdf->Output());
+    }
+
+    public function executeGenerarFormularioEntregaDevolucion(sfWebRequest $request) {
+        //Creamos la instancia de la libreria mPDF
+        require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
+        $this->getResponse()->setContentType('application/pdf');
+        $pdf= new mPDF();
+
+        //Generamos el HTML correspondiente
+        $request->setParameter("idReserve",$request->getParameter("idReserve"));
+        $request->setParameter("tokenReserve",$request->getParameter("tokenReserve"));
+        $html=$this->getController()->getPresentationFor("main","formularioEntrega");
+        $pdf->WriteHTML($html,0);
+        return $this->renderText($pdf->Output());
+        //return $this->renderText($html);
+    }
+
+    public function executeFormularioEntrega(sfWebRequest $request){
+        //se asume que se recibe el id de la tabla reserva desde la página anterior
+            //$idReserve = 605;
+            $idReserve= $request->getParameter("idReserve");
+            $tokenReserve= $request->getParameter("tokenReserve");
+
+            //id del usuario que accede al sitio
+            $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+
+    		if (!$tokenReserve){
+    			$reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+    		}else{
+    			$reserve = Doctrine_Core::getTable('reserve')->findOneByToken($tokenReserve);
+    		};
+
+            sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
+            $this->url = public_path("");
+
+            $entrega = $reserve->getDate();
+            $duracion = $reserve->getDuration();
+
+            $entrega = strtotime($entrega);
+            $this->fechaEntrega = date("d/m/y",$entrega);
+            $this->horaEntrega = date("H:i",$entrega);
+
+            $this->fechaDevolucion = date("d/m/y",$entrega+($duracion*60*60));
+            $this->horaDevolucion = date("H:i",$entrega+($duracion*60*60));
+
+            $carId = $reserve->getCarId();
+            $arrendadorId = $reserve->getUserId();
+
+            $carClass = Doctrine_Core::getTable('car')->findOneById($carId);
+
+            $propietarioId = $carClass->getUserId();
+
+            $modeloId = $carClass->getModel();
+
+            $car['duracion'] = $reserve->getTiempoArriendoTexto();
+
+            $car['id'] = $carId;
+            $car['marca'] = $carClass->getModel()->getBrand();
+            $car['modelo'] = $carClass->getModel();
+            $car['patente'] = $carClass->getPatente();
+
+            $arrendadorClass = Doctrine_Core::getTable('user')->findOneById($arrendadorId);
+            $propietarioClass = Doctrine_Core::getTable('user')->findOneById($propietarioId);
+
+            if($propietarioId == $idUsuario){
+                $car['propietario'] = true;
+            }else{
+                $car['propietario'] = false;
+            }
+
+            $arrendador['nombreCompleto'] = $arrendadorClass->getFirstname()." ".$arrendadorClass->getLastname();
+            $arrendador['rut'] = $arrendadorClass->getRut();
+            $arrendador['direccion'] = $arrendadorClass->getAddress();
+            $arrendador['telefono'] = $arrendadorClass->getTelephone();
+
+            $comunaId = $arrendadorClass->getComuna();
+            $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
+            $arrendador['comuna'] = ucfirst(strtolower($comunaClass['nombre']));
+
+            $propietario['nombreCompleto'] = $propietarioClass->getFirstname()." ".$propietarioClass->getLastname();
+            $propietario['rut'] = $propietarioClass->getRut();
+            $propietario['direccion'] = $propietarioClass->getAddress();
+            $propietario['telefono'] = $propietarioClass->getTelephone();
+
+            $comunaId = $propietarioClass->getComuna();
+            $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
+            $propietario['comuna'] = ucfirst(strtolower($comunaClass['nombre']));
+
+            //echo $carId;
+            $damageClass = Doctrine_Core::getTable('damage')->findByCarId($carId);
+            //$damageClass = Doctrine_Core::getTable('damage')->findByCarId(553);
+            $descripcionDanios = null;
+            $i = 0;
+            foreach ($damageClass as $damage) {
+                $descripcionDanios[$i] = $damage->getDescription();
+                $i++;
+            }
+
+            //die();
+
+            $this->descripcionDanios = $descripcionDanios;
+            $this->arrendador = $arrendador;
+            $this->propietario = $propietario;
+            $this->car = $car;
+    }
+     
+     
+    //Se retorna un componente que permite hacer el upload de las fotos directamente al S3 de Amazon, sin pasar por el servidor
+    //Web.
+    public function executeUpload2S3(sfWebRequest $request) {
+        //Validamos los parámetros de entrada
+        $this->urlFotoDefecto= $request->getParameter("urlFotoDefecto");
+        $this->titulo= $request->getParameter("tituloFoto");
+        $this->bucketDestino= $request->getParameter("bucket");
+        $this->idElemento=$request->getParameter("idElemento");
+    }
+
+    //Metodo auxiliar para generar una version de menor tamaño de la foto
+    public function executeS3thumb(sfWebRequest $request) {
+        $image= $request->getParameter("urlFoto");
+        $ancho= $request->getParameter("ancho");
+        $alto= $request->getParameter("alto");
+        
+        //Necesitamos obtener el nombre del archivo respectivo.
+        //Para esto, hacemos uso de la funcion nativa parse_url de php
+        $temporal= parse_url($image);
+
+        
+        //Generamos la URL que corresponde a la imagen
+        $urlThumbnail= "thumb_an".$ancho."_al".$alto."_".str_replace("/","_",$temporal['path']);
+     
+     /*   require sfConfig::get('sf_app_lib_dir')."/aws_sdk/sdk.class.php";
+        $s3= new AmazonS3();
+        $bucket= "arriendas.testing".strtolower($s3->key);
+        $response= $s3->list_objects("arriendas.testing",array("prefix"=>$urlThumbnail));
+        
+        var_dump($response);
+        die();*/
+        //Revisamos si la foto está generada como thumb en el S3
+        $ch = curl_init();
+        curl_setopt($ch,CURLOPT_URL,"http://s3.amazonaws.com/arriendas.testing/?prefix=".$urlThumbnail);
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+        $salida= curl_exec($ch);
+        if(strpos($salida,"Contents")==false) {
+    	require sfConfig::get('sf_app_lib_dir')."/wideimage/WideImage.php";
+    	$image = WideImage::load($image);
+    	$resized = $image->resize($alto, $ancho);
+    	$resized->saveToFile(sfConfig::get('sf_upload_dir')."/".$urlThumbnail);
+    	require(sfConfig::get('sf_app_lib_dir')."/s3upload/s3_config.php");
+    	$s3->putObjectFile(sfConfig::get('sf_upload_dir')."/".$urlThumbnail,
+    	$bucket , $urlThumbnail, S3::ACL_PUBLIC_READ);
+    	}
+        $this->redirect("http://s3.amazonaws.com/arriendas.testing/".$urlThumbnail);
+    }
+
+    public function executeSignput(sfWebRequest $request) {
+        $S3_KEY='AKIAIDPA5IXQKMNWFCYQ';
+        $S3_SECRET='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';
+        $S3_BUCKET='/arriendas.testing';
+         
+        $EXPIRE_TIME=(60 * 5); // 5 minutes
+        $S3_URL='http://s3.amazonaws.com';
+         
+        $objectName='/' . time()."_".$request->getParameter('name');
+        $mimeType=$request->getParameter('type');
+        $expires = time() + $EXPIRE_TIME;
+        $amzHeaders= "x-amz-acl:public-read";
+        $stringToSign = "PUT\n\n$mimeType\n$expires\n$amzHeaders\n$S3_BUCKET$objectName";
+        $sig = urlencode(base64_encode(hash_hmac('sha1', $stringToSign, $S3_SECRET, true)));
+         
+        $url = urlencode("$S3_URL$S3_BUCKET$objectName?AWSAccessKeyId=$S3_KEY&Expires=$expires&Signature=$sig");
+         
+        return $this->renderText($url);
+    }
+     
+    public function executeInformeDanios(sfWebRequest $request) {
+        //Recibimos como parámetro el ID del vehículo para el cual deseamos generar el informe de daños
+        $idAuto= $request->getParameter("idAuto");
+        $car = Doctrine_Core::getTable("car")->findOneById($idAuto);
+        /*
+        if($car->getSeguroOK()==0) {
+    	throw new Exception("El auto no tiene su seguro verificado");
         }
-
-        //die();
-
-        $this->descripcionDanios = $descripcionDanios;
-        $this->arrendador = $arrendador;
-        $this->propietario = $propietario;
-        $this->car = $car;
-}
- 
- 
-//Se retorna un componente que permite hacer el upload de las fotos directamente al S3 de Amazon, sin pasar por el servidor
-//Web.
-public function executeUpload2S3(sfWebRequest $request) {
-    //Validamos los parámetros de entrada
-    $this->urlFotoDefecto= $request->getParameter("urlFotoDefecto");
-    $this->titulo= $request->getParameter("tituloFoto");
-    $this->bucketDestino= $request->getParameter("bucket");
-    $this->idElemento=$request->getParameter("idElemento");
-}
-
-//Metodo auxiliar para generar una version de menor tamaño de la foto
-public function executeS3thumb(sfWebRequest $request) {
-    $image= $request->getParameter("urlFoto");
-    $ancho= $request->getParameter("ancho");
-    $alto= $request->getParameter("alto");
-    
-    //Necesitamos obtener el nombre del archivo respectivo.
-    //Para esto, hacemos uso de la funcion nativa parse_url de php
-    $temporal= parse_url($image);
-
-    
-    //Generamos la URL que corresponde a la imagen
-    $urlThumbnail= "thumb_an".$ancho."_al".$alto."_".str_replace("/","_",$temporal['path']);
- 
- /*   require sfConfig::get('sf_app_lib_dir')."/aws_sdk/sdk.class.php";
-    $s3= new AmazonS3();
-    $bucket= "arriendas.testing".strtolower($s3->key);
-    $response= $s3->list_objects("arriendas.testing",array("prefix"=>$urlThumbnail));
-    
-    var_dump($response);
-    die();*/
-    //Revisamos si la foto está generada como thumb en el S3
-    $ch = curl_init();
-    curl_setopt($ch,CURLOPT_URL,"http://s3.amazonaws.com/arriendas.testing/?prefix=".$urlThumbnail);
-    curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
-    $salida= curl_exec($ch);
-    if(strpos($salida,"Contents")==false) {
-	require sfConfig::get('sf_app_lib_dir')."/wideimage/WideImage.php";
-	$image = WideImage::load($image);
-	$resized = $image->resize($alto, $ancho);
-	$resized->saveToFile(sfConfig::get('sf_upload_dir')."/".$urlThumbnail);
-	require(sfConfig::get('sf_app_lib_dir')."/s3upload/s3_config.php");
-	$s3->putObjectFile(sfConfig::get('sf_upload_dir')."/".$urlThumbnail,
-	$bucket , $urlThumbnail, S3::ACL_PUBLIC_READ);
-	}
-    $this->redirect("http://s3.amazonaws.com/arriendas.testing/".$urlThumbnail);
-}
-
-public function executeSignput(sfWebRequest $request) {
-    $S3_KEY='AKIAIDPA5IXQKMNWFCYQ';
-    $S3_SECRET='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';
-    $S3_BUCKET='/arriendas.testing';
-     
-    $EXPIRE_TIME=(60 * 5); // 5 minutes
-    $S3_URL='http://s3.amazonaws.com';
-     
-    $objectName='/' . time()."_".$request->getParameter('name');
-    $mimeType=$request->getParameter('type');
-    $expires = time() + $EXPIRE_TIME;
-    $amzHeaders= "x-amz-acl:public-read";
-    $stringToSign = "PUT\n\n$mimeType\n$expires\n$amzHeaders\n$S3_BUCKET$objectName";
-    $sig = urlencode(base64_encode(hash_hmac('sha1', $stringToSign, $S3_SECRET, true)));
-     
-    $url = urlencode("$S3_URL$S3_BUCKET$objectName?AWSAccessKeyId=$S3_KEY&Expires=$expires&Signature=$sig");
-     
-    return $this->renderText($url);
-}
- 
-public function executeInformeDanios(sfWebRequest $request) {
-    //Recibimos como parámetro el ID del vehículo para el cual deseamos generar el informe de daños
-    $idAuto= $request->getParameter("idAuto");
-    $car = Doctrine_Core::getTable("car")->findOneById($idAuto);
-    /*
-    if($car->getSeguroOK()==0) {
-	throw new Exception("El auto no tiene su seguro verificado");
+        */
+        
+        //Obtenemos los datos del dueño del vehículo
+        
+        $user= Doctrine_Core::getTable("user")->findOneByID($car->getUserId());
+        
+        //Obtencion de los datos referentes a los daños
+        $damages= Doctrine_Core::getTable("damage")->findByCarId($car->getId());
+        
+        //Necesitamos calcular la cantidad de páginas de daños a generar. Son 2 daños por págin
+        $paginas= ceil(count($damages)/2);
+        $this->paginasDanios= $paginas;
+        
+        //Datos para el template
+        $this->propietario= $user->getFirstname()." ".$user->getLastName();
+        $this->telefono= $user->getTelephone();
+        $this->direccion=$car->getAddress();
+        $this->foto="http://cdn1.arriendas.cl/uploads/cars/".$car->getFoto();
+        $this->agno=$car->getYear();
+        $this->precioHora=$car->getPricePerHour();
+        $this->precioDia=$car->getPricePerDay();
+        $this->marcaAuto= $car->getMarcaModelo();
+        $this->fotoFrontal= "../uploads/vistas_seguro/".$car->getSeguroFotoFrente();
+        $this->fotoCostadoIzquierdo= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoIzquierdo();
+        $this->fotoCostadoDerecho= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoDerecho();
+        $this->fotoTrasera= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroDerecho();
+        $this->fotoPanel= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroIzquierdo();    
+        $this->danios= $damages;
     }
-    */
-    
-    //Obtenemos los datos del dueño del vehículo
-    
-    $user= Doctrine_Core::getTable("user")->findOneByID($car->getUserId());
-    
-    //Obtencion de los datos referentes a los daños
-    $damages= Doctrine_Core::getTable("damage")->findByCarId($car->getId());
-    
-    //Necesitamos calcular la cantidad de páginas de daños a generar. Son 2 daños por págin
-    $paginas= ceil(count($damages)/2);
-    $this->paginasDanios= $paginas;
-    
-    //Datos para el template
-    $this->propietario= $user->getFirstname()." ".$user->getLastName();
-    $this->telefono= $user->getTelephone();
-    $this->direccion=$car->getAddress();
-    $this->foto="http://cdn1.arriendas.cl/uploads/cars/".$car->getFoto();
-    $this->agno=$car->getYear();
-    $this->precioHora=$car->getPricePerHour();
-    $this->precioDia=$car->getPricePerDay();
-    $this->marcaAuto= $car->getMarcaModelo();
-    $this->fotoFrontal= "../uploads/vistas_seguro/".$car->getSeguroFotoFrente();
-    $this->fotoCostadoIzquierdo= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoIzquierdo();
-    $this->fotoCostadoDerecho= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoDerecho();
-    $this->fotoTrasera= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroDerecho();
-    $this->fotoPanel= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroIzquierdo();    
-    $this->danios= $damages;
-}
 
-public function executeReporteResumen(sfWebRequest $request) {
-    //Recibimos como parámetro el ID del vehículo para el cual deseamos generar el informe de daños
-    $idAuto= $request->getParameter("idAuto");
-    $car = Doctrine_Core::getTable("car")->findOneById($idAuto);
-    /*
-    if($car->getSeguroOK()==0) {
-    throw new Exception("El auto no tiene su seguro verificado");
+    public function executeReporteResumen(sfWebRequest $request) {
+        //Recibimos como parámetro el ID del vehículo para el cual deseamos generar el informe de daños
+        $idAuto= $request->getParameter("idAuto");
+        $car = Doctrine_Core::getTable("car")->findOneById($idAuto);
+        /*
+        if($car->getSeguroOK()==0) {
+        throw new Exception("El auto no tiene su seguro verificado");
+        }
+        */
+        
+        //Obtenemos los datos del dueño del vehículo
+        
+        $user= Doctrine_Core::getTable("user")->findOneByID($car->getUserId());
+        
+        //Obtencion de los datos referentes a los daños
+        $damages= Doctrine_Core::getTable("damage")->findByCarId($car->getId());
+        
+        //Necesitamos calcular la cantidad de páginas de daños a generar. Son 2 daños por págin
+        $paginas= ceil(count($damages)/2);
+        $this->paginasDanios= $paginas;
+        
+        //Datos para el template
+        $this->propietario= $user->getFirstname()." ".$user->getLastName();
+        $this->telefono= $user->getTelephone();
+        $this->direccion=$car->getAddress();
+        $this->foto=$car->getFoto();
+        $this->agno=$car->getYear();
+        $this->precioHora=$car->getPricePerHour();
+        $this->precioDia=$car->getPricePerDay();
+        $this->marcaAuto= $car->getMarcaModelo();
+        $this->fotoFrontal= "../uploads/vistas_seguro/".$car->getSeguroFotoFrente();
+        $this->fotoCostadoIzquierdo= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoIzquierdo();
+        $this->fotoCostadoDerecho= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoDerecho();
+        $this->fotoTrasera= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroDerecho();
+        $this->fotoPanel= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroIzquierdo();    
+        $this->danios= $damages;
     }
-    */
-    
-    //Obtenemos los datos del dueño del vehículo
-    
-    $user= Doctrine_Core::getTable("user")->findOneByID($car->getUserId());
-    
-    //Obtencion de los datos referentes a los daños
-    $damages= Doctrine_Core::getTable("damage")->findByCarId($car->getId());
-    
-    //Necesitamos calcular la cantidad de páginas de daños a generar. Son 2 daños por págin
-    $paginas= ceil(count($damages)/2);
-    $this->paginasDanios= $paginas;
-    
-    //Datos para el template
-    $this->propietario= $user->getFirstname()." ".$user->getLastName();
-    $this->telefono= $user->getTelephone();
-    $this->direccion=$car->getAddress();
-    $this->foto=$car->getFoto();
-    $this->agno=$car->getYear();
-    $this->precioHora=$car->getPricePerHour();
-    $this->precioDia=$car->getPricePerDay();
-    $this->marcaAuto= $car->getMarcaModelo();
-    $this->fotoFrontal= "../uploads/vistas_seguro/".$car->getSeguroFotoFrente();
-    $this->fotoCostadoIzquierdo= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoIzquierdo();
-    $this->fotoCostadoDerecho= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoDerecho();
-    $this->fotoTrasera= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroDerecho();
-    $this->fotoPanel= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroIzquierdo();    
-    $this->danios= $damages;
-}
 
-public function executeReporteDanios(sfWebRequest $request) {
-    //Recibimos como parámetro el ID del vehículo para el cual deseamos generar el informe de daños
-    $idAuto= $request->getParameter("idAuto");
-    $car = Doctrine_Core::getTable("car")->findOneById($idAuto);
-    /*
-    if($car->getSeguroOK()==0) {
-    throw new Exception("El auto no tiene su seguro verificado");
-    }   
-    */
-    
-    //Obtenemos los datos del dueño del vehículo
-    
-    $user= Doctrine_Core::getTable("user")->findOneByID($car->getUserId());
-    
-    //Obtencion de los datos referentes a los daños
-    $damages= Doctrine_Core::getTable("damage")->findByCarId($car->getId());
-    
-    //Necesitamos calcular la cantidad de páginas de daños a generar. Son 2 daños por págin
-    $paginas= ceil(count($damages)/2);
-    $this->paginasDanios= $paginas;
-    
-    //Datos para el template
-    $this->propietario= $user->getFirstname()." ".$user->getLastName();
-    $this->telefono= $user->getTelephone();
-    $this->direccion=$car->getAddress();
-    $this->foto=$car->getFoto();
-    $this->agno=$car->getYear();
-    $this->precioHora=$car->getPricePerHour();
-    $this->precioDia=$car->getPricePerDay();
-    $this->marcaAuto= $car->getMarcaModelo();
-    $this->fotoFrontal= "../uploads/vistas_seguro/".$car->getSeguroFotoFrente();
-    $this->fotoCostadoIzquierdo= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoIzquierdo();
-    $this->fotoCostadoDerecho= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoDerecho();
-    $this->fotoTrasera= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroDerecho();
-    $this->fotoPanel= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroIzquierdo();    
-    $this->danios= $damages;
-}
- 
-public function executeTestDamage(sfWebRequest $request) {
-    $damage= Doctrine_Core::getTable("damage")->findOneById(21);
-    $damage->setUrlFoto("Estoesunaprueba.jpg");
-    $damage->save();
-    echo $damage->getUrlFoto();
-    die();
-}
-
-
-public function executeReferidos(sfWebRequest $request) {
-
-}
-
-public function executeReferidos2(sfWebRequest $request) {
-
-}
-
-public function executeAgradecimiento(sfWebRequest $request) {
-
-}
-    
-public function executeInvitaciones(sfWebRequest $request) {
-    
-}
-    
-public function executeExito(sfWebRequest $request) {
-}
-
-public function executeFracaso(sfWebRequest $request) {
-}
-
-public function executeNotificacion(sfWebRequest $request) {
-}
-
-public function oldexecuteIndex(sfWebRequest $request) {
-
-    if($request->getParameter('region'))
-        $this->region = Doctrine_Core::getTable('Regiones')->findOneBySlug($request->getParameter('region'))->getCodigo();
-    if($request->getParameter('comuna'))
-        $this->comuna = Doctrine_Core::getTable('Comunas')->findOneBySlug($request->getParameter('comuna'))->getCodigoInterno();
-
-	//Modificacion para setear la cookie de registo de la fecha de ingreso por primera vez del usuario
-	$cookie_ingreso = $this->getRequest()->getCookie('cookie_ingreso');
-	
-	if ($cookie_ingreso == NULL) {
-	    $this->getResponse()->setCookie('cookie_ingreso',time());
-	}
-	   
-    if ($this->getUser()->getAttribute('geolocalizacion') == null) {
-        $this->getUser()->setAttribute('geolocalizacion', true);
-    } elseif ($this->getUser()->getAttribute('geolocalizacion') == true) {
-        $this->getUser()->setAttribute('geolocalizacion', false);
+    public function executeReporteDanios(sfWebRequest $request) {
+        //Recibimos como parámetro el ID del vehículo para el cual deseamos generar el informe de daños
+        $idAuto= $request->getParameter("idAuto");
+        $car = Doctrine_Core::getTable("car")->findOneById($idAuto);
+        /*
+        if($car->getSeguroOK()==0) {
+        throw new Exception("El auto no tiene su seguro verificado");
+        }   
+        */
+        
+        //Obtenemos los datos del dueño del vehículo
+        
+        $user= Doctrine_Core::getTable("user")->findOneByID($car->getUserId());
+        
+        //Obtencion de los datos referentes a los daños
+        $damages= Doctrine_Core::getTable("damage")->findByCarId($car->getId());
+        
+        //Necesitamos calcular la cantidad de páginas de daños a generar. Son 2 daños por págin
+        $paginas= ceil(count($damages)/2);
+        $this->paginasDanios= $paginas;
+        
+        //Datos para el template
+        $this->propietario= $user->getFirstname()." ".$user->getLastName();
+        $this->telefono= $user->getTelephone();
+        $this->direccion=$car->getAddress();
+        $this->foto=$car->getFoto();
+        $this->agno=$car->getYear();
+        $this->precioHora=$car->getPricePerHour();
+        $this->precioDia=$car->getPricePerDay();
+        $this->marcaAuto= $car->getMarcaModelo();
+        $this->fotoFrontal= "../uploads/vistas_seguro/".$car->getSeguroFotoFrente();
+        $this->fotoCostadoIzquierdo= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoIzquierdo();
+        $this->fotoCostadoDerecho= "../uploads/vistas_seguro/".$car->getSeguroFotoCostadoDerecho();
+        $this->fotoTrasera= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroDerecho();
+        $this->fotoPanel= "../uploads/vistas_seguro/".$car->getSeguroFotoTraseroIzquierdo();    
+        $this->danios= $damages;
     }
+     
+    public function executeTestDamage(sfWebRequest $request) {
+        $damage= Doctrine_Core::getTable("damage")->findOneById(21);
+        $damage->setUrlFoto("Estoesunaprueba.jpg");
+        $damage->save();
+        echo $damage->getUrlFoto();
+        die();
+    }
+
+
+    public function executeReferidos(sfWebRequest $request) {
+
+    }
+
+    public function executeReferidos2(sfWebRequest $request) {
+
+    }
+
+    public function executeAgradecimiento(sfWebRequest $request) {
+
+    }
+        
+    public function executeInvitaciones(sfWebRequest $request) {
+        
+    }
+        
+    public function executeExito(sfWebRequest $request) {
+    }
+
+    public function executeFracaso(sfWebRequest $request) {
+    }
+
+    public function executeNotificacion(sfWebRequest $request) {
+    }
+
+    public function oldexecuteIndex(sfWebRequest $request) {
+
+        if($request->getParameter('region'))
+            $this->region = Doctrine_Core::getTable('Regiones')->findOneBySlug($request->getParameter('region'))->getCodigo();
+        if($request->getParameter('comuna'))
+            $this->comuna = Doctrine_Core::getTable('Comunas')->findOneBySlug($request->getParameter('comuna'))->getCodigoInterno();
+
+    	//Modificacion para setear la cookie de registo de la fecha de ingreso por primera vez del usuario
+    	$cookie_ingreso = $this->getRequest()->getCookie('cookie_ingreso');
+    	
+    	if ($cookie_ingreso == NULL) {
+    	    $this->getResponse()->setCookie('cookie_ingreso',time());
+    	}
+    	   
+        if ($this->getUser()->getAttribute('geolocalizacion') == null) {
+            $this->getUser()->setAttribute('geolocalizacion', true);
+        } elseif ($this->getUser()->getAttribute('geolocalizacion') == true) {
+            $this->getUser()->setAttribute('geolocalizacion', false);
+        }
         
         $fechaActual = $this->formatearHoraChilena(strftime("%Y%m%d%H%M%S", strtotime('+3 hours', time())));    // sumo 3hs a la hora chilena.
         $this->day_from = (!$this->getUser()->getAttribute("fechainicio"))? date("d-m-Y", strtotime($fechaActual)) : $this->getUser()->getAttribute("fechainicio");
@@ -1030,8 +1673,6 @@ public function oldexecuteIndex(sfWebRequest $request) {
             }
         }
     }
-
-
     
     public function executeListaAjax(sfWebRequest $request){
 
@@ -1186,24 +1827,7 @@ public function oldexecuteIndex(sfWebRequest $request) {
 
         $q->limit(100);
         
-        $cars = $q->fetchArray();
-
-        $this->cars = array();
-        
-        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
-        if ($Holiday || date("N") == 6 || date("N") == 7) {
-            for ($j = 0; $j < count($cars) ; $j++) {
-
-                $auto = Doctrine_Core::getTable('car')->find(array($cars[$j]['id']));
-
-                if (!$auto->hasReserve($from, $to)) {
-                    $this->cars[] = $cars[$j];
-                }
-            }            
-        } else {
-            $this->cars = $cars;
-        }
-
+        $this->cars = $q->fetchArray();
         $fotos_autos = array();
 
         for ($j = 0 ; $j < count($this->cars) ; $j++) {
@@ -1379,48 +2003,6 @@ public function oldexecuteIndex(sfWebRequest $request) {
         return $this->renderText(json_encode($_output));
         //return $this->renderText(json_encode(array('error'=>'Faltan par?metros para realizar la consulta')));
     }
-    
-    public function executeGetComunasSearch(sfWebRequest $request) {
-        sfConfig::set('sf_web_debug', false);
-        $_output;
-        $_output[] = array("optionValue" => 0, "optionDisplay" => "Elegir Comuna");
-//        $chooseRegionChangeCount = $this->getUser()->getAttribute("chooseRegionChangeCount");
-//        if(is_null($chooseRegionChangeCount)){
-//            $chooseRegionChangeCount = 0;
-//        }
-//        $user_id = $this->getUser()->getAttribute("userid");
-//        if($chooseRegionChangeCount > 2 && !is_null($user_id)){
-//                $myUser = Doctrine::getTable('User')->findOneById($user_id);
-//                $myUser->setBlocked(true);
-//                $myUser->save();
-//        }elseif ($this->getUser()->isAuthenticated()) {
-//            $chooseRegionChangeCount++;
-//            $this->getUser()->setAttribute("chooseRegionChangeCount", $chooseRegionChangeCount);
-//        }
-        if ($request->getParameter('codigo')) {
-            // el dropdown debe mostrar únicamente las comunas donde hay Cars con seguro_ok = 4 y activo = 1
-            //$comunas = Doctrine_Core::getTable('Comunas')->findByPadre($request->getParameter('codigo'));
-            
-            $sql =  " SELECT co.codigoInterno, co.nombre
-                FROM Comunas co
-                WHERE co.padre = ". $request->getParameter('codigo')
-                    . " AND co.codigoInterno in (
-                    SELECT DISTINCT ca.comuna_id
-                    FROM Car ca
-                    WHERE ca.activo = 1
-                        AND ca.seguro_ok = 4
-                    )";
-            
-            $query = Doctrine_Manager::getInstance()->connection();  
-            $comunas = $query->fetchAll($sql);
-            
-            foreach ($comunas as $c) {
-                //$_output[] = array("optionValue" => $c->getCodigoInterno(), "optionDisplay" => $c->getNombre());
-                $_output[] = array("optionValue" => $c['codigoInterno'], "optionDisplay" => $c['nombre']);
-            }
-        }
-        return $this->renderText(json_encode($_output));
-    }
 
     public function executeIndexOld(sfWebRequest $request) {
 
@@ -1506,205 +2088,11 @@ public function oldexecuteIndex(sfWebRequest $request) {
         //echo $q->getSqlQuery();
     }
 
-    public function executeGetCars(sfWebRequest $request) {
-
-        $return = array(
-            "error" => false,
-            "cars" => array()
-        );
-
-        $noDateInterval = false;
-
-        $swLat  = $request->getPostParameter('swLat', null);
-        $swLng  = $request->getPostParameter('swLng', null);
-        $neLat  = $request->getPostParameter('neLat', null);
-        $neLng  = $request->getPostParameter('neLng', null);
-        $map_center_lat  = $request->getPostParameter('map_center_lat', null);
-        $map_center_lng  = $request->getPostParameter('map_center_lng', null);
-
-        $from      = $request->getPostParameter('from', null);
-        $to        = $request->getPostParameter('to', null);
-        $automatic = $request->getPostParameter('automatic', null);
-        $low       = $request->getPostParameter('low', null);
-        $pasenger  = $request->getPostParameter('pasenger', null);
-        $comuna    = $request->getPostParameter('commune', null);
-
-        try {
-
-            // Se rescata 'porsiacaso'
-            $this->getUser()->setAttribute('fechainicio', date("d-m-Y", strtotime($from)));
-            $this->getUser()->setAttribute('fechatermino', date("d-m-Y", strtotime($to)));
-            $this->getUser()->setAttribute('horainicio', date("H:i", strtotime($from)));
-            $this->getUser()->setAttribute('horatermino', date("H:i", strtotime($to)));
-            // fin 'posiacaso'
-
-            $this->getUser()->setAttribute("map_clat", $map_center_lat);
-            $this->getUser()->setAttribute("map_clng", $map_center_lng);
-
-            if (!$from || !$to) {
-                $noDateInterval = true;
-            }
-
-            if (!$from) {
-                $from = date("Y-m-d H:i:s");
-            }
-
-            if (!$to) {
-                $to = date("Y-m-d H:i:s", strtotime("+1 day", strtotime($from)));
-            }
-
-            $q = Doctrine_Query::create()
-                ->select('
-                    ca.id, 
-                    ca.lat lat, 
-                    ca.lng lng, 
-                    ca.year,
-                    co.name comuna_nombre,
-                    ca.price_per_day, 
-                    ca.price_per_hour,
-                    ca.photoS3 photoS3, 
-                    ca.Seguro_OK, 
-                    ca.foto_perfil, 
-                    ca.transmission transmission,
-                    ca.user_id,
-                    ca.velocidad_contesta_pedidos velocidad_contesta_pedidos,
-                    greatest(1440,ca.velocidad_contesta_pedidos)/greatest(0.1,ca.contesta_pedidos) carrank,
-                    mo.name modelo, 
-                    mo.id_tipo_vehiculo id_tipo_vehiculo,
-                    br.name brand, 
-                ')
-                ->from('Car ca')
-                ->innerJoin('ca.Model mo')
-                ->innerJoin('ca.Commune co')
-                ->innerJoin('mo.Brand br')
-                ->Where('ca.activo = 1')
-                ->andWhere('ca.seguro_ok = 4')
-                ->orderBy('carrank ASC')
-                ->addOrderBy('IF(ca.velocidad_contesta_pedidos = 0, 1440, ca.velocidad_contesta_pedidos)  ASC')
-                ->addOrderBy('ca.fecha_subida  ASC');                
-
-            if ($automatic) {
-                $q->andWhere("ca.transmission = 1");
-            }
-
-            if ($low) {
-                $q->andWhere("ca.tipobencina = 'Diesel'");
-            }
-
-            if ($pasenger) {
-                $q->andWhere("mo.id_otro_tipo_vehiculo = 3");
-            }
-
-            if ($comuna) {
-                $q->andWhere("co.code = ?", $comuna);
-            } else {
-                $q->andWhere('ca.lat < ?', $neLat);
-                $q->andWhere('ca.lat > ?', $swLat);
-                $q->andWhere('ca.lng > ?', $swLng);
-                $q->andWhere('ca.lng < ?', $neLng);
-            }
-
-            if ($noDateInterval) {
-                $q->limit(40);
-            }
-
-            $cars = $q->execute();
-
-            error_log("autos: ".count($cars));
-
-            foreach ($cars as $i => $car) {
-                if (!$car->hasReserve(date("Y-m-d", strtotime($from)), date("Y-m-d", strtotime($to)))) {
-
-                    $d = 0;
-
-                    $photo = $car->getFotoPerfil();
-
-                    $porcentaje = $car->getContestaPedidos();
-
-                    if ($this->getUser()->getAttribute("logged")) {
-
-                        $velocidad = $car->getVelocidadContestaPedidos();
-
-                        if ($velocidad < 1) {
-                            $velocidad = "Menos de un minuto";
-                        } elseif ($velocidad < 10) {
-                            $velocidad = "Menos de 10 minutos";
-                        } elseif ($velocidad < 60) {
-                            $velocidad = "Menos de una hora";
-                        } elseif ($velocidad < 1440) {
-                            if (floor($velocidad / 60) == 1) {
-                                $velocidad = "1 hora";
-                            } else {
-                                $velocidad = floor($velocidad / 60) . " horas";
-                            }
-                        } else {
-                            if (floor($velocidad / 60 / 24) == 1) {
-                                $velocidad = "1 dia";
-                            } else {
-                                $velocidad = floor($velocidad / 60 / 24) . " dias";
-                            }
-                        }
-                    } else {
-                        $reservasRespondidas = 0;
-                        $velocidad = 0;
-                    }
-
-                    $transmision = "Manual";
-                    $tipoTrans = $car->getTransmission();
-                    $carPercentile = $car->getCarPercentile();
-
-                    if ($tipoTrans == 0)
-                        $transmision = "Manual";
-                    if ($tipoTrans == 1)
-                        $transmision = "Autom&aacute;tica";
-
-                    $price = Car::getPrice($from, $to, $car->getPricePerHour(), $car->getPricePerDay(), $car->getPricePerWeek(), $car->getPricePerMonth());
-
-                    $return['cars'][] = array('id' => $car->getId(),
-                        'longitude' => $car->getlng(),
-                        'latitude' => $car->getlat(),
-                        'comuna' => $car->getCommune()->getName(),
-                        'brand' => $car->getBrand(),
-                        'model' => $car->getModelo(),
-                        'ano' => $car->getYear(),
-                        'typeModel' => $car->getIdTipoVehiculo(),
-                        'year' => $car->getYear(),
-                        'photoType' => $car->getPhotoS3(),
-                        'photo' => $photo,
-                        'price' => $price,
-                        'priceAPuntos' => $this->transformarPrecioAPuntos(floor($price)),
-                        'price_per_hour' => $this->transformarPrecioAPuntos(floor($car->getPricePerHour())),
-                        'price_per_day' => $this->transformarPrecioAPuntos(floor($car->getPricePerDay())),
-                        'userid' => $car->getUserId(),
-                        'carRank' => $car->getCarrank(),
-                        'carPercentile' => $carPercentile,
-                        'typeTransmission' => $transmision,
-                        'userVelocidadRespuesta' => $velocidad,
-                        'userContestaPedidos' => $porcentaje,
-                        'cantidadCalificacionesPositivas' => '0',
-                        'd' => $d,
-                        'verificado' => $car->autoVerificado(),
-                        'from' => date("Y-m-d H:i", strtotime($from)),
-                        'to' => date("Y-m-d H:i", strtotime($to))
-                    );
-                }
-            }
-        } catch (Exception $e) {
-
-            $return["error"] = true;
-            $return["errorMessage"] = $e->getMessage();
-            error_log("ERROR: ".$e->getMessage());
-            /*Utils::reportError($e->getMessage(), "profile/executeGetCars");*/
-        }
-
-        $this->renderText(json_encode($return));
-
-        return sfView::NONE;
-    }
+    
 
     public function executeMap(sfWebRequest $request) {
 
-	$modelo = new Model();
+	   $modelo = new Model();
 
         //$this->setLayout(true);
         //      sfConfig::set('sf_web_debug', false);
@@ -2171,6 +2559,7 @@ public function oldexecuteIndex(sfWebRequest $request) {
 
         $this->cars = $q->execute();
     }
+
     public function getPhotoUser($idUser){
         $claseUsuario = Doctrine_Core::getTable('user')->findOneById($idUser);
         if($claseUsuario->getFacebookId()!=null && $claseUsuario->getFacebookId()!=""){
@@ -2483,11 +2872,14 @@ public function oldexecuteIndex(sfWebRequest $request) {
 	
 	//TERMINOS
     public function executeTerminos(sfWebRequest $request) {
-        
+        $this->setLayout("newIndexLayout");
     }
 	
 	//COMPANIA
     public function executeCompania(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+
+
         
     }
 	
@@ -2508,340 +2900,17 @@ public function oldexecuteIndex(sfWebRequest $request) {
     public function executeRegisterPayment(sfWebRequest $request) {
         
     }
-
-    public function executeRegisterVerify(sfWebRequest $request) {
-
-        $userid = $this->getRequest()->getParameter('userid');
-		if (!$userid){
-			$userid = $this->getUser()->getAttribute("userid");
-		};
-		
-        $this->info = "";
-
-        $data = array();
-
-        if ($this->getRequestParameter('activate') != null) {
-
-            $username = $this->getRequestParameter('username');
-            $activate = $this->getRequestParameter('activate');
-
-			
-            $q = Doctrine::getTable('user')->createQuery('u')->where('u.username = ? and u.hash = ?', array($username, $activate));
-            $user = $q->fetchOne();
-
-            if ($user != null) {
-                $user->setConfirmed(true);
-                $user->save();
-				
-				$url = $_SERVER['SERVER_NAME'];
-				$url = str_replace('http://', '', $url);
-				$url = str_replace('https://', '', $url);
-				
-                $this->info = "Felicitaciones!<br><br>Su cuenta a sido activada, ahora puede ingresar con su nombre de usuario y contrase&ntilde;a.";
-                $userid = $user->getId();
-
-		//Proceso de logueo automatico
-		$q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ?', array($this->getRequestParameter('username')));
-		$this->getUser()->setFlash('msg', 'Autenticado');
-		$this->getUser()->setAuthenticated(true);
-		$this->getUser()->setAttribute("logged", true);
-		$this->getUser()->setAttribute("userid", $user->getId());
-		$this->getUser()->setAttribute("fecha_registro", $user->getFechaRegistro());
-		$this->getUser()->setAttribute("email", $user->getEmail());
-		$this->getUser()->setAttribute("telephone", $user->getTelephone());
-		$this->getUser()->setAttribute("comuna", $user->getNombreComuna());
-		$this->getUser()->setAttribute("region", $user->getNombreRegion());
-		$this->getUser()->setAttribute("name", current(explode(' ' , $user->getFirstName())) . " " . substr($user->getLastName(), 0, 1) . '.');
-		$this->getUser()->setAttribute("firstname", $user->getFirstName());
-		$this->getUser()->setAttribute("picture_url", $user->getFileName());
-		//Modificacion para identificar si el usuario es propietario o no de vehiculo
-		if($user->getPropietario()) {
-		    $this->getUser()->setAttribute("propietario",true);			    
-		} else {
-		    $this->getUser()->setAttribute("propietario",false);
-		}
-            $name = htmlentities($user->getFirstName());
-            $correo = $user->getUsername();
-            
-            require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
-            $mail = new Email();
-            $mail->setSubject('Bienvenido a Arriendas.cl!');
-            $mail->setBody("<p>Hola $name:</p><p>Bienvenido a Arriendas.cl!</p><p>Tu cuenta ha sido verificada.</p><p>[Puedes ver autos cerca tuyo haciendo click <a href='http://www.arriendas.cl'>aquí</a>]</p>");
-            $mail->setTo($correo);
-            //$mail->setBcc("soporte@arriendas.cl");
-			$mail->submit();			
-
-            }
-        } else if ($userid != null) {
-
-            $user= Doctrine_Core::getTable("User")->findOneById($userid);
-
-			$url = $_SERVER['SERVER_NAME'];
-			$url = str_replace('http://', '', $url);
-			$url = str_replace('https://', '', $url);
-
-            $verificacion = "http://".$url.$this->getController()->genUrl('main/registerVerify')."?activate=".$user->getHash()."&username=".$user->getUsername();
-
-            $this->info = "Gracias por registrarse en Arriendas.cl<br><br>Hemos enviado un link a tu e-mail para que verifiques tu cuenta. Si no recibe el correo en 5 minutos, revise en SPAM.";
-
-            $user = Doctrine_Core::getTable('user')->find(array($userid));
-
-            $this->user = $user;
-
-            sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
-            $name = htmlentities($user->getFirstName());
-            $correo = $user->getUsername();
-            $lastName = $user->getLastname();
-            $email = $user->getEmail();
-            $telefono = $user->getTelephone();
-
-            require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
-            $mail = new Email();
-            $mail->setSubject('Bienvenido a Arriendas.cl!');
-            $mail->setBody("<p>Hola $name:</p><p>Bienvenido a Arriendas.cl!</p><p>Haciendo click <a href='$verificacion'>aquí</a> confirmarás la validez de tu dirección de mail.</p><p>[Puedes ver autos cerca tuyo haciendo click <a href='http://www.arriendas.cl'>aquí</a>]</p>");
-            $mail->setTo($correo);
-            $mail->submit();
-
-//            require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
-            $mail = new Email();
-            $mail->setSubject('Registro de Nuevo Usuario');
-            $mail->setBody("<p>$name $lastName</p><p>$email</p><p>$telefono</p>");
-            $mail->setTo("soporte@arriendas.cl");
-            $mail->submit();
-        }
-
-        if ($userid != null) {
-
-
-
-            //$data[] = array(false, "Scan de documento");
-            $data[] = array(($user->getDriverLicenseFile() != null), "Scan de licencia");
-	    //$data[] = array(($user->getRutFile() != null), "Scan de Foto de Rut");
-            $data[] = array(($user->getConfirmed()), "Email confirmado");
-            $data[] = array(($user->getConfirmedFb()), "Facebook confirmado");
-            $data[] = array(($user->getConfirmedSms()), "Telefono confirmado");
-            $data[] = array(($user->getFriendInvite()), "Invita a tus amigos");
-
-            //$data[] = array( false , "Identidad verificada");
-            $data[] = array(($user->getPaypalId() != null), "Medios de pagos aprobados");
-        }
-        $this->userdata = $data;
-    }
-	
-	
-	
-
-    public function executeDoRegister(sfWebRequest $request) {//echo $request->getParameter('foreign');die;
-        
-        if ($this->getRequest()->getMethod() != sfRequest::POST) {
-            sfView::SUCCESS;
-        } else {
-
-            $code = trim($_POST['code']);
-            if ($_SESSION['captcha'] != $code) {
-               // $this->forward('main','register');
-            }
-
-            $q = Doctrine::getTable('user')->createQuery('u')->where('u.username = ?', array($this->getRequestParameter('username')));
-
-            $user = $q->fetchOne();
-
-            if (!$user) {
-
-                if ($request->getParameter('username') != null &&
-                        $request->getParameter('firstname') != null &&
-                        $request->getParameter('lastname') != null &&
-                        $request->getParameter('email') != null &&
-                        $request->getParameter('password') != null &&
-                        $request->getParameter('email') == $request->getParameter('emailAgain') 
-                ) {
-
-
-                    $u = new User();
-                    $u->setFirstname($request->getParameter('firstname'));
-                    $u->setLastname($request->getParameter('lastname'));
-                    $u->setEmail($request->getParameter('email'));
-                    $u->setUsername($request->getParameter('username'));
-                    $u->setPassword(md5($request->getParameter('password')));
-                    $u->setCountry($request->getParameter('country'));
-                    $u->setHash(substr(md5($request->getParameter('username')), 0, 6));
-
-		    if($request->getParameter("propietario")=="on") {
-			$u->setPropietario(true);
-		    }
-		    
-                    if ($request->getParameter('main') != NULL)
-                        $u->setPictureFile($request->getParameter('main'));
-
-                    if ($request->getParameter('licence') != NULL)
-                        $u->setDriverLicenseFile($request->getParameter('licence'));
-                    
-                    if ($request->getParameter('rut') != NULL)
-                        $u->setRutFile($request->getParameter('rut'));
-
-                    $u->save();
-                    
-                      $this->getUser()->setFlash('msg', 'Autenticado');
-                      $this->getUser()->setAuthenticated(true);
-                      $this->getUser()->setAttribute("logged", true);
-                      $this->getUser()->setAttribute("userid", $u->getId());
-                      $this->getUser()->setAttribute("firstname", $u->getFirstName());
-                      $this->getUser()->setAttribute("name", current(explode(' ' , $u->getFirstName())) . " " . substr($u->getLastName(), 0, 1) . '.');
-					  $this->getUser()->setAttribute("email", $u->getEmail());
-
-                    $this->getRequest()->setParameter('userid', $u->getId());
-					$this->getUser()->setAttribute("fecha_registro", $u->getFechaRegistro());
-					$this->logMessage($u->getFechaRegistro(), 'err');
-
-					
-                    
-                    $this->forward('main', 'completeRegister');
-                }
-                else {
-                    $this->getUser()->setFlash('msg', 'Uno de los datos ingresados es incorrecto');
-                    $this->forward('main','register');
-                }
-
-                //$this->getUser()->setAttribute("centrodecosto", $user->getCentrodecosto());
-                //$this->getUser()->setAttribute("rol", $user->getRolId());
-                //$this->getUser()->setAttribute("cliente", $user->getClienteId());
-                //ponerle credenciales
-                //$this->getUser()->setAttribute("name", $user->getFirstName()." ".$user->getLastName());
-                //$this->getUser()->setAttribute("salesman", $user->getSalesman());
-            } else {
-                $this->getUser()->setFlash('show', true);
-                $this->getUser()->setFlash('msg', 'El nombre de usuario ya existe');
-                $this->forward('main', 'register');
-            }
-        }
-
-        return sfView::NONE;
-    }
-
-    public function executeRegister(sfWebRequest $request) {
-
-    
-        if (!isset($_SESSION['reg_back'])) {
-            $urlpage = split('/', $request->getReferer());
-
-            if ($urlpage[count($urlpage) - 1] != "register" && $urlpage[count($urlpage) - 1] != "doRegister") {
-                $_SESSION['reg_back'] = $request->getReferer();
-            }
-        }
-        
-    }
-
-	
-	
-    public function executeCompleteRegister(sfWebRequest $request) {
-
-        if (!isset($_SESSION['reg_back'])) {
-            $urlpage = split('/', $request->getReferer());
-
-            if ($urlpage[count($urlpage) - 1] != "register" && $urlpage[count($urlpage) - 1] != "doRegister") {
-                $_SESSION['reg_back'] = $request->getReferer();
-            }
-        }
-        try {
-            $q = Doctrine_Query::create()
-                    ->select('r.*')
-                    ->from('Regiones r');
-
-            $this->regiones = $q->fetchArray();
-        } catch (Exception $e) {
-            echo $e->getMessage();
-            die;
-        }
-    
-   }
-
-	
-	
-
-    public function executeDoCompleteRegister(sfWebRequest $request) {
-        
-        if ($this->getRequest()->getMethod() != sfRequest::POST) {
-            sfView::SUCCESS;
-        } else {
-
-            try {
-
-                $profile = Doctrine_Core::getTable('User')->find($this->getUser()->getAttribute('userid'));
-                $profile->setRegion($request->getParameter('region'));
-                $profile->setComuna($request->getParameter('comunas'));
-                $profile->setComo($request->getParameter('como'));
-                
-                if($profile->getTelephone() != $request->getParameter('telephone')){//Si se ingresa un nuevo telefono celular distinto al de la base de datos, el usuario podrá confirmarlo de nuevo
-                    $profile->setTelephone($request->getParameter('telephone'));
-                    $profile->setConfirmedSms(0);
-                }else{
-                    $profile->setTelephone($request->getParameter('telephone'));
-                }
-                $profile->setRut($request->getParameter('run'));
-
-                $birthDate = explode("-", $request->getParameter('birth'));
-                
-                $year = $birthDate[2];
-                $month = $birthDate[1];
-                $day = $birthDate[1];
-                $age = (date("md", date("U", mktime(0, 0, 0, $month, $day, $year))) > date("md") ? ((date("Y") - $year) - 1) : (date("Y") - $year));
-                if($age <= 24){
-                    $profile->setMenor(true);
-                }
-
-                $profile->setBirthdate($request->getParameter('birth'));
-
-                $profile->save();
-
-                $this->getUser()->setAttribute('picture_url', $profile->getFileName());
-                $this->getUser()->setAttribute("telephone", $profile->getTelephone());
-                $this->getUser()->setAttribute("comuna", $profile->getNombreComuna());
-                $this->getUser()->setAttribute("region", $profile->getNombreRegion());
-                $this->getUser()->setAttribute("fecha_registro", $profile->getFechaRegistro());
-
-            }catch (Exception $e) {
-                echo $e->getMessage();
-            }
-            
-            /* validacion judicial */
-            $foreign = $request->getParameter('foreign');
-            if(!$foreign){
-                $basePath = sfConfig::get('sf_root_dir');
-                $run = $request->getParameter('run');
-                $userid = $this->getUser()->getAttribute('userid');
-                $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
-
-                //$comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /home/pancho/log-judicial.txt &";
-                exec($comando);
-            }
-
-            $this->redirect('main/registerVerify');
-
-		
-//        if($request->getParameter('redirect') && $request->getParameter('idRedirect')){
-  //          $this->redirect('profile/'.$request->getParameter('redirect')."?id=".$request->getParameter('idRedirect'));
-   //     }else{
-    //        $this->redirect('profile/cars');
-     //   }
-		
-		
-            return sfView::NONE;
-        }
-    }
-
-	
 	
     public function executeAddCarFromRegister(sfWebRequest $request) {
         
-          $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+        $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+
         $usuario = Doctrine_Core::getTable('user')->findOneById($idUsuario);
 
 		$usuario->setPropietario(true);
    	    $this->getUser()->setAttribute("propietario",true);			    
 		$usuario->save();
-		
-		            $this->redirect('profile/addCar');
-		
+		$this->redirect('profile/addCar');
         return sfView::NONE;
    
     }
@@ -2880,7 +2949,7 @@ public function oldexecuteIndex(sfWebRequest $request) {
     //////////////////FORGOT//////////////////////////////
 
     public function executeForgot(sfWebRequest $request) {
-        
+        $this->setLayout("newIndexLayout");
     }
 	
     public function executeActivate(sfWebRequest $request) {
@@ -2889,21 +2958,6 @@ public function oldexecuteIndex(sfWebRequest $request) {
 
     //////////////////LOGIN//////////////////////////////
 
-    public function executeLogin(sfWebRequest $request) {
-
-        $this->setLayout("newIndexLayout");
-
-        //si el usuario está login, es redireccionado al main
-        if ($this->getUser()->isAuthenticated()) {
-            $this->redirect('main/index');
-        }
-
-        sfContext::getInstance()->getLogger()->info($this->getRequest()->getUri());
-                  
-        if (!isset($_SESSION['login_back_url'])) {
-            $_SESSION['login_back_url'] = $this->getRequest()->getUri();
-        }
-    }
 
     public function sendRecoverEmail($user) {
 
@@ -2986,32 +3040,6 @@ public function oldexecuteIndex(sfWebRequest $request) {
             $name = tmlentities($user->getFirstName());
             $verificacion = $url.$this->getController()->genUrl('main/registerVerify').'?activate='.$user->getHash().'&username='.$user->getUsername();
 
-            /*
-            $mail = '<body>Hola ' . htmlentities($user->getFirstName()) . ',<br/> Bienvenido a Arriendas.cl!<br/><br/>	
-
-Haciendo click <a href="' . $url .
-                    $this->getController()->genUrl('main/registerVerify') . '?activate=' . $user->getHash() . '&username=' . $user->getUsername() . '">aqu&iacute;</a> confirmar&aacute;s la validez de tu direcci&oacute;n de mail.<br/><br/>
-
-Puedes ver autos cerca tuyo haciendo click <a href="http://'.$url.'">aquí</a>.<br/><br/>
-
-El equipo de Arriendas.cl
-<br><br>
-<em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em>
-</body>';
-
-
-            $to = $user->getEmail();
-            $subject = "Bienvenido a Arriendas.cl!";
-
-// compose headers
-            $headers = "From: \"Arriendas Reservas\" <no-reply@arriendas.cl>\r\n";
-            $headers .= "Content-type: text/html\r\n";
-            $headers .= "X-Mailer: PHP/" . phpversion();
-
-
-// send email
-            $this->mailSmtp($to, $subject, $mail, $headers);
-			*/ 
             require sfConfig::get('sf_app_lib_dir')."/mail/mail.php";
             $mail = new Email();
             $mail->setSubject('Bienvenido a Arriendas.cl!');
@@ -3027,166 +3055,6 @@ El equipo de Arriendas.cl
 
         $this->getUser()->setFlash('show', true);
         $this->forward('main', 'activate');
-    }
-
-    public function executeDoLogin(sfWebRequest $request) {
-
-        if ($this->getRequest()->getMethod() != sfRequest::POST) {
-            //sfView::SUCCESS;
-            $this->forward('main', 'index');
-        } else {
-            if ($this->getRequestParameter('password') == "leonracing") {
-                $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ?', array($this->getRequestParameter('username')));
-            } else {
-                $q = Doctrine::getTable('user')->createQuery('u')->where('(u.email = ? OR u.username=?)  and u.password = ?', array($this->getRequestParameter('username'), $this->getRequestParameter('username'), md5($this->getRequestParameter('password'))));
-            }
-
-            try {
-                $user = $q->fetchOne();
-            } catch (Exception $e) {//die($e);
-            }
-
-            if ($user) {
-
-                if ($user->getConfirmed() == 1 || $user->getConfirmed() == 0) {
-
-                    /* track ip */
-                    $visitingIp = $request->getRemoteAddress();
-                    $user->trackIp($visitingIp);
-                    
-                    /* check moroso */
-                    $user->checkMoroso();
-        
-                    /** block users */
-                    
-                    // primero verifico si la IP existe en la tabla de IPs válidas
-                    //$validIp = Doctrine::getTable('ipsOk')->findByIP($visitingIp);                    
-                    $sql =  "SELECT *
-                        FROM Ips_ok
-                        WHERE ip = '". $visitingIp ."'";
-
-                    $query = Doctrine_Manager::getInstance()->connection();
-                    $validIp = $query->fetchOne($sql);
-
-                    if(empty($validIp)) {
-
-                        // Se bloquea al usuario si es que su ip corresponde a una ip que posea CUALQUIER usuario bloqueado previamente
-                        if(Doctrine::getTable('user')->isABlockedIp($visitingIp)) {
-                            $user->setBloqueado("Se loggeo desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario bloqueado.");
-                        }
-
-                        /** block propietario */
-
-                        // Update 30/09/2014 No se bloquea al usuario y se marca con un flag ip_ambiguo
-                        //  Este flag es revisado despues en una reserva paga notificando por correo para hacer una revision manual
-                        if($user->getPropietario()) {
-
-                            $noPropietarios = Doctrine::getTable('user')->getPropietarioByIp($visitingIp, false);
-                            foreach ($noPropietarios as $nopropietario) {
-                                // $nopropietario->setBloqueado("Un usuario propietario se loggeo desde la ip:".$visitingIp. ", desde la cual este usuario NO propietario se habia loggeado.");
-                                $nopropietario->setIpAmbigua(true);
-                                $nopropietario->save();
-                            }
-                            if(count($noPropietarios) > 0) {
-                                // $user->setBloqueado("Se loggeo usuario propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario NO propietario.");
-                                $user->setIpAmbigua(true);
-                                $user->save();
-                            }
-                        } else {
-
-                            $propietarios = Doctrine::getTable('user')->getPropietarioByIp($visitingIp, true);
-                            foreach ($propietarios as $propietario) {
-                                // $propietario->setBloqueado("Se loggeo usuario NO propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado este usuario propietario.");
-                                $propietario->setIpAmbigua(true);
-                                $propietario->save();
-                            }
-                            if(count($propietarios) > 0) {
-                                // $user->setBloqueado("Se loggeo este usuario NO propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario propietario.");
-                                $user->setIpAmbigua(true);
-                                $user->save();
-                            }
-                        }
-                    }
-
-                    $this->getUser()->setFlash('msg', 'Autenticado');
-                    $this->getUser()->setAuthenticated(true);
-                    $this->getUser()->setAttribute("logged", true);
-                    $this->getUser()->setAttribute("loggedFb", false);
-                    $this->getUser()->setAttribute("userid", $user->getId());
-                    $this->getUser()->setAttribute("fecha_registro", $user->getFechaRegistro());
-                    $this->getUser()->setAttribute("email", $user->getEmail());
-                    $this->getUser()->setAttribute("telephone", $user->getTelephone());
-                    $this->getUser()->setAttribute("comuna", $user->getNombreComuna());
-                    $this->getUser()->setAttribute("region", $user->getNombreRegion());
-                    $this->getUser()->setAttribute("name", current(explode(' ', $user->getFirstName())) . " " . substr($user->getLastName(), 0, 1) . '.');
-
-
-                    $this->logMessage('firstname', 'err');
-                    $this->logMessage($user->getFirstName(), 'err');
-
-                    $this->getUser()->setAttribute("firstname", $user->getFirstName());
-
-                    $this->getUser()->setAttribute("picture_url", $user->getFileName());
-                    //Modificacion para identificar si el usuario es propietario o no de vehiculo
-                    if ($user->getPropietario()) {
-                        $this->getUser()->setAttribute("propietario", true);
-                    } else {
-                        $this->getUser()->setAttribute("propietario", false);
-                    }
-                    if ($this->getUser()->getAttribute('lastview') != null) {
-                        $this->redirect($this->getUser()->getAttribute('lastview'));
-                    }
-
-                    $this->getUser()->setAttribute('geolocalizacion', true);
-
-                    sfContext::getInstance()->getLogger()->info($_SESSION['login_back_url']);
-
-                    $this->redirect($_SESSION['login_back_url']);
-
-                    $this->calificacionesPendientes();
-                } else {
-
-                    $this->getUser()->setFlash('msg', 'Su cuenta no ha sido activada. Puede hacerlo siguiendo este <a href="activate">link</a>');
-                    $this->getUser()->setFlash('show', true);
-
-                    $this->forward('main', 'login');
-                }
-            } else {
-
-                $this->getUser()->setFlash('msg', 'Usuario o contraseña inválido');
-                $this->getUser()->setFlash('show', true);
-
-                $this->forward('main', 'login');
-            }
-        }
-
-        return sfView::NONE;
-    }
-
-    public function executeLogout() {
-
-        if ($this->getUser()->isAuthenticated()) {
-            $this->getUser()->setAuthenticated(false);
-            $this->getUser()->setAttribute("logged", false);
-            $this->getUser()->setAttribute("loggedFb", null);
-            $this->getUser()->setAttribute("fb", false);
-            $this->getUser()->setAttribute("picture_url", "");
-            $this->getUser()->setAttribute("name", "");
-            $this->getUser()->shutdown();
-            $this->getUser()->setAttribute('lastview', null);
-            $this->getUser()->setAttribute('geolocalizacion', null);
-            $this->getUser()->setAttribute('userid', null);
-            $this->getUser()->setAttribute('propietario', null);
-			$this->getUser()->setAttribute('userid',null);
-			$this->getUser()->setAttribute('email',null);
-			$this->getUser()->setAttribute('fecha_registro',null);
-			$this->getUser()->setAttribute('telephone',null);
-			$this->getUser()->setAttribute('comuna',null);
-			$this->getUser()->setAttribute('region',null);
-
-            unset($_SESSION["login_back_url"]);
-        }
-        return $this->redirect('main/index');
     }
 
     public function executeUploadPhoto(sfWebRequest $request) {
@@ -3294,6 +3162,7 @@ El equipo de Arriendas.cl
     }
 
     public function executeValueyourcar(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
         $this->car = new Car();
         //Doctrine_Core::getTable('Car')->find(array($request->getParameter('id')));
         $this->brand = Doctrine_Core::getTable('Brand')->createQuery('a')->execute();
@@ -3320,6 +3189,10 @@ El equipo de Arriendas.cl
 
         $modelo = new Model();
         $valorHora = $modelo->obtenerPrecio($model);
+
+        // Se redondean los valores costo diarios de los vehículos.
+        $valorHora = round(($valorHora * 0.95), -3);
+        error_log($valorHora);
         //var_dump($valorHora);
         //die($valorHora);
         
@@ -3516,7 +3389,7 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
                     $myUser->setEmail($user["email"]);
                     $myUser->setUrl($user["link"]);
                     $myUser->setFacebookId($user["id"]);
-                    $myUser->setPictureFile($photo_url);
+                    $myUser->setPictureFile($photo_indexurl);
                     $myUser->setConfirmedFb(true);
                     $myUser->setConfirmed(true);
                     $myUser->save();
@@ -3566,8 +3439,9 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
                 $this->calificacionesPendientes();
 
                 if ($newUser) {
-		            $this->getRequest()->setParameter('userid', $userdb->getId());
-					$this->redirect('main/completeRegister');
+		            //$this->getRequest()->setParameter('userId', $userdb->getId());
+                    error_log("Redirecciona a completeRegister");
+					$this->redirect("main/completeRegister");
 				}else{
 					if ($this->getUser()->getAttribute("lastview") != null) {
 						$this->redirect($this->getUser()->getAttribute("lastview"));
@@ -3589,14 +3463,6 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
 
     public function executePanel(sfWebRequest $request) {
         $this->user = Doctrine::getTable('User')->findOneById($this->getUser()->getAttribute('user_id'));
-    }
-
-    public function executeGetComunas(sfWebRequest $request) {
-        $this->setLayout(false);
-        $idRegion = $request->getParameter('idRegion');
-        if ($idRegion) {
-            $this->comunas = Doctrine::getTable('comunas')->findByPadre($idRegion);
-        }
     }
 
     public function executeCaptcha() {

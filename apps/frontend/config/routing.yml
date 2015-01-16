@@ -1,17 +1,96 @@
-reserves:
-    url: /reservas
-    param: { module: profile, action: reserves }
-
-reserve_change:
-    url: /reserve/change
-    param: { module: profile, action: reserveChange }
-
-reserve_extend:
-    url: /reserve/extend
-    param: { module: profile, action: reserveExtend }
-
 # You can find more information about this file on the symfony website:
 # http://www.symfony-project.org/reference/1_4/en/10-Routing
+
+about_company:
+    url: /nosotros
+    param: { module: main, action: compania }
+
+car_create:
+   url: /auto/crear
+   param: { module: cars, action: create }
+
+cars:
+    url: /mis-autos
+    param: { module: profile, action: cars }
+    #param: { module: cars, action: index }
+
+forgot_password:
+    url: /recuperar-contrasena
+    param: { module: main, action: forgot }
+
+homepage:
+    url: /
+    param: { module: main, action: index }
+
+login:
+    url: /login
+    param: { module: main, action: login }
+
+login_do:
+    url: /login/do
+    param: { module: main, action: loginDo }
+
+logout:
+    url: /logout
+    param: { module: main, action: logout }
+
+opportunities:
+    url: /oportunidades
+    param: { module: opportunities, action: index }
+
+opportunities_approve:
+    url: /oportunidades/aprobar
+    param: { module: opportunities, action: approve }
+
+reserve:
+    url: /reserva/:c/:f/:t
+    param: { module: profile, action: reserve }
+
+reserve_approve:
+    url: /reserva/aprobar
+    param: { module: reserves, action: approve }
+
+reserve_change:
+    url: /reserva/cambiar
+    param: { module: reserves, action: change }
+
+reserve_extend:
+    url: /reserva/extender
+    param: { module: reserves, action: extend }
+
+reserve_extend_get_price:
+    url: /reserva/extender/obtenerPrecio
+    param: { module: reserves, action: getExtendPrice }
+
+reserve_pay:
+    url: /reserva/pagar
+    param: { module: reserves, action: pay }
+
+reserve_reject:
+    url: /reserva/rechazar
+    param: { module: reserves, action: reject }
+
+reserves:
+    url: /reservas
+    param: { module: reserves, action: index }
+
+terms_and_conditions:
+    url: /terminos-y-condiciones
+    param: { module: main, action: terminos }
+
+user_register:
+    url: /registro
+    param: { module: main, action: register }
+
+user_register_complete:
+    url: /registro/completar
+    param: { module: main, action: completeRegister }
+
+
+
+    
+# old Design
+
 
 index_by_city:
   url:    /c/:c
@@ -91,25 +170,16 @@ facebook_login:
 region-comuna:
     url: /arriendo-de-autos/:region/:comuna
     param: {module: main, action: index }
- 
-# default rules
-homepage:
-  url:   /
-  param: { module: main, action: index }
 
 fbShare:
   url:    /fb/:id/
   param:  { module: main, action: fbShare }
-  
+
 # generic rules
 # please, remove them by adding more specific rules
-default_index:
-  url:   /:module
-  param: { action: index }
+# default_index:
+#   url:   /:module
+#   param: { action: index }
 
 default:
   url:   /:module/:action/*
-
-
-
-

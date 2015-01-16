@@ -12,9 +12,9 @@
  * @property decimal $insurance
  * @property decimal $commission
  * @property decimal $fuel
- * @property integer $User_id
+ * @property integer $user_id
  * @property integer $TransactionType_id
- * @property integer $Reserve_id
+ * @property integer $reserve_id
  * @property boolean $completed
  * @property boolean $show_success
  * @property boolean $impulsive
@@ -25,6 +25,7 @@
  * @property Reserve $Reserve
  * @property string $codpagocompra
  * @property integer $metodo_id
+ * @property boolean $selected
  * 
  * @method integer         getId()                 Returns the current record's "id" value
  * @method string          getCar()                Returns the current record's "car" value
@@ -33,9 +34,9 @@
  * @method decimal         getInsurance()          Returns the current record's "insurance" value
  * @method decimal         getCommission()         Returns the current record's "commission" value
  * @method decimal         getFuel()               Returns the current record's "fuel" value
- * @method integer         getUserId()             Returns the current record's "User_id" value
+ * @method integer         getUserId()             Returns the current record's "user_id" value
  * @method integer         getTransactionTypeId()  Returns the current record's "TransactionType_id" value
- * @method integer         getReserveId()          Returns the current record's "Reserve_id" value
+ * @method integer         getReserveId()          Returns the current record's "reserve_id" value
  * @method boolean         getCompleted()          Returns the current record's "completed" value
  * @method User            getUser()               Returns the current record's "User" value
  * @method TransactionType getTransactionType()    Returns the current record's "TransactionType" value
@@ -46,6 +47,7 @@
  * @method boolean         getImpulsive()          Returns the current record's "impulsive" value
  * @method integer         getTransaccionOriginal()      Returns the current record's "transaccion_original" value
  * @method integer         getNumeroFactura()      Returns the current record's "numero_factura" value
+ * @method boolean         getSelected()           Returns the current record's "selected" value
  * 
  * @method Transaction     setId()                 Sets the current record's "id" value
  * @method Transaction     setCar()                Sets the current record's "car" value
@@ -54,9 +56,9 @@
  * @method Transaction     setInsurance()          Sets the current record's "insurance" value
  * @method Transaction     setCommission()         Sets the current record's "commission" value
  * @method Transaction     setFuel()               Sets the current record's "fuel" value
- * @method Transaction     setUserId()             Sets the current record's "User_id" value
+ * @method Transaction     setUserId()             Sets the current record's "user_id" value
  * @method Transaction     setTransactionTypeId()  Sets the current record's "TransactionType_id" value
- * @method Transaction     setReserveId()          Sets the current record's "Reserve_id" value
+ * @method Transaction     setReserveId()          Sets the current record's "reserve_id" value
  * @method Transaction     setCompleted()          Sets the current record's "completed" value
  * @method Transaction     setUser()               Sets the current record's "User" value
  * @method Transaction     setTransactionType()    Sets the current record's "TransactionType" value
@@ -67,6 +69,7 @@
  * @method Transaction     setImpulsive()          Sets the current record's "impulsive" value
  * @method integer         setTransaccionOriginal()      Sets the current record's "transaccion_original" value
  * @method integer         setNumeroFactura()      Sets the current record's "numero_factura" value
+ * @method boolean         setSelected()           Sets the current record's "selected" value
  * 
  * @package    CarSharing
  * @subpackage model
@@ -111,7 +114,7 @@ abstract class BaseTransaction extends sfDoctrineRecord
              'length' => 10,
              'scale' => '2',
              ));
-        $this->hasColumn('User_id', 'integer', 4, array(
+        $this->hasColumn('user_id', 'integer', 4, array(
              'type' => 'integer',
              'notnull' => true,
              'length' => 4,
@@ -121,7 +124,7 @@ abstract class BaseTransaction extends sfDoctrineRecord
              'notnull' => true,
              'length' => 4,
              ));
-        $this->hasColumn('Reserve_id', 'integer', 4, array(
+        $this->hasColumn('reserve_id', 'integer', 4, array(
              'type' => 'integer',
              'length' => 4,
              ));
@@ -136,7 +139,7 @@ abstract class BaseTransaction extends sfDoctrineRecord
         $this->index('fk_Transaction_User1', array(
              'fields' => 
              array(
-              0 => 'User_id',
+              0 => 'user_id',
              ),
              ));
         $this->index('fk_Transaction_TransactionType1', array(
@@ -155,7 +158,7 @@ abstract class BaseTransaction extends sfDoctrineRecord
         $this->index('fk_Transaction_Reserve1', array(
              'fields' => 
              array(
-              0 => 'Reserve_id',
+              0 => 'reserve_id',
              ),
              ));
         $this->hasColumn('codpagocompra', 'string', 50, array(
@@ -199,6 +202,11 @@ abstract class BaseTransaction extends sfDoctrineRecord
             'length' => 11,
             'default' => 'null',
             ));
+        $this->hasColumn('selected', 'boolean', null, array(
+            'type' => 'boolean',
+            'default' => false,
+            ));
+
         $this->option('charset', 'utf8');
         $this->option('type', 'InnoDB');
     }
@@ -207,7 +215,7 @@ abstract class BaseTransaction extends sfDoctrineRecord
     {
         parent::setUp();
         $this->hasOne('User', array(
-             'local' => 'User_id',
+             'local' => 'user_id',
              'foreign' => 'id',
              'onDelete' => 'no action',
              'onUpdate' => 'no action'));
@@ -219,7 +227,7 @@ abstract class BaseTransaction extends sfDoctrineRecord
              'onUpdate' => 'no action'));
 
         $this->hasOne('Reserve', array(
-             'local' => 'Reserve_id',
+             'local' => 'reserve_id',
              'foreign' => 'id'));
     }
 }

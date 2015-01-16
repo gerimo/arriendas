@@ -34,6 +34,9 @@
         <link href="/css/newDesign/datetimepicker/jquery.datetimepicker.css" rel="stylesheet" type="text/css">
         <link href="/css/newDesign/slick/slick.css" rel="stylesheet" type="text/css">
         <link href="/css/newDesign/raty/jquery.raty.css" rel="stylesheet" type="text/css">
+        <link href="/css/newDesign/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+        <!-- <link href="/css/newDesign/datatablesp/jquery.dataTables_themeroller.css" rel="stylesheet" type="text/css"> -->
+        <link href="/css/newDesign/datatables/dataTables.responsive.css" rel="stylesheet" type="text/css">
 
         <!-- Estilos para todo el proyecto -->
         <link href="/css/newDesign/arriendas.css" rel="stylesheet" type="text/css">
@@ -60,6 +63,12 @@
         <script src="/js/newDesign/raty/jquery.raty.js" type="text/javascript"></script>
         <script src="/js/newDesign/number/jquery.number.min.js" type="text/javascript"></script>
         <script src="/js/newDesign/jquery-form/jquery.form.min.js" type="text/javascript"></script>
+        <script src="/js/newDesign/datatables/jquery.dataTables.min.js" type="text/javascript"></script>
+        <script src="/js/newDesign/datatables/dataTables.responsive.min.js" type="text/javascript"></script>
+        <script src="/js/newDesign/formToWizard/formToWizard.js" type="text/javascript"></script>
+
+        <!-- Utils -->
+        <script src="/js/newDesign/utils.js" type="text/javascript"></script>
 
         <?php include_partial("global/header") ?>
 

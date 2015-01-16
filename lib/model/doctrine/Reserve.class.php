@@ -12,6 +12,141 @@
  */
 class Reserve extends BaseReserve {
     
+    public function getFechaInicio2() {
+
+        return date("Y-m-d H:i:s", strtotime($this->getDate()));
+    }
+
+    public function getFechaTermino2() {
+        
+        return date("Y-m-d H:i:s", strtotime("+".$this->getDuration()." hour", strtotime($this->getDate())));
+    }
+
+    public function getChangeOptions($withOriginalReserve = true) {
+
+        $ChangeOptions = array();
+
+        $q = Doctrine_Core::getTable("Reserve")
+            ->createQuery('R')
+            ->innerJoin('R.Transaction T')
+            ->where('R.user_id = ?', $this->getUser()->id)
+            ->andWhere('DATE_FORMAT(R.date, "%Y-%m-%d %H:%i") = ?', date("Y-m-d H:i", strtotime($this->date)))
+            ->orderBy('T.completed DESC')
+            ->addOrderBy('R.fecha_reserva ASC');
+
+        $Reserves = $q->execute();
+
+        foreach ($Reserves as $Reserve) {
+
+            if ($Reserve->getReservaOriginal() == 0) {
+                if ($withOriginalReserve) {
+                    $ChangeOptions[] = $Reserve;
+                }
+            } elseif (!$Reserve->getCar()->hasReserve($this->getFechaInicio2(), $this->getFechaTermino2(), $this->getUserId())) {
+                $ChangeOptions[] = $Reserve;
+            }
+        }
+
+        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
+        if ($Holiday || date("N") == 6 || date("N") == 7) {
+
+            /*$q = Doctrine_Core::getTable("Car")
+                ->createQuery('C')
+                ->innerJoin('C.CarAvailability CA')
+                ->where('CA.day = ?', array($this->id, $this->id))
+                ->orderBy('T.selected DESC')
+                ->addOrderBy('R.fecha_reserva ASC');*/
+        }
+
+        return $ChangeOptions;
+    }
+
+    public function getRentalPrice() {
+
+        $Car = $this->getCar();
+
+        return Car::getPrice(
+                $this->getFechaInicio2,
+                $this->getFechaTermino2,
+                $Car->getPricePerHour(),
+                $Car->getPricePerDay(),
+                $Car->getPricePerWeek(),
+                $Car->getPricePerMonth()
+            );
+    }
+
+    public function getSelectedCar() {
+
+        $q = Doctrine_Core::getTable("Reserve")
+            ->createQuery('R')
+            ->innerJoin('R.Transaction T')
+            ->where('R.user_id = ?', $this->getUser()->id)
+            ->andWhere('DATE(R.date) = ?', date("Y-m-d", strtotime($this->date)))
+            ->andWhere('T.completed = 1');
+
+        return $q->fetchOne()->getCar();
+    }
+
+    public function getSignature() {
+
+        return md5("Arriendas ~ ".$this->getDate());
+    }
+
+    // Métodos estáticos
+
+    public static function calcularMontoLiberacionGarantia($price, $from, $to) {
+
+        $duration = floor((strtotime($to) - strtotime($from))/3600);
+        $days     = floor($duration/24);
+        $hours    = $duration%24;
+        
+        if ($hours >= 6) {
+            if ($days) {
+                $total = ($days * $price) + $price;
+            } else {
+                $total = $price;
+            }            
+        } else {
+            if ($days) {
+                $total = ($days * $price) + (($hours/6) * $price);
+            } else {
+                $total = ($hours/6) * $price;
+            }
+        }
+
+        return round($total);
+    }
+
+    public static function getPaidReserves($userId) {
+        
+        $q = Doctrine_Core::getTable("Reserve")
+            ->createQuery('R')
+            ->innerJoin('R.Transaction T')
+            ->innerJoin('R.Car C')
+            ->where('C.user_id = ?', $userId)
+            /*->andWhere('R.confirmed = 0')*/
+            ->andWhere('R.canceled = 0')
+            ->andWhere("T.completed = 1")
+            ->andWhere('NOW() < DATE_ADD(R.date, INTERVAL R.duration+4 HOUR)')
+            ->addOrderBy("R.fecha_reserva ASC");
+
+        return $q->execute();
+    }
+
+    public static function getReservesByUser($userId) {
+
+        $q = Doctrine_Core::getTable("Reserve")
+            ->createQuery('R')
+            ->innerJoin('R.Transaction T')
+            ->where('R.user_id = ?', $userId)
+            ->andWhere("T.completed = 1")
+            ->andWhere('NOW() < DATE_ADD(R.date, INTERVAL R.duration+4 HOUR)');
+
+        return $q->execute();
+    }
+
+    //////////////////////////////////////////////////////////////////
+    
     public function calcularIVA() {
         //Variable que define el IVA actual
         //TODO: modificar la obtenci�n de la variable IVA
@@ -550,100 +685,5 @@ class Reserve extends BaseReserve {
         }
     }
 
-    public function getSignature() {
-        return md5("Arriendas ~ ".$this->getDate());
-    }
-
-    public function getInicio() {
-
-        return date("Y-m-d H:i:s", strtotime($this->getDate()));
-    }
-
-    public function getTermino() {
-        
-        return date("Y-m-d H:i:s", strtotime("+".$this->getDuration()." hour", strtotime($this->getDate())));
-    }
-
-    public function getRentalPrice() {
-
-        $Car = $this->getCar();
-
-        $days = floor($this->duration / 24);
-        $hours = $this->duration % 24;
-
-        if ($hours >= 0.25) {
-            $days = $days + 1;
-            $hours = 0;
-        } else {
-            $hours = round($hours * 24, 0);
-        }
-
-        $pricePerDay = $Car->getPricePerDay();
-
-        if ($days >= 7 && $Car->getPricePerWeek() > 0) {
-            $pricePerDay = $Car->getPricePerWeek() / 7;
-        }
-
-        if ($days >= 30 && $Car->getPricePerMonth() > 0) {
-            $pricePerDay = $Car->getPricePerMonth() / 30;
-        }
-        
-        return floor($pricePerDay * $days + $Car->getPricePerHour() * $hours);
-    }
-
-
-    public static function calcularMontoLiberacionGarantia($price, $from, $to) {
-
-        $duration = floor((strtotime($to) - strtotime($from))/3600);
-        $days     = floor($duration/24);
-        $hours    = $duration%24;
-        
-        if ($hours >= 6) {
-            if ($days) {
-                $total = ($days * $price) + $price;
-            } else {
-                $total = $price;
-            }            
-        } else {
-            if ($days) {
-                $total = ($days * $price) + (($hours/6) * $price);
-            } else {
-                $total = ($hours/6) * $price;
-            }
-        }
-
-        return round($total);
-    }
-
-    public static function getReserves($userId) {
-
-        $q = Doctrine_Core::getTable("Reserve")
-            ->createQuery('R')
-            ->innerJoin('R.Transaction T')
-            ->where('R.user_id = ?', $userId)
-            ->andWhere("T.completed = 1");
-
-        return $q->execute();
-    }
-
-    public function getOpportunities() {
-
-        $Opportunities = array();
-
-        $q = Doctrine_Core::getTable("Reserve")
-            ->createQuery('R')
-            ->where('R.reserva_original = ?', $this->id)
-            ->orderBy('R.fecha_reserva ASC');
-
-        $Reserves = $q->execute();
-
-        foreach ($Reserves as $Reserve) {
-
-            if (!$Reserve->getCar()->hasReserve($this->date, date("Y-m-d H:i:s", strtotime("+".$this->duration." hour", strtotime($this->date))))) {
-                $Opportunities[] = $Reserve;
-            }
-        }
-
-        return $Opportunities;
-    }
+    
 }

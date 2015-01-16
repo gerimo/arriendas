@@ -249,6 +249,7 @@ class bcpuntopagosActions extends sfActions {
      * @param sfRequest $request A request object
      */
     public function executeExito(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
 
         $customer_in_session = $this->getUser()->getAttribute('userid');
 
@@ -483,6 +484,7 @@ class bcpuntopagosActions extends sfActions {
      * @param sfRequest $request A request object
      */
     public function executeShowExito(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
         $customer_in_session = $this->getUser()->getAttribute('userid');
 
         if ($customer_in_session) {
