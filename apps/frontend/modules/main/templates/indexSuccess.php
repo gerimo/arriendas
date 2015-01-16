@@ -966,7 +966,6 @@
         ],
         format:'d-m-Y H:i',
         minDate : "<?php echo date('d-m-Y') ?>",
-        minTime : "<?php echo date('H:i') ?>",
         dayOfWeekStart: 1,
         lang:'es'
     });
