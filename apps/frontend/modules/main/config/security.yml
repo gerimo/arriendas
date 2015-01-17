@@ -1,4 +1,4 @@
-all:
+homepage:
     is_secure: false
 
 login:
