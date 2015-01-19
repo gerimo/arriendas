@@ -862,6 +862,8 @@
             $('div[data-target="#tab-list"]').click();
         <?php endif?>
 
+        // Se muestra lista por defecto mientras el mapa no cargue bien los markers
+        $('div[data-target="#tab-list"]').click();
     });
 
 if ($(window).width() > 768) {
