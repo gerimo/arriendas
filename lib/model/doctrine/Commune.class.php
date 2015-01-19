@@ -23,6 +23,6 @@ class Commune extends BaseCommune {
             $q->where('R.id = ?', $regionId);
         }
 
-        return $q->execute();
+        return $q->execute()->toArray();
     }
 }

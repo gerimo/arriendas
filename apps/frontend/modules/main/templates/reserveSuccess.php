@@ -1,3 +1,4 @@
+
 <link href="/css/newDesign/reserve.css" rel="stylesheet" type="text/css">
 
 <div class="space-30 hidden-xs"></div>
@@ -20,61 +21,33 @@
 <?php endif ?>
 
 <div class="container">
+    <div class="hidden-xs col-sm-12 col-md-12"><h1 class="hidden-xs text-capitalize"><?php echo $Car->getModel()->getBrand()->getName()." "
+        .$Car->getModel()->getName()." <span>".$Car->getCommune().","."</span>"." "
+        ."<span>".$Car->getYear()."</span>" ?></h1></div>
 
-    <div class="col-xs-offset-0 col-xs-12 col-sn-12 col-md-offset-0 col-md-5 carousal-area">
-        <h1 class="hidden-xs text-capitalize">
-            <?php echo $Car->getModel()->getBrand()->name." ".$Car->getModel()->name ?>, <small><?php echo $Car->year ?></small><br>
-            <span><?php echo $Car->getCommune()->name ?></span>
-        </h1>
+    <div class="col-xs-offset-0 col-xs-12 col-sm-12 col-md-offset-0 col-md-5 carousal-area">
+        
         <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner" role="listbox">
-                <div class="item active">
+                
                     <?php
                     $base_url = $sf_request->getUriPrefix().$sf_request->getRelativeUrlRoot();
-                    if ($arrayFotos) {
-                        if ($opcionFotosEnS3 == 1) {
-                            ?>
-                            <div id="gallery">
-                                <ul>
-                                    <?php
-                                    $cantidadFotos = count($arrayFotos);
-                                    for ($i = 0; $i < $cantidadFotos; $i++) {
-                                        ?>
-                                        <li>
-                                            <a title="<?= $arrayDescripcionFotos[$i]; ?>" href="http://www.arriendas.cl/main/s3thumb?alto=600&ancho=600&urlFoto=<?= $arrayFotos[$i]; ?>">
-                                                <img title="<?= $arrayDescripcionFotos[$i]; ?>" src="http://www.arriendas.cl/main/s3thumb?alto=40&ancho=40&urlFoto=<?= $arrayFotos[$i]; ?>" width="40" height="40" alt="<?=$image_alt?>">
-                                            </a>
-                                        </li>
-                                        <?php
-                                    }
-                                    ?>
-                                </ul>
-                            </div>
-                            <?php
-                        } else {
-                            ?>
-
-                            <div id="gallery">
-                                <ul>
-                                    <?php
-                                    $cantidadFotos = count($arrayFotos);
-                                    for ($i = 0; $i < $cantidadFotos; $i++) {
-                                        ?>
-                                        <li>
-                                            <a title="<?= $arrayDescripcionFotos[$i]; ?>" href="<?= image_path('../uploads/verificaciones/' . $arrayFotos[$i]); ?>">
-                                                <img title="<?= $arrayDescripcionFotos[$i]; ?>" src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_40,h_40,c_fill,g_center/<?= $base_url ?>/uploads/verificaciones/thumbs/<?= $arrayFotos[$i]?>" width="40" height="40" alt="<?=$image_alt?>" >
-                                            </a>
-                                        </li>
-                                        <?php
-                                    }
-                                    ?>
-                                </ul>
-                            </div>
-                            <?php
+                    if ($arrayFotos != null) {  
+                        $cantidadFotos = count($arrayFotos);
+                                                ?>
+                        <div class="item active">   
+                           <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/c_fill,g_center/<?= $base_url ?>/uploads/verificaciones/<?= $arrayFotos[0]?>" >
+                        </div>
+                       <?php
+                        for ($i = 1; $i < $cantidadFotos; $i++) {
+                        ?>
+                        <div class="item ">
+                            <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/c_fill,g_center/<?= $base_url ?>/uploads/verificaciones/<?= $arrayFotos[$i]?>" >
+                        </div>
+                        <?php
                         }
                     }
                     ?>
-                </div>
             </div>
             <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev"></a>
             <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next"></a>
@@ -91,7 +64,6 @@
             <span class="km-area"><em>A <a href="#">1.5 km</a></em> del Metro</span>
         </div>
         -->
-        <div class="space-50 hidden-xs"></div>
 
         <ul id="features">
             <h2>Características:</h2>

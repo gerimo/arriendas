@@ -274,9 +274,9 @@
             errorList += "<li>Seleccionar una región</li>";
         }
 
-        if (!commune || commune == 0) {
+        /*if (!commune || commune == 0) {
             errorList += "<li>Seleccionar una comuna</li>";
-        }
+        }*/
 
         if ($("#tab-list").is(":visible") && errorList != "<p style='padding: 5% 5% 0 5%'>Para buscar, debes:<ul>") {
             error = true;
