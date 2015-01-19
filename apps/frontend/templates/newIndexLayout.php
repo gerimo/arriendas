@@ -76,7 +76,7 @@
 
         <?php include_partial("global/footer") ?>
 
-        <?php if ($_SERVER ['HTTP_HOST'] == "www.arriendas.cl"): ?>
+        <?php if ($_SERVER['HTTP_HOST'] == "www.arriendas.cl"): ?>
             
             <!-- Google Analytics -->
             <script type="text/javascript">

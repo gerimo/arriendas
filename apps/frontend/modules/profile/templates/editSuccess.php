@@ -8,7 +8,7 @@
 
         <div class="row BCW">
 
-            <h1>Perfil</h1>
+            <h1>Mi perfil</h1>
 
             <div class="col-md-5 text-center">
 
@@ -20,9 +20,9 @@
                             <?php echo image_tag('img_registro/tmp_user_foto.png', 'size=194x204') ?>  
                         <?php else: ?>
                             <?php if($user->getFacebookId() != null):?>
-                                <img src="http://res.cloudinary.com/arriendas-cl/image/facebook/w_194,h_204,c_fill,g_face/<?php echo $user->getFacebookId();?>.jpg"/>
+                                <img src="http://res.cloudinary.com/arriendas-cl/image/facebook/w_194,h_204,c_fill,g_face/<?php echo $user->getFacebookId();?>.jpg">
                             <?php else: ?>
-                                <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_194,h_204,c_fill,g_face/http://arriendas.cl/<?php echo "images/users/".$user->getFileName() ?>" />
+                                <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_194,h_204,c_fill,g_face/http://arriendas.cl/images/users/<?php echo $user->getFileName() ?>">
                             <?php endif ?>
                         <?php endif ?>
                     </div> 
@@ -32,6 +32,7 @@
 
                 <div class="hidden-xs space-70"></div>
                 <div class="visible-xs space-30"></div>
+
                 <div class="regis_foto_frame">
                     <div id="previewlicence">
                         <?php if ($user->getDriverLicenseFile() == null): ?>
@@ -156,11 +157,15 @@
 
         $(formfile).change(function(e) {
 
-            $(preview).html('');
             $(preview).html('<?php echo image_tag('loader.gif') ?>');
 
             $(form).ajaxForm({
-                target: preview
+                dataType: "json",
+                target: preview,
+                success: function(r){
+                    console.log("success");
+                    console.log(r);
+                }
             }).submit();
         });
         
