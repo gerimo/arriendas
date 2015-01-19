@@ -58,8 +58,12 @@ class carsActions extends sfActions {
              error_log($userId_session);*/
 
             $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
-            error_log($idUsuario);
 
+            $regex = '/^[a-z]{2}[\.\ ]?[0-9]{2}[\.\ ]?[0-9]{2}|[b-d,f-h,j-l,p,r-t,v-z]{2}[\-\. ]?[b-d,f-h,j-l,p,r-t,v-z]{2}[\.\- ]?[0-9]{2}$/i';
+
+            if (!preg_match($regex, $patent)) {
+                throw new Exception("Debes ingresar una patente valida", 10);
+            }
 
             if (is_null($address) || $address == "") {
                 throw new Exception("Debes indicar una dirección", 1);

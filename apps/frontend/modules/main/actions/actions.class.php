@@ -322,15 +322,13 @@ class mainActions extends sfActions {
                 $q->andWhere("mo.id_otro_tipo_vehiculo = 3");
             }
 
-            if($comuna != 0){
-                if ($comuna) {
-                    $q->andWhere("co.code = ?", $comuna);
-                } else {
-                    $q->andWhere('ca.lat < ?', $neLat);
-                    $q->andWhere('ca.lat > ?', $swLat);
-                    $q->andWhere('ca.lng > ?', $swLng);
-                    $q->andWhere('ca.lng < ?', $neLng);
-                }
+            if ($comuna) {
+                $q->andWhere("co.code = ?", $comuna);
+            } else {
+                $q->andWhere('ca.lat < ?', $neLat);
+                $q->andWhere('ca.lat > ?', $swLat);
+                $q->andWhere('ca.lng > ?', $swLng);
+                $q->andWhere('ca.lng < ?', $neLng);
             }
 
             $cars = $q->execute();
@@ -767,17 +765,19 @@ class mainActions extends sfActions {
                 $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
 
                 list($txt, $ext) = explode(".", $name);
+
+                $ext = strtolower($ext);
                 
                 if (strlen($name) == 0) {
-                    throw new Exception("Por favor, selecciona una imagen.", 1);   
+                    throw new Exception("Por favor, selecciona una imagen", 2);   
                 }
                     
                 if (!in_array($ext, $valid_formats)) {
-                    throw new Exception("Formato de la imagen no permitido.", 1);
+                    throw new Exception("Formato de la imagen no permitido", 2);
                 }
 
                 if ($size >= (5 * 1024 * 1024)) { // Image size max 1 MB
-                    throw new Exception("La imagen excede el máximo de 1 MB permitido.", 1);
+                    throw new Exception("La imagen excede el máximo permitido (1 MB)", 2);
                 }
                     
                 $userId = $this->getUser()->getAttribute("userid");
@@ -800,10 +800,11 @@ class mainActions extends sfActions {
             }
     
         } catch (Exception $e) {
-
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
-            /*Utils::reportError($e->getMessage(), "profile/executeGetCars");*/
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
+                Utils::reportError($e->getMessage(), "main/uploadPhoto");
+            }
         }
 
         $this->renderText(json_encode($return));
@@ -2849,67 +2850,79 @@ class mainActions extends sfActions {
 
     public function executeUploadPhoto(sfWebRequest $request) {
 
+        $return = array("error" => false);
         $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
 
-        if (isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST") {
+        try {
+
+            if (!isset($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
+                throw new Exception("No! No! No!", 1);
+            }
 
             $name = $_FILES[$request->getParameter('file')]['name'];
             $size = $_FILES[$request->getParameter('file')]['size'];
 			$tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
 
-            if (strlen($name)) {
+            if (!strlen($name)) {
+                throw new Exception("Por favor, seleccione una imagen", 2);
+            }
 
-                list($txt, $ext) = explode(".", $name);
+            list($txt, $ext) = explode(".", $name);
 
-                if (in_array($ext, $valid_formats) || 1==1) {
+            $ext = strtolower($ext);
 
-                    if ($size < (5 * 1024 * 1024)) { // Image size max 1 MB
-                    
-                        $sizewh = getimagesize($tmp);
-						if($sizewh[0] > 194 || $sizewh[1] > 204)
-							//echo '<script>alert(\'La imagen no cumple con las dimensiones especificadas. Puede continuar si lo desea\')</script>';
-                    
-                        $userId = $this->getUser()->getAttribute("userid");
-                        $actual_image_name = time() . $userId . "." . $ext;
+            if (!in_array($ext, $valid_formats)) {
+                throw new Exception("Formato de la imagen inválido", 2);
+            }
 
-                        $uploadDir = sfConfig::get("sf_web_dir");
-                        $path      = $uploadDir . '/images/users/';
-                        $fileName  = $actual_image_name . "." . $ext;
+            if ($size > (5 * 1024 * 1024)) {
+                throw new Exception("La imagen excede el tamaño máximo permitido (1 MB)", 2);                
+            }
+            
+            /*$sizewh = getimagesize($tmp);
 
-                        $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
+			if($sizewh[0] > 194 || $sizewh[1] > 204) {
+				echo '<script>alert(\'La imagen no cumple con las dimensiones especificadas. Puede continuar si lo desea\')</script>';
+            }*/
+        
+            $userId = $this->getUser()->getAttribute("userid");
+            $actual_image_name = time() . $userId . "." . $ext;
 
-                        $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
+            $uploadDir = sfConfig::get("sf_web_dir");
+            $path      = $uploadDir . '/images/users/';
+            $fileName  = $actual_image_name . "." . $ext;
 
-                        if ($uploaded) {
+            $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
 
-                            sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
+            $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
 
-                            echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
-                            echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";
+            if (!$uploaded) {
+                throw new Exception("No se pudo subir la imagen de perfil", 1);
+            }
 
-                            $User = Doctrine_Core::getTable('User')->find($userId);
-                            $User->setPictureFile("/images/users/".$actual_image_name);
-                            $User->save();
-                            
-                        } else {
-                            error_log("[".date('Y-m-d H:i:s')."] main/uploadPhoto - Error al subir la imagen.");
-                            echo "failed";
-                        }
-                    } else {
-                        echo "Image file size max 1 MB";
-                    }
-                } else {
-                    echo "Invalid file format..";
-                }
-            } else {
-                echo "Please select image..!";
+            sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
+
+            /*echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
+            echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";*/
+
+            $User = Doctrine_Core::getTable('User')->find($userId);
+            $User->setPictureFile("/images/users/".$actual_image_name);
+            $User->save();
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+            if ($e->getCode() == 1) {
+                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
+            }
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
+                Utils::reportError($e->getMessage(), "main/uploadPhoto");
             }
         }
 
-        exit;
-    }
+        $this->renderText(json_encode($return));
 
-    
+        return sfView::NONE;
+    }    
 
     public function executeUploadRut(sfWebRequest $request) {
 
@@ -2982,7 +2995,6 @@ class mainActions extends sfActions {
 
         // Se redondean los valores costo diarios de los vehículos.
         $valorHora = round(($valorHora * 0.95), -3);
-        error_log($valorHora);
         //var_dump($valorHora);
         //die($valorHora);
         
@@ -3230,7 +3242,6 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
 
                 if ($newUser) {
 		            //$this->getRequest()->setParameter('userId', $userdb->getId());
-                    error_log("Redirecciona a completeRegister");
 					$this->redirect("main/completeRegister");
 				}else{
 					if ($this->getUser()->getAttribute("lastview") != null) {

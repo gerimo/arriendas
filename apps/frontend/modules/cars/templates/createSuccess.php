@@ -179,7 +179,6 @@
 <script>
 
 
-
     $("#brand").change(function(){
 
         var brandId = $("#brand option:selected").val();
@@ -277,7 +276,9 @@
                     $('#typeCar').focus();
                 }else if(r.errorCode == 10){
                     $("#patent").addClass("alert-danger");
+                    $('#patent').val('');
                     $('#patent').focus(); 
+
                 }else if(r.errorCode == 11){
                     $("#color").addClass("alert-danger"); 
                     $('#color').focus();
@@ -293,6 +294,9 @@
 
   function validatePatent(){
 
+
+        var x = $("#patent").val();
+        $("#patent").val(x.toUpperCase());
         var patente = $("#patent").val();
 
         $.post("<?php echo url_for('cars/getValidatePatent') ?>", {"patente": patente}, function(r){
