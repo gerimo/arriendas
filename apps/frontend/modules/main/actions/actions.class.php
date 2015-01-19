@@ -784,16 +784,16 @@ class mainActions extends sfActions {
                 
                 $newImageName = time() . "-" . $userId . "." . $ext;
 
-                $path = sfConfig::get("sf_web_dir") . '/images/license/';
+                $path = sfConfig::get("sf_web_dir") . '/images/licence/';
 
                 $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
 
                 if (!move_uploaded_file($tmp, $path . $newImageName)) {
-                    throw new Exception("Problemas al subir la imagen.", 1);
+                    throw new Exception("Problemas al grabar la imagen en disco", 1);
                 }
 
                 $User = Doctrine_Core::getTable('User')->find($userId);
-                $User->setDriverLicenseFile("/images/license/".$newImageName);
+                $User->setDriverLicenseFile("/images/licence/".$newImageName);
                 $User->save();
             } else {
                 throw new Exception("No, no, no.", 1);
