@@ -291,6 +291,8 @@ class profileActions extends sfActions {
                 ->select('r.*')
                 ->from('Regiones r');
         $this->regiones = $q->fetchArray();
+
+        error_log("edit");
     }
 
     public function executePay (sfWebRequest $request) {
