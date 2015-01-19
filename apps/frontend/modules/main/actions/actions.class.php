@@ -323,7 +323,7 @@ class mainActions extends sfActions {
             }
 
             if ($comuna) {
-                $q->andWhere("co.code = ?", $comuna);
+                $q->andWhere("co.id = ?", $comuna);
             } else {
                 $q->andWhere('ca.lat < ?', $neLat);
                 $q->andWhere('ca.lat > ?', $swLat);

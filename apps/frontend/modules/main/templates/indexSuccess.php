@@ -197,7 +197,7 @@
 
     function searchCars() {
 
-        if ($("#from").val() > $("#to").val()) {
+        if ($("#from").val() > $("#to").val() || $("#from").val() == $("#to").val()) {
 
             $("#dialog-alert p").html('Fecha "Hasta" debe ser posterior a la fecha "Desde"');
             $("#dialog-alert").attr('title','Fecha "Hasta" mal ingresada');
@@ -274,9 +274,9 @@
             errorList += "<li>Seleccionar una región</li>";
         }
 
-        /*if (!commune || commune == 0) {
+        if (!commune || commune == 0) {
             errorList += "<li>Seleccionar una comuna</li>";
-        }*/
+        }
 
         if ($("#tab-list").is(":visible") && errorList != "<p style='padding: 5% 5% 0 5%'>Para buscar, debes:<ul>") {
             error = true;
@@ -761,15 +761,15 @@
 
     <div class="hidden-xs col-sm-offset-2 col-sm-8 col-md-offset-2 col-md-8">
         <div id="section-on-news-carousel">
-            <div class = "normal"><a href="http://www.t13.cl/videos/actualidad/arrienda-tu-auto-es-la-nueva-tendencia-entre-los-chilenos"><img src="/images/newDesign/logos_canais/13.png" alt="Canal 13"></a></div>
-            <div><a href="http://www.cnnchile.com/noticia/2014/01/10/arriendas-el-emprendimiento-que-permite-arrendar-tu-propio-auto"><img src="/images/newDesign/logos_canais/LogoCNN.png" alt="CNN Chile"></a></div>
-            <div class = "normal"><a href="http://www.24horas.cl/nacional/rent-a-car-vecino-la-nueva-forma-de-viajar-906946"><img src="/images/newDesign/logos_canais/logotvn2.png" alt="TVN"></a></div>
-            <div><a href="http://www.emol.com/noticias/economia/2012/07/27/552815/emprendedor-estrenara-primer-sistema-de-arriendo-de-vehiculos-por-hora-de-chile.html"><img src="/images/newDesign/logos_canais/LogoEmol.png" alt="EMOL"></a></div>
-            <div><a href="http://www.lun.com/lunmobile//pages/NewsDetailMobile.aspx?IsNPHR=1&dt=2012-10-23&NewsID=0&BodyId=0&PaginaID=6&Name=6&PagNum=0&SupplementId=0&Anchor=20121023_6_0_0"><img src="/images/newDesign/logos_canais/LogoLUN.png" alt="Las Últimas Noticias"></a></div>
-            <div><a href="http://www.tacometro.cl/prontus_tacometro/site/artic/20121030/pags/20121030152946.html"><img src="/images/newDesign/logos_canais/LogoPublimetro.png" alt="Publimetro"></a></div>
-            <div><a href="http://www.lasegunda.com/Noticias/CienciaTecnologia/2012/08/774751/arriendascl-sistema-de-alquiler-de-autos-por-horas-debuta-en-septiembre"><img src="/images/newDesign/logos_canais/LogoLaSegunda.png" alt="La Segunda"></a></div>
-            <div><a href="http://www.lacuarta.com/noticias/cronica/2013/08/63-157571-9-ahora-puedes-arrendar-el-automovil-de-tu-vecino.shtml"><img src="/images/newDesign/logos_canais/LogoLaCuarta.png" alt="La Cuarta"></a></div>
-            <div><a href="http://www.diariopyme.cl/arrienda-tu-auto-y-gana-dinero-extra-a-fin-de-mes/prontus_diariopyme/2013-06-23/212000.html"><img src="/images/newDesign/logos_canais/LogoDiarioPyme.png" alt="Diario PYME"></a></div>
+            <div class = "normal"><a href="http://www.t13.cl/videos/actualidad/arrienda-tu-auto-es-la-nueva-tendencia-entre-los-chilenos" target="_blank"><img src="/images/newDesign/logos_canais/13.png" alt="Canal 13"></a></div>
+            <div><a href="http://www.cnnchile.com/noticia/2014/01/10/arriendas-el-emprendimiento-que-permite-arrendar-tu-propio-auto" target="_blank"><img src="/images/newDesign/logos_canais/LogoCNN.png" alt="CNN Chile"></a></div>
+            <div class = "normal"><a href="http://www.24horas.cl/nacional/rent-a-car-vecino-la-nueva-forma-de-viajar-906946" target="_blank"><img src="/images/newDesign/logos_canais/logotvn2.png" alt="TVN"></a></div>
+            <div><a href="http://www.emol.com/noticias/economia/2012/07/27/552815/emprendedor-estrenara-primer-sistema-de-arriendo-de-vehiculos-por-hora-de-chile.html" target="_blank"><img src="/images/newDesign/logos_canais/LogoEmol.png" alt="EMOL"></a></div>
+            <div><a href="http://www.lun.com/lunmobile//pages/NewsDetailMobile.aspx?IsNPHR=1&dt=2012-10-23&NewsID=0&BodyId=0&PaginaID=6&Name=6&PagNum=0&SupplementId=0&Anchor=20121023_6_0_0" target="_blank"><img src="/images/newDesign/logos_canais/LogoLUN.png" alt="Las Últimas Noticias"></a></div>
+            <div><a href="http://www.tacometro.cl/prontus_tacometro/site/artic/20121030/pags/20121030152946.html" target="_blank"><img src="/images/newDesign/logos_canais/LogoPublimetro.png" alt="Publimetro" ></a></div>
+            <div><a href="http://www.lasegunda.com/Noticias/CienciaTecnologia/2012/08/774751/arriendascl-sistema-de-alquiler-de-autos-por-horas-debuta-en-septiembre" target="_blank"><img src="/images/newDesign/logos_canais/LogoLaSegunda.png" alt="La Segunda"></a></div>
+            <div><a href="http://www.lacuarta.com/noticias/cronica/2013/08/63-157571-9-ahora-puedes-arrendar-el-automovil-de-tu-vecino.shtml" target="_blank"><img src="/images/newDesign/logos_canais/LogoLaCuarta.png" alt="La Cuarta"></a></div>
+            <div><a href="http://www.diariopyme.cl/arrienda-tu-auto-y-gana-dinero-extra-a-fin-de-mes/prontus_diariopyme/2013-06-23/212000.html" target="_blank"><img src="/images/newDesign/logos_canais/LogoDiarioPyme.png" alt="Diario PYME"></a></div>
         </div>
     </div>
 </div>
