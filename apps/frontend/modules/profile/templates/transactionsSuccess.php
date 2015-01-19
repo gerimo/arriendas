@@ -8,71 +8,79 @@
 
         <div class="BCW">
 
-			<?php if(!$transaccionesRenter): ?>
-				<h2>No tiene transacciones registradas como Arrendatario</h2>
-			<?php else: ?>	
-				<h2>Transacciones como Arrendatario</h2>
-				<div class="table-responsive">
-					<table class="table table-bordered">
-						<tr>
-							<td class='titulo'>FECHA</td>
-							<td class='titulo'>MONTO</td>
-							<td class='titulo'>COMISI&Oacute;N ARRIENDAS</td>
-							<td class='titulo'>PRECIO SEGURO</td>
-							<td class='titulo'>NETO</td>
-							<td class='titulo'>DEP&Oacute;SITO EN GARANT&Iacute;A</td>
-						</tr>
+            <?php if (count($TransactionsRenter) > 0): ?>
+                <h1>Transacciones como Arrendatario</h1>
+                
+                <table class="display responsive no-wrap" id="transactions-renter" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Monto</th>
+                            <th>Comisión Arriendas.cl</th>
+                            <th>Precio seguro</th>
+                            <th>Neto</th>
+                            <th>Depósito en garantía</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($TransactionsRenter as $T): ?>
+                            <tr>
+                                <td><small><?php echo date("Y-m-d H:i", strtotime($T['fechaInicio'])) ?><br><?php echo date("Y-m-d H:i", strtotime($T['fechaTermino'])) ?></small></td>
+                                <td>$<?php echo $T['monto'] ?> CLP</td>
+                                <td>$<?php echo $T['comisionArriendas'] ?> CLP</td>
+                                <td>$<?php echo $T['precioSeguro'] ?> CLP</td>
+                                <td>$<?php echo $T['neto'] ?> CLP</td>
+                                <td>$<?php echo $T['depositoGarantia'] ?> CLP</td>
+                            </tr>
+                        <?php endforeach ?>
+                    </tbody>
+                </table>
+            <?php endif ?>
 
-						<?php foreach ($transaccionesRenter as $transaccion) {
+            <?php if (count($TransactionsOwner) > 0): ?>
+                <h1>Transacciones como dueño</h1>
 
-							echo "<tr>";
-							echo "<td>".$transaccion['fechaInicio']."-".$transaccion['horaInicio']."<br>".$transaccion['fechaTermino']."-".$transaccion['horaTermino']."</td>";
-							echo "<td>$".$transaccion['monto']." CLP</td>";
-							echo "<td>$".$transaccion['comisionArriendas']." CLP</td>";
-							echo "<td>$".$transaccion['precioSeguro']." CLP</td>";
-							echo "<td><span class='destacado'>$".$transaccion['neto']." CLP</span><br><span class='textoChico'>Fecha de dep&oacute;sito ".$transaccion['fechaDeposito']."</span></td>";
-							echo "<td>$".$transaccion['depositoGarantia']." CLP</td>";
-							echo "</tr>";
-
-						}?>
-					</table>	
-				</div>
-			<?php endif ?>
-
-			<?php if(!$transaccionesOwner): ?>
-				<h2>No tiene transacciones registradas como Dueño</h2>
-			<?php else: ?>
-				<h2>Transacciones como dueño</h2>
-
-				<div class="table-responsive">
-					<table class="table table-bordered">
-						<tr>
-							<td class='titulo'>FECHA</td>
-							<td class='titulo'>MONTO</td>
-							<td class='titulo'>COMISI&Oacute;N ARRIENDAS</td>
-							<td class='titulo'>PRECIO SEGURO</td>
-							<td class='titulo'>NETO</td>
-							<td class='titulo'>DEP&Oacute;SITO EN GARANT&Iacute;A</td>
-						</tr>
-
-						<?php foreach ($transaccionesOwner as $transacciones) {
-
-							echo "<tr>";
-								echo "<td>".$transacciones['fechaInicio']."-".$transacciones['horaInicio']."<br>".$transacciones['fechaTermino']."-".$transacciones['horaTermino']."</td>";
-								echo "<td>$".$transacciones['monto']." CLP</td>";
-								echo "<td>$".$transacciones['comisionArriendas']." CLP</td>";
-								echo "<td>$".$transacciones['precioSeguro']." CLP</td>";
-								echo "<td><span class='destacado'>$".$transacciones['neto']." CLP</span><br><span class='textoChico'>Fecha de dep&oacute;sito ".$transacciones['fechaDeposito']."</span></td>";
-								echo "<td>$".$transaccion['depositoGarantia']." CLP</td>";
-							echo "</tr>";
-						} ?>
-					</table>
-				</div>
-
-			<?php endif ?>
-
-		</div>
+                <table class="dt display responsive no-wrap" id="transactions-owner" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Monto</th>
+                            <th>Comisión Arriendas.cl</th>
+                            <th>Precio seguro</th>
+                            <th>Neto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($TransactionsOwner as $T): ?>
+                            <tr>
+                                <td><small><?php echo date("Y-m-d H:i", strtotime($T['fechaInicio'])) ?><br><?php echo date("Y-m-d H:i", strtotime($T['fechaTermino'])) ?></small></td>
+                                <td>$<?php echo $T['monto'] ?> CLP</td>
+                                <td>$<?php echo $T['comisionArriendas'] ?> CLP</td>
+                                <td>$<?php echo $T['precioSeguro'] ?> CLP</td>
+                                <td>$<?php echo $T['neto'] ?> CLP</td>
+                            </tr>
+                        <?php endforeach ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <?php if (count($TransactionsRenter) == 0): ?>
+                    <h2 class="text-center">No tienes transacciones registradas</h2>
+                <?php endif ?>
+            <?php endif ?>
+        </div>
     </div>
 </div>
 
 <div class="hidden-xs space-100"></div>
+
+<script>
+    $(document).ready(function(){
+    
+        $('#transactions-renter, #transactions-owner').DataTable({
+            info: false,
+            paging: false,
+            responsive: true,
+            searching: false
+        });    
+    });
+</script>

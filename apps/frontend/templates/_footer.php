@@ -1,3 +1,13 @@
+<?php
+    if (strtotime(date("H:i")) > strtotime("19:00") || strtotime(date("H:i")) < strtotime("09:00")) {
+        $telefono = "tel:0223333714";
+        $telefonoText = "(02) 2333 3714"; 
+    } else {
+        $telefono = "tel:0226402900";
+        $telefonoText = "(02) 2640 2900";
+    }
+?>
+
 <footer id="footer">
     <div class="row">
 
@@ -44,16 +54,6 @@
             </ul>
         </div>
     </div>
-    
-    <?php if(date("H:i") > "19:00" || date("H:i") < "09:00"):
-            $telefono = "tel:0223333714";
-            $telefonoText = "(02) 2333-3714"; 
-          else:
-            $telefono = "tel:0226402900";
-            $telefonoText = "(02) 2 640 29 00";
-          endif;
-    ?>
-               
     
     <div class="row">
         <div class="hidden-xs col-sm-12 col-md-12 text-center" id="address"> 

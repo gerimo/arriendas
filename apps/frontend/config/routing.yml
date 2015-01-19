@@ -102,9 +102,9 @@ user_register_complete:
     url: /registro/completar
     param: { module: main, action: completeRegister }
 
-transaction:
+transactions:
     url: /mis-transacciones
-    param: { module: profile, action:transactions }
+    param: { module: profile, action: transactions }
 
 # old Design
 
