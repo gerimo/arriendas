@@ -10,7 +10,6 @@
     /*google.maps.event.addDomListener(window, 'load', initialize);*/
 
         var reserveUrl = "<?php echo url_for('reserve', array('c' => 'carId', 'f' => 'from', 't' => 'to'), true) ?>";
-        console.log(reserveUrl);
 
         var usuarioLogeado = "<?php echo $usuarioLog; ?>";
         var geolocalizacion; // coordenadas

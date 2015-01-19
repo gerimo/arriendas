@@ -228,9 +228,7 @@ class mainActions extends sfActions {
         return sfView::NONE;
     }
 
-    public function executeGetCars(sfWebRequest $request) {
-
-        
+    public function executeGetCars(sfWebRequest $request) {        
 
         $return = array(
             "error" => false,
@@ -243,6 +241,7 @@ class mainActions extends sfActions {
         $swLng  = $request->getPostParameter('swLng', null);
         $neLat  = $request->getPostParameter('neLat', null);
         $neLng  = $request->getPostParameter('neLng', null);
+
         $map_center_lat  = $request->getPostParameter('map_center_lat', null);
         $map_center_lng  = $request->getPostParameter('map_center_lng', null);
 
@@ -303,15 +302,13 @@ class mainActions extends sfActions {
                 /*->orderBy('carrank ASC')*/
                 /*->addOrderBy('IF(ca.velocidad_contesta_pedidos = 0, 1440, ca.velocidad_contesta_pedidos)  ASC')*/
                 ->orderBy('ca.price_per_day ASC');
-                $detect = new Mobile_Detect;
-                if($detect->isMobile()){
-                    $q->limit(5);
-                } else {
-                    $q->limit(33);
-                }
-                
-
-                
+            
+            $detect = new Mobile_Detect;
+            if ($detect->isMobile()) {
+                $q->limit(5);
+            } else {
+                $q->limit(33);
+            }                
 
             if ($automatic) {
                 $q->andWhere("ca.transmission = 1");
@@ -418,7 +415,7 @@ class mainActions extends sfActions {
 
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
-            /*Utils::reportError($e->getMessage(), "profile/executeGetCars");*/
+            Utils::reportError($e->getMessage(), "profile/executeGetCars");
         }
 
         $this->renderText(json_encode($return));
