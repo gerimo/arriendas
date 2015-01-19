@@ -94,6 +94,10 @@ terms_and_conditions:
     url: /terminos-y-condiciones
     param: { module: main, action: terminos }
 
+transactions:
+    url: /mis-transacciones
+    param: { module: profile, action: transactions }
+
 user_register:
     url: /registro
     param: { module: main, action: register }
@@ -101,10 +105,6 @@ user_register:
 user_register_complete:
     url: /registro/completar
     param: { module: main, action: completeRegister }
-
-transactions:
-    url: /mis-transacciones
-    param: { module: profile, action: transactions }
 
 # old Design
 
