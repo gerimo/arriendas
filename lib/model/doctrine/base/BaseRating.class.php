@@ -15,6 +15,8 @@
  * @property boolean $km
  * @property string $clean_satisfied
  * @property Doctrine_Collection $Reserve
+ * @property string $opinion_about_owner
+ * @property integer $idRenter
  * 
  * @method integer             getId()                 Returns the current record's "id" value
  * @method string              getDescription()        Returns the current record's "description" value
@@ -26,6 +28,9 @@
  * @method boolean             getKm()                 Returns the current record's "km" value
  * @method string              getCleanSatisfied()     Returns the current record's "clean_satisfied" value
  * @method Doctrine_Collection getReserve()            Returns the current record's "Reserve" collection
+ * @method string              getOpinionAboutOwner()  Returns the current record's "opinion_about_owner" value
+ * @method integer             getIdRenter()           Returns the current record's "idRenter" value
+ *
  * @method Rating              setId()                 Sets the current record's "id" value
  * @method Rating              setDescription()        Sets the current record's "description" value
  * @method Rating              setUserOwnerOpnion()    Sets the current record's "user_owner_opnion" value

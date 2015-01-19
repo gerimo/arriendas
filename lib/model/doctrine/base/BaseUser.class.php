@@ -13,6 +13,7 @@
  * @property string $email
  * @property string $firstname
  * @property string $lastname
+ * @property string $apellido_materno
  * @property string $paypal_id
  * @property string $driver_license_number
  * @property string $driver_license_file
@@ -55,6 +56,7 @@
  * @method string              getEmail()                 Returns the current record's "email" value
  * @method string              getFirstname()             Returns the current record's "firstname" value
  * @method string              getLastname()              Returns the current record's "lastname" value
+ * @method string              getApellidoMaterno()       Returns the current record's "apellido_materno" value
  * @method string              getPaypalId()              Returns the current record's "paypal_id" value
  * @method string              getDriverLicenseNumber()   Returns the current record's "driver_license_number" value
  * @method string              getDriverLicenseFile()     Returns the current record's "driver_license_file" value
@@ -89,6 +91,8 @@
  * @method Doctrine_Collection getMessage()               Returns the current record's "Message" collection
  * @method Doctrine_Collection getReserves()              Returns the current record's "Reserves" collection
  * @method Doctrine_Collection getTransactions()          Returns the current record's "Transactions" collection
+ * @method timestamp           getFechaRegistro()         Returns the current record's "fecha_registro" value
+ *
  * @method User                setId()                    Sets the current record's "id" value
  * @method User                setUsername()              Sets the current record's "username" value
  * @method User                setPassword()              Sets the current record's "password" value
@@ -97,6 +101,7 @@
  * @method User                setEmail()                 Sets the current record's "email" value
  * @method User                setFirstname()             Sets the current record's "firstname" value
  * @method User                setLastname()              Sets the current record's "lastname" value
+ * @method User                setApellidoMaterno         Sets the current record's "apellido_materno" value
  * @method User                setPaypalId()              Sets the current record's "paypal_id" value
  * @method User                setDriverLicenseNumber()   Sets the current record's "driver_license_number" value
  * @method User                setDriverLicenseFile()     Sets the current record's "driver_license_file" value

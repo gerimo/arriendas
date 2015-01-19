@@ -42,7 +42,7 @@ class TransactionTable extends Doctrine_Table
         return  $q->count();
     }
     
-    public function getPendingToShowByUser($user_id){
+    public static function getPendingToShowByUser($user_id){
         $q = Doctrine_Query::create()
             ->from("Transaction t ")
             ->where("t.user_id = ? ",$user_id)

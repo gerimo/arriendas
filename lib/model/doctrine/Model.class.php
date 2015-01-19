@@ -12,6 +12,22 @@
  */
 class Model extends BaseModel
 {
+    public static function getByBrand($brandId = false) {
+
+        $q = Doctrine_Core::getTable("Model")
+            ->createQuery('M')
+            ->innerJoin('M.Brand B')
+            ->orderBy('M.name ASC');
+
+        if ($brandId) {
+            $q->where('B.id = ?', $brandId);
+        }
+
+        return $q->execute();
+    }
+
+
+    /////////////////////////////////////////////////////////
     
     public function getFotoDefecto($id) {
     }
@@ -41,4 +57,6 @@ class Model extends BaseModel
         
         return round($precio);
     }
+
+
 }

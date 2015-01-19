@@ -348,6 +348,8 @@ class messagesActions extends sfActions {
     }
 
     public function executeInbox() {
+        $this->setLayout("newIndexLayout");
+        
         $this->user_id = $this->getUser()->getAttribute("userid");
         $ListaDeConversaciones = Doctrine_Core::getTable("Conversation")->findConversation($this->getUser()->getAttribute("userid"));
 
@@ -423,6 +425,7 @@ class messagesActions extends sfActions {
     }
 
     public function executeConversation(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
 
         $this->user_id = $this->getUser()->getAttribute("userid");
         $idConversacion = $request->getParameter("id");

@@ -33,17 +33,16 @@ all:
 
     # Enable the database manager
     use_database:           true
-    
+
     default_module:         main
     default_action:         index
     default_culture:        es_ES
-    
-    # Enable the database manager
+
     login_module:           main
     login_action:           login
-    
+
     timeout:                36000
     enabled_modules:        [sfVideo]
-    
+
     error_404_module: error
     error_404_action: 404

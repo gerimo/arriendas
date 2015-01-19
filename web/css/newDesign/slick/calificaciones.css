@@ -1,0 +1,740 @@
+.rating {
+	cursor: pointer;
+	clear: both;
+	display: block;
+}
+.rating:after {
+	content: '.';
+	display: block;
+	height: 0;
+	width: 0;
+	clear: both;
+	visibility: hidden;
+}
+.starRpta {
+	height:15px;
+	width:80px;
+	padding:1px;
+	text-align: center;
+	font-size: 10px;
+	font-style: italic;
+	color: #BDBDBD;
+}
+.star {
+	float: left;
+	width: 17px;
+	height: 15px;
+	overflow: hidden;
+	text-indent: -999em;
+	cursor: pointer;
+}
+
+.star,
+.star a {background: url(../images/img_evaluaciones/IconoEstrellaGris.png) no-repeat;}
+	
+.cancel a,
+.star a {
+	display: block;
+	width: 100%;
+	height: 100%;
+	background: url(../images/img_evaluaciones/IconoEstrellaGris.png) no-repeat;
+}
+
+div.rating div.on a {
+	background: url(../images/img_evaluaciones/IconoEstrellaCeleste.png) no-repeat;
+}
+div.rating div.hover a,
+div.rating div a:hover {
+	background: url(../images/img_evaluaciones/IconoEstrellaCeleste.png) no-repeat;
+}
+
+#marcoFotoPerfil{
+	float: left;
+	margin-top: 30px;
+	margin-left: 10px;
+	width: 186px;
+	height: 186px;
+	background: white url('../images/img_asegura_tu_auto/Marco.png') no-repeat top center;
+}
+#fotoPerfil{
+	float: left;
+	background-color: green;
+	width: 120px;
+	height: 120px;
+	margin: 4px;
+}
+#datosPerfil{
+	float: left;
+	width: 286px;
+	margin: 4px;
+	margin-top: 30px;
+}
+#datosPerfil p span{
+	font-weight: bold;
+}
+
+#iconoEnviarMensaje{
+	position: absolute;
+	margin-left: 464px;
+	margin-top: -10px;
+}
+
+#lineaMiembroDesde, #lineaNTransacciones, #lineaTiempoDemora{
+	float: left;
+	margin: 5px;
+	margin-top: 20px;
+	font-size: 12px;
+
+}
+#lineaMiembroDesde{
+	margin-top: 5px;
+}
+.miembroDesde{
+	float: left;
+	margin-left: 8px;
+	margin-right: 12px;
+}
+.nTransacciones, .velocidadRespuesta{
+	float: left;
+	margin-right: 10px;
+}
+#lineaMiembroDesde p, #lineaNTransacciones p, #lineaTiempoDemora p{
+	float: left;
+	margin-top: 5px;
+}
+
+.evaluaciones{
+	float: left;
+	width: 480px;
+	margin-left: 4px;
+	margin-top: 40px;
+	margin-bottom: 30px;
+}
+#evaluacionesPublicProfile{
+	float: left;
+	width: 490px;
+	margin-left: 9px;
+	margin-top: 40px;
+	margin-bottom: 30px;
+}
+.conten_opcion3 .evaluaciones, .conten_opcion2 .evaluaciones{
+	margin-top: 10px;
+}
+
+#evaluacionesPublicProfile h3{
+	margin-left: 10px;
+	border-bottom: 1px solid #00AEEF;
+	padding-bottom: 10px;
+	font-size: 14px;
+	color: #00AEEF; /* celeste */
+	margin-bottom: 10px;
+}
+.conten_opcion2 .evaluacion .noHay p, .conten_opcion3 .evaluacion .noHay p{
+	margin-left: 20px;
+}
+.conten_opcion1 .noHay p{
+	margin-left: 10px;
+	margin-top: 10px;
+}
+
+.calificacionEstrellas{
+	float: left;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border-top: 1px solid #BDBDBD;
+	border-bottom: 1px solid #BDBDBD;
+	margin-left: 50px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	width: 80%;
+ }
+ .calificacionEstrellas .puntualidad p{
+ 	float: left;
+ 	margin-top: 3px;
+ 	width: 80px;
+ }
+ .calificacionEstrellas .limpieza p{
+	float: left;
+ 	margin-top: 3px;
+ 	width: 65px;
+ }
+ .calificacionEstrellas p span{
+	font-weight: bold;
+	font-size: 12px;
+}
+.estrellas{
+	float: left;
+}
+.puntualidad{
+ 	float: left;
+ 	width: 200px;
+ }
+ .img_IconoPuntualidad{
+ 	float: left;
+ 	margin-right: 4px;
+ }
+ .limpieza{
+ 	float: right;
+ 	width: 175px;
+ }
+ .img_IconoLimpieza{
+ 	float: left;
+ 	margin-right: 4px;
+ }
+ .comentario{
+ 	float: left;
+ 	margin-bottom: 10px;
+ }
+ .usuario{
+ 	float: left;
+ 	margin-top: 20px;
+ 	margin-left: 0px;
+ }
+ .img_usuario{
+ 	float: left;
+ 	width: 60px;
+ 	height: 60px;
+ 	margin-left: 5px;
+ }
+ .nombrePosteador{
+ 	float: left;
+ 	width: 70px;
+ 	text-align: center;
+ 	margin-top: 5px;
+ }
+ .nombrePosteador p{
+ 	font-size: 12px;
+ 	color: #00AEEF;
+ 	font-weight: bold;
+ }
+ .campoTexto{
+ 	float: left;
+ 	width: 340px;
+ 	height: 80px;
+ 	margin-top: 20px;
+ 	margin-left: 10px;
+ }
+ .margenTexto{
+ 	float: left;
+ 	margin-left: 7px;
+ 	border: 1px solid #BDBDBD;
+ 	width: 396px;
+ 	height: auto ! important;
+	height: 50px;
+ 	padding: 5px;
+ 	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	-webkit-box-shadow: 0px 0px 9px rgba(50, 50, 50, 0.32);
+	-moz-box-shadow:    0px 0px 9px rgba(50, 50, 50, 0.32);
+	box-shadow:         0px 0px 9px rgba(50, 50, 50, 0.32);
+
+ }
+ .punta{
+ 	position:relative;
+ 	margin-top: 20px;
+ 	margin-left: -415px;
+ }
+ .texto{
+ 	/*overflow: scroll; Ideal, sacarlo ...*/
+ 	width: 384px;
+ 	height: auto ! important;
+	height: 32px;
+ 	border: 1px solid #BDBDBD;
+ 	padding-left: 5px; padding-right: 5px;
+ 	padding-top: 8px; padding-bottom: 23px;
+ 	font-size: 12px;
+
+ 	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+ }
+ .detallesComentario{
+ 	float: right;
+ 	color: #A4A4A4;
+ 	font-size: 9px;
+ 	margin-top: 8px;
+ }
+ .limp, .punt, .reco, .fecha{
+ 	float: right;
+ 	margin: 2px;
+ 	color: #A4A4A4;
+ }
+ .limp p, .punt p, .reco p, .fecha p{
+  	float: left;
+  	margin-top: 1px;
+ }
+ .limp p{
+ 	margin-right: 2px;
+ }
+.limp span, .punt span, .reco span, .fecha span{
+  	float: left;
+  	margin-right: 4px;
+}
+ .img_det_limp, .img_det_punt, .img_det_reco{
+ 	float: left;
+ 	width: 10px;
+ 	height: 10px;
+ 	margin-right: 2px;
+ }
+ .img_dedo_arriba, .img_dedo_abajo{
+ 	float: left;
+ 	width: 12px;
+ 	height: 12px;
+ 	margin-left: 2px;
+ }
+ .img_dedo_abajo{
+ 	margin-top: -2px;
+ }
+ .reco .img_dedo_abajo, .punt .img_dedo_abajo, .reco .img_dedo_arriba, .punt .img_dedo_arriba{
+ 	margin-left: 3px;
+ }
+
+.barrasNavegadoras{
+	float: left;
+	width: 100%;
+	height: 50px;
+}
+ /*################################## BARRA NAVEGADORA NUEVA ###########################*/
+.barraNavegadoraOpciones{
+	float: left;
+	width: 100%;
+	height: 30px;
+	border-bottom: 2px solid #BDBDBD;
+	margin-top: 20px;
+}
+/* Iniciacializacion de botones */
+.boton1_cla{
+ 	background: white url("../images/img_evaluaciones/pest_calificaciones/BarraClaraEvaluaciones.png");
+    background-repeat: repeat-x;
+    float: left;
+	width: 140px;
+	height: 21px;
+	padding-left: 10px;
+	padding-top: 9px;
+	font-size: 11px;
+	color: black;
+ }
+.boton1_osc{
+ 	background: white url("../images/img_evaluaciones/pest_calificaciones/BarraEvaluaciones.png");
+    background-repeat: repeat-x;
+    float: left;
+	width: 140px;
+	height: 21px;
+	padding-left: 10px;
+	padding-top: 9px;
+	font-size: 11px;
+	color: black;
+ }
+.boton2_cla{
+ 	background: white url("../images/img_evaluaciones/pest_calificaciones/BarraClaraEvaluaciones.png");
+    background-repeat: repeat-x;
+    float: left;
+	width: 146px;
+	height: 21px;
+	padding-left: 5px;
+	padding-top: 9px;
+	font-size: 11px;
+	color: black;
+ }
+.boton2_osc{
+ 	background: white url("../images/img_evaluaciones/pest_calificaciones/BarraEvaluaciones.png");
+    background-repeat: repeat-x;
+    float: left;
+	width: 146px;
+	height: 21px;
+	padding-left: 5px;
+	padding-top: 9px;
+	font-size: 11px;
+	color: black;
+ }
+.boton3_cla{
+ 	background: white url("../images/img_evaluaciones/pest_calificaciones/BarraClaraEvaluaciones.png");
+    background-repeat: repeat-x;
+    float: left;
+	width: 142px;
+	height: 21px;
+	padding-left: 5px;
+	padding-top: 9px;
+	font-size: 11px;
+	color: black;
+ }
+ .boton3_osc{
+ 	background: white url("../images/img_evaluaciones/pest_calificaciones/BarraEvaluaciones.png");
+    background-repeat: repeat-x;
+    float: left;
+	width: 142px;
+	height: 21px;
+	padding-left: 5px;
+	padding-top: 9px;
+	font-size: 11px;
+	color: black;
+ }
+.intermedio1_osc_osc, .intermedio2_osc_osc{
+ 	background: white url("../images/img_evaluaciones/pest_calificaciones/osc_osc.png");
+    background-repeat: repeat-x;
+    float: left;
+	width: 36px;
+	height: 30px;
+}
+.intermedio1_cla_cla, .intermedio2_cla_cla{
+ 	background: white url("../images/img_evaluaciones/pest_calificaciones/cla_cla.png");
+    background-repeat: repeat-x;
+    float: left;
+	width: 36px;
+	height: 30px;
+}
+.intermedio1_cla_osc, .intermedio2_cla_osc{
+ 	background: white url("../images/img_evaluaciones/pest_calificaciones/cla_osc.png");
+    background-repeat: repeat-x;
+    float: left;
+	width: 36px;
+	height: 30px;
+}
+.intermedio1_osc_cla, .intermedio2_osc_cla{
+ 	background: white url("../images/img_evaluaciones/pest_calificaciones/osc_cla.png");
+    background-repeat: repeat-x;
+    float: left;
+	width: 36px;
+	height: 30px;
+ }
+/* ######################## FIN DISEÑO BARRA NAVEGADORA ############################# */
+
+ .conten_opcion1{
+ 	float: left;
+ 	margin-top: 10px;
+ 	margin-left: 15px;
+ 	width: 100%;
+ 	height: auto ! important;
+	min-height: 500px;
+ }
+ .conten_opcion2{
+ 	float: left;
+ 	display: none;
+ 	width: 470px;
+ 	height: auto ! important;
+	min-height: 500px;
+ 	margin-top: 10px;
+ 	margin-left: 10px;
+ 	padding-bottom: 30px;
+ }
+ .conten_opcion3{
+ 	float: left;
+ 	display: none;
+ 	margin-top: 10px;
+ 	margin-left: 5px;
+ 	width: 470px;
+ 	height: auto ! important;
+	min-height: 500px;
+ }
+
+/*************************** CSS ACORDEON *******************************/
+.menu{
+	float: left;
+	padding-bottom: 20px;
+}
+.menu ul{
+    list-style: none;
+    margin:0;
+    padding:0;
+    width:480px;
+}
+.menu ul li ul{
+    width:440px;
+}
+.menu ul li{
+    margin:0;
+    padding:5px;
+}
+.menu ul li a.encabezadoPestania{ /* encabezado de c/pregunta */
+	float: left;
+	width: 100%;
+    padding-top:10px;
+    margin-top: 10px;
+    padding-left: 10px;
+    display:block;
+    text-decoration: none;
+    color:black;
+    font-size: 12px;
+    height:60px;
+    line-height: 1.3em;
+    background-color: #E6E6E6;
+
+    -webkit-box-shadow: 0px 1px 5px rgba(50, 50, 50, 0.4);
+	-moz-box-shadow:    0px 1px 5px rgba(50, 50, 50, 0.4);
+	box-shadow:         0px 1px 5px rgba(50, 50, 50, 0.4);
+}
+
+
+.main_contenido span{
+	font-weight: bold;
+}
+
+.menu ul li a.encabezadoPestania:hover{
+    background: #F3E2A9  no-repeat center right;
+}
+ 
+.menu ul li ul{
+    display:none;
+}
+
+.img_usuario2{
+ 	width: 45px;
+ 	height: 45px;
+ 	float: left;
+ 	position: absolute;
+ }
+.menu ul li a p{
+ 	margin-top: 15px;
+ 	margin-left: 60px;
+
+ }
+ .fechaAcord{
+ 	float: right;
+ 	color: #585858;
+ 	font-size: 10px;
+ 	margin-right: 10px;
+ }
+
+ .contenidoPestania_R, .contenidoPestania_O{
+ 	width: 100%;
+ }
+
+/*******************************************************/
+.recoUsuarios{
+	float: left;
+	width: 100%;
+	font-size: 11px;
+	margin-top: 30px;
+}
+.recomiendas, .fuePuntual, .autoLimpio, .desperfecto{
+	float: left;
+	width: 100%;
+	font-size: 11px;
+	margin-top: 20px;
+}
+.contenidoPestania_O .recomiendas{
+	margin-top: 30px;
+}
+.recomiendas p span, .recoUsuarios p span, .fuePuntual p span, .autoLimpio p span, .escribeSobre p span, .desperfecto p span{
+	float: left;
+	font-weight: bold;
+	margin-top: 7px;
+}
+.escribeSobre .indicador{
+	float: left;
+	margin-top: 7px;
+	margin-left: 4px;
+}
+.img_IconoUsuario2, .img_IconoPuntualidad2, .img_IconoLimpieza2, .img_IconoAuto2, .img_Desperfecto{
+	float: left;
+	margin-right: 6px;
+	margin-left: 30px;
+	margin-top: 4px;
+}
+.img_IconoAuto2{
+	margin-top: 8px;
+	margin-right: 8px;
+}
+.botonesSi_No, .botonesEstrella{
+	float: right;
+}
+.img_botonSi{
+	float: left;
+	margin-right: 15px;
+	-webkit-box-shadow: 1px 1px 16px rgba(50, 50, 50, 0.41);
+	-moz-box-shadow:    1px 1px 16px rgba(50, 50, 50, 0.41);
+	box-shadow:         1px 1px 16px rgba(50, 50, 50, 0.41);
+}
+.img_botonNo{
+	float: left;
+	-webkit-box-shadow: 1px 1px 16px rgba(50, 50, 50, 0.41);
+	-moz-box-shadow:    1px 1px 16px rgba(50, 50, 50, 0.41);
+	box-shadow:         1px 1px 16px rgba(50, 50, 50, 0.41);
+}
+.img_IconoComentario{
+	float: left;
+	margin-right: 6px;
+	margin-left: 20px;
+}
+.TextoOculto, .TextoOculto2, .TextoOculto3{
+	display: none;
+	float: left;
+	width: 100%;
+	font-size: 10px;
+	margin-top: 10px;
+}
+.TextoOculto textarea, .TextoOculto2 textarea, .TextoOculto3 textarea{
+	resize:none;
+	width: 360px;
+	height: 20px;
+	margin-left: 40px;
+	font-size: 10px;
+	margin-top: 10px;
+	padding: 5px;
+	font-family: Arial;
+}
+.inputOculto_punt{
+	display: none;
+	padding-left: 30px;
+	font-family: Arial;
+	float: left;
+	width: 340px;
+	margin-left: 30px;
+	margin-top: 20px;
+}
+.inputOculto_punt p{
+	float: left;
+	font-size: 10px;
+	font-style: italic;
+	margin-top: 4px;
+	margin-right: 10px;
+}
+
+select{
+	float: left;
+	width: 90px;
+	color: #848484;
+	font-size: 10px;
+	font-style: italic;
+	height:18px;
+	background-color:#E6E7E8;
+	margin-left: 5px;
+}
+
+.separacion{
+	float: left;
+	width: 90%;
+	margin-left: 35px;
+	margin-top: 10px;
+	height: 10px;
+	border-bottom: 1px solid #A4A4A4;
+}
+
+.escribeSobre{
+	float: left;
+	width: 100%;
+	font-size: 11px;
+	margin-top: 30px;
+}
+.escribeSobre textarea{
+	resize:none;
+	width: 360px;
+	height: 40px;
+	margin-left: 40px;
+	font-size: 10px;
+	margin-top: 10px;
+	padding: 5px;
+	font-family: Arial;
+}
+.botonListo{
+	float: right ;
+	margin-top: 10px;
+}
+.img_botonListo{
+	width: 138px;
+	height: 55px;
+}
+/************** botones hover ******************/
+input{
+	margin: 0px;
+	padding: 0px;
+	border: 0px;
+	cursor: pointer;
+}
+input.listo{
+	width: 138px;
+	height: 55px;
+	background: url("../images/img_evaluaciones/botonListo.png");
+	background-repeat: repeat-x;
+}
+.botSI_reco, .botSI_desp,.botSI_usua, .botSI_punt{
+	background: white url("../images/img_evaluaciones/SiGris.png");
+	background-repeat: repeat-x;
+    float: left;
+    width: 22px;
+    height: 22px;
+	margin-right: 20px;
+	-webkit-box-shadow: 1px 1px 16px rgba(50, 50, 50, 0.41);
+	-moz-box-shadow:    1px 1px 16px rgba(50, 50, 50, 0.41);
+	box-shadow:         1px 1px 16px rgba(50, 50, 50, 0.41);
+}
+.botNO_reco, .botNO_desp, .botNO_usua, .botNO_punt{
+	background: white url("../images/img_evaluaciones/NoGris.png");
+	background-repeat: repeat-x;
+    float: left;
+    width: 22px;
+    height: 22px;
+	margin-right: 10px;
+	-webkit-box-shadow: 1px 1px 16px rgba(50, 50, 50, 0.41);
+	-moz-box-shadow:    1px 1px 16px rgba(50, 50, 50, 0.41);
+	box-shadow:         1px 1px 16px rgba(50, 50, 50, 0.41);
+}
+.botSI_usua_Azul, .botSI_desp_Azul, .botSI_reco_Azul, .botSI_punt_Azul{
+	background: white url("../images/img_evaluaciones/SiAzul.png");
+	background-repeat: repeat-x;
+    float: left;
+    width: 22px;
+    height: 22px;
+	margin-right: 20px;
+	-webkit-box-shadow: 1px 1px 16px rgba(50, 50, 50, 0.41);
+	-moz-box-shadow:    1px 1px 16px rgba(50, 50, 50, 0.41);
+	box-shadow:         1px 1px 16px rgba(50, 50, 50, 0.41);
+}
+.botNO_usua_Azul, .botNO_desp_Azul, .botNO_reco_Azul, .botNO_punt_Azul{
+	background: white url("../images/img_evaluaciones/NoGris.png");
+	background-repeat: repeat-x;
+    float: left;
+    width: 22px;
+    height: 22px;
+	margin-right: 10px;
+	-webkit-box-shadow: 1px 1px 16px rgba(50, 50, 50, 0.41);
+	-moz-box-shadow:    1px 1px 16px rgba(50, 50, 50, 0.41);
+	box-shadow:         1px 1px 16px rgba(50, 50, 50, 0.41);
+}
+
+/********************** fin hover ********************/
+
+.comen_estrellas{
+	font-style: italic;
+	font-size: 10px;
+	margin-top: 6px;
+	text-align: center;
+	color: #A4A4A4; /* gris */
+}
+
+.loader_gif{
+	float: right;
+	width: 30px;
+	height: 30px;
+	margin-top: 20px;
+}
+#mensajeAJAX{
+	float: left;
+	color: #A4A4A4;
+	font-size: 10px;
+	margin: 5px;
+	text-align: center;
+	font-style: italic;
+	margin-top: 10px;
+}
+
+#ajax_loader{
+	float: right;
+	margin-right: 20px;
+	width: 150px;
+	height: 50px;
+}
+
+.main_contenido .usuario_foto_frame{
+	margin-top: 30px;
+	width: 120px;
+	height: 120px;
+}
+
+
+.comentarios{
+	float: left;
+	width: 100%;
+	margin-top: 10px;
+}

@@ -1,4 +1,4 @@
-
+	
 <?php use_stylesheet('registro.css') ?>
 <?php use_stylesheet('comunes.css') ?>
 

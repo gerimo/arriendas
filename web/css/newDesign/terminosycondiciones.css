@@ -1,0 +1,18 @@
+body {
+    background-image: url('/images/newDesign/background.jpg');
+}
+
+.Encabezado{
+    border-bottom: 1px dashed rgba(70, 70, 70, 0.5);
+    margin: 15px 0 15px 0;
+}
+.BCW h1 {
+    border-bottom: 0px;
+    color: rgb(70, 70, 70);
+    font-size: 32px;
+    font-weight: 300;
+    margin: 15px 0 0px 0;
+    padding: 0 0 6px 0px;
+}
+
+/*/////////////////////////////////*/

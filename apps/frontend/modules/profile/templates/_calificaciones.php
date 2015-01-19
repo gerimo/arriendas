@@ -1,5 +1,7 @@
-<?php use_stylesheet('calificaciones_profile.css') ?>
-<?php use_stylesheet('rating.css') ?>
+<link href="/css/newDesign/rating.css" rel="stylesheet" type="text/css"> 	
+<link href="/css/newDesign/calificaciones.css" rel="stylesheet" type="text/css">
+
+
 <?php
 $useragent=$_SERVER['HTTP_USER_AGENT'];
 if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i',$useragent)||preg_match('/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i',substr($useragent,0,4))){
@@ -7,489 +9,496 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 }
 ?>
 
-<div class="contenido">
-	<div class="barraSuperior"><p>CALIFICACIONES</p></div>
-	<div class="barrasNavegadoras">
-		<div class="barraNavegadoraOpciones">
-			<a href="#" id="opcion1" class="select"><div id="boton1" class="boton1_osc">Calificaciones pendientes</div></a>
-			<div id="intermedio1" class="intermedio1_osc_cla"></div>
-			<a href="#" id="opcion2"><div id="boton2" class="boton2_cla">Calificaciones hechas por ti</div></a>
-			<div id="intermedio2" class="intermedio2_cla_cla"></div>
-			<a href="#" id="opcion3"><div id="boton3" class="boton3_cla">Calificaciones sobre ti</div></a>
-		</div>
-	</div>
-	<div class="conten_opcion1">
-		<?php
-			if(isset($arrayRenter_Pendiente)){
-				$cantidadArrendadores = count($arrayRenter_Pendiente);
-			}else{
-				$cantidadArrendadores = 0;
-			}
-			if(isset($arrayOwner_Pendiente)){
-				$cantidadDuenios = count($arrayOwner_Pendiente);
-			}else{
-				$cantidadDuenios = 0;
-			}
-			
-			$totalPendientes = 0;
-			if($cantidadDuenios == 0 && $cantidadArrendadores == 0){
-				?>
-					<div class="noHay"><p>No existen calificaciones pendientes por realizar</p></div>
-				<?php
-			}else{
-				?>
-				<div class="menu">
-		        <ul>
-		        	<?php
-		        	if($cantidadDuenios>0){
-		        		$totalPendientes = $totalPendientes + $cantidadDuenios;
-		        		for($i=0;$i<$cantidadDuenios;$i++){
-		        			?>
-		        			<?php echo form_tag('profile/calificaciones', array('method' => 'post', 'enctype' => 'multipart/form-data', 'class' => 'frmCalificaciones')); ?>
-					        <li>
-				                <a href="#" class="encabezadoPestania">
-				                	<?php
-						            if($arrayOwner_Pendiente[$i]['facebook_id']!=null && $arrayOwner_Pendiente[$i]['facebook_id']!=""){
-		                                echo "<img src='".$arrayOwner_Pendiente[$i]['picture_file']."' class='img_usuario2'/>";
-		                            }else{
-		                                if($arrayOwner_Pendiente[$i]['picture_file']!=""){
-		                                    $filename = explode("/", $arrayOwner_Pendiente[$i]['picture_file']);
-		                                    echo image_tag("users/".$filename[Count($filename) - 1], 'class=img_usuario2');
-		                                }else{
-		                                    echo image_tag('img_calificaciones/tmp_user_foto.jpg', 'class=img_usuario2');
-		                                }
-		                            }
-				                	?>
-				                	<p><u>¿Cómo fue tu experiencia con <span><?php echo strtoupper($arrayOwner_Pendiente[$i]->getFirstname())." ".strtoupper($arrayOwner_Pendiente[$i]->getLastname()); ?></span></u></p>
-				                	<div class="fechaAcord"><?=$idCalificacionesComoRenter[$i]['fecha'];?></div><!-- PREGUNTAR SOBRE LA FECHA EN RESERVE -->
-				                </a>
-				                <ul>
-					                <div class="contenidoPestania_R numero<?=($i);?>">
-					                	<div class="formularioContenidoPestania">
-						                	<div class="recoUsuarios">
-						                		<?php echo image_tag('img_evaluaciones/IconoAuto.png','class=img_IconoAuto2') ?>
-						                		<p><span>¿Recomendarías este auto a otros usuarios?</span></p>
-						                		<div class="botonesSi_No">
-						                			<input type="button" class="botSI_usua"></input>
-						                			<input type="button" class="botNO_usua"></input>
-						                		</div>
-						                	</div>
-						                	<div class="TextoOculto" style="display:none">
-						                		<textarea class="texto1" name="textoRecomenAuto_NO<?=($i);?>" placeholder="¿Por qué no?"></textarea>
-						                	</div>
-						                	<div class="desperfecto">
-						                		<?php echo image_tag('img_evaluaciones/IconoRechazado.png','class=img_Desperfecto') ?>
-						                		<p><span>¿Tenía el auto algún desperfecto mecánico?</span></p>
-						                		<div class="botonesSi_No">
-						                			<input type="button" class="botSI_desp"></input>
-						                			<input type="button" class="botNO_desp"></input>
-						                		</div>
-						                	</div>
-						                	<div class="TextoOculto3" style="display:none">
-						                		<textarea class="texto3" name="textoDesperfecto_SI<?=($i);?>" placeholder="¿Cual?"></textarea>
-						                	</div>
-						                	<div class="separacion"></div>
-						                	<div class="recomiendas">
-						                		<?php echo image_tag('img_evaluaciones/IconoUsuario.png','class=img_IconoUsuario2') ?>
-						                		<p><span>¿Recomiendas a <?php echo strtoupper($arrayOwner_Pendiente[$i]->getFirstname());?> para la comunidad Arriendas?</span></p>
-						                		<div class="botonesSi_No">
-						                			<input type="button" class="botSI_reco"></input>
-						                			<input type="button" class="botNO_reco"></input>
-						                		</div>
-						                	</div>
-						                	<div class="TextoOculto2" style="display:none">
-						                		<textarea class="texto2" name="textoRecomen_NO<?=($i);?>" placeholder="¿Por qué no?"></textarea>
-						                	</div>
-						                	<div class="fuePuntual">
-						                		<?php echo image_tag('img_evaluaciones/IconoPuntualidad.png','class=img_IconoPuntualidad2') ?>
-						                		<p><span>¿Fue puntual?</span></p>
-						                		<div class="botonesSi_No">
-						                			<input type="button" class="botSI_punt"></input>
-						                			<input type="button" class="botNO_punt"></input>
-						                		</div>
-						                	</div>
-						                	<div class="inputOculto_punt">
-						                		<p>Tiempo que se demoró: </p>
-						                		<select class="start_punt<?=($i);?>" name="star_impuntualidad<?=($i);?>">
-						                			<option value="0">Al comienzo</option><option value="15">15 minutos</option><option value="30">30 minutos</option><option value="60">60 minutos</option><option value="90">90 minutos</option><option value="120">120 minutos</option><option value="180">150 minutos</option><option value="180">3 horas</option>
-						                		</select>
-						                		<select class="end_punt<?=($i);?>" name="end_impuntualidad<?=($i);?>">
-						                			<option value="0">Al término</option><option value="15">15 minutos</option><option value="30">30 minutos</option><option value="60">60 minutos</option><option value="90">90 minutos</option><option value="120">120 minutos</option><option value="180">150 minutos</option><option value="180">3 horas</option>
-						                		</select>
-						                	</div>
-						                	<div class="autoLimpio">
-						                		<?php echo image_tag('img_evaluaciones/IconoLimpieza.png','class=img_IconoLimpieza2') ?>
-						                		<p><span>¿El interior del auto estaba limpio?</span></p>
-						                		<div class="botonesEstrella">
-						                			<div class="star<?=($i);?> rating">&nbsp;</div>
-						                		</div>
-						                	</div>
-						                	<div class="escribeSobre">
-						                		<?php echo image_tag('img_evaluaciones/IconoComentario.png','class=img_IconoComentario') ?>
-						                		<p><span>Escribe de tu experiencia con <?php echo strtoupper($arrayOwner_Pendiente[$i]->getFirstname());?></span><div class="indicador"> (se publicará en el perfil)</div></p>
-						                		<textarea class="textoPublicacion<?=($i);?>" name="algoBreve<?=($i);?>" placeholder="Escribe algo breve..."></textarea>
-						                	</div>
-						                	<input type="hidden" class="preg_reco" name="preg_reco<?=($i);?>" value="0" />
-						                	<input type="hidden" class="preg_desp" name="preg_desp<?=($i);?>" value="0" />
-						                	<input type="hidden" class="preg_usua" name="preg_usua<?=($i);?>" value="0" />
-						                	<input type="hidden" class="preg_punt" name="preg_punt<?=($i);?>" value="0" />
-						                	<input type="hidden" class="estrella_llena" name="estrella_llena<?=($i);?>" value="0" />
-						                	<div class="botonListo">
-						                		<input type="hidden" name="listoOK<?=($i);?>" value="ok<?=($i);?>"/>
-						                		<input type="hidden" name="guardandoComo" value="renter">
-						                		<input type="hidden" name="posicion" value="<?=($i);?>"/>
-						                		<input type="hidden" name="idCalificacion" value="<?=$idCalificacionesComoRenter[$i]['id'];?>"/>
-						                		<input class="listo" type="submit" name="<?=($i);?>" value="" />
-						                	</div>
-						                	<!-- <div id="ajax_loader"></div> -->
-					                	</div> <!-- fin formularioContenidoPestania -->
-					                </div><!-- fin contenidoPestania -->
-				           		</ul>
-				            </li>
-				            </form>
-		        			<?php
-		        		}//fin for
-		        	}//fin si
-		        	if($cantidadArrendadores>0){
-		        		$totalPendientes = $totalPendientes + $cantidadArrendadores;
-		        		$k=0;
-		        		for($i=$cantidadDuenios;$i<$totalPendientes;$i++){
-		        			?>
-		        			<?php echo form_tag('profile/calificaciones', array('method' => 'post', 'enctype' => 'multipart/form-data', 'class' => 'frmCalificaciones')); ?>
-					        <li>
-				                <a href="#" class="encabezadoPestania click_owner">
-				                	<?php
-						            if($arrayRenter_Pendiente[$k]['facebook_id']!=null && $arrayRenter_Pendiente[$k]['facebook_id']!=""){
-		                                echo "<img src='".$arrayRenter_Pendiente[$i]['picture_file']."' class='img_usuario2'/>";
-		                            }else{
-		                                if($arrayRenter_Pendiente[$k]['picture_file']!=""){
-		                                    $filename = explode("/", $arrayRenter_Pendiente[$k]['picture_file']);
-		                                    echo image_tag("users/".$filename[Count($filename) - 1], 'class=img_usuario2');
-		                                }else{
-		                                    echo image_tag('img_calificaciones/tmp_user_foto.jpg', 'class=img_usuario2');
-		                                }
-		                            }
-				                	?>
-				                	<p><u>¿Cómo fue tu experiencia con <span><?php echo strtoupper($arrayRenter_Pendiente[$k]->getFirstname())." ".strtoupper($arrayRenter_Pendiente[$k]->getLastname()); ?></span></u></p>
-				                	<div class="fechaAcord"><?=$idCalificacionesComoOwner[$k]['fecha'];?></div><!-- PREGUNTAR SOBRE LA FECHA EN RESERVE -->
-				                </a>
-				                <ul>
-					                <div class="contenidoPestania_O numero<?=($i);?>">
-					                	<div class="formularioContenidoPestania">
-						                	<div class="recomiendas">
-						                		<?php echo image_tag('img_evaluaciones/IconoUsuario.png','class=img_IconoUsuario2') ?>
-						                		<p><span>¿Recomiendas a <?php echo strtoupper($arrayRenter_Pendiente[$k]->getFirstname());?> para la comunidad Arriendas?</span></p>
-						                		<div class="botonesSi_No">
-						                			<input type="button" class="botSI_reco"></input>
-						                			<input type="button" class="botNO_reco"></input>
-						                		</div>
-						                	</div>
-						                	<div class="TextoOculto2" style="display:none">
-						                		<textarea class="texto2" name="textoRecomen_NO<?=($i);?>" placeholder="¿Por qué no?"></textarea>
-						                	</div>
-						                	<div class="fuePuntual">
-						                		<?php echo image_tag('img_evaluaciones/IconoPuntualidad.png','class=img_IconoPuntualidad2') ?>
-						                		<p><span>¿Fue puntual?</span></p>
-						                		<div class="botonesSi_No">
-						                			<input type="button" class="botSI_punt"></input>
-						                			<input type="button" class="botNO_punt"></input>
-						                		</div>
-						                	</div>
-						                	<div class="inputOculto_punt">
-						                		<p>Tiempo que se demoró: </p>
-						                		<select class="start_punt<?=($i);?>" name="star_impuntualidad<?=($i);?>">
-						                			<option value="0">Al comienzo</option><option value="15">15 minutos</option><option value="30">30 minutos</option><option value="60">60 minutos</option><option value="90">90 minutos</option><option value="120">120 minutos</option><option value="180">150 minutos</option><option value="180">3 horas</option>
-						                		</select>
-						                		<select class="end_punt<?=($i);?>" name="end_impuntualidad<?=($i);?>">
-						                			<option value="0">Al término</option><option value="15">15 minutos</option><option value="30">30 minutos</option><option value="60">60 minutos</option><option value="90">90 minutos</option><option value="120">120 minutos</option><option value="180">150 minutos</option><option value="180">3 horas</option>
-						                		</select>
-						                	</div>
-						                	<div class="autoLimpio">
-						                		<?php echo image_tag('img_evaluaciones/IconoLimpieza.png','class=img_IconoLimpieza2') ?>
-						                		<p><span>¿El interior del auto estaba limpio?</span></p>
-						                		<div class="botonesEstrella">
-						                			<div class="star<?=($i);?> rating">&nbsp;</div>
-						                		</div>
-						                	</div>
-						                	<div class="escribeSobre">
-						                		<?php echo image_tag('img_evaluaciones/IconoComentario.png','class=img_IconoComentario') ?>
-						                		<p><span>Escribe de tu experiencia con <?php echo strtoupper($arrayRenter_Pendiente[$k]->getFirstname());?></span><div class="indicador"> (se publicará en el perfil)</div></p>
-						                		<textarea class="textoPublicacion<?=($i);?>" name="algoBreve<?=($i);?>" placeholder="Escribe algo breve..."></textarea>
-						                	</div>
+<div class="hidden-xs space-100"></div>
+<div class="visible-xs space-100"></div>
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12 col-md-12 ">
+  			<div class="saso col-xs-12 col-md-offset-2 col-md-8">
+				<div class="barraSuperior col-xs-12 col-md-12 "><h1>Calificaciones</h1></div>
+				<div class="barrasNavegadoras col-md-12">
+						<a href="#" id="opcion1" class="select"><div id="boton1" class="boton col-md-4">Calificaciones pendientes</div></a>
+						<a href="#" id="opcion2"><div id="boton2" class="boton col-md-4">Calificaciones hechas por ti</div></a>
+						<a href="#" id="opcion3"><div id="boton3" class="boton col-md-4">Calificaciones sobre ti</div></a>
+				</div>
+				<div class="opiniones col-xs-12 col-md-12">
+					<div class="conten_opcion1">
+						<?php
+							if(isset($arrayRenter_Pendiente)){
+								$cantidadArrendadores = count($arrayRenter_Pendiente);
+							}else{
+								$cantidadArrendadores = 0;
+							}
+							if(isset($arrayOwner_Pendiente)){
+								$cantidadDuenios = count($arrayOwner_Pendiente);
+							}else{
+								$cantidadDuenios = 0;
+							}
+							
+							$totalPendientes = 0;
+							if($cantidadDuenios == 0 && $cantidadArrendadores == 0){
+								?>
+									<div class="noHay"><p>No existen calificaciones pendientes por realizar</p></div>
+								<?php
+							}else{
+								?>
+								<div class="menu">
+						        <ul>
+						        	<?php
+						        	if($cantidadDuenios>0){
+						        		$totalPendientes = $totalPendientes + $cantidadDuenios;
+						        		for($i=0;$i<$cantidadDuenios;$i++){
+						        			?>
+						        			<?php echo form_tag('profile/calificaciones', array('method' => 'post', 'enctype' => 'multipart/form-data', 'class' => 'frmCalificaciones')); ?>
+									        <li>
+								                <a href="#" class="encabezadoPestania col-md-12">
+								                	<?php
+										            if($arrayOwner_Pendiente[$i]['facebook_id']!=null && $arrayOwner_Pendiente[$i]['facebook_id']!=""){
+						                                echo "<img src='".$arrayOwner_Pendiente[$i]['picture_file']."' class='img_usuario2 '/>";
+						                            }else{
+						                                if($arrayOwner_Pendiente[$i]['picture_file']!=""){
+						                                    $filename = explode("/", $arrayOwner_Pendiente[$i]['picture_file']);
+						                                    echo image_tag("users/".$filename[Count($filename) - 1], 'class=img_usuario2');
+						                                }else{
+						                                    echo image_tag('img_calificaciones/tmp_user_foto.jpg', 'class=img_usuario2');
+						                                }
+						                            }
+								                	?>
+								                	<p><u>¿Cómo fue tu experiencia con <span><?php echo strtoupper($arrayOwner_Pendiente[$i]->getFirstname())." ".strtoupper($arrayOwner_Pendiente[$i]->getLastname()); ?></span></u></p>
+								                	<div class="fechaAcord"><?=$idCalificacionesComoRenter[$i]['fecha'];?></div><!-- PREGUNTAR SOBRE LA FECHA EN RESERVE -->
+								                </a>
+								                <ul>
+									                <div class="col-md-12 contenidoPestania_R numero<?=($i);?>">
+									                	<div class="formularioContenidoPestania">
+										                	<div class="recoUsuarios col-xs-12 col-md-12">
+										                		<?php echo image_tag('img_evaluaciones/IconoAuto.png','class=img_IconoAuto2') ?>
+										                		<p><span>¿Recomendarías este auto a otros usuarios?</span></p>
+										                		<div class="botonesSi_No">
+										                			<input type="button" class="botSI_usua"></input>
+										                			<input type="button" class="botNO_usua"></input>
+										                		</div>
+										                	</div>
+										                	<div class="TextoOculto col-xs-12 col-md-12" style="display:none">
+										                		<textarea class="texto1" name="textoRecomenAuto_NO<?=($i);?>" placeholder="¿Por qué no?"></textarea>
+										                	</div>
+										                	<div class="desperfecto col-xs-12 col-md-12">
+										                		<?php echo image_tag('img_evaluaciones/IconoRechazado.png','class=img_Desperfecto') ?>
+										                		<p><span>¿Tenía el auto algún desperfecto mecánico?</span></p>
+										                		<div class="botonesSi_No">
+										                			<input type="button" class="botSI_desp"></input>
+										                			<input type="button" class="botNO_desp"></input>
+										                		</div>
+										                	</div>
+										                	<div class="TextoOculto3" style="display:none">
+										                		<textarea class="texto3" name="textoDesperfecto_SI<?=($i);?>" placeholder="¿Cual?"></textarea>
+										                	</div>
+										                	<div class="separacion col-xs-12 col-md-12"></div>
+										                	<div class="recomiendas col-xs-12 col-md-12">
+										                		<?php echo image_tag('img_evaluaciones/IconoUsuario.png','class=img_IconoUsuario2') ?>
+										                		<p><span>¿Recomiendas a <?php echo strtoupper($arrayOwner_Pendiente[$i]->getFirstname());?> para la comunidad Arriendas?</span></p>
+										                		<div class="botonesSi_No">
+										                			<input type="button" class="botSI_reco"></input>
+										                			<input type="button" class="botNO_reco"></input>
+										                		</div>
+										                	</div>
+										                	<div class="TextoOculto2 col-xs-12 col-md-12" style="display:none">
+										                		<textarea class="texto2" name="textoRecomen_NO<?=($i);?>" placeholder="¿Por qué no?"></textarea>
+										                	</div>
+										                	<div class="fuePuntual col-xs-12 col-md-12">
+										                		<?php echo image_tag('img_evaluaciones/IconoPuntualidad.png','class=img_IconoPuntualidad2') ?>
+										                		<p><span>¿Fue puntual?</span></p>
+										                		<div class="botonesSi_No">
+										                			<input type="button" class="botSI_punt"></input>
+										                			<input type="button" class="botNO_punt"></input>
+										                		</div>
+										                	</div>
+										                	<div class="inputOculto_punt col-xs-12 col-md-12">
+										                		<p>Tiempo que se demoró: </p>
+										                		<select class="start_punt<?=($i);?>" name="star_impuntualidad<?=($i);?>">
+										                			<option value="0">Al comienzo</option><option value="15">15 minutos</option><option value="30">30 minutos</option><option value="60">60 minutos</option><option value="90">90 minutos</option><option value="120">120 minutos</option><option value="180">150 minutos</option><option value="180">3 horas</option>
+										                		</select>
+										                		<select class="end_punt<?=($i);?>" name="end_impuntualidad<?=($i);?>">
+										                			<option value="0">Al término</option><option value="15">15 minutos</option><option value="30">30 minutos</option><option value="60">60 minutos</option><option value="90">90 minutos</option><option value="120">120 minutos</option><option value="180">150 minutos</option><option value="180">3 horas</option>
+										                		</select>
+										                	</div>
+										                	<div class="autoLimpio col-xs-12 col-md-12">
+										                		<?php echo image_tag('img_evaluaciones/IconoLimpieza.png','class=img_IconoLimpieza2') ?>
+										                		<p><span>¿El interior del auto estaba limpio?</span></p>
+										                		<div class="botonesEstrella">
+										                			<div class="star<?=($i);?> rating">&nbsp;</div>
+										                		</div>
+										                	</div>
+										                	<div class="escribeSobre col-xs-12 col-md-12">
+										                		<?php echo image_tag('img_evaluaciones/IconoComentario.png','class=img_IconoComentario') ?>
+										                		<p><span>Escribe de tu experiencia con <?php echo strtoupper($arrayOwner_Pendiente[$i]->getFirstname());?></span><span class="indicador"> (se publicará en el perfil)</span></p>
+										                		<textarea class="textoPublicacion<?=($i);?>  col-md-12" name="algoBreve<?=($i);?>" placeholder="Escribe algo breve..."></textarea>
+										                	</div>
+										                	<input type="hidden" class="preg_reco" name="preg_reco<?=($i);?>" value="0" />
+										                	<input type="hidden" class="preg_desp" name="preg_desp<?=($i);?>" value="0" />
+										                	<input type="hidden" class="preg_usua" name="preg_usua<?=($i);?>" value="0" />
+										                	<input type="hidden" class="preg_punt" name="preg_punt<?=($i);?>" value="0" />
+										                	<input type="hidden" class="estrella_llena" name="estrella_llena<?=($i);?>" value="0" />
+										                	<div class="botonListo">
+										                		<input type="hidden" name="listoOK<?=($i);?>" value="ok<?=($i);?>"/>
+										                		<input type="hidden" name="guardandoComo" value="renter">
+										                		<input type="hidden" name="posicion" value="<?=($i);?>"/>
+										                		<input type="hidden" name="idCalificacion" value="<?=$idCalificacionesComoRenter[$i]['id'];?>"/>
+										                		<input class="listo" type="submit" name="<?=($i);?>" value="" />
+										                	</div>
+										                	<!-- <div id="ajax_loader"></div> -->
+									                	</div> <!-- fin formularioContenidoPestania -->
+									                </div><!-- fin contenidoPestania -->
+								           		</ul>
+								            </li>
+								            </form>
+						        			<?php
+						        		}//fin for
+						        	}//fin si
+						        	if($cantidadArrendadores>0){
+						        		$totalPendientes = $totalPendientes + $cantidadArrendadores;
+						        		$k=0;
+						        		for($i=$cantidadDuenios;$i<$totalPendientes;$i++){
+						        			?>
+						        			<?php echo form_tag('profile/calificaciones', array('method' => 'post', 'enctype' => 'multipart/form-data', 'class' => 'frmCalificaciones')); ?>
+									        <li>
+								                <a href="#" class="encabezadoPestania click_owner">
+								                	<?php
+										            if($arrayRenter_Pendiente[$k]['facebook_id']!=null && $arrayRenter_Pendiente[$k]['facebook_id']!=""){
+						                                echo "<img src='".$arrayRenter_Pendiente[$i]['picture_file']."' class='img_usuario2'/>";
+						                            }else{
+						                                if($arrayRenter_Pendiente[$k]['picture_file']!=""){
+						                                    $filename = explode("/", $arrayRenter_Pendiente[$k]['picture_file']);
+						                                    echo image_tag("users/".$filename[Count($filename) - 1], 'class=img_usuario2');
+						                                }else{
+						                                    echo image_tag('img_calificaciones/tmp_user_foto.jpg', 'class=img_usuario2');
+						                                }
+						                            }
+								                	?>
+								                	<p><u>¿Cómo fue tu experiencia con <span><?php echo strtoupper($arrayRenter_Pendiente[$k]->getFirstname())." ".strtoupper($arrayRenter_Pendiente[$k]->getLastname()); ?></span></u></p>
+								                	<div class="fechaAcord"><?=$idCalificacionesComoOwner[$k]['fecha'];?></div><!-- PREGUNTAR SOBRE LA FECHA EN RESERVE -->
+								                </a> 
+								                <ul>
+									                <div class="contenidoPestania_O numero<?=($i);?>">
+									                	<div class="formularioContenidoPestania">
+										                	<div class="recomiendas">
+										                		<?php echo image_tag('img_evaluaciones/IconoUsuario.png','class=img_IconoUsuario2') ?>
+										                		<p><span>¿Recomiendas a <?php echo strtoupper($arrayRenter_Pendiente[$k]->getFirstname());?> para la comunidad Arriendas?</span></p>
+										                		<div class="botonesSi_No">
+										                			<input type="button" class="botSI_reco"></input>
+										                			<input type="button" class="botNO_reco"></input>
+										                		</div>
+										                	</div>
+										                	<div class="TextoOculto2" style="display:none">
+										                		<textarea class="texto2" name="textoRecomen_NO<?=($i);?>" placeholder="¿Por qué no?"></textarea>
+										                	</div>
+										                	<div class="fuePuntual">
+										                		<?php echo image_tag('img_evaluaciones/IconoPuntualidad.png','class=img_IconoPuntualidad2') ?>
+										                		<p><span>¿Fue puntual?</span></p>
+										                		<div class="botonesSi_No">
+										                			<input type="button" class="botSI_punt"></input>
+										                			<input type="button" class="botNO_punt"></input>
+										                		</div>
+										                	</div>
+										                	<div class="inputOculto_punt">
+										                		<p>Tiempo que se demoró: </p>
+										                		<select class="start_punt<?=($i);?>" name="star_impuntualidad<?=($i);?>">
+										                			<option value="0">Al comienzo</option><option value="15">15 minutos</option><option value="30">30 minutos</option><option value="60">60 minutos</option><option value="90">90 minutos</option><option value="120">120 minutos</option><option value="180">150 minutos</option><option value="180">3 horas</option>
+										                		</select>
+										                		<select class="end_punt<?=($i);?>" name="end_impuntualidad<?=($i);?>">
+										                			<option value="0">Al término</option><option value="15">15 minutos</option><option value="30">30 minutos</option><option value="60">60 minutos</option><option value="90">90 minutos</option><option value="120">120 minutos</option><option value="180">150 minutos</option><option value="180">3 horas</option>
+										                		</select>
+										                	</div>
+										                	<div class="autoLimpio">
+										                		<?php echo image_tag('img_evaluaciones/IconoLimpieza.png','class=img_IconoLimpieza2') ?>
+										                		<p><span>¿El interior del auto estaba limpio?</span></p>
+										                		<div class="botonesEstrella">
+										                			<div class="star<?=($i);?> rating">&nbsp;</div>
+										                		</div>
+										                	</div>
+										                	<div class="escribeSobre">
+										                		<?php echo image_tag('img_evaluaciones/IconoComentario.png','class=img_IconoComentario') ?>
+										                		<p><span>Escribe de tu experiencia con <?php echo strtoupper($arrayRenter_Pendiente[$k]->getFirstname());?></span><div class="indicador"> (se publicará en el perfil)</div></p>
+										                		<textarea class="textoPublicacion<?=($i);?>" name="algoBreve<?=($i);?>" placeholder="Escribe algo breve..."></textarea>
+										                	</div>
 
-						                	<!-- Campos que se mandan, pero no se guardan -->
-						                	<input type="hidden" class="preg_usua" name="preg_usua<?=($i);?>" value="3" />
-						                	<input type="hidden" class="preg_desp" name="preg_desp<?=($i);?>" value="3" />
+										                	<!-- Campos que se mandan, pero no se guardan -->
+										                	<input type="hidden" class="preg_usua" name="preg_usua<?=($i);?>" value="3" />
+										                	<input type="hidden" class="preg_desp" name="preg_desp<?=($i);?>" value="3" />
 
-						                	<input type="hidden" class="preg_reco" name="preg_reco<?=($i);?>" value="0" />
-						                	<input type="hidden" class="preg_punt" name="preg_punt<?=($i);?>" value="0" />
-						                	<input type="hidden" class="estrella_llena" name="estrella_llena<?=($i);?>" value="0" />
-						                	<div class="botonListo">
-						                		<input type="hidden" name="listoOK<?=($i);?>" value="ok<?=($i);?>"/>
-						                		<input type="hidden" name="guardandoComo" value="owner">
-						                		<input type="hidden" name="posicion" value="<?=($i);?>"/>
-						                		<input type="hidden" name="idCalificacion" value="<?=$idCalificacionesComoOwner[$k]['id'];?>"/>
-						                		<input class="listo" type="submit" name="<?=($i);?>" value="" />
-						                	</div>
-						                	<!-- <div id="ajax_loader"></div> -->
-					                	</div> <!-- fin formularioContenidoPestania -->
-					                </div><!-- fin contenidoPestania -->
-				           		</ul>
-				            </li>
-				            </form>
-		        			<?php
-		        			$k++;
-		        		}//fin for
-		        	}//fin si
-		        	?>
-		        </ul>
-		   		</div><!-- fin menu -->
-				<?php
-			}//fin if-else
-		?>
-	</div><!-- fin contenido opcion 1 -->
-	<div class="conten_opcion2">
-	<!-- MOSTRAR COMENTARIOS QUE HICISTE A OTROS USUARIOS -->
-	    <div class="evaluaciones">
-        <div class="evaluacion">
-            <?php
-            	$cantidadDeComentariosHechosPorMi = count($comentariosHechosPorMi);
+										                	<input type="hidden" class="preg_reco" name="preg_reco<?=($i);?>" value="0" />
+										                	<input type="hidden" class="preg_punt" name="preg_punt<?=($i);?>" value="0" />
+										                	<input type="hidden" class="estrella_llena" name="estrella_llena<?=($i);?>" value="0" />
+										                	<div class="botonListo">
+										                		<input type="hidden" name="listoOK<?=($i);?>" value="ok<?=($i);?>"/>
+										                		<input type="hidden" name="guardandoComo" value="owner">
+										                		<input type="hidden" name="posicion" value="<?=($i);?>"/>
+										                		<input type="hidden" name="idCalificacion" value="<?=$idCalificacionesComoOwner[$k]['id'];?>"/>
+										                		<input class="listo" type="submit" name="<?=($i);?>" value="" />
+										                	</div>
+										                	<!-- <div id="ajax_loader"></div> -->
+									                	</div> <!-- fin formularioContenidoPestania -->
+									                </div><!-- fin contenidoPestania -->
+								           		</ul>
+								            </li>
+								            </form>
+						        			<?php
+						        			$k++;
+						        		}//fin for
+						        	}//fin si
+						        	?>
+						        </ul>
+						   		</div><!-- fin menu -->
+								<?php
+							}//fin if-else
+						?>
+					</div><!-- fin contenido opcion 1 -->
 
-            	if($comentariosHechosPorMi[0] == null){
-            		?>
-            			<div class="noHay"><p>En este momento no existen comentarios hechos por ti</p></div>
-            		<?php
-            	}else{
-                	for ($i=0; $i < $cantidadDeComentariosHechosPorMi ; $i++) {
-            ?>
+					<div class="conten_opcion2 col-xs-12 col-md-12">
+					<!-- MOSTRAR COMENTARIOS QUE HICISTE A OTROS USUARIOS -->
+					    <div class="evaluaciones">
+				        <div class="evaluacion">
+				            <?php
+				            	$cantidadDeComentariosHechosPorMi = count($comentariosHechosPorMi);
 
-            <div class="comentario">
-                <div class="usuario">
+				            	if($comentariosHechosPorMi[0] == null){
+				            		?>
+				            			<div class="noHay"><p>En este momento no existen comentarios hechos por ti</p></div>
+				            		<?php
+				            	}else{
+				                	for ($i=0; $i < $cantidadDeComentariosHechosPorMi ; $i++) {
+				            ?>
 
-                    <?php echo "<a href='".url_for('profile/publicprofile?id='.$comentariosHechosPorMi[$i]['idEvaluado'])."'>"; ?>
-                    <div class="fotoPosteador">
-                        <?php 
-                            
-                            if($comentariosHechosPorMi[$i]['facebookPersonaEvaluada']!=null && $comentariosHechosPorMi[$i]['facebookPersonaEvaluada']!=""){
-                                echo "<img src='".$comentariosHechosPorMi[$i]['urlFotoPersonaEvaluada']."' class='img_usuario'/>";
-                            }else{
-                                if($comentariosHechosPorMi[$i]['urlFotoPersonaEvaluada']!=""){
-                                    $filename = explode("/", $comentariosHechosPorMi[$i]['urlFotoPersonaEvaluada']);
-                                    echo image_tag("users/".$filename[Count($filename) - 1], 'class=img_usuario');
-                                }else{
-                                    echo image_tag('img_registro/tmp_user_foto.jpg', 'class=img_usuario');
-                                }
-                            }
-                            
-                        ?>
-                    </div>
-                    <div class="nombrePosteador"><p><?php echo $comentariosHechosPorMi[$i]['nombrePersonaEvaluada']." ".$comentariosHechosPorMi[$i]['apellidoPersonaEvaluada']; ?></p></div>
-                    </a>
+				            <div class="comentario">
+				                <div class="usuario col-xs-12 col-sm-3 col-md-3 text-center">
 
-                </div>
-                <div class="campoTexto">
-                    <?php echo image_tag('img_evaluaciones/TrianguloComentarios.png','class=punta') ?>
-                    <div class="margenTexto">
-                        <div class="texto">
-                            <p><?php echo $comentariosHechosPorMi[$i]['comentarioEvaluacion']; ?></p>
-                            <div class="detallesComentario">
-                            	<div class="fecha"><span>|</span><p><?php echo $comentariosHechosPorMi[$i]['fechaEvaluacion']; ?></p></div>
-                            	<div class="limp">
-                            		<span>|</span><?php echo image_tag('img_evaluaciones/IconoLimpieza.png','class=img_det_limp') ?>
-                            		<p>Limpieza</p>
-                            		<p><?=$comentariosHechosPorMi[$i]['evaluadoLimpieza'];?>/5</p>
-                            		<?php
-                            			if($comentariosHechosPorMi[$i]['evaluadoLimpieza'] > 2){
-                            		?>
-                            			<?php echo image_tag('img_evaluaciones/IconoDedoArriba.png','class=img_dedo_arriba') ?>
-                            		<?php
-                            			}else{
-                            		?>
-                            			<?php echo image_tag('img_evaluaciones/IconoDedoAbajo.png','class=img_dedo_abajo') ?>
-                            		<?php
-                            			}
-                            		?>
+				                    <?php echo "<a href='".url_for('profile/publicprofile?id='.$comentariosHechosPorMi[$i]['idEvaluado'])."'>"; ?>
+				                    <div class="fotoPosteador col-xs-offset-4 col-xs-4 col-sm-offset-2 col-sm-8 col-md-offset-2 col-md-8 text-center">
+				                        <?php 
+				                            
+				                            if($comentariosHechosPorMi[$i]['facebookPersonaEvaluada']!=null && $comentariosHechosPorMi[$i]['facebookPersonaEvaluada']!=""){
+				                                echo "<img src='".$comentariosHechosPorMi[$i]['urlFotoPersonaEvaluada']."' class='img_usuario'/>";
+				                            }else{
+				                                if($comentariosHechosPorMi[$i]['urlFotoPersonaEvaluada']!=""){
+				                                    $filename = explode("/", $comentariosHechosPorMi[$i]['urlFotoPersonaEvaluada']);
+				                                    echo image_tag("users/".$filename[Count($filename) - 1], 'class=img_usuario');
+				                                }else{
+				                                    echo image_tag('img_registro/tmp_user_foto.jpg', 'class=img_usuario');
+				                                }
+				                            }
+				                            
+				                        ?>
+				                    </div>
+				                    <div class="nombrePosteador col-xs-12 col-md-offset-2 col-md-8 text-center"><p><?php echo $comentariosHechosPorMi[$i]['nombrePersonaEvaluada']." ".$comentariosHechosPorMi[$i]['apellidoPersonaEvaluada']; ?></p></div>
+				                    </a>
 
-                            	</div>
-                            	<div class="punt">
-                            		<span>|</span><?php echo image_tag('img_evaluaciones/IconoPuntualidad.png','class=img_det_punt') ?>
-                            		<?php
-                            			if($comentariosHechosPorMi[$i]['evaluadoPuntual'] == 1){
-                            		?>
-                            			<p>Puntual</p><?php echo image_tag('img_evaluaciones/IconoDedoArriba.png','class=img_dedo_arriba') ?>
-                            		<?php
-                            			}else{
-                            		?>
-                            			<p>Impuntual [<?php echo $comentariosHechosPorMi[$i]['evaluadoImpunt']; ?> min]</p><?php echo image_tag('img_evaluaciones/IconoDedoAbajo.png','class=img_dedo_abajo') ?>
-                            		<?php
-                            			}
-                            		?>
-                            	</div>
-                            	<div class="reco">
-                            		<?php echo image_tag('img_evaluaciones/IconoUsuario.png','class=img_det_reco') ?>
-                            		<?php
-                            			if($comentariosHechosPorMi[$i]['evaluadoRecomendado'] == 1){
-                            		?>
-                            			<p>Recomendado</p><?php echo image_tag('img_evaluaciones/IconoDedoArriba.png','class=img_dedo_arriba') ?>
-                            		<?php
-                            			}else{
-                            		?>
-                            			<p>No recomendado</p><?php echo image_tag('img_evaluaciones/IconoDedoAbajo.png','class=img_dedo_abajo') ?>
-                            		<?php
-                            			}
-                            		?>
-                            	</div>                            	
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+				                </div>
+				                <div class="campoTexto col-xs-12 col-sm-9 col-md-9">
+				                    <div class="col-sm-12 col-md-12 margenTexto">
+				                        <div class="texto col-sm-12 col-md-12">
+				                            <p><?php echo $comentariosHechosPorMi[$i]['comentarioEvaluacion']; ?></p>
+				                            <div class="detallesComentario">
+				                            	<div class="fecha"><span>|</span><p><?php echo $comentariosHechosPorMi[$i]['fechaEvaluacion']; ?></p></div>
+				                            	<div class="limp">
+				                            		<span>|</span><?php echo image_tag('img_evaluaciones/IconoLimpieza.png','class=img_det_limp') ?>
+				                            		<p>Limpieza</p>
+				                            		<p><?=$comentariosHechosPorMi[$i]['evaluadoLimpieza'];?>/5</p>
+				                            		<?php
+				                            			if($comentariosHechosPorMi[$i]['evaluadoLimpieza'] > 2){
+				                            		?>
+				                            			<?php echo image_tag('img_evaluaciones/IconoDedoArriba.png','class=img_dedo_arriba') ?>
+				                            		<?php
+				                            			}else{
+				                            		?>
+				                            			<?php echo image_tag('img_evaluaciones/IconoDedoAbajo.png','class=img_dedo_abajo') ?>
+				                            		<?php
+				                            			}
+				                            		?>
 
-            <?php
-            		}//fin for
-            	}//fin if-else
-            ?>
-        </div><!-- fin evaluacion -->
-    </div><!-- fin evaluaciones -->
-	</div>
-	<div class="conten_opcion3">
-	<!-- MOSTRAR COMENTARIOS QUE OTROS HICIERON SOBRE TI -->
-    <div class="evaluaciones">
-        <div class="evaluacion">
-        	<?php
-        	$cantidadDeComentariosSobreMi = count($comentariosSobreMi);
+				                            	</div>
+				                            	<div class="punt">
+				                            		<span>|</span><?php echo image_tag('img_evaluaciones/IconoPuntualidad.png','class=img_det_punt') ?>
+				                            		<?php
+				                            			if($comentariosHechosPorMi[$i]['evaluadoPuntual'] == 1){
+				                            		?>
+				                            			<p>Puntual</p><?php echo image_tag('img_evaluaciones/IconoDedoArriba.png','class=img_dedo_arriba') ?>
+				                            		<?php
+				                            			}else{
+				                            		?>
+				                            			<p>Impuntual [<?php echo $comentariosHechosPorMi[$i]['evaluadoImpunt']; ?> min]</p><?php echo image_tag('img_evaluaciones/IconoDedoAbajo.png','class=img_dedo_abajo') ?>
+				                            		<?php
+				                            			}
+				                            		?>
+				                            	</div>
+				                            	<div class="reco">
+				                            		<?php echo image_tag('img_evaluaciones/IconoUsuario.png','class=img_det_reco') ?>
+				                            		<?php
+				                            			if($comentariosHechosPorMi[$i]['evaluadoRecomendado'] == 1){
+				                            		?>
+				                            			<p>Recomendado</p><?php echo image_tag('img_evaluaciones/IconoDedoArriba.png','class=img_dedo_arriba') ?>
+				                            		<?php
+				                            			}else{
+				                            		?>
+				                            			<p>No recomendado</p><?php echo image_tag('img_evaluaciones/IconoDedoAbajo.png','class=img_dedo_abajo') ?>
+				                            		<?php
+				                            			}
+				                            		?>
+				                            	</div>                            	
+				                            </div>
+				                        </div>
+				                    </div>
+				                </div>
+				            </div>
 
-            	if($comentariosSobreMi[0] == null){
-            		?>
-            			<div class="noHay"><p>En este momento no existen comentarios sobre ti</p></div>
-            		<?php
-            	}else{
-        	?>
-            <div class="calificacionEstrellas">
-                <div class="puntualidad">
-                    <?php echo image_tag('img_evaluaciones/IconoPuntualidad.png','class=img_IconoPuntualidad') ?>
-                    <p><span>Puntualidad</span></p>
-                    <div class="estrellas">
-                        <?php
-                            for($i=0; $i<5; $i++){
-                                if($i<$puntualidad){//estrella marcada
-                                    echo image_tag('img_evaluaciones/IconoEstrellaCeleste.png');
-                                }else{//estrella no marcada
-                                    echo image_tag('img_evaluaciones/IconoEstrellaGris.png');
-                                }
-                            }
-                        ?>
-                    </div>
-                </div>
-                <div class="limpieza">
-                    <?php echo image_tag('img_evaluaciones/IconoLimpieza.png','class=img_IconoLimpieza') ?>
-                    <p><span>Limpieza</span></p>
-                    <div class="estrellas">
-                        <?php
-                            for($i=0; $i<5; $i++){
-                                if($i<$limpieza){//estrella marcada
-                                    echo image_tag('img_evaluaciones/IconoEstrellaCeleste.png');
-                                }else{//estrella no marcada
-                                    echo image_tag('img_evaluaciones/IconoEstrellaGris.png');
-                                }
-                            }
-                        ?>
-                    </div>
-                </div>
-            </div>
+				            <?php
+				            		}//fin for
+				            	}//fin if-else
+				            ?>
+				        </div><!-- fin evaluacion -->
+				    </div><!-- fin evaluaciones -->
+					</div>
+					<div class="conten_opcion3 col-xs-12 col-md-12">
+					<!-- MOSTRAR COMENTARIOS QUE OTROS HICIERON SOBRE TI -->
+				    <div class="evaluaciones">
+				        <div class="evaluacion">
+				        	<?php
+				        	$cantidadDeComentariosSobreMi = count($comentariosSobreMi);
 
-            <?php
-                for ($i=0; $i < $cantidadDeComentariosSobreMi ; $i++) {
-            ?>
+				            	if($comentariosSobreMi[0] == null){
+				            		?>
+				            			<div class="noHay"><p>En este momento no existen comentarios sobre ti</p></div>
+				            		<?php
+				            	}else{
+				        	?>
+				            <div class="calificacionEstrellas col-xs-12 col-sm-offset-1 col-sm-11 col-md-offset-1 col-md-11 text-center">
+				                <div class="puntualidad col-xs-12	 col-sm-6 col-md-6">
+				                    <?php echo image_tag('img_evaluaciones/IconoPuntualidad.png','class=img_IconoPuntualidad') ?>
+				                    <p><span>Puntualidad</span></p>
+				                    <div class="estrellas">
+				                        <?php
+				                            for($i=0; $i<5; $i++){
+				                                if($i<$puntualidad){//estrella marcada
+				                                    echo image_tag('img_evaluaciones/IconoEstrellaCeleste.png');
+				                                }else{//estrella no marcada
+				                                    echo image_tag('img_evaluaciones/IconoEstrellaGris.png');
+				                                }
+				                            }
+				                        ?>
+				                    </div>
+				                </div>
+				                <div class="limpieza col-xs-12 col-sm-6 col-md-6">
+				                    <?php echo image_tag('img_evaluaciones/IconoLimpieza.png','class=img_IconoLimpieza') ?>
+				                    <p><span>Limpieza</span></p>
+				                    <div class="estrellas">
+				                        <?php
+				                            for($i=0; $i<5; $i++){
+				                                if($i<$limpieza){//estrella marcada
+				                                    echo image_tag('img_evaluaciones/IconoEstrellaCeleste.png');
+				                                }else{//estrella no marcada
+				                                    echo image_tag('img_evaluaciones/IconoEstrellaGris.png');
+				                                }
+				                            }
+				                        ?>
+				                    </div>
+				                </div>
+				            </div>
 
-            <div class="comentario">
-                <div class="usuario">
-                    <?php echo "<a href='".url_for('profile/publicprofile?id='.$comentariosSobreMi[$i]['idEvaluador'])."'>"; ?>
-                    <div class="fotoPosteador">
-                        <?php 
-                            
-                            if($comentariosSobreMi[$i]['facebookEvaluador']!=null && $comentariosSobreMi[$i]['facebookEvaluador']!=""){
-                                echo "<img src='".$comentariosSobreMi[$i]['urlFotoEvaluador']."' class='img_usuario'/>";
-                            }else{
+				            <?php
+				                for ($i=0; $i < $cantidadDeComentariosSobreMi ; $i++) {
+				            ?>
+
+				            <div class="comentario">
+			                   <div class="usuario2 col-xs-12 col-sm-3 col-md-3 text-center">
+			                    <?php echo "<a href='".url_for('profile/publicprofile?id='.$comentariosSobreMi[$i]['idEvaluador'])."'>"; ?>
+			                    <div class="fotoPosteador col-xs-offset-4 col-xs-4 col-sm-offset-2 col-sm-8 col-md-offset-2 col-md-8 text-center">
+		                        <?php       
+	                            if($comentariosSobreMi[$i]['facebookEvaluador']!=null && $comentariosSobreMi[$i]['facebookEvaluador']!=""){
+	                                echo "<img src='".$comentariosSobreMi[$i]['urlFotoEvaluador']."' class='img_usuario'/>";
+	                            }else{
                                 if($comentariosSobreMi[$i]['urlFotoEvaluador']!=""){
                                     $filename = explode("/", $comentariosSobreMi[$i]['urlFotoEvaluador']);
                                     echo image_tag("users/".$filename[Count($filename) - 1], 'class=img_usuario');
                                 }else{
                                     echo image_tag('img_registro/tmp_user_foto.jpg', 'class=img_usuario');
                                 }
-                            }
-                            
-                        ?>
-                    </div>
-                    <div class="nombrePosteador"><p><?php echo $comentariosSobreMi[$i]['nombreEvaluador']." ".$comentariosSobreMi[$i]['apellidoEvaluador']; ?></p></div>
-                    </a>
+	                            }
+				                            
+				                        ?>
+				                    </div>
+				                    <div class="nombrePosteador col-xs-12 col-md-offset-2 col-md-8 text-center"><p><?php echo $comentariosSobreMi[$i]['nombreEvaluador']." ".$comentariosSobreMi[$i]['apellidoEvaluador']; ?></p></div>
+				                    </a>
 
-                </div>
-                <div class="campoTexto">
-                    <?php echo image_tag('img_evaluaciones/TrianguloComentarios.png','class=punta') ?>
-                    <div class="margenTexto">
-                        <div class="texto">
-                            <p><?php echo $comentariosSobreMi[$i]['comentarioEvaluacion']; ?></p>
-                            <div class="detallesComentario">
-                            	<div class="fecha"><span>|</span><p><?php echo $comentariosSobreMi[$i]['fechaEvaluacion']; ?></p></div>
-                            	<div class="limp">
-                            		<span>|</span><?php echo image_tag('img_evaluaciones/IconoLimpieza.png','class=img_det_limp') ?>
-                            		<p>Limpieza</p>
-                            		<p><?=$comentariosSobreMi[$i]['limpio'];?>/5</p>
-                            		<?php
-                            			if($comentariosSobreMi[$i]['limpio'] > 2){
-                            		?>
-                            			<?php echo image_tag('img_evaluaciones/IconoDedoArriba.png','class=img_dedo_arriba') ?>
-                            		<?php
-                            			}else{
-                            		?>
-                            			<?php echo image_tag('img_evaluaciones/IconoDedoAbajo.png','class=img_dedo_abajo') ?>
-                            		<?php
-                            			}
-                            		?>
+				                </div>
+				                <div class="campoTexto2 col-xs-12 col-sm-9 col-md-9">
+				                    <?php echo image_tag('img_evaluaciones/TrianguloComentarios.png','class=punta') ?>
+				                    <div class="margenTexto col-sm-12 col-md-12">
+				                        <div class="texto col-sm-12 col-md-12">
+				                            <p><?php echo $comentariosSobreMi[$i]['comentarioEvaluacion']; ?></p>
+				                            <div class="detallesComentario">
+				                            	<div class="fecha"><span>|</span><p><?php echo $comentariosSobreMi[$i]['fechaEvaluacion']; ?></p></div>
+				                            	<div class="limp">
+				                            		<span>|</span><?php echo image_tag('img_evaluaciones/IconoLimpieza.png','class=img_det_limp') ?>
+				                            		<p>Limpieza</p>
+				                            		<p><?=$comentariosSobreMi[$i]['limpio'];?>/5</p>
+				                            		<?php
+				                            			if($comentariosSobreMi[$i]['limpio'] > 2){
+				                            		?>
+				                            			<?php echo image_tag('img_evaluaciones/IconoDedoArriba.png','class=img_dedo_arriba') ?>
+				                            		<?php
+				                            			}else{
+				                            		?>
+				                            			<?php echo image_tag('img_evaluaciones/IconoDedoAbajo.png','class=img_dedo_abajo') ?>
+				                            		<?php
+				                            			}
+				                            		?>
 
-                            	</div>
-                            	<div class="punt">
-                            		<span>|</span><?php echo image_tag('img_evaluaciones/IconoPuntualidad.png','class=img_det_punt') ?>
-                            		<?php
-                            			if($comentariosSobreMi[$i]['puntual'] == 1){
-                            		?>
-                            			<p>Puntual</p><?php echo image_tag('img_evaluaciones/IconoDedoArriba.png','class=img_dedo_arriba') ?>
-                            		<?php
-                            			}else{
-                            		?>
-                            			<p>Impuntual [<?php echo $comentariosSobreMi[$i]['impunt']; ?> min]</p><?php echo image_tag('img_evaluaciones/IconoDedoAbajo.png','class=img_dedo_abajo') ?>
-                            		<?php
-                            			}
-                            		?>
-                            	</div>
-                            	<div class="reco">
-                            		<?php echo image_tag('img_evaluaciones/IconoUsuario.png','class=img_det_reco') ?>
-                            		<?php
-                            			if($comentariosSobreMi[$i]['recomendado'] == 1){
-                            		?>
-                            			<p>Recomendado</p><?php echo image_tag('img_evaluaciones/IconoDedoArriba.png','class=img_dedo_arriba') ?>
-                            		<?php
-                            			}else{
-                            		?>
-                            			<p>No recomendado</p><?php echo image_tag('img_evaluaciones/IconoDedoAbajo.png','class=img_dedo_abajo') ?>
-                            		<?php
-                            			}
-                            		?>
-                            	</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+				                            	</div>
+				                            	<div class="punt">
+				                            		<span>|</span><?php echo image_tag('img_evaluaciones/IconoPuntualidad.png','class=img_det_punt') ?>
+				                            		<?php
+				                            			if($comentariosSobreMi[$i]['puntual'] == 1){
+				                            		?>
+				                            			<p>Puntual</p><?php echo image_tag('img_evaluaciones/IconoDedoArriba.png','class=img_dedo_arriba') ?>
+				                            		<?php
+				                            			}else{
+				                            		?>
+				                            			<p>Impuntual [<?php echo $comentariosSobreMi[$i]['impunt']; ?> min]</p><?php echo image_tag('img_evaluaciones/IconoDedoAbajo.png','class=img_dedo_abajo') ?>
+				                            		<?php
+				                            			}
+				                            		?>
+				                            	</div>
+				                            	<div class="reco">
+				                            		<?php echo image_tag('img_evaluaciones/IconoUsuario.png','class=img_det_reco') ?>
+				                            		<?php
+				                            			if($comentariosSobreMi[$i]['recomendado'] == 1){
+				                            		?>
+				                            			<p>Recomendado</p><?php echo image_tag('img_evaluaciones/IconoDedoArriba.png','class=img_dedo_arriba') ?>
+				                            		<?php
+				                            			}else{
+				                            		?>
+				                            			<p>No recomendado</p><?php echo image_tag('img_evaluaciones/IconoDedoAbajo.png','class=img_dedo_abajo') ?>
+				                            		<?php
+				                            			}
+				                            		?>
+				                            	</div>
+				                            </div>
+				                        </div>
+				                    </div>
+				                </div>
+				            </div>
 
-            <?php
-            		} //fin for
-        		}//fin if-else
-            ?>
-        </div> <!-- fin evaluacion -->
-    </div><!-- fin evaluaciones -->
-	</div> <!-- fin content_opcion3 -->
+				            <?php
+				            		} //fin for
+				        		}//fin if-else
+				            ?>
+				        </div> <!-- fin evaluacion -->
+				    </div><!-- fin evaluaciones -->
+					</div> <!-- fin content_opcion3 -->
+				</div>
+			</div>
+		</div>
+	</div>
+<div class="hidden-xs space-100"></div>
+<div class="visible-xs space-50"></div>	
 </div>
 
 <script type="text/javascript">

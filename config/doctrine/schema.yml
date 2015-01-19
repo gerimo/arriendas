@@ -203,6 +203,9 @@ Car:
       type: boolean
       notnull: true
       default: 1
+    disabled_until:
+      type: date
+      default: null  
     verification_id:
       type: integer(11)
     fecha_subida:
@@ -241,6 +244,13 @@ Car:
       class: Comunas
       local: comuna_id
       foreign: codigoInterno
+      foreignAlias: Cars
+      onDelete: no action
+      onUpdate: no action
+    Commune:
+      class: Commune
+      local: commune_id
+      foreign: id
       foreignAlias: Cars
       onDelete: no action
       onUpdate: no action
@@ -352,6 +362,38 @@ City:
     id_UNIQUE:
       fields: [id]
       type: unique
+  options:
+    charset: utf8
+    type: InnoDB
+
+Commune:
+  tableName: Commune
+  columns:
+    id:
+      type: integer(11)
+      primary: true
+      notnull: true
+      autoincrement: true
+    code:
+      type: integer(11)
+      notnull: true
+    name:
+      type: string(255)
+      notnull: true
+    region_id:
+      type: integer(11)
+      notnull: true
+    slug:
+      type: string(100)
+      notnull: true
+  relations:
+    Region:
+      class: Region
+      local: region_id
+      foreign: id
+      foreignAlias: Communes
+      onDelete: no action
+      onUpdate: no action
   options:
     charset: utf8
     type: InnoDB
@@ -810,6 +852,27 @@ Reserve:
     charset: utf8
     type: InnoDB
 
+Region:
+  tableName: Region
+  columns:
+    id:
+      type: integer(11)
+      primary: true
+      notnull: true
+      autoincrement: true
+    is_active:
+      type: boolean
+      default: true
+    name:
+      type: string(255)
+      notnull: true
+    natural_order:
+      type: integer(11)
+      notnull: true
+  options:
+    charset: utf8
+    type: InnoDB
+
 State:
   tableName: State
   columns:
@@ -885,6 +948,9 @@ Transaction:
       default: null
     numero_factura:
       type: integer(7)
+    selected:
+      type: boolean
+      default: false
   relations:
     User:
       class: User
