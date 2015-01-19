@@ -1,92 +1,184 @@
-<?php use_stylesheet('calendario.css') ?>
-<?php use_stylesheet('comunes.css') ?>
-<?php use_stylesheet('mis_autos.css??v=05122014') ?>
-<?php use_stylesheet('registro.css') ?>
-<?php
-    $useragent=$_SERVER['HTTP_USER_AGENT'];
-    if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i',$useragent)||preg_match('/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i',substr($useragent,0,4))){
-        use_stylesheet('moviles.css');
-    }
-?>
-<?php use_javascript('cars.js') ?>
+<link href="/css/newDesign/cars.css" rel="stylesheet" type="text/css">
 
-<?php use_stylesheet('jquery.timepicker.css') ?>
-<?php use_javascript('jquery.timepicker.js') ?>
+<div class="hidden-xs space-100"></div>
+<div class="visible-xs space-50"></div>
 
-<style>
+<div class="row">
+    <div class="col-md-offset-3 col-md-6">
+        <div class="BCW">
+            
+            <div class="encabezado">
+                <h1>MIS AUTOS</h1>
+            </div>         
 
-    h3 {
-        font-size: 14px;
-        font-weight: bold;
-        padding: 20px 0 10px 0;
-        text-align: center;
-    }
+            <div class="col-md-offset-8 col-md-4">
+                    <a class="col-md-12  btn-block btn-a-primary" href="<?php echo url_for('profile/addCar') ?>">¡Sube un auto!</a>
+            </div>      
+                       
+            <div class="row">
+                <?php foreach ($cars as $c): ?>
+                    <br/><br/>
+                    
+                    <div class="misautos_user_item plomo" id="item_<?php echo $c->getId() ?>">
+                                            
+                        <div class="row plomo">
+                            <div class="col-md-3 ">
+                                <a href="<?php echo url_for('profile/addCar?id=' . $c->getId() )?>" >
+                                    <?php if($c->getPhotoS3() == 1): ?>
+                                        <?php echo image_tag($c->getFoto(),array("width"=>"84px","height"=>"84px")) ?>
+                                    <?php else: ?>
+                                        <?php $base_url = $sf_request->getUriPrefix().$sf_request->getRelativeUrlRoot() ?>
+                                        <?php echo "<img class='foto' style='margin-top: 7px'src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_84,h_84,c_fill,g_center/".$base_url."/uploads/cars/".$c->getFoto()."'/>" ?>
+                                    <?php endif; ?>
+                                </a>
+                            </div>
+                            
+                            <div class="col-offset-md-3 col-md-3 misautos_marca">
+                                <a href="<?php echo url_for('profile/addCar?id=' . $c->getId() )?>" ><span><?=$c->getModel()->getBrand()->getName()?> <?=$c->getModel()->getName()?></span></a>
+                            </div>
+                            
+                            <div class="col-md-offset-1 col-md-1" id="car_<?php echo $c->getId() ?>">
+                                <div class="imgActivo col-md-offset-11 col-md-1" style="margin-top:12px">
+                                        <div class="circuloActivo" style="display: <?= ($c->getActivo() == 1)?"block":"none" ?>"></div>
+                                        <div class="circuloInactivo" style="display: <?= ($c->getActivo() == 0)?"block":"none" ?>" ></div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">    
+                                <select class="form-control selectorActivo" >
+                                    <option  value="1" <?= ($c->getActivo() == 1)?"selected":"" ?>>Activo</option>
+                                    <option  value="0" <?= ($c->getActivo() == 0)?"selected":"" ?>>Inactivo</option>
+                                </select>
+                            </div>     
+                        </div>
 
-    .AOC-container {
-        text-align: center;
-    }
+                        <!-- Esto es para mostrar el form desde - hasta-->
+                        <div class="row">                                   
+                            <div id="<?php echo $c->getId() ?>">
+                                <?php if (isset($availabilityOfCars[$c->getId()])): ?>
+                                    <div class="availabilityOfCars">
+                                        <h2>Horario para recibir un cliente</h2>   
+                                        <?php foreach ($availabilityOfCars[$c->getId()] as $AOC): ?>
+                                            <div class="row">
+                                                <h3 class="col-md-offset-1"><?php echo $AOC["dayName"] ." ". date("j", strtotime($AOC["day"])) ?></h3>
+                                                <div class="AOC-container" data-car-id="<?php echo $c->getId() ?>" data-day="<?php echo $AOC['day'] ?>">
+                                                    <div class='col-md-offset-3 col-md-4'>
+                                                        <div class="date-group">
+                                                            <span>Desde:</span>
+                                                            <div class='input-group date'>
+                                                                <input id="from<?php echo $c->getId() ?>" class="from datetimepicker form-control" type="text" <?php if (isset($AOC['from'])):echo "value='".date("H:i", strtotime($AOC['from']))."'";endif; ?>>
+                                                                <!--span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span-->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="date-group">
+                                                            <span>Hasta:</span>
+                                                            <div class='input-group date'>
+                                                                <input id="to<?php echo $c->getId() ?>" class="to datetimepicker form-control" type="text" <?php if (isset($AOC['to'])): echo "value='".date("H:i", strtotime($AOC['to']))."'"; endif; ?>>
+                                                                <!--span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span-->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="hidden-xs space-10">
+                                                    <br><br>
+                                                    <br><br>
+                                                    </div>
+                                                    <div class="botones col-md-12 hidden-xs" style="margin-top:22px">
+                                                        <a class="btn-a-action col-md-offset-4 col-md-2 btnCars-delete-availability" href="">Eliminar</a>
+                                                        <a style="margin-left: 87px" class="btn-a-action col-md-offset-1 col-md-2 btnCars-save-availability" href="">Guardar</a>
+                                                        <br/>
+                                                    </div>
+                                                    <div class="visible-xs">
+                                                        <a class="btn-a-action btn-block btnCars-delete-availability" href="">Eliminar</a>
+                                                        <a class="btn-a-action btn-block btnCars-save-availability" href="">Guardar</a>
+                                                        <br/>
+                                                    </div>
 
-    .normal-text {
-        font-size: 12px;
-        font-weight: normal;
-        padding: 0 10px 0 5px;
-    }
+                                                </div><!--fin AOC-container-->
+                                            </div>
+                                                <div class="hidden-xs space-10">    
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div><!--fin availabilityOfCars-->
+                                <?php else: ?>                                    
+                                    <div class="disabledOfCars" id="dis_unt_<?php echo $c->getId() ?>" >
+                                        <div clas="DOC-container" data-car-id="<?php echo $c->getId() ?>">
+                                            <div class="col-md-offset-8 col-md-4">
+                                                <div class='date-group'>
+                                                    <span>Inactivo Hasta:</span>
+                                                    <div class="input-group date ">
+                                                        <input id="todisabled<?php echo $c->getId() ?>" class="todisabled form-control" type="text" value="<?php echo $c->getDisabledUntil() ? date('d-m-Y',strtotime($c->getDisabledUntil())): "";?>">
+                                                        <!--span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span-->
+                                                        </span>
+                                                    </div><!-- fin input-group date-->
+                                                    <br>
+                                                </div>
+                                            </div>
+                                        </div><!--Fin DocContainer -->
+                                    </div><!-- FIN disabledOfCars-->
+                                <?php endif; ?>
+                            </div><!-- fin id dinamico del desde-hasta -->
+                        </div>
+                    </div><!--fin misautos_user_item-->
+                <?php endforeach; ?>
+            </div><!--fin row-->
+        </div><!--fin BCW-->
+    </div><!--fin -->
+</div>
 
-    .btnCars {
-        width: 100px;
-        height: 26px;
-        background-image: url('../images/bt_blue_on_v2.png');
-        border: 1px solid #36cced;
-        border-radius: 1px 1px 1px 1px;
-        color: #FFFFFF;
-        text-shadow: 1px 1px 1px #758386;
-        font-size: 12px;
-        line-height: 23px;
-        text-align: center;
-        text-decoration: none;
-
-        padding: 3px 9px;
-    }
-
-    .btnCars:hover {
-        background-image: url('../images/bt_blue_hover_v2.png');
-        text-decoration: underline;
-    }
-
-    .loader {
-        height: 15px;
-        width: 15px;
-        display: none;
-    }
-</style>
+<div class="hidden-xs space-100"></div>
 
 <script type="text/javascript">
-    var urlEliminarCarAjax = <?php echo "'".url_for("profile/eliminarCarAjax")."';" ?>
+
     var toggleActiveCarAjax = <?php echo "'".url_for("profile/toggleActiveCarAjax")."';" ?>
 
-    var toggleActiveCAEAjax = <?php echo "'".url_for("profile/toggleActiveCAEAjax")."';" ?>
-
-    $(document).on('ready',function(){
-
-        $('.mis_autos_verificado').on('click',function(e){
-            e.preventDefault();
-        });
+    function deleteDisabled(idCar){
         
+        var todisabled = $('#todisabled'+idCar).val();
+        $.post("<?php echo url_for('profile/CarDisabledUntilDelete') ?>", {"car": idCar,"to": todisabled}, function(r){
+            console.log(r);
+            if (!r.error) {
+                $('#todisabled'+idCar).val("");
+            }    
+         });
+    }
+
+    function deleteAvailability(idCar){
+        var from = $('#from'+idCar).val();
+        var to   = $('#to'+idCar).val();
+        var day  = $(".AOC-container").attr("data-day");
+        
+            $.post("<?php echo url_for('profile/CarAvailabilityDeleteChangeStatus') ?>", {"car": idCar, "day": day});
+    }
+        
+    $(document).on('ready',function(){
+          
         $(".selectorActivo").change(function() {
-            var id = $(this).parent().attr("id").replace("car_", "");
-            var active = $(this).val();
+
+            //prev()->busca el hermano anterior
+            //next()->busca el hermano siguiente
+            var id           = $(this).parent().prev().attr("id").replace("car_", "");
+            var active       = $(this).val();
             var divImgActivo = $(this).parent().children(".imgActivo");
-            if(active == 0){
+            if(active == 0){//esta desactivado
                 divImgActivo.children(".circuloActivo").css("display","none");
                 divImgActivo.children(".circuloInactivo").css("display","block");
+                //setea en 1 is_delete of CarAvailability
+                deleteAvailability(id);
             }else{
                 divImgActivo.children(".circuloInactivo").css("display","none");
                 divImgActivo.children(".circuloActivo").css("display","block");
+                //setea en null disabled_until.
+                deleteDisabled(id);
             }
                 
             $('#item_'+id+' .cargando').show();
             $.ajax({
-                    type:'post',
+               type:'post',
                     url: toggleActiveCarAjax,
                     data:{
                         "idCar" : id,
@@ -94,19 +186,18 @@
                     }
             }).done(function(){
                     $('#item_'+id+' .cargando').hide();
+                    location.reload();
             }).fail(function(){
-                    alert('Ha ocurrido un error al eliminar el vehículo, inténtelo nuevamente');
+                    alert('Ha ocurrido un error al inactivar el vehículo, inténtelo nuevamente');
                     $('#item_'+id+' .cargando').hide();
             });
         });
 
-        
-
-        $(".btnCars-save").click(function(e){
+        $(".btnCars-save-availability").click(function(e){
 
             e.preventDefault();
             
-            var p = $(this).parent();
+            var p = $(this).parent().parent();
 
             var car    = p.data("car-id");
             var day    = p.data("day");
@@ -117,20 +208,26 @@
             loader.show();
 
             $.post("<?php echo url_for('profile/carAvailabilitySave') ?>", {"car": car, "day": day, "from": from, "to": to}, function(r){
-                console.log(r); // JS no esta interpretando el JSON
+                
                 if (r.error) {
                     alert(r.errorMessage);
                 }
-
+                
                 loader.hide();
-            });
-        });
 
-        $(".btnCars-delete").click(function(e){
+            }, "json");
+
+            
+            if(to<from){
+                p.find(".to").val("");
+                
+            }
+        });
+       
+        $(".btnCars-delete-availability").click(function(e){
 
             e.preventDefault();
-
-            var p = $(this).parent();
+            var p = $(this).parent().parent();
 
             var car    = p.data("car-id");
             var day    = p.data("day");
@@ -145,124 +242,57 @@
                 if (!r.error) {
                     from.val("");
                     to.val("");
+                    p.find(".to").val("");
                 }
-
                 loader.hide();
             });
         });
 
-        $('.ui-timepicker-input').timepicker();
+        $(".todisabled").change(function(e){
 
-        $(".main_contenido").height($(".availabilityOfCars").height() * $(".availabilityOfCars").length + $(".misautos_user_item").length * 120 + 300);
+            e.preventDefault();
+
+            var p          = $(this).parent().parent().parent().parent();
+            var car        = p.data("car-id");
+            var todisabled = p.find(".todisabled").val();
+            var loader     = p.find(".loader");
+            loader.show();
+            $.post("<?php echo url_for('profile/CarDisabledUntilSave') ?>", {"car": car,"to": todisabled}, function(r){
+                console.log(r); // JS no esta interpretando el JSON
+                loader.hide();
+
+            },"json");
+                       
+        });
+
+        $(".todisabled").datetimepicker({
+
+            timepicker:false,
+            dayOfWeekStart: 1,
+            lang:'es',
+            minDate: "<?php echo date('d-m-Y') ?>",
+            closeOnDateSelect:true,
+            format:'d-m-Y'
+        });
+
+        $('.datetimepicker').datetimepicker({
+            
+            dayOfWeekStart: 1,
+            lang:'es',
+            datepicker:false,
+            allowTimes:[
+                "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
+                "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
+                "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
+                "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+                "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+                "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
+                "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
+                "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
+            ],
+            
+            format:'H:i'
+        });
+
     });
 </script>
-
-<div class="main_box_1">
-<div class="main_box_2">
-
-<?php include_component('profile', 'profile') ?>
-
-<!--  contenido de la seccion -->
-<div class="main_contenido">
-
-    <div class="barraSuperior">
-        <p>MIS AUTOS</p>
-    </div>
-
-    <div class="botonSubeTuAuto">
-        <a href="<?php echo url_for('profile/addCar') ?>"><?php echo image_tag('img_mis_autos/Subeunauto.png') ?></a>
-    </div>
- 
-
-    <div class="misautos_box">
-
-        <?php foreach ($cars as $c): ?>
-            
-            <div class="misautos_user_item" id="item_<?php echo $c->getId() ?>">
-                
-                <div class="misautos_user_post">
-                        
-                    <div class="activo" id="car_<?php echo $c->getId() ?>">
-                        <div class="imgActivo">
-                                <div class="circuloActivo" style="display: <?= ($c->getActivo() == 1)?"block":"none" ?>"></div>
-                                <div class="circuloInactivo" style="display: <?= ($c->getActivo() == 0)?"block":"none" ?>" ></div>
-                        </div>
-                        <select class="selectorActivo">
-                            <option value="1" <?= ($c->getActivo() == 1)?"selected":"" ?>>Activo</option>
-                            <option value="0" <?= ($c->getActivo() == 0)?"selected":"" ?>>Inactivo</option>
-                        </select>
-                    </div>
-                        
-                    <div class="misautos_marca">
-                        <a href="<?php echo url_for('profile/addCar?id=' . $c->getId() )?>" ><span><?=$c->getModel()->getBrand()->getName()?> <?=$c->getModel()->getName()?></span></a>
-                    </div><!-- misautos_marca -->
-                
-                
-                    <div class="misautos_btn_sector">
-                        <!-- <a href="<?php echo url_for('profile/pedidos') ?>" class="misautos_btn_alqui">Mis Arriendos</a> -->
-                    
-                        <!-- Obtener variable $ok del Auto, rescatandolo de la DB, por mientras se usará de variable -->
-                        <!-- $ok = 0; -->
-                        <?php $ok = $c->getSeguroOk(); ?>
-                        <?php if($ok <> 4): ?>
-                            <div class="divBotonVerificar" style="backgound-color:#ec008c;">
-                                <!-- <a href="mailto:soporte@arriendas.cl?subject=Reserva%20un%20horario%20para%20que%20verifiquemos%20tu%20auto" class="misautos_btn_alqui">Verificar</a> -->
-                            </div>
-                        <?php else: ?>
-                            <div class="divBotonVerificar">
-                                <a href="#" class="mis_autos_verificado">Verificado</a>
-                            </div>
-                        <?php endif; ?>
-                    </div><!-- misautos_btn_sector -->
-                
-                    <div class='cargando'><?php echo image_tag('../images/ajax-loader.gif', 'class=img_cargando'); ?></div>
-
-                    <div class="misautos_user_item_flecha"></div>
-                </div><!-- misautos_user_post -->
-            
-                <div class="misautos_user_frame">
-                
-                    <a href="<?php echo url_for('profile/addCar?id=' . $c->getId() )?>" >
-                        <?php if($c->getPhotoS3() == 1): ?>
-                            <?php echo image_tag($c->getFoto(),array("width"=>"84px","height"=>"84px")) ?>
-                        <?php else: ?>
-                            <?php $base_url = $sf_request->getUriPrefix().$sf_request->getRelativeUrlRoot() ?>
-                            <?php echo "<img class='foto' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_84,h_84,c_fill,g_center/".$base_url."/uploads/cars/".$c->getFoto()."'/>" ?>
-                        <?php endif; ?>
-                    </a>
-                </div>
-
-                <?php if (isset($availabilityOfCars[$c->getId()])): ?>
-
-                    <div class="availabilityOfCars">
-                        <h2>Horario para recibir un cliente</h2>
-                        
-                        <?php foreach ($availabilityOfCars[$c->getId()] as $AOC): ?>
-
-                            <h3><?php echo $AOC["dayName"] ." ". date("j", strtotime($AOC["day"])) ?></h3>
-                            <div class="AOC-container" data-car-id="<?php echo $c->getId() ?>" data-day="<?php echo $AOC['day'] ?>">
-                                <span class="normal-text">Desde</span>
-                                <input autocomplete="off" class="from time ui-timepicker-input" type="text" <?php if (isset($AOC['from'])): echo "value='".date("H:ia", strtotime($AOC['from']))."'"; endif; ?>></td>
-                                <input autocomplete="off" class="to time ui-timepicker-input" type="text" <?php if (isset($AOC['to'])): echo "value='".date("H:ia", strtotime($AOC['to']))."'"; endif; ?>></td>
-                                <span class="normal-text">Hasta</span>
-                                <br><br>
-                                <a class="btnCars btnCars-delete" href="">Eliminar</a>
-                                <a class="btnCars btnCars-save" href="">Guardar</a>
-                                <br><br>
-                                <img class="loader" src="../images/ajax-loader.gif">
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
-
-                <div class="clear"></div>
-            </div>
-        <?php endforeach; ?>
-    </div><!-- misautos_box -->
-
-</div><!-- main_contenido -->
-
-<?php include_component('profile', 'colDer') ?>
-
-</div><!-- main_box_2 -->
-</div><!-- main_box_1 -->

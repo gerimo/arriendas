@@ -1,2 +1,14 @@
 all:
-  is_secure: false
+    is_secure: false
+
+login:
+    is_secure: false
+
+login_do:
+    is_secure: false
+
+logout:
+    is_secure: false
+
+reserve:
+    is_secure: true

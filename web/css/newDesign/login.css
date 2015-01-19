@@ -1,0 +1,61 @@
+body {
+	background-image: url('/images/newDesign/background.jpg');
+}
+
+h1 {
+    color: rgb(70, 70, 70);
+    font-weight: 300;
+    margin: 0 0 20px 0;
+    padding: 0;
+}
+
+h2 {
+	color: rgb(70, 70, 70);
+    font-size: 19px;
+    font-weight: normal;
+}
+
+hr {
+    margin: 50px 0 30px 0;
+}
+
+input {
+    margin-top: 15px;
+}
+
+.error-message {
+    color: red;
+    margin: 0;
+    padding: 10px;
+}
+
+.forgot {
+    color: black;
+    margin-top: 21px;
+    text-decoration: underline;
+}
+
+.forgot:hover {
+    color: #333;
+}
+
+.register-here {
+    background-color: #ddd;
+    margin: 20px -20px -20px -20px;
+    padding: 10px;
+}
+
+.fb-title {
+    margin-bottom: 20px;
+}
+
+@media only screen and (max-width:767px) {
+
+    hr {
+        margin: 20px 0;
+    }
+
+    input[type="submit"] {
+        display: block;
+    }
+}

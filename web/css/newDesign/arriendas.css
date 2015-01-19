@@ -1,0 +1,366 @@
+.MA {
+    margin: 0;
+    margin: auto;
+}
+
+.LWS {
+    list-style: none;
+}
+
+.BCW {
+    background-color: white;
+    /*box-shadow: rgba(50, 50, 50, 0.498039) 4px 4px 20px 0px;*/
+    padding: 20px 20px 20px 20px;
+}
+
+.BCW h1 {
+    border-bottom: 1px dashed rgba(70, 70, 70, 0.5);
+    color: rgb(70, 70, 70);
+    font-size: 32px;
+    font-weight: 300;
+    margin: 30px 0 40px 0;
+    padding: 0 0 6px 0px;
+}
+
+.BCW h2 {
+    color: rgb(70, 70, 70);
+    font-size: 24px;
+    font-weight: 300;
+    margin: 15px 0 20px 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+section {
+    height: 100%;
+    vertical-align: middle;
+    width: 100%;
+}
+
+header .navbar-default {
+    background-color: rgba(70, 70, 70, 1);
+    border-color: rgba(70, 70, 70, 1);
+}
+
+header .navbar-nav a {
+    color: rgb(255, 255, 255) !important;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+header .navbar-nav a:active {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+header .navbar-nav a:focus {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+header .navbar-nav a:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+header .navbar-right .dropdown-menu {
+    background-color: rgba(70, 70, 70, 1);
+    border-color: rgba(70, 70, 70, 1);
+}
+
+header .glyphicon{
+    right: 5px;
+}
+
+header .glyphicon{
+    right: 5px;
+}
+
+footer {
+    background: #00aced;
+    color: #fff;
+    font: 700 20px/24px 'Roboto', sans-serif;
+    font-weight: 300;
+    padding: 0 75px;
+}
+
+footer .direccion{
+    font: 700 20px/24px 'Roboto', sans-serif;
+}
+
+footer #address{
+    margin: 57px 0 51px;
+}
+
+footer h1 {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 20px 0 10px 0;
+    padding: 0;
+    text-transform: uppercase;
+}
+
+footer h3 {
+    border-top: 1px solid #fff;
+    margin: 0 0 15px;
+    font: 700 20px/24px 'Roboto', sans-serif;
+    text-transform: uppercase;
+}
+
+footer h3 span{
+    position: relative;
+    top: -11px;
+    background: #00aced;
+    padding: 0 10px;
+    max-width: 500px;
+    display: inline-block;
+}
+
+footer ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+footer li {
+    margin: 0;
+    padding: 0;
+}
+
+footer a {
+    color: #fff;
+}
+
+footer a:hover {
+    color: #ddd;
+    text-decoration: none;
+}
+
+footer p {
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+}
+
+footer .fa-facebook , .fa-twitter{
+    background: url(/images/newDesign/bg-facebook.svg);
+    height: 35px;
+    width: 35px;
+    text-indent: -9999px;
+    margin: 0 4px;
+}
+
+footer .fa-twitter {
+    background: url(/images/newDesign/bg-twitter.svg);
+}
+
+.row {
+    margin: 0;
+}
+
+.loading {
+    display: none;
+}
+
+.btn-a-primary {
+    background: #ba135f;
+    border: 2px solid #dc89af;
+    border-radius: 0;
+    color: #eee !important;
+    font: 700 16px/19px 'Open Sans', sans-serif;
+    padding: 5px 10px !important;
+    text-align: center;
+    text-transform: uppercase !important;
+    vertical-align: middle;
+}
+
+.btn-a-secondary:hover {
+    background: #ca236f !important;
+    color: #fff !important;
+    text-decoration: none;
+}
+
+.btn-a-secondary {
+    font-size: 16px !important;
+    margin: 5px;
+    background: #ba135f;
+    border: 2px solid #dc89af;
+    border-radius: 0;
+    color: #eee !important;
+    font: 700 16px/19px 'Open Sans', sans-serif;
+    padding: 8px 21px !important;
+    text-align: center;
+    text-transform: uppercase !important;
+    vertical-align: middle;
+}
+
+.btn-a-action {
+    background: #00aced;
+    border: 2px solid #00accb;
+    border-radius: 0;
+    color: #fff;
+    font: 300 18px/20px 'Open Sans', sans-serif;
+    padding: 5px 10px;
+    text-align: center;
+    text-transform: uppercase !important;
+    vertical-align: middle;
+}
+
+.btn-a-action:hover {
+    background: #06c;
+    color: #fff;
+    text-decoration: none;
+}
+
+.ui-widget-header {
+    background: none;
+    background-color: rgb(70, 70, 70);
+    color: white;
+}
+
+.ui-dialog-buttonpane button {
+    background: none;
+    background-color: rgb(70, 70, 70);
+    border-color: rgb(70, 70, 70);
+    color: white;
+}
+
+.ui-widget-header .ui-dialog-titlebar-close {
+    background-color: rgb(255, 0 ,0);
+    border: solid 1px rgb(255, 0, 0);
+    border-radius: 100%;
+}
+
+.alert {
+    padding: 0;
+}
+
+.alert-a-success {
+    color: #3c763d;
+}
+
+.alert-a-danger {
+    color: #a94442;
+}
+
+.space-10 {
+    height: 10px;
+}
+.space-20 {
+    height: 20px;
+}
+.space-30 {
+    height: 30px;
+}
+.space-40 {
+    height: 40px;
+}
+.space-50 {
+    height: 50px;
+}
+.space-60 {
+    height: 60px;
+}
+.space-70 {
+    height: 70px;
+}
+.space-80 {
+    height: 80px;
+}
+.space-90 {
+    height: 90px;
+}
+.space-100 {
+    height: 100px;
+}
+
+.ui-dialog-buttonpane {
+    padding: .5em 0 !important;
+    text-align: center !important;
+}
+
+.ui-dialog-buttonset {
+    float: none !important;
+}
+
+.ui-dialog-buttonset button{
+    width: 125px;
+}
+
+@media only screen and (min-width:768px) {
+
+    header .navbar-nav a:focus {
+        box-shadow: 0px 5px 10px 10px rgba(255, 255, 255, 0.2) !important;
+    }
+
+    header .navbar-nav a:hover {
+        box-shadow: 0px 5px 10px 0px rgba(255, 255, 255, 0.2) !important;
+    }
+
+    .BCW {
+        background-color: white;
+        box-shadow: rgba(50, 50, 50, 0.498039) 4px 4px 20px 0px;
+        padding: 20px 20px 20px 20px;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+
+    .BCW {
+        background-color: white;
+        margin-left: -15px;
+        margin-right: -15px;
+        padding: 20px 20px 20px 20px;
+    }
+}
+
+@media only screen and (max-width:767px){
+
+    footer {
+        padding: 0;
+    }
+
+    footer h1{
+        margin: 10px 0 10px 0;
+        font-size: 12px;
+    }
+
+    footer p{
+        margin: 0 0 4px; 
+        font: 300 12px/14px "Roboto", sans-serif;
+        text-transform: none;
+    }
+
+    footer .fa-facebook , .fa-twitter{
+        width: 24px;
+        height: 24px;
+    }
+}
+
+@media only screen and (max-width:767px){
+
+    footer {
+        padding: 0;
+    }
+
+    footer h1{
+        margin: 10px 0 10px 0;
+        font-size: 12px;
+    }
+
+    footer p{
+        margin: 0 0 4px; 
+        font: 300 12px/14px "Roboto", sans-serif;
+        text-transform: none;
+    }
+
+    footer .fa-facebook , .fa-twitter{
+        width: 24px;
+        height: 24px;
+    }
+}

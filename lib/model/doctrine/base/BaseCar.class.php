@@ -32,8 +32,11 @@
  * @property Doctrine_Collection $Photoes
  * @property Doctrine_Collection $Reserves
  * @property float $ratio_aprobacion
+ * @property string accesoriosSeguro
  * @property Comunas $Comuna
  * @property integer $region
+ * @property Commune $commune
+ * @property date disabled_until
  * 
  * @method integer             getId()             Returns the current record's "id" value
  * @method integer             getUserId()         Returns the current record's "User_id" value
@@ -59,20 +62,24 @@
  * @method Model               getModel()          Returns the current record's "Model" value
  * @method City                getCity()           Returns the current record's "City" value
  * @method float               getRatioAprobacion() Returns the current record's "ratio_aprobacion" value
- * @method integer             getTransmission()        Returns the current record's "transmission" value
+ * @method integer             getTransmission()   Returns the current record's "transmission" value
+ * @method accesoriosSeguro    getAccesoriosSeguro() Returns the current record's "accesoriosSeguro" value
  * @method Comunas             getComuna()         Returns the current record's "Comuna" value
- * @method integer             getRegion()         Returns the current record's "region" value
+ * @method Commune             getCommune()        Returns the current record's "commune" value
+ * @method integer             getRegion()
  * 
  * @method Doctrine_Collection getAvailabilities() Returns the current record's "Availabilities" collection
  * @method Doctrine_Collection getDamages()        Returns the current record's "Damages" collection
  * @method Doctrine_Collection getPhotoes()        Returns the current record's "Photoes" collection
  * @method Doctrine_Collection getReserves()       Returns the current record's "Reserves" collection
+ * @method timestamp           getDisabledUntil()  Returns the current record's "disable_until" value
+ *
  * @method Car                 setId()             Sets the current record's "id" value
  * @method Car                 setUserId()         Sets the current record's "User_id" value
  * @method Car                 setKm()             Sets the current record's "km" value
  * @method Car                 setCityId()         Sets the current record's "City_id" value
- * @method Car                 setComunaId()         Sets the current record's "Comuna_id" value
- * @method Car                 setStateId()         Sets the current record's "State_id" value
+ * @method Car                 setComunaId()       Sets the current record's "Comuna_id" value
+ * @method Car                 setStateId()        Sets the current record's "State_id" value
  * @method Car                 setAddress()        Sets the current record's "address" value
  * @method Car                 setLat()            Sets the current record's "lat" value
  * @method Car                 setLng()            Sets the current record's "lng" value
@@ -92,13 +99,15 @@
  * @method Car                 setCity()           Sets the current record's "City" value
  * @method Car                 setAvailabilities() Sets the current record's "Availabilities" collection
  * @method Car                 setDamages()        Sets the current record's "Damages" collection
- * @method Car                 setPhotos()        Sets the current record's "Photoes" collection
+ * @method Car                 setPhotos()         Sets the current record's "Photoes" collection
  * @method Car                 setReserves()       Sets the current record's "Reserves" collection
  * @method Car                 setRatioAprobacion() Sets the current record's "ratio_aprobacion" value
- * @method Car                 setTransmission() Sets the current record's "transmission" value
- * @method Car                 setComuna() Sets the current record's "Comuna" value
- * @method Car                 setRegion() Sets the current record's "region" value
- * 
+ * @method Car                 setTransmission()   Sets the current record's "transmission" value
+ * @method Car                 setAccesoriosSeguro() Sets the current record's "accesoriosSeguro" value
+ * @method Car                 setComuna()         Sets the current record's "Comuna" value
+ * @method Car                 setRegion()         Sets the current record's "Region" value
+ * @method Car                 setDisabledUntil()   Sets the current record's "disable_until" value
+ *
  * @package    CarSharing
  * @subpackage model
  * @author     Your name here
@@ -190,6 +199,8 @@ abstract class BaseCar extends sfDoctrineRecord
              'length' => 10,
              'scale' => '2',
              ));
+
+
         $this->hasColumn('Model_id', 'integer', 4, array(
              'type' => 'integer',
              'notnull' => true,
@@ -410,6 +421,10 @@ abstract class BaseCar extends sfDoctrineRecord
              'notnull' => true,
              'default' => 1,
              ));
+        $this->hasColumn('disabled_until', 'timestamp', null, array(
+             'type' => 'date',
+             'default' => null
+             ));
        $this->hasColumn('verification_id', 'integer', 11, array(
              'type' => 'integer',
              'length' => 11,
@@ -444,6 +459,17 @@ abstract class BaseCar extends sfDoctrineRecord
         $this->hasColumn('ratio_aprobacion', 'float', null, array(
             'type' => 'float'
             ));
+
+      $this->hasColumn('commune_id', 'integer', 11, array(
+            'notnull' => true
+      ));
+      $this->index('fk_Car_Commune', array(
+            'fields' => array(
+                0 => 'commune_id',
+            ),
+      ));
+
+
         $this->index('fk_Car_User', array(
              'fields' => 
              array(
@@ -522,5 +548,12 @@ abstract class BaseCar extends sfDoctrineRecord
         $this->hasMany('CarAvailabilityEmail as CarAvailabilityEmails', array(
              'local' => 'id',
              'foreign' => 'car_id'));
+
+        $this->hasOne('Commune', array(
+            'local' => 'commune_id',
+            'foreign' => 'id',
+            'onDelete' => 'no action',
+            'onUpdate' => 'no action'
+        ));
     }
 }

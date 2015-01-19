@@ -55,6 +55,6 @@ abstract class BaseRegiones extends sfDoctrineRecord
 
         $this->hasMany('Comuna as Comunas', array(
              'local' => 'id',
-             'foreign' => 'Padre'));
+             'foreign' => 'id'));
     }
 }
