@@ -38,7 +38,7 @@
                         <?php if ($user->getDriverLicenseFile() == null): ?>
                             <?php echo image_tag('img_asegura_tu_auto/foto_padron_reverso.png', 'size=194x204') ?>
                         <?php else: ?>
-                            <?php echo image_tag('license/'.$user->getLicenseFileName(), 'size=194x204') ?>
+                            <?php echo image_tag('licence/'.$user->getLicenseFileName(), 'size=194x204') ?>
                         <?php endif ?>
                     </div> 
 
