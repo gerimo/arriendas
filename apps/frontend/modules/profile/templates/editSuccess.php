@@ -22,7 +22,7 @@
                             <?php if($user->getFacebookId() != null):?>
                                 <img src="http://res.cloudinary.com/arriendas-cl/image/facebook/w_194,h_204,c_fill,g_face/<?php echo $user->getFacebookId();?>.jpg">
                             <?php else: ?>
-                                <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_194,h_204,c_fill,g_face/http://local.arriendas.cl/images/users/<?php echo $user->getFileName() ?>">
+                                <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_194,h_204,c_fill,g_face/http://www.arriendas.cl/images/users/<?php echo $user->getFileName() ?>">
                             <?php endif ?>
                         <?php endif ?>
                     </div> 
