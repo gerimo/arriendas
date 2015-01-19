@@ -60,24 +60,24 @@
 							?>
 										
 							<div class='row newMensaje'>
-												<div class="usuarioIzq">
-											      	<div class="msg_user_frame col-xs-2 col-sm-2 col-md-2">
-											        	<?php include_component("profile","pictureFile",array("user"=>$objetoConversacion[0]->getUserFrom(),"params"=>"width='74px' height='74px'"));?>
-											      	</div>
-											      	<div class="msg_user_nombre">
-											          	<?php 
-											          		if($yoSoyElFrom) echo "Tú";
-											          	    else echo "<a target='_blank' href='http://www.arriendas.cl/profile/publitarget='_blank' profile/id/".$conversacion[$i]['userMensaje']."'>".$objetoConversacion[0]->getUserFrom()->getFirstName()."</a>";
-											          	?>
-										          	</div>
-											    </div>
-												<div class="puntaBlanca"></div>  
-										      	<div class="marcoTextoIzq col-xs-9 col-sm-9 col-md-9 ">
-											  	  	<div class="texto">
-													    <div class="msg"><p><?=$conversacion[$i]['bodyMensaje'];?></p></div>
-													    <div class="horaFecha"><?=$conversacion[$i]['dateMensaje'];?></div>
-												    </div>
-											  	</div>
+								<div class="usuarioIzq hidden-xs col-xs-1 col-sm-1 col-md-1">
+							      	<div class="msg_user_frame hidden-sm">
+							        	<?php include_component("profile","pictureFile",array("user"=>$objetoConversacion[0]->getUserFrom(),"params"=>"width='74px' height='74px'"));?>
+							      	</div>
+							      	<div class="msg_user_nombre">
+							          	<?php 
+							          		if($yoSoyElFrom) echo "Tú";
+							          	    else echo "<a target='_blank' href='http://www.arriendas.cl/profile/publitarget='_blank' profile/id/".$conversacion[$i]['userMensaje']."'>".$objetoConversacion[0]->getUserFrom()->getFirstName()."</a>";
+							          	?>
+						          	</div>
+							    </div>
+								<div class="puntaBlanca"></div>  
+						      	<div class="marcoTextoIzq col-xs-10 col-sm-10 col-md-10 ">
+							  	  	<div class="texto">
+									    <div class="msg"><p><?=$conversacion[$i]['bodyMensaje'];?></p></div>
+									    <div class="horaFecha"><?=$conversacion[$i]['dateMensaje'];?></div>
+								    </div>
+							  	</div>
 							</div>
 
 						   	<?php 
@@ -85,26 +85,26 @@
 						   	?>
 									
 							<div class='row newMensaje'>
-											<div class="usuarioDer">
+								<div class="usuarioDer hidden-xs col-xs-1 col-sm-1 col-md-1">
 
-											    <div class="msg_user_frame ">
-											        <?php include_component("profile","pictureFile",array("user"=>$objetoConversacion[0]->getUserFrom(),"params"=>"width='74px' height='74px'"));?>
-											    </div>
+								    <div class="msg_user_frame hidden-sm">
+								        <?php include_component("profile","pictureFile",array("user"=>$objetoConversacion[0]->getUserFrom(),"params"=>"width='74px' height='74px'"));?>
+								    </div>
 
-										    	<div class="msg_user_nombre">
-											        <?php if($yoSoyElFrom) echo "Tú";
-											          	else echo "<a target='_blank' href='http://www.arriendas.cl/profile/publicprofile/id/".$conversacion[$i]['userMensaje']."'>".$objetoConversacion[0]->getUserFrom()->getFirstName()."</a>";
-											        ?>
-								          		</div>
+							    	<div class="msg_user_nombre">
+								        <?php if($yoSoyElFrom) echo "Tú";
+								          	else echo "<a target='_blank' href='http://www.arriendas.cl/profile/publicprofile/id/".$conversacion[$i]['userMensaje']."'>".$objetoConversacion[0]->getUserFrom()->getFirstName()."</a>";
+								        ?>
+					          		</div>
 
-										    </div>
-										  	<div class="puntaCeleste"></div>  
-										    <div class="marcoTextoDer col-xs-9 col-sm-9 col-md-9">
-										  	  	<div class="texto">
-											        <div class="msg"><p><?=$conversacion[$i]['bodyMensaje'];?></p></div>
-											        <div class="horaFecha"><?=$conversacion[$i]['dateMensaje'];?></div>
-											    </div>
-											</div>
+							    </div>
+							  	<div class="puntaCeleste"></div>  
+							    <div class="marcoTextoDer col-xs-10 col-sm-10 col-md-10">
+							  	  	<div class="texto">
+								        <div class="msg"><p><?=$conversacion[$i]['bodyMensaje'];?></p></div>
+								        <div class="horaFecha"><?=$conversacion[$i]['dateMensaje'];?></div>
+								    </div>
+								</div>
 							</div>
 
 							<?php
@@ -114,8 +114,8 @@
 							?>
 									
 							<div class='row newMensaje'>
-										<div class="usuarioIzq">
-										    <div class="msg_user_frame ">
+										<div class="usuarioIzq hidden-xs col-xs-1 col-sm-1 col-md-1">
+										    <div class="msg_user_frame hidden-sm">
 										        <?php include_component("profile","pictureFile",array("user"=>$objetoConversacion[0]->getUserTo(),"params"=>"width='74px' height='74px'"));?>
 										    </div>
 
@@ -129,7 +129,7 @@
 
 									  	<div class="puntaBlanca"></div>
 
-									  	<div class="marcoTextoIzq col-xs-9 col-sm-9 col-md-9">
+									  	<div class="marcoTextoIzq col-xs-10 col-sm-10 col-md-10">
 									  	  	<div class="texto">
 										        <div class="msg"><p><?=$conversacion[$i]['bodyMensaje'];?></p></div>
 										        <div class= "horaFecha"><?=$conversacion[$i]['dateMensaje'];?></div>
@@ -142,8 +142,8 @@
 							?>
 
 							<div class='row newMensaje'>
-							    <div class="usuarioDer">
-							        <div class="msg_user_frame ">
+							    <div class="usuarioDer hidden-xs col-xs-1 col-sm-1 col-md-1">
+							        <div class="msg_user_frame hidden-sm">
 							        	<?php include_component("profile","pictureFile",array("user"=>$objetoConversacion[0]->getUserTo(),"params"=>"width='74px' height='74px'"));?>
 							        </div>
 							        <div class="msg_user_nombre">
@@ -156,7 +156,7 @@
 
 						  	    <div class="puntaCeleste"></div>
 
-								  	<div class="marcoTextoDer col-xs-9 col-sm-9 col-md-9">
+								  	<div class="marcoTextoDer col-xs-10 col-sm-10 col-md-10">
 								  	  	<div class="texto">
 									        <div class="msg"><p><?=$conversacion[$i]['bodyMensaje'];?></p></div>
 									        <div class="horaFecha"><?=$conversacion[$i]['dateMensaje'];?></div>
