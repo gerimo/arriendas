@@ -5955,7 +5955,7 @@ class profileActions extends sfActions {
             $disponibilidadFinde = 0;
         } elseif ($disponibilidad == 2) {
             $disponibilidadSemana = 0;
-            $disponibilidadFinde = 1;
+            $disponibilidadFinde = 1;   
         } elseif ($disponibilidad == 3) {
             $disponibilidadSemana = 1;
             $disponibilidadFinde = 1;

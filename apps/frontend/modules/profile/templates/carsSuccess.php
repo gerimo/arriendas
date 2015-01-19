@@ -19,9 +19,9 @@
                 <?php foreach ($cars as $c): ?>
                     <br/><br/>
                     
-                    <div class="misautos_user_item plomo" id="item_<?php echo $c->getId() ?>">
+                    <div class="misautos_user_item grey" id="item_<?php echo $c->getId() ?>">
                                             
-                        <div class="row plomo">
+                        <div class="row grey">
                             <div class="col-md-3 ">
                                 <a href="<?php echo url_for('profile/addCar?id=' . $c->getId() )?>" >
                                     <?php if($c->getPhotoS3() == 1): ?>

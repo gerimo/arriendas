@@ -85,7 +85,12 @@ h3 {
 	background-image: url('/images/newDesign/bt_blue_hover_v2.png');
 	
 }*/
-.plomo{
+.grey{
 
 	background: #FAFAFA;
+}
+
+.btn-a-action{
+	font-size: 15px;
+
 }

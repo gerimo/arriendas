@@ -322,13 +322,15 @@ class mainActions extends sfActions {
                 $q->andWhere("mo.id_otro_tipo_vehiculo = 3");
             }
 
-            if ($comuna) {
-                $q->andWhere("co.code = ?", $comuna);
-            } else {
-                $q->andWhere('ca.lat < ?', $neLat);
-                $q->andWhere('ca.lat > ?', $swLat);
-                $q->andWhere('ca.lng > ?', $swLng);
-                $q->andWhere('ca.lng < ?', $neLng);
+            if($comuna != 0){
+                if ($comuna) {
+                    $q->andWhere("co.code = ?", $comuna);
+                } else {
+                    $q->andWhere('ca.lat < ?', $neLat);
+                    $q->andWhere('ca.lat > ?', $swLat);
+                    $q->andWhere('ca.lng > ?', $swLng);
+                    $q->andWhere('ca.lng < ?', $neLng);
+                }
             }
 
             $cars = $q->execute();
