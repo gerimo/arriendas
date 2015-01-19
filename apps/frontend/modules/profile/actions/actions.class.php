@@ -3097,64 +3097,55 @@ class profileActions extends sfActions {
       /* */
 
     public function executeTransactions(sfWebRequest $request) {
+
         $this->setLayout("newIndexLayout");
 
-        $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
-        //$idUsuario = 885;
-        //var_dump($idUsuario);die();
-        $transactionRenter = Doctrine_Core::getTable("Transaction")->findByUserId($idUsuario);
-        $transaccionesRenter = null;
-        foreach ($transactionRenter as $i => $tran) {
-            //selecciona solo las transacciones pagadas (completed=1)
-            if ($tran['completed']) {
-                $idReserve = $tran['Reserve_id'];
-                $reserve = Doctrine_Core::getTable("Reserve")->findOneById($idReserve);
+        $userId = sfContext::getInstance()->getUser()->getAttribute('userid');
 
-                $transaccionesRenter[$i]['fechaDeposito'] = $tran->getDateFormato();
-                $transaccionesRenter[$i]['fechaInicio'] = $reserve->getFechaInicio();
-                $transaccionesRenter[$i]['horaInicio'] = $reserve->getHoraInicio();
-                $transaccionesRenter[$i]['fechaTermino'] = $reserve->getFechaTermino();
-                $transaccionesRenter[$i]['horaTermino'] = $reserve->getHoraTermino();
+        $this->TransactionsRenter = null;
+        $this->TransactionsOwner  = null;
 
-                $precio = $reserve->getPrice();
+        $TransactionsRenter = Doctrine_Core::getTable("Transaction")->findByUserId($userId);        
 
-                $transaccionesRenter[$i]['monto'] = number_format($precio, 0, ',', '.');
-                $transaccionesRenter[$i]['comisionArriendas'] = number_format($precio * 0.15, 0, ',', '.');
-                $transaccionesRenter[$i]['precioSeguro'] = number_format($precio * 0.15, 0, ',', '.');
-                $transaccionesRenter[$i]['neto'] = number_format($precio * 0.7, 0, ',', '.');
-                $transaccionesRenter[$i]['depositoGarantia'] = number_format($reserve->getMontoLiberacion(), 0, ',', '.');
+        foreach ($TransactionsRenter as $i => $T) {
+            //selecciona solo las Tsacciones pagadas (completed=1)
+            if ($T['completed']) {
+
+                $Reserve = Doctrine_Core::getTable("Reserve")->findOneById($T['reserve_id']);
+
+                $this->TransactionsRenter[$i]['fechaInicio']  = $Reserve->getFechaInicio2();
+                $this->TransactionsRenter[$i]['fechaTermino'] = $Reserve->getFechaTermino2();
+
+                $precio = $Reserve->getPrice();
+
+                $this->TransactionsRenter[$i]['monto']             = number_format($precio, 0, ',', '.');
+                $this->TransactionsRenter[$i]['comisionArriendas'] = number_format($precio * 0.15, 0, ',', '.');
+                $this->TransactionsRenter[$i]['precioSeguro']      = number_format($precio * 0.15, 0, ',', '.');
+                $this->TransactionsRenter[$i]['neto']              = number_format($precio * 0.7, 0, ',', '.');
+                $this->TransactionsRenter[$i]['depositoGarantia']  = number_format($Reserve->getMontoLiberacion(), 0, ',', '.');
             }
         }
-        //var_dump($transaccionesRenter);die();
-        $this->transaccionesRenter = $transaccionesRenter;
-
-        $claseUsuario = Doctrine_Core::getTable('user')->findOneById($idUsuario);
-        $transactionOwner = $claseUsuario->getTransaccionesWithOwner();
-
-        $transaccionesOwner = null;
-        foreach ($transactionOwner as $i => $tran) {
+        
+        $User = Doctrine_Core::getTable('User')->find($userId);
+        
+        foreach ($User->getTransaccionesWithOwner() as $i => $T) {
             //selecciona solo las transacciones pagadas (completed=1)
-            if ($tran['completed']) {
-                $idReserve = $tran['Reserve_id'];
-                $reserve = Doctrine_Core::getTable("Reserve")->findOneById($idReserve);
+            if ($T['completed']) {
+                error_log("yes!");
+                $Reserve = Doctrine_Core::getTable("Reserve")->findOneById($T['reserve_id']);
 
-                $transaccionesOwner[$i]['fechaDeposito'] = $tran->getDateFormato();
-                $transaccionesOwner[$i]['fechaInicio'] = $reserve->getFechaInicio();
-                $transaccionesOwner[$i]['horaInicio'] = $reserve->getHoraInicio();
-                $transaccionesOwner[$i]['fechaTermino'] = $reserve->getFechaTermino();
-                $transaccionesOwner[$i]['horaTermino'] = $reserve->getHoraTermino();
+                $this->TransactionsOwner[$i]['fechaInicio']  = $Reserve->getFechaInicio2();
+                $this->TransactionsOwner[$i]['fechaTermino'] = $Reserve->getFechaTermino2();
 
-                $precio = $reserve->getPrice();
+                $precio = $Reserve->getPrice();
 
-                $transaccionesOwner[$i]['monto'] = number_format($precio, 0, ',', '.');
-                $transaccionesOwner[$i]['comisionArriendas'] = number_format($precio * 0.15, 0, ',', '.');
-                $transaccionesOwner[$i]['precioSeguro'] = number_format($precio * 0.15, 0, ',', '.');
-                $transaccionesOwner[$i]['neto'] = number_format($precio * 0.7, 0, ',', '.');
-                $transaccionesRenter[$i]['depositoGarantia'] = number_format($reserve->getMontoLiberacion(), 0, ',', '.');
+                $this->TransactionsOwner[$i]['monto']             = number_format($precio, 0, ',', '.');
+                $this->TransactionsOwner[$i]['comisionArriendas'] = number_format($precio * 0.15, 0, ',', '.');
+                $this->TransactionsOwner[$i]['precioSeguro']      = number_format($precio * 0.15, 0, ',', '.');
+                $this->TransactionsOwner[$i]['neto']              = number_format($precio * 0.7, 0, ',', '.');
+                /*$transaccionesRenter[$i]['depositoGarantia']      = number_format($Reserve->getMontoLiberacion(), 0, ',', '.');*/
             }
         }
-        //var_dump($transaccionesOwner);die();
-        $this->transaccionesOwner = $transaccionesOwner;
     }
 
     public function executeMessages(sfWebRequest $request) {
@@ -5955,7 +5946,7 @@ class profileActions extends sfActions {
             $disponibilidadFinde = 0;
         } elseif ($disponibilidad == 2) {
             $disponibilidadSemana = 0;
-            $disponibilidadFinde = 1;
+            $disponibilidadFinde = 1;   
         } elseif ($disponibilidad == 3) {
             $disponibilidadSemana = 1;
             $disponibilidadFinde = 1;

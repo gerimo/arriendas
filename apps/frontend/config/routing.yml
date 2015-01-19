@@ -5,9 +5,21 @@ about_company:
     url: /nosotros
     param: { module: main, action: compania }
 
+car_price:
+   url: /auto/precios
+   param: { module: cars, action: price }
+
+car_photo:
+   url: /auto/foto
+   param: { module: cars, action: photo }
+
 car_create:
    url: /auto/crear
    param: { module: cars, action: create }
+
+car_availability:
+   url: /auto/disponibilidad
+   param: { module: cars, action: availability }
 
 cars:
     url: /mis-autos
@@ -81,6 +93,10 @@ reserves:
 terms_and_conditions:
     url: /terminos-y-condiciones
     param: { module: main, action: terminos }
+
+transactions:
+    url: /mis-transacciones
+    param: { module: profile, action: transactions }
 
 user_register:
     url: /registro

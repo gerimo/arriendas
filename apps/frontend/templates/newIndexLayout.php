@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <?php //include_metas() ?>
+        <?php include_metas() ?>
         <?php //include_title() ?>
         <?php //include_stylesheets() ?>
 

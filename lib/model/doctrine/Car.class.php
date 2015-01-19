@@ -5,6 +5,30 @@ class Car extends BaseCar {
     // $Car->getOpportunities();
     // Car::getPrice();
 
+    public function getExistPatent($patent = false){
+
+        $q = Doctrine_Core::getTable("Car")
+            ->createQuery('C')
+            ->where('C.patente = ?', $patent);
+       
+
+        return $q->execute();
+
+    }
+
+    public function getSameCar($model, $year){
+
+        $q = Doctrine_Core::getTable("Car")
+            ->createQuery('C')
+            ->where('C.model_id = ?', $model)
+            ->andWhere('C.year = ?', $year)
+            ->orderBy('C.price_per_day ASC')
+            ->limit(1);
+
+        return $q->execute();
+      
+    }
+
     public function getCurrentCarAvailabilityEmails() {
 
         $q = Doctrine_Core::getTable("CarAvailabilityEmail")
@@ -74,6 +98,8 @@ class Car extends BaseCar {
 
         return $Opportunities;
     }
+
+
 
     // Métodos estáticos
 
