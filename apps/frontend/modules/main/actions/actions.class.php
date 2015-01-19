@@ -784,16 +784,16 @@ class mainActions extends sfActions {
                 
                 $newImageName = time() . "-" . $userId . "." . $ext;
 
-                $path = sfConfig::get("sf_web_dir") . '/images/license/';
+                $path = sfConfig::get("sf_web_dir") . '/images/licence/';
 
                 $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
 
                 if (!move_uploaded_file($tmp, $path . $newImageName)) {
-                    throw new Exception("Problemas al subir la imagen.", 1);
+                    throw new Exception("Problemas al grabar la imagen en disco", 1);
                 }
 
                 $User = Doctrine_Core::getTable('User')->find($userId);
-                $User->setDriverLicenseFile("/images/license/".$newImageName);
+                $User->setDriverLicenseFile("/images/licence/".$newImageName);
                 $User->save();
             } else {
                 throw new Exception("No, no, no.", 1);
@@ -802,6 +802,9 @@ class mainActions extends sfActions {
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
+            if ($e->getCode() == 1) {
+                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo nuevamente más tarde";
+            }
             if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
                 Utils::reportError($e->getMessage(), "main/uploadPhoto");
             }
@@ -2912,7 +2915,7 @@ class mainActions extends sfActions {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
             if ($e->getCode() == 1) {
-                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
+                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo nuevamente más tarde";
             }
             if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
                 Utils::reportError($e->getMessage(), "main/uploadPhoto");

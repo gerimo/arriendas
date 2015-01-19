@@ -284,13 +284,13 @@ class profileActions extends sfActions {
         $this->redirect = $request->getParameter('redirect');
         $this->idRedirect = $request->getParameter('id');
 
-        $user = Doctrine_Core::getTable('user')->find($userId);
+        $User = Doctrine_Core::getTable('User')->find($userId);
 
-        $this->userRegion = $user->getRegion();
+        $this->userRegion = $User->getRegion();
 
-        $this->userComuna = $user->getComuna();
+        $this->userComuna = $User->getComuna();
 
-        $this->user = $user;
+        $this->User = $User;
 
         $q = Doctrine_Query::create()
                 ->select('c.*')
