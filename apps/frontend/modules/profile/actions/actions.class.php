@@ -379,134 +379,6 @@ class profileActions extends sfActions {
         $this->forward("khipu", "generatePayment");
     }
 
-    public function executeReserve (sfWebRequest $request) {
-
-        $this->setLayout("newIndexLayout");
-
-        $carId = $request->getParameter("c", null);
-        $f     = strtotime($request->getParameter("f", null));
-        $t     = strtotime($request->getParameter("t", null));
-
-        $userId = $this->getUser()->getAttribute("userid");
-
-        if (is_null($carId)) {
-            throw new Exception("Auto no encontrado", 1);
-        }
-
-        if ($t <= $f) {
-            throw new Exception("No, no, no", 1);
-        }
-
-        $from = date("Y-m-d H:i", $f);
-        $this->from = date("Y-m-d H:i", $f);
-        $this->fromHuman = date("D d/m/Y H:i", $f);
-        $to = date("Y-m-d H:i", $t);
-        $this->to = date("Y-m-d H:i", $t);
-        $this->toHuman = date("D d/m/Y H:i", $t);
-
-        $this->User = Doctrine_Core::getTable('User')->find($userId);
-        $this->Car = Doctrine_Core::getTable('Car')->find($carId);
-
-        if ($this->Car->hasReserve($from, $to)) {
-            throw new Exception("Auto ya posee reserva", 1);            
-        }
-
-        $this->price = Car::getPrice($from, $to, $this->Car->getPricePerHour(), $this->Car->getPricePerDay(), $this->Car->getPricePerWeek(), $this->Car->getPricePerMonth());
-
-        // Reviews (hay que arreglar las clase Rating)
-        $this->reviews = array();
-        $Ratings = Doctrine_Core::getTable('Rating')->findByIdOwner($this->Car->getUserId());
-
-        foreach ($Ratings as $i => $Rating) {
-            $opinion = $Rating->getOpinionAboutOwner();
-            if ($opinion) {
-                $this->reviews[$i]["opinion"] = $Rating->getOpinionAboutOwner();
-                $U = Doctrine_Core::getTable('User')->find($Rating->getIdRenter());
-                $this->reviews[$i]["picture"] = $U->getPictureFile();
-                $this->reviews[$i]["star"] = $Rating->getOpCleaningAboutOwner();
-             }
-        }
-
-        // Características
-        $this->passengers = false;
-        if ($this->Car->getModel()->getIdOtroTipoVehiculo() >= 2) {
-            $this->passengers = true;
-        }
-
-        $this->diesel = false;
-        if ($this->Car->getTipobencina() == "Diesel") {
-            $this->diesel = true;
-        }
-
-        $this->airCondition = false;
-        if (explode(",", $this->Car->getAccesoriosSeguro())[0] == "aireAcondicionado") {
-            $this->airCondition = true;
-        }
-
-        $this->transmission = false;
-        if ($this->Car->getTransmission()) {
-            $this->transmission = true;
-        }
-
-        $userId = $this->getUser()->getAttribute("userid");
-        $User = Doctrine_Core::getTable('User')->find($userId);
-
-        $this->license            = $User->getDriverLicenseFile();
-        $this->isDebtor           = sfContext::getInstance()->getUser()->getAttribute('moroso');
-        $this->amountWarranty     = sfConfig::get("app_monto_garantia");
-        $this->amountWarrantyFree = sfConfig::get("app_monto_garantia_por_dia");
-
-        //imagenes
-        $arrayImagenes = null;
-        $i = 0;
-        if ($this->Car->getSeguroFotoFrente() != null && $this->Car->getSeguroFotoFrente() != "") {
-            $rutaFotoFrente = $this->Car->getSeguroFotoFrente();
-            $arrayImagenes[$i] = $rutaFotoFrente;
-            $i++;
-        }
-        if ($this->Car->getSeguroFotoCostadoDerecho() != null && $this->Car->getSeguroFotoCostadoDerecho() != "") {
-            $rutaFotoCostadoDerecho = $this->Car->getSeguroFotoCostadoDerecho();
-            $arrayImagenes[$i] = $rutaFotoCostadoDerecho;
-            $i++;
-        }
-        if (strpos($this->Car->getSeguroFotoCostadoIzquierdo(), "http") != -1 && $this->Car->getSeguroFotoCostadoIzquierdo() != "") {
-            $rutaFotoCostadoIzquierdo = $this->Car->getSeguroFotoCostadoIzquierdo();
-            $arrayImagenes[$i] = $rutaFotoCostadoIzquierdo;
-            $i++;
-        }
-        if (strpos($this->Car->getSeguroFotoTraseroDerecho(), "http") != -1 && $this->Car->getSeguroFotoTraseroDerecho() != "") {
-            $rutaFotoTrasera = $this->Car->getSeguroFotoTraseroDerecho();
-            $arrayImagenes[$i] = $rutaFotoTrasera;
-            $i++;
-        }
-        if (strpos($this->Car->getTablero(), "http") != -1 && $this->Car->getTablero() != "") {
-            $rutaFotoPanel = $this->Car->getTablero();
-            $arrayImagenes[$i] = $rutaFotoPanel;
-            $i++;
-        }
-        if (strpos($this->Car->getAccesorio1(), "http") != -1 && $this->Car->getAccesorio1() != "") {
-            $rutaFotoAccesorios1 = $this->Car->getAccesorio1();
-            $arrayImagenes[$i] = $rutaFotoAccesorios1;
-            $i++;
-        }
-        if (strpos($this->Car->getAccesorio2(), "http") != -1 && $this->Car->getAccesorio2() != "") {
-            $rutaFotoAccesorios2 = $this->Car->getAccesorio2();
-            $arrayImagenes[$i] = $rutaFotoAccesorios2;
-        }
-        $this->arrayFotos = $arrayImagenes;
-        // $arrayFotoDanios = null;
-        // $arrayDescripcionDanios = null;
-        // $danios = Doctrine_Core::getTable('damage')->findByCar(array($this->Car->getId()));
-        // for ($i = 0; $i < count($danios); $i++) {
-        //     $arrayFotoDanios[$i] = $danios[$i]->getUrlFoto();
-        //     $arrayDescripcionDanios[$i] = $danios[$i]->getDescription();
-        // }
-        // $this->arrayFotosDanios = $arrayFotoDanios;
-        // $this->arrayDescripcionesDanios = $arrayDescripcionDanios;
-    }
-
-
-
     public function executeCarAvailabilityDelete(sfWebRequest $request) {
         
         $return = array("error" => false);
@@ -2791,7 +2663,7 @@ class profileActions extends sfActions {
             $user = Doctrine_Core::getTable('user')->find(array($this->getUser()->getAttribute("userid")));
             if (!$user->getSendReserveLastWeek($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")))) {
                 if ($user->getConfirmedSms() == 1) {
-                    $texto = "Has emitido tu primera reserva de la semana en Arriendas.cl - Ante cualquier duda llamanos al 2 2333-3714 o escribenos a soporte@arriendas.cl";
+                    $texto = "Has emitido tu primera reserva de la semana en Arriendas.cl - Ante cualquier duda llamanos al 2 2640-2900 o escribenos a soporte@arriendas.cl";
                     $this->enviarSMS($user->getTelephone(), $texto);
                 }
             }
@@ -2800,7 +2672,7 @@ class profileActions extends sfActions {
                 $mail3->setSubject('Servicio al Cliente - Tu reserva en Arriendas.cl');
                 $mail3->setBody("<p>Hola $nameRenter:</p>
                 <p>Recuerda completar tu perfil y subir la imagen de tu licencia (arriba a la derecha, opción 'Mi Perfil').</p>
-                <p>Ante cualquier pregunta llámanos al 2 2333-3714.</p>");
+                <p>Ante cualquier pregunta llámanos al 2 2640-2900.</p>");
                 $mail3->setTo($correoRenter);
                 $mail3->submit();
             }
@@ -5027,7 +4899,7 @@ class profileActions extends sfActions {
         $mail->setBody("<p>Hola $name,</p>
         <p>Has subido un auto!</p>
         <p>Para verlo publicado responde a este correo escribiendo tu DIRECCION, COMUNA y NUMERO DE CELULAR.</p>
-        <p>Ante cualquier duda, llámanos al 2333-3714.</p>");
+        <p>Ante cualquier duda, llámanos al 2 2640-2900.</p>");
         $mail->setTo($correo);
         $mail->setCc('soporte@arriendas.cl');
         $mail->submit();
@@ -6498,8 +6370,8 @@ class profileActions extends sfActions {
 
             if (count($has_reserve) == 0) {*/
 
-            $Car = Doctrine_Core::getTable('Car')->find($carid);
-            if(!$Car->hasReserve($startDate, $endDate)) {
+            /*$Car = Doctrine_Core::getTable('Car')->find($carid);
+            if(!$Car->hasReserve($startDate, $endDate)) {*/
 
                 if ($diff > 0) {
 
@@ -6519,9 +6391,9 @@ class profileActions extends sfActions {
                 } else {
                     echo 'Fecha de retiro debe ser mayor a fecha de entrega';
                 }
-            } else {
+            /*} else {
                 echo 'Ya hay una reserva confirmada para ese horario';
-            }
+            }*/
         } else {
             echo 'Por favor ingrese fechas con formato YYYY-MM-DD HH:MM';
         }

@@ -9,82 +9,84 @@
 
     /*google.maps.event.addDomListener(window, 'load', initialize);*/
 
-    var usuarioLogeado = "<?php echo $usuarioLog; ?>";
-    var geolocalizacion; // coordenadas
-    var latitud; // coordenadas
-    var lastValidCenter; // initialize
-    var longitud; // coordenadas
-    var map; // initialize, searchCars
-    var markerCluster; // searchCars
-    var markers = []; // searchCars
-    var strictBounds = null; // initialize
+        var reserveUrl = "<?php echo url_for('reserve', array('c' => 'carId', 'f' => 'from', 't' => 'to'), true) ?>";
 
-    var swLat; // searchCars
-    var swLng; // searchCars
-    var neLat; // searchCars
-    var neLng; // searchCars
+        var usuarioLogeado = "<?php echo $usuarioLog; ?>";
+        var geolocalizacion; // coordenadas
+        var latitud; // coordenadas
+        var lastValidCenter; // initialize
+        var longitud; // coordenadas
+        var map; // initialize, searchCars
+        var markerCluster; // searchCars
+        var markers = []; // searchCars
+        var strictBounds = null; // initialize
 
-    function coordenadas(position) {
-        latitud  = position.coords.latitude; // Guardamos nuestra latitud
-        longitud = position.coords.longitude; // Guardamos nuestra longitud
-        <?php if ($sf_user->getAttribute('geolocalizacion') == true): ?>
-        geolocalizacion = true;
-        <?php else: ?>
-        geolocalizacion = false;
-        <?php endif; ?>
-    }
+        var swLat; // searchCars
+        var swLng; // searchCars
+        var neLat; // searchCars
+        var neLng; // searchCars
 
-    function errores(err) {
-
-        // Controlamos los posibles errores
-        if (err.code == 0) {
-            alert("¡Oops! Algo ha salido mal");
-        }
-        if (err.code == 1) {
-            alert("¡Oops! No has aceptado compartir tu posición");
-        }
-        if (err.code == 2) {
-            alert("¡Oops! No se puede obtener la posición actual");
-        }
-        if (err.code == 3) {
-            alert("¡Oops! Hemos superado el tiempo de espera");
-        }
-    }
-
-    function initialize() {
-
-        var center = null;
-
-        <?php if (stripos($_SERVER['SERVER_NAME'], "arrendas") !== FALSE): ?>
-        center = new google.maps.LatLng(-34.59, -58.401604);
-        <?php else: ?>
-            center = new google.maps.LatLng(-33.436024, -70.632858);
-        <?php endif ?>
-        if (geolocalizacion) {
-            center = new google.maps.LatLng(latitud, longitud);
+        function coordenadas(position) {
+            latitud  = position.coords.latitude; // Guardamos nuestra latitud
+            longitud = position.coords.longitude; // Guardamos nuestra longitud
+            <?php if ($sf_user->getAttribute('geolocalizacion') == true): ?>
+                geolocalizacion = true;
+            <?php else: ?>
+                geolocalizacion = false;
+            <?php endif; ?>
         }
 
-        <?php if (isset($_GET['ciudad']) && $_GET['ciudad'] == "arica"): ?>
-            center = new google.maps.LatLng(-18.32, -70.20);
-        <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "concepcion"): ?>
-            center = new google.maps.LatLng(-37.00, -72.30);
-        <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "laserena"): ?>
-            center = new google.maps.LatLng(-29.75, -71.10);
-        <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "temuco"): ?>
-            center = new google.maps.LatLng(-38.45, -72.40);
-        <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "valparaiso"): ?>
-            center = new google.maps.LatLng(-33.2, -71.4);
-        <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "viña"): ?>
-            center = new google.maps.LatLng(-33.0, -71.3);
-        <?php elseif (isset($map_clat) && isset($map_clng)): ?>
-            center = new google.maps.LatLng(<?= $map_clat ?>, <?= $map_clng ?>);
-        <?php endif; ?>
+        function errores(err) {
 
-        map = new google.maps.Map(document.getElementById('map-container'), {
-            zoom: 14,
-            center: center,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            scrollwheel: false
+            // Controlamos los posibles errores
+            if (err.code == 0) {
+                alert("¡Oops! Algo ha salido mal");
+            }
+            if (err.code == 1) {
+                alert("¡Oops! No has aceptado compartir tu posición");
+            }
+            if (err.code == 2) {
+                alert("¡Oops! No se puede obtener la posición actual");
+            }
+            if (err.code == 3) {
+                alert("¡Oops! Hemos superado el tiempo de espera");
+            }
+        }
+
+        function initialize() {
+
+            var center = null;
+
+            <?php if (stripos($_SERVER['SERVER_NAME'], "arrendas") !== FALSE): ?>
+                center = new google.maps.LatLng(-34.59, -58.401604);
+            <?php else: ?>
+                center = new google.maps.LatLng(-33.436024, -70.632858);
+            <?php endif ?>
+                if (geolocalizacion) {
+                        center = new google.maps.LatLng(latitud, longitud);
+                }
+
+            <?php if (isset($_GET['ciudad']) && $_GET['ciudad'] == "arica"): ?>
+                center = new google.maps.LatLng(-18.32, -70.20);
+            <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "concepcion"): ?>
+                center = new google.maps.LatLng(-37.00, -72.30);
+            <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "laserena"): ?>
+                center = new google.maps.LatLng(-29.75, -71.10);
+            <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "temuco"): ?>
+                center = new google.maps.LatLng(-38.45, -72.40);
+            <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "valparaiso"): ?>
+                center = new google.maps.LatLng(-33.2, -71.4);
+            <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "viña"): ?>
+                center = new google.maps.LatLng(-33.0, -71.3);
+            <?php elseif (isset($map_clat) && isset($map_clng)): ?>
+                center = new google.maps.LatLng(<?= $map_clat ?>, <?= $map_clng ?>);
+            <?php endif; ?>
+
+            map = new google.maps.Map(document.getElementById('map-container'), {
+                zoom: 14,
+                center: center,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                scrollwheel: false
         });
 
         var market = null;
@@ -183,7 +185,7 @@
             infowindow.open(map, marker);
             searchCars();
         });
-    }
+}
 
     function localizame() {
         if (navigator.geolocation) { // Si el navegador tiene geolocalizacion
@@ -229,6 +231,8 @@
         var center = map.getCenter();
         var map_center_lat = center.lat();
         var map_center_lng = center.lng();
+
+
 
         // Inputs and Selects
         var from = null;
@@ -406,7 +410,7 @@
                     
                     contentString += "</div>";
 
-                    contentString += "<p class='text-right'><a class='btn-a-action' href='<?php echo url_for('profile/reserve?id=') ?>" + dataCar.id + "' target='_blank'>RESERVAR</a></p>";
+                    contentString += "<p class='text-right'><a class='btn-a-action' href='"+reserveUrl.replace("carId", dataCar.id).replace("from", dataCar.from).replace("to", dataCar.to)+"' target='_blank'>RESERVAR</a></p>";
 
                     if (infowindow)
                         infowindow.close();
@@ -471,10 +475,10 @@
                     article += "<img class='marker' src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + contador + "|05a4e7|ffffff'>"
                     article += "</div>";
                     article += "<div class='col-xs-8 col-md-8 text'>";
-                    article += "<h2><a target='_blank' href='<?php echo url_for("profile/reserve?c=") ?>"+ dataCar.id + "/f/"+dataCar.from+"/t/"+dataCar.to+"'>"+ dataCar.brand +" "+ dataCar.model +"<small>, "+dataCar.year+"</small></a></h2>";
+                    article += "<h2><a target='_blank' href='"+reserveUrl.replace("carId", dataCar.id).replace("from", dataCar.from).replace("to", dataCar.to)+"'>"+ dataCar.brand +" "+ dataCar.model +"<small>, "+dataCar.year+"</small></a></h2>";
                     /*article += "<span class='sub-heading'>A 2 km Metro <strong>Tobalaba</strong></span>";*/
                     article += "<p class='price'>$"+ dataCar.priceAPuntos +" <small>Total</small></p>";
-                    article += "<p class='text-right'><a class='btn-a-action' href='<?php echo url_for("profile/reserve?c=") ?>"+ dataCar.id + "/f/"+dataCar.from+"/t/"+dataCar.to+"' class='reserve' target='_blank'>RESERVAR</a></p>";
+                    article += "<p class='text-right'><a class='btn-a-action' href='"+reserveUrl.replace("carId", dataCar.id).replace("from", dataCar.from).replace("to", dataCar.to)+"' class='reserve' target='_blank'>RESERVAR</a></p>";
                     /*article += "<img src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + contador + "|05a4e7|ffffff' />";*/
                     article += "</div>";
                     article += "</div>";
@@ -514,7 +518,7 @@
 
             markerCluster = new MarkerClusterer(map, markers, mcOptions);
         }, "json");
-    }
+}
 </script>
 
 <section id="section-home">
@@ -535,16 +539,16 @@
         <!-- Carousel -->
         <div id="section-home-carousel">
             <div>
-                <h1>ARRIENDA EL AUTO DE UN VECINO DESDE $17.000 FINALES</h1>
-                <h2>en precios finales, todo incluído.</h2>
+            <h1>ARRIENDA EL AUTO DE UN VECINO CON SEGURO, ASISTENCIA EN RUTA Y TAG</h1>
+                <h2>Precios finales, sin letra chica.</h2>
             </div>
             <div>
-                <h1>RENT A CAR SIN TARJETA DE CREDITO. MAYOR AHORRO GARANTIZADO</h1>
-                <h2>deposito en garantía opcional. </h2>
+                <h1>DEPOSITO EN GARANTIA OPCIONAL </h1>
+                <h2>Pagos con o sin Tarjeta de Crédito. </h2>
             </div>
             <div>
                 <h1>PRIMER SISTEMA DE ARRIENDO DE AUTOS ENTRE PERSONAS</h1>
-                <h2>hay un auto en tu comuna</h2>
+                <h2>Hay un auto en tu comuna o en un metro cercano.</h2>
             </div>
         </div>
     </div>
@@ -669,12 +673,12 @@
     <div class="row text-center">
         <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
             <div class="col-xs-12 col-sm-offset-0  col-md-offset-0">
-             <h2 class="title">Compare precios</h2>
-         </div>
-     </div>
- </div>
- <div class="visible-xs space-20"></div>
- <div class="row">
+               <h2 class="title">Compare precios</h2>
+           </div>
+       </div>
+   </div>
+   <div class="visible-xs space-20"></div>
+   <div class="row">
     <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 table-responsive text-center">
         <table id="compare-prices-table">
             <thead>
@@ -732,8 +736,8 @@
     <div>
         <?php $U = sfContext::getInstance()->getUser(); ?>
         <?php if ($sf_user->isAuthenticated()): ?>
-         <section class="hidden-sm hidden-md hidden-xs"id="section-condition"></section>
-     <?php else: ?>                        
+           <section class="hidden-sm hidden-md hidden-xs"id="section-condition"></section>
+       <?php else: ?>                        
         <section class="visible-xs hidden-sm hidden-md text-center">
             <div class="row" id = "link-holder">
                 <a href="<?php echo url_for('main/login') ?>" style="font-size: 18px"><strong>INGRESAR</strong></a>
@@ -748,12 +752,12 @@
 
         <div class="row">
             <div class="hidden-xs col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
-               <div class="col-xs-offset-3 col-xs-8 col-sm-offset-0 col-md-offset-0"> <h2 class="title">Arriendas en las noticias</h2></div>
-           </div>
-       </div>
-   </div>
+             <div class="col-xs-offset-3 col-xs-8 col-sm-offset-0 col-md-offset-0"> <h2 class="title">Arriendas en las noticias</h2></div>
+         </div>
+     </div>
+ </div>
 
-   <div class="row" id = "noticias">
+ <div class="row" id = "noticias">
 
     <div class="hidden-xs col-sm-offset-2 col-sm-8 col-md-offset-2 col-md-8">
         <div id="section-on-news-carousel">
@@ -803,6 +807,7 @@
 <script>
 
     $(document).ready(function(){
+
 
         $("#from").val(rounMinutos($("#from").val()));
         $("#to").val(rounMinutos($("#to").val()));        
@@ -859,147 +864,148 @@
 
     });
 
-    if ($(window).width() > 768) {
+if ($(window).width() > 768) {
 
-        $('#section-home').css({'height': $(window).height()});
+    $('#section-home').css({'height': $(window).height()});
 
-        $("#map, #map-list").css({height: $(window).height() - $("#section-map-form-search").outerHeight() - $("#section-map-filters").outerHeight()});
+    $("#map, #map-list").css({height: $(window).height() - $("#section-map-form-search").outerHeight() - $("#section-map-filters").outerHeight()});
+}
+
+$("input[type='checkbox']").change(function(){
+    searchCars();
+});
+
+$("#search").click(function(e){
+    e.preventDefault();
+    searchCars();        
+});
+
+$("#commune").change(function(e){
+    e.preventDefault();
+    searchCars(); 
+});
+
+$(".tab").click(function(){
+
+    var target = $(this).data("target");
+
+    if (target == "#tab-map") {
+        $("#region-container").hide();
+        $("#commune-container").hide();
+        $("#direction-container").show();
+        $(".list").removeClass('activo');
+        $(".map").addClass('activo');
+
     }
 
-    $("input[type='checkbox']").change(function(){
-        searchCars();
-    });
+    if (target == "#tab-list") {
+        $("#direction-container").hide();
+        $("#region-container").show();
+        $("#commune-container").show();
+        $(".map").removeClass('activo');
+        $(".list").addClass('activo');
+    }
+});
 
-    $("#search").click(function(e){
-        e.preventDefault();
-        searchCars();        
-    });
+$('#header .animate').each(function(){
 
-    $("#commune").change(function(e){
-        e.preventDefault();
-        searchCars(); 
-    });
+    var target  = $(this).data('target');
 
-    $(".tab").click(function(){
+    $(this).on('click', function(e) {
 
-        var target = $(this).data("target");
-
-        if (target == "#tab-map") {
-            $("#region-container").hide();
-            $("#commune-container").hide();
-            $("#direction-container").show();
-            $(".list").removeClass('activo');
-            $(".map").addClass('activo');
-
-        }
-
-        if (target == "#tab-list") {
-            $("#direction-container").hide();
-            $("#region-container").show();
-            $("#commune-container").show();
-            $(".map").removeClass('activo');
-            $(".list").addClass('activo');
-        }
-    });
-
-    $('#header .animate').each(function(){
-
-        var target  = $(this).data('target');
-
-        $(this).on('click', function(e) {
-
-            e.preventDefault();
-            var position = $(target).offset().top - 50;
-            $('html, body').animate({
-                scrollTop: position
-            }, 1250);
-        });
-    });
-
-    $(".ico-search").on('click', function(e) {
-        var target  = $(this).data('target');
         e.preventDefault();
         var position = $(target).offset().top - 50;
         $('html, body').animate({
             scrollTop: position
         }, 1250);
     });
+});
 
-    $(".tab").on('click', function(){
+$(".ico-search").on('click', function(e) {
+    var target  = $(this).data('target');
+    e.preventDefault();
+    var position = $(target).offset().top - 50;
+    $('html, body').animate({
+        scrollTop: position
+    }, 1250);
+});
 
-        var target = $(this).data("target");
+$(".tab").on('click', function(){
 
-        $(".tab").removeClass("active");
-        $(this).addClass("active");
+    var target = $(this).data("target");
 
-        $(".tab-container").hide();
-        $(target).show();
-    });
+    $(".tab").removeClass("active");
+    $(this).addClass("active");
 
-    $('#to').datetimepicker({
-        allowTimes:[
-        "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
-        "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
-        "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
-        "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-        "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-        "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-        "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-        "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
-        ],
-        dayOfWeekStart: 1,
-        lang:'es',
-        minDate : "<?php echo date('d-m-Y', (strtotime ('+24 Hours'))); ?>",
-        format:'d-m-Y H:i'
-    });
+    $(".tab-container").hide();
+    $(target).show();
+});
 
-    $('#from').datetimepicker({
-        allowTimes:[
-        "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
-        "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
-        "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
-        "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-        "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-        "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-        "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-        "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
-        ],
-        format:'d-m-Y H:i',
-        minDate : "<?php echo date('d-m-Y') ?>",
-        dayOfWeekStart: 1,
-        lang:'es'
-    });
+$('#to').datetimepicker({
+    allowTimes:[
+    "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
+    "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
+    "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
+    "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+    "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+    "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
+    "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
+    "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
+    ],
+    dayOfWeekStart: 1,
+    lang:'es',
+    minDate : "<?php echo date('d-m-Y', (strtotime ('+24 Hours'))); ?>",
+    format:'d-m-Y H:i'
+});
 
-    function rounMinutos(valor){
-        var fechaH = valor
+$('#from').datetimepicker({
+    allowTimes:[
+    "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
+    "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
+    "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
+    "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+    "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+    "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
+    "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
+    "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
+    ],
+    format:'d-m-Y H:i',
+    minDate : "<?php echo date('d-m-Y') ?>",
+    minTime : "<?php echo date('H:i') ?>",
+    dayOfWeekStart: 1,
+    lang:'es'
+});
 
-        var split = fechaH.split(" ");
-        var f = split[0];
-        var h = split[1];
+function rounMinutos(valor){
+    var fechaH = valor
 
-        var split3 = h.split(":");
-        var hora = split3[0];
-        var min = split3[1];
+    var split = fechaH.split(" ");
+    var f = split[0];
+    var h = split[1];
 
-        if(min > "14" && min < "45"){
-            min = "30";
-        }else if(min > "45"){
-            min = "00";
-            var a = parseInt(hora)+1;
-            hora = a.toString();
-        }else{
-            min = "00";
-        }
+    var split3 = h.split(":");
+    var hora = split3[0];
+    var min = split3[1];
 
-        fecha = f+" "+hora+":"+min;
-
-        return fecha;
+    if(min > "14" && min < "45"){
+        min = "30";
+    }else if(min > "45"){
+        min = "00";
+        var a = parseInt(hora)+1;
+        hora = a.toString();
+    }else{
+        min = "00";
     }
-    
+
+    fecha = f+" "+hora+":"+min;
+
+    return fecha;
+}
 
 
 
-     
+
+
 
 
 </script>

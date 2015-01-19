@@ -3,26 +3,13 @@
 /web/images/cars/
 /web/images/licence/
 /web/images/users/
-/web/uploads/*.jpg
-/web/uploads/*.jpeg
-/web/uploads/*.JPG
-/web/uploads/*.png
-/web/uploads/cars/
-/web/uploads/damages/
-/web/uploads/images/
-/web/uploads/vistas_seguro/
-/web/uploads/verificaciones/
+/web/uploads/
 /config/databases.yml
 /config/ProjectConfiguration.class.php
-/nbproject/private/
-
-.DS_Store
 /nbproject/
-/nbproject/private/
-
 /db/
 
+.DS_Store
 *.orig
 
-/arriendas.mwb
-/arriendas.mwb.bak
+/web/old/

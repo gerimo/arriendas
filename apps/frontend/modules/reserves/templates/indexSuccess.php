@@ -10,7 +10,7 @@
 
             <?php if (count($PaidReserves) > 0): ?>
 
-                <h1>Reservas pagadas <small>(pendientes de tu aprobación) (<?php echo count($PaidReserves) ?>)</small></h1>
+                <h1>Reservas pagadas <small>(pendientes de tu aprobación)</small></h1>
 
                 <?php foreach ($PaidReserves as $PaidReserve): ?>
                     <div class="row paid-reserve-container">
@@ -196,7 +196,7 @@
         button.attr("disabled", true);
 
         $.post("<?php echo url_for('reserve_approve') ?>", {"reserveId": reserveId}, function(r){
-            
+            console.log(r);
             if (r.error) {
                 $("#dialog-alert p").html(r.errorMessage);
                 $("#dialog-alert").attr("title", "Problemas al aprobar la reserva");
