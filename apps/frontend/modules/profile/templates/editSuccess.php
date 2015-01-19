@@ -22,7 +22,7 @@
                             <?php if($user->getFacebookId() != null):?>
                                 <img src="http://res.cloudinary.com/arriendas-cl/image/facebook/w_194,h_204,c_fill,g_face/<?php echo $user->getFacebookId();?>.jpg">
                             <?php else: ?>
-                                <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_194,h_204,c_fill,g_face/http://arriendas.cl/images/users/<?php echo $user->getFileName() ?>">
+                                <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_194,h_204,c_fill,g_face/http://local.arriendas.cl/images/users/<?php echo $user->getFileName() ?>">
                             <?php endif ?>
                         <?php endif ?>
                     </div> 
@@ -140,7 +140,11 @@
     <form action="<?php echo url_for('main/uploadRut?photo=rut&width=194&height=204&file=filerut') ?>" enctype="multipart/form-data" id="formrut" method="post">
         <input id="filerut" name="filerut" type="file">
         <input type="submit">
-    </form>   
+    </form>
+
+    <div id="dialog-alert" title="">
+        <p></p>
+    </div>
 </div>
 
 <div class="hidden-xs space-100"></div>
@@ -156,20 +160,33 @@
     function imageUpload (form, formfile, preview, link) {
 
         $(formfile).change(function(e) {
-
+            
             $(preview).html('<?php echo image_tag('loader.gif') ?>');
 
             $(form).ajaxForm({
                 dataType: "json",
                 target: preview,
                 success: function(r){
-                    console.log("success");
-                    console.log(r);
+                    if (r.error) {
+                        $("#dialog-alert p").html(r.errorMessage);
+                        $("#dialog-alert").attr("title", "Problemas al subir la imagen");
+                        $("#dialog-alert").dialog({
+                            buttons: [{
+                                text: "Aceptar",
+                                click: function() {
+                                    $( this ).dialog( "close" );
+                                }
+                            }]
+                        });
+                    } else {
+                        /*location.reload();*/
+                    }
                 }
             }).submit();
         });
         
         $(link).click(function(e) {
+            e.preventDefault();
             $(formfile).click();
         });
     }

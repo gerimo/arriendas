@@ -2874,7 +2874,7 @@ class mainActions extends sfActions {
                 throw new Exception("Formato de la imagen inválido", 2);
             }
 
-            if ($size < (5 * 1024 * 1024)) {
+            if ($size > (5 * 1024 * 1024)) {
                 throw new Exception("La imagen excede el tamaño máximo permitido (1 MB)", 2);                
             }
             
@@ -2901,16 +2901,17 @@ class mainActions extends sfActions {
 
             sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
 
-            echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
-            echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";
+            /*echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
+            echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";*/
 
             $User = Doctrine_Core::getTable('User')->find($userId);
             $User->setPictureFile("/images/users/".$actual_image_name);
             $User->save();
         } catch (Exception $e) {
+            error_log($e->getMessage());
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
-            if ($e->getCode() == 2) {
+            if ($e->getCode() == 1) {
                 $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
             }
             if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 2) {
