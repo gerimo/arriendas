@@ -2,14 +2,6 @@
 
 require_once sfConfig::get('sf_lib_dir') . '/vendor/khipu/KhipuService.php';
 
-/**
- * khipu actions.
- *
- * @package    CarSharing
- * @subpackage khipu
- * @author     Your name here
- * @version    SVN: $Id: actions.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
- */
 class khipuActions extends sfActions {
 
     public function executeGeneratePayment (sfWebRequest $request) {
@@ -247,12 +239,11 @@ class khipuActions extends sfActions {
                     /* envío de mail */
                     require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
 
-
                     /* pedidos de reserva pagado (propietario) */
                     $mail = new Email();
                     $mailer = $mail->getMailer();
 
-                    if ($order->getImpulsive()) {
+                    /*if ($order->getImpulsive()) {*/
 
                         $url = $this->generateUrl("aprobarReserve", array('idReserve' => $reserve->getId(), 'idUser' => $reserve->getCar()->getUserId()), TRUE);
 
@@ -264,7 +255,7 @@ class khipuActions extends sfActions {
                         $body .= "<p>Si no apruebas la reserva cuanto antes otro dueño podría ganar la reserva.";
                         $body .= "<p>Para recibir tu pago debes aprobar la reserva haciendo <a href='$url'>click aquí</a></p>";
 
-                    } else {
+                    /*} else {
 
                         $subject = "¡El arrendatario ha pagado la reserva!";
 
@@ -276,7 +267,7 @@ class khipuActions extends sfActions {
                         $body .= "<p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p>";
                         $body .= "<p>Datos del propietario:<br><br>Nombre: $nameRenter $lastnameRenter<br>Teléfono: $telephoneRenter<br>Correo: $emailRenter</p>";
                         $body .= "<p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
-                    }
+                    }*/
 
                     $message = $mail->getMessage();
                     $message->setSubject($subject);
@@ -444,10 +435,6 @@ class khipuActions extends sfActions {
         
     }
 
-    /**
-     * Get environment khipu settings.
-     * @return array setttings.
-     */
     protected function getSettings() {
         $rawSettings = sfYaml::load(dirname(dirname(__FILE__)) . "/config/khipu.yml");
         $env = sfConfig::get('sf_environment');
@@ -459,5 +446,4 @@ class khipuActions extends sfActions {
         $custom_logger = new sfFileLogger(new sfEventDispatcher(), array('file' => $logPath));
         $custom_logger->info($step . " - " . $status . ". " . $msg);
     }
-
 }

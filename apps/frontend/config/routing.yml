@@ -54,9 +54,13 @@ opportunities_approve:
     url: /oportunidades/aprobar
     param: { module: opportunities, action: approve }
 
+rent_a_car_region_commune:
+    url: /arriendo-de-autos/:region/:commune
+    param: {module: main, action: index }
+
 reserve:
     url: /reserva/:c/:f/:t
-    param: { module: profile, action: reserve }
+    param: { module: main, action: reserve }
 
 reserve_approve:
     url: /reserva/aprobar
@@ -98,11 +102,7 @@ user_register_complete:
     url: /registro/completar
     param: { module: main, action: completeRegister }
 
-
-
-    
 # old Design
-
 
 index_by_city:
   url:    /c/:c
@@ -135,9 +135,11 @@ webpayFinal:
 khipuNotify:
     url:  /khipu/notifyPayment
     param:  { module: khipu, action: notifyPayment }
+
 khipuReturn:
     url:  /khipu/paymentInformation
     param:  { module: khipu, action: paymentInformation }
+
 khipuCancel:
     url:  /khipu/processPaymentCanceled
     param:  { module: khipu, action: processPaymentCanceled }
@@ -177,11 +179,6 @@ availabilityEmailOpen:
 facebook_login:
     url: /main/loginFacebook 
     param:  { module: main, action: loginFacebook }
-
-# URLs específicas para cada region-comuna
-region-comuna:
-    url: /arriendo-de-autos/:region/:comuna
-    param: {module: main, action: index }
 
 fbShare:
   url:    /fb/:id/
