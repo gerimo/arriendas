@@ -64,7 +64,7 @@
 
                         <div class='row'>
 
-                            <div class="leftMessage hidden-xs col-md-offset-1 col-xs-1 col-sm-1 col-md-1">
+                            <div class="leftMessage hidden-xs col-sm-offset-1 col-md-offset-1 col-xs-1 col-sm-1 col-md-1">
 
                                 <div class="imageProfile hidden-sm">
                                     <?php include_component("profile","pictureFile",array("user"=>$objetoConversacion[0]->getUserFrom(),"params"=>"width='74px' height='74px'"));?>
@@ -94,7 +94,7 @@
                     <?php else: ?>
 
                         <div class='row'>
-                            <div class="marcoTextoDer col-md-offset-1 col-xs-10 col-sm-8 col-md-8">
+                            <div class="marcoTextoDer col-sm-offset-1 col-md-offset-1 col-xs-10 col-sm-8 col-md-8">
                                 <div class="texto">
                                     <div class="msg"><p><?=$conversacion[$i]['bodyMensaje'];?></p></div>
                                     <div class="horaFecha"><?=$conversacion[$i]['dateMensaje'];?></div>
@@ -102,7 +102,7 @@
                             </div>
                             <!--<div class="puntaCeleste"></div>-->
                             <div class="rightMessage hidden-xs col-md-2">
-                                <div class="imgProfile">
+                                <div class="imgProfile hidden-sm">
                                     <?php include_component("profile","pictureFile",array("user"=>$objetoConversacion[0]->getUserFrom(),"params"=>"width='74px' height='74px'"));?>
                                 </div>
                                 <div class="nameProfile">
@@ -123,7 +123,7 @@
                     <?php if ($idUsuarioTo == $myId): ?>
 
                         <div class='row'>
-                            <div class="leftMessage hidden-xs col-md-offset-1  col-xs-1 col-sm-1 col-md-1">
+                            <div class="leftMessage hidden-xs col-sm-offset-1 col-md-offset-1  col-xs-1 col-sm-1 col-md-1">
                                 <div class="imgProfile hidden-sm">
                                     <?php include_component("profile","pictureFile",array("user"=>$objetoConversacion[0]->getUserTo(),"params"=>"width='74px' height='74px'"));?>
                                 </div>
@@ -150,8 +150,16 @@
                     <?php else: ?> <!-- Si no soy yo -->
 
                         <div class='row'>
+                            <!--<div class="puntaCeleste"></div>-->
+                            <div class="marcoTextoDer col-sm-offset-1 col-md-offset-1 col-xs-10 col-sm-8 col-md-8">
+                                <div class="texto">
+                                    <div class="msg"><p><?=$conversacion[$i]['bodyMensaje'];?></p></div>
+                                    <div class="horaFecha"><?=$conversacion[$i]['dateMensaje'];?></div>
+                                </div>
+                            </div>
+
                             <div class="rightMessage hidden-xs col-md-2">
-                                <div class="imgProfile">
+                                <div class="imgProfile hidden-sm">
                                     <?php include_component("profile","pictureFile",array("user"=>$objetoConversacion[0]->getUserTo(),"params"=>"width='74px' height='74px'"));?>
                                 </div>
                                 <div class="nameProfile">
@@ -161,13 +169,7 @@
                                     ?>
                                 </div>
                             </div>
-                            <!--<div class="puntaCeleste"></div>-->
-                            <div class="marcoTextoDer col-md-offset-1 col-xs-10 col-sm-8 col-md-8">
-                                <div class="texto">
-                                    <div class="msg"><p><?=$conversacion[$i]['bodyMensaje'];?></p></div>
-                                    <div class="horaFecha"><?=$conversacion[$i]['dateMensaje'];?></div>
-                                </div>
-                            </div>
+
                         </div>
 
                         <div class="hidden-xs space-30"></div>
@@ -185,13 +187,11 @@
 
 <script type="text/javascript">
 
-    var urlGuardarMensaje = <?php echo "'".url_for("messages/guardarMensajeNuevoAjax")."';" ?>
     var idCon = "<?php echo $conversacion['idConversacion']; ?>";
     var idFrom = "<?php echo $myId; ?>";
     var idTo = "<?php echo $idOtroUsuario; ?>";
 
     $(document).ready(function(){
-
         $("span.img-thumbnail").find( "img" ).addClass("img-responsive");
         $("div.imgProfile").find( "img" ).addClass("img-responsive");
 
@@ -204,7 +204,7 @@
                 $(".img_loader").fadeIn("hide");
                 $.ajax({
                     type: 'POST',
-                    url: urlGuardarMensaje,
+                    url: "<?php echo url_for('messages/guardarMensajeNuevoAjax') ?>",
                     data: {
                         mensajeNuevo: contenido,
                         idConversacion: idCon,
@@ -215,7 +215,7 @@
                     $(".cargaDeNuevosMensajes").prepend(texto);
                     //ocultar
                     $(".img_loader").fadeOut("hide");
-                    $(".textoMensaje").val('');
+                    $("#bodyMessage").val('');
                 }).fail(function(){
                     alert("Ha ocurrido un error al enviar mensaje");
                     //ocultar
