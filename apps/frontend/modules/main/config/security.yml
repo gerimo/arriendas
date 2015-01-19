@@ -1,4 +1,4 @@
-homepage:
+all:
     is_secure: false
 
 login:
@@ -9,3 +9,6 @@ login_do:
 
 logout:
     is_secure: false
+
+reserve:
+    is_secure: true

@@ -22,9 +22,10 @@
 <div class="container">
 
     <div class="col-xs-offset-0 col-xs-12 col-sn-12 col-md-offset-0 col-md-5 carousal-area">
-        <h1 class="hidden-xs text-capitalize"><?php echo $Car->getModel()->getBrand()->getName()." "
-        .$Car->getModel()->getName()."</br> <span>".$Car->getCommune().","."</span>"." "
-        ."<span>".$Car->getYear()."</span>" ?></h1>
+        <h1 class="hidden-xs text-capitalize">
+            <?php echo $Car->getModel()->getBrand()->name." ".$Car->getModel()->name ?>, <small><?php echo $Car->year ?></small><br>
+            <span><?php echo $Car->getCommune()->name ?></span>
+        </h1>
         <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner" role="listbox">
                 <div class="item active">
@@ -252,7 +253,7 @@
                     <h2><span class="dis">1.- </span>GARANTÍA ARRIENDAS</h2>
                     <ul class="list list-unstyled">
                         <li><span class="icon-svg_16"></span>Calidad Arriendas: el auto se encuentra verificado por Arriendas.</li>
-                        <li><span class="icon-svg_16"></span>Garantía Arriendas: 2 opcionesde reemplazo o te devolvemos el dinero.</li>
+                        <li><span class="icon-svg_16"></span>Garantía Arriendas: 2 opciones de reemplazo o te devolvemos el dinero.</li>
                         <li><span class="icon-svg_16"></span>Ofertas: Recibirás ofertas de otros dueños manteniendo este precio.</li>
                     </ul>
                     </div>

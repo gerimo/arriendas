@@ -53,14 +53,44 @@ class reservesActions extends sfActions {
             $Reserve->setConfirmed(1);
             $Reserve->setCanceled(0);
             $Reserve->setFechaConfirmacion(date("Y-m-d H:i:s"));
-            $Reserve->save();
 
-            $Transaction = $Reserve->getTransaction();
-            /*$Transaction->setSelected(true);*/
-            $Transaction->save();
+            // Correo de notificación
+            $User    = $Reserve->getUser();
 
-            // Correos de aprobación
+            $mail    = new Email();
+            $mailer  = $mail->getMailer();
+            $message = $mail->getMessage();            
+
+            $Functions  = new Functions;
+            $formulario = $Functions->generarFormulario(NULL, $Reserve->token);
+            $reporte    = $Functions->generarReporte($Reserve->getCar()->id);
+            $contrato   = $Functions->generarContrato($Reserve->token);
+
+            $subject = "¡Tu reserva ha sido aprobada!";
+            $body    = $this->getPartial('emails/reserveApproved', array('Reserve' => $Reserve));
+            $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+            $to      = array($User->email => $User->firstname." ".$User->lastname);
+
+            $message->setSubject($subject);
+            $message->setBody($body, 'text/html');
+            $message->setFrom($from);
+            $message->setTo($to);
+            /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
+
+            $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+            $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
+            $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
             
+            if (!is_null($User->getDriverLicenseFile())) {
+                $filepath = $User->getDriverLicenseFile();
+                if (is_file($filepath)) {
+                    $message->attach(Swift_Attachment::fromPath($User->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$User->getLicenceFileName()));
+                }
+            }
+            
+            $mailer->send($message);
+
+            $Reserve->save();            
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
@@ -128,43 +158,34 @@ class reservesActions extends sfActions {
                 throw new Exception("No se pudo realizar el cambio. Por favor, intentalo nuevamente más tarde.", 1);
             }
 
-            /*$oq = Doctrine_Core::getTable("OportunityQueue")->findOneByReserveId($reserveId);
-            $oq->setIsActive(false);
-            $oq->save();
+            $Renter = $NewReserve->getUser();
+            $Owner  = $NewReserve->getCar()->getUser();
 
-            $Renter = $r->getUser();
-            $Owner = $r->getCar()->getUser();
+            $mail    = new Email();
+            $mailer  = $mail->getMailer();
+            
+            $functions  = new Functions;
+            $formulario = $functions->generarFormulario(NULL, $NewReserve->token);
+            $reporte    = $functions->generarReporte($NewReserve->getCar()->id);
+            $contrato   = $functions->generarContrato($NewReserve->token);
+            $pagare     = $functions->generarPagare($NewReserve->token);
 
-            $functions = new Functions;
-            $formulario = $functions->generarFormulario(NULL, $r->getToken());
-            $reporte = $functions->generarReporte($reserve->getCar()->getId());
-            $contrato = $functions->generarContrato($r->getToken());
-            $pagare = $functions->generarPagare($r->getToken());
-
-            // DOCUMENTOS DUEÑO
-
+            // CORREO DUEÑO
             $subject = "¡Has ganado la oportunidad!";
+            $body    = $this->getPartial('emails/opportunityWonOwner', array('Reserve' => $NewReserve));
+            $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+            $to      = array($Owner->email => $Owner->firstname." ".$Owner->lastname);
 
-            $body = "<p>".$Owner->getFirstname().",</p>";
-            $body .= "<p>Han aceptado tu postulación por un total de <strong>".number_format(($r->getPrice()), 0, ',', '.')."</strong>, desde ".$r->getFechaInicio()." ".$r->getHoraInicio()." hasta ".$r->getFechaTermino()." ".$r->getHoraTermino().". Te recomendamos que llames al arrendatario cuanto antes. Sus datos son los siguientes:</p>";
-            $body .= "<table>";
-            $body .= "<tr><th style='text-align: left'>Nombre</th><td>".$Renter->getFirstname()." ".$Renter->getLastname()."</td></tr>";
-            $body .= "<tr><th style='text-align: left'>Teléfono</th><td>".$Renter->getTelephone()."</td></tr>";
-            $body .= "<tr><th style='text-align: left'>Correo electrónico</th><td>".$Renter->getEmail()."</td></tr>";
-            $body .= "</table>";
-            $body .= "<br><br>";
-            $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Atentamente</p>";
-            $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Equipo Arriendas.cl</p>";
+            $message = $mail->getMessage();
+            $message->setSubject($subject);
+            $message->setBody($body, 'text/html');
+            $message->setFrom($from);
+            $message->setTo($to);
+            /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
 
-            $mail = new Email();
-            $message = $mail->getMessage()
-                ->setSubject($subject)
-                ->setBody($body, 'text/html')
-                ->setFrom(array("soporte@arriendas.cl" => "Soporte Arriendas.cl"))
-                ->setTo(array($Owner->getEmail() => $Owner->getFirstName()." ".$Owner->getLastname()))
-                ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
-                ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
-                ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+            $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+            $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
+            $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
             
             if (!is_null($Renter->getDriverLicenseFile())) {
                 $filepath = $Renter->getDriverLicenseFile();
@@ -175,73 +196,49 @@ class reservesActions extends sfActions {
             
             $mailer->send($message);
 
-            // DOCUMENTOS ARRENDATARIO
-
+            // CORREO ARRENDATARIO
             $subject = "Has cambiado el auto de tu reserva";
+            $body    = $this->getPartial('emails/opportunityWonRenter', array('Reserve' => $NewReserve));
+            $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+            $to      = array($Renter->email => $Renter->firstname." ".$Renter->lastname);
 
-            $body = "<p>Hola ".$Renter->getFirstname().",</p>";
-            $body .= "<p>Has cambiado el auto de tu reserva y esta ya esta confirmada. Recuerda que debes llenar el <strong>Formulario de entrega</strong> Y <strong>Devolución</strong> del vehículo.</p>";
-            $body .= "<p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p>";
-            $body .= "<h3>Datos del propietario</h3>";
-            $body .= "<table>";
-            $body .= "<tr><th style='text-align: left'>Nombre</th><td>".$Owner->getFirstname()." ".$Owner->getLastname()."</td></tr>";
-            $body .= "<tr><th style='text-align: left'>Teléfono</th><td>".$Owner->getTelephone()."</td></tr>";
-            $body .= "<tr><th style='text-align: left'>Correo electrónico</th><td>".$Owner->getEmail()."</td></tr>";
-            $body .= "<tr><th style='text-align: left'>Dirección</th><td>".$Owner->getAddress()."</td></tr>";
-            $body .= "<tr><th style='text-align: left'>Marca</th><td>".$r->getCar()->getModel()->getBrand()->getName()."</td></tr>";
-            $body .= "<tr><th style='text-align: left'>Modelo</th><td>".$r->getCar()->getModel()->getName()."</td></tr>";
-            $body .= "</table>";
-            $body .= "<p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
-            $body .= "<br><br>";
-            $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Atentamente</p>";
-            $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Equipo Arriendas.cl</p>";
+            $message = $mail->getMessage();
+            $message->setSubject($subject);
+            $message->setBody($body, 'text/html');
+            $message->setFrom($from);
+            $message->setTo($to);
+            /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
 
-            $mail = new Email();
-            $message = $mail->getMessage()
-                ->setSubject($subject)
-                ->setBody($body, 'text/html')
-                ->setFrom(array("soporte@arriendas.cl" => "Soporte Arriendas.cl"))
-                ->setTo(array($Renter->getEmail() => $Renter->getFirstName()." ".$Renter->getLastname()))
-                ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
-                ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
-                ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'))
-                ->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
+            $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+            $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
+            $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+            $message->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
                 
             $mailer->send($message);
 
-            // DOCUMENTOS SOPORTE
+            // CORREO SOPORTE
 
-            $subject = "Ha habido un cambio de auto en la Reserva ".$originalReserve->getId();
+            if ($NewReserve->reserva_original) {
+                $originalReserveId = $NewReserve->reserva_original;
+            } else {
+                $originalReserveId = $NewReserve->id;
+            }
 
-            $body = "<h3>Datos del propietario</h3>";
-            $body .= "<table>";
-            $body .= "<tr><th style='text-align: left'>Nombre</th><td>".$Owner->getFirstname()." ".$Owner->getLastname()."</td></tr>";
-            $body .= "<tr><th style='text-align: left'>Teléfono</th><td>".$Owner->getTelephone()."</td></tr>";
-            $body .= "<tr><th style='text-align: left'>Correo electrónico</th><td>".$Owner->getEmail()."</td></tr>";
-            $body .= "<tr><th style='text-align: left'>Dirección</th><td>".$Owner->getAddress()."</td></tr>";
-            $body .= "<tr><th style='text-align: left'>Marca</th><td>".$r->getCar()->getModel()->getBrand()->getName()."</td></tr>";
-            $body .= "<tr><th style='text-align: left'>Modelo</th><td>".$r->getCar()->getModel()->getName()."</td></tr>";
-            $body .= "</table>";
-            $body .= "<h3>Datos del arrendatario</h3>";
-            $body .= "<table>";
-            $body .= "<tr><th style='text-align: left'>Nombre</th><td>".$Renter->getFirstname()." ".$Renter->getLastname()."</td></tr>";
-            $body .= "<tr><th style='text-align: left'>Teléfono</th><td>".$Renter->getTelephone()."</td></tr>";
-            $body .= "<tr><th style='text-align: left'>Correo electrónico</th><td>".$Renter->getEmail()."</td></tr>";
-            $body .= "</table>";
-            $body .= "<br><br>";
-            $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Atentamente</p>";
-            $body .= "<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Equipo Arriendas.cl</p>";
+            $subject = "Ha habido un cambio de auto en la Reserva ".$originalReserveId;
+            $body    = $this->getPartial('emails/opportunityWonSupport', array('Reserve' => $NewReserve));
+            $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+            $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
 
-            $mail = new Email();
-            $message = $mail->getMessage()
-                ->setSubject($subject)
-                ->setBody($body, 'text/html')
-                ->setFrom(array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl"))
-                ->setTo(array("soporte@arriendas.cl" => "Soporte Arriendas.cl"))
-                ->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"))
-                ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
-                ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
-                ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+            $message = $mail->getMessage();
+            $message->setSubject($subject);
+            $message->setBody($body, 'text/html');
+            $message->setFrom($from);
+            $message->setTo($to);
+            $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+
+            $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+            $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
+            $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
             
             if (!is_null($Renter->getDriverLicenseFile())) {
                 $filepath = $Renter->getDriverLicenseFile();
@@ -250,8 +247,7 @@ class reservesActions extends sfActions {
                 }
             }
 
-            $mailer->send($message);*/
-    
+            $mailer->send($message);
         } catch (Exception $e) {
 
             $return["error"] = true;
@@ -481,7 +477,23 @@ class reservesActions extends sfActions {
 
             $Reserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
 
+            $Reserve->setConfirmed(false);
             $Reserve->setCanceled(true);
+
+            // Correo de notificación
+            $mail    = new Email();
+            $mailer  = $mail->getMailer();
+            $message = $mail->getMessage();
+            $User    = $Reserve->getUser();
+
+            $message->setSubject("La reserva ha sido rechazada");
+            $message->setBody($this->getPartial('emails/reserveRejected', array('Reserve' => $Reserve)), 'text/html');
+            $message->setFrom(array("soporte@arriendas.cl" => "Soporte Arriendas.cl"));
+            $message->setTo(array($User->email => $User->firstname." ".$User->lastname));
+            /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
+            
+            $mailer->send($message);
+
             $Reserve->save();
         } catch (Exception $e) {
             $return["error"] = true;

@@ -9,6 +9,9 @@
 
     /*google.maps.event.addDomListener(window, 'load', initialize);*/
 
+        var reserveUrl = "<?php echo url_for('reserve', array('c' => 'carId', 'f' => 'from', 't' => 'to'), true) ?>";
+        console.log(reserveUrl);
+
         var usuarioLogeado = "<?php echo $usuarioLog; ?>";
         var geolocalizacion; // coordenadas
         var latitud; // coordenadas
@@ -408,7 +411,7 @@
                     
                     contentString += "</div>";
 
-                    contentString += "<p class='text-right'><a class='btn-a-action' href='<?php echo url_for('profile/reserve?id=') ?>" + dataCar.id + "' target='_blank'>RESERVAR</a></p>";
+                    contentString += "<p class='text-right'><a class='btn-a-action' href='"+reserveUrl.replace("carId", dataCar.id).replace("from", dataCar.from).replace("to", dataCar.to)+"' target='_blank'>RESERVAR</a></p>";
 
                     if (infowindow)
                         infowindow.close();
@@ -473,10 +476,10 @@
                     article += "<img class='marker' src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + contador + "|05a4e7|ffffff'>"
                     article += "</div>";
                     article += "<div class='col-xs-8 col-md-8 text'>";
-                    article += "<h2><a target='_blank' href='<?php echo url_for("profile/reserve?c=") ?>"+ dataCar.id + "/f/"+dataCar.from+"/t/"+dataCar.to+"'>"+ dataCar.brand +" "+ dataCar.model +"<small>, "+dataCar.year+"</small></a></h2>";
+                    article += "<h2><a target='_blank' href='"+reserveUrl.replace("carId", dataCar.id).replace("from", dataCar.from).replace("to", dataCar.to)+"'>"+ dataCar.brand +" "+ dataCar.model +"<small>, "+dataCar.year+"</small></a></h2>";
                     /*article += "<span class='sub-heading'>A 2 km Metro <strong>Tobalaba</strong></span>";*/
                     article += "<p class='price'>$"+ dataCar.priceAPuntos +" <small>Total</small></p>";
-                    article += "<p class='text-right'><a class='btn-a-action' href='<?php echo url_for("profile/reserve?c=") ?>"+ dataCar.id + "/f/"+dataCar.from+"/t/"+dataCar.to+"' class='reserve' target='_blank'>RESERVAR</a></p>";
+                    article += "<p class='text-right'><a class='btn-a-action' href='"+reserveUrl.replace("carId", dataCar.id).replace("from", dataCar.from).replace("to", dataCar.to)+"' class='reserve' target='_blank'>RESERVAR</a></p>";
                     /*article += "<img src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + contador + "|05a4e7|ffffff' />";*/
                     article += "</div>";
                     article += "</div>";

@@ -10,8 +10,8 @@ class mainActions extends sfActions {
 
         $this->hasCommune = false;
 
-        if ($request->hasParameter('region','comuna')){
-            $communeSlug = $request->getParameter('comuna');
+        if ($request->hasParameter('region','commune')){
+            $communeSlug = $request->getParameter('commune');
             $this->hasCommune = Doctrine_Core::getTable('Commune')->findOneBySlug($communeSlug)->id;
         }
 
@@ -749,7 +749,7 @@ class mainActions extends sfActions {
             $rutaFotoAccesorios2 = $this->Car->getAccesorio2();
             $arrayImagenes[$i] = $rutaFotoAccesorios2;
         }
-        
+
         $this->arrayFotos = $arrayImagenes;
     }
 
