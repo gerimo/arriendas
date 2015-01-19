@@ -33,7 +33,7 @@ class messagesActions extends sfActions {
         $myId = $this->getUser()->getAttribute("userid"); //id del que envía el mensaje
         $horaFechaActual = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"));
 
-        
+
         
 error_log("id_conversation: ". $idConversacion." ::: id_userFrom: ". $idUserFrom . " ::: id_userTo: ". $idUserTo ." ::: mensajeNuevo: ". $mensajeNuevo ." :::: my_id: ". $myId);
 
@@ -210,7 +210,8 @@ error_log("id_conversation: ". $idConversacion." ::: id_userFrom: ". $idUserFrom
                         </div>
                     </div>
                 </div>
-                <div class='hidden-xs space-30'></div>";
+                <div class='hidden-xs space-30'></div>
+                <div class='visible-xs space-20'></div>";
 
         die();
    
@@ -439,6 +440,7 @@ error_log("id_conversation: ". $idConversacion." ::: id_userFrom: ". $idUserFrom
 
         $this->user_id = $this->getUser()->getAttribute("userid");
         $idConversacion = $request->getParameter("id");
+        error_log($idConversacion);
         
         $objetoConversacion = Doctrine_Core::getTable("Conversation")->findConversationWithId($this->getUser()->getAttribute("userid"), $idConversacion);
         
@@ -477,6 +479,7 @@ error_log("id_conversation: ". $idConversacion." ::: id_userFrom: ". $idUserFrom
             echo "Error al intentar mostrar conversacion.";
             //verificar efectivamente si la id existe
             //id no encontrada, crear una nueva
+
         }
     }
 

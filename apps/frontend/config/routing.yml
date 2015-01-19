@@ -46,6 +46,10 @@ logout:
     url: /logout
     param: { module: main, action: logout }
 
+messages:
+    url: /mensajes/:id
+    param: { module: messages, action: conversation }
+
 opportunities:
     url: /oportunidades
     param: { module: opportunities, action: index }
