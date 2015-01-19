@@ -1,30 +1,7 @@
-body {
+
+
+body{
     background-image: url('/images/newDesign/background.jpg');
-}
-
-h1 {
-    text-align: center;
-    color: rgb(70, 70, 70);
-    font-weight: 300;
-    margin: 0 0 20px 0;
-    padding: 0;
-}
-
-h2 {
-    color: rgb(70, 70, 70);
-    font-size: 19px;
-    font-weight: normal;
-    margin: 0 0 20px 0;
-}
-
-hr {
-
-    margin: 50px 0 30px 0;
-}
-
-input, select, button {
-
-    margin-top: 15px;
 }
 
 .note {
@@ -47,18 +24,3 @@ input, select, button {
 
 
 }
-
-/*----------------------------------------------------------*/
-        fieldset { border:none;}
-        legend { font-size:18px; margin:0px; padding:10px 0px; color:#b0232a; font-weight:bold;}
-        .next { background-color:#b0232a; padding:5px 10px; color:#fff; text-decoration:none; float:right; margin: 5% 4% 0 0;}
-        .next:hover { background-color:#000; text-decoration:none;}
-        .prev { display: none}
-        #steps { list-style:none; width:100%; overflow:hidden; margin:0px; padding:0px; }
-        #steps li {font-size:24px; float:left; padding:10px; color:#b0b1b3; }
-        #steps li span {font-size:11px; display:block; }
-        #steps li.current { color:#000; text-align: center;}
-        #makeWizard { background-color:#b0232a; color:#fff; padding:5px 10px; text-decoration:none; font-size:18px;}
-        #makeWizard:hover { background-color:#000;} 
-
-/*----------------------------------------------------------*/

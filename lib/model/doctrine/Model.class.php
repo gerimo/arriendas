@@ -23,7 +23,7 @@ class Model extends BaseModel
             $q->where('B.id = ?', $brandId);
         }
 
-        return $q->execute();
+        return $q->execute()->toArray();
     }
 
 

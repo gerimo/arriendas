@@ -1,24 +1,26 @@
 <link href="/css/newDesign/create.css" rel="stylesheet" type="text/css">
 
 
-<div class="space-100 hidden-xs"></div>
+<div class="space-100"></div>
 
 <div class="container">
-    <div class="col-md-offset-2 col-md-8 BCW">
+    <div class="col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-2 col-md-8 BCW">
         <div class="row">
             <form id="createCar">
 
                 <fieldset id="paso1">
                     <legend>Datos del vehículo</legend>
-                    <div class="espacio col-md-12">
+                    <div class="espacio col-xs-12 col-sm-12 col-md-12">
                         <!-- direccion -->
-                        <div class="col-md-8">
+                        <div class="col-sm-8 col-md-8">
                             <label>Ubicación del vehículo  (*)</label>
-                            <input class="form-control" id="address" name="address" placeholder="Dirección #111" type="text" required>
+                            <input class="form-control" id="address" name="address" placeholder="Dirección #111" type="text">
                         </div>
 
+                        <div class="visible-xs space-20"></div>
+
                         <!-- comuna -->
-                        <div class="col-md-4">   
+                        <div class="col-sm-4 col-md-4">   
                             <label>Comuna (*)</label>
                             <select class="form-control" id="commune" name="commune" placeholder="" type="text">
                                     <option value="">--</option>
@@ -31,13 +33,15 @@
                                 ?>
                             </select>
                         </div>
+
+
                     </div>
 
-                    <div class="linea espacio col-md-11"></div>
+                    <div class="linea espacio hidden-xs col-md-11"></div>
 
-                    <div class="espacio col-md-12">
+                    <div class="espacio col-sm-12 col-md-12">
                         <!-- marca auto -->
-                        <div class="col-md-4">
+                        <div class="col-sm-4 col-md-4">
                             <label>Marca (*)</label><br>
                             <select class="form-control" id="brand" name="brand" placeholder="" type="text">
                                     <option value="">--</option>
@@ -51,16 +55,21 @@
                             </select>
                         </div>
 
+                        <div class="visible-xs space-20"></div>
+
                         <!-- modelo auto -->
-                        <div class="col-md-4">
+                        <div class="col-sm-4 col-md-4">
                             <label>Modelo (*)</label><br>
                             <select class="form-control" id="model" name="model" placeholder="" type="text" disabled>
-                                    <option value="0">Selecciona la marca</option>
+                                    <option value="0">Selecciona el modelo</option>
                             </select>
                         </div>
 
+                        <div class="visible-xs space-20"></div>
+
+
                         <!--Año auto-->
-                        <div class="col-md-4    ">
+                        <div class="col-sm-4 col-md-4    ">
                             <label>Año (*)</label>
                             <select class="form-control" id="ano" name="ano" placeholder="" type="text">
                                 <option value="">--</option>
@@ -75,9 +84,9 @@
                         </div>
                     </div>
 
-                    <div class="espacio col-md-12">
+                    <div class="espacio col-sm-12 col-md-12">
                         <!--N° puerta-->
-                        <div class="col-md-4">
+                        <div class="col-sm-4 col-md-4">
                             <label>N° de puertas (*)</label>
                             <select class="form-control" id="door" name="door" placeholder="" type="text">
                                 <option value="">--</option>
@@ -86,8 +95,11 @@
                             </select>
                         </div>
 
+                        <div class="visible-xs space-20"></div>
+
+
                         <!--Transmisión-->
-                        <div class="col-md-4">
+                        <div class="col-sm-4 col-md-4">
                             <label>Transmisión (*)</label>
                             <select class="form-control" id="transmission" name="transmission" placeholder="" type="text">
                                 <option value="">--</option>
@@ -96,10 +108,13 @@
                             </select>
                         </div>
 
+                        <div class="visible-xs space-20"></div>
+
+
                         <!--Tipo de bencina -->
-                        <div class="col-md-4">
+                        <div class="col-sm-4 col-md-4">
                             <label>Tipo de bencina (*)</label>
-                            <select class="form-control" id="benzine" name="benzine" placeholder="" type="text">
+                            <select class="form-control " id="benzine" name="benzine" placeholder="" type="text">
                                 <option value="">--</option>
                                 <option value="93">93</option>
                                 <option value="95">95</option>
@@ -110,9 +125,9 @@
                         </div>
                     </div>
 
-                    <div class="espacio col-md-12">
+                    <div class="espacio col-sm-12 col-md-12">
                         <!--Tipo de Vehículo -->
-                        <div class="col-md-4">
+                        <div class="col-sm-4 col-md-4">
                             <label>Tipo de Vehículo (*)</label>
                             <select class="form-control" id="typeCar" name="typeCar" placeholder="" type="text">
                                 <option value="">--</option>
@@ -123,36 +138,36 @@
                             </select>
                         </div>
 
+                        <div class="visible-xs space-20"></div>
+
                         <!--Patente-->
-                        <div class="col-md-4">
+                        <div class="col-sm-4 col-md-4">
                             <label>Patente (*)</label>
-                            <input class="form-control" id="patent" name="patent" placeholder="Patente" type="text">
+                            <input class="form-control" id="patent" name="patent" placeholder="Patente" type="text" onblur="validatePatent()">
                         </div>
 
+                        <div class="visible-xs space-20"></div>
+
                         <!--Color-->
-                        <div class="col-md-4">
+                        <div class="col-sm-4 col-md-4">
                             <label>Color (*)</label>
                             <input class="form-control" id="color" name="color" placeholder="color" type="text">
                         </div>
+
+                        <div class="espacio col-md-11"></div>
+
                     </div>
                 </fieldset>
-
-                <fieldset id="paso2">
-                    <legend>Precios del vehículo </legend>
-                    <p class="msjPrecio">Fija el precio de tu auto > <span class="msjModelo"></span></p>
-                </fieldset>
-
-                <fieldset id="paso3">
-                    <legend>Disponibilidad del vehículo</legend>
-                    
-                </fieldset>
-
-                <fieldset id="paso4">
-                    <legend>Fotos del Vehículo</legend>
-                </fieldset>
-
             </form>
-
+            <div class="col-md-offset-8 col-md-4">
+                <button class="btn-a-primary btn-block" name="save" onclick="validateForm()">Siguiente</button>
+                <p class="alert"></p> 
+            </div>
+            <div style="display:none">
+                <div id="dialog-alert" title="">
+                    <p></p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -163,13 +178,11 @@
 
 <script>
 
-    $(document).ready(function(){
-            $("#createCar").formToWizard({ submitButton: 'SaveAccount' })
-    });
+
 
     $("#brand").change(function(){
 
-        var brandId = $(this).val();
+        var brandId = $("#brand option:selected").val();
 
         if (brandId == 0) {
             return false;
@@ -178,12 +191,12 @@
         $("#model").attr("disabled", true);
 
         $.post("<?php echo url_for('cars/getModels') ?>", {"brandId": brandId}, function(r){
-            console.log(r);
+
             if (r.error) {
                 console.log(r.errorMessage);
             } else {
 
-                var html = "<option selected value='0'>Selecciona la marca</option>";
+                var html = "<option selected value=''>Selecciona el modelo</option>";
                 
                 $.each(r.models, function(k, v){
                     html += "<option value='"+v.id+"'>"+v.name+"</option>";
@@ -197,48 +210,120 @@
         }, 'json');
     });
 
-   /* function createNextButton(i) {
-            var stepName = "step" + i;
-            $("#" + stepName + "commands").append("<a href='#' id='" + stepName + "Next' class='next'>Siguiente ></a>");
-
-            $("#" + stepName + "Next").bind("click", function(e) {
-                $("#" + stepName).hide();
-                $("#step" + (i + 1)).show();
-                if (i + 2 == count)
-                    $(submmitButtonName).show();
-                selectStep(i + 1);
-            });
-        }*/
-
     function validateForm() {
 
         var address        = $("#address").val();
-        var commune        = $("#commune").val();
-        var brand          = $("#brand").val();
-        var model          = $("#model").val();
-        var ano            = $("#ano").val();
-        var door           = $("#door").val();
-        var transmission   = $("#transmission").val();
-        var benzine        = $("#benzine").val();
-        var typeCar        = $("#typeCar").val();
+        var commune        = $("#commune option:selected").val();
+        var brand          = $("#brand option:selected").val();
+        var model          = $("#model option:selected").val();
+        var ano            = $("#ano option:selected").val();
+        var door           = $("#door option:selected").val();
+        var transmission   = $("#transmission option:selected").val();
+        var benzine        = $("#benzine option:selected").val();
+        var typeCar        = $("#typeCar option:selected").val();
         var patent         = $("#patent").val();
         var color          = $("#color").val();
 
 
-        $.post("<?php echo url_for('cars/doValidate1') ?>", {"address": address, "commune": commune, "brand": brand, "model": model, "ano": ano, "door": door, "ano": ano, "transmission": transmission}, function(r){
+        $.post("<?php echo url_for('cars/getValidateCar') ?>", {"address": address, "commune": commune, "brand": brand, "model": model, "ano": ano, "door": door, "transmission": transmission, "benzine": benzine, "typeCar": typeCar, "patent": patent, "color": color}, function(r){
 
+            
             $(".alert").removeClass("alert-a-danger");
             $(".alert").removeClass("alert-a-success");
+            
+            $("#address").removeClass("alert-danger");
+            $("#commune").removeClass("alert-danger");
+            $("#brand").removeClass("alert-danger");
+            $("#model").removeClass("alert-danger");
+            $("#ano").removeClass("alert-danger");
+            $("#door").removeClass("alert-danger");
+            $("#transmission").removeClass("alert-danger");
+            $("#benzine").removeClass("alert-danger");
+            $("#typeCar").removeClass("alert-danger");
+            $("#patent").removeClass("alert-danger");
+            $("#benzine").removeClass("alert-danger");
+
 
             if (r.error) {
                 $(".alert").addClass("alert-a-danger");
                 $(".alert").html(r.errorMessage);
+
+                if(r.errorCode == 1){
+                    $("#address").addClass("alert-danger");
+                    $('#address').focus();
+                }else if(r.errorCode == 2){
+                    $("#commune").addClass("alert-danger");
+                    $('#commune').focus(); 
+                }else if(r.errorCode == 3){
+                    $("#brand").addClass("alert-danger"); 
+                    $('#brand').focus();
+                }else if(r.errorCode == 4){
+                    $("#model").addClass("alert-danger"); 
+                    $('#model').focus();
+                }else if(r.errorCode == 5){
+                    $("#ano").addClass("alert-danger"); 
+                    $('#ano').focus();
+                }else if(r.errorCode == 6){
+                    $("#door").addClass("alert-danger"); 
+                    $('#door').focus();
+                }else if(r.errorCode == 7){
+                    $("#transmission").addClass("alert-danger"); 
+                    $('#transmission').focus();
+                }else if(r.errorCode == 8){
+                    $("#benzine").addClass("alert-danger"); 
+                    $('#benzine').focus();
+                }else if(r.errorCode == 9){
+                    $("#typeCar").addClass("alert-danger"); 
+                    $('#typeCar').focus();
+                }else if(r.errorCode == 10){
+                    $("#patent").addClass("alert-danger");
+                    $('#patent').focus(); 
+                }else if(r.errorCode == 11){
+                    $("#color").addClass("alert-danger"); 
+                    $('#color').focus();
+                }
+
+
             } else {
                 window.location.href = r.url_complete;
             }
 
         }, 'json');
-    }    
+    } 
+
+  function validatePatent(){
+
+        var patente = $("#patent").val();
+
+        $.post("<?php echo url_for('cars/getValidatePatent') ?>", {"patente": patente}, function(r){
+
+            if (r.error) {
+
+                $("#dialog-alert p").html("Ya ha subido este auto.</br> Recién podrá ver "+ 
+                    "publicado su auto una vez que lo haya visitado"+
+                    " un inspector. Un inspector te llamará esta"+
+                    " semana.");
+                $("#dialog-alert").attr('title','Patente ya existe!');
+                $("#dialog-alert").dialog({
+                    buttons: [{
+                    text: "Aceptar",
+                    click: function() {
+                        $( this ).dialog( "close" );
+                    }
+                    }]
+                });
+
+                $("#patent").val("");
+
+            }
+
+        }, 'json');
+    }
+    
+
+    
+
+       
 
     
 
