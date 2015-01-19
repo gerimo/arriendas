@@ -767,17 +767,19 @@ class mainActions extends sfActions {
                 $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
 
                 list($txt, $ext) = explode(".", $name);
+
+                $ext = strtolower($ext);
                 
                 if (strlen($name) == 0) {
-                    throw new Exception("Por favor, selecciona una imagen.", 1);   
+                    throw new Exception("Por favor, selecciona una imagen", 2);   
                 }
                     
                 if (!in_array($ext, $valid_formats)) {
-                    throw new Exception("Formato de la imagen no permitido.", 1);
+                    throw new Exception("Formato de la imagen no permitido", 2);
                 }
 
                 if ($size >= (5 * 1024 * 1024)) { // Image size max 1 MB
-                    throw new Exception("La imagen excede el máximo de 1 MB permitido.", 1);
+                    throw new Exception("La imagen excede el máximo permitido (1 MB)", 2);
                 }
                     
                 $userId = $this->getUser()->getAttribute("userid");
@@ -800,10 +802,11 @@ class mainActions extends sfActions {
             }
     
         } catch (Exception $e) {
-
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
-            /*Utils::reportError($e->getMessage(), "profile/executeGetCars");*/
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
+                Utils::reportError($e->getMessage(), "main/uploadPhoto");
+            }
         }
 
         $this->renderText(json_encode($return));
@@ -2914,7 +2917,7 @@ class mainActions extends sfActions {
             if ($e->getCode() == 1) {
                 $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
             }
-            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 2) {
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
                 Utils::reportError($e->getMessage(), "main/uploadPhoto");
             }
         }
