@@ -90,6 +90,10 @@ user_register_complete:
     url: /registro/completar
     param: { module: main, action: completeRegister }
 
+transaction:
+    url: /mis-transacciones
+    param: { module: profile, action:transactions }
+
 # old Design
 
 index_by_city:

@@ -3107,7 +3107,7 @@ class profileActions extends sfActions {
         foreach ($transactionRenter as $i => $tran) {
             //selecciona solo las transacciones pagadas (completed=1)
             if ($tran['completed']) {
-                $idReserve = $tran['Reserve_id'];
+                $idReserve = $tran['reserve_id'];
                 $reserve = Doctrine_Core::getTable("Reserve")->findOneById($idReserve);
 
                 $transaccionesRenter[$i]['fechaDeposito'] = $tran->getDateFormato();
@@ -3135,7 +3135,7 @@ class profileActions extends sfActions {
         foreach ($transactionOwner as $i => $tran) {
             //selecciona solo las transacciones pagadas (completed=1)
             if ($tran['completed']) {
-                $idReserve = $tran['Reserve_id'];
+                $idReserve = $tran['reserve_id'];
                 $reserve = Doctrine_Core::getTable("Reserve")->findOneById($idReserve);
 
                 $transaccionesOwner[$i]['fechaDeposito'] = $tran->getDateFormato();
