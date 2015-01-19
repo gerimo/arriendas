@@ -105,7 +105,7 @@
                                         <?php endforeach; ?>
                                     </div><!--fin availabilityOfCars-->
                                 <?php else: ?>                                    
-                                    <div class="disabledOfCars" id="dis_unt_<?php echo $c->getId() ?>" >
+                                    <div class="disabledOfCars" id="dis_unt_<?php echo $c->getId() ?>" style="display: <?= ($c->getActivo() == 0)?"block":"none" ?>">
                                         <div clas="DOC-container" data-car-id="<?php echo $c->getId() ?>">
                                             <div class="col-md-offset-8 col-md-4">
                                                 <div class='date-group'>
