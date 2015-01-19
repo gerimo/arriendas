@@ -33,6 +33,10 @@ class messagesActions extends sfActions {
         $myId = $this->getUser()->getAttribute("userid"); //id del que envía el mensaje
         $horaFechaActual = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"));
 
+        
+        
+error_log("id_conversation: ". $idConversacion." ::: id_userFrom: ". $idUserFrom . " ::: id_userTo: ". $idUserTo ." ::: mensajeNuevo: ". $mensajeNuevo ." :::: my_id: ". $myId);
+
         $claseUsuario = Doctrine_Core::getTable('user')->findOneById($myId);
 //        $looking_user_from = 1;
 //        if ($claseUsuario->getBlocked() == 1) {
@@ -93,7 +97,6 @@ class messagesActions extends sfActions {
                 $mess->setDate($horaFechaActual);
                 $mess->setConversationId($idConversacion);
                 $mess->setUserId($myId);
-                
                 /* default visibility */
                 $looking_user_from = 1;
                 $looking_user_to = 1;
@@ -147,32 +150,32 @@ class messagesActions extends sfActions {
             }
         }
 
-        //enviar mail a $idUserTo, con el contenido $mensajeNuevo
-        //obtener nombre from, nombre to, mail to
-        $userFrom = Doctrine_Core::getTable('user')->findOneById($idUserFrom);
-        $userTo = Doctrine_Core::getTable('user')->findOneById($idUserTo);
+        // //enviar mail a $idUserTo, con el contenido $mensajeNuevo
+        // //obtener nombre from, nombre to, mail to
+        // $userFrom = Doctrine_Core::getTable('user')->findOneById($idUserFrom);
+        // $userTo = Doctrine_Core::getTable('user')->findOneById($idUserTo);
 
-        require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
+        // require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
         
-        /* el mensaje se envia por mail solo a usuarios no bloqueados */
-        if ($claseUsuario->getBlocked() != 1) {
-            $mail = new Email();
-            $mail->setSubject('Mensaje nuevo');
-            $mail->setBody("<p>Hola $userTo:</p><p>$userFrom te ha enviado un mensaje:</p><p>\"$mensajeNuevo\"</p><p>Para contestarlo ingresa <a href='http://www.arriendas.cl/messages/inbox'>aquí</a></p>");
-            $mail->setTo($userTo->getEmail());
-            $mail->setFrom($userFrom->getEmail());
-            $mail->submit();
-        }
+        // /* el mensaje se envia por mail solo a usuarios no bloqueados */
+        // if ($claseUsuario->getBlocked() != 1) {
+        //     $mail = new Email();
+        //     $mail->setSubject('Mensaje nuevo');
+        //     $mail->setBody("<p>Hola $userTo:</p><p>$userFrom te ha enviado un mensaje:</p><p>\"$mensajeNuevo\"</p><p>Para contestarlo ingresa <a href='http://www.arriendas.cl/messages/inbox'>aquí</a></p>");
+        //     $mail->setTo($userTo->getEmail());
+        //     $mail->setFrom($userFrom->getEmail());
+        //     $mail->submit();
+        // }
         
 
-        //Copia de mensaje a Germán
-        $emailUserFrom = $userFrom->getEmail();
-        $emailUserTo = $userTo->getEmail();
-        $mail = new Email();
-        $mail->setSubject('Nuevo mensaje entre usuarios');
-        $mail->setBody("<p>Enviado por: <b>$userFrom</b> | Recibido por: <b>$userTo</b></p><p>\"$mensajeNuevo\"</p><br><p>Contactar a <b>$userFrom</b>: 1) Desde <a href='http://www.arriendas.cl/messages/new/id/$idUserFrom'>Arriendas.cl</a> | 2) Correo personal: $emailUserFrom</p><p>Contactar a <b>$userTo</b>: 1) Desde <a href='http://www.arriendas.cl/messages/new/id/$idUserTo'>Arriendas.cl</a> | 2) Correo personal: $emailUserTo</p>");
-        $mail->setTo('german@arriendas.cl');
-        $mail->submit();
+        // //Copia de mensaje a Germán
+        // $emailUserFrom = $userFrom->getEmail();
+        // $emailUserTo = $userTo->getEmail();
+        // $mail = new Email();
+        // $mail->setSubject('Nuevo mensaje entre usuarios');
+        // $mail->setBody("<p>Enviado por: <b>$userFrom</b> | Recibido por: <b>$userTo</b></p><p>\"$mensajeNuevo\"</p><br><p>Contactar a <b>$userFrom</b>: 1) Desde <a href='http://www.arriendas.cl/messages/new/id/$idUserFrom'>Arriendas.cl</a> | 2) Correo personal: $emailUserFrom</p><p>Contactar a <b>$userTo</b>: 1) Desde <a href='http://www.arriendas.cl/messages/new/id/$idUserTo'>Arriendas.cl</a> | 2) Correo personal: $emailUserTo</p>");
+        // $mail->setTo('german@arriendas.cl');
+        // $mail->submit();
 
 
 
@@ -189,21 +192,28 @@ class messagesActions extends sfActions {
             }
         }
 
+        echo   "<div class='row'>
+                    <div class='leftMessage hidden-xs col-md-offset-1  col-xs-1 col-sm-1 col-md-1'>
+                        <div class='imageProfile hidden-sm'>
+                            <div class='msg_user_frame'><img src=" . $urlFoto . " class='imgFoto' width='74px' height='74px'></div>
+                        </div>
 
-        echo "<div class='newMensaje'>
-            <div class='usuarioIzq'>
-              <div class='msg_user_frame'><img src=" . $urlFoto . " class='imgFoto'></div>
-              <div class='msg_user_nombre'>Tú</div>
-            </div>
-            <div class='puntaBlanca'></div> 
-            <div class='marcoTextoIzq'>
-              <div class='texto'>
-                <div class='msg'><p>" . $mensajeNuevo . "</p></div>
-                <div class='horaFecha'>" . $horaFechaActual . "</div>
-              </div>
-            </div>
-          </div>";
+                        <div class='nameProfile'>
+                            Tú
+                        </div>
+                    </div>
+
+                    <div class='marcoTextoIzq col-xs-10 col-sm-8 col-md-8'>
+                        <div class='texto'>
+                            <div class='msg'><p>" . $mensajeNuevo . "</p></div>
+                            <div class='horaFecha'>" . $horaFechaActual . "</div>
+                        </div>
+                    </div>
+                </div>
+                <div class='hidden-xs space-30'></div>";
+
         die();
+   
     }
 
     public function verificarUsuarioFrom($idConversacion) {
