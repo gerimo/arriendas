@@ -16,13 +16,13 @@
                 <div class="regis_foto_frame">
 
                     <div id="previewmain" style="width: 100%">
-                        <?php if ($user->getPictureFile() == null): ?>
+                        <?php if ($User->getPictureFile() == null): ?>
                             <?php echo image_tag('img_registro/tmp_user_foto.png', 'size=194x204') ?>  
                         <?php else: ?>
-                            <?php if($user->getFacebookId() != null):?>
-                                <img src="http://res.cloudinary.com/arriendas-cl/image/facebook/w_194,h_204,c_fill,g_face/<?php echo $user->getFacebookId();?>.jpg">
+                            <?php if($User->getFacebookId() != null):?>
+                                <img src="http://res.cloudinary.com/arriendas-cl/image/facebook/w_194,h_204,c_fill,g_face/<?php echo $User->getFacebookId();?>.jpg">
                             <?php else: ?>
-                                <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_194,h_204,c_fill,g_face/http://www.arriendas.cl/images/users/<?php echo $user->getFileName() ?>">
+                                <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_194,h_204,c_fill,g_face/http://www.arriendas.cl/images/users/<?php echo $User->getFileName() ?>">
                             <?php endif ?>
                         <?php endif ?>
                     </div> 
@@ -35,10 +35,10 @@
 
                 <div class="regis_foto_frame">
                     <div id="previewlicense">
-                        <?php if ($user->getDriverLicenseFile() == null): ?>
+                        <?php if ($User->getDriverLicenseFile() == null): ?>
                             <?php echo image_tag('img_asegura_tu_auto/foto_padron_reverso.png', 'size=194x204') ?>
                         <?php else: ?>
-                            <?php echo image_tag('licence/'.$user->getLicenseFileName(), 'size=194x204') ?>
+                            <?php echo image_tag('licence/'.$User->getLicenceFileName(), 'size=194x204') ?>
                         <?php endif ?>
                     </div> 
 
@@ -54,37 +54,37 @@
                     </div>
                 <?php endif ?>
 
-                <input class="form-control" id="firstname" name="firstname" placeholder="Nombres" value="<?php if($user->getFirstName()) echo $user->getFirstName(); ?>" type="text">                    
+                <input class="form-control" id="firstname" name="firstname" placeholder="Nombres" value="<?php if($User->getFirstName()) echo $User->getFirstName(); ?>" type="text">                    
             
-                <input class="form-control" id="lastname" name="lastname" placeholder="Apellido paterno" value="<?php if($user->getLastName()) echo $user->getLastName(); ?>" type="text">                    
+                <input class="form-control" id="lastname" name="lastname" placeholder="Apellido paterno" value="<?php if($User->getLastName()) echo $User->getLastName(); ?>" type="text">                    
             
-                <input class="form-control" id="motherLastname" name="motherLastname" placeholder="Apellido materno" value="<?php if($user->getApellidoMaterno()) echo $user->getApellidoMaterno(); ?>" type="text">                    
+                <input class="form-control" id="motherLastname" name="motherLastname" placeholder="Apellido materno" value="<?php if($User->getApellidoMaterno()) echo $User->getApellidoMaterno(); ?>" type="text">                    
 
-                <?php if ($user->getFacebookId() == null): ?>                          
-                    <input class="form-control" id="email" name="email" placeholder="Correo electrónico" value="<?php if($user->getEmail()) echo $user->getEmail() ?>" type="text">                        
+                <?php if ($User->getFacebookId() == null): ?>                          
+                    <input class="form-control" id="email" name="email" placeholder="Correo electrónico" value="<?php if($User->getEmail()) echo $User->getEmail() ?>" type="text">                        
                 <?php else: ?>
-                    <input class="form-control" id="email" name="email" placeholder="Correo electrónico" value="<?php if($user->getEmail()) echo $user->getEmail() ?>" type="hidden">
-                    <input class="form-control" id="emailAgain" name="emailAgain" placeholder="Repetir correo electrónico" value="<?php if($user->getEmail()) echo $user->getEmail() ?>" type="hidden">
+                    <input class="form-control" id="email" name="email" placeholder="Correo electrónico" value="<?php if($User->getEmail()) echo $User->getEmail() ?>" type="hidden">
+                    <input class="form-control" id="emailAgain" name="emailAgain" placeholder="Repetir correo electrónico" value="<?php if($User->getEmail()) echo $User->getEmail() ?>" type="hidden">
                 <?php endif ?>
 
                 <div class="form-inline clearfix">
                     <select class="form-control" name="foreign" id="foreign">
-                        <option value="0" <?php echo $user->getExtranjero() == 0 ? "selected" : ""; ?> >Chileno</option>
-                        <option value="1" <?php echo $user->getExtranjero() == 1 ? "selected" : ""; ?> >Extranjero</option>
+                        <option value="0" <?php echo $User->getExtranjero() == 0 ? "selected" : ""; ?> >Chileno</option>
+                        <option value="1" <?php echo $User->getExtranjero() == 1 ? "selected" : ""; ?> >Extranjero</option>
                     </select>
-                    <input class="form-control" id="run" name="run" placeholder="RUT" value="<?php if ($user->getRut()) echo $user->getRut() ?>" type="text">
+                    <input class="form-control" id="run" name="run" placeholder="RUT" value="<?php if ($User->getRut()) echo $User->getRut() ?>" type="text">
                 </div>
 
-                <input class="form-control" name="telephone" id="telephone" placeholder="Teléfono" value="<?php if ($user->getTelephone()) echo $user->getTelephone() ?>" title="Celular" type="text">
+                <input class="form-control" name="telephone" id="telephone" placeholder="Teléfono" value="<?php if ($User->getTelephone()) echo $User->getTelephone() ?>" title="Celular" type="text">
 
-                <input class="datetimepicker form-control" id="birth" name="birth" placeholder="Fecha de nacimiento" value="<?php if ($user->getBirthdate()) echo date('d-m-Y', strtotime($user->getBirthdate())) ?>" type="text">
+                <input class="datetimepicker form-control" id="birth" name="birth" placeholder="Fecha de nacimiento" value="<?php if ($User->getBirthdate()) echo date('d-m-Y', strtotime($User->getBirthdate())) ?>" type="text">
                 <span class="note">La fecha debe coincidir con la fecha de nacimiento de tu licencia.</span>
                 
-                <input class="form-control" id="address" name="address" placeholder="Dirección #111" value="<?php if ($user->getAddress()) echo $user->getAddress() ?>" type="text">
+                <input class="form-control" id="address" name="address" placeholder="Dirección #111" value="<?php if ($User->getAddress()) echo $User->getAddress() ?>" type="text">
             
                 <select class="form-control" id="commune" name="commune">
                     <?php foreach ($comunas as $c): ?>
-                        <?php if ($c["codigoInterno"] == $userComuna): ?>
+                        <?php if ($c["codigoInterno"] == $UserComuna): ?>
                             <option selected value="<?php echo $c["codigoInterno"] ?>"><?php echo ucwords(strtolower($c["nombre"])) ?></option>
                         <?php else: ?>
                             <option value="<?php echo $c["codigoInterno"] ?>"><?php echo ucwords(strtolower($c["nombre"])) ?></option>
@@ -94,7 +94,7 @@
 
                 <select class="form-control" id="region" name="region" onChange="cargarComunas(this.value)">
                     <?php foreach ($regiones as $r): ?>
-                        <?php if ($r["codigo"] == $userRegion): ?>
+                        <?php if ($r["codigo"] == $UserRegion): ?>
                             <option selected value="<?php echo $r["codigo"] ?>"><?php echo $r["nombre"] ?></option>
                         <?php else: ?>
                             <option value="<?php echo $r["codigo"] ?>"><?php echo $r["nombre"] ?></option>
