@@ -802,6 +802,9 @@ class mainActions extends sfActions {
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
+            if ($e->getCode() == 1) {
+                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo nuevamente más tarde";
+            }
             if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
                 Utils::reportError($e->getMessage(), "main/uploadPhoto");
             }
@@ -2912,7 +2915,7 @@ class mainActions extends sfActions {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
             if ($e->getCode() == 1) {
-                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
+                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo nuevamente más tarde";
             }
             if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
                 Utils::reportError($e->getMessage(), "main/uploadPhoto");
