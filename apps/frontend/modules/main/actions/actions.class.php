@@ -322,15 +322,13 @@ class mainActions extends sfActions {
                 $q->andWhere("mo.id_otro_tipo_vehiculo = 3");
             }
 
-            if($comuna != 0){
-                if ($comuna) {
-                    $q->andWhere("co.code = ?", $comuna);
-                } else {
-                    $q->andWhere('ca.lat < ?', $neLat);
-                    $q->andWhere('ca.lat > ?', $swLat);
-                    $q->andWhere('ca.lng > ?', $swLng);
-                    $q->andWhere('ca.lng < ?', $neLng);
-                }
+            if ($comuna) {
+                $q->andWhere("co.code = ?", $comuna);
+            } else {
+                $q->andWhere('ca.lat < ?', $neLat);
+                $q->andWhere('ca.lat > ?', $swLat);
+                $q->andWhere('ca.lng > ?', $swLng);
+                $q->andWhere('ca.lng < ?', $neLng);
             }
 
             $cars = $q->execute();
@@ -2911,7 +2909,6 @@ class mainActions extends sfActions {
             $User->setPictureFile("/images/users/".$actual_image_name);
             $User->save();
         } catch (Exception $e) {
-            error_log($e->getMessage());
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
             if ($e->getCode() == 1) {
@@ -2998,7 +2995,6 @@ class mainActions extends sfActions {
 
         // Se redondean los valores costo diarios de los vehículos.
         $valorHora = round(($valorHora * 0.95), -3);
-        error_log($valorHora);
         //var_dump($valorHora);
         //die($valorHora);
         
@@ -3246,7 +3242,6 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
 
                 if ($newUser) {
 		            //$this->getRequest()->setParameter('userId', $userdb->getId());
-                    error_log("Redirecciona a completeRegister");
 					$this->redirect("main/completeRegister");
 				}else{
 					if ($this->getUser()->getAttribute("lastview") != null) {
