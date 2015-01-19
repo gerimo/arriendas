@@ -34,15 +34,15 @@
                 <div class="visible-xs space-30"></div>
 
                 <div class="regis_foto_frame">
-                    <div id="previewlicence">
+                    <div id="previewlicense">
                         <?php if ($user->getDriverLicenseFile() == null): ?>
                             <?php echo image_tag('img_asegura_tu_auto/foto_padron_reverso.png', 'size=194x204') ?>
                         <?php else: ?>
-                            <?php echo image_tag('licence/'.$user->getLicenceFileName(), 'size=194x204') ?>
+                            <?php echo image_tag('license/'.$user->getLicenseFileName(), 'size=194x204') ?>
                         <?php endif ?>
                     </div> 
 
-                    <a id="linklicence" href=""><i class="fa fa-edit"></i> editar</a>
+                    <a id="linklicense" href=""><i class="fa fa-edit"></i> editar</a>
                 </div>
             </div>
 
@@ -132,8 +132,8 @@
         <input type="submit">
     </form>
 
-    <form action="<?php echo url_for('main/uploadLicence?photo=licence&width=194&height=204&file=filelicence') ?>" enctype="multipart/form-data" id="formlicence" method="post">
-        <input id="filelicence" name="filelicence" type="file">
+    <form action="<?php echo url_for('main/uploadLicense?photo=license&width=194&height=204&file=filelicense') ?>" enctype="multipart/form-data" id="formlicense" method="post">
+        <input id="filelicense" name="filelicense" type="file">
         <input type="submit">
     </form>
     
@@ -154,7 +154,7 @@
     $(document).ready(function() {
 
         imageUpload('#formmain', '#filemain', '#previewmain','#linkmain');       
-        imageUpload('#formlicence', '#filelicence', '#previewlicence','#linklicence');
+        imageUpload('#formlicense', '#filelicense', '#previewlicense','#linklicense');
     });
 
     function imageUpload (form, formfile, preview, link) {
