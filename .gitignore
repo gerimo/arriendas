@@ -11,3 +11,5 @@
 
 .DS_Store
 *.orig
+
+/web/old/
