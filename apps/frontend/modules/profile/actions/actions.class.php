@@ -197,7 +197,6 @@ class profileActions extends sfActions {
             $birth          = $request->getPostParameter("birth", null);
             $address        = $request->getPostParameter("address", null);
             $commune        = $request->getPostParameter("commune", null);
-            $region         = $request->getPostParameter("region", null);
 
             $userId = $this->getUser()->getAttribute("userid");
 
@@ -243,10 +242,6 @@ class profileActions extends sfActions {
                 throw new Exception("Debes indicar tu comuna", 1);
             }
 
-            if (is_null($region) || $region == "") {
-                throw new Exception("Debes indicar tu región", 1);
-            }
-
             $User->setFirstname($firstname);
             $User->setLastname($lastname);
             $User->setApellidoMaterno($motherLastname);
@@ -257,6 +252,9 @@ class profileActions extends sfActions {
             $User->setTelephone($telephone);
             $User->setBirthdate($birth);
             $User->setAddress($address);
+
+            $Commune = Doctrine_Core::getTable('Commune')->find($commune);
+            $User->setCommune($Commune);
 
             $User->save();
     
@@ -277,26 +275,9 @@ class profileActions extends sfActions {
 
         $userId = $this->getUser()->getAttribute("userid");
 
-        $this->redirect = $request->getParameter('redirect');
-        $this->idRedirect = $request->getParameter('id');
+        $this->User = Doctrine_Core::getTable('User')->find($userId);
 
-        $User = Doctrine_Core::getTable('User')->find($userId);
-
-        $this->userRegion = $User->getRegion();
-
-        $this->userComuna = $User->getComuna();
-
-        $this->User = $User;
-
-        $q = Doctrine_Query::create()
-                ->select('c.*')
-                ->from('Comunas c');
-        $this->comunas = $q->fetchArray();
-
-        $q = Doctrine_Query::create()
-                ->select('r.*')
-                ->from('Regiones r');
-        $this->regiones = $q->fetchArray();
+        $this->Regions = Doctrine_Core::getTable('Region')->findAll();
     }
 
     public function executePay (sfWebRequest $request) {
