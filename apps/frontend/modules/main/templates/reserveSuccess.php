@@ -98,11 +98,11 @@
                 <strong>40%</strong>AHORRO
             </div>
             <div class="price-area">
-                <?php if ($Car->getPricePerHour() != 0):?>
-                    <span class="price">$<?php echo number_format(round($Car->getPricePerHour()), 0, '', '.')?> <span class="sub">/ Horas</span></span>
-                <?php endif ?>
                 <?php if ($Car->getPricePerDay() != 0):?>
-                   <span class="text">$<?php echo number_format(round($Car->getPricePerDay()), 0, '', '.')?> <span>/ día</span></span>
+                   <span class="price">$<?php echo number_format(round($Car->getPricePerDay()), 0, '', '.')?> <span>/ día</span></span>
+                <?php endif ?>
+                <?php if ($Car->getPricePerHour() != 0):?>
+                    <span class="text">$<?php echo number_format(round($Car->getPricePerHour()), 0, '', '.')?> <span class="sub">/ Hora</span></span>
                 <?php endif ?>
                 <?php if ($Car->getPricePerWeek() != 0):?>
                    <span class="text"><span><?php echo number_format(round(($Car->getPricePerWeek()/7)), 0, '', '.') ?></span> / día la SEMANA</span>
@@ -168,11 +168,11 @@
                             <strong>40%</strong>AHORRO
                         </div>
                         <div class="area-precio">
-                            <?php if ($Car->getPricePerHour() != 0):?>
-                                <span class="text">$<?php echo number_format(round($Car->getPricePerHour()), 0, '', '.')?> <span class="sub">/ Horas</span></span></br>
-                            <?php endif ?>
                             <?php if ($Car->getPricePerDay() != 0):?>
-                                <span class="text">$<?php echo number_format(round($Car->getPricePerDay()), 0, '', '.')?> <span class="sub">/ día</span></span></br>
+                                <span class="price">$<?php echo number_format(round($Car->getPricePerDay()), 0, '', '.')?> <span class="sub">/ día</span></span></br>
+                            <?php endif ?>
+                            <?php if ($Car->getPricePerHour() != 0):?>
+                                <span class="text">$<?php echo number_format(round($Car->getPricePerHour()), 0, '', '.')?> <span class="sub">/ Hora</span></span></br>
                             <?php endif ?>
                             <?php if ($Car->getPricePerWeek() != 0):?>
                                 <span class="text"><span>$<?php echo number_format(round(($Car->getPricePerWeek()/7)), 0, '', '.') ?></span> <span class="sub"> / día la SEMANA</span></span></br>
@@ -257,7 +257,7 @@
 
                         <div id="sub-price-container">
                             <span class="price pull-right" id="subtotal" data-price="<?php echo $price ?>"><?php echo '$'.number_format($price, 0, ',', '.') ?></span>SUB TOTAL
-                            <span class="" id="time">(<?php echo $time ?></span> Horas)
+                            <span class="time" id="time">(<?php echo $time ?> Horas)</span> 
                         </div>
                         <div class="price-count">
                         <div class="radio">
@@ -673,7 +673,7 @@
                 setDefaultDateH();
 
             } else {
-                $("#time").html("("+r.tiempo);
+                $("#time").html("("+r.tiempo+" horas)");
             }
 
         }, 'json');

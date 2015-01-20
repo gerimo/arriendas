@@ -195,9 +195,36 @@
         }
     }
 
+    function validateTime(){
+
+        var fechaF = splitTime($("#from").val());
+        var fechaT = splitTime($("#to").val());
+
+        console.log(fechaF);
+        console.log(fechaT);
+
+        if(fechaF > fechaT){
+            return true;
+        }
+        return false;
+    }
+
+    function splitTime(time){
+        var split = time.split(" ");
+        var f = split[0];
+        var h = split[1];
+
+        var split = f.split("-");
+        var dia = split[0];
+        var mes = split[1];
+        var ano = split[2];
+
+        return (mes+dia+ano);
+    }
+
     function searchCars() {
 
-        if ($("#from").val() > $("#to").val() || $("#from").val() == $("#to").val()) {
+        if (validateTime()) {
 
             $("#dialog-alert p").html('Fecha "Hasta" debe ser posterior a la fecha "Desde"');
             $("#dialog-alert").attr('title','Fecha "Hasta" mal ingresada');

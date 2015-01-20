@@ -749,6 +749,11 @@ background: #f8f8f8;
     border-bottom: 1px solid #6d6969;
 }
 
+.time{
+        font-size: 22px;
+        line-height: 24px;
+}
+
 
 #payments .radio {
     height: 130px;
@@ -852,6 +857,12 @@ background: #f8f8f8;
         width: 17px;
         margin: -1px 0px 0px -31px;
     }
+
+    .time{
+        font-size: 15px;
+        line-height: 24px;
+    }
+
     .datetimepicker{
         font-size: 18px;
         line-height: 25px;
