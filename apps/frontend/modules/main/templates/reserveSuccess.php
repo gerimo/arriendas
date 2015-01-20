@@ -559,7 +559,6 @@
         ],
         dayOfWeekStart: 1,
         minDate: "<?php echo date('d-m-Y') ?>",
-        minTime: "<?php echo date('H:i') ?>",
         i18n:{
             es:{
                 months:[
@@ -674,7 +673,7 @@
                 setDefaultDateH();
 
             } else {
-                $("#time").html("("+r.tiempo+" horas)");
+                $("#time").html("("+r.tiempo+" Horas)");
             }
 
         }, 'json');
