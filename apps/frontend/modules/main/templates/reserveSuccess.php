@@ -249,7 +249,7 @@
             <div class="step-list col-md-offset-1 col-md-10">
                 <span class="num duracion">2</span>   
                 <h2><span class="dis">2.- </span>DURACION Y PRECIO</h2>
-                <span class="text">Arriendo de Auto <?php echo $Car->getModel()->getBrand()->getName()." ".$Car->getModel()->getName() ?> a $<?php echo number_format(round($Car->getPricePerDay()), 0, '', '.') ?> en <?php echo $Car->getCommune();?>, Santiago.</span>
+                <span class="text">Arriendo de Auto <?php echo $Car->getModel()->getBrand()->getName()." ".$Car->getModel()->getName() ?> a <span id="pricecar"><?php echo '$'.number_format($price, 0, ',', '.') ?></span> en <?php echo $Car->getCommune();?>, Santiago.</span>
                 <input class="datetimepicker btn-block" id="fromH" type="button" value="Desde: <?php echo $fromHuman ?>"></input>
                 <input class="datetimepicker btn-block" id="toH" type="button" value="Hasta: <?php echo $toHuman ?>"></input>
 
@@ -257,7 +257,7 @@
 
                         <div id="sub-price-container">
                             <span class="price pull-right" id="subtotal" data-price="<?php echo $price ?>"><?php echo '$'.number_format($price, 0, ',', '.') ?></span>SUB TOTAL
-                            <span class="time" id="time">(<?php echo $time ?> Horas)</span> 
+                            <span class="time" id="time">(<?php echo $time ?>   Horas)</span> 
                         </div>
                         <div class="price-count">
                         <div class="radio">
@@ -646,6 +646,7 @@
             } else {
                 $("#subtotal").html("$"+$.number(r.price, 0, ',', '.'));
                 $("#subtotal").data('price', r.price);
+                $("#pricecar").html("$"+$.number(r.price, 0, ',', '.'));
             }
 
         }, 'json');
