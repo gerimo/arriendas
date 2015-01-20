@@ -47,6 +47,7 @@
  * @property Doctrine_Collection $Transactions
  * @property Doctrine_Collection $Comuna
  * @property Doctrine_Collection $Region
+ * @property Commune $commune
  * 
  * @method integer             getId()                    Returns the current record's "id" value
  * @method string              getUsername()              Returns the current record's "username" value
@@ -92,6 +93,7 @@
  * @method Doctrine_Collection getReserves()              Returns the current record's "Reserves" collection
  * @method Doctrine_Collection getTransactions()          Returns the current record's "Transactions" collection
  * @method timestamp           getFechaRegistro()         Returns the current record's "fecha_registro" value
+ * @method Commune             getCommune()               Returns the current record's "commune" value
  *
  * @method User                setId()                    Sets the current record's "id" value
  * @method User                setUsername()              Sets the current record's "username" value
@@ -136,6 +138,7 @@
  * @method User                setMessage()               Sets the current record's "Message" collection
  * @method User                setReserves()              Sets the current record's "Reserves" collection
  * @method User                setTransactions()          Sets the current record's "Transactions" collection
+ * @method User                setCommune()               Sets the current record's "commune" value
  * 
  * @package    CarSharing
  * @subpackage model
@@ -348,6 +351,14 @@ abstract class BaseUser extends sfDoctrineRecord {
             'notnull' => '0',
             'default' => 0,
             ));
+        $this->hasColumn('commune_id', 'integer', 11, array(
+            'notnull' => true
+        ));
+        $this->index('fk_User_Commune', array(
+            'fields' => array(
+                0 => 'commune_id',
+            ),
+        ));
         $this->index('id_UNIQUE', array(
             'fields' =>
             array(
@@ -380,6 +391,13 @@ abstract class BaseUser extends sfDoctrineRecord {
         $this->hasMany('Transaction as Transactions', array(
             'local' => 'id',
             'foreign' => 'User_id'));
+        
+        $this->hasOne('Commune', array(
+            'local' => 'commune_id',
+            'foreign' => 'id',
+            'onDelete' => 'no action',
+            'onUpdate' => 'no action'
+        ));
     }
 
 }

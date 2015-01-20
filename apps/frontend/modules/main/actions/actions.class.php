@@ -8,7 +8,7 @@ class mainActions extends sfActions {
         $this->setLayout(false);
 
         /*$this->reserveId = 41023;*/
-        $this->transactionId = 21096;
+        $this->transactionId = 21097;
     }
 
     public function executeIndex (sfWebRequest $request) {
