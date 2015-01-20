@@ -147,6 +147,8 @@ class khipuActions extends sfActions {
 
     public function executeNotifyPayment(sfWebRequest $request) {
 
+        error_log("-------------NOTIFICACION PAGO-------------");
+
         $this->_log("NotifyPayment", "INFO", "Start validation");
         $settings = $this->getSettings();
 
@@ -162,6 +164,8 @@ class khipuActions extends sfActions {
             "payer_email" => $_POST['payer_email'],
             "notification_signature" => $_POST['notification_signature']
         );
+
+        error_log("-------------COMENZANDO-------------");
 
         try {
 
@@ -291,8 +295,8 @@ class khipuActions extends sfActions {
                             }
                         }
                         
+                        error_log("-------------ENVIANDO EMAIL DUENO-------------");
                         $mailer->send($message);
-
 
                         /* pedidos de reserva pagado (arrendatario) */
                         $message = $mail->getMessage();
@@ -305,6 +309,8 @@ class khipuActions extends sfActions {
                         $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
                         $pagare = $functions->generarPagare($tokenReserve);
                         $message->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
+
+                        error_log("-------------ENVIANDO EMAIL ARRENDATARIO-------------");
                         $mailer->send($message);
 
                         /* mail Soporte */
@@ -326,7 +332,7 @@ class khipuActions extends sfActions {
                             }
                         }
                         
-                        
+                        error_log("-------------ENVIANDO EMAIL SOPORTE-------------");
                         $mailer->send($message);
 
                         /* crea la fila calificaciones habilitada para la fecha de término de reserva + 2 horas (solo si no es una extension de otra reserva) */
@@ -351,12 +357,16 @@ class khipuActions extends sfActions {
 
                         /* almacena $idReserve en la tabla mail calificaciones */
                         $reserve->encolarMailCalificaciones();
+
+                        error_log("-------------SUCCESS-------------");
+                        Utils::reportError("PAGO CORRECTO", "khipu/notifyPayment");
                     }
                 }
             } else {
                 $this->_log("NotifyPayment", "ERROR", "Hubo un error en el proceso de verificacion.");
             }
         } catch (Exception $e) {
+            error_log("-------------ERROR-----------: ". $e->getMessage());
             Utils::reportError($e->getMessage(), "khipu/notifyPayment");
         }
 
