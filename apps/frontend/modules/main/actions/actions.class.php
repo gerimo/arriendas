@@ -637,6 +637,7 @@ class mainActions extends sfActions {
         $this->setLayout("newIndexLayout");
 
         $carId = $request->getParameter("c", null);
+
         $f     = strtotime($request->getParameter("f", null));
         $t     = strtotime($request->getParameter("t", null));
 
@@ -664,6 +665,7 @@ class mainActions extends sfActions {
             throw new Exception("Auto ya posee reserva", 1);            
         }
 
+        $this->time = Car::getTime($from, $to);
         $this->price = Car::getPrice($from, $to, $this->Car->getPricePerHour(), $this->Car->getPricePerDay(), $this->Car->getPricePerWeek(), $this->Car->getPricePerMonth());
 
         // Reviews (hay que arreglar las clase Rating)
@@ -755,7 +757,6 @@ class mainActions extends sfActions {
         $return = array("error" => false);
 
         try {
-    
             if (isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST") {
 
                 $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");

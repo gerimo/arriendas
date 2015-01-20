@@ -140,6 +140,31 @@ class reservesActions extends sfActions {
         return sfView::NONE;
     }
 
+    public function executeCalculateTime (sfWebRequest $request) {
+
+        $return = array("error" => false);
+
+        $from  = $request->getPostParameter("from", null);
+        $to    = $request->getPostParameter("to", null);
+
+        try {
+
+            $datesError = $this->validateDates($from, $to);
+            if ($datesError) {
+                throw new Exception($datesError, 1);
+            }
+
+            $return["tiempo"] = Car::getTime($from, $to);
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+        }
+    
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
     public function executeChange (sfWebRequest $request) {
     
         $return = array("error" => false);

@@ -9,10 +9,12 @@
         <div class="col-xs-12 col-md-offset-4 col-md-4">
             <h1>¡FALTA TU CÉDULA DE CONDUCIR!</h1>
             <h2>Es necesario que la subas una vez para seguirrealizando arriendos.</h2>
-            <a href="#" class="upload-link" id="license-bottom">
+            <div id="previewlicence">
+            <a href="#" class="upload-link" id="linklicence">
                 <span class="icon-svg_17"></span>
                 <strong class="text">(la puedes sacar con tu celular)</strong>
             </a>
+            </div>
         </div>
     </div>
     <div class="space-60 hidden-xs"></div>
@@ -96,8 +98,11 @@
                 <strong>40%</strong>AHORRO
             </div>
             <div class="price-area">
+                <?php if ($Car->getPricePerHour() != 0):?>
+                    <span class="price">$<?php echo number_format(round($Car->getPricePerHour()), 0, '', '.')?> <span class="sub">/ Horas</span></span>
+                <?php endif ?>
                 <?php if ($Car->getPricePerDay() != 0):?>
-                   <span class="price">$<?php echo number_format(round($Car->getPricePerDay()), 0, '', '.')?> <span>/ día</span></span>
+                   <span class="text">$<?php echo number_format(round($Car->getPricePerDay()), 0, '', '.')?> <span>/ día</span></span>
                 <?php endif ?>
                 <?php if ($Car->getPricePerWeek() != 0):?>
                    <span class="text"><span><?php echo number_format(round(($Car->getPricePerWeek()/7)), 0, '', '.') ?></span> / día la SEMANA</span>
@@ -163,6 +168,9 @@
                             <strong>40%</strong>AHORRO
                         </div>
                         <div class="area-precio">
+                            <?php if ($Car->getPricePerHour() != 0):?>
+                                <span class="text">$<?php echo number_format(round($Car->getPricePerHour()), 0, '', '.')?> <span class="sub">/ Horas</span></span></br>
+                            <?php endif ?>
                             <?php if ($Car->getPricePerDay() != 0):?>
                                 <span class="text">$<?php echo number_format(round($Car->getPricePerDay()), 0, '', '.')?> <span class="sub">/ día</span></span></br>
                             <?php endif ?>
@@ -241,7 +249,7 @@
             <div class="step-list col-md-offset-1 col-md-10">
                 <span class="num duracion">2</span>   
                 <h2><span class="dis">2.- </span>DURACION Y PRECIO</h2>
-                <span class="text">Arriendo de Auto <?php echo $Car->getModel()->getBrand()->getName()." ".$Car->getModel()->getName() ?> a <?php echo number_format(round($Car->getPricePerDay()), 0, '', '.') ?> el Día por 48 horas en <?php echo $Car->getCommune();?>, Santiago.</span>
+                <span class="text">Arriendo de Auto <?php echo $Car->getModel()->getBrand()->getName()." ".$Car->getModel()->getName() ?> a $<?php echo number_format(round($Car->getPricePerDay()), 0, '', '.') ?> en <?php echo $Car->getCommune();?>, Santiago.</span>
                 <input class="datetimepicker btn-block" id="fromH" type="button" value="Desde: <?php echo $fromHuman ?>"></input>
                 <input class="datetimepicker btn-block" id="toH" type="button" value="Hasta: <?php echo $toHuman ?>"></input>
 
@@ -249,6 +257,7 @@
 
                         <div id="sub-price-container">
                             <span class="price pull-right" id="subtotal" data-price="<?php echo $price ?>"><?php echo '$'.number_format($price, 0, ',', '.') ?></span>SUB TOTAL
+                            <span class="" id="time">(<?php echo $time ?></span> Horas)
                         </div>
                         <div class="price-count">
                         <div class="radio">
@@ -379,7 +388,6 @@
                 <?php endif ?>
             </div>
         </div>
-
         <input id="car" name="car" type="hidden" value="<?php echo $Car->getId() ?>">
         <input id="from" name="from" type="hidden" value="<?php echo $from ?>">
         <input id="to" name="to" type="hidden" value="<?php echo $to ?>">
@@ -396,15 +404,23 @@
 </div>
 
 <div style="display:none">
-    <form action="<?php echo url_for('main/uploadLicense?photo=license&width=194&height=204&file=license-file') ?>" enctype="multipart/form-data" id="license-form" method="post">
-        <input id="license-file" name="license-file" type="file">
+
+    <form action="<?php echo url_for('main/uploadLicense?photo=licence&width=194&height=204&file=filelicence') ?>" enctype="multipart/form-data" id="formlicence" method="post">
+        <input id="filelicence" name="filelicence" type="file">
         <input type="submit">
+
+        <div id="dialog-alert" title="">
+        <p></p>
+    </div>
     </form>
+
 </div>
 
 <script>
 
-    $(document).ready(function(){       
+    $(document).ready(function(){
+
+        imageUpload('#formlicence', '#filelicence', '#previewlicence','#linklicence');       
 
         // Carousel
         $('#car-images-carousel').slick({
@@ -495,33 +511,7 @@
             }
         });
 
-        $("#license-bottom").click(function(e){
-            $("#license-file").click();
-        });
-
-        $("#license-file").change(function(e) {
-
-            $("#license-form").ajaxForm({
-                dataType: "json",
-                success: function(r) {
-                    
-                    if (r.error) {
-                        $("#dialog-alert p").html(r.errorMessage);
-                        $("#dialog-alert").attr("title", "Problemas al subir la imagen");
-                        $("#dialog-alert").dialog({
-                            buttons: [{
-                                text: "Aceptar",
-                                click: function() {
-                                    $( this ).dialog( "close" );
-                                }
-                            }]
-                        });
-                    } else {
-                        $("#license-container").remove();
-                    }
-                }
-            }).submit();
-        });
+    
     });
 
     function isValidForm() {
@@ -661,6 +651,34 @@
         }, 'json');
     }
 
+    function getCarTime() {
+
+        var from  = $("#from").val();
+        var to    = $("#to").val();
+
+        $.post("<?php echo url_for('reserves/calculateTime') ?>", {"from": from, "to": to}, function(r){
+            console.error(r);
+            if (r.error) {
+                $("#dialog-alert p").html(r.errorMessage);
+                $("#dialog-alert").attr("title", "¡Alerta!");
+                $("#dialog-alert").dialog({
+                    buttons: [{
+                        text: "Aceptar",
+                        click: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }]
+                });
+
+                setDefaultDateH();
+
+            } else {
+                $("#time").html("("+r.tiempo);
+            }
+
+        }, 'json');
+    }
+
     function formatoFecha(fecha){
         
         var split = fecha.split(" ");
@@ -697,10 +715,54 @@
         }
 
         getRentalPrice();
+        getCarTime();
+
     }
 
     function setDefaultDateH(){
         $("#toH").val('<?php echo $toHuman ?>');
         $("#fromH").val('<?php echo $fromHuman ?>');
     }
+
+
+    function imageUpload (form, formfile, preview, link) {
+
+        $(formfile).change(function(e) {
+            
+            $(preview).html('<?php echo image_tag('loader.gif') ?>');
+
+            $(form).ajaxForm({
+                dataType: "json",
+                target: preview,
+                success: function(r){
+                    if (r.error) {
+                        $("#dialog-alert p").html(r.errorMessage);
+                        $("#dialog-alert").attr("title", "Problemas al subir la imagen");
+                        $("#dialog-alert").dialog({
+                            buttons: [{
+                                text: "Aceptar",
+                                click: function() {
+                                    $( this ).dialog( "close" );
+                                }
+                            }]
+                        });
+                    } else {
+                        location.reload();
+                    }
+                }
+            }).submit();
+        });
+        
+        $(link).click(function(e) {
+            e.preventDefault();
+            $(formfile).click();
+        });
+    }
+
+
+
+
+    
+
+    
 </script>

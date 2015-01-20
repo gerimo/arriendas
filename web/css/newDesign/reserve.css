@@ -211,9 +211,8 @@
     color: #c8427f;
     text-align: center;
     display: block;
-    font-size: 48px;
+    font-size: 33px;
     line-height: 55px;
-    margin: 0 0 7px;
     font-weight: 700;
 }
 .reserve-area .text {
@@ -221,7 +220,7 @@
     margin: 0 0 5px;
     text-align: center;
     display: block;
-    font-size: 23px;
+    font-size: 22px;
     line-height: 30px;
 }
 .reserve-area .text spanin { font-weight: bold; }
