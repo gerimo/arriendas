@@ -351,6 +351,8 @@ class khipuActions extends sfActions {
 
                         /* almacena $idReserve en la tabla mail calificaciones */
                         $reserve->encolarMailCalificaciones();
+
+                        Utils::reportError("PAGO CORRECTO", "khipu/notifyPayment");
                     }
                 }
             } else {
