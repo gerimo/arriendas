@@ -163,197 +163,203 @@ class khipuActions extends sfActions {
             "notification_signature" => $_POST['notification_signature']
         );
 
-        $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["notification-validation-url"]);
-        $response = $khipuService->notificationValidation($data);
+        try {
 
-        if ($response == 'VERIFIED' && $data["receiver_id"] == $settings["receiver_id"]) {
-            
-            /* Los parametros son correctos, ahora falta verificar que transacion_id, custom, subject y amount correspondan al pedido */
-            $this->_log("NotifyPayment", "INFO", "cobro verificado");
-            $this->_log("NotifyPayment", "INFO", "respuesta: ".  serialize($response));
-            $order = Doctrine_Core::getTable("Transaction")->getTransaction($data["transaction_id"]);
-            $this->idReserva = $order->getReserveId();
-            $reserve = Doctrine_Core::getTable('reserve')->findOneById($this->idReserva);
+            $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["notification-validation-url"]);
+            $response = $khipuService->notificationValidation($data);
 
-            /* //cancel other reserves not paid for the same rental dates */
-            $startDate0 = $reserve->getDate();
-            $startDate = date("Y-m-d H:i:s", strtotime($startDate0));
-            $endDate = date("Y-m-d H:i:s", strtotime($startDate0) + ($reserve->getDuration() * 60 * 60));
+            if ($response == 'VERIFIED' && $data["receiver_id"] == $settings["receiver_id"]) {
+                
+                /* Los parametros son correctos, ahora falta verificar que transacion_id, custom, subject y amount correspondan al pedido */
+                $this->_log("NotifyPayment", "INFO", "cobro verificado");
+                $this->_log("NotifyPayment", "INFO", "respuesta: ".  serialize($response));
+                $order = Doctrine_Core::getTable("Transaction")->getTransaction($data["transaction_id"]);
+                $this->idReserva = $order->getReserveId();
+                $reserve = Doctrine_Core::getTable('reserve')->findOneById($this->idReserva);
 
-            $rangeDates = array($startDate, $endDate, $startDate, $endDate, $startDate, $endDate);
-            $carid = $reserve->getCarId();
+                /* //cancel other reserves not paid for the same rental dates */
+                $startDate0 = $reserve->getDate();
+                $startDate = date("Y-m-d H:i:s", strtotime($startDate0));
+                $endDate = date("Y-m-d H:i:s", strtotime($startDate0) + ($reserve->getDuration() * 60 * 60));
 
-            $q = Doctrine_Query::create()
-                    ->update('reserve r')
-                    ->set('r.canceled', '?', 1)
-                    ->set('r.visible_renter', '?', 0)
-                    ->set('r.visible_owner', '?', 0)
-                    ->set('r.cancel_reason', '?', 2)
-                    ->where('r.car_id = ?', $carid)
-                    ->andwhere('r.id <> ?', $reserve->getId())
-                    ->andwhere('? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR ? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR r.date BETWEEN ? AND ? OR DATE_ADD(r.date, INTERVAL r.duration HOUR) BETWEEN ? AND ?', $rangeDates)
-                    ->execute();
+                $rangeDates = array($startDate, $endDate, $startDate, $endDate, $startDate, $endDate);
+                $carid = $reserve->getCarId();
 
-            $opcionLiberacion = $reserve->getLiberadoDeGarantia();
-            if ($opcionLiberacion == 0) {
-                $montoLiberacion = 0;
-            } else if ($opcionLiberacion == 1) {
-                $montoLiberacion = $reserve->getMontoLiberacion();
-            }
-            $finalPrice = $order->getPrice() + $montoLiberacion;
-            if ($finalPrice > 0) {
+                $q = Doctrine_Query::create()
+                        ->update('reserve r')
+                        ->set('r.canceled', '?', 1)
+                        ->set('r.visible_renter', '?', 0)
+                        ->set('r.visible_owner', '?', 0)
+                        ->set('r.cancel_reason', '?', 2)
+                        ->where('r.car_id = ?', $carid)
+                        ->andwhere('r.id <> ?', $reserve->getId())
+                        ->andwhere('? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR ? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR r.date BETWEEN ? AND ? OR DATE_ADD(r.date, INTERVAL r.duration HOUR) BETWEEN ? AND ?', $rangeDates)
+                        ->execute();
 
-                $this->_log("Pago", "Exito", "Usuario: " . $customer_in_session . ". Order ID: " . $order->getId());
-                Doctrine_Core::getTable("Transaction")->successTransaction($orderId, $token, $paypalSettings["status_success"], 1);
-
-                $idReserve = $order->getReserveId();
-                $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
-
-                $tokenReserve = $reserve->getToken();
-                $this->tokenReserve = $reserve->getToken();
-                $nameRenter = $reserve->getNameRenter();
-                $this->nameOwner = $reserve->getNameOwner();
-                $emailRenter = $reserve->getEmailRenter();
-                $this->emailOwner = $reserve->getEmailOwner();
-                $nameOwner = $reserve->getNameOwner();
-                $emailOwner = $reserve->getEmailOwner();
-                $lastnameRenter = $reserve->getLastnameRenter();
-                $this->lastnameOwner = $reserve->getLastnameOwner();
-                $lastnameOwner = $reserve->getLastnameOwner();
-                $telephoneRenter = $reserve->getTelephoneRenter();
-                $this->telephoneOwner = $reserve->getTelephoneOwner();
-                $telephoneOwner = $reserve->getTelephoneOwner();
-                $addressCar = $reserve->getAddressCar();
-                $idCar = $reserve->getCarId();
-
-                /* verifica que la reserva no esté completa */
-                if (!$order->getCompleted()) {
-                    
-                    $functions = new Functions;
-                    $functions->generarNroFactura($reserve, $order);
-                    
-                    /* actualiza el estado completed */
-                    $order->setCompleted(true);
-                    $order->save();
-
-                    /* envío de mail */
-                    require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
-
-                    /* pedidos de reserva pagado (propietario) */
-                    $mail = new Email();
-                    $mailer = $mail->getMailer();
-
-                    /*if ($order->getImpulsive()) {*/
-
-                        $url = $this->generateUrl("aprobarReserve", array('idReserve' => $reserve->getId(), 'idUser' => $reserve->getCar()->getUserId()), TRUE);
-
-                        $subject = "¡Has recibido un pago! Apruébalo ahora";
-
-                        $body = "";
-                        $body .= "<p>Hola $nameOwner,</p>";
-                        $body .= "<p>Has recibido un pago por ".number_format(($reserve->getPrice()), 0, ',', '.').", desde ".$reserve->getFechaInicio()." ".$reserve->getHoraInicio()." hasta ".$reserve->getFechaTermino()." ".$reserve->getHoraTermino().".</p>";
-                        $body .= "<p>Si no apruebas la reserva cuanto antes otro dueño podría ganar la reserva.";
-                        $body .= "<p>Para recibir tu pago debes aprobar la reserva haciendo <a href='$url'>click aquí</a></p>";
-
-                    /*} else {
-
-                        $subject = "¡El arrendatario ha pagado la reserva!";
-
-                        $body = "";
-                        $body .= "<p>Hola $nameOwner,</p>";
-                        $body .= "<p>El arrendatario ha pagado la reserva!</p>";
-                        $body .= "<p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p>";
-                        $body .= "<p>Puedes llenar el formulario <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/$idReserve'>desde tu celular</a>.</p>";
-                        $body .= "<p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p>";
-                        $body .= "<p>Datos del propietario:<br><br>Nombre: $nameRenter $lastnameRenter<br>Teléfono: $telephoneRenter<br>Correo: $emailRenter</p>";
-                        $body .= "<p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
-                    }*/
-
-                    $message = $mail->getMessage();
-                    $message->setSubject($subject);
-                    $message->setBody($mail->addFooter($body), 'text/html');
-                    $message->setTo($emailOwner);
-                    $functions = new Functions;
-                    $formulario = $functions->generarFormulario(NULL, $tokenReserve);
-                    $reporte = $functions->generarReporte($idCar);
-                    $contrato = $functions->generarContrato($tokenReserve);
-                    $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
-                    $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
-                    $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
-                    
-                    $renterUser = $reserve->getUser();
-                    if (!is_null($renterUser->getDriverLicenseFile())) {
-                        $filepath = $renterUser->getDriverLicenseFile();
-                        if (is_file($filepath)) {
-                            $message->attach(Swift_Attachment::fromPath($renterUser->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$renterUser->getLicenceFileName()));
-                        }
-                    }
-                    
-                    $mailer->send($message);
-
-
-                    /* pedidos de reserva pagado (arrendatario) */
-                    $message = $mail->getMessage();
-                    $message->setSubject('La reserva ha sido pagada!');
-                    $body = "<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
-                    $message->setBody($mail->addFooter($body), 'text/html');
-                    $message->setTo($emailRenter);
-                    $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
-                    $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
-                    $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
-                    $pagare = $functions->generarPagare($tokenReserve);
-                    $message->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
-                    $mailer->send($message);
-
-                    /* mail Soporte */
-                    $message = $mail->getMessage();
-                    $message->setSubject('Nueva reserva paga ' . $idReserve . '');
-                    $body = "<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
-                    $body .= "<p>En caso de siniestro debes dejar constancia en la comisaría más cercana INMEDITAMENTE y llamar al (02)2333 3714.</p>";
-                    $message->setBody($mail->addFooter($body), 'text/html');
-                    $message->setTo("soporte@arriendas.cl");
-                    $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
-                    $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
-                    $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
-                    
-                    $renterUser = $reserve->getUser();
-                    if (!is_null($renterUser->getDriverLicenseFile())) {
-                        $filepath = $renterUser->getDriverLicenseFile();
-                        if (is_file($filepath)) {
-                            $message->attach(Swift_Attachment::fromPath($renterUser->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$renterUser->getLicenceFileName()));
-                        }
-                    }
-                    
-                    
-                    $mailer->send($message);
-
-                    /* crea la fila calificaciones habilitada para la fecha de término de reserva + 2 horas (solo si no es una extension de otra reserva) */
-                    if (!$reserve->getIdPadre()) {
-
-                        $fecha = $reserve->getFechaHabilitacionRating();
-                        $idOwner = $reserve->getIdOwner();
-                        $idRenter = $reserve->getIdRenter();
-
-                        $rating = new Rating();
-                        $rating->setFechaHabilitadaDesde($fecha);
-                        $rating->setIdOwner($idOwner);
-                        $rating->setIdRenter($idRenter);
-                        $rating->save();
-
-                        /* actualiza rating_id en la tabla Reserve */
-                        $ratingId = $rating->getId();
-                        $reserve->setFechaPago(strftime("%Y-%m-%d %H:%M:%S"));
-                        $reserve->setRatingId($ratingId);
-                        $reserve->save();
-                    }
-
-                    /* almacena $idReserve en la tabla mail calificaciones */
-                    $reserve->encolarMailCalificaciones();
+                $opcionLiberacion = $reserve->getLiberadoDeGarantia();
+                if ($opcionLiberacion == 0) {
+                    $montoLiberacion = 0;
+                } else if ($opcionLiberacion == 1) {
+                    $montoLiberacion = $reserve->getMontoLiberacion();
                 }
+                $finalPrice = $order->getPrice() + $montoLiberacion;
+                if ($finalPrice > 0) {
+
+                    $this->_log("Pago", "Exito", "Usuario: " . $customer_in_session . ". Order ID: " . $order->getId());
+                    Doctrine_Core::getTable("Transaction")->successTransaction($orderId, $token, $paypalSettings["status_success"], 1);
+
+                    $idReserve = $order->getReserveId();
+                    $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+
+                    $tokenReserve = $reserve->getToken();
+                    $this->tokenReserve = $reserve->getToken();
+                    $nameRenter = $reserve->getNameRenter();
+                    $this->nameOwner = $reserve->getNameOwner();
+                    $emailRenter = $reserve->getEmailRenter();
+                    $this->emailOwner = $reserve->getEmailOwner();
+                    $nameOwner = $reserve->getNameOwner();
+                    $emailOwner = $reserve->getEmailOwner();
+                    $lastnameRenter = $reserve->getLastnameRenter();
+                    $this->lastnameOwner = $reserve->getLastnameOwner();
+                    $lastnameOwner = $reserve->getLastnameOwner();
+                    $telephoneRenter = $reserve->getTelephoneRenter();
+                    $this->telephoneOwner = $reserve->getTelephoneOwner();
+                    $telephoneOwner = $reserve->getTelephoneOwner();
+                    $addressCar = $reserve->getAddressCar();
+                    $idCar = $reserve->getCarId();
+
+                    /* verifica que la reserva no esté completa */
+                    if (!$order->getCompleted()) {
+                        
+                        $functions = new Functions;
+                        $functions->generarNroFactura($reserve, $order);
+                        
+                        /* actualiza el estado completed */
+                        $order->setCompleted(true);
+                        $order->save();
+
+                        /* envío de mail */
+                        require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
+
+                        /* pedidos de reserva pagado (propietario) */
+                        $mail = new Email();
+                        $mailer = $mail->getMailer();
+
+                        /*if ($order->getImpulsive()) {*/
+
+                            $url = $this->generateUrl("aprobarReserve", array('idReserve' => $reserve->getId(), 'idUser' => $reserve->getCar()->getUserId()), TRUE);
+
+                            $subject = "¡Has recibido un pago! Apruébalo ahora";
+
+                            $body = "";
+                            $body .= "<p>Hola $nameOwner,</p>";
+                            $body .= "<p>Has recibido un pago por ".number_format(($reserve->getPrice()), 0, ',', '.').", desde ".$reserve->getFechaInicio()." ".$reserve->getHoraInicio()." hasta ".$reserve->getFechaTermino()." ".$reserve->getHoraTermino().".</p>";
+                            $body .= "<p>Si no apruebas la reserva cuanto antes otro dueño podría ganar la reserva.";
+                            $body .= "<p>Para recibir tu pago debes aprobar la reserva haciendo <a href='$url'>click aquí</a></p>";
+
+                        /*} else {
+
+                            $subject = "¡El arrendatario ha pagado la reserva!";
+
+                            $body = "";
+                            $body .= "<p>Hola $nameOwner,</p>";
+                            $body .= "<p>El arrendatario ha pagado la reserva!</p>";
+                            $body .= "<p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p>";
+                            $body .= "<p>Puedes llenar el formulario <a href='http://www.arriendas.cl/profile/formularioEntrega/idReserve/$idReserve'>desde tu celular</a>.</p>";
+                            $body .= "<p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p>";
+                            $body .= "<p>Datos del propietario:<br><br>Nombre: $nameRenter $lastnameRenter<br>Teléfono: $telephoneRenter<br>Correo: $emailRenter</p>";
+                            $body .= "<p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
+                        }*/
+
+                        $message = $mail->getMessage();
+                        $message->setSubject($subject);
+                        $message->setBody($mail->addFooter($body), 'text/html');
+                        $message->setTo($emailOwner);
+                        $functions = new Functions;
+                        $formulario = $functions->generarFormulario(NULL, $tokenReserve);
+                        $reporte = $functions->generarReporte($idCar);
+                        $contrato = $functions->generarContrato($tokenReserve);
+                        $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+                        $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
+                        $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+                        
+                        $renterUser = $reserve->getUser();
+                        if (!is_null($renterUser->getDriverLicenseFile())) {
+                            $filepath = $renterUser->getDriverLicenseFile();
+                            if (is_file($filepath)) {
+                                $message->attach(Swift_Attachment::fromPath($renterUser->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$renterUser->getLicenceFileName()));
+                            }
+                        }
+                        
+                        $mailer->send($message);
+
+
+                        /* pedidos de reserva pagado (arrendatario) */
+                        $message = $mail->getMessage();
+                        $message->setSubject('La reserva ha sido pagada!');
+                        $body = "<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
+                        $message->setBody($mail->addFooter($body), 'text/html');
+                        $message->setTo($emailRenter);
+                        $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+                        $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
+                        $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+                        $pagare = $functions->generarPagare($tokenReserve);
+                        $message->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
+                        $mailer->send($message);
+
+                        /* mail Soporte */
+                        $message = $mail->getMessage();
+                        $message->setSubject('Nueva reserva paga ' . $idReserve . '');
+                        $body = "<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
+                        $body .= "<p>En caso de siniestro debes dejar constancia en la comisaría más cercana INMEDITAMENTE y llamar al (02)2333 3714.</p>";
+                        $message->setBody($mail->addFooter($body), 'text/html');
+                        $message->setTo("soporte@arriendas.cl");
+                        $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+                        $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
+                        $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+                        
+                        $renterUser = $reserve->getUser();
+                        if (!is_null($renterUser->getDriverLicenseFile())) {
+                            $filepath = $renterUser->getDriverLicenseFile();
+                            if (is_file($filepath)) {
+                                $message->attach(Swift_Attachment::fromPath($renterUser->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$renterUser->getLicenceFileName()));
+                            }
+                        }
+                        
+                        
+                        $mailer->send($message);
+
+                        /* crea la fila calificaciones habilitada para la fecha de término de reserva + 2 horas (solo si no es una extension de otra reserva) */
+                        if (!$reserve->getIdPadre()) {
+
+                            $fecha = $reserve->getFechaHabilitacionRating();
+                            $idOwner = $reserve->getIdOwner();
+                            $idRenter = $reserve->getIdRenter();
+
+                            $rating = new Rating();
+                            $rating->setFechaHabilitadaDesde($fecha);
+                            $rating->setIdOwner($idOwner);
+                            $rating->setIdRenter($idRenter);
+                            $rating->save();
+
+                            /* actualiza rating_id en la tabla Reserve */
+                            $ratingId = $rating->getId();
+                            $reserve->setFechaPago(strftime("%Y-%m-%d %H:%M:%S"));
+                            $reserve->setRatingId($ratingId);
+                            $reserve->save();
+                        }
+
+                        /* almacena $idReserve en la tabla mail calificaciones */
+                        $reserve->encolarMailCalificaciones();
+                    }
+                }
+            } else {
+                $this->_log("NotifyPayment", "ERROR", "Hubo un error en el proceso de verificacion.");
             }
-        } else {
-            $this->_log("NotifyPayment", "ERROR", "Hubo un error en el proceso de verificacion.");
+        } catch (Exception $e) {
+            Utils::reportError($e->getMessage(), "khipu/notifyPayment");
         }
+
         die();
     }
 
