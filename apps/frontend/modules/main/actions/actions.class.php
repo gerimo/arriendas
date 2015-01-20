@@ -4,6 +4,13 @@ require_once sfConfig::get('sf_lib_dir') . '/vendor/mobile-detect/Mobile_Detect.
 
 class mainActions extends sfActions {
 
+    public function executeTestKhipu (sfWebRequest $request) {
+        $this->setLayout(false);
+
+        /*$this->reserveId = 41023;*/
+        $this->transactionId = 21096;
+    }
+
     public function executeIndex (sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
