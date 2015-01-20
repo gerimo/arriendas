@@ -128,8 +128,6 @@ class Car extends BaseCar {
             $days = $days + 24;
             $hours = 0;
         }
-        error_log($hours);
-        error_log($days);
         return floor($days + $hours);
     }
 
