@@ -147,6 +147,8 @@ class khipuActions extends sfActions {
 
     public function executeNotifyPayment(sfWebRequest $request) {
 
+        error_log("-------------NOTIFICACION PAGO-------------");
+
         $this->_log("NotifyPayment", "INFO", "Start validation");
         $settings = $this->getSettings();
 
@@ -162,6 +164,8 @@ class khipuActions extends sfActions {
             "payer_email" => $_POST['payer_email'],
             "notification_signature" => $_POST['notification_signature']
         );
+
+        error_log("-------------COMENZANDO-------------");
 
         try {
 
@@ -352,6 +356,7 @@ class khipuActions extends sfActions {
                         /* almacena $idReserve en la tabla mail calificaciones */
                         $reserve->encolarMailCalificaciones();
 
+                        error_log("-------------SUCCESS-------------");
                         Utils::reportError("PAGO CORRECTO", "khipu/notifyPayment");
                     }
                 }
@@ -359,6 +364,7 @@ class khipuActions extends sfActions {
                 $this->_log("NotifyPayment", "ERROR", "Hubo un error en el proceso de verificacion.");
             }
         } catch (Exception $e) {
+            error_log("-------------ERROR-----------: ". $e->getMessage());
             Utils::reportError($e->getMessage(), "khipu/notifyPayment");
         }
 
