@@ -279,7 +279,7 @@ class reservesActions extends sfActions {
             $return["errorMessage"] = $e->getMessage();
 
             if ($e->getCode() == 2) {
-                /*Utils::reportError($e->getMessage(), "profile/reserveChange");*/
+                Utils::reportError($e->getMessage(), "profile/reserveChange");
             }
         }
     
