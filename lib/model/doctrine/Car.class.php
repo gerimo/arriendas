@@ -66,6 +66,7 @@ class Car extends BaseCar {
         foreach ($Reserves as $Reserve) {
 
             $ChangeOptions = $Reserve->getChangeOptions(false);
+            error_log("Auto: ".$this->id.". Opciones de cambio: ".count($ChangeOptions));
 
             if (count($ChangeOptions) < $maxOpportunitiesAllowed && 
                 !$this->hasReserve($Reserve->getFechaInicio2(), $Reserve->getFechaTermino2())) {
