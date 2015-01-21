@@ -77,6 +77,7 @@ class Car extends BaseCar {
                 $itsPresent = false;
                 foreach ($ChangeOptions as $CO) {
                     if ($CO->getCar()->getUser()->id == $this->getUser()->id) {
+                        error_log("Reserve CO: ".$CO->id." - Dueno: ".$CO->getCar()->getUser()->id.". This: ".$this->getUser()->id);
                         $itsPresent = true;
                         break;
                     }
@@ -279,13 +280,7 @@ public function hasReserve($from, $to, $userId = false) {
     $checkAvailability = $q->execute();
 
     if (count($checkAvailability) == 0) {
-        error_log("Auto: ".$this->id.". No tiene reservas");
         return false;
-    }
-
-    error_log("Auto: ".$this->id.". Tiene reservas (".count($checkAvailability).")");
-    foreach ($checkAvailability as $R) {
-      error_log("Auto: ".$this->id.", Tiene R: ".$R->id);
     }
 
     return true;
