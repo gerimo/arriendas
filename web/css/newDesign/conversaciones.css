@@ -240,6 +240,9 @@ textarea.textoMensaje{
     padding-left: 5px;
     padding-right: 20px;
 	border: 1px solid #BCBEB0;
+    -webkit-box-shadow: 2px 2px 20px rgba(50, 50, 50, 0.5);
+    -moz-box-shadow:    2px 2px 20px rgba(50, 50, 50, 0.5);
+    box-shadow:         2px 2px 8px rgba(50, 50, 50, 0.5);
 }
 .usuarioDer{
 	float: right;
@@ -262,7 +265,7 @@ textarea.textoMensaje{
 	background-color: #C7EAFB;
 	-webkit-box-shadow: 2px 2px 20px rgba(50, 50, 50, 0.5);
 	-moz-box-shadow:    2px 2px 20px rgba(50, 50, 50, 0.5);
-	box-shadow:         2px 2px 20px rgba(50, 50, 50, 0.5);
+	box-shadow:         2px 2px 8px rgba(50, 50, 50, 0.5);
 }
 .texto{
 	margin-left: 5px;

@@ -34,9 +34,6 @@ class messagesActions extends sfActions {
         $horaFechaActual = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"));
 
 
-        
-error_log("id_conversation: ". $idConversacion." ::: id_userFrom: ". $idUserFrom . " ::: id_userTo: ". $idUserTo ." ::: mensajeNuevo: ". $mensajeNuevo ." :::: my_id: ". $myId);
-
         $claseUsuario = Doctrine_Core::getTable('user')->findOneById($myId);
 //        $looking_user_from = 1;
 //        if ($claseUsuario->getBlocked() == 1) {
@@ -358,11 +355,37 @@ error_log("id_conversation: ". $idConversacion." ::: id_userFrom: ". $idUserFrom
         $this->redirect('messages/inbox');
     }
 
-    public function executeInbox() {
+    public function executeInbox(sfWebRequest $request) {
+        
         $this->setLayout("newIndexLayout");
+
+        // extrae los parametros de mensajes
+        /*$this->offset = $request->getParameter("offset", null);
+        $this->limit = $request->getParameter("limit", null);
+
+        if($this->o==''||$this->o==0){
+            $this->o = 0;
+        }
+        if($this->l==''||$this->l==0){
+            $this->l = 5;
+        }*/
         
         $this->user_id = $this->getUser()->getAttribute("userid");
+
         $ListaDeConversaciones = Doctrine_Core::getTable("Conversation")->findConversation($this->getUser()->getAttribute("userid"));
+        
+        // query que recupera los datos de conversation
+        /*$q = Doctrine_Core::getTable("Conversation")
+        ->createQuery('c')
+        ->where('c.user_from_id = ?', $this->getUser()->getAttribute("userid"))
+        ->orWhere('c.user_to_id = ?', $this->getUser()->getAttribute("userid"))
+        ->limit($this->limit)
+        ->offset($this->offset)
+        ->addOrderBy('start DESC');
+
+        $ListaDeConversaciones = $q->execute();
+        error_log("~~~~~~~~~~~~~~~~~~~~".count($ListaDeConversaciones));*/
+
 
         $MisConversaciones = $this->obtenerMisConversaciones();
 
@@ -375,6 +398,7 @@ error_log("id_conversation: ". $idConversacion." ::: id_userFrom: ". $idUserFrom
             }
         }
         $MisConversacionesAux = $MisConversaciones;
+
         if ($MisConversacionesAux) {
             //ordenando los utimos mensajes por fecha
             $conversacionesAux = array(); //declarando el array como vacio
@@ -440,46 +464,62 @@ error_log("id_conversation: ". $idConversacion." ::: id_userFrom: ". $idUserFrom
 
         $this->user_id = $this->getUser()->getAttribute("userid");
         $idConversacion = $request->getParameter("id");
-        error_log($idConversacion);
         
         $objetoConversacion = Doctrine_Core::getTable("Conversation")->findConversationWithId($this->getUser()->getAttribute("userid"), $idConversacion);
-        
-        // muestro precargado último mensaje enviado 
-        // (sólo para arrendatarios y sólo si el último mensaje no pertenece a la conversación actual)
-        $user = Doctrine_Core::getTable('user')->find($this->user_id);
-        $message = Doctrine_Core::getTable("Message")->lastMessageSentByUserId($this->user_id);
-        if(!$user->isPropietario()
-                && $message && !in_array($message->getId(), $objetoConversacion[0]->getMessage()->getPrimaryKeys())){            
-            $this->comentarios = $message->getBody();
-        }else{
-            $this->comentarios = $request->getParameter("comentarios");
-        }        
 
-        if ($idConversacion) {//si la id existe
-            $this->setearReceived_aTodosLosMensajes($idConversacion);
-
-            $MisConversaciones = $this->obtenerMisConversaciones();
-            $cantidadMisConversaciones = count($MisConversaciones);
-            for ($i = 0; $i < $cantidadMisConversaciones; $i++) {
-                if ($MisConversaciones[$i]['idConversacion'] == $idConversacion) {
-                    $conversacion_conSusMensajes = $MisConversaciones[$i];
+        // verifica si la converzacion incluye al usuario actual
+        $isPartOfThisConversation = false;
+        for ($i = 0; $i < count($objetoConversacion); $i++) {
+            if($objetoConversacion[$i]->getUserToId() == $this->user_id || $objetoConversacion[$i]->getUserFromId() == $this->user_id){
+                    $isPartOfThisConversation = true;
+                    break;
                 }
-            }
-            $conversacionesOrdDes = array();
-            $conversacionesOrdDes['idConversacion'] = $conversacion_conSusMensajes['idConversacion'];
-            $conversacionesOrdDes['idUser_from'] = $conversacion_conSusMensajes['idUser_from'];
-            $conversacionesOrdDes['idUser_to'] = $conversacion_conSusMensajes['idUser_to'];
-            $cant = count($conversacion_conSusMensajes) - 3;
-            for ($y = 0; $y < $cant; $y++) { //Ordeno del mas actual, al mas antiguo
-                $conversacionesOrdDes[$y] = $conversacion_conSusMensajes[$cant - 1 - $y];
-            }
-            $this->objetoConversacion = $objetoConversacion;
-            $this->conversacion = $conversacionesOrdDes;
-        } else {//si no existe la id
-            echo "Error al intentar mostrar conversacion.";
-            //verificar efectivamente si la id existe
-            //id no encontrada, crear una nueva
+        }
 
+        if($isPartOfThisConversation){
+
+            // muestro precargado último mensaje enviado 
+            // (sólo para arrendatarios y sólo si el último mensaje no pertenece a la conversación actual)
+            $user = Doctrine_Core::getTable('user')->find($this->user_id);
+
+            $message = Doctrine_Core::getTable("Message")->lastMessageSentByUserId($this->user_id);
+
+            if(!$user->isPropietario()
+                    && $message && !in_array($message->getId(), $objetoConversacion[0]->getMessage()->getPrimaryKeys())){            
+                $this->comentarios = $message->getBody();
+            }else{
+                $this->comentarios = $request->getParameter("comentarios");
+            }        
+
+            if ($idConversacion) {//si la id existe
+                $this->setearReceived_aTodosLosMensajes($idConversacion);
+
+                $MisConversaciones = $this->obtenerMisConversaciones();
+                $cantidadMisConversaciones = count($MisConversaciones);
+                for ($i = 0; $i < $cantidadMisConversaciones; $i++) {
+                    if ($MisConversaciones[$i]['idConversacion'] == $idConversacion) {
+                        $conversacion_conSusMensajes = $MisConversaciones[$i];
+                    }
+                }
+
+                $conversacionesOrdDes = array();
+                $conversacionesOrdDes['idConversacion'] = $conversacion_conSusMensajes['idConversacion'];
+                $conversacionesOrdDes['idUser_from'] = $conversacion_conSusMensajes['idUser_from'];
+                $conversacionesOrdDes['idUser_to'] = $conversacion_conSusMensajes['idUser_to'];
+                $cant = count($conversacion_conSusMensajes) - 3;
+                for ($y = 0; $y < $cant; $y++) { //Ordeno del mas actual, al mas antiguo
+                    $conversacionesOrdDes[$y] = $conversacion_conSusMensajes[$cant - 1 - $y];
+                }
+                $this->objetoConversacion = $objetoConversacion;
+                $this->conversacion = $conversacionesOrdDes;
+            } else {//si no existe la id
+                echo "Error al intentar mostrar conversacion.";
+                //verificar efectivamente si la id existe
+                //id no encontrada, crear una nueva
+            }
+
+        } else {
+            $this->redirect('main/index');
         }
     }
 
