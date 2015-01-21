@@ -280,6 +280,8 @@ public function hasReserve($from, $to, $userId = false) {
         return false;
     }
 
+    error_log(print_r($checkAvailability, true));
+
     return true;
 }
 
