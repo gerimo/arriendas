@@ -550,6 +550,8 @@ class khipuActions extends sfActions {
 
     public function executePaymentInformation(sfWebRequest $request) {
 
+        $this->setLayout("newIndexLayout");
+
         $customer_in_session = $this->getUser()->getAttribute('userid');
         
         if ($customer_in_session) {
