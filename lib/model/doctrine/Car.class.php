@@ -280,7 +280,9 @@ public function hasReserve($from, $to, $userId = false) {
         return false;
     }
 
-    error_log(print_r($checkAvailability, true));
+    foreach ($checkAvailability as $R) {
+      error_log("R: ".$R->id);
+    }
 
     return true;
 }
