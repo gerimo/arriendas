@@ -35,7 +35,7 @@ class Reserve extends BaseReserve {
             ->addOrderBy('R.fecha_reserva ASC');
 
         $Reserves = $q->execute();
-
+error_log("Reservas encontradas: ".count($Reserves));
         foreach ($Reserves as $Reserve) {
 
             if ($Reserve->getReservaOriginal() == 0) {
