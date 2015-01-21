@@ -70,6 +70,8 @@ class Car extends BaseCar {
             if (count($ChangeOptions) < $maxOpportunitiesAllowed && 
                 !$this->hasReserve($Reserve->getFechaInicio2(), $Reserve->getFechaTermino2())) {
 
+                error_log("Auto: ".$this->id.", Paso cantidad max permitida y has reserve");
+
                 // Revisamos que el usuario no haya ya postulado a la oportunidad
                 $itsPresent = false;
                 foreach ($ChangeOptions as $CO) {
