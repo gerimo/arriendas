@@ -61,7 +61,6 @@ class Car extends BaseCar {
 
         error_log("Auto: ".$this->id.", Cantidad Opp: ".count($Reserves));
 
-
         // Revisamos que las reservas no tengan ya el máximo de oportunidades permitidas y
         // Revisamos que el auto no tenga ya una reserva confirmada en la fecha de la oportunidad
         foreach ($Reserves as $Reserve) {
@@ -276,9 +275,11 @@ public function hasReserve($from, $to, $userId = false) {
     $checkAvailability = $q->execute();
 
     if (count($checkAvailability) == 0) {
+        error_log("Auto: ".$this->id.". No tiene reservas");
         return false;
     }
 
+    error_log("Auto: ".$this->id.". Tiene reservas (".count($checkAvailability).")");
     foreach ($checkAvailability as $R) {
       error_log("Auto: ".$this->id.", Tiene R: ".$R->id);
     }
