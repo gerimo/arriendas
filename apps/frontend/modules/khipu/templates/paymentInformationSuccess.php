@@ -54,8 +54,8 @@
             methods.start();
         }
     })(jQuery);
+
     $(document).ready(function() {
         $("#progressbar").arriendasCounter();
     });
-
 </script>
