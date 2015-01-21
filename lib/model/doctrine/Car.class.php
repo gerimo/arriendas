@@ -87,7 +87,7 @@ class Car extends BaseCar {
             }
         }
 
-        error_log("Auto: ".$this->id.", Cantidad Opp aceptadas: ".count($Reserves));
+        error_log("Auto: ".$this->id.", Cantidad Opp aceptadas: ".count($Opportunities));
         return $Opportunities;
     }
 
