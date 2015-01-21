@@ -59,21 +59,17 @@ class Car extends BaseCar {
 
         $Reserves = $q->execute();
 
-        error_log("Auto: ".$this->id.", Cantidad Opp encontradas: ".count($Reserves));
+        error_log("Auto[".$this->id."] OPPS[".count($Reserves)."]");
 
         // Revisamos que las reservas no tengan ya el máximo de oportunidades permitidas y
         // Revisamos que el auto no tenga ya una reserva confirmada en la fecha de la oportunidad
         foreach ($Reserves as $k => $Reserve) {
-
-            error_log("Auto[".$this->id."] OPP[".$k."] Reserve[".$Reserve->id."]");
 
             $ChangeOptions = $Reserve->getChangeOptions(false);
             error_log("Auto[".$this->id."] OPP[".$k."] Reserve[".$Reserve->id."] CO[".count($ChangeOptions)."]");
 
             if (count($ChangeOptions) < $maxOpportunitiesAllowed && 
                 !$this->hasReserve($Reserve->getFechaInicio2(), $Reserve->getFechaTermino2())) {
-
-                error_log("Auto: ".$this->id.", Paso cantidad max permitida y has reserve");
 
                 // Revisamos que el usuario no haya ya postulado a la oportunidad
                 $itsPresent = false;
@@ -91,7 +87,7 @@ class Car extends BaseCar {
             }
         }
 
-        error_log("Auto: ".$this->id.", Cantidad Opp aceptadas: ".count($Opportunities));
+        error_log("Auto[".$this->id."] OPP ACEPTADAS[".count($Opportunities)."]");
         return $Opportunities;
     }
 
