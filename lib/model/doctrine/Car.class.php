@@ -59,7 +59,7 @@ class Car extends BaseCar {
 
         $Reserves = $q->execute();
 
-        error_log("Opp: ".count($Reserves));
+        error_log("Auto: ".$this->id.", Cantidad Opp: ".count($Reserves));
 
 
         // Revisamos que las reservas no tengan ya el máximo de oportunidades permitidas y
@@ -67,7 +67,6 @@ class Car extends BaseCar {
         foreach ($Reserves as $Reserve) {
 
             $ChangeOptions = $Reserve->getChangeOptions(false);
-            error_log(print_r($this->hasReserve($Reserve->getFechaInicio2(), $Reserve->getFechaTermino2()), true));
 
             if (count($ChangeOptions) < $maxOpportunitiesAllowed && 
                 !$this->hasReserve($Reserve->getFechaInicio2(), $Reserve->getFechaTermino2())) {
@@ -281,7 +280,7 @@ public function hasReserve($from, $to, $userId = false) {
     }
 
     foreach ($checkAvailability as $R) {
-      error_log("R: ".$R->id);
+      error_log("Auto: ".$this->id.", Tiene R: ".$R->id);
     }
 
     return true;
