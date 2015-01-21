@@ -61,11 +61,13 @@ class Car extends BaseCar {
 
         error_log("Opp: ".count($Reserves));
 
+
         // Revisamos que las reservas no tengan ya el máximo de oportunidades permitidas y
         // Revisamos que el auto no tenga ya una reserva confirmada en la fecha de la oportunidad
         foreach ($Reserves as $Reserve) {
 
             $ChangeOptions = $Reserve->getChangeOptions(false);
+            error_log("hasReserve: ".$this->hasReserve($Reserve->getFechaInicio2(), $Reserve->getFechaTermino2()));
 
             if (count($ChangeOptions) < $maxOpportunitiesAllowed && 
                 !$this->hasReserve($Reserve->getFechaInicio2(), $Reserve->getFechaTermino2())) {
