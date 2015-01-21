@@ -74,7 +74,7 @@ class Car extends BaseCar {
                 // Revisamos que el usuario no haya ya postulado a la oportunidad
                 $itsPresent = false;
                 foreach ($ChangeOptions as $l => $CO) {
-                    error_log("Auto[".$this->id."] OPP[".$k."] Reserve[".$Reserve->id."] CO[".($l++)."] RCO[".$CO->id."] CAR[".$CO->getCar()->id."]");
+                    error_log("Auto[".$this->id."] OPP[".($k++)."] Reserve[".$Reserve->id."] CO[".($l++)."] RCO[".$CO->id."] CAR[".$CO->getCar()->id."]");
                     if ($CO->getCar()->getUser()->id == $this->getUser()->id) {
                         error_log("Reserve CO: ".$CO->id." - Dueno: ".$CO->getCar()->getUser()->id.". This: ".$this->getUser()->id);
                         $itsPresent = true;
