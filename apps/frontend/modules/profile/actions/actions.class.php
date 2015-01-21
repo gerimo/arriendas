@@ -32,35 +32,41 @@ class profileActions extends sfActions {
 
             if ($Car->getActivo()) {
 
-                $this->availabilityOfCars[$Car->getId()] = array();
-                
+                $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+1 day")));  
 
-                $i       = 0;
-                $day     = date("Y-m-d");
-                $Holiday = null;
-                
-                do {
-
-                    $this->availabilityOfCars[$Car->getId()][$i] = array();
-
-                    $this->availabilityOfCars[$Car->getId()][$i]["day"]     = $day;
-                    $this->availabilityOfCars[$Car->getId()][$i]["dayName"] = $week[date("N", strtotime($day))];
+                if (date("N", strtotime("+1 day")) == 7 || date("N", strtotime("+1 day")) == 6 || $Holiday) {
                     
-                    $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime($day)));
-                    if ($Holiday) {
-                        $this->availabilityOfCars[$Car->getId()][$i]["dayName"] .= " (Feriado)";
-                    }
+                    $this->availabilityOfCars[$Car->getId()] = array();
 
-                    $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
-                    if ($CarAvailability) {
-                        $this->availabilityOfCars[$Car->getId()][$i]["from"] = $CarAvailability->getStartedAt();
-                        $this->availabilityOfCars[$Car->getId()][$i]["to"] = $CarAvailability->getEndedAt();
-                    }
+                    $i       = 0;
+                    $day     = date("Y-m-d");
+                    $Holiday = null;
+                    
+                    do {
 
-                    $i++;
-                    $day = date("Y-m-d", strtotime("+".$i." day"));
-                } while($i < 5);
-                //}
+                        $this->availabilityOfCars[$Car->getId()][$i] = array();
+
+                        $this->availabilityOfCars[$Car->getId()][$i]["day"]     = $day;
+                        $this->availabilityOfCars[$Car->getId()][$i]["dayName"] = $week[date("N", strtotime($day))];
+                        
+                        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime($day)));
+                        if ($Holiday) {
+                            $this->availabilityOfCars[$Car->getId()][$i]["dayName"] .= " (Feriado)";
+                        }
+
+                        $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
+                        if ($CarAvailability) {
+                            $this->availabilityOfCars[$Car->getId()][$i]["from"] = $CarAvailability->getStartedAt();
+                            $this->availabilityOfCars[$Car->getId()][$i]["to"] = $CarAvailability->getEndedAt();
+                        }
+                        
+                        $i++;
+                        $day = date("Y-m-d", strtotime("+".$i." day"));
+                        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime($day)));                         
+                        
+                    } while(date("N", strtotime($day)) == 6 || date("N", strtotime($day)) == 7 || $Holiday);
+                    //} while($i < 5);
+                }
             }
         }
     }
@@ -191,7 +197,6 @@ class profileActions extends sfActions {
             $birth          = $request->getPostParameter("birth", null);
             $address        = $request->getPostParameter("address", null);
             $commune        = $request->getPostParameter("commune", null);
-            $region         = $request->getPostParameter("region", null);
 
             $userId = $this->getUser()->getAttribute("userid");
 
@@ -237,10 +242,6 @@ class profileActions extends sfActions {
                 throw new Exception("Debes indicar tu comuna", 1);
             }
 
-            if (is_null($region) || $region == "") {
-                throw new Exception("Debes indicar tu región", 1);
-            }
-
             $User->setFirstname($firstname);
             $User->setLastname($lastname);
             $User->setApellidoMaterno($motherLastname);
@@ -251,6 +252,9 @@ class profileActions extends sfActions {
             $User->setTelephone($telephone);
             $User->setBirthdate($birth);
             $User->setAddress($address);
+
+            $Commune = Doctrine_Core::getTable('Commune')->find($commune);
+            $User->setCommune($Commune);
 
             $User->save();
     
@@ -271,26 +275,9 @@ class profileActions extends sfActions {
 
         $userId = $this->getUser()->getAttribute("userid");
 
-        $this->redirect = $request->getParameter('redirect');
-        $this->idRedirect = $request->getParameter('id');
+        $this->User = Doctrine_Core::getTable('User')->find($userId);
 
-        $user = Doctrine_Core::getTable('user')->find($userId);
-
-        $this->userRegion = $user->getRegion();
-
-        $this->userComuna = $user->getComuna();
-
-        $this->user = $user;
-
-        $q = Doctrine_Query::create()
-                ->select('c.*')
-                ->from('Comunas c');
-        $this->comunas = $q->fetchArray();
-
-        $q = Doctrine_Query::create()
-                ->select('r.*')
-                ->from('Regiones r');
-        $this->regiones = $q->fetchArray();
+        $this->Regions = Doctrine_Core::getTable('Region')->findAll();
     }
 
     public function executePay (sfWebRequest $request) {
@@ -410,23 +397,44 @@ class profileActions extends sfActions {
     public function executeCarAvailabilityDeleteChangeStatus(sfWebRequest $request){
         $return = array("error" => false);
 
+        
+
         $carId = $request->getPostParameter('car');
         $day   = $request->getPostParameter('day');
-        $i = 0;
+        
+
+        $week = array(
+            1 => "Lunes",
+            2 => "Martes",
+            3 => "Miércoles",
+            4 => "Jueves",
+            5 => "Viernes",
+            6 => "Sábado",
+            7 => "Domingo"
+        );
+
         try {
+            $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+1 day")));
             
-            do {
-                $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $carId, false);
-                if ($CarAvailability) {
+            if (date("N", strtotime("+1 day")) == 6 || date("N", strtotime("+1 day")) == 7 || $Holiday) {
+                $i = 0;
 
-                    $CarAvailability->setIsDeleted(true);
-                    $CarAvailability->save();
+                do {
+                    $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $carId, false);
+                    if ($CarAvailability) {
 
-                }
-                $i++;
-                $day = date("Y-m-d", strtotime("+".$i." day"));
-            }while ($i < 5);
-        } catch (Exception $e) {
+                        $CarAvailability->setIsDeleted(true);
+                        $CarAvailability->save();
+                    }
+
+                    $i++;
+                    $day = date("Y-m-d", strtotime("+".$i." day"));
+
+                    $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime($day)));
+                }while (date("N", strtotime($day)) == 7 || date("N", strtotime($day)) == 6 || $Holiday);
+            }   
+            
+        }catch (Exception $e) {
 
             $return["error"] = true;
             Utils::reportError($e->getMessage(), "executeCarAvailabilityDeleteChangeStatus");
@@ -437,6 +445,7 @@ class profileActions extends sfActions {
         return sfView::NONE;
         
     }
+
     public function executeCarAvailabilitySave(sfWebRequest $request) {
         
         $return = array("error" => false);
@@ -501,6 +510,8 @@ class profileActions extends sfActions {
 
         return sfView::NONE;
     }
+
+  
 
 
     //////////////////////////////////////////////////////////////////////////////////

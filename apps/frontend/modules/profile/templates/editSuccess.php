@@ -16,13 +16,13 @@
                 <div class="regis_foto_frame">
 
                     <div id="previewmain" style="width: 100%">
-                        <?php if ($user->getPictureFile() == null): ?>
+                        <?php if ($User->getPictureFile() == null): ?>
                             <?php echo image_tag('img_registro/tmp_user_foto.png', 'size=194x204') ?>  
                         <?php else: ?>
-                            <?php if($user->getFacebookId() != null):?>
-                                <img src="http://res.cloudinary.com/arriendas-cl/image/facebook/w_194,h_204,c_fill,g_face/<?php echo $user->getFacebookId();?>.jpg">
+                            <?php if($User->getFacebookId() != null):?>
+                                <img src="http://res.cloudinary.com/arriendas-cl/image/facebook/w_194,h_204,c_fill,g_face/<?php echo $User->getFacebookId();?>.jpg">
                             <?php else: ?>
-                                <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_194,h_204,c_fill,g_face/http://www.arriendas.cl/images/users/<?php echo $user->getFileName() ?>">
+                                <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_194,h_204,c_fill,g_face/http://www.arriendas.cl/images/users/<?php echo $User->getFileName() ?>">
                             <?php endif ?>
                         <?php endif ?>
                     </div> 
@@ -34,15 +34,15 @@
                 <div class="visible-xs space-30"></div>
 
                 <div class="regis_foto_frame">
-                    <div id="previewlicence">
-                        <?php if ($user->getDriverLicenseFile() == null): ?>
-                            <?php echo image_tag('img_asegura_tu_auto/foto_padron_reverso.png', 'size=194x204') ?>
+                    <div id="previewlicense">
+                        <?php if ($User->getDriverLicenseFile() == null): ?>
+                            <?php echo image_tag('pimg_asegura_tu_auto/foto_padron_reverso.png', 'size=194x204') ?>
                         <?php else: ?>
-                            <?php echo image_tag('licence/'.$user->getLicenceFileName(), 'size=194x204') ?>
+                            <?php echo image_tag('licence/'.$User->getLicenceFileName(), 'size=194x204') ?>
                         <?php endif ?>
                     </div> 
 
-                    <a id="linklicence" href=""><i class="fa fa-edit"></i> editar</a>
+                    <a id="linklicense" href=""><i class="fa fa-edit"></i> editar</a>
                 </div>
             </div>
 
@@ -54,54 +54,54 @@
                     </div>
                 <?php endif ?>
 
-                <input class="form-control" id="firstname" name="firstname" placeholder="Nombres" value="<?php if($user->getFirstName()) echo $user->getFirstName(); ?>" type="text">                    
+                <input class="form-control" id="firstname" name="firstname" placeholder="Nombres" value="<?php if($User->getFirstName()) echo $User->getFirstName(); ?>" type="text">                    
             
-                <input class="form-control" id="lastname" name="lastname" placeholder="Apellido paterno" value="<?php if($user->getLastName()) echo $user->getLastName(); ?>" type="text">                    
+                <input class="form-control" id="lastname" name="lastname" placeholder="Apellido paterno" value="<?php if($User->getLastName()) echo $User->getLastName(); ?>" type="text">                    
             
-                <input class="form-control" id="motherLastname" name="motherLastname" placeholder="Apellido materno" value="<?php if($user->getApellidoMaterno()) echo $user->getApellidoMaterno(); ?>" type="text">                    
+                <input class="form-control" id="motherLastname" name="motherLastname" placeholder="Apellido materno" value="<?php if($User->getApellidoMaterno()) echo $User->getApellidoMaterno(); ?>" type="text">                    
 
-                <?php if ($user->getFacebookId() == null): ?>                          
-                    <input class="form-control" id="email" name="email" placeholder="Correo electrónico" value="<?php if($user->getEmail()) echo $user->getEmail() ?>" type="text">                        
+                <?php if ($User->getFacebookId() == null): ?>                          
+                    <input class="form-control" id="email" name="email" placeholder="Correo electrónico" value="<?php if($User->getEmail()) echo $User->getEmail() ?>" type="text">                        
                 <?php else: ?>
-                    <input class="form-control" id="email" name="email" placeholder="Correo electrónico" value="<?php if($user->getEmail()) echo $user->getEmail() ?>" type="hidden">
-                    <input class="form-control" id="emailAgain" name="emailAgain" placeholder="Repetir correo electrónico" value="<?php if($user->getEmail()) echo $user->getEmail() ?>" type="hidden">
+                    <input class="form-control" id="email" name="email" placeholder="Correo electrónico" value="<?php if($User->getEmail()) echo $User->getEmail() ?>" type="hidden">
+                    <input class="form-control" id="emailAgain" name="emailAgain" placeholder="Repetir correo electrónico" value="<?php if($User->getEmail()) echo $User->getEmail() ?>" type="hidden">
                 <?php endif ?>
 
                 <div class="form-inline clearfix">
                     <select class="form-control" name="foreign" id="foreign">
-                        <option value="0" <?php echo $user->getExtranjero() == 0 ? "selected" : ""; ?> >Chileno</option>
-                        <option value="1" <?php echo $user->getExtranjero() == 1 ? "selected" : ""; ?> >Extranjero</option>
+                        <option value="0" <?php echo $User->getExtranjero() == 0 ? "selected" : ""; ?> >Chileno</option>
+                        <option value="1" <?php echo $User->getExtranjero() == 1 ? "selected" : ""; ?> >Extranjero</option>
                     </select>
-                    <input class="form-control" id="run" name="run" placeholder="RUT" value="<?php if ($user->getRut()) echo $user->getRut() ?>" type="text">
+                    <input class="form-control" id="run" name="run" placeholder="RUT" value="<?php if ($User->getRut()) echo $User->getRut() ?>" type="text">
                 </div>
 
-                <input class="form-control" name="telephone" id="telephone" placeholder="Teléfono" value="<?php if ($user->getTelephone()) echo $user->getTelephone() ?>" title="Celular" type="text">
+                <input class="form-control" name="telephone" id="telephone" placeholder="Teléfono" value="<?php if ($User->getTelephone()) echo $User->getTelephone() ?>" title="Celular" type="text">
 
-                <input class="datetimepicker form-control" id="birth" name="birth" placeholder="Fecha de nacimiento" value="<?php if ($user->getBirthdate()) echo date('d-m-Y', strtotime($user->getBirthdate())) ?>" type="text">
+                <input class="datetimepicker form-control" id="birth" name="birth" placeholder="Fecha de nacimiento" value="<?php if ($User->getBirthdate()) echo date('d-m-Y', strtotime($User->getBirthdate())) ?>" type="text">
                 <span class="note">La fecha debe coincidir con la fecha de nacimiento de tu licencia.</span>
                 
-                <input class="form-control" id="address" name="address" placeholder="Dirección #111" value="<?php if ($user->getAddress()) echo $user->getAddress() ?>" type="text">
+                <input class="form-control" id="address" name="address" placeholder="Dirección #111" value="<?php if ($User->getAddress()) echo $User->getAddress() ?>" type="text">
             
-                <select class="form-control" id="commune" name="commune">
-                    <?php foreach ($comunas as $c): ?>
-                        <?php if ($c["codigoInterno"] == $userComuna): ?>
-                            <option selected value="<?php echo $c["codigoInterno"] ?>"><?php echo ucwords(strtolower($c["nombre"])) ?></option>
+                <select class="form-control" id="region" name="region">
+                    <?php foreach ($Regions as $R): ?>
+                        <?php if ($R->id == $User->getCommune()->getRegion()->id): ?>
+                            <option selected value="<?php echo $R->id ?>"><?php echo $R->name ?></option>
                         <?php else: ?>
-                            <option value="<?php echo $c["codigoInterno"] ?>"><?php echo ucwords(strtolower($c["nombre"])) ?></option>
+                            <option value="<?php echo $R->id ?>"><?php echo $R->name ?></option>
                         <?php endif ?>
                     <?php endforeach ?>
                 </select>
 
-                <select class="form-control" id="region" name="region" onChange="cargarComunas(this.value)">
-                    <?php foreach ($regiones as $r): ?>
-                        <?php if ($r["codigo"] == $userRegion): ?>
-                            <option selected value="<?php echo $r["codigo"] ?>"><?php echo $r["nombre"] ?></option>
+                <select class="form-control" id="commune" name="commune">
+                    <?php foreach ($User->getCommune()->getRegion()->getCommunes() as $C): ?>
+                        <?php if ($C->id == $User->getCommune()->id): ?>
+                            <option selected value="<?php echo $C->id ?>"><?php echo $C->name ?></option>
                         <?php else: ?>
-                            <option value="<?php echo $r["codigo"] ?>"><?php echo $r["nombre"] ?></option>
+                            <option value="<?php echo $C->id ?>"><?php echo $C->name ?></option>
                         <?php endif ?>
                     <?php endforeach ?>
                 </select>
-                
+
                 <!-- <div class="regis_term" style="display: none;">
                     <p>Terminos y Condiciones:</p>
                     <div style="width:400px; height:200px; overflow:auto; border: 1px solid #CCC;">
@@ -132,8 +132,8 @@
         <input type="submit">
     </form>
 
-    <form action="<?php echo url_for('main/uploadLicence?photo=licence&width=194&height=204&file=filelicence') ?>" enctype="multipart/form-data" id="formlicence" method="post">
-        <input id="filelicence" name="filelicence" type="file">
+    <form action="<?php echo url_for('main/uploadLicense?photo=license&width=194&height=204&file=filelicense') ?>" enctype="multipart/form-data" id="formlicense" method="post">
+        <input id="filelicense" name="filelicense" type="file">
         <input type="submit">
     </form>
     
@@ -154,7 +154,35 @@
     $(document).ready(function() {
 
         imageUpload('#formmain', '#filemain', '#previewmain','#linkmain');       
-        imageUpload('#formlicence', '#filelicence', '#previewlicence','#linklicence');
+        imageUpload('#formlicense', '#filelicense', '#previewlicense','#linklicense');
+    });
+
+    $("#region").change(function(){
+
+        var regionId = $(this).val();
+
+        $("#commune").attr("disabled", true);
+
+        if (regionId > 0) {
+            $.post("<?php echo url_for('main/getCommunes') ?>", {"regionId": regionId}, function(r){
+
+                if (r.error) {
+                    console.log(r.errorMessage);
+                } else {
+
+                    var html = "<option selected value='0'>Selecciona tu comuna</option>";
+
+                    $.each(r.communes, function(k, v){
+                        html += "<option value='"+v.id+"'>"+v.name+"</option>";
+                    });
+
+                    $("#commune").html(html);
+                }
+
+                $("#commune").removeAttr("disabled");
+
+            }, 'json');
+        }
     });
 
     function imageUpload (form, formfile, preview, link) {
@@ -204,9 +232,22 @@
         var birth          = $("#birth").val();
         var address        = $("#address").val();
         var commune        = $("#commune option:selected").val();
-        var region         = $("#region option:selected").val();
 
-        $.post("<?php echo url_for('profile/doEdit') ?>", {"firstname": firstname, "lastname": lastname, "motherLastname": motherLastname, "email": email, "emailAgain": emailAgain, "rut": rut, "foreign": foreign, "telephone": telephone, "birth": birth, "address": address, "commune": commune, "region": region}, function(r){
+        var parameters = {
+            "firstname": firstname,
+            "lastname": lastname,
+            "motherLastname": motherLastname,
+            "email": email,
+            "emailAgain": emailAgain,
+            "rut": rut,
+            "foreign": foreign,
+            "telephone": telephone,
+            "birth": birth,
+            "address": address,
+            "commune": commune
+        }
+
+        $.post("<?php echo url_for('profile/doEdit') ?>", parameters, function(r){
 
             $(".alert").removeClass("alert-a-danger");
             $(".alert").removeClass("alert-a-success");

@@ -4,6 +4,13 @@ require_once sfConfig::get('sf_lib_dir') . '/vendor/mobile-detect/Mobile_Detect.
 
 class mainActions extends sfActions {
 
+    public function executeTestKhipu (sfWebRequest $request) {
+        $this->setLayout(false);
+
+        /*$this->reserveId = 41023;*/
+        $this->transactionId = 21097;
+    }
+
     public function executeIndex (sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
@@ -322,15 +329,13 @@ class mainActions extends sfActions {
                 $q->andWhere("mo.id_otro_tipo_vehiculo = 3");
             }
 
-            if($comuna != 0){
-                if ($comuna) {
-                    $q->andWhere("co.code = ?", $comuna);
-                } else {
-                    $q->andWhere('ca.lat < ?', $neLat);
-                    $q->andWhere('ca.lat > ?', $swLat);
-                    $q->andWhere('ca.lng > ?', $swLng);
-                    $q->andWhere('ca.lng < ?', $neLng);
-                }
+            if ($comuna) {
+                $q->andWhere("co.id = ?", $comuna);
+            } else {
+                $q->andWhere('ca.lat < ?', $neLat);
+                $q->andWhere('ca.lat > ?', $swLat);
+                $q->andWhere('ca.lng > ?', $swLng);
+                $q->andWhere('ca.lng < ?', $neLng);
             }
 
             $cars = $q->execute();
@@ -639,6 +644,7 @@ class mainActions extends sfActions {
         $this->setLayout("newIndexLayout");
 
         $carId = $request->getParameter("c", null);
+
         $f     = strtotime($request->getParameter("f", null));
         $t     = strtotime($request->getParameter("t", null));
 
@@ -666,6 +672,7 @@ class mainActions extends sfActions {
             throw new Exception("Auto ya posee reserva", 1);            
         }
 
+        $this->time = Car::getTime($from, $to);
         $this->price = Car::getPrice($from, $to, $this->Car->getPricePerHour(), $this->Car->getPricePerDay(), $this->Car->getPricePerWeek(), $this->Car->getPricePerMonth());
 
         // Reviews (hay que arreglar las clase Rating)
@@ -757,7 +764,6 @@ class mainActions extends sfActions {
         $return = array("error" => false);
 
         try {
-    
             if (isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST") {
 
                 $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
@@ -786,16 +792,16 @@ class mainActions extends sfActions {
                 
                 $newImageName = time() . "-" . $userId . "." . $ext;
 
-                $path = sfConfig::get("sf_web_dir") . '/images/license/';
+                $path = sfConfig::get("sf_web_dir") . '/images/licence/';
 
                 $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
 
                 if (!move_uploaded_file($tmp, $path . $newImageName)) {
-                    throw new Exception("Problemas al subir la imagen.", 1);
+                    throw new Exception("Problemas al grabar la imagen en disco", 1);
                 }
 
                 $User = Doctrine_Core::getTable('User')->find($userId);
-                $User->setDriverLicenseFile("/images/license/".$newImageName);
+                $User->setDriverLicenseFile("/images/licence/".$newImageName);
                 $User->save();
             } else {
                 throw new Exception("No, no, no.", 1);
@@ -804,6 +810,9 @@ class mainActions extends sfActions {
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
+            if ($e->getCode() == 1) {
+                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo nuevamente más tarde";
+            }
             if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
                 Utils::reportError($e->getMessage(), "main/uploadPhoto");
             }
@@ -2911,11 +2920,10 @@ class mainActions extends sfActions {
             $User->setPictureFile("/images/users/".$actual_image_name);
             $User->save();
         } catch (Exception $e) {
-            error_log($e->getMessage());
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
             if ($e->getCode() == 1) {
-                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
+                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo nuevamente más tarde";
             }
             if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
                 Utils::reportError($e->getMessage(), "main/uploadPhoto");
@@ -2998,7 +3006,6 @@ class mainActions extends sfActions {
 
         // Se redondean los valores costo diarios de los vehículos.
         $valorHora = round(($valorHora * 0.95), -3);
-        error_log($valorHora);
         //var_dump($valorHora);
         //die($valorHora);
         
@@ -3246,7 +3253,6 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
 
                 if ($newUser) {
 		            //$this->getRequest()->setParameter('userId', $userdb->getId());
-                    error_log("Redirecciona a completeRegister");
 					$this->redirect("main/completeRegister");
 				}else{
 					if ($this->getUser()->getAttribute("lastview") != null) {

@@ -126,22 +126,18 @@ class TransactionTable extends Doctrine_Table
 		
 		try {
 		    
-		//Modificamos el metodo, de forma de agregar el correlativo del ultimo pago
-		
-			
-			
+            //Modificamos el metodo, de forma de agregar el correlativo del ultimo pago			
 	        $q = Doctrine_Query::create()
-	                ->update('Transaction t')
-	                ->set('t.metodo_id', '?', $metodo_id)
-	                ->set('t.codpagocompra', '?', $codpagocompra)
-			->set('t.completed', '?', $status)
-			->set('t.correlativo_pago','SELECT (MAX(correlativo_pago)+1) FROM Transaction')
-	                ->where('t.id = ?', $trans_id);
+                ->update('Transaction t')
+                ->set('t.metodo_id', '?', $metodo_id)
+                ->set('t.codpagocompra', '?', $codpagocompra)
+    			->set('t.completed', '?', $status)
+    			->set('t.correlativo_pago','SELECT (MAX(correlativo_pago)+1) FROM Transaction')
+                ->where('t.id = ?', $trans_id);
 	        $q->execute();
 			
 			return TRUE;
-		}
-		catch(Exception $e) { return $e; }
+		} catch(Exception $e) { return $e; }
 	}
 	
     private function calcularMontoTotal($duration = 0, $preciohora = 0, $preciodia = 0, $preciosemana = 0, $preciomes = 0) {    	
