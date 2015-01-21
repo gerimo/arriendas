@@ -2,6 +2,9 @@
 
 class carsActions extends sfActions {
 
+
+    /*Crear auto vista 1*/    
+    
     public function executeCreate(sfWebRequest $request){
           $this->setLayout("newIndexLayout");
           $this->Communes = Commune::getByRegion(false);
@@ -28,12 +31,353 @@ class carsActions extends sfActions {
             $return["errorMessage"] = $e->getMessage();
         }
 
-        error_log("T: ".count($return["models"]));
+        $this->renderText(json_encode($return));
+        
+        return sfView::NONE;
+    }
+
+    public function executeGetValidateCar(sfWebRequest $request) {
+        
+        $return = array("error" => false);
+
+        try {
+
+            $address        = $request->getPostParameter("address", null);
+            $commune        = $request->getPostParameter("commune", null);
+            $brand          = $request->getPostParameter("brand", null);
+            $model          = $request->getPostParameter("model", null);
+            $ano            = $request->getPostParameter("ano", null);
+            $door           = $request->getPostParameter("door", null);
+            $transmission   = $request->getPostParameter("transmission", null);
+            $benzine        = $request->getPostParameter("benzine", null);
+            $typeCar        = $request->getPostParameter("typeCar", null);
+            $patent         = $request->getPostParameter("patent", null);
+            $color          = $request->getPostParameter("color", null);
+
+            /*$userId_session = $this->getUser()->getAttribute("userid");
+             error_log($userId_session);*/
+
+            $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+
+            $regex = '/^[a-z]{2}[\.\ ]?[0-9]{2}[\.\ ]?[0-9]{2}|[b-d,f-h,j-l,p,r-t,v-z]{2}[\-\. ]?[b-d,f-h,j-l,p,r-t,v-z]{2}[\.\- ]?[0-9]{2}$/i';
+
+            if (!preg_match($regex, $patent)) {
+                throw new Exception("Debes ingresar una patente valida", 10);
+            }
+
+            if (is_null($address) || $address == "") {
+                throw new Exception("Debes indicar una dirección", 1);
+            }
+
+            if (is_null($commune) || $commune == "") {
+                throw new Exception("Debes indicar una comuna", 2);
+            }
+
+            if (is_null($brand) || $brand == "") {
+                throw new Exception("Debes indicar una marca", 3);
+            }
+
+            if (is_null($model) || $model == "") {
+                throw new Exception("Debes indicar un modelo", 4);
+            }
+
+            if (is_null($ano) || $ano == "") {
+                throw new Exception("Debes indicar un año", 5);
+            }
+
+            if (is_null($door) || $door == "") {
+                throw new Exception("Debes indicar el n° de puertas", 6);
+            }   
+
+            if (is_null($transmission) || $transmission == "") {
+                throw new Exception("Debes indicar una transmisión", 7);
+            }
+
+            if (is_null($benzine) || $benzine == "") {
+                throw new Exception("Debes indicar el tipo de bencina", 8);
+            }
+
+            if (is_null($typeCar) || $typeCar == "") {
+                throw new Exception("Debes indicar el tipo de vehículo", 9);
+            }
+
+            if (is_null($patent) || $patent == "") {
+                throw new Exception("Debes indicar la patente", 10);
+            }
+
+            if (is_null($color) || $color == "") {
+                throw new Exception("Debes indicar el color", 11);
+            }
+
+            if (is_null($idUsuario) || $idUsuario == "") {
+                $this->redirect('main/index');
+            }
+
+            /*if ((is_null($User) && $User->getConfirmed()) || !$User->getConfirmedFb()) {
+                $this->redirect('main/index');
+            }*/
+
+            $Car = new Car();
+
+            $Car->setAddress($address);
+            $Car->setCommuneId($commune);
+            $Car->setModelId($model);
+            $Car->setYear($ano);
+            $Car->setAddress($address);
+            $Car->setDoors($door);
+            $Car->setTransmission($transmission);
+            $Car->setTipoBencina($benzine);
+            $Car->setPatente($patent);
+            $Car->setUserId($idUsuario);
+            $Car->save();
+
+            $this->getUser()->setAttribute("carId", $Car->getId());
+
+
+            $url = $this->generateUrl('car_price');
+            error_log($Car->getId());
+            $return["url_complete"] = $url;
+
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorCode"] = $e->getCode();
+            $return["errorMessage"] = $e->getMessage();
+        }
+
+        $this->renderText(json_encode($return));
+        return sfView::NONE;
+    }
+
+    public function executeGetValidatePatent(sfWebRequest $request){
+
+        $return = array("error" => false);
+
+        try {
+
+            $patente = $request->getPostParameter("patente", null);
+
+                $result = Car::getExistPatent($patente);
+
+                error_log("T: ".count($result));
+                if (count($result) > 0) {
+                    throw new Exception("patente ya existe!", 1);
+                }
+            
+
+
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorCode"] = $e->getCode();
+            $return["errorMessage"] = $e->getMessage();
+        }
 
         $this->renderText(json_encode($return));
         
         return sfView::NONE;
     }
+
+    /*Crear auto vista 2*/
+
+    public function executePrice(sfWebRequest $request){
+            $this->setLayout("newIndexLayout");
+            $carId= sfContext::getInstance()->getUser()->getAttribute('carId');
+            $this->Car = Doctrine_Core::getTable('car')->find($carId);
+
+            /*$year = $this->Car->getYear();
+            $model = $this->Car->getModelId();
+            $this->Datos = Car::getSameCar($model, $year);*/
+    }
+
+    public function executeGetValidatePrice(sfWebRequest $request) {
+        
+        $return = array("error" => false);
+
+        try {
+
+            $priceHour        = $request->getPostParameter("priceHour", null);
+            $priceDay         = $request->getPostParameter("priceDay", null);
+            $priceWeek        = $request->getPostParameter("priceWeek", null);
+            $priceMonth       = $request->getPostParameter("priceMonth", null);
+            $carId            = $request->getPostParameter("carId", null);
+
+            if (is_null($priceHour) || $priceHour == "") {
+                throw new Exception("Debes indicar el precio hora", 1);
+            }
+
+            if (is_null($priceDay) || $priceDay == "") {
+                throw new Exception("Debes indicar el precio dia", 2);
+            }
+
+            if($priceHour < 4000){
+                throw new Exception("El valor mínimo por hora es $4.000", 3);
+            }
+
+            $Car = Doctrine_Core::getTable('car')->find($carId);
+
+            $Car->setPricePerHour($priceHour);
+            $Car->setPricePerDay($priceDay);
+            $Car->setPricePerWeek($priceWeek);
+            $Car->setPricePerMonth($priceMonth);
+            $Car->save();
+
+
+
+            $url = $this->generateUrl('car_availability');
+            $return["url_complete"] = $url;
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorCode"] = $e->getCode();
+            $return["errorMessage"] = $e->getMessage();
+        }
+
+        $this->renderText(json_encode($return));
+        return sfView::NONE;
+    }
+
+    /*Crear auto vista 3*/
+    public function executeAvailability(sfWebRequest $request){
+            $this->setLayout("newIndexLayout");
+            $carId= sfContext::getInstance()->getUser()->getAttribute('carId');
+            $this->Car = Doctrine_Core::getTable('car')->find($carId);
+
+            /*$year = $this->Car->getYear();
+            $model = $this->Car->getModelId();
+            $this->Datos = Car::getSameCar($model, $year);*/
+    }
+
+    public function executeGetValidateAvailability(sfWebRequest $request) {
+        
+        $return = array("error" => false);
+
+        try {
+
+            $availability        = $request->getPostParameter("availability", null);
+            $carId            = $request->getPostParameter("carId", null);
+
+            if (is_null($availability) || $availability == "") {
+                throw new Exception("Debes indicar la disponibilidad", 1);
+            }
+
+            $Car = Doctrine_Core::getTable('car')->find($carId);
+           
+            if($availability == 1):
+                $disponibilidadSemana = 1;
+                $disponibilidadFinde = 0;
+            elseif($availability == 2):
+                $disponibilidadSemana = 0;
+                $disponibilidadFinde = 1;
+            elseif($availability == 3):
+                $disponibilidadSemana = 1;
+                $disponibilidadFinde = 1;
+            endif;
+
+            $fechaHoy = Date("Y-m-d");
+
+            $Car->setDisponibilidadSemana($disponibilidadSemana);
+            $Car->setDisponibilidadFinde($disponibilidadFinde);
+            $Car->setFechaSubida($fechaHoy);
+
+            $Car->save();
+
+
+
+            $url = $this->generateUrl('car_photo');
+            $return["url_complete"] = $url;
+
+
+
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorCode"] = $e->getCode();
+            $return["errorMessage"] = $e->getMessage();
+        }
+
+        $this->renderText(json_encode($return));
+        return sfView::NONE;
+    }
+
+    /*Crear auto vista 4*/
+        public function executePhoto(sfWebRequest $request){
+            $this->setLayout("newIndexLayout");
+            $this->Car = Doctrine_Core::getTable('car')->find($carId);
+
+            /*$year = $this->Car->getYear();
+            $model = $this->Car->getModelId();
+            $this->Datos = Car::getSameCar($model, $year);*/
+    }
+
+    public function executeUploadPhoto(sfWebRequest $request) {
+
+        $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
+
+        if (isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST") {
+
+            $name = $_FILES[$request->getParameter('file')]['name'];
+            $size = $_FILES[$request->getParameter('file')]['size'];
+            $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
+
+            if (strlen($name)) {
+
+                list($txt, $ext) = explode(".", $name);
+
+                if (in_array($ext, $valid_formats) || 1==1) {
+
+                    if ($size < (5 * 1024 * 1024)) { // Image size max 1 MB
+                    
+                        $sizewh = getimagesize($tmp);
+                        if($sizewh[0] > 194 || $sizewh[1] > 204)
+                            //echo '<script>alert(\'La imagen no cumple con las dimensiones especificadas. Puede continuar si lo desea\')</script>';
+                    
+                        $carId= sfContext::getInstance()->getUser()->getAttribute('carId');
+                        $actual_image_name = time() . $userId . "." . $ext;
+
+                        $uploadDir = sfConfig::get("sf_web_dir");
+                        $path      = $uploadDir . '/images/cars/';
+                        $fileName  = $actual_image_name . "." . $ext;
+
+                        $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
+
+                        $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
+                        error_log("asdasd");
+
+                        if ($uploaded) {
+                            error_log("apadsasd");
+
+                            sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
+
+                            echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
+                            echo "<img src='" . image_path("cars/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";
+
+                            $Car = Doctrine_Core::getTable('car')->find($carId);
+                            $Car->setFot("/images/cars/".$actual_image_name);
+                            $Car->save();
+                            
+                        } else {
+                            error_log("[".date('Y-m-d H:i:s')."] cars/uploadPhoto - Error al subir la imagen.");
+                            echo "failed";
+                        }
+                    } else {
+                        echo "Image file size max 1 MB";
+                    }
+                } else {
+                    echo "Invalid file format..";
+                }
+            } else {
+                echo "Please select image..!";
+            }
+        }
+
+        exit;
+    }
+
+
+   
+
+
+
+
+
+
 
     ////////////////////////////////////////
 

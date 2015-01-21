@@ -1095,6 +1095,14 @@ User:
       type: date
     credito:
       type: integer
+  relations:
+    Commune:
+      class: Commune
+      local: commune_id
+      foreign: id
+      foreignAlias: Users
+      onDelete: no action
+      onUpdate: no action
   indexes:
     id_UNIQUE:
       fields: [id]

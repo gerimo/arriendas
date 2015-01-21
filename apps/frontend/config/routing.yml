@@ -1,13 +1,29 @@
 # You can find more information about this file on the symfony website:
 # http://www.symfony-project.org/reference/1_4/en/10-Routing
 
+test_khipu:
+    url: /test/khipu
+    param: { module: main, action: testKhipu }
+
 about_company:
     url: /nosotros
     param: { module: main, action: compania }
 
+car_price:
+   url: /auto/precios
+   param: { module: cars, action: price }
+
+car_photo:
+   url: /auto/foto
+   param: { module: cars, action: photo }
+
 car_create:
    url: /auto/crear
    param: { module: cars, action: create }
+
+car_availability:
+   url: /auto/disponibilidad
+   param: { module: cars, action: availability }
 
 cars:
     url: /mis-autos
@@ -34,6 +50,14 @@ logout:
     url: /logout
     param: { module: main, action: logout }
 
+messages:
+    url: /mensajes/:id
+    param: { module: messages, action: conversation }
+
+messages_inbox:
+    url: /mis-mensajes
+    param: { module: messages, action: inbox }
+
 opportunities:
     url: /oportunidades
     param: { module: opportunities, action: index }
@@ -42,9 +66,13 @@ opportunities_approve:
     url: /oportunidades/aprobar
     param: { module: opportunities, action: approve }
 
+rent_a_car_region_commune:
+    url: /arriendo-de-autos/:region/:commune
+    param: {module: main, action: index }
+
 reserve:
     url: /reserva/:c/:f/:t
-    param: { module: profile, action: reserve }
+    param: { module: main, action: reserve }
 
 reserve_approve:
     url: /reserva/aprobar
@@ -78,6 +106,10 @@ terms_and_conditions:
     url: /terminos-y-condiciones
     param: { module: main, action: terminos }
 
+transactions:
+    url: /mis-transacciones
+    param: { module: profile, action: transactions }
+
 user_register:
     url: /registro
     param: { module: main, action: register }
@@ -86,11 +118,7 @@ user_register_complete:
     url: /registro/completar
     param: { module: main, action: completeRegister }
 
-
-
-    
 # old Design
-
 
 index_by_city:
   url:    /c/:c
@@ -123,9 +151,11 @@ webpayFinal:
 khipuNotify:
     url:  /khipu/notifyPayment
     param:  { module: khipu, action: notifyPayment }
+
 khipuReturn:
     url:  /khipu/paymentInformation
     param:  { module: khipu, action: paymentInformation }
+
 khipuCancel:
     url:  /khipu/processPaymentCanceled
     param:  { module: khipu, action: processPaymentCanceled }
@@ -165,11 +195,6 @@ availabilityEmailOpen:
 facebook_login:
     url: /main/loginFacebook 
     param:  { module: main, action: loginFacebook }
-
-# URLs específicas para cada region-comuna
-region-comuna:
-    url: /arriendo-de-autos/:region/:comuna
-    param: {module: main, action: index }
 
 fbShare:
   url:    /fb/:id/

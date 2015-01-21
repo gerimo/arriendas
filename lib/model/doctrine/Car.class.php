@@ -5,6 +5,17 @@ class Car extends BaseCar {
     // $Car->getOpportunities();
     // Car::getPrice();
 
+    public function getExistPatent($patent = false){
+
+        $q = Doctrine_Core::getTable("Car")
+            ->createQuery('C')
+            ->where('C.patente = ?', $patent);
+       
+
+        return $q->execute();
+
+    }
+    
     public function getCurrentCarAvailabilityEmails() {
 
         $q = Doctrine_Core::getTable("CarAvailabilityEmail")
@@ -75,6 +86,8 @@ class Car extends BaseCar {
         return $Opportunities;
     }
 
+
+
     // Métodos estáticos
 
     public static function getPrice($from, $to, $pricePerHour, $pricePerDay, $pricePerWeek, $pricePerMonth) {
@@ -100,6 +113,22 @@ class Car extends BaseCar {
         }
         
         return floor($pricePerDay * $days + $pricePerHour * $hours);
+    }
+
+    public static function getTime($from, $to) {
+
+        $from = date("Y-m-d H:i:s", strtotime($from));
+        $to   = date("Y-m-d H:i:s", strtotime($to));
+
+        $duration = Utils::calculateDuration($from, $to);
+        $hours    = $duration % 24;
+        $days     = floor($duration) - $hours;
+
+        if ($hours >= 6) {
+            $days = $days + 24;
+            $hours = 0;
+        }
+        return floor($days + $hours);
     }
 
     public static function getReviews($id) {

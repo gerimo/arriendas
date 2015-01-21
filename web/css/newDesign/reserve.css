@@ -1,3 +1,4 @@
+
 @font-face {
     font-family: 'icomoon';
     src: url('/fonts/newDesign/reserva/icomoon.eot?ffv0vx');
@@ -210,9 +211,8 @@
     color: #c8427f;
     text-align: center;
     display: block;
-    font-size: 48px;
+    font-size: 33px;
     line-height: 55px;
-    margin: 0 0 7px;
     font-weight: 700;
 }
 .reserve-area .text {
@@ -220,7 +220,7 @@
     margin: 0 0 5px;
     text-align: center;
     display: block;
-    font-size: 23px;
+    font-size: 22px;
     line-height: 30px;
 }
 .reserve-area .text spanin { font-weight: bold; }
@@ -262,6 +262,7 @@
 
 .content{
     padding: 0;
+    margin-top: 10%;
 }
 .content h1 {
     font-size: 36px;
@@ -748,21 +749,17 @@ background: #f8f8f8;
     border-bottom: 1px solid #6d6969;
 }
 
-
-#payments .radio {
-    height: 20px;
-    margin: 0;
-    padding: 0px 0px 0 31px;
-    font-weight: 400;
+.time{
+        font-size: 22px;
+        line-height: 24px;
 }
 
-#payments .title-payment{
-    font-family: 'Roboto';
-    font-weight: normal;
-    font-size: 18px;
-    text-decoration: none;
-    color: #333;
-    
+
+#payments .radio {
+    height: 130px;
+    margin: 0;
+    padding: 10px 0px 0 31px;
+    font-weight: 400;
 }
 
 .radio label{
@@ -860,6 +857,12 @@ background: #f8f8f8;
         width: 17px;
         margin: -1px 0px 0px -31px;
     }
+
+    .time{
+        font-size: 15px;
+        line-height: 24px;
+    }
+
     .datetimepicker{
         font-size: 18px;
         line-height: 25px;

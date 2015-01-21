@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <?php //include_metas() ?>
+        <?php include_metas() ?>
         <?php //include_title() ?>
         <?php //include_stylesheets() ?>
 
@@ -75,5 +75,36 @@
         <?php echo $sf_content ?>
 
         <?php include_partial("global/footer") ?>
+
+        <?php if ($_SERVER['HTTP_HOST'] == "www.arriendas.cl"): ?>
+            
+            <!-- Google Analytics -->
+            <script type="text/javascript">
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-35908733-1', 'auto');
+                ga('send', 'pageview');
+            </script>
+
+            <!-- SnapEngage -->
+            <script type="text/javascript">           
+                (function() {
+                var se = document.createElement('script'); se.type = 'text/javascript'; se.async = true;
+                se.src = '//storage.googleapis.com/code.snapengage.com/js/42f8a363-b7b1-47f8-8148-0175fa82193c.js';
+                var done = false;
+                se.onload = se.onreadystatechange = function() {
+                if (!done&&(!this.readyState||this.readyState==='loaded'||this.readyState==='complete')) {
+                done = true;
+                /* Place your SnapEngage JS API code below */
+                /* SnapEngage.allowChatSound(true); Example JS API: Enable sounds for Visitors. */
+                }
+                };
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(se, s);
+                })();
+            </script>
+        <?php endif ?>        
     </body>
 </html>

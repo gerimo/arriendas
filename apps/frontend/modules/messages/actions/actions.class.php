@@ -33,6 +33,7 @@ class messagesActions extends sfActions {
         $myId = $this->getUser()->getAttribute("userid"); //id del que envía el mensaje
         $horaFechaActual = $this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S"));
 
+
         $claseUsuario = Doctrine_Core::getTable('user')->findOneById($myId);
 //        $looking_user_from = 1;
 //        if ($claseUsuario->getBlocked() == 1) {
@@ -93,7 +94,6 @@ class messagesActions extends sfActions {
                 $mess->setDate($horaFechaActual);
                 $mess->setConversationId($idConversacion);
                 $mess->setUserId($myId);
-                
                 /* default visibility */
                 $looking_user_from = 1;
                 $looking_user_to = 1;
@@ -147,32 +147,32 @@ class messagesActions extends sfActions {
             }
         }
 
-        //enviar mail a $idUserTo, con el contenido $mensajeNuevo
-        //obtener nombre from, nombre to, mail to
-        $userFrom = Doctrine_Core::getTable('user')->findOneById($idUserFrom);
-        $userTo = Doctrine_Core::getTable('user')->findOneById($idUserTo);
+        // //enviar mail a $idUserTo, con el contenido $mensajeNuevo
+        // //obtener nombre from, nombre to, mail to
+        // $userFrom = Doctrine_Core::getTable('user')->findOneById($idUserFrom);
+        // $userTo = Doctrine_Core::getTable('user')->findOneById($idUserTo);
 
-        require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
+        // require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
         
-        /* el mensaje se envia por mail solo a usuarios no bloqueados */
-        if ($claseUsuario->getBlocked() != 1) {
-            $mail = new Email();
-            $mail->setSubject('Mensaje nuevo');
-            $mail->setBody("<p>Hola $userTo:</p><p>$userFrom te ha enviado un mensaje:</p><p>\"$mensajeNuevo\"</p><p>Para contestarlo ingresa <a href='http://www.arriendas.cl/messages/inbox'>aquí</a></p>");
-            $mail->setTo($userTo->getEmail());
-            $mail->setFrom($userFrom->getEmail());
-            $mail->submit();
-        }
+        // /* el mensaje se envia por mail solo a usuarios no bloqueados */
+        // if ($claseUsuario->getBlocked() != 1) {
+        //     $mail = new Email();
+        //     $mail->setSubject('Mensaje nuevo');
+        //     $mail->setBody("<p>Hola $userTo:</p><p>$userFrom te ha enviado un mensaje:</p><p>\"$mensajeNuevo\"</p><p>Para contestarlo ingresa <a href='http://www.arriendas.cl/messages/inbox'>aquí</a></p>");
+        //     $mail->setTo($userTo->getEmail());
+        //     $mail->setFrom($userFrom->getEmail());
+        //     $mail->submit();
+        // }
         
 
-        //Copia de mensaje a Germán
-        $emailUserFrom = $userFrom->getEmail();
-        $emailUserTo = $userTo->getEmail();
-        $mail = new Email();
-        $mail->setSubject('Nuevo mensaje entre usuarios');
-        $mail->setBody("<p>Enviado por: <b>$userFrom</b> | Recibido por: <b>$userTo</b></p><p>\"$mensajeNuevo\"</p><br><p>Contactar a <b>$userFrom</b>: 1) Desde <a href='http://www.arriendas.cl/messages/new/id/$idUserFrom'>Arriendas.cl</a> | 2) Correo personal: $emailUserFrom</p><p>Contactar a <b>$userTo</b>: 1) Desde <a href='http://www.arriendas.cl/messages/new/id/$idUserTo'>Arriendas.cl</a> | 2) Correo personal: $emailUserTo</p>");
-        $mail->setTo('german@arriendas.cl');
-        $mail->submit();
+        // //Copia de mensaje a Germán
+        // $emailUserFrom = $userFrom->getEmail();
+        // $emailUserTo = $userTo->getEmail();
+        // $mail = new Email();
+        // $mail->setSubject('Nuevo mensaje entre usuarios');
+        // $mail->setBody("<p>Enviado por: <b>$userFrom</b> | Recibido por: <b>$userTo</b></p><p>\"$mensajeNuevo\"</p><br><p>Contactar a <b>$userFrom</b>: 1) Desde <a href='http://www.arriendas.cl/messages/new/id/$idUserFrom'>Arriendas.cl</a> | 2) Correo personal: $emailUserFrom</p><p>Contactar a <b>$userTo</b>: 1) Desde <a href='http://www.arriendas.cl/messages/new/id/$idUserTo'>Arriendas.cl</a> | 2) Correo personal: $emailUserTo</p>");
+        // $mail->setTo('german@arriendas.cl');
+        // $mail->submit();
 
 
 
@@ -189,21 +189,29 @@ class messagesActions extends sfActions {
             }
         }
 
+        echo   "<div class='row'>
+                    <div class='leftMessage hidden-xs col-md-offset-1  col-xs-1 col-sm-1 col-md-1'>
+                        <div class='imageProfile hidden-sm'>
+                            <div class='msg_user_frame'><img src=" . $urlFoto . " class='imgFoto' width='74px' height='74px'></div>
+                        </div>
 
-        echo "<div class='newMensaje'>
-            <div class='usuarioIzq'>
-              <div class='msg_user_frame'><img src=" . $urlFoto . " class='imgFoto'></div>
-              <div class='msg_user_nombre'>Tú</div>
-            </div>
-            <div class='puntaBlanca'></div> 
-            <div class='marcoTextoIzq'>
-              <div class='texto'>
-                <div class='msg'><p>" . $mensajeNuevo . "</p></div>
-                <div class='horaFecha'>" . $horaFechaActual . "</div>
-              </div>
-            </div>
-          </div>";
+                        <div class='nameProfile'>
+                            Tú
+                        </div>
+                    </div>
+
+                    <div class='marcoTextoIzq col-xs-10 col-sm-8 col-md-8'>
+                        <div class='texto'>
+                            <div class='msg'><p>" . $mensajeNuevo . "</p></div>
+                            <div class='horaFecha'>" . $horaFechaActual . "</div>
+                        </div>
+                    </div>
+                </div>
+                <div class='hidden-xs space-30'></div>
+                <div class='visible-xs space-20'></div>";
+
         die();
+   
     }
 
     public function verificarUsuarioFrom($idConversacion) {
@@ -347,11 +355,37 @@ class messagesActions extends sfActions {
         $this->redirect('messages/inbox');
     }
 
-    public function executeInbox() {
+    public function executeInbox(sfWebRequest $request) {
+        
         $this->setLayout("newIndexLayout");
+
+        // extrae los parametros de mensajes
+        /*$this->offset = $request->getParameter("offset", null);
+        $this->limit = $request->getParameter("limit", null);
+
+        if($this->o==''||$this->o==0){
+            $this->o = 0;
+        }
+        if($this->l==''||$this->l==0){
+            $this->l = 5;
+        }*/
         
         $this->user_id = $this->getUser()->getAttribute("userid");
+
         $ListaDeConversaciones = Doctrine_Core::getTable("Conversation")->findConversation($this->getUser()->getAttribute("userid"));
+        
+        // query que recupera los datos de conversation
+        /*$q = Doctrine_Core::getTable("Conversation")
+        ->createQuery('c')
+        ->where('c.user_from_id = ?', $this->getUser()->getAttribute("userid"))
+        ->orWhere('c.user_to_id = ?', $this->getUser()->getAttribute("userid"))
+        ->limit($this->limit)
+        ->offset($this->offset)
+        ->addOrderBy('start DESC');
+
+        $ListaDeConversaciones = $q->execute();
+        error_log("~~~~~~~~~~~~~~~~~~~~".count($ListaDeConversaciones));*/
+
 
         $MisConversaciones = $this->obtenerMisConversaciones();
 
@@ -364,6 +398,7 @@ class messagesActions extends sfActions {
             }
         }
         $MisConversacionesAux = $MisConversaciones;
+
         if ($MisConversacionesAux) {
             //ordenando los utimos mensajes por fecha
             $conversacionesAux = array(); //declarando el array como vacio
@@ -431,42 +466,60 @@ class messagesActions extends sfActions {
         $idConversacion = $request->getParameter("id");
         
         $objetoConversacion = Doctrine_Core::getTable("Conversation")->findConversationWithId($this->getUser()->getAttribute("userid"), $idConversacion);
-        
-        // muestro precargado último mensaje enviado 
-        // (sólo para arrendatarios y sólo si el último mensaje no pertenece a la conversación actual)
-        $user = Doctrine_Core::getTable('user')->find($this->user_id);
-        $message = Doctrine_Core::getTable("Message")->lastMessageSentByUserId($this->user_id);
-        if(!$user->isPropietario()
-                && $message && !in_array($message->getId(), $objetoConversacion[0]->getMessage()->getPrimaryKeys())){            
-            $this->comentarios = $message->getBody();
-        }else{
-            $this->comentarios = $request->getParameter("comentarios");
-        }        
 
-        if ($idConversacion) {//si la id existe
-            $this->setearReceived_aTodosLosMensajes($idConversacion);
-
-            $MisConversaciones = $this->obtenerMisConversaciones();
-            $cantidadMisConversaciones = count($MisConversaciones);
-            for ($i = 0; $i < $cantidadMisConversaciones; $i++) {
-                if ($MisConversaciones[$i]['idConversacion'] == $idConversacion) {
-                    $conversacion_conSusMensajes = $MisConversaciones[$i];
+        // verifica si la converzacion incluye al usuario actual
+        $isPartOfThisConversation = false;
+        for ($i = 0; $i < count($objetoConversacion); $i++) {
+            if($objetoConversacion[$i]->getUserToId() == $this->user_id || $objetoConversacion[$i]->getUserFromId() == $this->user_id){
+                    $isPartOfThisConversation = true;
+                    break;
                 }
+        }
+
+        if($isPartOfThisConversation){
+
+            // muestro precargado último mensaje enviado 
+            // (sólo para arrendatarios y sólo si el último mensaje no pertenece a la conversación actual)
+            $user = Doctrine_Core::getTable('user')->find($this->user_id);
+
+            $message = Doctrine_Core::getTable("Message")->lastMessageSentByUserId($this->user_id);
+
+            if(!$user->isPropietario()
+                    && $message && !in_array($message->getId(), $objetoConversacion[0]->getMessage()->getPrimaryKeys())){            
+                $this->comentarios = $message->getBody();
+            }else{
+                $this->comentarios = $request->getParameter("comentarios");
+            }        
+
+            if ($idConversacion) {//si la id existe
+                $this->setearReceived_aTodosLosMensajes($idConversacion);
+
+                $MisConversaciones = $this->obtenerMisConversaciones();
+                $cantidadMisConversaciones = count($MisConversaciones);
+                for ($i = 0; $i < $cantidadMisConversaciones; $i++) {
+                    if ($MisConversaciones[$i]['idConversacion'] == $idConversacion) {
+                        $conversacion_conSusMensajes = $MisConversaciones[$i];
+                    }
+                }
+
+                $conversacionesOrdDes = array();
+                $conversacionesOrdDes['idConversacion'] = $conversacion_conSusMensajes['idConversacion'];
+                $conversacionesOrdDes['idUser_from'] = $conversacion_conSusMensajes['idUser_from'];
+                $conversacionesOrdDes['idUser_to'] = $conversacion_conSusMensajes['idUser_to'];
+                $cant = count($conversacion_conSusMensajes) - 3;
+                for ($y = 0; $y < $cant; $y++) { //Ordeno del mas actual, al mas antiguo
+                    $conversacionesOrdDes[$y] = $conversacion_conSusMensajes[$cant - 1 - $y];
+                }
+                $this->objetoConversacion = $objetoConversacion;
+                $this->conversacion = $conversacionesOrdDes;
+            } else {//si no existe la id
+                echo "Error al intentar mostrar conversacion.";
+                //verificar efectivamente si la id existe
+                //id no encontrada, crear una nueva
             }
-            $conversacionesOrdDes = array();
-            $conversacionesOrdDes['idConversacion'] = $conversacion_conSusMensajes['idConversacion'];
-            $conversacionesOrdDes['idUser_from'] = $conversacion_conSusMensajes['idUser_from'];
-            $conversacionesOrdDes['idUser_to'] = $conversacion_conSusMensajes['idUser_to'];
-            $cant = count($conversacion_conSusMensajes) - 3;
-            for ($y = 0; $y < $cant; $y++) { //Ordeno del mas actual, al mas antiguo
-                $conversacionesOrdDes[$y] = $conversacion_conSusMensajes[$cant - 1 - $y];
-            }
-            $this->objetoConversacion = $objetoConversacion;
-            $this->conversacion = $conversacionesOrdDes;
-        } else {//si no existe la id
-            echo "Error al intentar mostrar conversacion.";
-            //verificar efectivamente si la id existe
-            //id no encontrada, crear una nueva
+
+        } else {
+            $this->redirect('main/index');
         }
     }
 

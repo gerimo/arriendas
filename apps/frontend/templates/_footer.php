@@ -1,3 +1,13 @@
+<?php
+    if (strtotime(date("H:i")) > strtotime("19:00") || strtotime(date("H:i")) < strtotime("09:00")) {
+        $telefono = "tel:0223333714";
+        $telefonoText = "(02) 2333 3714"; 
+    } else {
+        $telefono = "tel:0226402900";
+        $telefonoText = "(02) 2640 2900";
+    }
+?>
+
 <footer id="footer">
     <div class="row">
 
@@ -6,6 +16,7 @@
             <ul>
                 <?php if(sfContext::getInstance()->getUser()->isAuthenticated()): ?>
                     <li><a href="<?php echo url_for('profile/edit') ?>" title="Edita tu perfil">Mi Perfil</a></li>
+                    <li><a href="<?php echo url_for('profile/changePassword') ?>" title="Cambia tu contraseña">Seguridad</a></li>
                     <li><a href="<?php echo url_for('main/logout') ?>" title="Salir">Salir</a></li>
                 <?php else: ?>
                     <li><a href="<?php echo url_for('main/register') ?>" title="Regístrate">Regístrate</a></li>
@@ -17,10 +28,10 @@
         <div class="hidden-xs col-sm-3 col-md-3">
             <h1>Arriendo de autos en Santiago</h1>
             <ul>
-                <li><a href="<?php echo url_for('arriendo-de-autos/region-metropolitana').'/providencia' ?>">Rent a Car Providencia</a></li>
-                <li><a href="<?php echo url_for('arriendo-de-autos/region-metropolitana').'/la-florida' ?>">Rent a Car La Florida</a></li>
-                <li><a href="<?php echo url_for('arriendo-de-autos/region-metropolitana').'/nunoa' ?>">Rent a Car Ñuñoa</a></li>
-                <li><a href="<?php echo url_for('arriendo-de-autos/region-metropolitana').'/santiago-centro' ?>">Rent a Car Santiago Centro</a></li>
+                <li><a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'providencia'), true) ?>">Rent a Car Providencia</a></li>
+                <li><a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'la-florida'), true) ?>">Rent a Car La Florida</a></li>
+                <li><a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'nunoa'), true) ?>">Rent a Car Ñuñoa</a></li>
+                <li><a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'santiago-centro'), true) ?>">Rent a Car Santiago Centro</a></li>
             </ul>
         </div>
 
@@ -43,16 +54,6 @@
             </ul>
         </div>
     </div>
-    
-    <?php if(date("H:i") > "19:00" || date("H:i") < "09:00"):
-            $telefono = "tel:0223333714";
-            $telefonoText = "(02) 2333-3714"; 
-          else:
-            $telefono = "tel:0226402900";
-            $telefonoText = "(02) 2 640 29 00";
-          endif;
-    ?>
-               
     
     <div class="row">
         <div class="hidden-xs col-sm-12 col-md-12 text-center" id="address"> 

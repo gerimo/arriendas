@@ -1151,11 +1151,8 @@ p{
         $comuna_due = ComunasTable::getInstance()->findOneByCodigoInterno($duenio->getComuna());
         $datosContrato->comuna_duenio = $comuna_due->getNombre();
 
-
-
         //Cargamos el texto del contrato desde el archivo fuente
         $contrato = file_get_contents(sfConfig::get("sf_app_template_dir") . "/pagare.html");
-
 
         //Reemplazamos los datos por la informacion del contrato
         $contrato = str_replace("{name_region_duenio}", $datosContrato->name_region_duenio, $contrato);
@@ -1176,7 +1173,8 @@ p{
         $contrato = str_replace("{fecha_arriendo_anio}", utf8_decode($datosContrato->fecha_arriendo_anio), $contrato);
         $contrato = str_replace("{duracion_arriendo}", utf8_decode($datosContrato->duracion_arriendo), $contrato);
         $contrato = str_replace("{inicio}", $datosContrato->fecha_arriendo . " a las " . $datosContrato->hora_arriendo, $contrato);
-        $contrato = str_replace("{precio}", $datosContrato->precio_arriendo, $contrato);
+        /*$contrato = str_replace("{precio}", $datosContrato->precio_arriendo, $contrato);*/
+        $contrato = str_replace("{precio}", "__________", $contrato);
 
         $pdf = new \mPDF();
         $pdf->WriteHTML(utf8_encode($contrato));

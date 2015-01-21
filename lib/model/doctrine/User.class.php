@@ -889,17 +889,15 @@ class User extends BaseUser {
     }
 
     public function getTransaccionesWithOwner() {
-        $idUser = $this->getId();
+
         $q = Doctrine_Query::create()
-                ->from('Transaction tr, tr.Reserve')
-                ->leftJoin("tr.Reserve re")
-                ->leftJoin("re.Car ca")
-                ->where('re.car_id = ca.id')
-                ->andWhere("ca.user_id=$idUser");
-        //echo $q;
-        //die();
-        $transacciones = $q->execute();
-        return $transacciones;
+            ->from('Transaction tr, tr.Reserve')
+            ->leftJoin("tr.Reserve re")
+            ->leftJoin("re.Car ca")
+            ->where('re.car_id = ca.id')
+            ->andWhere("ca.user_id = ?", $this->id);
+
+        return $q->execute();
     }
 
     //TODO

@@ -9,47 +9,50 @@
             
             <div class="encabezado">
                 <h1>MIS AUTOS</h1>
-            </div>         
-
+            </div>  
+            
             <div class="col-md-offset-8 col-md-4">
                     <a class="col-md-12  btn-block btn-a-primary" href="<?php echo url_for('profile/addCar') ?>">¡Sube un auto!</a>
-            </div>      
+            </div>
+
                        
             <div class="row">
                 <?php foreach ($cars as $c): ?>
                     <br/><br/>
                     
-                    <div class="misautos_user_item plomo" id="item_<?php echo $c->getId() ?>">
+                    <div class="misautos_user_item grey" id="item_<?php echo $c->getId() ?>">
                                             
-                        <div class="row plomo">
+                        <div class="row grey">
                             <div class="col-md-3 ">
                                 <a href="<?php echo url_for('profile/addCar?id=' . $c->getId() )?>" >
                                     <?php if($c->getPhotoS3() == 1): ?>
                                         <?php echo image_tag($c->getFoto(),array("width"=>"84px","height"=>"84px")) ?>
                                     <?php else: ?>
                                         <?php $base_url = $sf_request->getUriPrefix().$sf_request->getRelativeUrlRoot() ?>
-                                        <?php echo "<img class='foto' style='margin-top: 7px'src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_84,h_84,c_fill,g_center/".$base_url."/uploads/cars/".$c->getFoto()."'/>" ?>
+                                        <?php echo "<img class='foto' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_84,h_84,c_fill,g_center/".$base_url."/uploads/cars/".$c->getFoto()."'/>" ?>
                                     <?php endif; ?>
                                 </a>
                             </div>
                             
-                            <div class="col-offset-md-3 col-md-3 misautos_marca">
-                                <a href="<?php echo url_for('profile/addCar?id=' . $c->getId() )?>" ><span><?=$c->getModel()->getBrand()->getName()?> <?=$c->getModel()->getName()?></span></a>
-                            </div>
+                            <div class="col-offset-md-2 col-md-5 ">
+                                <a class= "misautos_marca" href="<?php echo url_for('profile/addCar?id=' . $c->getId() )?>" ><span><?=$c->getModel()->getBrand()->getName()?> <?=$c->getModel()->getName()?></span></a>
+                           </div>
                             
-                            <div class="col-md-offset-1 col-md-1" id="car_<?php echo $c->getId() ?>">
+                            
+                            <div class="col-md-1" id="car_<?php echo $c->getId() ?>">
                                 <div class="imgActivo col-md-offset-11 col-md-1" style="margin-top:12px">
                                         <div class="circuloActivo" style="display: <?= ($c->getActivo() == 1)?"block":"none" ?>"></div>
                                         <div class="circuloInactivo" style="display: <?= ($c->getActivo() == 0)?"block":"none" ?>" ></div>
                                 </div>
                             </div>
-                            <div class="col-md-4">    
+                            <div class="col-md-3">    
                                 <select class="form-control selectorActivo" >
                                     <option  value="1" <?= ($c->getActivo() == 1)?"selected":"" ?>>Activo</option>
                                     <option  value="0" <?= ($c->getActivo() == 0)?"selected":"" ?>>Inactivo</option>
                                 </select>
                             </div>     
                         </div>
+                        
 
                         <!-- Esto es para mostrar el form desde - hasta-->
                         <div class="row">                                   
@@ -105,9 +108,9 @@
                                         <?php endforeach; ?>
                                     </div><!--fin availabilityOfCars-->
                                 <?php else: ?>                                    
-                                    <div class="disabledOfCars" id="dis_unt_<?php echo $c->getId() ?>" >
+                                    <div class="disabledOfCars" id="dis_unt_<?php echo $c->getId() ?>" style="display: <?= ($c->getActivo() == 0)?"block":"none" ?>">
                                         <div clas="DOC-container" data-car-id="<?php echo $c->getId() ?>">
-                                            <div class="col-md-offset-8 col-md-4">
+                                            <div class="col-md-offset-9 col-md-3">
                                                 <div class='date-group'>
                                                     <span>Inactivo Hasta:</span>
                                                     <div class="input-group date ">

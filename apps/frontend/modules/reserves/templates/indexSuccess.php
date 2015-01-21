@@ -10,7 +10,7 @@
 
             <?php if (count($PaidReserves) > 0): ?>
 
-                <h1>Reservas pagadas <small>(pendientes de tu aprobación) (<?php echo count($PaidReserves) ?>)</small></h1>
+                <h1>Reservas pagadas <small>(pendientes de tu aprobación)</small></h1>
 
                 <?php foreach ($PaidReserves as $PaidReserve): ?>
                     <div class="row paid-reserve-container">
@@ -196,7 +196,7 @@
         button.attr("disabled", true);
 
         $.post("<?php echo url_for('reserve_approve') ?>", {"reserveId": reserveId}, function(r){
-            
+            console.log(r);
             if (r.error) {
                 $("#dialog-alert p").html(r.errorMessage);
                 $("#dialog-alert").attr("title", "Problemas al aprobar la reserva");
@@ -293,7 +293,41 @@
         $("#extendForm").submit();
     });
 
-    $('.datetimepicker').datetimepicker({
+    $("#extendTo").datetimepicker({
+        allowTimes:[
+        "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
+        "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
+        "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
+        "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+        "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+        "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
+        "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
+        "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
+        ],
+        dayOfWeekStart: 1,
+        minDate: "<?php echo date('d-m-Y') ?>",
+        lang:'es',
+        i18n:{
+            es:{
+                months:[
+                'Enero','Febrero','Marzo','Abril',
+                'Mayo','Junio','Julio','Agosto',
+                'Septiembre','Octubre','Noviembre','Diciembre'
+                ],
+                dayOfWeek:["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"]
+            }
+        },
+        format:'d-m-Y H:i',
+        onSelectDate: function() {
+            getExtendPrice();
+            $("#extendTo").val(rounMinutos($("#extendTo").val()));  
+        },
+        onSelectTime: function() {
+            getExtendPrice();
+        }
+    });
+
+    $("#extendFrom").datetimepicker({
         allowTimes:[
         "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
         "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
@@ -374,4 +408,30 @@
 
         }, "json");
     }
+
+function rounMinutos(valor){
+        var fechaH = valor
+
+        var split = fechaH.split(" ");
+        var f = split[0];
+        var h = split[1];
+
+        var split3 = h.split(":");
+        var hora = split3[0];
+        var min = split3[1];
+
+        if(min > "14" && min < "45"){
+            min = "30";
+        }else if(min > "45"){
+            min = "00";
+            var a = parseInt(hora)+1;
+            hora = a.toString();
+        }else{
+            min = "00";
+        }
+
+        fecha = f+" "+hora+":"+min;
+
+        return fecha;
+    }    
 </script>

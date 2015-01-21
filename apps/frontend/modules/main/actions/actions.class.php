@@ -4,14 +4,21 @@ require_once sfConfig::get('sf_lib_dir') . '/vendor/mobile-detect/Mobile_Detect.
 
 class mainActions extends sfActions {
 
+    public function executeTestKhipu (sfWebRequest $request) {
+        $this->setLayout(false);
+
+        /*$this->reserveId = 41023;*/
+        $this->transactionId = 21097;
+    }
+
     public function executeIndex (sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
 
         $this->hasCommune = false;
 
-        if ($request->hasParameter('region','comuna')){
-            $communeSlug = $request->getParameter('comuna');
+        if ($request->hasParameter('region','commune')){
+            $communeSlug = $request->getParameter('commune');
             $this->hasCommune = Doctrine_Core::getTable('Commune')->findOneBySlug($communeSlug)->id;
         }
 
@@ -228,9 +235,7 @@ class mainActions extends sfActions {
         return sfView::NONE;
     }
 
-    public function executeGetCars(sfWebRequest $request) {
-
-        
+    public function executeGetCars(sfWebRequest $request) {        
 
         $return = array(
             "error" => false,
@@ -243,6 +248,7 @@ class mainActions extends sfActions {
         $swLng  = $request->getPostParameter('swLng', null);
         $neLat  = $request->getPostParameter('neLat', null);
         $neLng  = $request->getPostParameter('neLng', null);
+
         $map_center_lat  = $request->getPostParameter('map_center_lat', null);
         $map_center_lng  = $request->getPostParameter('map_center_lng', null);
 
@@ -303,15 +309,13 @@ class mainActions extends sfActions {
                 /*->orderBy('carrank ASC')*/
                 /*->addOrderBy('IF(ca.velocidad_contesta_pedidos = 0, 1440, ca.velocidad_contesta_pedidos)  ASC')*/
                 ->orderBy('ca.price_per_day ASC');
-                $detect = new Mobile_Detect;
-                if($detect->isMobile()){
-                    $q->limit(5);
-                } else {
-                    $q->limit(33);
-                }
-                
-
-                
+            
+            $detect = new Mobile_Detect;
+            if ($detect->isMobile()) {
+                $q->limit(5);
+            } else {
+                $q->limit(33);
+            }                
 
             if ($automatic) {
                 $q->andWhere("ca.transmission = 1");
@@ -326,7 +330,7 @@ class mainActions extends sfActions {
             }
 
             if ($comuna) {
-                $q->andWhere("co.code = ?", $comuna);
+                $q->andWhere("co.id = ?", $comuna);
             } else {
                 $q->andWhere('ca.lat < ?', $neLat);
                 $q->andWhere('ca.lat > ?', $swLat);
@@ -418,7 +422,7 @@ class mainActions extends sfActions {
 
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
-            /*Utils::reportError($e->getMessage(), "profile/executeGetCars");*/
+            Utils::reportError($e->getMessage(), "profile/executeGetCars");
         }
 
         $this->renderText(json_encode($return));
@@ -451,14 +455,6 @@ class mainActions extends sfActions {
         return sfView::NONE;
     }
 
-    public function executeGetComunas(sfWebRequest $request) {
-        $this->setLayout(false);
-        $idRegion = $request->getParameter('idRegion');
-        if ($idRegion) {
-            $this->comunas = Doctrine::getTable('comunas')->findByPadre($idRegion);
-        }
-    }
-
     public function executeLogin (sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
@@ -470,11 +466,6 @@ class mainActions extends sfActions {
         
         $referer = $this->getContext()->getActionStack()->getSize() > 1 ? $request->getUri() : $request->getReferer();
         $this->getUser()->setAttribute("referer", $referer);
-
-        /*sfContext::getInstance()->getLogger()->info($this->getRequest()->getUri());
-        if (!isset($_SESSION['login_back_url'])) {
-            $_SESSION['login_back_url'] = $this->getRequest()->getUri();
-        }*/
     }
 
     public function executeLoginDo (sfWebRequest $request) {
@@ -627,26 +618,7 @@ class mainActions extends sfActions {
         if ($this->getUser()->isAuthenticated()) {
 
             $this->getUser()->setAuthenticated(false);
-            $this->getUser()->getAttributeHolder()->clear(); //probando
-            /*$this->getUser()->setAttribute("logged", false);
-            $this->getUser()->setAttribute("loggedFb", null);
-            $this->getUser()->setAttribute("fb", false);
-            $this->getUser()->setAttribute("picture_url", "");
-            $this->getUser()->setAttribute("name", "");
-            $this->getUser()->shutdown();
-            $this->getUser()->setAttribute('lastview', null);
-            $this->getUser()->setAttribute('geolocalizacion', null);
-            $this->getUser()->setAttribute('userid', null);
-            $this->getUser()->setAttribute('propietario', null);
-            $this->getUser()->setAttribute('userid',null);
-            $this->getUser()->setAttribute('email',null);
-            $this->getUser()->setAttribute('fecha_registro',null);
-            $this->getUser()->setAttribute('telephone',null);
-            $this->getUser()->setAttribute('comuna',null);
-            $this->getUser()->setAttribute('region',null);*/
-
-            /*unset($_SESSION["login_back_url"]);
-            error_log("-- [logout] ".$_SESSION["login_back_url"]);*/
+            $this->getUser()->getAttributeHolder()->clear();
         }
 
         return $this->redirect('homepage');
@@ -667,12 +639,131 @@ class mainActions extends sfActions {
         }
     }
 
+    public function executeReserve (sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+
+        $carId = $request->getParameter("c", null);
+
+        $f     = strtotime($request->getParameter("f", null));
+        $t     = strtotime($request->getParameter("t", null));
+
+        $userId = $this->getUser()->getAttribute("userid");
+
+        if (is_null($carId)) {
+            throw new Exception("Auto no encontrado", 1);
+        }
+
+        if ($t <= $f) {
+            throw new Exception("No, no, no", 1);
+        }
+
+        $from = date("Y-m-d H:i", $f);
+        $this->from = date("Y-m-d H:i", $f);
+        $this->fromHuman = date("D d/m/Y H:i", $f);
+        $to = date("Y-m-d H:i", $t);
+        $this->to = date("Y-m-d H:i", $t);
+        $this->toHuman = date("D d/m/Y H:i", $t);
+
+        $this->User = Doctrine_Core::getTable('User')->find($userId);
+        $this->Car = Doctrine_Core::getTable('Car')->find($carId);
+
+        if ($this->Car->hasReserve($from, $to)) {
+            throw new Exception("Auto ya posee reserva", 1);            
+        }
+
+        $this->time = Car::getTime($from, $to);
+        $this->price = Car::getPrice($from, $to, $this->Car->getPricePerHour(), $this->Car->getPricePerDay(), $this->Car->getPricePerWeek(), $this->Car->getPricePerMonth());
+
+        // Reviews (hay que arreglar las clase Rating)
+        $this->reviews = array();
+        $Ratings = Doctrine_Core::getTable('Rating')->findByIdOwner($this->Car->getUserId());
+
+        foreach ($Ratings as $i => $Rating) {
+            $opinion = $Rating->getOpinionAboutOwner();
+            if ($opinion) {
+                $this->reviews[$i]["opinion"] = $Rating->getOpinionAboutOwner();
+                $U = Doctrine_Core::getTable('User')->find($Rating->getIdRenter());
+                $this->reviews[$i]["picture"] = $U->getPictureFile();
+                $this->reviews[$i]["star"] = $Rating->getOpCleaningAboutOwner();
+             }
+        }
+
+        // Características
+        $this->passengers = false;
+        if ($this->Car->getModel()->getIdOtroTipoVehiculo() >= 2) {
+            $this->passengers = true;
+        }
+
+        $this->diesel = false;
+        if ($this->Car->getTipobencina() == "Diesel") {
+            $this->diesel = true;
+        }
+
+        $this->airCondition = false;
+        if (explode(",", $this->Car->getAccesoriosSeguro())[0] == "aireAcondicionado") {
+            $this->airCondition = true;
+        }
+
+        $this->transmission = false;
+        if ($this->Car->getTransmission()) {
+            $this->transmission = true;
+        }
+
+        $userId = $this->getUser()->getAttribute("userid");
+        $User = Doctrine_Core::getTable('User')->find($userId);
+
+        $this->license            = $User->getDriverLicenseFile();
+        $this->isDebtor           = sfContext::getInstance()->getUser()->getAttribute('moroso');
+        $this->amountWarranty     = sfConfig::get("app_monto_garantia");
+        $this->amountWarrantyFree = sfConfig::get("app_monto_garantia_por_dia");
+
+        //imagenes
+        $arrayImagenes = null;
+        $i = 0;
+        if ($this->Car->getSeguroFotoFrente() != null && $this->Car->getSeguroFotoFrente() != "") {
+            $rutaFotoFrente = $this->Car->getSeguroFotoFrente();
+            $arrayImagenes[$i] = $rutaFotoFrente;
+            $i++;
+        }
+        if ($this->Car->getSeguroFotoCostadoDerecho() != null && $this->Car->getSeguroFotoCostadoDerecho() != "") {
+            $rutaFotoCostadoDerecho = $this->Car->getSeguroFotoCostadoDerecho();
+            $arrayImagenes[$i] = $rutaFotoCostadoDerecho;
+            $i++;
+        }
+        if (strpos($this->Car->getSeguroFotoCostadoIzquierdo(), "http") != -1 && $this->Car->getSeguroFotoCostadoIzquierdo() != "") {
+            $rutaFotoCostadoIzquierdo = $this->Car->getSeguroFotoCostadoIzquierdo();
+            $arrayImagenes[$i] = $rutaFotoCostadoIzquierdo;
+            $i++;
+        }
+        if (strpos($this->Car->getSeguroFotoTraseroDerecho(), "http") != -1 && $this->Car->getSeguroFotoTraseroDerecho() != "") {
+            $rutaFotoTrasera = $this->Car->getSeguroFotoTraseroDerecho();
+            $arrayImagenes[$i] = $rutaFotoTrasera;
+            $i++;
+        }
+        if (strpos($this->Car->getTablero(), "http") != -1 && $this->Car->getTablero() != "") {
+            $rutaFotoPanel = $this->Car->getTablero();
+            $arrayImagenes[$i] = $rutaFotoPanel;
+            $i++;
+        }
+        if (strpos($this->Car->getAccesorio1(), "http") != -1 && $this->Car->getAccesorio1() != "") {
+            $rutaFotoAccesorios1 = $this->Car->getAccesorio1();
+            $arrayImagenes[$i] = $rutaFotoAccesorios1;
+            $i++;
+        }
+        if (strpos($this->Car->getAccesorio2(), "http") != -1 && $this->Car->getAccesorio2() != "") {
+            $rutaFotoAccesorios2 = $this->Car->getAccesorio2();
+            $arrayImagenes[$i] = $rutaFotoAccesorios2;
+        }
+
+        $this->arrayFotos = $arrayImagenes;
+    }
+
     public function executeUploadLicense (sfWebRequest $request) {
     
         $return = array("error" => false);
 
         try {
-    
             if (isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST") {
 
                 $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
@@ -682,43 +773,49 @@ class mainActions extends sfActions {
                 $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
 
                 list($txt, $ext) = explode(".", $name);
+
+                $ext = strtolower($ext);
                 
                 if (strlen($name) == 0) {
-                    throw new Exception("Por favor, selecciona una imagen.", 1);   
+                    throw new Exception("Por favor, selecciona una imagen", 2);   
                 }
                     
                 if (!in_array($ext, $valid_formats)) {
-                    throw new Exception("Formato de la imagen no permitido.", 1);
+                    throw new Exception("Formato de la imagen no permitido", 2);
                 }
 
                 if ($size >= (5 * 1024 * 1024)) { // Image size max 1 MB
-                    throw new Exception("La imagen excede el máximo de 1 MB permitido.", 1);
+                    throw new Exception("La imagen excede el máximo permitido (1 MB)", 2);
                 }
                     
                 $userId = $this->getUser()->getAttribute("userid");
                 
                 $newImageName = time() . "-" . $userId . "." . $ext;
 
-                $path = sfConfig::get("sf_web_dir") . '/images/license/';
+                $path = sfConfig::get("sf_web_dir") . '/images/licence/';
 
                 $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
 
                 if (!move_uploaded_file($tmp, $path . $newImageName)) {
-                    throw new Exception("Problemas al subir la imagen.", 1);
+                    throw new Exception("Problemas al grabar la imagen en disco", 1);
                 }
 
                 $User = Doctrine_Core::getTable('User')->find($userId);
-                $User->setDriverLicenseFile("/images/license/".$newImageName);
+                $User->setDriverLicenseFile("/images/licence/".$newImageName);
                 $User->save();
             } else {
                 throw new Exception("No, no, no.", 1);
             }
     
         } catch (Exception $e) {
-
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
-            /*Utils::reportError($e->getMessage(), "profile/executeGetCars");*/
+            if ($e->getCode() == 1) {
+                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo nuevamente más tarde";
+            }
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
+                Utils::reportError($e->getMessage(), "main/uploadPhoto");
+            }
         }
 
         $this->renderText(json_encode($return));
@@ -869,18 +966,6 @@ class mainActions extends sfActions {
     	$this->forward ('main', 'index');
     }
 
-
-    public function executePruebaImagen(sfWebRequest $request){
-
-    }
-
-
-
-
-    public function executeSubirImagenS3(sfWebRequest $request){
-
-    }
-
     public function executeSubirImagenS3Ajax(sfWebRequest $request){
 
         // Incluimos la clase de Amazon S3
@@ -921,17 +1006,12 @@ class mainActions extends sfActions {
         }
 
         die();
-
     }
 
     public function executeFechaServidor(sfWebRequest $request){
         $fechaActual = strftime("%Y-%m-%d %H:%M:%S");
         echo $fechaActual;
         die();
-    }
-
-    public function executeComparaPrecios(sfWebRequest $request){
-        
     }
 
     public function executeMailCalificaciones(sfWebRequest $request){
@@ -960,7 +1040,6 @@ class mainActions extends sfActions {
 
         return $this->renderText("Enviados ".$cont." mail");
     }
-     
 
     public function executeVerificacionSeguro(sfWebRequest $request) {
         //Verificamos el estado de la tabla Security Tokens
@@ -993,8 +1072,6 @@ class mainActions extends sfActions {
         $this->getResponse()->setContentType('image/png');
         return $new->output('png');
     }
-
-
 
     public function executeGenerarDaniosAuto(sfWebRequest $request) {
         $idAuto= $request->getParameter("idAuto");
@@ -1156,8 +1233,7 @@ class mainActions extends sfActions {
             $this->propietario = $propietario;
             $this->car = $car;
     }
-     
-     
+          
     //Se retorna un componente que permite hacer el upload de las fotos directamente al S3 de Amazon, sin pasar por el servidor
     //Web.
     public function executeUpload2S3(sfWebRequest $request) {
@@ -1207,6 +1283,7 @@ class mainActions extends sfActions {
     }
 
     public function executeSignput(sfWebRequest $request) {
+
         $S3_KEY='AKIAIDPA5IXQKMNWFCYQ';
         $S3_SECRET='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';
         $S3_BUCKET='/arriendas.testing';
@@ -1346,23 +1423,6 @@ class mainActions extends sfActions {
         $damage->save();
         echo $damage->getUrlFoto();
         die();
-    }
-
-
-    public function executeReferidos(sfWebRequest $request) {
-
-    }
-
-    public function executeReferidos2(sfWebRequest $request) {
-
-    }
-
-    public function executeAgradecimiento(sfWebRequest $request) {
-
-    }
-        
-    public function executeInvitaciones(sfWebRequest $request) {
-        
     }
         
     public function executeExito(sfWebRequest $request) {
@@ -2088,8 +2148,6 @@ class mainActions extends sfActions {
         //echo $q->getSqlQuery();
     }
 
-    
-
     public function executeMap(sfWebRequest $request) {
 
 	   $modelo = new Model();
@@ -2577,259 +2635,6 @@ class mainActions extends sfActions {
         return $urlFoto;
     }
 
-    public function executeSearchResult(sfWebRequest $request) {
-
-        $this->setLayout(false);
-        sfConfig::set('sf_web_debug', false);
-
-        $boundleft = $request->getParameter('swLat');
-        $boundright = $request->getParameter('neLat');
-        $boundtop = $request->getParameter('swLng');
-        $boundbottom = $request->getParameter('neLng');
-
-        $day_from = $request->getParameter('day_from');
-        $day_to = $request->getParameter('day_to');
-
-        $hour_from = $request->getParameter('hour_from');
-        $hour_to = $request->getParameter('hour_to');
-
-        $brand = $request->getParameter('brand');
-        $model = $request->getParameter('model');
-
-        $location = $request->getParameter('location');
-        $price = $request->getParameter('price');
-
-        $lat_centro = $request->getParameter('clat');
-        $lng_centro = $request->getParameter('clng');
-
-        /* if(
-          $hour_from != "Hora de inicio" &&
-          $hour_to != "Hora de entrega" &&
-          $hour_from != "" &&
-          $hour_from != ""
-          )
-          {
-          list($day_from, $hour_from) = split(' ', $hour_from);
-          list($day_to, $hour_to) = split(' ', $hour_to);
-          } */
-
-
-        $q = Doctrine_Query::create()
-                ->select('DISTINCT ca.id , av.id idav , mo.name modelo,
-			  br.name brand, ca.year year,
-			  ca.photoS3 photoS3, ca.address address, ci.name city,
-			  st.name state, co.name country,
-			  owner.firstname firstname,
-			  owner.lastname lastname,
-			  ca.price_per_day priceday,
-			  ca.price_per_hour pricehour,
-                          ca.lat lat,
-                          ca.lng lng,
-			  owner.id userid'
-                )
-                ->from('Car ca')
-                ->innerJoin('ca.Availabilities av')
-                ->innerJoin('ca.Model mo')
-                ->leftJoin('ca.Reserves re')
-                ->innerJoin('ca.User owner')
-                ->innerJoin('mo.Brand br')
-                ->innerJoin('ca.City ci')
-                ->innerJoin('ci.State st')
-                ->innerJoin('st.Country co')
-                ->where('ca.lat > ?', $boundleft)
-                ->andWhere('ca.activo = ?', 1)
-                ->andWhereIn('ca.seguro_ok', array(4))
-                ->andWhere('ca.lat < ?', $boundright)
-                ->andWhere('ca.lng > ?', $boundtop)
-                ->andWhere('ca.lng < ?', $boundbottom);
-                //->orderBy('ca.price_per_day asc');
-
-        if (
-                $hour_from != "Hora de inicio" &&
-                $hour_to != "Hora de entrega" &&
-                $hour_from != "" &&
-                $hour_from != "" &&
-                $day_from != "Dia de inicio" &&
-                $day_to != "Dia de entrega" &&
-                $day_from != "" &&
-                $day_to != ""
-        ) {
-
-
-            $day_from = implode('-', array_reverse(explode('-', $day_from)));
-            $day_to = implode('-', array_reverse(explode('-', $day_to)));
-
-            $fullstartdate = $day_from . " " . $hour_from;
-            $fullenddate = $day_to . " " . $hour_to;
-
-            $q = $q->andWhere('av.hour_from < ? and av.hour_to > ? and av.date_from <= ? and av.date_to >= ?', array($hour_from, $hour_to, $day_from, $day_to));
-            $q = $q->orWhere('av.hour_from < ? and av.hour_to > ? and av.date_from < ?', array($hour_from, $hour_to, $day_from));
-
-            //$q = $q->andwhere('((re.date > ? and date_add(re.date, INTERVAL re.duration HOUR) > ?) or (re.date < ? and date_add(re.date, INTERVAL re.duration HOUR) < ?))', array($fullstartdate, $fullstartdate, $fullenddate, $fullenddate));
-        }
-
-        if ($brand != "") {
-            $q = $q->andWhere('br.id = ?', $brand);
-        }
-
-        if ($model != "" && $model != "0") {
-            $q = $q->andWhere('mo.id = ?', $model);
-        }
-
-        if ($location != "") {
-            $q = $q->andWhere('co.id = ?', $location);
-        }
-        if ($price != null) {
-            if ($price == "1") {
-                $q = $q->orderBy('ca.price_per_day asc');
-            } else {
-                $q = $q->orderBy('ca.price_per_day desc');
-            }
-        }
-
-        $cars = $q->execute();
-
-        $data = array();
-        $carsid = Array();
-
-        foreach ($cars as $car) {
-
-	    //Modificacion para revisar el estado de validacion del seguro
-	
-            if ($lat_centro != null && $lng_centro != null) {
-
-                $lat1 = $car->getlat();
-                $lat2 = $lat_centro;
-
-                $lon1 = $car->getlng();
-                $lon2 = $lng_centro;
-
-                $R = 6371; // km
-                $dLat = deg2rad($lat2 - $lat1);
-                $dLon = deg2rad($lon2 - $lon1);
-                $lat1 = deg2rad($lat1);
-                $lat2 = deg2rad($lat2);
-
-                $a = sin($dLat / 2) * sin($dLat / 2) +
-                        sin($dLon / 2) * sin($dLon / 2) * cos($lat1) * cos($lat2);
-                $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
-                $d = $R * $c;
-            }
-
-	    sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
-            $photo = $car->getFoto();
-
-            $has_reserve = false;
-
-            if (
-                    $hour_from != "Hora de inicio" &&
-                    $hour_to != "Hora de entrega" &&
-                    $hour_from != "" &&
-                    $hour_from != "" &&
-                    $day_from != "Dia de inicio" &&
-                    $day_to != "Dia de entrega" &&
-                    $day_from != "" &&
-                    $day_to != ""
-            ) {
-
-
-
-                $fullstartdate = $day_from . " " . $hour_from;
-                $fullenddate = $day_to . " " . $hour_to;
-                $has_reserve = $car->hasReserve($fullstartdate, $fullenddate);
-            }
-
-            $urlUser = $this->getPhotoUser($car->getUser()->getId());
-
-            $user = $car->getUser();
-            $reservasRespondidas = $user->getReservasContestadas_aLaFecha();
-            $velocidad = $user->getVelocidadRespuesta_mensajes();
-            $transmision = "-";
-            $tipoTrans = $car->getTransmission();
-            if($tipoTrans == 1) $transmision = "Manual";
-            if($tipoTrans == 0) $transmision = "Autom&aacute;tica";
-            
-            if (!$has_reserve) {
-                $data[] = array('id' => $car->getId(),
-                    'idav' => $car->getIdav(),
-                    'longitude' => $car->getlng(),
-                    'latitude' => $car->getlat(),
-                    'comuna' => strtolower($car->getNombreComuna()),
-                    'brand' => $car->getBrand(),
-                    'model' => $car->getModelo(),
-                    'address' => $car->getAddress(),
-                    'year' => $car->getYear(),
-                    'photo' => $photo,
-                    'photoType' => $car->getPhotoS3(),
-                    'username' => ucwords(current(explode(' ' , $car->getUser()->getFirstname()))) . " " . ucwords(current(explode(' ' , $car->getUser()->getLastname()))),
-                    'firstname' => ucwords(current(explode(' ' ,$car->getUser()->getFirstname()))),
-                    'lastname' => ucwords(substr($car->getUser()->getLastName(), 0, 1)).".",
-                    'price_per_hour' => $this->transformarPrecioAPuntos(floor($car->getPricePerHour())),
-                    'price_per_day' => $this->transformarPrecioAPuntos(floor($car->getPricePerDay())),
-                    'userid' => $car->getUser()->getId(),
-                    'userPhoto' => $urlUser,
-                    'typeTransmission' => $transmision,
-                    'userVelocidadRespuesta' => $velocidad,
-                    'cantidadCalificacionesPositivas' => $car->getCantidadCalificacionesPositivas(),
-                    'reservasRespondidas' => $reservasRespondidas,
-                    'd' => $d,
-		    'verificado'=> $car->autoVerificado(),
-                );
-            }
-        }//end foreach
-
-        $position = array();
-        $newRow = array();
-        foreach ($data as $key => $row) {
-            $position[$key] = $row["verificado"];
-            $newRow[$key] = $row;
-        }
-        //asort($position); //Se comenta porque no se utilizará el orden por ubicación, sino que por precio por dia
-        $returnArray = array();
-        foreach ($position as $key => $pos) {
-            $returnArray[] = $newRow[$key];
-        }
-
-        //print_r($returnArray);die;
-
-        if ($lat_centro != null && $lng_centro != null) {
-            $this->cars = array_reverse($returnArray);
-        } else {
-            $this->cars = array_reverse($data);
-        }
-
-
-//        echo '<pre>';
-//        print_r($this->cars);
-//        echo '</pre>';
-//
-//        $data = Array();
-//
-//        echo 'llega'.'\n';
-//        
-//        foreach ($this->cars as $c) {
-//            $data[] = array('id' => $c->getId(), 'count' => $c->getPositiveRatings());
-//        }
-//        
-//        echo 'llega2'.'\n';
-//
-//        foreach ($data as $key => $row) {
-//            $id[$key] = $row['id'];
-//            $count[$key] = $row['count'];
-//        }
-//        
-//        echo 'llega3';
-//        die;
-//
-//        $this->data;
-//        if ($this->cars->count()) {
-//            array_multisort($count, SORT_DESC, $id, SORT_ASC, $data);
-//            $this->data = array_slice($data, 0, 5);
-//        }
-        //print_r($data);
-        //exit();
-    }
-
     public function executeDoSearch(sfWebRequest $request) {
 
         /*  $fecha = strtotime($request->getParameter('date'));
@@ -2877,10 +2682,7 @@ class mainActions extends sfActions {
 	
 	//COMPANIA
     public function executeCompania(sfWebRequest $request) {
-        $this->setLayout("newIndexLayout");
-
-
-        
+        $this->setLayout("newIndexLayout");        
     }
 	
 	//AYUDA
@@ -3059,67 +2861,79 @@ class mainActions extends sfActions {
 
     public function executeUploadPhoto(sfWebRequest $request) {
 
+        $return = array("error" => false);
         $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
 
-        if (isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST") {
+        try {
+
+            if (!isset($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
+                throw new Exception("No! No! No!", 1);
+            }
 
             $name = $_FILES[$request->getParameter('file')]['name'];
             $size = $_FILES[$request->getParameter('file')]['size'];
 			$tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
 
-            if (strlen($name)) {
+            if (!strlen($name)) {
+                throw new Exception("Por favor, seleccione una imagen", 2);
+            }
 
-                list($txt, $ext) = explode(".", $name);
+            list($txt, $ext) = explode(".", $name);
 
-                if (in_array($ext, $valid_formats) || 1==1) {
+            $ext = strtolower($ext);
 
-                    if ($size < (5 * 1024 * 1024)) { // Image size max 1 MB
-                    
-                        $sizewh = getimagesize($tmp);
-						if($sizewh[0] > 194 || $sizewh[1] > 204)
-							//echo '<script>alert(\'La imagen no cumple con las dimensiones especificadas. Puede continuar si lo desea\')</script>';
-                    
-                        $userId = $this->getUser()->getAttribute("userid");
-                        $actual_image_name = time() . $userId . "." . $ext;
+            if (!in_array($ext, $valid_formats)) {
+                throw new Exception("Formato de la imagen inválido", 2);
+            }
 
-                        $uploadDir = sfConfig::get("sf_web_dir");
-                        $path      = $uploadDir . '/images/users/';
-                        $fileName  = $actual_image_name . "." . $ext;
+            if ($size > (5 * 1024 * 1024)) {
+                throw new Exception("La imagen excede el tamaño máximo permitido (1 MB)", 2);                
+            }
+            
+            /*$sizewh = getimagesize($tmp);
 
-                        $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
+			if($sizewh[0] > 194 || $sizewh[1] > 204) {
+				echo '<script>alert(\'La imagen no cumple con las dimensiones especificadas. Puede continuar si lo desea\')</script>';
+            }*/
+        
+            $userId = $this->getUser()->getAttribute("userid");
+            $actual_image_name = time() . $userId . "." . $ext;
 
-                        $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
+            $uploadDir = sfConfig::get("sf_web_dir");
+            $path      = $uploadDir . '/images/users/';
+            $fileName  = $actual_image_name . "." . $ext;
 
-                        if ($uploaded) {
+            $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
 
-                            sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
+            $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
 
-                            echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
-                            echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";
+            if (!$uploaded) {
+                throw new Exception("No se pudo subir la imagen de perfil", 1);
+            }
 
-                            $User = Doctrine_Core::getTable('User')->find($userId);
-                            $User->setPictureFile("/images/users/".$actual_image_name);
-                            $User->save();
-                            
-                        } else {
-                            error_log("[".date('Y-m-d H:i:s')."] main/uploadPhoto - Error al subir la imagen.");
-                            echo "failed";
-                        }
-                    } else {
-                        echo "Image file size max 1 MB";
-                    }
-                } else {
-                    echo "Invalid file format..";
-                }
-            } else {
-                echo "Please select image..!";
+            sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
+
+            /*echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
+            echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";*/
+
+            $User = Doctrine_Core::getTable('User')->find($userId);
+            $User->setPictureFile("/images/users/".$actual_image_name);
+            $User->save();
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+            if ($e->getCode() == 1) {
+                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo nuevamente más tarde";
+            }
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
+                Utils::reportError($e->getMessage(), "main/uploadPhoto");
             }
         }
 
-        exit;
-    }
+        $this->renderText(json_encode($return));
 
-    
+        return sfView::NONE;
+    }    
 
     public function executeUploadRut(sfWebRequest $request) {
 
@@ -3192,7 +3006,6 @@ class mainActions extends sfActions {
 
         // Se redondean los valores costo diarios de los vehículos.
         $valorHora = round(($valorHora * 0.95), -3);
-        error_log($valorHora);
         //var_dump($valorHora);
         //die($valorHora);
         
@@ -3440,7 +3253,6 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
 
                 if ($newUser) {
 		            //$this->getRequest()->setParameter('userId', $userdb->getId());
-                    error_log("Redirecciona a completeRegister");
 					$this->redirect("main/completeRegister");
 				}else{
 					if ($this->getUser()->getAttribute("lastview") != null) {
@@ -3782,4 +3594,12 @@ public function calificacionesPendientes(){
 
         $this->redirect('profile/cars');
     }
+
+    /*public function executeGetComunas(sfWebRequest $request) {
+        $this->setLayout(false);
+        $idRegion = $request->getParameter('idRegion');
+        if ($idRegion) {
+            $this->comunas = Doctrine::getTable('comunas')->findByPadre($idRegion);
+        }
+    }*/
 }

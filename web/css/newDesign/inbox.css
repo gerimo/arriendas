@@ -1,4 +1,4 @@
-.cont{
+body{
     background: url(/images/newDesign/bg-pricebox.jpg);
 }
 
@@ -18,7 +18,7 @@
     behavior: url(ie-css3.htc);
 }
 
-.barraSuperior{
+/*.barraSuperior{
     background-image: url("../images/Barra.png");
     background-repeat: repeat-x;
     height: 32px;
@@ -42,7 +42,7 @@
     text-align: center;
     padding-top: 10px;
     margin-top: 0px;
-}
+}*/
 
 .usuario_foto_frame {
     float: left;
@@ -1020,7 +1020,7 @@ button.regis_btn_agregar {
     float: left;
     margin-top: 10px;
     padding: 5px;
-    background-color: #E2E3E4;
+    background-color: #F1F1F1;
     border-bottom: 1px solid #BCBEB0;
 }
 .encabezadoConversacionAmarillo{
@@ -1053,6 +1053,7 @@ button.regis_btn_agregar {
     float: left;
     font-size: 14px;
     margin-left: 5px;
+    margin-top: 15px;
     height: 14px;
     color: black;
 }
@@ -1065,6 +1066,13 @@ input{
     border: 0px;
     cursor: pointer;
 }
+
+.botonEliminarConversacion{
+
+    margin-top: 15px;
+}
+
+
 input.botonEliminarConversacion{
     color: #A4A4A4;
     font-size: 12px;
@@ -1087,9 +1095,10 @@ input.botonEliminarConversacion:hover{
 .newMensaje .body_msg{
     width: 252px;
 }
-.fecha_msg{    font-size: 10px;
+.fecha_msg{    
+    font-size: 10px;
     color: #A4A4A4;
-    margin-top: 5px;
+    margin-top: 15px;
 }
 .costado_izquierdo{
     padding: 0;
@@ -1194,7 +1203,7 @@ textarea.textoMensaje{
     float: right;
     width: 13px;
     height: 9px;
-    margin-top: 2px;
+    margin-top: 15px;
 }
 .usuarioIzq{
     float: left;
@@ -1318,6 +1327,7 @@ textarea.textoMensaje{
     text-align: center;
     line-height: 13px;
     margin-bottom: 5px;
+    margin-top: 15px;
 }
 
 .msg_user_post {
@@ -1486,7 +1496,7 @@ textarea.textoMensaje{
  .body_msgInbox{
 
     margin-left: 30px;
-    margin-top: ;
+    margin-top: 15px;
     height: 0;
  }
  .indicador{

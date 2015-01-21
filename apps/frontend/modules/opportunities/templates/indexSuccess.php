@@ -20,15 +20,6 @@
                         <th>Acción</th>
                     </tr>
                 </thead>
-                <tfoot>
-                    <tr>
-                        <th>Desde</th>
-                        <th>Hasta</th>
-                        <th>Monto</th>
-                        <th>Arrendatario</th>
-                        <th>Acción</th>
-                    </tr>
-                </tfoot>
                 <tbody>
                     <?php foreach($Opportunities as $Opp): ?>
                         <tr data-reserve-id="<?php echo $Opp["Reserve"]->getId() ?>">

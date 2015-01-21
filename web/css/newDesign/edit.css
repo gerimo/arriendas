@@ -2,14 +2,6 @@ body {
     background-image: url('/images/newDesign/background.jpg');
 }
 
-h1 {
-    text-align: center;
-    color: rgb(70, 70, 70);
-    font-weight: 300;
-    margin: 0 0 20px 0;
-    padding: 0;
-}
-
 h2 {
     color: rgb(70, 70, 70);
     font-size: 19px;

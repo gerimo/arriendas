@@ -259,7 +259,7 @@ function bindEventsAll(){
             for (var i = 0; i < classCar.length; i++) {
                 if (classCar[i].indexOf != -1) {
                     idCar = obtenerId(classCar[i]);
-                }
+                } 
             }
 
             $('.informeDanios').attr('href', 'http://arriendas.cl/main/generarReporteDanios/idAuto/' + idCar);

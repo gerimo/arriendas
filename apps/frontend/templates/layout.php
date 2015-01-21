@@ -452,7 +452,7 @@ iframe[name='google_conversion_frame'] {
                     
                     <?php if (!sfContext::getInstance()->getUser()->isAuthenticated()): ?>
                         <a class="item_thm" href="<?php echo url_for('main/login') ?>"><div class="top_login"></div></a>  
-                        <span class="header_phone">(02) 2333-3714</span>
+                        <span class="header_phone">(02) 2640-2900</span>
 
                         <?php else: ?>
                         
@@ -647,7 +647,7 @@ var google_conversion_value = 0;
             
                     </div><!-- footer_enlaces -->
 
-                    <p class="footer_copy" style='text-align:center;'>Teléfono (02) 2333-3714 - Providencia 229 (entrada por Perez Espinoza), Providencia, Santiago.</p>
+                    <p class="footer_copy" style='text-align:center;'>Teléfono (02) 2640-2900 - Providencia 229 (entrada por Perez Espinoza), Providencia, Santiago.</p>
 
                     <br><br>
                 </div><!-- /footer_contenido -->
