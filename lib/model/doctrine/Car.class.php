@@ -59,6 +59,8 @@ class Car extends BaseCar {
 
         $Reserves = $q->execute();
 
+        error_log("Opp: ".count($Reserves));
+
         // Revisamos que las reservas no tengan ya el máximo de oportunidades permitidas y
         // Revisamos que el auto no tenga ya una reserva confirmada en la fecha de la oportunidad
         foreach ($Reserves as $Reserve) {
