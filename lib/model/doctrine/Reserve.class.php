@@ -667,24 +667,29 @@ class Reserve extends BaseReserve {
         return $ret;
     }
     
-    private function setUniqueToken($try=0){
+    public function setUniqueToken($replace = false){
         
-        if (!$this->getToken()) {
-            $token = sha1($this->getDuration() . rand(11111, 99999));
-            $res = Doctrine_Core::getTable('Reserve')->findOneBy('token', $token);
-            if(!$res){
-                $this->setToken($token);
-            }else{
-                // ejecuto hasta 10 intentos
-                if($try<10){
-                    $try++; 
-                    $this->setUniqueToken($try);
-                }else{
-                    throw new Exception("No se pudo generar el token para la reserva.");
-                }
-            }
-        }
-    }
+        $iterate = true;
+        $iteration = 1;
+        $max_iterations = 10;        
+        
+        if (!$this->token || $replace) {
+            while ($iterate) {
+                error_log("iteracion");
+                $token = sha1($this->getDuration() . rand(11111, 99999));
 
-    
+                if (!Doctrine_Core::getTable('Reserve')->findOneBy('token', $token)) {
+                    $this->setToken($token);
+                    $iterate = false;
+                }
+
+                if ($iteration == $max_iterations) {
+                    Utils::reportError("No se pudo definir un token para la reserva ".$this->id, "Reserve/setUniqueToken");
+                    $iterate = false;
+                }
+
+                $iteration++;
+            }            
+        }
+    }    
 }
