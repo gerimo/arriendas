@@ -129,6 +129,7 @@ class carsActions extends sfActions {
             $Car->setFechaSubida($fechaHoy);
             $Car->setLat($lat);
             $Car->setLng($lng);
+            $Car->setCityId(27);
 
             $Car->save();
 
