@@ -52,8 +52,6 @@
                                 </select>
                             </div>     
                         </div>
-                        
-
                         <!-- Esto es para mostrar el form desde - hasta-->
                         <div class="row">                                   
                             <div id="<?php echo $c->getId() ?>">

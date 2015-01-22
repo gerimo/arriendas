@@ -9,7 +9,7 @@
             <form id="priceCar">
 
                 <fieldset id="paso2">
-                    <legend>Precios del vehículo</legend>
+                    <h1>Precios del vehículo</h1>
                     <div class = "col-sm-12 col-md-12 text-center">
                         <p>Fija el precio de tu auto > <?php echo $Car->getModel()->getBrand()->getName().", "." ".$Car->getModel()->getName().", ".   " ".$Car->getYear() ?></p>
                     </div>
@@ -18,27 +18,30 @@
 
 
                     <!--precios obligatorios-->
+                    <div class="hidden-xs space-30"></div>    
                     <div class="col-md-12">
-                        <div class="col-sm-6 col-md-6">
+                        <div class="col-sm-6 col-md-6"> 
+
                             <label>Precio por hora (*)</label>
-                            <input class="form-control" id="priceHour" name="priceHour" placeholder="" type="text">
+                            <input class="form-control" id="priceHour" name="priceHour" placeholder="Precio referencia $<?php if($hour<4000): echo 4000; else: echo $hour; endif;    ?>" type="text">
                         </div>
                         <div class="col-sm-6 col-md-6">
                             <label>Precio por día (*)</label>
-                            <input class="form-control" id="priceDay" name="priceDay" placeholder="" type="text">
+                            <input class="form-control" id="priceDay" name="priceDay" placeholder="Precio referencia $<?php echo $day ?>" type="text">
                         </div>
                         </div>
                     </div>
+                    <div class="space-30"></div> 
 
                     <!--precios Opcionales-->
                     <div class="col-md-12">
                         <div class="col-sm-6 col-md-6">
                             <label>Precio por semana (Opcional)</label>
-                            <input class="form-control" id="priceWeek" name="priceWeek" placeholder="" type="text">
+                            <input class="form-control" id="priceWeek" name="priceWeek" placeholder="Precio referencia $<?php echo $week ?>" type="text">
                         </div>
                         <div class="col-sm-6 col-md-6">
                             <label>Precio por mes (Opcional)</label>
-                            <input class="form-control" id="priceMonth" name="priceMonth" placeholder="" type="text">
+                            <input class="form-control" id="priceMonth" name="priceMonth" placeholder="Precio referencia $<?php echo $month ?>" type="text">
                         </div>
                     </div>
                     
@@ -61,6 +64,10 @@
 
 
 <script>
+
+$(document).ready(function(){
+
+});
 
 function validateForm() {
 
@@ -102,7 +109,8 @@ function validateForm() {
             }
 
         }, 'json');
-    }
+}
+
 
     
 

@@ -60,7 +60,7 @@
                                     </div>
                                     <div class="col-md-3 text-center">
                                         <p class="price"><strong><?php echo '$'.number_format($Reserve->getPrice(), 0, ',', '.') ?></strong></p>
-                                        <a href="#">Descargar contratos</a>
+                                        <a class="download-contracts" data-car-id="<?php echo $Reserve->getCar()->id ?>" data-reserve-token="<?php echo $Reserve->token ?>" href="#">Descargar contratos</a>
                                     </div>
                                     <div class="col-md-3 text-center">
                                         <?php if ($Reserve->getConfirmed()): ?>
@@ -169,7 +169,7 @@
     </div>    
 </div>
 
-<!-- Alert -->
+<!-- Alerta -->
 <div style="display:none">
     <div id="dialog-alert" title="">
         <p></p>
@@ -216,17 +216,6 @@
         }, "json");
     });
 
-    $(document).on("click", ".extend", function(){
-
-        $("#extendReserve").val($(this).data("reserve-id"));
-        $("#extendFrom").val($(this).data("reserve-to"));
-        $("#extendTo").val("");
-
-        $("#extendAlert").hide();
-        
-        $("#reserveExtendModal").modal('show');
-    });
-
     $(document).on("click", ".change", function(){
 
         var button = $(this);
@@ -257,6 +246,17 @@
 
             $(".change").removeAttr("disabled");
         }, "json");
+    });
+
+    $(document).on("click", ".extend", function(){
+
+        $("#extendReserve").val($(this).data("reserve-id"));
+        $("#extendFrom").val($(this).data("reserve-to"));
+        $("#extendTo").val("");
+
+        $("#extendAlert").hide();
+        
+        $("#reserveExtendModal").modal('show');
     });
 
     $(document).on("click", ".reject", function(e){
@@ -291,6 +291,24 @@
 
         $("#extendFrom").removeAttr("disabled");
         $("#extendForm").submit();
+    });
+
+    $(document).on("click", ".download-contracts", function(e){
+
+        e.preventDefault();
+
+        var carId = $(this).data("car-id");
+        var reserveToken = $(this).data("reserve-token");
+
+        var urlContrato   = "http://<?php echo $sf_request->getHost() ?>/api.php/contrato/generarContrato/tokenReserva/";
+        var urlFormulario = "http://<?php echo $sf_request->getHost() ?>/main/generarFormularioEntregaDevolucion/tokenReserve/";
+        var urlPagare     = "http://<?php echo $sf_request->getHost() ?>/main/generarPagare/tokenReserve/";
+        /*var urlContrato3 = "http://<?php echo $sf_request->getHost() ?>/main/generarReporte/idAuto/";*/
+
+        window.open(urlContrato + reserveToken);
+        window.open(urlFormulario + reserveToken);
+        window.open(urlPagare + reserveToken);
+        /*window.open(urlContrato3 + carId);*/
     });
 
     $("#extendTo").datetimepicker({

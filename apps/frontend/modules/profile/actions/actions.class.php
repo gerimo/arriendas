@@ -397,12 +397,9 @@ class profileActions extends sfActions {
     public function executeCarAvailabilityDeleteChangeStatus(sfWebRequest $request){
         $return = array("error" => false);
 
-        
-
         $carId = $request->getPostParameter('car');
         $day   = $request->getPostParameter('day');
         
-
         $week = array(
             1 => "Lunes",
             2 => "Martes",
@@ -435,7 +432,7 @@ class profileActions extends sfActions {
             }   
             
         }catch (Exception $e) {
-
+            error_log("idiota");
             $return["error"] = true;
             Utils::reportError($e->getMessage(), "executeCarAvailabilityDeleteChangeStatus");
         }

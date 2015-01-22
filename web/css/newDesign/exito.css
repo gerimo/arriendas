@@ -1,3 +1,7 @@
+body {
+    background-image: url('/images/newDesign/background.jpg');
+}
+
 .contenido h2{
 	color:#EC008C;
 	font-size:300 16px;

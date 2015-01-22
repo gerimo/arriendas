@@ -64,6 +64,9 @@ class opportunitiesActions extends sfActions {
             $O->setComentario('Reserva oportunidad');
             $O->setReservaOriginal($OriginalReserve->getId());
             $O->save();
+            
+            $O->setUniqueToken(true);
+            $O->save();
 
             $OT = $OriginalReserve->getTransaction()->copy(true);
             $OT->setCar($Car->getModel()->getBrand()->getName() ." ". $Car->getModel()->getName());
@@ -78,7 +81,9 @@ class opportunitiesActions extends sfActions {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
 
-            /*Utils::reportError($e->getMessage(), "opportunities/approve");*/
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "opportunities/approve");
+            }
         }
 
         $this->renderText(json_encode($return));
