@@ -1,26 +1,39 @@
+
+
 <link href="/css/newDesign/exito.css" rel="stylesheet" type="text/css">
 
 <div class="hidden-xs space-100"></div>
 <div class="visible-xs space-50"></div>
 <div class="row">
-    <div class="col-md-offset-4 col-md-4">
+    <div class="col-md-offset-3 col-md-6">
       <div class="BCW">
       
           <h1>¡PAGO EXITOSO!</h1>
           <div class="contenido text-center">
             <p>Antes y después de realizar la reserva, debes firmar el 
-              <a href='http://local.arriendas.cl/main/generarFormularioEntregaDevolucion/tokenReserve/<?php echo $tokenReserve; ?>' target='_blank'>informe de daños impreso.</a>
+              <a href="<?php echo url_for('return_form', array('tokenReserve' => $tokenReserve))?>" target='_blank'>formulario de entrega impreso.</a>
             </p>
             <br>
             <p class="Owner text-center">
               <b>Datos del dueño del auto</b>
             </p>
             <p>
-              <b>Nombre:</b> <?php echo $nameOwner ?> <?php echo $lastnameOwner ?>
+              <b>Nombre:</b>    <?php echo $nameOwner ?> <?php echo $lastnameOwner ?>
               <br>
-              <b>Teléfono:</b> <?php echo $telephoneOwner ?>
+              <b>Direccion:</b> <?php echo $addressOwner ?> , <?php echo $comunaOwner ?>
               <br>
-              <b>Correo:</b> <?php echo $emailOwner ?>
+              <b>Teléfono:</b>  <?php echo $telephoneOwner ?>
+              <br>
+              <b>Correo:</b>    <?php echo $emailOwner ?>              
+            </p>
+            <hr>
+            <p class="Owner text-center">
+              <b>Datos del arriendo</b>
+            </p>
+            <p>  
+              <b>Fecha Inicio:</b>    <?php echo date("d-m-Y H:i",strtotime($durationFrom)) ?>
+              <br>
+              <b>Fecha Termino:</b>    <?php echo date("d-m-Y H:i",strtotime($durationTo)) ?>
             </p>
           </div>
         <div class="col-md-offset-1">

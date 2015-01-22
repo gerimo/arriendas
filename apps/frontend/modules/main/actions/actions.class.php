@@ -1138,6 +1138,7 @@ class mainActions extends sfActions {
         //Generamos el HTML correspondiente
         $request->setParameter("idReserve",$request->getParameter("idReserve"));
         $request->setParameter("tokenReserve",$request->getParameter("tokenReserve"));
+        
         $html=$this->getController()->getPresentationFor("main","formularioEntrega");
         $pdf->WriteHTML($html,0);
         return $this->renderText($pdf->Output());
@@ -2757,6 +2758,13 @@ class mainActions extends sfActions {
         
     }
 
+
+    //////////////////Preguntas Frecuentes//////////////////////////////
+
+    public function executeQuestions(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+    }
+
     //////////////////LOGIN//////////////////////////////
 
 
@@ -2813,6 +2821,7 @@ class mainActions extends sfActions {
     }
 
     public function executeDoRecover(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
 
         $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ?', $this->getRequestParameter('email'));
         $user = $q->fetchOne();
