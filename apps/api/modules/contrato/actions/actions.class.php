@@ -61,13 +61,15 @@ class contratoActions extends sfActions
     $arrendatario= UserTable::getInstance()->findOneById($reserva->getUserId());
     $datosContrato->nombre_arrendatario=$arrendatario->getFirstname()." ".$arrendatario->getLastname();
 	
-	if (!$confirmed){
+	/*if (!$confirmed){
 		$datosContrato->rut_arrendatario=preg_replace('/[\w\.]/','X',$arrendatario->getRut());
 		$datosContrato->domicilio_arrendatario=preg_replace('/[\w\.]/','X',$arrendatario->getAddress());
     }else{
 		$datosContrato->rut_arrendatario=$arrendatario->getRut();
 		$datosContrato->domicilio_arrendatario=$arrendatario->getAddress();
-    };
+    };*/
+    $datosContrato->rut_arrendatario=$arrendatario->getRut();
+    $datosContrato->domicilio_arrendatario=$arrendatario->getAddress();
 	
     //Comuna Arrendatario
     $comuna_arr= ComunasTable::getInstance()->findOneByCodigoInterno($arrendatario->getComuna());
@@ -77,13 +79,15 @@ class contratoActions extends sfActions
     $duenio= UserTable::getInstance()->findOneById($auto->getUserId());
     $datosContrato->nombre_duenio=$duenio->getFirstname()." ".$duenio->getLastname();
 
-	if (!$confirmed){
+	/*if (!$confirmed){
 		$datosContrato->rut_duenio=preg_replace('/[\w\.]/','X',$duenio->getRut());
 		$datosContrato->domicilio_duenio=preg_replace('/[\w\.]/','X',$duenio->getAddress());
 	}else{
 		$datosContrato->rut_duenio=$duenio->getRut();
 		$datosContrato->domicilio_duenio=$duenio->getAddress();
-	};
+	};*/
+    $datosContrato->rut_duenio=$duenio->getRut();
+    $datosContrato->domicilio_duenio=$duenio->getAddress();
 
     //Comuna Duenio
     $comuna_due= ComunasTable::getInstance()->findOneByCodigoInterno($duenio->getComuna());

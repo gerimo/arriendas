@@ -102,6 +102,10 @@ reserves:
     url: /reservas
     param: { module: reserves, action: index }
 
+return_form:
+    url: /informe-de-devolucion/:tokenReserve
+    param: { module: main, action: generarFormularioEntregaDevolucion }
+
 terms_and_conditions:
     url: /terminos-y-condiciones
     param: { module: main, action: terminos }

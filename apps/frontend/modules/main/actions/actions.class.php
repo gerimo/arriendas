@@ -1093,15 +1093,14 @@ class mainActions extends sfActions {
 
         //Creamos la instancia de la libreria mPDF
         require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
-       $this->getResponse()->setContentType('application/pdf');
-        $pdf= new mPDF();
+        $this->getResponse()->setContentType('application/pdf');
+        $pdf = new mPDF();
 
         //Generamos el HTML correspondiente
         $request->setParameter("idAuto",$request->getParameter("idAuto"));
         $html=$this->getController()->getPresentationFor("main","informeDanios");
         $pdf->WriteHTML($html,0);
         return $this->renderText($pdf->Output());
-     //   return $this->renderText($html);
     }
 
     public function executeGenerarReporteResumen(sfWebRequest $request){
@@ -1121,13 +1120,25 @@ class mainActions extends sfActions {
         //Creamos la instancia de la libreria mPDF
         require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
         $this->getResponse()->setContentType('application/pdf');
-        $pdf= new mPDF();
+        $pdf = new mPDF();
 
         //Generamos el HTML correspondiente
         $request->setParameter("idAuto",$request->getParameter("idAuto"));
         $html=$this->getController()->getPresentationFor("main","reporteDanios");
         $pdf->WriteHTML($html,0);
         return $this->renderText($pdf->Output());
+    }
+
+    public function executeGenerarPagare (sfWebRequest $request) {
+
+        $reserveToken = $request->getParameter("tokenReserve");
+
+        $Functions = new Functions;
+        $contrato = $Functions->generarPagare($reserveToken);
+
+        $this->getResponse()->setContentType('application/pdf');
+        
+        return $this->renderText($contrato);
     }
 
     public function executeGenerarFormularioEntregaDevolucion(sfWebRequest $request) {
@@ -1139,6 +1150,7 @@ class mainActions extends sfActions {
         //Generamos el HTML correspondiente
         $request->setParameter("idReserve",$request->getParameter("idReserve"));
         $request->setParameter("tokenReserve",$request->getParameter("tokenReserve"));
+        
         $html=$this->getController()->getPresentationFor("main","formularioEntrega");
         $pdf->WriteHTML($html,0);
         return $this->renderText($pdf->Output());
@@ -2758,6 +2770,13 @@ class mainActions extends sfActions {
         
     }
 
+
+    //////////////////Preguntas Frecuentes//////////////////////////////
+
+    public function executeQuestions(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+    }
+
     //////////////////LOGIN//////////////////////////////
 
 
@@ -2814,6 +2833,7 @@ class mainActions extends sfActions {
     }
 
     public function executeDoRecover(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
 
         $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ?', $this->getRequestParameter('email'));
         $user = $q->fetchOne();
