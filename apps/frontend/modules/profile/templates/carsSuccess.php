@@ -12,7 +12,7 @@
             </div>  
             
             <div class="col-md-offset-8 col-md-4">
-                    <a class="col-md-12  btn-block btn-a-primary" href="<?php echo url_for('profile/addCar') ?>">¡Sube un auto!</a>
+                    <button class="col-md-12  btn-block btn-a-primary" onclick="location.href='<?php echo url_for('cars/create') ?>'">¡Sube un auto!</button>
             </div>
 
                        
@@ -24,7 +24,7 @@
                                             
                         <div class="row grey">
                             <div class="col-md-3 ">
-                                <a href="<?php echo url_for('profile/addCar?id=' . $c->getId() )?>" >
+                                <a href="#" >
                                     <?php if($c->getPhotoS3() == 1): ?>
                                         <?php echo image_tag($c->getFoto(),array("width"=>"84px","height"=>"84px")) ?>
                                     <?php else: ?>
@@ -35,7 +35,7 @@
                             </div>
                             
                             <div class="col-offset-md-2 col-md-5 ">
-                                <a class= "misautos_marca" href="<?php echo url_for('profile/addCar?id=' . $c->getId() )?>" ><span><?=$c->getModel()->getBrand()->getName()?> <?=$c->getModel()->getName()?></span></a>
+                                <a class= "misautos_marca" href="#" ><span><?=$c->getModel()->getBrand()->getName()?> <?=$c->getModel()->getName()?></span></a>
                            </div>
                             
                             

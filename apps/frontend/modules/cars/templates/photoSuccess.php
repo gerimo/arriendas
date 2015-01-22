@@ -97,7 +97,7 @@
 
             <div class="space-20"></div>
             <div class="col-xs-12 col-sm-offset-8 col-sm-4 col-md-offset-8 col-md-4">
-                <button class="btn-a-primary btn-block" name="save" onclick="validateForm()">Finalizar</button>
+                <button class="btn-a-primary btn-block" name="save" onclick="location.href='<?php echo url_for('cars') ?>'">Finalizar</button>
                 <p class="alert"></p> 
             </div>
         </div>
