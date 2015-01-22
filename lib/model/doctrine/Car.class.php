@@ -61,7 +61,7 @@ class Car extends BaseCar {
 
         // Revisamos que las reservas no tengan ya el máximo de oportunidades permitidas y
         // Revisamos que el auto no tenga ya una reserva confirmada en la fecha de la oportunidad
-        foreach ($Reserves as $Reserve) {
+        foreach ($Reserves as $k => $Reserve) {
 
             $ChangeOptions = $Reserve->getChangeOptions(false);
 
@@ -70,7 +70,7 @@ class Car extends BaseCar {
 
                 // Revisamos que el usuario no haya ya postulado a la oportunidad
                 $itsPresent = false;
-                foreach ($ChangeOptions as $CO) {
+                foreach ($ChangeOptions as $l => $CO) {
                     if ($CO->getCar()->getUser()->id == $this->getUser()->id) {
                         $itsPresent = true;
                         break;
