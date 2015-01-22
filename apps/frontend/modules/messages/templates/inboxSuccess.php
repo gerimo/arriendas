@@ -42,7 +42,7 @@
                         <?php echo "<a href='".url_for('messages', array('id' => $conversacionesOrdenadas[$k]['idConversacion']))."' title='Ir a la conversación'>"; ?>
                         
                           <div class="msg_user_frame hidden-xs col-sm-2 col-md-2">
-                            <?php include_component("profile","pictureFile",array("user"=>$listaConversaciones[$i]->getUserFrom(),"params"=>"width='74px' height='74px'"));?>
+                            <?php include_component("profile","pictureFile",array('inboxHeight'=> '100', 'inboxWidth'=> '100', "user"=>$listaConversaciones[$i]->getUserFrom(),"params"=>"width='74px' height='74px'"));?>
                           </div> 
 
                           <div class="costado_izquierdo col-xs-10 col-sm-8 col-md-8">
@@ -93,7 +93,7 @@
                         <?php echo "<a href='".url_for('messages', array('id' => $conversacionesOrdenadas[$k]['idConversacion']))."' title='Ir a la conversación'>"; ?>
                         
                           <div class="msg_user_frame hidden-xs col-sm-2 col-md-2">
-                            <?php include_component("profile","pictureFile",array("user"=>$listaConversaciones[$i]->getUserTo(),"params"=>"width='74px' height='74px'"));?>
+                            <?php include_component("profile","pictureFile",array('inboxHeight'=> '100', 'inboxWidth'=> '100', "user"=>$listaConversaciones[$i]->getUserTo(),"params"=>"width='74px' height='74px'"));?>
                           </div>
 
                           <div class="costado_izquierdo col-xs-10 col-sm-8 col-md-8">

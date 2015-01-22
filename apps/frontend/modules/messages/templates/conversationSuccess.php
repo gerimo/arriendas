@@ -69,9 +69,11 @@
                         <div class='row'>
                             <div class="leftMessage hidden-xs col-sm-offset-1 col-md-offset-1 col-xs-1 col-sm-1 col-md-1">
 
-                                <div class="imageProfile hidden-sm">
-                                    <?php include_component("profile","pictureFile",array("user"=>$objetoConversacion[0]->getUserFrom(),"params"=>"width='74px' height='74px'"));?>
-                                </div>
+                                <span class="img-responsive">
+                                    <div class="imgProfile hidden-sm">
+                                        <?php include_component("profile","pictureFile",array("user"=>$objetoConversacion[0]->getUserFrom(),"params"=>"width='74px' height='74px'"));?>
+                                    </div>
+                                </span>
 
                                 <div class="nameProfile">
                                     <?php 
@@ -122,15 +124,17 @@
 
                     <?php endif ?>
                 <?php endif ?>
-                <?php if ($conversacion[$i]['userMensaje'] == $idUsuarioTo): ?> <!-- Si es el emisor -->
-                    <?php error_log($conversacion[$i]['bodyMessage']); ?>
+                <?php if ($conversacion[$i]['userMensaje'] == $idUsuarioTo): ?> <!-- Si es el emisor -->    
                     <?php if ($idUsuarioTo == $myId): ?>
 
                         <div class='row'>
                             <div class="leftMessage hidden-xs col-sm-offset-1 col-md-offset-1  col-xs-1 col-sm-1 col-md-1">
-                                <div class="imgProfile hidden-sm">
-                                    <?php include_component("profile","pictureFile",array("user"=>$objetoConversacion[0]->getUserTo(),"params"=>"width='74px' height='74px'"));?>
-                                </div>
+                                
+                                <span class="img-responsive">
+                                    <div class="imgProfile hidden-sm">
+                                        <?php include_component("profile","pictureFile",array("user"=>$objetoConversacion[0]->getUserTo(),"params"=>"width='74px' height='74px'"));?>
+                                    </div>
+                                </span>
 
                                 <div class="nameProfile">
                                     <?php 
