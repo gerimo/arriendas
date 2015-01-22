@@ -107,6 +107,7 @@
  * @method Car                 setComuna()         Sets the current record's "Comuna" value
  * @method Car                 setRegion()         Sets the current record's "Region" value
  * @method Car                 setDisabledUntil()   Sets the current record's "disable_until" value
+ * @method Car                 setCommune()        Sets the current record's "commune" value
  *
  * @package    CarSharing
  * @subpackage model

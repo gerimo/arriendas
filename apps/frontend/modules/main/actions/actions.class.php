@@ -8,7 +8,7 @@ class mainActions extends sfActions {
         $this->setLayout(false);
 
         /*$this->reserveId = 41023;*/
-        $this->transactionId = 21096;
+        $this->transactionId = 21097;
     }
 
     public function executeIndex (sfWebRequest $request) {
@@ -644,6 +644,7 @@ class mainActions extends sfActions {
         $this->setLayout("newIndexLayout");
 
         $carId = $request->getParameter("c", null);
+
         $f     = strtotime($request->getParameter("f", null));
         $t     = strtotime($request->getParameter("t", null));
 
@@ -671,6 +672,7 @@ class mainActions extends sfActions {
             throw new Exception("Auto ya posee reserva", 1);            
         }
 
+        $this->time = Car::getTime($from, $to);
         $this->price = Car::getPrice($from, $to, $this->Car->getPricePerHour(), $this->Car->getPricePerDay(), $this->Car->getPricePerWeek(), $this->Car->getPricePerMonth());
 
         // Reviews (hay que arreglar las clase Rating)
@@ -762,7 +764,6 @@ class mainActions extends sfActions {
         $return = array("error" => false);
 
         try {
-    
             if (isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST") {
 
                 $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
@@ -1092,15 +1093,14 @@ class mainActions extends sfActions {
 
         //Creamos la instancia de la libreria mPDF
         require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
-       $this->getResponse()->setContentType('application/pdf');
-        $pdf= new mPDF();
+        $this->getResponse()->setContentType('application/pdf');
+        $pdf = new mPDF();
 
         //Generamos el HTML correspondiente
         $request->setParameter("idAuto",$request->getParameter("idAuto"));
         $html=$this->getController()->getPresentationFor("main","informeDanios");
         $pdf->WriteHTML($html,0);
         return $this->renderText($pdf->Output());
-     //   return $this->renderText($html);
     }
 
     public function executeGenerarReporteResumen(sfWebRequest $request){
@@ -1120,13 +1120,25 @@ class mainActions extends sfActions {
         //Creamos la instancia de la libreria mPDF
         require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
         $this->getResponse()->setContentType('application/pdf');
-        $pdf= new mPDF();
+        $pdf = new mPDF();
 
         //Generamos el HTML correspondiente
         $request->setParameter("idAuto",$request->getParameter("idAuto"));
         $html=$this->getController()->getPresentationFor("main","reporteDanios");
         $pdf->WriteHTML($html,0);
         return $this->renderText($pdf->Output());
+    }
+
+    public function executeGenerarPagare (sfWebRequest $request) {
+
+        $reserveToken = $request->getParameter("tokenReserve");
+
+        $Functions = new Functions;
+        $contrato = $Functions->generarPagare($reserveToken);
+
+        $this->getResponse()->setContentType('application/pdf');
+        
+        return $this->renderText($contrato);
     }
 
     public function executeGenerarFormularioEntregaDevolucion(sfWebRequest $request) {

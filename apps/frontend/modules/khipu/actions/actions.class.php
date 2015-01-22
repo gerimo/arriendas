@@ -147,6 +147,183 @@ class khipuActions extends sfActions {
 
     public function executeNotifyPayment(sfWebRequest $request) {
 
+        error_log("-------------NOTIFICACION PAGO-------------");
+
+        $this->_log("NotifyPayment", "INFO", "Start validation");
+
+        $userId = $this->getUser()->getAttribute("userid");
+        
+        $settings = $this->getSettings();
+
+        $data = array(
+            "api_version" => $_POST['api_version'],
+            "receiver_id" => $_POST['receiver_id'],
+            "notification_id" => $_POST['notification_id'],
+            "subject" => $_POST['subject'],
+            "amount" => $_POST['amount'],
+            "currency" => $_POST['currency'],
+            "custom" => $_POST['custom'],
+            "transaction_id" => $_POST['transaction_id'],
+            "payer_email" => $_POST['payer_email'],
+            "notification_signature" => $_POST['notification_signature']
+        );
+
+        error_log("-------------COMENZANDO-------------");
+
+        try {
+
+            $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["notification-validation-url"]);
+            $response = $khipuService->notificationValidation($data);
+
+            if ($response == 'VERIFIED' && $data["receiver_id"] == $settings["receiver_id"]) {
+                
+                // Los parametros son correctos, ahora falta verificar que transacion_id, custom, subject y amount correspondan al pedido 
+                $this->_log("NotifyPayment", "INFO", "cobro verificado");
+                $this->_log("NotifyPayment", "INFO", "respuesta: ".  serialize($response));
+
+                $Transaction = Doctrine_Core::getTable("Transaction")->find($data["transaction_id"]);
+                $Reserve     = Doctrine_Core::getTable('Reserve')->find($Transaction->getReserveId());
+
+                $montoLiberacion = 0;
+                if ($Reserve->getLiberadoDeGarantia()) {
+                    $montoLiberacion = $Reserve->getMontoLiberacion();
+                }
+
+                $finalPrice = $Transaction->getPrice() + $montoLiberacion;
+
+                if ($finalPrice > 0) {
+
+                    $this->_log("Pago", "Exito", "Usuario: " . $userId . ". Order ID: " . $Transaction->getId());
+
+                    if (!$Transaction->getCompleted()) {
+                        
+                        $Renter = $Reserve->getUser();
+                        $Owner  = $Reserve->getCar()->getUser();
+
+                        $Functions = new Functions;
+                        $Functions->generarNroFactura($Reserve, $Transaction);
+
+                        $formulario = $Functions->generarFormulario(NULL, $Reserve->token);
+                        $reporte    = $Functions->generarReporte($Reserve->getCar()->id);
+                        $contrato   = $Functions->generarContrato($Reserve->token);
+                        $pagare     = $Functions->generarPagare($Reserve->token);
+                        
+                        $Transaction->setCompleted(true);
+                        $Transaction->save();
+
+                        $mail   = new Email();
+                        $mailer = $mail->getMailer();
+
+                        // Correo dueño
+                        $subject = "¡Has recibido un pago! Apruébalo ahora";
+                        $body    = $this->getPartial('emails/paymentDoneOwner', array('Reserve' => $Reserve));
+                        $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+                        $to      = array($Owner->email => $Owner->firstname." ".$Owner->lastname);
+
+                        $message = $mail->getMessage();
+                        $message->setSubject($subject);
+                        $message->setBody($body, 'text/html');
+                        $message->setFrom($from);
+                        $message->setTo($to);
+                        
+                        $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+                        $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
+                        $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+                        
+                        if (!is_null($Renter->getDriverLicenseFile())) {
+                            $filepath = $Renter->getDriverLicenseFile();
+                            if (is_file($filepath)) {
+                                $message->attach(Swift_Attachment::fromPath($Renter->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$Renter->getLicenceFileName()));
+                            }
+                        }
+                        
+                        error_log("-------------ENVIANDO EMAIL DUENO-------------");
+                        $mailer->send($message);
+
+                        // Correo arrendatario
+                        $subject = "La reserva ha sido pagada";
+                        $body    = $this->getPartial('emails/paymentDoneRenter', array('Reserve' => $Reserve));
+                        $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+                        $to      = array($Renter->email => $Renter->firstname." ".$Renter->lastname);
+
+                        $message = $mail->getMessage();
+                        $message->setSubject($subject);
+                        $message->setBody($body, 'text/html');
+                        $message->setFrom($from);
+                        $message->setTo($to);
+
+                        $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+                        $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
+                        $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));                        
+                        $message->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
+
+                        error_log("-------------ENVIANDO EMAIL ARRENDATARIO-------------");
+                        $mailer->send($message);
+
+                        // Correo soporte
+                        $subject = "Nuevo pago. Reserva: ".$Reserve->id;
+                        $body    = $this->getPartial('emails/paymentDoneSupport', array('Reserve' => $Reserve));
+                        $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+                        $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+
+                        $message = $mail->getMessage();
+                        $message->setSubject($subject);
+                        $message->setBody($body, 'text/html');
+                        $message->setFrom($from);
+                        $message->setTo($to);
+                        $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+
+                        $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+                        $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
+                        $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+
+                        if (!is_null($Renter->getDriverLicenseFile())) {
+                            $filepath = $Renter->getDriverLicenseFile();
+                            if (is_file($filepath)) {
+                                $message->attach(Swift_Attachment::fromPath($Renter->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$Renter->getLicenceFileName()));
+                            }
+                        }
+                        
+                        error_log("-------------ENVIANDO EMAIL SOPORTE-------------");
+                        $mailer->send($message);
+
+                        // Crea la fila calificaciones habilitada para la fecha de término de reserva + 2 horas (solo si no es una extension de otra reserva)
+                        if (!$Reserve->getIdPadre()) {
+
+                            $Rating = new Rating();
+                            $Rating->setFechaHabilitadaDesde($Reserve->getFechaHabilitacionRating());
+                            $Rating->setIdOwner($Owner->id);
+                            $Rating->setIdRenter($Renter->id);
+                            $Rating->save();
+
+                            // Actualiza rating_id en la tabla Reserve
+                            $ratingId = $Rating->id;
+                            $Reserve->setFechaPago(date("Y-m-d H:i:s"));
+                            $Reserve->setRatingId($ratingId);
+                            $Reserve->save();
+                        }
+
+                        // Almacena reserveId en la tabla mail calificaciones
+                        $Reserve->encolarMailCalificaciones();
+
+                        error_log("-------------SUCCESS-------------");
+                    }
+                }
+            } else {
+                $this->_log("NotifyPayment", "ERROR", "Hubo un error en el proceso de verificacion.");
+            }
+        } catch (Exception $e) {
+            error_log("-------------ERROR-----------: ". $e->getMessage());
+            Utils::reportError($e->getMessage(), "khipu/notifyPayment");
+        }
+
+        die();
+    }
+
+    /*public function executeNotifyPayment(sfWebRequest $request) {
+
+        error_log("-------------NOTIFICACION PAGO-------------");
+
         $this->_log("NotifyPayment", "INFO", "Start validation");
         $settings = $this->getSettings();
 
@@ -163,6 +340,8 @@ class khipuActions extends sfActions {
             "notification_signature" => $_POST['notification_signature']
         );
 
+        error_log("-------------COMENZANDO-------------");
+
         try {
 
             $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["notification-validation-url"]);
@@ -170,14 +349,14 @@ class khipuActions extends sfActions {
 
             if ($response == 'VERIFIED' && $data["receiver_id"] == $settings["receiver_id"]) {
                 
-                /* Los parametros son correctos, ahora falta verificar que transacion_id, custom, subject y amount correspondan al pedido */
+                // Los parametros son correctos, ahora falta verificar que transacion_id, custom, subject y amount correspondan al pedido 
                 $this->_log("NotifyPayment", "INFO", "cobro verificado");
                 $this->_log("NotifyPayment", "INFO", "respuesta: ".  serialize($response));
                 $order = Doctrine_Core::getTable("Transaction")->getTransaction($data["transaction_id"]);
                 $this->idReserva = $order->getReserveId();
                 $reserve = Doctrine_Core::getTable('reserve')->findOneById($this->idReserva);
 
-                /* //cancel other reserves not paid for the same rental dates */
+                // cancel other reserves not paid for the same rental dates 
                 $startDate0 = $reserve->getDate();
                 $startDate = date("Y-m-d H:i:s", strtotime($startDate0));
                 $endDate = date("Y-m-d H:i:s", strtotime($startDate0) + ($reserve->getDuration() * 60 * 60));
@@ -228,24 +407,24 @@ class khipuActions extends sfActions {
                     $addressCar = $reserve->getAddressCar();
                     $idCar = $reserve->getCarId();
 
-                    /* verifica que la reserva no esté completa */
+                    // verifica que la reserva no esté completa 
                     if (!$order->getCompleted()) {
                         
                         $functions = new Functions;
                         $functions->generarNroFactura($reserve, $order);
                         
-                        /* actualiza el estado completed */
+                        // actualiza el estado completed 
                         $order->setCompleted(true);
                         $order->save();
 
-                        /* envío de mail */
+                        // envío de mail 
                         require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
 
-                        /* pedidos de reserva pagado (propietario) */
+                        //pedidos de reserva pagado (propietario) 
                         $mail = new Email();
                         $mailer = $mail->getMailer();
 
-                        /*if ($order->getImpulsive()) {*/
+                        if ($order->getImpulsive()) {
 
                             $url = $this->generateUrl("aprobarReserve", array('idReserve' => $reserve->getId(), 'idUser' => $reserve->getCar()->getUserId()), TRUE);
 
@@ -257,7 +436,7 @@ class khipuActions extends sfActions {
                             $body .= "<p>Si no apruebas la reserva cuanto antes otro dueño podría ganar la reserva.";
                             $body .= "<p>Para recibir tu pago debes aprobar la reserva haciendo <a href='$url'>click aquí</a></p>";
 
-                        /*} else {
+                        } else {
 
                             $subject = "¡El arrendatario ha pagado la reserva!";
 
@@ -269,7 +448,7 @@ class khipuActions extends sfActions {
                             $body .= "<p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p>";
                             $body .= "<p>Datos del propietario:<br><br>Nombre: $nameRenter $lastnameRenter<br>Teléfono: $telephoneRenter<br>Correo: $emailRenter</p>";
                             $body .= "<p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
-                        }*/
+                        }
 
                         $message = $mail->getMessage();
                         $message->setSubject($subject);
@@ -291,10 +470,10 @@ class khipuActions extends sfActions {
                             }
                         }
                         
+                        error_log("-------------ENVIANDO EMAIL DUENO-------------");
                         $mailer->send($message);
 
-
-                        /* pedidos de reserva pagado (arrendatario) */
+                        // pedidos de reserva pagado (arrendatario) 
                         $message = $mail->getMessage();
                         $message->setSubject('La reserva ha sido pagada!');
                         $body = "<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
@@ -305,9 +484,11 @@ class khipuActions extends sfActions {
                         $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
                         $pagare = $functions->generarPagare($tokenReserve);
                         $message->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
+
+                        error_log("-------------ENVIANDO EMAIL ARRENDATARIO-------------");
                         $mailer->send($message);
 
-                        /* mail Soporte */
+                        // mail Soporte 
                         $message = $mail->getMessage();
                         $message->setSubject('Nueva reserva paga ' . $idReserve . '');
                         $body = "<p>Hola $nameRenter:</p><p>Has pagado la reserva y esta ya esta confirmada.</p><p>Recuerda que debes llenar el FORMULARIO DE ENTREGA Y DEVOLUCIÓN del vehículo.</p><p>No des inicio al arriendo si el auto tiene más daños que los declarados.</p><p>Datos del propietario:<br><br>Nombre: $nameOwner $lastnameOwner<br>Teléfono: $telephoneOwner<br>Correo: $emailOwner<br>Dirección: $addressCar</p><p>Los datos del arriendo y la versión escrita del formulario de entrega, se encuentran adjuntos en formato PDF.</p>";
@@ -326,10 +507,10 @@ class khipuActions extends sfActions {
                             }
                         }
                         
-                        
+                        error_log("-------------ENVIANDO EMAIL SOPORTE-------------");
                         $mailer->send($message);
 
-                        /* crea la fila calificaciones habilitada para la fecha de término de reserva + 2 horas (solo si no es una extension de otra reserva) */
+                        // crea la fila calificaciones habilitada para la fecha de término de reserva + 2 horas (solo si no es una extension de otra reserva) 
                         if (!$reserve->getIdPadre()) {
 
                             $fecha = $reserve->getFechaHabilitacionRating();
@@ -342,28 +523,34 @@ class khipuActions extends sfActions {
                             $rating->setIdRenter($idRenter);
                             $rating->save();
 
-                            /* actualiza rating_id en la tabla Reserve */
+                            // actualiza rating_id en la tabla Reserve 
                             $ratingId = $rating->getId();
                             $reserve->setFechaPago(strftime("%Y-%m-%d %H:%M:%S"));
                             $reserve->setRatingId($ratingId);
                             $reserve->save();
                         }
 
-                        /* almacena $idReserve en la tabla mail calificaciones */
+                        // almacena $idReserve en la tabla mail calificaciones 
                         $reserve->encolarMailCalificaciones();
+
+                        error_log("-------------SUCCESS-------------");
+                        Utils::reportError("PAGO CORRECTO", "khipu/notifyPayment");
                     }
                 }
             } else {
                 $this->_log("NotifyPayment", "ERROR", "Hubo un error en el proceso de verificacion.");
             }
         } catch (Exception $e) {
+            error_log("-------------ERROR-----------: ". $e->getMessage());
             Utils::reportError($e->getMessage(), "khipu/notifyPayment");
         }
 
         die();
-    }
+    }*/
 
     public function executePaymentInformation(sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
 
         $customer_in_session = $this->getUser()->getAttribute('userid');
         

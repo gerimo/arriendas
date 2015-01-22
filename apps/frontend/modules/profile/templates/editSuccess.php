@@ -36,7 +36,7 @@
                 <div class="regis_foto_frame">
                     <div id="previewlicense">
                         <?php if ($User->getDriverLicenseFile() == null): ?>
-                            <?php echo image_tag('img_asegura_tu_auto/foto_padron_reverso.png', 'size=194x204') ?>
+                            <?php echo image_tag('pimg_asegura_tu_auto/foto_padron_reverso.png', 'size=194x204') ?>
                         <?php else: ?>
                             <?php echo image_tag('licence/'.$User->getLicenceFileName(), 'size=194x204') ?>
                         <?php endif ?>
@@ -82,26 +82,26 @@
                 
                 <input class="form-control" id="address" name="address" placeholder="Dirección #111" value="<?php if ($User->getAddress()) echo $User->getAddress() ?>" type="text">
             
-                <select class="form-control" id="commune" name="commune">
-                    <?php foreach ($comunas as $c): ?>
-                        <?php if ($c["codigoInterno"] == $UserComuna): ?>
-                            <option selected value="<?php echo $c["codigoInterno"] ?>"><?php echo ucwords(strtolower($c["nombre"])) ?></option>
+                <select class="form-control" id="region" name="region">
+                    <?php foreach ($Regions as $R): ?>
+                        <?php if ($R->id == $User->getCommune()->getRegion()->id): ?>
+                            <option selected value="<?php echo $R->id ?>"><?php echo $R->name ?></option>
                         <?php else: ?>
-                            <option value="<?php echo $c["codigoInterno"] ?>"><?php echo ucwords(strtolower($c["nombre"])) ?></option>
+                            <option value="<?php echo $R->id ?>"><?php echo $R->name ?></option>
                         <?php endif ?>
                     <?php endforeach ?>
                 </select>
 
-                <select class="form-control" id="region" name="region" onChange="cargarComunas(this.value)">
-                    <?php foreach ($regiones as $r): ?>
-                        <?php if ($r["codigo"] == $UserRegion): ?>
-                            <option selected value="<?php echo $r["codigo"] ?>"><?php echo $r["nombre"] ?></option>
+                <select class="form-control" id="commune" name="commune">
+                    <?php foreach ($User->getCommune()->getRegion()->getCommunes() as $C): ?>
+                        <?php if ($C->id == $User->getCommune()->id): ?>
+                            <option selected value="<?php echo $C->id ?>"><?php echo $C->name ?></option>
                         <?php else: ?>
-                            <option value="<?php echo $r["codigo"] ?>"><?php echo $r["nombre"] ?></option>
+                            <option value="<?php echo $C->id ?>"><?php echo $C->name ?></option>
                         <?php endif ?>
                     <?php endforeach ?>
                 </select>
-                
+
                 <!-- <div class="regis_term" style="display: none;">
                     <p>Terminos y Condiciones:</p>
                     <div style="width:400px; height:200px; overflow:auto; border: 1px solid #CCC;">
@@ -157,6 +157,34 @@
         imageUpload('#formlicense', '#filelicense', '#previewlicense','#linklicense');
     });
 
+    $("#region").change(function(){
+
+        var regionId = $(this).val();
+
+        $("#commune").attr("disabled", true);
+
+        if (regionId > 0) {
+            $.post("<?php echo url_for('main/getCommunes') ?>", {"regionId": regionId}, function(r){
+
+                if (r.error) {
+                    console.log(r.errorMessage);
+                } else {
+
+                    var html = "<option selected value='0'>Selecciona tu comuna</option>";
+
+                    $.each(r.communes, function(k, v){
+                        html += "<option value='"+v.id+"'>"+v.name+"</option>";
+                    });
+
+                    $("#commune").html(html);
+                }
+
+                $("#commune").removeAttr("disabled");
+
+            }, 'json');
+        }
+    });
+
     function imageUpload (form, formfile, preview, link) {
 
         $(formfile).change(function(e) {
@@ -204,9 +232,22 @@
         var birth          = $("#birth").val();
         var address        = $("#address").val();
         var commune        = $("#commune option:selected").val();
-        var region         = $("#region option:selected").val();
 
-        $.post("<?php echo url_for('profile/doEdit') ?>", {"firstname": firstname, "lastname": lastname, "motherLastname": motherLastname, "email": email, "emailAgain": emailAgain, "rut": rut, "foreign": foreign, "telephone": telephone, "birth": birth, "address": address, "commune": commune, "region": region}, function(r){
+        var parameters = {
+            "firstname": firstname,
+            "lastname": lastname,
+            "motherLastname": motherLastname,
+            "email": email,
+            "emailAgain": emailAgain,
+            "rut": rut,
+            "foreign": foreign,
+            "telephone": telephone,
+            "birth": birth,
+            "address": address,
+            "commune": commune
+        }
+
+        $.post("<?php echo url_for('profile/doEdit') ?>", parameters, function(r){
 
             $(".alert").removeClass("alert-a-danger");
             $(".alert").removeClass("alert-a-success");

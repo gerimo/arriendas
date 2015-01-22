@@ -54,6 +54,10 @@ messages:
     url: /mensajes/:id
     param: { module: messages, action: conversation }
 
+messages_inbox:
+    url: /mis-mensajes
+    param: { module: messages, action: inbox }
+
 opportunities:
     url: /oportunidades
     param: { module: opportunities, action: index }

@@ -15,20 +15,7 @@ class Car extends BaseCar {
         return $q->execute();
 
     }
-
-    public function getSameCar($model, $year){
-
-        $q = Doctrine_Core::getTable("Car")
-            ->createQuery('C')
-            ->where('C.model_id = ?', $model)
-            ->andWhere('C.year = ?', $year)
-            ->orderBy('C.price_per_day ASC')
-            ->limit(1);
-
-        return $q->execute();
-      
-    }
-
+    
     public function getCurrentCarAvailabilityEmails() {
 
         $q = Doctrine_Core::getTable("CarAvailabilityEmail")
@@ -74,7 +61,7 @@ class Car extends BaseCar {
 
         // Revisamos que las reservas no tengan ya el máximo de oportunidades permitidas y
         // Revisamos que el auto no tenga ya una reserva confirmada en la fecha de la oportunidad
-        foreach ($Reserves as $Reserve) {
+        foreach ($Reserves as $k => $Reserve) {
 
             $ChangeOptions = $Reserve->getChangeOptions(false);
 
@@ -83,7 +70,7 @@ class Car extends BaseCar {
 
                 // Revisamos que el usuario no haya ya postulado a la oportunidad
                 $itsPresent = false;
-                foreach ($ChangeOptions as $CO) {
+                foreach ($ChangeOptions as $l => $CO) {
                     if ($CO->getCar()->getUser()->id == $this->getUser()->id) {
                         $itsPresent = true;
                         break;
@@ -126,6 +113,22 @@ class Car extends BaseCar {
         }
         
         return floor($pricePerDay * $days + $pricePerHour * $hours);
+    }
+
+    public static function getTime($from, $to) {
+
+        $from = date("Y-m-d H:i:s", strtotime($from));
+        $to   = date("Y-m-d H:i:s", strtotime($to));
+
+        $duration = Utils::calculateDuration($from, $to);
+        $hours    = $duration % 24;
+        $days     = floor($duration) - $hours;
+
+        if ($hours >= 6) {
+            $days = $days + 24;
+            $hours = 0;
+        }
+        return floor($days + $hours);
     }
 
     public static function getReviews($id) {

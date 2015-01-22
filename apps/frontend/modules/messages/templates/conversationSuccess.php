@@ -12,12 +12,15 @@
 
             <?php
                 $cantidadMensajes = count($conversacion)-3;
+
                 $idUsuarioTo = $objetoConversacion[0]->getUserToId();
                 $idUsuarioFrom = $objetoConversacion[0]->getUserFromId();
+
                 $myId = $user_id;
                 $yoSoyElFrom = false;
                 $yoSoyElTo = false;
                 $idOtroUsuario = null;
+
                 if($myId == $idUsuarioFrom){ //Yo soy el que envia mensajes
                     $yoSoyElFrom = true;
                     $idOtroUsuario = $idUsuarioTo;
@@ -28,7 +31,7 @@
             ?>
 
             <div class="row topPart">                   
-                <span><a id="volverAtras" href="#"><i class="fa fa-arrow-left"></i> Bandeja de entrada</a></span>
+                <span><a id="volverAtras" href="<?php echo url_for('messages_inbox') ?>"><i class="fa fa-arrow-left"></i> Bandeja de entrada</a></span>
             </div>
 
             <div class="hidden-xs space-50"></div>
@@ -37,11 +40,11 @@
             <div class="row newMessage">
 
                 <div class="imgProfile col-sm-2 col-md-2 hidden-xs text-center">
-                        <?php if($yoSoyElFrom): ?>
-                            <?php include_component("profile","pictureFile", array("user" => $objetoConversacion[0]->getUserFrom(), "params" => "width=74px height=74px")) ?>
-                        <?php elseif($yoSoyElTo): ?>
-                            <?php include_component("profile","pictureFile", array("user" => $objetoConversacion[0]->getUserTo(), "params" => "width=74px height=74px")) ?>
-                        <?php endif ?>
+                    <?php if($yoSoyElFrom): ?>
+                        <?php include_component("profile","pictureFile", array("user" => $objetoConversacion[0]->getUserFrom(), "params" => "width=74px height=74px")) ?>
+                    <?php elseif($yoSoyElTo): ?>
+                        <?php include_component("profile","pictureFile", array("user" => $objetoConversacion[0]->getUserTo(), "params" => "width=74px height=74px")) ?>
+                    <?php endif ?>
                 </div>
 
                 <div class="col-sm-10 col-md-9">
@@ -54,8 +57,9 @@
                 </div>
                 <div id="ajax_loader" class="col-xs-offset-4 col-xs-4"><?php echo image_tag('ajax-loader.gif', 'class=img_loader');?></div>
             </div>  
-            <div class="hidden-xs space-30"></div>
+            <div class="hidden-xs space-70"></div>
             <div class="visible-xs space-20"></div>
+
             <div class="cargaDeNuevosMensajes"></div>
 
             <?php for ($i = 0 ; $i < $cantidadMensajes ; $i++): ?>
@@ -63,12 +67,13 @@
                     <?php if ($idUsuarioFrom == $myId): ?>
 
                         <div class='row'>
-
                             <div class="leftMessage hidden-xs col-sm-offset-1 col-md-offset-1 col-xs-1 col-sm-1 col-md-1">
 
-                                <div class="imageProfile hidden-sm">
-                                    <?php include_component("profile","pictureFile",array("user"=>$objetoConversacion[0]->getUserFrom(),"params"=>"width='74px' height='74px'"));?>
-                                </div>
+                                <span class="img-responsive">
+                                    <div class="imgProfile hidden-sm">
+                                        <?php include_component("profile","pictureFile",array("user"=>$objetoConversacion[0]->getUserFrom(),"params"=>"width='74px' height='74px'"));?>
+                                    </div>
+                                </span>
 
                                 <div class="nameProfile">
                                     <?php 
@@ -92,6 +97,7 @@
                         <div class="visible-xs space-20"></div>
 
                     <?php else: ?>
+
 
                         <div class='row'>
                             <div class="marcoTextoDer col-sm-offset-1 col-md-offset-1 col-xs-10 col-sm-8 col-md-8">
@@ -118,15 +124,17 @@
 
                     <?php endif ?>
                 <?php endif ?>
-
-                <?php if ($conversacion[$i]['userMensaje'] == $idUsuarioTo): ?> <!-- Si es el emisor -->
+                <?php if ($conversacion[$i]['userMensaje'] == $idUsuarioTo): ?> <!-- Si es el emisor -->    
                     <?php if ($idUsuarioTo == $myId): ?>
 
                         <div class='row'>
                             <div class="leftMessage hidden-xs col-sm-offset-1 col-md-offset-1  col-xs-1 col-sm-1 col-md-1">
-                                <div class="imgProfile hidden-sm">
-                                    <?php include_component("profile","pictureFile",array("user"=>$objetoConversacion[0]->getUserTo(),"params"=>"width='74px' height='74px'"));?>
-                                </div>
+                                
+                                <span class="img-responsive">
+                                    <div class="imgProfile hidden-sm">
+                                        <?php include_component("profile","pictureFile",array("user"=>$objetoConversacion[0]->getUserTo(),"params"=>"width='74px' height='74px'"));?>
+                                    </div>
+                                </span>
 
                                 <div class="nameProfile">
                                     <?php 
@@ -222,11 +230,6 @@
                     $(".img_loader").fadeOut("hide");
                 });
             }
-        });
-
-        $("#volverAtras").click(function(){
-            //location.href="http://localhost/repo_arriendas/web/frontend_dev.php/messages/inbox";
-            location.href="http://www.arriendas.cl/messages/inboxp";
         });
     });
 
