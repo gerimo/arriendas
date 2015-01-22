@@ -519,6 +519,7 @@ class bcpuntopagosActions extends sfActions {
                         ->andwhere('? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR ? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR r.date BETWEEN ? AND ? OR DATE_ADD(r.date, INTERVAL r.duration HOUR) BETWEEN ? AND ?', $rangeDates)
                         ->execute();
 
+
                 $opcionLiberacion = $reserve->getLiberadoDeGarantia();
                 if ($opcionLiberacion == 0)
                     $montoLiberacion = 0;
@@ -534,12 +535,14 @@ class bcpuntopagosActions extends sfActions {
                     $order->setShowSuccess(true);
                     $order->save();
 
+
                     $carId = $reserve->getCarId();
                     $carClass = Doctrine_Core::getTable('car')->findOneById($carId);
                     $propietarioId = $carClass->getUserId();
                     $propietarioClass = Doctrine_Core::getTable('user')->findOneById($propietarioId);
                     $comunaId = $propietarioClass->getComuna();
-                    $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);                    
+                    $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
+                    
                     
                     $this->nameOwner      = $reserve->getNameOwner();
                     $this->emailOwner     = $reserve->getEmailOwner();
@@ -547,7 +550,7 @@ class bcpuntopagosActions extends sfActions {
                     $this->telephoneOwner = $reserve->getTelephoneOwner();
                     $this->tokenReserve   = $reserve->getToken();
                     $this->comunaOwner    = $comunaClass->getNombre();
-                    $this->addressOwner   = $propietarioClass->getAddress();
+                    $this->addressOwner   =$propietarioClass->getAddress();
 
                     $this->durationFrom   = $reserve->getFechaInicio2();
                     $this->durationTo     = $reserve->getFechaTermino2();
@@ -557,12 +560,13 @@ class bcpuntopagosActions extends sfActions {
                     $this->_log("Pago", "Error", "Usuario: " . $customer_in_session . ". Order ID: " . $order->getId());
                     Doctrine_Core::getTable("Transaction")->successTransaction($last_order_id, $token, $STATE_ERROR, 1);
                 }
+                $this->setTemplate('exito');
+            } else{
+                exit; 
             }
         } else {
             $this->redirect('@homepage');
-        }
-        
-        $this->setTemplate('exito');
+        }       
     }
 
     /**

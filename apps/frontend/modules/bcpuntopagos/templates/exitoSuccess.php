@@ -11,7 +11,7 @@
           <h1>¡PAGO EXITOSO!</h1>
           <div class="contenido text-center">
             <p>Antes y después de realizar la reserva, debes firmar el 
-              <a href="<?php echo url_for('return_form', array('tokenReserve' => $tokenReserve))?>" target='_blank'>formulario de entrega impreso.</a>
+              <a href="<?php echo url_for('return_form', array('tokenReserve' => $tokenReserve))?>" target='_blank'>informe de daños impreso.</a>
             </p>
             <br>
             <p class="Owner text-center">
@@ -20,7 +20,7 @@
             <p>
               <b>Nombre:</b>    <?php echo $nameOwner ?> <?php echo $lastnameOwner ?>
               <br>
-              <b>Direccion:</b> <?php echo $addressOwner ?> , <?php echo $comunaOwner ?>
+              <b>Direccion:</b> <?php echo $addressOwner ?> , <?php echo ucfirst(strtolower($comunaOwner)) ?>
               <br>
               <b>Teléfono:</b>  <?php echo $telephoneOwner ?>
               <br>
