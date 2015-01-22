@@ -1,4 +1,7 @@
 <link href="/css/newDesign/create.css" rel="stylesheet" type="text/css">
+<!-- Google Maps -->
+<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
+
 
 
 <div class="space-100"></div>
@@ -9,30 +12,30 @@
             <form id="createCar">
 
                 <fieldset id="paso1">
-                    <legend>Datos del vehículo</legend>
+                    <h1>Datos del vehículo</h1>
                     <div class="espacio col-xs-12 col-sm-12 col-md-12">
-                        <!-- direccion -->
-                        <div class="col-sm-8 col-md-8">
-                            <label>Ubicación del vehículo  (*)</label>
-                            <input class="form-control" id="address" name="address" placeholder="Dirección #111" type="text">
-                        </div>
+                    <!-- comuna -->
+                    <div class="col-sm-4 col-md-4">   
+                        <label>Comuna (*)</label>
+                        <select class="form-control" id="commune" name="commune" placeholder="" type="text">
+                                <option value="">--</option>
+                            <?php
+                                foreach ($Communes as $commun):
+                            ?>
+                                <option value="<?php echo $commun['id']?>"><?php echo $commun['name']?></option>
+                            <?php
+                                endforeach;
+                            ?>
+                        </select>
+                    </div>
+                    
+                    <div class="visible-xs space-20"></div>
 
-                        <div class="visible-xs space-20"></div>
-
-                        <!-- comuna -->
-                        <div class="col-sm-4 col-md-4">   
-                            <label>Comuna (*)</label>
-                            <select class="form-control" id="commune" name="commune" placeholder="" type="text">
-                                    <option value="">--</option>
-                                <?php
-                                    foreach ($Communes as $commun):
-                                ?>
-                                    <option value="<?php echo $commun['id']?>"><?php echo $commun['name']?></option>
-                                <?php
-                                    endforeach;
-                                ?>
-                            </select>
-                        </div>
+                    <!-- direccion -->
+                    <div class="col-sm-8 col-md-8">
+                        <label>Ubicación del vehículo  (*)</label>
+                        <input class="form-control" id="address" name="address" placeholder="Dirección #111" type="text"> 
+                    </div>
 
 
                     </div>
@@ -155,14 +158,33 @@
                         </div>
 
                         <div class="espacio col-md-11"></div>
-
+                        <!-- Modal -->
+                        <div class="modal fade" id="myModal">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">¿Es está su dirección?</h4>
+                              </div>
+                              <div id="mostrarMapa"> </div>
+                              <div class="modal-footer">
+                                <button id="noAddress"type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">SI</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>  
                     </div>
                 </fieldset>
+
+                <input id="lat" name="lat" type="hidden" value="">
+                <input id="lng" name="lng" type="hidden" value="">
             </form>
             <div class="col-md-offset-8 col-md-4">
                 <button class="btn-a-primary btn-block" name="save" onclick="validateForm()">Siguiente</button>
                 <p class="alert"></p> 
             </div>
+            
             <div style="display:none">
                 <div id="dialog-alert" title="">
                     <p></p>
@@ -222,9 +244,11 @@
         var typeCar        = $("#typeCar option:selected").val();
         var patent         = $("#patent").val();
         var color          = $("#color").val();
+        var lat            = $("#lat").val();
+        var lng            = $("#lng").val();
 
 
-        $.post("<?php echo url_for('cars/getValidateCar') ?>", {"address": address, "commune": commune, "brand": brand, "model": model, "ano": ano, "door": door, "transmission": transmission, "benzine": benzine, "typeCar": typeCar, "patent": patent, "color": color}, function(r){
+        $.post("<?php echo url_for('cars/getValidateCar') ?>", {"address": address, "commune": commune, "brand": brand, "model": model, "ano": ano, "door": door, "transmission": transmission, "benzine": benzine, "typeCar": typeCar, "patent": patent, "color": color, "lat": lat, "lng": lng}, function(r){
 
             
             $(".alert").removeClass("alert-a-danger");
@@ -274,11 +298,6 @@
                 }else if(r.errorCode == 9){
                     $("#typeCar").addClass("alert-danger"); 
                     $('#typeCar').focus();
-                }else if(r.errorCode == 10){
-                    $("#patent").addClass("alert-danger");
-                    $('#patent').val('');
-                    $('#patent').focus(); 
-
                 }else if(r.errorCode == 11){
                     $("#color").addClass("alert-danger"); 
                     $('#color').focus();
@@ -292,7 +311,7 @@
         }, 'json');
     } 
 
-  function validatePatent(){
+    function validatePatent(){
 
 
         var x = $("#patent").val();
@@ -301,7 +320,7 @@
 
         $.post("<?php echo url_for('cars/getValidatePatent') ?>", {"patente": patente}, function(r){
 
-            if (r.error) {
+            if (r.errorCode == 2) {
 
                 $("#dialog-alert p").html("Ya ha subido este auto.</br> Recién podrá ver "+ 
                     "publicado su auto una vez que lo haya visitado"+
@@ -320,10 +339,77 @@
                 $("#patent").val("");
 
             }
+            else if(r.errorCode == 1){
+                    $(".alert").html(r.errorMessage);
+                    $("#patent").addClass("alert-danger");
+                    $('#patent').val('');
+
+            }
 
         }, 'json');
+
+        $(".alert").html("");
+        $("#patent").removeClass("alert-danger");
     }
+
+    $('#noAddress').blur(function(){
+        $('#address').val("");
+        $('#commune').val("");
+        $('#lat').val("");
+        $('#log').val("");
+    });
+  
+  
+    $('#address').blur(function(){
+        if(($("#address").val() != null) && ($("#address").val() != "") && ($("#commune option:selected").val() != "") && ($("#commune option:selected").val() != "")){
+            modalShow();
+        }
+    });
+
+    $('#commune').blur(function(){
+        if(($("#address").val() != null) && ($("#address").val() != "") && ($("#commune option:selected").val() != "") && ($("#commune option:selected").val() != "")){
+            modalShow();
+        }
+    });
+
+    function modalShow(){
+        $("#myModal").modal('show');
+        $('#myModal').on('shown.bs.modal', function() {
+
+            var direccion = $("#commune option:selected").text()+" "+$("#address").val();
+            initialize(direccion);
+        
+        });
+    }
+
+    function initialize(address) {
+
+        console.log(address);
+        var geoCoder = new google.maps.Geocoder(address)
+        var request = {address:address};
+        geoCoder.geocode(request, function(result, status){
+
+            var latlng = new google.maps.LatLng(result[0].geometry.location.lat(), result[0].geometry.location.lng());       
+            var myOptions = {
+                zoom: 17,
+                center: latlng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+
+            };
+
+            $("#lat").val(result[0].geometry.location.lat());
+            $("#lng").val(result[0].geometry.location.lng());
     
+    
+            var map = new google.maps.Map(document.getElementById("mostrarMapa"),myOptions);
+     
+            var marker = new google.maps.Marker({position:latlng,map:map,title:'title'});
+
+ 
+        })
+    }
+
+
 
     
 
