@@ -6,7 +6,7 @@
 
         public function executeHeader(){
 
-            if ($this->gteUser()->isAuthenticated()) {
+            if ($this->getUser()->isAuthenticated()) {
         	
             	$userId = sfContext::getInstance()->getUser()->getAttribute('userid');
 
