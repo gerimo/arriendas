@@ -125,6 +125,7 @@ class opportunitiesActions extends sfActions {
 
             $Car = Doctrine_Core::getTable('Car')->find($carId);
             $OriginalReserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
+            error_log(1);
 
             if ($Car->hasReserve($OriginalReserve->getFechaInicio2(), $OriginalReserve->getFechaTermino2())) {
                 throw new Exception("El auto seleccionado para postular ya posee una reserva en las fechas de la postulación", 1);                
@@ -134,25 +135,26 @@ class opportunitiesActions extends sfActions {
             /*if ($Car->getUserId() != $this->getUser()->getAttribute("userid")) {
                 throw new Exception("No! No! No!", 1);
             }*/
-
+            error_log(2);
             $O = $OriginalReserve->copy(true);
             $O->setCar($Car);
             $O->setFechaReserva(date("Y-m-d H:i:s"));
             $O->setConfirmed(true);
             $O->setImpulsive(true);
             $O->setReservaOriginal($OriginalReserve->getId());
-
+            error_log(3);
             if ($isMailing) {
                 $O->setComentario('Reserva oportunidad - mailing');
             } else {
                 $O->setComentario('Reserva oportunidad');
             }
-
+            error_log(4);
             $O->save();
-            
+            error_log(5);
             $O->setUniqueToken(true);
+            error_log(6);
             $O->save();
-
+            error_log(7);
             $OT = $OriginalReserve->getTransaction()->copy(true);
             $OT->setCar($Car->getModel()->getBrand()->getName() ." ". $Car->getModel()->getName());
             $OT->setReserve($O);
@@ -161,9 +163,10 @@ class opportunitiesActions extends sfActions {
             $OT->setImpulsive(true);
             $OT->setTransaccionOriginal($OriginalReserve->getTransaction()->getId());
             $OT->save();
+            error_log(8);
 
         } catch (Exception $e) {
-            error_log("opportunities/(private)approve". $e->getMessage());
+            error_log("[ERROR] opportunities/(private)approve: ". $e->getMessage());
             return $e->getMessage();
         }
 
