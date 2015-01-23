@@ -156,8 +156,6 @@ class opportunitiesActions extends sfActions {
                 $O->setComentario('Reserva oportunidad');
             }
             
-            $O->save();
-            
             $O->setUniqueToken(true);            
             $O->save();
             
