@@ -675,7 +675,7 @@ class Reserve extends BaseReserve {
         
         if (!$this->token || $replace) {
             while ($iterate) {
-                error_log("iteracion");
+                
                 $token = sha1($this->getDuration() . rand(11111, 99999));
 
                 if (!Doctrine_Core::getTable('Reserve')->findOneBy('token', $token)) {

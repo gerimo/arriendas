@@ -108,7 +108,7 @@ EOF;
                         /*->groupBy('C.user_id')*/
                         /*->orderBy('C.ratio_aprobacion DESC');*/
 
-                    if ($Reserve->getCar()->getModel()->getIdOtroTipoVehiculo() == 2) {
+                    if ($Reserve->getCar()->getModel()->getIdOtroTipoVehiculo() == 1) {
                         $q->andWhere('M.id_otro_tipo_vehiculo IN (1,2)');
                     } else {
                         $q->andWhere('M.id_otro_tipo_vehiculo = ?', $Reserve->getCar()->getModel()->getIdOtroTipoVehiculo());
