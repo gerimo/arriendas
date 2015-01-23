@@ -63,6 +63,7 @@ EOF;
 
                     // Si la reserva ya posee mas de 5 opciones de cambio, no se generan oportunidades y se cancela
                     if (count($Reserve->getChangeOptions()) > 5) {
+                        $this->log("[".date("Y-m-d H:i:s")."] La oportunidad {$OpportunityQueue->id} ya posee mas de 5 opciones de cambios");
                         $OpportunityQueue->setIsActive(false);
                         $OpportunityQueue->save();
                         continue;
@@ -70,6 +71,7 @@ EOF;
 
                     // Si el usuario que realizó la reserva o el pago se encuentra bloqueado, no se generan oportunidades
                     if ($Reserve->getUser()->getBlocked()) {
+                        $this->log("[".date("Y-m-d H:i:s")."] El usuario ({$Reserve->getUser()->getBlocked()}) que realizo la reserva se encuentra bloqueado");
                         continue;
                     }
 
@@ -85,6 +87,7 @@ EOF;
                     // Esto es para evitar generar los registros para una reserva en la que aun no se envian todos los correos
                     //  generados para la iteracion anterior
                     if (isset($result[0]) && $result[0]->getTotal() > 0) {
+                        $this->log("[".date("Y-m-d H:i:s")."] Evitando generar registros para un reserva en la que aun no se envian todos los correos");
                         continue;
                     }
 
