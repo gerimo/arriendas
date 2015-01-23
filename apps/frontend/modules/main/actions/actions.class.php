@@ -3622,7 +3622,7 @@ public function calificacionesPendientes(){
             Utils::reportError($e->getMessage(), "profile/executeAvailability");
         }
 
-        $this->redirect('profile/cars');
+        $this->redirect('cars');
     }
 
     /*public function executeGetComunas(sfWebRequest $request) {
