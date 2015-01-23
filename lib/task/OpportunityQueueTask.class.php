@@ -100,7 +100,7 @@ EOF;
                         ->where('distancia(?, ?, C.lat, C.lng) > ?', array($Reserve->getCar()->getLat(), $Reserve->getCar()->getLng(), $desde))
                         ->andWhere('distancia(?, ?, C.lat, C.lng) <= ?',  array($Reserve->getCar()->getLat(), $Reserve->getCar()->getLng(), $hasta))
                         ->andWhere('C.seguro_ok = 4')
-                        ->andWhere('C.activo IS TRUE')
+                        ->andWhere('C.activo = 1')
                         ->andWhere('C.transmission = ?', $Reserve->getCar()->getTransmission());
                         /*->andWhere('R.comentario = "null"')*/
                         /*->andWhere('(day(R.date) - day(R.fecha_reserva)) > 0')*/
