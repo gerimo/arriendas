@@ -42,7 +42,7 @@
                         <!-- <li><a onclick="playPause()">Play / Pause</a></li> -->
                     <?php endif ?>
 
-                    <li><a href="<?php echo url_for('como_funciona/index') ?>">Ayuda</a></li>
+                    <li><a href="<?php echo url_for('questions') ?>">Preguntas Frecuentes</a></li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
