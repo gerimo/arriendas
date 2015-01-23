@@ -7,14 +7,11 @@
     <div class="col-md-offset-3 col-md-6">
         <div class="BCW">
             
-            <div class="encabezado">
-                <h1>MIS AUTOS</h1>
-            </div>  
-            
             <div class="col-md-offset-8 col-md-4">
-                    <button class="col-md-12  btn-block btn-a-primary" onclick="location.href='<?php echo url_for('cars/create') ?>'">¡Sube un auto!</button>
+                <button class="col-md-12  btn-block btn-a-primary" onclick="location.href='<?php echo url_for('cars/create') ?>'">¡Sube un auto!</button>
             </div>
 
+            <h1>MIS AUTOS</h1>
                        
             <div class="row">
                 <?php foreach ($cars as $c): ?>
