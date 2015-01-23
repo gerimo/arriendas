@@ -69,10 +69,6 @@ class opportunitiesActions extends sfActions {
 
             $Reserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
 
-            error_log("reserveId: ".$reserveId);
-            error_log("carId: ".$carId);
-            error_log("signature: ".$Reserve->getSignature());
-
             if ($Reserve) {
                 if ($Reserve->getSignature() == $signature) {
 
@@ -108,7 +104,7 @@ class opportunitiesActions extends sfActions {
             $this->error = "ERROR: ".$e->getMessage();
 
             if ($request->getHost() == "www.arriendas.cl") {
-                Utils::reportError($e->getMessage(), "reserves/approve");
+                Utils::reportError($e->getMessage(), "opportunities/mailingApprove");
             }
         }
 
@@ -167,6 +163,7 @@ class opportunitiesActions extends sfActions {
             $OT->save();
 
         } catch (Exception $e) {
+            error_log("opportunities/(private)approve". $e->getMessage());
             return $e->getMessage();
         }
 
