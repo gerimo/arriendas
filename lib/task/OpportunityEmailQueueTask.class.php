@@ -72,7 +72,7 @@ EOF;
 
                 $subject = "Oportunidad especial para arrendar tu auto";
                 $body    = get_partial('emails/opportunityMailing', array('Reserve' => $Reserve, 'Car' => $Owner->getCar(), "acceptUrl" => $acceptUrl, "imageUrl" => $imageUrl));
-                $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+                $from    = array("soporte@arriendas.cl" => "Oportunidades Arriendas.cl");
                 $to      = array($Owner->email => $Owner->firstname." ".$Owner->lastname);
 
                 $message = $this->getMailer()->compose();
