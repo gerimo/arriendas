@@ -66,6 +66,10 @@ opportunities_approve:
     url: /oportunidades/aprobar
     param: { module: opportunities, action: approve }
 
+questions:
+    url: /preguntas-frecuentes
+    param: { module: main , action: questions }
+
 rent_a_car_region_commune:
     url: /arriendo-de-autos/:region/:commune
     param: {module: main, action: index }
