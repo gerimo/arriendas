@@ -30,20 +30,20 @@ class reservesActions extends sfActions {
         try {
     
             if (is_null($reserveId) || $reserveId == "") {
-                throw new Exception("Falta la reserva", 1);
+                throw new Exception("Falta la reserva");
             }
 
             $Reserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
             if (!$Reserve) {
-                throw new Exception("Reserva no encontrada", 1);
+                throw new Exception("Reserva no encontrada");
             }
 
             if ($Reserve->getCar()->getUser()->getId() != $this->getUser()->getAttribute("userid")) {
-                throw new Exception("La reserva corresponde a otro usuario", 1);
+                throw new Exception("La reserva corresponde a otro usuario");
             }
 
             if ($Reserve->getConfirmed()) {
-                throw new Exception("La reserva ya se encuentra aprobada", 1);
+                throw new Exception("La reserva ya se encuentra aprobada");
             }
 
             if ($Reserve->getUser()->getBlocked()){            
@@ -53,6 +53,11 @@ class reservesActions extends sfActions {
             $Reserve->setConfirmed(1);
             $Reserve->setCanceled(0);
             $Reserve->setFechaConfirmacion(date("Y-m-d H:i:s"));
+
+            // Cancelamos el envío de oportunidades
+            $OpportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findByReserve($Reserve);
+            $OpportunityQueue->setIsActive(false);
+            $OpportunityQueue->save();
 
             // Correo de notificación
             $User    = $Reserve->getUser();
@@ -95,8 +100,8 @@ class reservesActions extends sfActions {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
 
-            if ($e->getCode() == 2) {
-                /*Utils::reportError($e->getMessage(), "profile/reserveChange");*/
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "reserves/approve");
             }
         }
     
@@ -133,6 +138,9 @@ class reservesActions extends sfActions {
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "reserves/calculatePrice");
+            }
         }
     
         $this->renderText(json_encode($return));
@@ -242,7 +250,6 @@ class reservesActions extends sfActions {
             $mailer->send($message);
 
             // CORREO SOPORTE
-
             if ($NewReserve->reserva_original) {
                 $originalReserveId = $NewReserve->reserva_original;
             } else {
@@ -277,9 +284,8 @@ class reservesActions extends sfActions {
 
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
-
-            if ($e->getCode() == 2) {
-                Utils::reportError($e->getMessage(), "profile/reserveChange");
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "reserves/change");
             }
         }
     
@@ -394,6 +400,9 @@ class reservesActions extends sfActions {
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "reserves/getExtendPrice");
+            }
         }
     
         $this->renderText(json_encode($return));
@@ -523,6 +532,9 @@ class reservesActions extends sfActions {
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "reserves/reject");
+            }
         }
 
         $this->renderText(json_encode($return));

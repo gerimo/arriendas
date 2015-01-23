@@ -3493,29 +3493,6 @@ public function calificacionesPendientes(){
         return $next_numero;
     }
 
-    public function executeOpenOpportunityEmail(sfWebRequest $request) {
-
-        try {
-
-            $opportunityEmailQueue = Doctrine_Core::getTable('OportunityEmailQueue')->find($request->getParameter('id'));
-
-            if (is_null($opportunityEmailQueue->getOpenedAt())) {
-                $opportunityEmailQueue->setOpenedAt(date("Y-m-d H:i:s"));
-                $opportunityEmailQueue->save();
-            }
-
-        } catch (Exception $e) {
-
-            Utils::reportError($e->getMessage(), "profile/executeOpenOpportunityEmail");
-        }
-
-        $this->getResponse()->setContentType('image/gif');
-
-        echo base64_decode("R0lGODlhAQABAIAAAP///////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACwAAAAAAQABAAACAkQBADs=");
-
-        return sfView::NONE;
-    }
-
     public function executeAvailabilityOpen(sfWebRequest $request) {
 
         try {

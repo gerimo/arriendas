@@ -10,7 +10,7 @@
 
             <?php if (count($PaidReserves) > 0): ?>
 
-                <h1>Reservas pagadas <small>(pendientes de tu aprobación)</small></h1>
+                <h1>Reservas recibidas</h1>
 
                 <?php foreach ($PaidReserves as $PaidReserve): ?>
                     <div class="row paid-reserve-container">
@@ -32,6 +32,7 @@
                         <div class="col-md-3 text-center">
                             <?php if ($PaidReserve->confirmed): ?>
                                 <button class="btn-a-action btn-block" disabled>CONFIRMADA</button>
+                                <a class="download-contracts" data-car-id="<?php echo $PaidReserve->getCar()->id ?>" data-reserve-token="<?php echo $PaidReserve->token ?>" href="#">Descargar contratos</a>
                             <?php else: ?>
                                 <button class="approve btn-a-primary btn-block" data-reserve-id="<?php echo $PaidReserve->getId() ?>">Aprobar</button>
                                 <a class="reject" data-reserve-id="<?php echo $PaidReserve->getId() ?>">Rechazar</a>
