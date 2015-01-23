@@ -1,5 +1,5 @@
 <?php
-    $Owner  = $Reserve->getCar()->getUser();
+    $Owner = $Car->getUser();
 ?>
 
 <p>Hola <?php echo $Owner->firstname ?>,</p>

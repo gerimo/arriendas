@@ -68,11 +68,11 @@ opportunities_approve:
 
 opportunities_mailing_approve:
     url: /oportunidades/mailing/aprobar/:reserve_id/:car_id/:signature
-    param: { module: profile, action: mailingApprove }
+    param: { module: opportunities, action: mailingApprove }
 
 opportunities_mailing_open:
     url: /oportunidades/mailing/:id/:signature
-    param: { module: main, action: mailingOpen }
+    param: { module: opportunities, action: mailingOpen }
 questions:
     url: /preguntas-frecuentes
     param: { module: main , action: questions }

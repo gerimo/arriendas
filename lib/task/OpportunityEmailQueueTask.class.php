@@ -71,7 +71,7 @@ EOF;
                 $this->log("[".date("Y-m-d H:i:s")."] Envio de correo de opportunidad a {$Owner->firstname} {$Owner->lastname}, Reserva {$Reserve->id}");
 
                 $subject = "Oportunidad especial para arrendar tu auto";
-                $body    = get_partial('emails/opportunityMailing', array('Reserve' => $Reserve, "acceptUrl" => $acceptUrl, "imageUrl" => $imageUrl));
+                $body    = get_partial('emails/opportunityMailing', array('Reserve' => $Reserve, 'Car' => $Owner->getCar(), "acceptUrl" => $acceptUrl, "imageUrl" => $imageUrl));
                 $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
                 $to      = array($Owner->email => $Owner->firstname." ".$Owner->lastname);
 
