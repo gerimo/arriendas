@@ -624,6 +624,35 @@ class mainActions extends sfActions {
         return $this->redirect('homepage');
     }
 
+    public function executeMailingOpen(sfWebRequest $request) {
+
+        $opportunityEmailQueueId        = $request->getParameter('id');
+        $opportunityEmailQueueSignature = $request->getParameter('signature');
+
+        try {
+
+            $OpportunityEmailQueue = Doctrine_Core::getTable('OportunityEmailQueue')->find($opportunityEmailQueueId);
+
+            if ($OpportunityEmailQueue->getSignature() == $opportunityEmailQueueSignature) {
+                if (is_null($OpportunityEmailQueue->getOpenedAt())) {
+                    $OpportunityEmailQueue->setOpenedAt(date("Y-m-d H:i:s"));
+                    $OpportunityEmailQueue->save();
+                }
+            } else {
+                throw new Exception("Firma no coincide", 1);                
+            }
+
+        } catch (Exception $e) {
+            Utils::reportError($e->getMessage(), "main/opportunityMailingOpen");
+        }
+
+        $this->getResponse()->setContentType('image/gif');
+
+        echo base64_decode("R0lGODlhAQABAIAAAP///////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACwAAAAAAQABAAACAkQBADs=");
+
+        return sfView::NONE;
+    }
+
     public function executeRegister(sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
