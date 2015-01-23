@@ -61,9 +61,9 @@ class opportunitiesActions extends sfActions {
 
         $this->error = false;
 
-        $reserveId = $request->getGetParameter("reserve_id", null);
-        $carId     = $request->getGetParameter("car_id", null);
-        $signature = $request->getGetParameter("signature", null);
+        $reserveId = $request->getParameter("reserve_id", null);
+        $carId     = $request->getParameter("car_id", null);
+        $signature = $request->getParameter("signature", null);
 
         try {
 
