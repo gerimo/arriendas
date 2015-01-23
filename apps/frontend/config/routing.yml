@@ -72,7 +72,7 @@ opportunities_mailing_approve:
 
 opportunities_mailing_open:
     url: /oportunidades/mailing/:id/:signature
-    param: { module: opportunities, action: mailingOpen }
+    param: { module: main, action: mailingOpen }
 questions:
     url: /preguntas-frecuentes
     param: { module: main , action: questions }
