@@ -631,7 +631,7 @@ class mainActions extends sfActions {
 
         try {
 
-            $OpportunityEmailQueue = Doctrine_Core::getTable('OportunityEmailQueue')->find($opportunityEmailQueueId);
+            $OpportunityEmailQueue = Doctrine_Core::getTable('OpportunityEmailQueue')->find($opportunityEmailQueueId);
 
             if ($OpportunityEmailQueue->getSignature() == $opportunityEmailQueueSignature) {
                 if (is_null($OpportunityEmailQueue->getOpenedAt())) {
