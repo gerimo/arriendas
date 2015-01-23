@@ -113,6 +113,10 @@ class opportunitiesActions extends sfActions {
 
     private function approve($reserveId, $carId, $isMailing = false) {
 
+        error_log("Reserva: ".$reserveId);
+        error_log("Car: ".$carId);
+        error_log("isMailing: ".$isMailing);
+
         try {
 
             if (is_null($reserveId) || $reserveId == 0) {
