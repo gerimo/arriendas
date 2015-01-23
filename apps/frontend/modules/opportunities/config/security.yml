@@ -1,0 +1,5 @@
+opportunities_mailing_approve:
+    is_secure: false
+
+opportunities_mailing_open:
+    is_secure: false
