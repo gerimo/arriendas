@@ -122,13 +122,13 @@
 			    	<div class="panel-heading" role="tab" id="headingThree">
 			      <h4 class="panel-title">
 			        <a class="collapsed" data-toggle="collapse" data-parent="#accordions" href="#leeseThree" aria-expanded="false" aria-controls="leeseThree">
-			           ¿Quién decide qué pedidos se aceptan y cuales no?<i class="pull-right fa fa-chevron-down"></i>
+			           ¿Dónde se retira el auto?<i class="pull-right fa fa-chevron-down"></i>
 			        </a>
 			      </h4>
 			    	</div>
 			    	<div id="leeseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
 			      <div class="panel-body">
-			        Tu. Puedes rechazar o aprobar los pedidos según tu disponibilidad.
+			        El auto se retira en el domicilio del dueño del auto. Puedes buscar autos en tu comuna, a través de nuestro mapa de búsqueda.
 			      </div>
 			    	</div>
 			  	</div>
@@ -136,13 +136,13 @@
 			    	<div class="panel-heading" role="tab" id="headingFour">
 			      		<h4 class="panel-title">
 			        	<a class="collapsed" data-toggle="collapse" data-parent="#accordions" href="#leeseFour" aria-expanded="false" aria-controls="leeseFour">
-			          		 ¿Cómo y cuándo me pagan mis arriendos?<i class="pull-right fa fa-chevron-down"></i>
+			          		¿Es necesario realizar un depósito en garantía?<i class="pull-right fa fa-chevron-down"></i>
 			        	</a>
 			      		</h4>
 			    	</div>
 			    	<div id="leeseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
 			      		<div class="panel-body">
-							Por transferencia (debes indicarnos tu cuenta bancaria), los pagos se realizan los dias 1 y 16 de cada mes.
+							El depósito en garantía es opcional por $180,000, estos se devuelven al final del arriendo en caso de que el auto vuelva en buenas condiciones. Si decides no realizar el depósito en garantía debes pagar un fijo adicional de 8,700 pesos que van a un fondo solidario (estos NO se devuelven).
 			      		</div>
 			    	</div>
 			  	</div>
@@ -150,17 +150,13 @@
 			    	<div class="panel-heading" role="tab" id="headingFive">
 			      <h4 class="panel-title">
 			        <a class="collapsed" data-toggle="collapse" data-parent="#accordions" href="#leeseFive" aria-expanded="false" aria-controls="leeseFive">
-			           ¿Qué se hace en caso de daños?<i class="pull-right fa fa-chevron-down"></i>
+			           ¿Cuáles son los medios de pago?<i class="pull-right fa fa-chevron-down"></i>
 			        </a>
 			      </h4>
 			    	</div>
 			    	<div id="leeseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
 			      <div class="panel-body">
-			        Lo primero es realizar la CONSTANCIA por el siniestro dentro de 24 horas y enviar ese número a soporte@arriendas.cl 
-			        Luego debes firmar el formulario de devolución junto con el arrendatario e indicar el daño en el mismo formulario.
-			        Para reclamar la cobertura que te corresponde debes enviar una foto del formulario y comunicarte con nosotros por teléfono o correo,
-			        en el acto.
-			        <b>Arriendas.cl se encarga de procesar el arreglo y de la aplicación de la póliza, junto con la entrega del formulario y aviso conforme</b>
+			        Debes pagar por transferencia bancaria desde una cuenta a tu nombre . No aceptamos efectivo, cheques o tarjetas de crédito.
 			      </div>
 			    	</div>
 			  	</div>
