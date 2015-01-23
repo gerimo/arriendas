@@ -633,13 +633,17 @@ class mainActions extends sfActions {
 
             $OpportunityEmailQueue = Doctrine_Core::getTable('OpportunityEmailQueue')->find($opportunityEmailQueueId);
 
-            if ($OpportunityEmailQueue->getSignature() == $opportunityEmailQueueSignature) {
-                if (is_null($OpportunityEmailQueue->getOpenedAt())) {
-                    $OpportunityEmailQueue->setOpenedAt(date("Y-m-d H:i:s"));
-                    $OpportunityEmailQueue->save();
+            if ($OpportunityEmailQueue) {
+                if ($OpportunityEmailQueue->getSignature() == $opportunityEmailQueueSignature) {
+                    if (is_null($OpportunityEmailQueue->getOpenedAt())) {
+                        $OpportunityEmailQueue->setOpenedAt(date("Y-m-d H:i:s"));
+                        $OpportunityEmailQueue->save();
+                    }
+                } else {
+                    throw new Exception("Firma no coincide", 1);                
                 }
             } else {
-                throw new Exception("Firma no coincide", 1);                
+                throw new Exception("OpportunityEmailQueue no encontrada", 1);                
             }
 
         } catch (Exception $e) {
