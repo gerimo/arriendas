@@ -31,8 +31,14 @@
 
                     <?php if ($sf_user->isAuthenticated()): ?>
                         <li><a href="<?php echo url_for("homepage") ?>" data-target="homepage">Inicio</a></li>
-                        <li><a href="<?php echo url_for("cars") ?>" data-target="cars">Mis autos</a></li>
-                        <li><a href="<?php echo url_for("opportunities") ?>" data-target="opportunities">Oportunidades</a></li>
+                        <?php if($hasCars):?>
+                            <li><a href="<?php echo url_for("cars") ?>" data-target="cars">Mis autos</a></li>
+                        <?php else: ?>
+                            <li><a href="<?php echo url_for("car_create") ?>" data-target="cars">Subir Auto</a></li>
+                        <?php endif; 
+                        if($hasActiveCars):?>
+                            <li><a href="<?php echo url_for("opportunities") ?>" data-target="opportunities">Oportunidades</a></li>
+                        <?php endif; ?>
                         <li><a href="<?php echo url_for("reserves") ?>" data-target="reserves">Reservas</a></li>
                     <?php else: ?>
                         <li><a class="animate" data-target="#section-map-form-search" href="">Buscar autos</a></li>
