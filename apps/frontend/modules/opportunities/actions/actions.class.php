@@ -62,44 +62,52 @@ class opportunitiesActions extends sfActions {
         $this->error = false;
 
         $reserveId = $request->getGetParameter("reserve_id", null);
-        $carId = $request->getGetParameter("car_id", null);
+        $carId     = $request->getGetParameter("car_id", null);
         $signature = $request->getGetParameter("signature", null);
 
         try {
 
             $Reserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
 
-            if ($Reserve->getSignature() == $signature) {
+            error_log("reserveId: ".$reserveId);
+            error_log("carId: ".$carId);
+            error_log("signature: ".$Reserve->getSignature());
 
-                    $already = false;
+            if ($Reserve) {
+                if ($Reserve->getSignature() == $signature) {
 
-                    $ChangeOptions = $Reserve->getChangeOptions();
+                        $already = false;
 
-                    foreach ($ChangeOptions as $CO) {
-                        if ($carId == $CO->getCar()->id) {
-                            $already = true;
-                            break;
+                        $ChangeOptions = $Reserve->getChangeOptions();
+
+                        foreach ($ChangeOptions as $CO) {
+                            if ($carId == $CO->getCar()->id) {
+                                $already = true;
+                                break;
+                            }
                         }
-                    }
 
-                    if (!$already) {
+                        if (!$already) {
 
-                        $error = $this->approve($reserveId, $carId, true);
+                            $error = $this->approve($reserveId, $carId, true);
 
-                        if ($error) {
-                            throw new Exception($error, 1);
+                            if ($error) {
+                                throw new Exception($error, 1);
+                            }
+                        } else {
+                            throw new Exception("Oportunidad ya aceptada", 2);
                         }
-                    } else {
-                        throw new Exception("Oportunidad ya aceptada", 2);
-                    }
+                } else {
+                    throw new Exception("Firma no coincide", 1);
+                }
             } else {
-                throw new Exception("Firma no coincide", 2);
+                throw new Exception("No se econtró la reserva", 1);
             }
 
         } catch ( Exception $e ) {
             $this->error = "ERROR: ".$e->getMessage();
 
-            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
+            if ($request->getHost() == "www.arriendas.cl") {
                 Utils::reportError($e->getMessage(), "reserves/approve");
             }
         }
