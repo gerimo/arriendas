@@ -39,12 +39,15 @@
 
             <div class="row newMessage">
 
+                
                 <div class="imgProfile col-sm-2 col-md-2 hidden-xs text-center">
-                    <?php if($yoSoyElFrom): ?>
-                        <?php include_component("profile","pictureFile", array("user" => $objetoConversacion[0]->getUserFrom(), "params" => "width=74px height=74px")) ?>
-                    <?php elseif($yoSoyElTo): ?>
-                        <?php include_component("profile","pictureFile", array("user" => $objetoConversacion[0]->getUserTo(), "params" => "width=74px height=74px")) ?>
-                    <?php endif ?>
+                    <span class="thumbnail">
+                        <?php if($yoSoyElFrom): ?>
+                            <?php include_component("profile","pictureFile", array('inboxHeight'=> '100', 'inboxWidth'=> '100', "user" => $objetoConversacion[0]->getUserFrom(), "params" => "width=74px height=74px")) ?>
+                        <?php elseif($yoSoyElTo): ?>
+                            <?php include_component("profile","pictureFile", array('inboxHeight'=> '100', 'inboxWidth'=> '100', "user" => $objetoConversacion[0]->getUserTo(), "params" => "width=74px height=74px")) ?>
+                        <?php endif ?>
+                    </span>
                 </div>
 
                 <div class="col-sm-10 col-md-9">
@@ -67,15 +70,15 @@
                     <?php if ($idUsuarioFrom == $myId): ?>
 
                         <div class='row'>
-                            <div class="leftMessage hidden-xs col-sm-offset-1 col-md-offset-1 col-xs-1 col-sm-1 col-md-1">
+                            <div class="leftMessage hidden-xs col-xs-1 col-sm-2 col-md-2">
 
-                                <span class="img-responsive">
-                                    <div class="imgProfile hidden-sm">
-                                        <?php include_component("profile","pictureFile",array("user"=>$objetoConversacion[0]->getUserFrom(),"params"=>"width='74px' height='74px'"));?>
-                                    </div>
-                                </span>
+                                <div class="imgProfile hidden-sm">
+                                    <span class="thumbnail">
+                                        <?php include_component("profile","pictureFile",array('inboxHeight'=> '100', 'inboxWidth'=> '100', "user"=>$objetoConversacion[0]->getUserFrom(),"params"=>"width='74px' height='74px'"));?>
+                                    </span>
+                                </div>
 
-                                <div class="nameProfile">
+                                <div class="nameProfile text-center">
                                     <?php 
                                         if($yoSoyElFrom) echo "Tú";
                                         else echo "<a target='_blank' href='http://www.arriendas.cl/profile/publitarget='_blank' profile/id/".$conversacion[$i]['userMensaje']."'>".$objetoConversacion[0]->getUserFrom()->getFirstName()."</a>";
@@ -109,9 +112,11 @@
                             <!--<div class="puntaCeleste"></div>-->
                             <div class="rightMessage hidden-xs col-md-2">
                                 <div class="imgProfile hidden-sm">
-                                    <?php include_component("profile","pictureFile",array("user"=>$objetoConversacion[0]->getUserFrom(),"params"=>"width='74px' height='74px'"));?>
+                                    <span class="thumbnail">
+                                        <?php include_component("profile","pictureFile",array('inboxHeight'=> '100', 'inboxWidth'=> '100', "user"=>$objetoConversacion[0]->getUserFrom(),"params"=>"width='74px' height='74px'"));?>
+                                    </span>
                                 </div>
-                                <div class="nameProfile">
+                                <div class="nameProfile text-center">
                                     <?php if($yoSoyElFrom) echo "Tú";
                                         else echo "<a target='_blank' href='http://www.arriendas.cl/profile/publicprofile/id/".$conversacion[$i]['userMensaje']."'>".$objetoConversacion[0]->getUserFrom()->getFirstName()."</a>";
                                     ?>
@@ -128,15 +133,16 @@
                     <?php if ($idUsuarioTo == $myId): ?>
 
                         <div class='row'>
-                            <div class="leftMessage hidden-xs col-sm-offset-1 col-md-offset-1  col-xs-1 col-sm-1 col-md-1">
+                            <div class="leftMessage hidden-xs col-xs-1 col-sm-2 col-md-2">
                                 
-                                <span class="img-responsive">
-                                    <div class="imgProfile hidden-sm">
-                                        <?php include_component("profile","pictureFile",array("user"=>$objetoConversacion[0]->getUserTo(),"params"=>"width='74px' height='74px'"));?>
-                                    </div>
-                                </span>
+                                
+                                <div class="imgProfile hidden-sm">
+                                    <span class="thumbnail">
+                                        <?php include_component("profile","pictureFile",array('inboxHeight'=> '100', 'inboxWidth'=> '100', "user"=>$objetoConversacion[0]->getUserTo(),"params"=>"width='74px' height='74px'"));?>
+                                    </span>
+                                </div>
 
-                                <div class="nameProfile">
+                                <div class="nameProfile text-center">
                                     <?php 
                                         if($yoSoyElTo) echo "Tú";
                                         else echo "<a target='_blank' href='http://www.arriendas.cl/profile/publicprofile/id/".$conversacion[$i]['userMensaje']."'>".$objetoConversacion[0]->getUserTo()->getFirstName()."</a>";
@@ -168,9 +174,11 @@
 
                             <div class="rightMessage hidden-xs col-md-2">
                                 <div class="imgProfile hidden-sm">
-                                    <?php include_component("profile","pictureFile",array("user"=>$objetoConversacion[0]->getUserTo(),"params"=>"width='74px' height='74px'"));?>
+                                    <span class="thumbnail">
+                                        <?php include_component("profile","pictureFile",array('inboxHeight'=> '100', 'inboxWidth'=> '100', "user"=>$objetoConversacion[0]->getUserTo(),"params"=>"width='74px' height='74px'"));?>
+                                    </span>
                                 </div>
-                                <div class="nameProfile">
+                                <div class="nameProfile text-center">
                                     <?php 
                                         if($yoSoyElTo) echo "Tú";
                                         else echo "<a target='_blank' href='http://www.arriendas.cl/profile/publicprofile/id/".$conversacion[$i]['userMensaje']."'>".$objetoConversacion[0]->getUserTo()->getFirstName()."</a>";

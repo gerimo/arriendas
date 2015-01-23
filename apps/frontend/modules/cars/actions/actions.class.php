@@ -56,6 +56,7 @@ class carsActions extends sfActions {
             $lat            = $request->getPostParameter("lat", null);
             $lng            = $request->getPostParameter("lng", null);
 
+
             /*$userId_session = $this->getUser()->getAttribute("userid");
              error_log($userId_session);*/
 
@@ -109,6 +110,10 @@ class carsActions extends sfActions {
                 $this->redirect('main/index');
             }
 
+            if (is_null($lat) || $lat == "") {
+                throw new Exception("Debes indicar una dirección", 1);
+            }
+
             /*if ((is_null($User) && $User->getConfirmed()) || !$User->getConfirmedFb()) {
                 $this->redirect('main/index');
             }*/
@@ -129,6 +134,7 @@ class carsActions extends sfActions {
             $Car->setFechaSubida($fechaHoy);
             $Car->setLat($lat);
             $Car->setLng($lng);
+            $Car->setCityId(27);
 
             $Car->save();
 
