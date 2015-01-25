@@ -94,7 +94,7 @@ class CarTable extends Doctrine_Table {
                 Utils::reportError($e->getMessage(), "carTable::findCars");
             }*/
         }
-
+        error_log("[".date("Y-m-d H:i:s")."][CarTable::findCars()] ENCONTRADOS: ".count($CarsFound));
         return $CarsFound;
     }
     
