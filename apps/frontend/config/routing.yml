@@ -83,7 +83,7 @@ rent_a_car_region_commune:
     param: {module: main, action: index }
 
 reserve:
-    url: /reserva/:carId
+    url: /reserva/auto/:carId
     param: { module: main, action: reserve }
 
 reserve_approve:
