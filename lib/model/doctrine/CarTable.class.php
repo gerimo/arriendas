@@ -19,7 +19,7 @@ class CarTable extends Doctrine_Table {
 
             $MD = new Mobile_Detect;
             if ($MD->isMobile()) {
-                $q->limit(5);
+                $q->limit(33);
             } else {
                 $q->limit(33);
             }
