@@ -36,6 +36,7 @@
  * @property Comunas $Comuna
  * @property integer $region
  * @property Commune $commune
+ * @property integer $options
  * @property date disabled_until
  * 
  * @method integer             getId()             Returns the current record's "id" value
@@ -67,6 +68,7 @@
  * @method Comunas             getComuna()         Returns the current record's "Comuna" value
  * @method Commune             getCommune()        Returns the current record's "commune" value
  * @method integer             getRegion()
+ * @method integer             getOptions()        Returns the current record's "options" value
  * 
  * @method Doctrine_Collection getAvailabilities() Returns the current record's "Availabilities" collection
  * @method Doctrine_Collection getDamages()        Returns the current record's "Damages" collection
@@ -108,6 +110,7 @@
  * @method Car                 setRegion()         Sets the current record's "Region" value
  * @method Car                 setDisabledUntil()   Sets the current record's "disable_until" value
  * @method Car                 setCommune()        Sets the current record's "commune" value
+ * @method Car                 setOptions()        Sets the current record's "options" value
  *
  * @package    CarSharing
  * @subpackage model
@@ -464,10 +467,19 @@ abstract class BaseCar extends sfDoctrineRecord
       $this->hasColumn('commune_id', 'integer', 11, array(
             'notnull' => true
       ));
+      $this->hasColumn('options', 'integer', 4, array(
+             'type' => 'integer',
+             'notnull' => true,
+             'length' => 4,
+             ));
+      
       $this->index('fk_Car_Commune', array(
             'fields' => array(
                 0 => 'commune_id',
             ),
+
+
+
       ));
 
 

@@ -211,6 +211,10 @@ class khipuActions extends sfActions {
                         $Transaction->setCompleted(true);
                         $Transaction->save();
 
+                        $OpportunityQueue = new OpportunityQueue();
+                        $OpportunityQueue->setReserve($Reserve);
+                        $OpportunityQueue->save();
+
                         $mail   = new Email();
                         $mailer = $mail->getMailer();
 
@@ -549,6 +553,8 @@ class khipuActions extends sfActions {
     }*/
 
     public function executePaymentInformation(sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
 
         $customer_in_session = $this->getUser()->getAttribute('userid');
         

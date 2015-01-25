@@ -30,6 +30,7 @@ class Reserve extends BaseReserve {
             ->createQuery('R')
             ->innerJoin('R.Transaction T')
             ->where('R.user_id = ?', $this->getUser()->id)
+            ->andWhere('R.fecha_pago IS NOT NULL')
             ->andWhere('DATE_FORMAT(R.date, "%Y-%m-%d %H:%i") = ?', date("Y-m-d H:i", strtotime($this->date)))
             ->orderBy('T.completed DESC')
             ->addOrderBy('R.fecha_reserva ASC');
@@ -65,7 +66,7 @@ class Reserve extends BaseReserve {
 
         $Car = $this->getCar();
 
-        return Car::getPrice(
+        return CarTable::getPrice(
                 $this->getFechaInicio2,
                 $this->getFechaTermino2,
                 $Car->getPricePerHour(),
@@ -666,24 +667,29 @@ class Reserve extends BaseReserve {
         return $ret;
     }
     
-    private function setUniqueToken($try=0){
+    public function setUniqueToken($replace = false){
         
-        if (!$this->getToken()) {
-            $token = sha1($this->getDuration() . rand(11111, 99999));
-            $res = Doctrine_Core::getTable('Reserve')->findOneBy('token', $token);
-            if(!$res){
-                $this->setToken($token);
-            }else{
-                // ejecuto hasta 10 intentos
-                if($try<10){
-                    $try++; 
-                    $this->setUniqueToken($try);
-                }else{
-                    throw new Exception("No se pudo generar el token para la reserva.");
-                }
-            }
-        }
-    }
+        $iterate = true;
+        $iteration = 1;
+        $max_iterations = 10;        
+        
+        if (!$this->token || $replace) {
+            while ($iterate) {
+                
+                $token = sha1($this->getDuration() . rand(11111, 99999));
 
-    
+                if (!Doctrine_Core::getTable('Reserve')->findOneBy('token', $token)) {
+                    $this->setToken($token);
+                    $iterate = false;
+                }
+
+                if ($iteration == $max_iterations) {
+                    Utils::reportError("No se pudo definir un token para la reserva ".$this->id, "Reserve/setUniqueToken");
+                    $iterate = false;
+                }
+
+                $iteration++;
+            }            
+        }
+    }    
 }

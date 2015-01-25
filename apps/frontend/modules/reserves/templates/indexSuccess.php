@@ -10,7 +10,7 @@
 
             <?php if (count($PaidReserves) > 0): ?>
 
-                <h1>Reservas pagadas <small>(pendientes de tu aprobación)</small></h1>
+                <h1>Reservas recibidas</h1>
 
                 <?php foreach ($PaidReserves as $PaidReserve): ?>
                     <div class="row paid-reserve-container">
@@ -21,7 +21,7 @@
                             <p class="text-center"><strong><?php echo date("d-m-Y H:i", strtotime("+".$PaidReserve->getDuration()." hour", strtotime($PaidReserve->getDate()))) ?></strong></p>
                         </div>
                         <div class="col-md-3">
-                            <p class="text-center"><?php echo '$'.number_format(Car::getPrice($PaidReserve->getFechaInicio2(), $PaidReserve->getFechaTermino2(), $PaidReserve->getCar()->getPricePerHour(), $PaidReserve->getCar()->getPricePerDay(), $PaidReserve->getCar()->getPricePerWeek(), $PaidReserve->getCar()->getPricePerMonth()), 0, ',', '.') ?></p>
+                            <p class="text-center"><?php echo '$'.number_format(CarTable::getPrice($PaidReserve->getFechaInicio2(), $PaidReserve->getFechaTermino2(), $PaidReserve->getCar()->getPricePerHour(), $PaidReserve->getCar()->getPricePerDay(), $PaidReserve->getCar()->getPricePerWeek(), $PaidReserve->getCar()->getPricePerMonth()), 0, ',', '.') ?></p>
                             <p class="text-center"><?php echo $PaidReserve->getCar()->getModel()->getBrand()->getName()." ".$PaidReserve->getCar()->getModel()->getName() ?></p>
                             <p class="text-center"></p>
                         </div>
@@ -32,6 +32,7 @@
                         <div class="col-md-3 text-center">
                             <?php if ($PaidReserve->confirmed): ?>
                                 <button class="btn-a-action btn-block" disabled>CONFIRMADA</button>
+                                <a class="download-contracts" data-car-id="<?php echo $PaidReserve->getCar()->id ?>" data-reserve-token="<?php echo $PaidReserve->token ?>" href="#">Descargar contratos</a>
                             <?php else: ?>
                                 <button class="approve btn-a-primary btn-block" data-reserve-id="<?php echo $PaidReserve->getId() ?>">Aprobar</button>
                                 <a class="reject" data-reserve-id="<?php echo $PaidReserve->getId() ?>">Rechazar</a>
@@ -60,7 +61,7 @@
                                     </div>
                                     <div class="col-md-3 text-center">
                                         <p class="price"><strong><?php echo '$'.number_format($Reserve->getPrice(), 0, ',', '.') ?></strong></p>
-                                        <a href="#">Descargar contratos</a>
+                                        <a class="download-contracts" data-car-id="<?php echo $Reserve->getCar()->id ?>" data-reserve-token="<?php echo $Reserve->token ?>" href="#">Descargar contratos</a>
                                     </div>
                                     <div class="col-md-3 text-center">
                                         <?php if ($Reserve->getConfirmed()): ?>
@@ -169,7 +170,7 @@
     </div>    
 </div>
 
-<!-- Alert -->
+<!-- Alerta -->
 <div style="display:none">
     <div id="dialog-alert" title="">
         <p></p>
@@ -216,17 +217,6 @@
         }, "json");
     });
 
-    $(document).on("click", ".extend", function(){
-
-        $("#extendReserve").val($(this).data("reserve-id"));
-        $("#extendFrom").val($(this).data("reserve-to"));
-        $("#extendTo").val("");
-
-        $("#extendAlert").hide();
-        
-        $("#reserveExtendModal").modal('show');
-    });
-
     $(document).on("click", ".change", function(){
 
         var button = $(this);
@@ -257,6 +247,17 @@
 
             $(".change").removeAttr("disabled");
         }, "json");
+    });
+
+    $(document).on("click", ".extend", function(){
+
+        $("#extendReserve").val($(this).data("reserve-id"));
+        $("#extendFrom").val($(this).data("reserve-to"));
+        $("#extendTo").val("");
+
+        $("#extendAlert").hide();
+        
+        $("#reserveExtendModal").modal('show');
     });
 
     $(document).on("click", ".reject", function(e){
@@ -291,6 +292,24 @@
 
         $("#extendFrom").removeAttr("disabled");
         $("#extendForm").submit();
+    });
+
+    $(document).on("click", ".download-contracts", function(e){
+
+        e.preventDefault();
+
+        var carId = $(this).data("car-id");
+        var reserveToken = $(this).data("reserve-token");
+
+        var urlContrato   = "http://<?php echo $sf_request->getHost() ?>/api.php/contrato/generarContrato/tokenReserva/";
+        var urlFormulario = "http://<?php echo $sf_request->getHost() ?>/main/generarFormularioEntregaDevolucion/tokenReserve/";
+        var urlPagare     = "http://<?php echo $sf_request->getHost() ?>/main/generarPagare/tokenReserve/";
+        /*var urlContrato3 = "http://<?php echo $sf_request->getHost() ?>/main/generarReporte/idAuto/";*/
+
+        window.open(urlContrato + reserveToken);
+        window.open(urlFormulario + reserveToken);
+        window.open(urlPagare + reserveToken);
+        /*window.open(urlContrato3 + carId);*/
     });
 
     $("#extendTo").datetimepicker({

@@ -9,6 +9,10 @@ header .navbar-default {
     margin: 0;
 }
 
+#filters {
+    margin: 0;
+}
+
 .activo {
     background-color: #ba135f;
 }
@@ -181,7 +185,7 @@ header .navbar-nav .navbar-right ul{
 #section-map-filters .col-md-7 input[type=checkbox] { margin: 0 10px 0 10px; }
 
 #section-map-body div {
-    padding: 0;
+    padding: 8px;
 }
 
 #map-container {
@@ -201,6 +205,11 @@ header .navbar-nav .navbar-right ul{
 
 #list-container {
     background-color: white;
+    min-height: 250px;
+}
+
+#list-container h2 {
+    font-weight: 300;
 }
 
 .infowindow {
@@ -578,6 +587,13 @@ header .navbar-nav .navbar-right ul{
     left: 0;
 }
 
+#testimonials-container {
+    margin: auto;
+    max-width: 550px;
+    padding: 10px 40px;
+    width: 50%;
+}
+
 
 @media only screen and (min-width:768px) {
 
@@ -589,145 +605,133 @@ header .navbar-nav .navbar-right ul{
     #region-container, #commune-container, #tab-list {
         display: none;
     }
+}
 
-    /*#section-testimonials {
-        background-image: url('/images/newDesign/good-way.jpg');
-        background-size: 100%;
-        }*/
+@media only screen and (max-width:767px) {
+
+    .navbar-default {
+        background-color: rgba(0,0,0,1);
+        border-color: rgba(0,0,0,1);
     }
 
-    #testimonials-container {
-        margin: auto;
-        max-width: 550px;
-        padding: 10px 40px;
-        width: 50%;
+    .iframe{
+        height: 200px;
     }
 
-    @media only screen and (max-width:767px) {
-
-        .navbar-default {
-            background-color: rgba(0,0,0,1);
-            border-color: rgba(0,0,0,1);
-        }
-
-        .iframe{
-            height: 200px;
-        }
-
-        .form-control {
-            font-size: 11px;
-        }
-
-        #section-map-form-search {
-            background: white;
-            padding: 5px 0 0 0;
-        }
-
-        #section-map-form-search select, #section-map-form-search input {
-            margin-top: 5px;
-        }
-
-        #region-container {
-            padding-right: 5px;
-        }
-
-        #commune-container {
-            padding-left: 5px;
-        }
-
-        #from-container {
-            padding-right: 5px;
-        }
-
-        #to-container {
-            padding-left: 5px;
-        }
-
-        #section-map-form-search #search {
-            border-radius: 4px;
-            margin-top: 5px;
-            padding-top: 8px;
-        }
-
-        .title {
-            font-size: 12px;
-            line-height: 14px;
-            float: none;
-            display: inline-block;
-            padding: 4px 13px 14px 9px;
-            margin: 0 0 17px;
-            background: url(/images/newDesign/bg-title3.png) repeat-x;
-        }
-
-        .title:before {
-            background: url(/images/newDesign/bg-shadow5.png) no-repeat;
-            width: 16px;
-            height: 39px;
-            left: -16px;
-            top: -3px;
-        }
-        .title:after {
-            background: url(/images/newDesign/bg-shadow6.png) no-repeat;
-            width: 15px;
-            height: 39px;
-            right: -15px;
-            top: -3px;
-        }
-
-        #section-on-news .title{
-            margin: 0 -86px 28px 0;
-        }
-
-        .td{
-            padding: 11px 13px;
-        }
-
+    .form-control {
+        font-size: 11px;
     }
 
-    @media only screen and (max-width:864px) {
-        #section-map #section-map-filters .tabset {
-
-            font: 700 22px/30px 'Open Sans', sans-serif;
-        }
-
-
-        #section-map-filters li {
-            font: 600 15px/20px 'Open Sans', sans-serif;
-        }
-
-        #section-map-filters .heading {
-
-            padding: 0 30px 0 10px;
-        }
-
-        .btn-a-action {
-            font: 300 14px/20px 'Open Sans', sans-serif;
-        }
-
-        .box .price{
-            font: 700 13px/22px 'Roboto', sans-serif;
-        }
-
-        .box .text h2{
-            font: 700 13px/20px 'Roboto', sans-serif;
-        }
-        #section-home-carousel h1{
-            font-size: 25px;
-        }
-
-        #section-home-carousel h2{
-            font-size: 19px;
-            margin: 0 0 170px 0;
-        }
-
+    #section-map-form-search {
+        background: white;
+        padding: 5px 0 0 0;
     }
 
-    @media only screen and (max-width:992px) {
+    #section-map-form-search select, #section-map-form-search input {
+        margin-top: 5px;
+    }
+
+    #region-container {
+        padding-right: 5px;
+    }
+
+    #commune-container {
+        padding-left: 5px;
+    }
+
+    #from-container {
+        padding-right: 5px;
+    }
+
+    #to-container {
+        padding-left: 5px;
+    }
+
+    #section-map-form-search #search {
+        border-radius: 4px;
+        margin-top: 5px;
+        padding-top: 8px;
+    }
+
+    .title {
+        font-size: 12px;
+        line-height: 14px;
+        float: none;
+        display: inline-block;
+        padding: 4px 13px 14px 9px;
+        margin: 0 0 17px;
+        background: url(/images/newDesign/bg-title3.png) repeat-x;
+    }
+
+    .title:before {
+        background: url(/images/newDesign/bg-shadow5.png) no-repeat;
+        width: 16px;
+        height: 39px;
+        left: -16px;
+        top: -3px;
+    }
+    .title:after {
+        background: url(/images/newDesign/bg-shadow6.png) no-repeat;
+        width: 15px;
+        height: 39px;
+        right: -15px;
+        top: -3px;
+    }
+
+    #section-on-news .title{
+        margin: 0 -86px 28px 0;
+    }
+
+    .td {
+        padding: 11px 13px;
+    }
+
+    #section-map-body div {
+        padding: 0px;
+    }
+}
+
+@media only screen and (max-width:864px) {
+
+    #section-map #section-map-filters .tabset {
+
+        font: 700 22px/30px 'Open Sans', sans-serif;
+    }
+
+    #section-map-filters li {
+        font: 600 15px/20px 'Open Sans', sans-serif;
+    }
+
+    #section-map-filters .heading {
+
+        padding: 0 30px 0 10px;
+    }
+
+    .btn-a-action {
+        font: 300 14px/20px 'Open Sans', sans-serif;
+    }
+
+    .box .price{
+        font: 700 13px/22px 'Roboto', sans-serif;
+    }
+
+    .box .text h2{
+        font: 700 13px/20px 'Roboto', sans-serif;
+    }
+    #section-home-carousel h1{
+        font-size: 25px;
+    }
+
+    #section-home-carousel h2{
+        font-size: 19px;
+        margin: 0 0 170px 0;
+    }
+}
+
+@media only screen and (max-width:992px) {
 
     #section-home {
         background-image: url("/images/newDesign/background-home.jpg");
         background-size: 100% 100%;
     }
-
-    
 }

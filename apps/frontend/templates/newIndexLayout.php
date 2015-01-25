@@ -70,11 +70,11 @@
         <!-- Utils -->
         <script src="/js/newDesign/utils.js" type="text/javascript"></script>
 
-        <?php include_partial("global/header") ?>
+        <?php include_component('main', 'header') ?>
 
         <?php echo $sf_content ?>
 
-        <?php include_partial("global/footer") ?>
+        <?php include_component('main', 'footer') ?>
 
         <?php if ($_SERVER['HTTP_HOST'] == "www.arriendas.cl"): ?>
             
