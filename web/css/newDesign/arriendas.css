@@ -303,6 +303,10 @@ footer .fa-twitter {
 
 @media only screen and (max-width: 767px) {
 
+    header .container {
+        padding: 0 5px;
+    }
+
     .BCW {
         background-color: white;
         margin-left: -15px;
