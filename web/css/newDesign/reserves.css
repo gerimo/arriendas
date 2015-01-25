@@ -1,3 +1,7 @@
+body {
+    background-image: url('/images/newDesign/background.jpg');
+}
+
 p {
     margin: 0;
     padding: 0;

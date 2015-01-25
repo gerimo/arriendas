@@ -44,7 +44,7 @@
 
             <?php if (count($Reserves) > 0): ?>
                 
-                <h1>Reservas <small>(<?php echo count($Reserves) ?>)</small></h1>
+                <h1>Reservas</h1>
 
                 <div class="panel-group" id="reserves" role="tablist" aria-multiselectable="true">
                     <?php foreach ($Reserves as $key => $Reserve ): ?>

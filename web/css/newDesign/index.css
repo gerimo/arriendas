@@ -3,6 +3,16 @@ header .navbar-default {
     border-color: rgba(0, 0, 0, 0.8);
 }
 
+header .navbar-right .dropdown-menu{
+    background-color: rgba(0, 0, 0, 0.8);
+    border-color: rgba(0, 0, 0, 0.8);
+}
+
+header .navbar-nav .navbar-right ul {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-color: rgba(0, 0, 0, 0.8);
+}
+
 #filters-navbar {
     background-color: white;
     border-color: white;
@@ -15,16 +25,6 @@ header .navbar-default {
 
 .activo {
     background-color: #ba135f;
-}
-
-header .navbar-right .dropdown-menu{
-    background-color: rgba(0, 0, 0, 0.8);
-    border-color: rgba(0, 0, 0, 0.8);
-}
-
-header .navbar-nav .navbar-right ul{
-    background-color: rgba(0, 0, 0, 0.8);
-    border-color: rgba(0, 0, 0, 0.8);
 }
 
 #video {
@@ -608,11 +608,6 @@ header .navbar-nav .navbar-right ul{
 }
 
 @media only screen and (max-width:767px) {
-
-    .navbar-default {
-        background-color: rgba(0,0,0,1);
-        border-color: rgba(0,0,0,1);
-    }
 
     .iframe{
         height: 200px;

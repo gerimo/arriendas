@@ -110,7 +110,7 @@
         <h2>Características:</h2>
 
         <ul class="features">
-            <?php if ($metro || true): ?>
+            <?php if ($metro): ?>
                 <li><span class="metro-mobile"></span> A <strong>1.5 km</strong> del Metro Católica</li>
             <?php endif ?>
             <?php if ($passengers): ?>

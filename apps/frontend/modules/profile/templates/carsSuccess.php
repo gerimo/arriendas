@@ -11,7 +11,7 @@
                 <button class="col-md-12  btn-block btn-a-primary" onclick="location.href='<?php echo url_for('cars/create') ?>'">¡Sube un auto!</button>
             </div>
 
-            <h1>MIS AUTOS</h1>
+            <h1>Mis Autos</h1>
                        
             <div class="row">
                 <?php foreach ($cars as $c): ?>
