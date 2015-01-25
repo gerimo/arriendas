@@ -21,7 +21,7 @@
                             <p class="text-center"><strong><?php echo date("d-m-Y H:i", strtotime("+".$PaidReserve->getDuration()." hour", strtotime($PaidReserve->getDate()))) ?></strong></p>
                         </div>
                         <div class="col-md-3">
-                            <p class="text-center"><?php echo '$'.number_format(Car::getPrice($PaidReserve->getFechaInicio2(), $PaidReserve->getFechaTermino2(), $PaidReserve->getCar()->getPricePerHour(), $PaidReserve->getCar()->getPricePerDay(), $PaidReserve->getCar()->getPricePerWeek(), $PaidReserve->getCar()->getPricePerMonth()), 0, ',', '.') ?></p>
+                            <p class="text-center"><?php echo '$'.number_format(CarTable::getPrice($PaidReserve->getFechaInicio2(), $PaidReserve->getFechaTermino2(), $PaidReserve->getCar()->getPricePerHour(), $PaidReserve->getCar()->getPricePerDay(), $PaidReserve->getCar()->getPricePerWeek(), $PaidReserve->getCar()->getPricePerMonth()), 0, ',', '.') ?></p>
                             <p class="text-center"><?php echo $PaidReserve->getCar()->getModel()->getBrand()->getName()." ".$PaidReserve->getCar()->getModel()->getName() ?></p>
                             <p class="text-center"></p>
                         </div>

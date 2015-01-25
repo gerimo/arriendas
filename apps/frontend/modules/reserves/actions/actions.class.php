@@ -134,7 +134,7 @@ class reservesActions extends sfActions {
                 throw new Exception("El auto no existe", 1);
             }
 
-            $return["price"] = Car::getPrice($from, $to, $Car->price_per_hour, $Car->price_per_day, $Car->price_per_week, $Car->price_per_month);
+            $return["price"] = CarTable::getPrice($from, $to, $Car->price_per_hour, $Car->price_per_day, $Car->price_per_week, $Car->price_per_month);
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
@@ -329,7 +329,7 @@ class reservesActions extends sfActions {
         $NewReserve->setCar($Car);
         $NewReserve->setDate($Reserve->getFechaTermino2());
         $NewReserve->setDuration(Utils::calculateDuration($from, $to));
-        $NewReserve->setPrice(Car::getPrice($from, $to, $Car->price_per_hour, $Car->price_per_day, $Car->price_per_week, $Car->price_per_month));
+        $NewReserve->setPrice(CarTable::getPrice($from, $to, $Car->price_per_hour, $Car->price_per_day, $Car->price_per_week, $Car->price_per_month));
         $NewReserve->setComentario("Reserva extendida");
         $NewReserve->setFechaReserva(date("Y-m-d H:i:s"));
         $NewReserve->setIdPadre($Reserve->id);
@@ -396,7 +396,7 @@ class reservesActions extends sfActions {
                 throw new Exception("La extensión no se puede realizar debido a que el auto ya posee una reserva en la fecha consultada", 1);
             }
 
-            $return["price"] = Car::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth());
+            $return["price"] = CarTable::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth());
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
@@ -444,12 +444,6 @@ class reservesActions extends sfActions {
             throw new Exception("El auto ya posee un reserva en las fechas indicadas.", 1);
         }
 
-        // Guardo en session // Esto se deja 'xsiaca'
-        $this->getUser()->setAttribute('fechainicio', date("d-m-Y", strtotime($from)));
-        $this->getUser()->setAttribute('fechatermino', date("d-m-Y", strtotime($to)));
-        $this->getUser()->setAttribute('horainicio', date("g:i A",strtotime($from)));
-        $this->getUser()->setAttribute('horatermino', date("g:i A",strtotime($to)));
-
         $Reserve = new Reserve();
         $Reserve->setDuration(Utils::calculateDuration($from, $to));
         $Reserve->setDate(date("Y-m-d H:i:s", strtotime($from)));
@@ -469,7 +463,7 @@ class reservesActions extends sfActions {
             $Reserve->setLiberadoDeGarantia(true);
         }
 
-        $Reserve->setPrice(Car::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth()));
+        $Reserve->setPrice(CarTable::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth()));
         $Reserve->setMontoLiberacion($amountWarranty);
         $Reserve->setFechaReserva(date("Y-m-d H:i:s"));
         $Reserve->setConfirmed(false);

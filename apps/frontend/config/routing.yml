@@ -73,6 +73,7 @@ opportunities_mailing_approve:
 opportunities_mailing_open:
     url: /oportunidades/mailing/:id/:signature
     param: { module: main, action: mailingOpen }
+
 questions:
     url: /preguntas-frecuentes
     param: { module: main , action: questions }
@@ -82,7 +83,7 @@ rent_a_car_region_commune:
     param: {module: main, action: index }
 
 reserve:
-    url: /reserva/:c/:f/:t
+    url: /reserva/:carId
     param: { module: main, action: reserve }
 
 reserve_approve:
