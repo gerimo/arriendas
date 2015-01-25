@@ -21,7 +21,7 @@ class Utils {
         $mailer->send($message);
     }
 
-    public static function validateRUT($rut) {
+    public static function isValidRUT($rut) {
 
        $rut = str_replace(array('.', ',', '-', ' '), '', $rut);
 

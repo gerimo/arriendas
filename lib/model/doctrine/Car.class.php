@@ -2,18 +2,13 @@
 
 class Car extends BaseCar {
 
-    // $Car->getOpportunities();
-    // Car::getPrice();
-
     public function getExistPatent($patent = false){
 
         $q = Doctrine_Core::getTable("Car")
             ->createQuery('C')
-            ->where('C.patente = ?', $patent);
-       
+            ->where('C.patente = ?', $patent);       
 
         return $q->execute();
-
     }
     
     public function getCurrentCarAvailabilityEmails() {
@@ -85,35 +80,30 @@ class Car extends BaseCar {
 
         return $Opportunities;
     }
+  
+    public function hasReserve($from, $to, $userId = false) {
 
+        $q = Doctrine_Core::getTable("Reserve")
+            ->createQuery('R')
+            ->leftJoin('R.Transaction T')
+            ->where('T.completed = 1')
+            ->andWhere('R.car_id = ?', $this->id)
+            ->andWhere('(? BETWEEN R.date AND DATE_ADD(R.date, INTERVAL R.duration HOUR)) OR (? BETWEEN R.date AND DATE_ADD(R.date, INTERVAL R.duration HOUR)) OR (R.date BETWEEN ? AND ?) OR (DATE_ADD(R.date, INTERVAL R.duration HOUR) BETWEEN ? AND ?)', array($from, $to, $from, $to, $from, $to));
 
-
-    // Métodos estáticos
-
-    public static function getPrice($from, $to, $pricePerHour, $pricePerDay, $pricePerWeek, $pricePerMonth) {
-
-        $from = date("Y-m-d H:i:s", strtotime($from));
-        $to   = date("Y-m-d H:i:s", strtotime($to));
-
-        $duration = Utils::calculateDuration($from, $to);
-        $days     = floor($duration / 24);
-        $hours    = $duration % 24;
-
-        if ($hours >= 6) {
-            $days = $days + 1;
-            $hours = 0;
+        if ($userId) {
+          $q->andWhere('R.user_id != ?', $userId);
         }
 
-        if ($days >= 7 && $pricePerWeek > 0) {
-            $pricePerDay = $pricePerWeek / 7;
+        $checkAvailability = $q->execute();
+
+        if (count($checkAvailability) == 0) {
+            return false;
         }
 
-        if ($days >= 30 && $pricePerMonth > 0) {
-            $pricePerDay = $pricePerMonth / 30;
-        }
-        
-        return floor($pricePerDay * $days + $pricePerHour * $hours);
+        return true;
     }
+    
+    // Métodos estáticos
 
     public static function getTime($from, $to) {
 
@@ -255,29 +245,6 @@ class Car extends BaseCar {
       return $ratings->count();
 
   }
-  
-public function hasReserve($from, $to, $userId = false) {
-
-    $q = Doctrine_Core::getTable("Reserve")
-        ->createQuery('R')
-        ->leftJoin('R.Transaction T')
-        ->where('T.completed = 1')
-        ->andWhere('R.confirmed = 1')
-        ->andWhere('R.car_id = ?', $this->id)
-        ->andWhere('(? BETWEEN R.date AND DATE_ADD(R.date, INTERVAL R.duration HOUR)) OR (? BETWEEN R.date AND DATE_ADD(R.date, INTERVAL R.duration HOUR)) OR (R.date BETWEEN ? AND ?) OR (DATE_ADD(R.date, INTERVAL R.duration HOUR) BETWEEN ? AND ?)', array($from, $to, $from, $to, $from, $to));
-
-    if ($userId) {
-      $q->andWhere('R.user_id != ?', $userId);
-    }
-
-    $checkAvailability = $q->execute();
-
-    if (count($checkAvailability) == 0) {
-        return false;
-    }
-
-    return true;
-}
 
 public function getNombreComuna() {
 

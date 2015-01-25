@@ -174,7 +174,7 @@ EOF;
                                 ->setSubject($subject)
                                 ->setBody($body, "text/html")
                                 ->setFrom('soporte@arriendas.cl', 'Arriendas.cl')
-                                /*->setTo(array($Renter->getEmail() => $Renter->getFirstName()." ".$Renter->getLastname()))*/
+                                ->setTo(array($Renter->getEmail() => $Renter->getFirstName()." ".$Renter->getLastname()))
                                 ->setBcc(array(
                                     "cristobal@arriendas.cl" => "Cristóbal Medina Moenne",
                                 ))
@@ -204,7 +204,7 @@ EOF;
                                 ->setSubject($subject)
                                 ->setBody($body, 'text/html')
                                 ->setFrom(array("soporte@arriendas.cl" => "Arriendas.cl"))
-                                /*->setTo(array($Owner->getEmail() => $Owner->getFirstName()." ".$Owner->getLastname()))*/
+                                ->setTo(array($Owner->getEmail() => $Owner->getFirstName()." ".$Owner->getLastname()))
                                 ->setBcc(array(
                                     "cristobal@arriendas.cl" => "Cristóbal Medina Moenne",
                                 ))

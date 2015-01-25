@@ -16,6 +16,7 @@ class mainActions extends sfActions {
         $this->setLayout("newIndexLayout");
 
         $this->hasCommune = false;
+        $this->isWeekend  = false;
 
         if ($request->hasParameter('region','commune')){
             $communeSlug = $request->getParameter('commune');
@@ -24,13 +25,17 @@ class mainActions extends sfActions {
 
         $this->Region = Doctrine_Core::getTable("Region")->find(13);
 
+        // Revisar para que se utiliza este atributo
         if (is_null($this->getUser()->getAttribute('geolocalizacion'))) {
             $this->getUser()->setAttribute('geolocalizacion', true);
         } elseif ($this->getUser()->getAttribute('geolocalizacion') == true) {
             $this->getUser()->setAttribute('geolocalizacion', false);
         }
 
-        $this->Region = Doctrine_Core::getTable("Region")->find(13);
+        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
+        if ($Holiday || date("N") == 6 || date("N") == 7) {
+            $this->isWeekend = true;
+        }
     }
 
     public function executeCompleteRegister(sfWebRequest $request) {
@@ -100,7 +105,7 @@ class mainActions extends sfActions {
                 throw new Exception("Debes indicar tu región", 1);
             }
             if(!$foreign) {
-                if (!Utils::validateRUT($rut)) {
+                if (!Utils::isValidRUT($rut)) {
                     throw new Exception("el rut ingresado es inválido", 1);
                 } else {
                     if(User::rutExist($rut)) {
@@ -235,194 +240,47 @@ class mainActions extends sfActions {
         return sfView::NONE;
     }
 
-    public function executeGetCars(sfWebRequest $request) {        
+    public function executeGetCars(sfWebRequest $request) {
 
-        $return = array(
-            "error" => false,
-            "cars" => array()
-        );
+        $return = array("error" => false);
 
-        $noDateInterval = false;
+        $isMap              = $request->getPostParameter('isMap', true) === 'true' ? true : false;
+        $mapCenterLat       = (float) $request->getPostParameter('mapCenterLat', null);
+        $mapCenterLng       = (float) $request->getPostParameter('mapCenterLng', null);
+        $from               = $request->getPostParameter('from', date("Y-m-d H:i:s"));
+        $to                 = $request->getPostParameter('to', date("Y-m-d H:i:s", strtotime("+1 day", strtotime($from))));
+        $NELat              = (float) $request->getPostParameter('NELat', null);
+        $NELng              = (float) $request->getPostParameter('NELng', null);
+        $SWLat              = (float) $request->getPostParameter('SWLat', null);
+        $SWLng              = (float) $request->getPostParameter('SWLng', null);
+        $regionId           = (int) $request->getPostParameter('regionId', 13);
+        $communeId          = (int) $request->getPostParameter('communeId', 0);
+        $isAutomatic        = $request->getPostParameter('isAutomatic', false) === 'true' ? true : false;
+        $isLowConsumption   = $request->getPostParameter('isLowConsumption', false) === 'true' ? true : false;
+        $isMorePassengers   = $request->getPostParameter('isMorePassengers', false) === 'true' ? true : false;
 
-        $swLat  = $request->getPostParameter('swLat', null);
-        $swLng  = $request->getPostParameter('swLng', null);
-        $neLat  = $request->getPostParameter('neLat', null);
-        $neLng  = $request->getPostParameter('neLng', null);
-
-        $map_center_lat  = $request->getPostParameter('map_center_lat', null);
-        $map_center_lng  = $request->getPostParameter('map_center_lng', null);
-
-        $from      = $request->getPostParameter('from', null);
-        $to        = $request->getPostParameter('to', null);
-        $automatic = $request->getPostParameter('automatic', null);
-        $low       = $request->getPostParameter('low', null);
-        $pasenger  = $request->getPostParameter('pasenger', null);
-        $comuna    = $request->getPostParameter('commune', null);
+        $isWeekend = false;
 
         try {
 
-            $this->getUser()->setAttribute('fechainicio', date("d-m-Y", strtotime($from)));
-            $this->getUser()->setAttribute('fechatermino', date("d-m-Y", strtotime($to)));
-            $this->getUser()->setAttribute('horainicio', date("H:i", strtotime($from)));
-            $this->getUser()->setAttribute('horatermino', date("H:i", strtotime($to)));
-            $this->getUser()->setAttribute("map_clat", $map_center_lat);
-            $this->getUser()->setAttribute("map_clng", $map_center_lng);
-
-            if (!$from || !$to) {
-                $noDateInterval = true;
+            $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
+            if ($Holiday || date("N") == 6 || date("N") == 7) {
+                $isWeekend = true;
             }
 
-            if (!$from) {
-                $from = date("Y-m-d H:i:s");
-            }
+            $this->getUser()->setAttribute('from', date("Y-m-d H:i:s", strtotime($from)));
+            $this->getUser()->setAttribute('to', date("Y-m-d H:i:s", strtotime($to)));
+            $this->getUser()->setAttribute("mapCenterLat", $mapCenterLat);
+            $this->getUser()->setAttribute("mapCenterLng", $mapCenterLng);            
 
-            if (!$to) {
-                $to = date("Y-m-d H:i:s", strtotime("+1 day", strtotime($from)));
-            }
+            $return["cars"] = CarTable::findCars($from, $to, $isMap, $isWeekend, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers);
 
-            $q = Doctrine_Query::create()
-                ->select('
-                    ca.id, 
-                    ca.lat lat, 
-                    ca.lng lng, 
-                    ca.year,
-                    ca.price_per_day, 
-                    ca.price_per_hour,
-                    ca.photoS3 photoS3, 
-                    ca.Seguro_OK, 
-                    ca.foto_perfil, 
-                    ca.transmission transmission,
-                    ca.user_id,
-                    ca.velocidad_contesta_pedidos velocidad_contesta_pedidos,
-                    greatest(1440,ca.velocidad_contesta_pedidos)/greatest(0.1,ca.contesta_pedidos) carrank,
-                    co.name comuna_nombre,
-                    mo.name modelo, 
-                    mo.id_tipo_vehiculo id_tipo_vehiculo,
-                    br.name brand, 
-                ')
-                ->from('Car ca')
-                ->innerJoin('ca.Model mo')
-                ->innerJoin('ca.Commune co')
-                ->innerJoin('mo.Brand br')
-                ->Where('ca.activo = 1')
-                ->andWhere('ca.seguro_ok = 4')
-                /*->orderBy('carrank ASC')*/
-                /*->addOrderBy('IF(ca.velocidad_contesta_pedidos = 0, 1440, ca.velocidad_contesta_pedidos)  ASC')*/
-                ->orderBy('ca.price_per_day ASC');
-            
-            $detect = new Mobile_Detect;
-            if ($detect->isMobile()) {
-                $q->limit(5);
-            } else {
-                $q->limit(33);
-            }                
-
-            if ($automatic) {
-                $q->andWhere("ca.transmission = 1");
-            }
-
-            if ($low) {
-                $q->andWhere("ca.tipobencina = 'Diesel'");
-            }
-
-            if ($pasenger) {
-                $q->andWhere("mo.id_otro_tipo_vehiculo = 3");
-            }
-
-            if ($comuna) {
-                $q->andWhere("co.id = ?", $comuna);
-            } else {
-                $q->andWhere('ca.lat < ?', $neLat);
-                $q->andWhere('ca.lat > ?', $swLat);
-                $q->andWhere('ca.lng > ?', $swLng);
-                $q->andWhere('ca.lng < ?', $neLng);
-            }
-
-            $cars = $q->execute();
-
-            foreach ($cars as $i => $car) {
-                if (!$car->hasReserve(date("Y-m-d H:i:s", strtotime($from)), date("Y-m-d H:i:s", strtotime($to)))) {
-
-                    $d = 0;
-
-                    $photo = $car->getFotoPerfil();
-
-                    $porcentaje = $car->getContestaPedidos();
-
-                    if ($this->getUser()->getAttribute("logged")) {
-
-                        $velocidad = $car->getVelocidadContestaPedidos();
-
-                        if ($velocidad < 1) {
-                            $velocidad = "Menos de un minuto";
-                        } elseif ($velocidad < 10) {
-                            $velocidad = "Menos de 10 minutos";
-                        } elseif ($velocidad < 60) {
-                            $velocidad = "Menos de una hora";
-                        } elseif ($velocidad < 1440) {
-                            if (floor($velocidad / 60) == 1) {
-                                $velocidad = "1 hora";
-                            } else {
-                                $velocidad = floor($velocidad / 60) . " horas";
-                            }
-                        } else {
-                            if (floor($velocidad / 60 / 24) == 1) {
-                                $velocidad = "1 dia";
-                            } else {
-                                $velocidad = floor($velocidad / 60 / 24) . " dias";
-                            }
-                        }
-                    } else {
-                        $reservasRespondidas = 0;
-                        $velocidad = 0;
-                    }
-
-                    $transmision = "Manual";
-                    $tipoTrans = $car->getTransmission();
-                    $carPercentile = $car->getCarPercentile();
-
-                    if ($tipoTrans == 0)
-                        $transmision = "Manual";
-                    if ($tipoTrans == 1)
-                        $transmision = "Autom&aacute;tica";
-
-                    $price = Car::getPrice($from, $to, $car->getPricePerHour(), $car->getPricePerDay(), $car->getPricePerWeek(), $car->getPricePerMonth());
-
-                    $return['cars'][] = array(
-                        'id' => $car->getId(),
-                        'longitude' => $car->getlng(),
-                        'latitude' => $car->getlat(),
-                        'comuna' => $car->getCommune()->getName(),
-                        'brand' => $car->getBrand(),
-                        'model' => $car->getModelo(),
-                        'ano' => $car->getYear(),
-                        'typeModel' => $car->getIdTipoVehiculo(),
-                        'year' => $car->getYear(),
-                        'photoType' => $car->getPhotoS3(),
-                        'photo' => $photo,
-                        'price' => $price,
-                        'priceAPuntos' => $this->transformarPrecioAPuntos(floor($price)),
-                        'price_per_hour' => $this->transformarPrecioAPuntos(floor($car->getPricePerHour())),
-                        'price_per_day' => $this->transformarPrecioAPuntos(floor($car->getPricePerDay())),
-                        'userid' => $car->getUserId(),
-                        'carRank' => $car->getCarrank(),
-                        'carPercentile' => $carPercentile,
-                        'typeTransmission' => $transmision,
-                        'userVelocidadRespuesta' => $velocidad,
-                        'userContestaPedidos' => $porcentaje,
-                        'cantidadCalificacionesPositivas' => '0',
-                        'd' => $d,
-                        'verificado' => $car->autoVerificado(),
-                        'from' => date("Y-m-d H:i", strtotime($from)),
-                        'to' => date("Y-m-d H:i", strtotime($to))
-                    );
-                }
-            }
         } catch (Exception $e) {
-
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
-            Utils::reportError($e->getMessage(), "profile/executeGetCars");
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "main/getCars");
+            }
         }
 
         $this->renderText(json_encode($return));
@@ -624,6 +482,39 @@ class mainActions extends sfActions {
         return $this->redirect('homepage');
     }
 
+    public function executeMailingOpen(sfWebRequest $request) {
+
+        $opportunityEmailQueueId        = $request->getParameter('id');
+        $opportunityEmailQueueSignature = $request->getParameter('signature');
+
+        try {
+
+            $OpportunityEmailQueue = Doctrine_Core::getTable('OpportunityEmailQueue')->find($opportunityEmailQueueId);
+
+            if ($OpportunityEmailQueue) {
+                if ($OpportunityEmailQueue->getSignature() == $opportunityEmailQueueSignature) {
+                    if (is_null($OpportunityEmailQueue->getOpenedAt())) {
+                        $OpportunityEmailQueue->setOpenedAt(date("Y-m-d H:i:s"));
+                        $OpportunityEmailQueue->save();
+                    }
+                } else {
+                    throw new Exception("Firma no coincide", 1);                
+                }
+            } else {
+                throw new Exception("OpportunityEmailQueue no encontrada", 1);                
+            }
+
+        } catch (Exception $e) {
+            Utils::reportError($e->getMessage(), "main/opportunityMailingOpen");
+        }
+
+        $this->getResponse()->setContentType('image/gif');
+
+        echo base64_decode("R0lGODlhAQABAIAAAP///////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACwAAAAAAQABAAACAkQBADs=");
+
+        return sfView::NONE;
+    }
+
     public function executeRegister(sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
@@ -643,16 +534,28 @@ class mainActions extends sfActions {
 
         $this->setLayout("newIndexLayout");
 
-        $carId = $request->getParameter("c", null);
+        if ($this->getUser()->getAttribute("from", false)) {
+            $from = $this->getUser()->getAttribute("from");
+        } else {
+            $from = date("Y-m-d H:i:s");
+        }
 
-        $f     = strtotime($request->getParameter("f", null));
-        $t     = strtotime($request->getParameter("t", null));
+        if ($this->getUser()->getAttribute("to", false)) {
+            $to = $this->getUser()->getAttribute("to");
+        } else {
+            $to = date("Y-m-d H:i:s", strtotime("+1 day", strtotime($from)));
+        }
 
         $userId = $this->getUser()->getAttribute("userid");
+
+        $carId = $request->getParameter("carId", null);
 
         if (is_null($carId)) {
             throw new Exception("Auto no encontrado", 1);
         }
+
+        $f = strtotime($from);
+        $t = strtotime($to);
 
         if ($t <= $f) {
             throw new Exception("No, no, no", 1);
@@ -673,7 +576,7 @@ class mainActions extends sfActions {
         }
 
         $this->time = Car::getTime($from, $to);
-        $this->price = Car::getPrice($from, $to, $this->Car->getPricePerHour(), $this->Car->getPricePerDay(), $this->Car->getPricePerWeek(), $this->Car->getPricePerMonth());
+        $this->price = CarTable::getPrice($from, $to, $this->Car->getPricePerHour(), $this->Car->getPricePerDay(), $this->Car->getPricePerWeek(), $this->Car->getPricePerMonth());
 
         // Reviews (hay que arreglar las clase Rating)
         $this->reviews = array();
@@ -714,7 +617,7 @@ class mainActions extends sfActions {
         $User = Doctrine_Core::getTable('User')->find($userId);
 
         $this->license            = $User->getDriverLicenseFile();
-        $this->isDebtor           = sfContext::getInstance()->getUser()->getAttribute('moroso');
+        $this->isDebtor           = $User->moroso;
         $this->amountWarranty     = sfConfig::get("app_monto_garantia");
         $this->amountWarrantyFree = sfConfig::get("app_monto_garantia_por_dia");
 
@@ -3493,29 +3396,6 @@ public function calificacionesPendientes(){
         return $next_numero;
     }
 
-    public function executeOpenOpportunityEmail(sfWebRequest $request) {
-
-        try {
-
-            $opportunityEmailQueue = Doctrine_Core::getTable('OportunityEmailQueue')->find($request->getParameter('id'));
-
-            if (is_null($opportunityEmailQueue->getOpenedAt())) {
-                $opportunityEmailQueue->setOpenedAt(date("Y-m-d H:i:s"));
-                $opportunityEmailQueue->save();
-            }
-
-        } catch (Exception $e) {
-
-            Utils::reportError($e->getMessage(), "profile/executeOpenOpportunityEmail");
-        }
-
-        $this->getResponse()->setContentType('image/gif');
-
-        echo base64_decode("R0lGODlhAQABAIAAAP///////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACwAAAAAAQABAAACAkQBADs=");
-
-        return sfView::NONE;
-    }
-
     public function executeAvailabilityOpen(sfWebRequest $request) {
 
         try {
@@ -3612,7 +3492,7 @@ public function calificacionesPendientes(){
             Utils::reportError($e->getMessage(), "profile/executeAvailability");
         }
 
-        $this->redirect('profile/cars');
+        $this->redirect('cars');
     }
 
     /*public function executeGetComunas(sfWebRequest $request) {
