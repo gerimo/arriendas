@@ -73,7 +73,7 @@
             <p class="alert"></p>
             <div class="row">
                 <div class="col-md-offset-7 col-md-5" style="padding: 0">
-                    <button class="btn-a-primary btn-block" id="save" data-id="<?php echo $User->getId(); ?>" onclick="validateForm()">Finalizar</button>
+                    <button class="btn btn-a-primary btn-block" id="save" data-id="<?php echo $User->getId(); ?>" onclick="validateForm()">Finalizar</button>
                 </div>
             </div>
             <div class="hidden-xs space-100"></div>
@@ -87,8 +87,8 @@
         <div class="BCW" id="message" style="display: none">
                 <p class="text-center final-ask"></p>
                 <div class="row">
-                        <button class="col-md-4 btn-a-action" style="" onclick="location.href='<?php echo url_for('main/index') ?>'">Quiero Arrendar un Auto</button>
-                        <button class="col-md-offset-4 col-md-4 btn-a-action" onclick="location.href='<?php echo url_for('main/AddCarFromRegister') ?>'">Quero Subir mi Auto</button>
+                        <button class="col-md-4 btn btn-a-action" style="" onclick="location.href='<?php echo url_for('main/index') ?>'">Quiero Arrendar un Auto</button>
+                        <button class="col-md-offset-4 col-md-4 btn btn-a-action" onclick="location.href='<?php echo url_for('main/AddCarFromRegister') ?>'">Quero Subir mi Auto</button>
                 </div>
         </div>
     </div>

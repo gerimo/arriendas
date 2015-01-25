@@ -31,10 +31,10 @@
                         </div>
                         <div class="col-md-3 text-center">
                             <?php if ($PaidReserve->confirmed): ?>
-                                <button class="btn-a-action btn-block" disabled>CONFIRMADA</button>
+                                <button class="btn btn-a-action btn-block" disabled>CONFIRMADA</button>
                                 <a class="download-contracts" data-car-id="<?php echo $PaidReserve->getCar()->id ?>" data-reserve-token="<?php echo $PaidReserve->token ?>" href="#">Descargar contratos</a>
                             <?php else: ?>
-                                <button class="approve btn-a-primary btn-block" data-reserve-id="<?php echo $PaidReserve->getId() ?>">Aprobar</button>
+                                <button class="approve btn btn-a-primary btn-block" data-reserve-id="<?php echo $PaidReserve->getId() ?>">Aprobar</button>
                                 <a class="reject" data-reserve-id="<?php echo $PaidReserve->getId() ?>">Rechazar</a>
                             <?php endif ?>
                         </div>
@@ -65,7 +65,7 @@
                                     </div>
                                     <div class="col-md-3 text-center">
                                         <?php if ($Reserve->getConfirmed()): ?>
-                                            <button class="extend btn-a-primary btn-block" data-reserve-id="<?php echo $Reserve->getId() ?>" data-reserve-to="<?php echo date("d-m-Y H:i", strtotime($Reserve->getFechaTermino2())) ?>">Extender</button>
+                                            <button class="extend btn btn-a-primary btn-block" data-reserve-id="<?php echo $Reserve->getId() ?>" data-reserve-to="<?php echo date("d-m-Y H:i", strtotime($Reserve->getFechaTermino2())) ?>">Extender</button>
                                         <?php else: ?>
                                             <p>En espera de confirmación</p>
                                         <?php endif ?>
@@ -106,7 +106,7 @@
                                                 <?php if ($CO->getTransaction()->getCompleted()): ?>
                                                     <i class="selected fa fa-check"></i>
                                                 <?php else: ?>
-                                                    <button class="change btn-a-action btn-block" data-reserve-id="<?php echo $CO->getId() ?>">Cambiar</button>
+                                                    <button class="change btn btn-a-action btn-block" data-reserve-id="<?php echo $CO->getId() ?>">Cambiar</button>
                                                 <?php endif ?>
                                             </div>
                                         </div>
@@ -161,7 +161,7 @@
                     <input id="extendReserve" name="reserveId" type="hidden" value="0">
                 </div>
                 <div class="modal-footer">
-                    <button class="btn-a-primary pull-right" id="payExtend">Pagar</button>
+                    <button class="btn btn-a-primary pull-right" id="payExtend">Pagar</button>
                     <span id="extendAlert" style="display: none"></span>
                     <img id="extendLoading" src="/images/newDesign/loading.gif" style="display: none">
                 </div>

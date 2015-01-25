@@ -265,19 +265,25 @@
         var communeId = parseInt($("#commune option:selected").val());
 
         var isAutomatic = false;
-        if ($('#isAutomatic').is(':checked')) {
-            isAutomatic = true;
-        }
+        $(".isAutomatic").each(function(){
+            if ($(this).is(':checked')) {
+                isAutomatic = true;
+            }
+        });
         
         var isLowConsumption = false;
-        if ($('#isLowConsumption').is(':checked')) {
-            isLowConsumption = true;
-        }
+        $(".isLowConsumption").each(function(){
+            if ($(this).is(':checked')) {
+                isLowConsumption = true;
+            }
+        });
 
         var isMorePassengers = false;
-        if ($('#isMorePassengers').is(':checked')) {
-            isMorePassengers = true;
-        }        
+        $(".isMorePassengers").each(function(){
+            if ($(this).is(':checked')) {
+                isMorePassengers = true;
+            }
+        });
 
         // Validación de la búsqueda
         var error = false;
@@ -377,7 +383,7 @@
                     
                     windowMarker += "</div>";
 
-                    windowMarker += "<p class='text-right'><a class='btn-a-action' href='"+reserveUrl.replace("carId", Car.id)+"' target='_blank'>RESERVAR</a></p>";
+                    windowMarker += "<p class='text-right'><a class='btn btn-a-action btn-sm' href='"+reserveUrl.replace("carId", Car.id)+"' target='_blank'>RESERVAR</a></p>";
 
                     if (infowindow) {
                         infowindow.close();
@@ -423,7 +429,7 @@
                     article += "<h2>"+ Car.brand +" "+ Car.model +"<small>, "+Car.year+"</small></h2>";
                     /*article += "<span class='sub-heading'>A 2 km Metro <strong>Tobalaba</strong></span>";*/
                     article += "<p class='price'>$"+ Car.price +" <small style='color: black; font-weight: 300'>TOTAL</small></p>";
-                    article += "<p class='text-right'><a class='btn-a-action' href='"+reserveUrl.replace("carId", Car.id)+"' class='reserve' target='_blank'>RESERVAR</a></p>";
+                    article += "<p class='text-right'><a class='btn btn-a-action btn-sm' href='"+reserveUrl.replace("carId", Car.id)+"' class='reserve' target='_blank'>RESERVAR</a></p>";
                     /*article += "<img src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + contador + "|05a4e7|ffffff' />";*/
                     article += "</div>";
                     article += "</div>";
@@ -529,7 +535,7 @@
 
         <!-- Search -->
         <div class="col-xs-12 col-sm-2 col-md-2 text-center">
-            <a class="btn-a-action btn-block" href id="search">Buscar</a>
+            <a class="btn btn-a-action btn-block" href id="search">Buscar</a>
         </div>
     </div>
 </section>
