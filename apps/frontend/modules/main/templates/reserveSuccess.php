@@ -294,10 +294,10 @@
         <!-- FORMULARIO -->
         <input id="car" name="car" type="hidden" value="<?php echo $Car->getId() ?>">
         <input id="from" name="from" type="hidden" value="<?php echo $from ?>">
-        <input id="to" name="to" type="hidden" value="<?php echo $to ?>">
-        <input id="price" type="hidden" value="<?php echo $price ?>">
-        <input id="total-price" type="hidden" value="<?php echo $price ?>">
+        <input id="to" name="to" type="hidden" value="<?php echo $to ?>">        
     </form>
+    <input id="price" type="hidden" value="<?php echo $price ?>">
+    <input id="total-price" type="hidden" value="<?php echo $price ?>">
 </div>
 
 <!-- Alert -->
@@ -529,7 +529,7 @@
         var to    = $("#to").val();
 
         $.post("<?php echo url_for('reserves/calculateTime') ?>", {"from": from, "to": to}, function(r){
-            console.error(r);
+            
             if (r.error) {
                 $("#dialog-alert p").html(r.errorMessage);
                 $("#dialog-alert").attr("title", "¡Alerta!");

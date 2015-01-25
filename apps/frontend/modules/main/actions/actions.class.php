@@ -960,11 +960,7 @@ class mainActions extends sfActions {
         return $this->renderText("OK");
      }
  
-    /*
-    Esta funcion recibe el ID de un daño almacenado en la tabla Damages, y devuelve el PNG correspondiente
-    a la vista superior del auto con el daño marcado con una X
-    */
-
+    // Esta funcion recibe el ID de un daño almacenado en la tabla Damages, y devuelve el PNG correspondiente a la vista superior del auto con el daño marcado con una X
     public function executeGenerarMapaDanio(sfWebRequest $request) {
         $idDanio= $request->getParameter("idDanio");
         $danio= Doctrine_Core::getTable("damage")->findOneById($idDanio);
@@ -1062,95 +1058,94 @@ class mainActions extends sfActions {
 
     public function executeFormularioEntrega(sfWebRequest $request){
         //se asume que se recibe el id de la tabla reserva desde la página anterior
-            //$idReserve = 605;
-            $idReserve= $request->getParameter("idReserve");
-            $tokenReserve= $request->getParameter("tokenReserve");
+        //$idReserve = 605;
+        $idReserve= $request->getParameter("idReserve");
+        $tokenReserve= $request->getParameter("tokenReserve");
 
-            //id del usuario que accede al sitio
-            $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+        //id del usuario que accede al sitio
+        $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
 
-    		if (!$tokenReserve){
-    			$reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
-    		}else{
-    			$reserve = Doctrine_Core::getTable('reserve')->findOneByToken($tokenReserve);
-    		};
+		if (!$tokenReserve){
+			$reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
+		}else{
+			$reserve = Doctrine_Core::getTable('reserve')->findOneByToken($tokenReserve);
+		};
 
-            sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
-            $this->url = public_path("");
+        sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
+        $this->url = public_path("");
 
-            $entrega = $reserve->getDate();
-            $duracion = $reserve->getDuration();
+        $entrega = $reserve->getDate();
+        $duracion = $reserve->getDuration();
 
-            $entrega = strtotime($entrega);
-            $this->fechaEntrega = date("d/m/y",$entrega);
-            $this->horaEntrega = date("H:i",$entrega);
+        $entrega = strtotime($entrega);
+        $this->fechaEntrega = date("d/m/y",$entrega);
+        $this->horaEntrega = date("H:i",$entrega);
 
-            $this->fechaDevolucion = date("d/m/y",$entrega+($duracion*60*60));
-            $this->horaDevolucion = date("H:i",$entrega+($duracion*60*60));
+        $this->fechaDevolucion = date("d/m/y",$entrega+($duracion*60*60));
+        $this->horaDevolucion = date("H:i",$entrega+($duracion*60*60));
 
-            $carId = $reserve->getCarId();
-            $arrendadorId = $reserve->getUserId();
+        $carId = $reserve->getCarId();
+        $arrendadorId = $reserve->getUserId();
 
-            $carClass = Doctrine_Core::getTable('car')->findOneById($carId);
+        $carClass = Doctrine_Core::getTable('car')->findOneById($carId);
 
-            $propietarioId = $carClass->getUserId();
+        $propietarioId = $carClass->getUserId();
 
-            $modeloId = $carClass->getModel();
+        $modeloId = $carClass->getModel();
 
-            $car['duracion'] = $reserve->getTiempoArriendoTexto();
+        $car['duracion'] = $reserve->getTiempoArriendoTexto();
 
-            $car['id'] = $carId;
-            $car['marca'] = $carClass->getModel()->getBrand();
-            $car['modelo'] = $carClass->getModel();
-            $car['patente'] = $carClass->getPatente();
+        $car['id'] = $carId;
+        $car['marca'] = $carClass->getModel()->getBrand();
+        $car['modelo'] = $carClass->getModel();
+        $car['patente'] = $carClass->getPatente();
 
-            $arrendadorClass = Doctrine_Core::getTable('user')->findOneById($arrendadorId);
-            $propietarioClass = Doctrine_Core::getTable('user')->findOneById($propietarioId);
+        $arrendadorClass = Doctrine_Core::getTable('user')->findOneById($arrendadorId);
+        $propietarioClass = Doctrine_Core::getTable('user')->findOneById($propietarioId);
 
-            if($propietarioId == $idUsuario){
-                $car['propietario'] = true;
-            }else{
-                $car['propietario'] = false;
-            }
+        if($propietarioId == $idUsuario){
+            $car['propietario'] = true;
+        }else{
+            $car['propietario'] = false;
+        }
 
-            $arrendador['nombreCompleto'] = $arrendadorClass->getFirstname()." ".$arrendadorClass->getLastname();
-            $arrendador['rut'] = $arrendadorClass->getRut();
-            $arrendador['direccion'] = $arrendadorClass->getAddress();
-            $arrendador['telefono'] = $arrendadorClass->getTelephone();
+        $arrendador['nombreCompleto'] = $arrendadorClass->getFirstname()." ".$arrendadorClass->getLastname();
+        $arrendador['rut'] = $arrendadorClass->getRut();
+        $arrendador['direccion'] = $arrendadorClass->getAddress();
+        $arrendador['telefono'] = $arrendadorClass->getTelephone();
 
-            $comunaId = $arrendadorClass->getComuna();
-            $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
-            $arrendador['comuna'] = ucfirst(strtolower($comunaClass['nombre']));
+        $comunaId = $arrendadorClass->getComuna();
+        $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
+        $arrendador['comuna'] = ucfirst(strtolower($comunaClass['nombre']));
 
-            $propietario['nombreCompleto'] = $propietarioClass->getFirstname()." ".$propietarioClass->getLastname();
-            $propietario['rut'] = $propietarioClass->getRut();
-            $propietario['direccion'] = $propietarioClass->getAddress();
-            $propietario['telefono'] = $propietarioClass->getTelephone();
+        $propietario['nombreCompleto'] = $propietarioClass->getFirstname()." ".$propietarioClass->getLastname();
+        $propietario['rut'] = $propietarioClass->getRut();
+        $propietario['direccion'] = $propietarioClass->getAddress();
+        $propietario['telefono'] = $propietarioClass->getTelephone();
 
-            $comunaId = $propietarioClass->getComuna();
-            $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
-            $propietario['comuna'] = ucfirst(strtolower($comunaClass['nombre']));
+        $comunaId = $propietarioClass->getComuna();
+        $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
+        $propietario['comuna'] = ucfirst(strtolower($comunaClass['nombre']));
 
-            //echo $carId;
-            $damageClass = Doctrine_Core::getTable('damage')->findByCarId($carId);
-            //$damageClass = Doctrine_Core::getTable('damage')->findByCarId(553);
-            $descripcionDanios = null;
-            $i = 0;
-            foreach ($damageClass as $damage) {
-                $descripcionDanios[$i] = $damage->getDescription();
-                $i++;
-            }
+        //echo $carId;
+        $damageClass = Doctrine_Core::getTable('damage')->findByCarId($carId);
+        //$damageClass = Doctrine_Core::getTable('damage')->findByCarId(553);
+        $descripcionDanios = null;
+        $i = 0;
+        foreach ($damageClass as $damage) {
+            $descripcionDanios[$i] = $damage->getDescription();
+            $i++;
+        }
 
-            //die();
+        //die();
 
-            $this->descripcionDanios = $descripcionDanios;
-            $this->arrendador = $arrendador;
-            $this->propietario = $propietario;
-            $this->car = $car;
+        $this->descripcionDanios = $descripcionDanios;
+        $this->arrendador = $arrendador;
+        $this->propietario = $propietario;
+        $this->car = $car;
     }
           
-    //Se retorna un componente que permite hacer el upload de las fotos directamente al S3 de Amazon, sin pasar por el servidor
-    //Web.
+    //Se retorna un componente que permite hacer el upload de las fotos directamente al S3 de Amazon, sin pasar por el servidor Web.
     public function executeUpload2S3(sfWebRequest $request) {
         //Validamos los parámetros de entrada
         $this->urlFotoDefecto= $request->getParameter("urlFotoDefecto");
@@ -1168,31 +1163,23 @@ class mainActions extends sfActions {
         //Necesitamos obtener el nombre del archivo respectivo.
         //Para esto, hacemos uso de la funcion nativa parse_url de php
         $temporal= parse_url($image);
-
         
         //Generamos la URL que corresponde a la imagen
         $urlThumbnail= "thumb_an".$ancho."_al".$alto."_".str_replace("/","_",$temporal['path']);
-     
-     /*   require sfConfig::get('sf_app_lib_dir')."/aws_sdk/sdk.class.php";
-        $s3= new AmazonS3();
-        $bucket= "arriendas.testing".strtolower($s3->key);
-        $response= $s3->list_objects("arriendas.testing",array("prefix"=>$urlThumbnail));
-        
-        var_dump($response);
-        die();*/
+
         //Revisamos si la foto está generada como thumb en el S3
         $ch = curl_init();
         curl_setopt($ch,CURLOPT_URL,"http://s3.amazonaws.com/arriendas.testing/?prefix=".$urlThumbnail);
         curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
         $salida= curl_exec($ch);
         if(strpos($salida,"Contents")==false) {
-    	require sfConfig::get('sf_app_lib_dir')."/wideimage/WideImage.php";
-    	$image = WideImage::load($image);
-    	$resized = $image->resize($alto, $ancho);
-    	$resized->saveToFile(sfConfig::get('sf_upload_dir')."/".$urlThumbnail);
-    	require(sfConfig::get('sf_app_lib_dir')."/s3upload/s3_config.php");
-    	$s3->putObjectFile(sfConfig::get('sf_upload_dir')."/".$urlThumbnail,
-    	$bucket , $urlThumbnail, S3::ACL_PUBLIC_READ);
+        	require sfConfig::get('sf_app_lib_dir')."/wideimage/WideImage.php";
+        	$image = WideImage::load($image);
+        	$resized = $image->resize($alto, $ancho);
+        	$resized->saveToFile(sfConfig::get('sf_upload_dir')."/".$urlThumbnail);
+        	require(sfConfig::get('sf_app_lib_dir')."/s3upload/s3_config.php");
+        	$s3->putObjectFile(sfConfig::get('sf_upload_dir')."/".$urlThumbnail,
+        	$bucket , $urlThumbnail, S3::ACL_PUBLIC_READ);
     	}
         $this->redirect("http://s3.amazonaws.com/arriendas.testing/".$urlThumbnail);
     }
@@ -1222,11 +1209,6 @@ class mainActions extends sfActions {
         //Recibimos como parámetro el ID del vehículo para el cual deseamos generar el informe de daños
         $idAuto= $request->getParameter("idAuto");
         $car = Doctrine_Core::getTable("car")->findOneById($idAuto);
-        /*
-        if($car->getSeguroOK()==0) {
-    	throw new Exception("El auto no tiene su seguro verificado");
-        }
-        */
         
         //Obtenemos los datos del dueño del vehículo
         
@@ -1257,17 +1239,12 @@ class mainActions extends sfActions {
     }
 
     public function executeReporteResumen(sfWebRequest $request) {
+
         //Recibimos como parámetro el ID del vehículo para el cual deseamos generar el informe de daños
         $idAuto= $request->getParameter("idAuto");
         $car = Doctrine_Core::getTable("car")->findOneById($idAuto);
-        /*
-        if($car->getSeguroOK()==0) {
-        throw new Exception("El auto no tiene su seguro verificado");
-        }
-        */
-        
-        //Obtenemos los datos del dueño del vehículo
-        
+
+        //Obtenemos los datos del dueño del vehículo        
         $user= Doctrine_Core::getTable("user")->findOneByID($car->getUserId());
         
         //Obtencion de los datos referentes a los daños
@@ -1295,17 +1272,12 @@ class mainActions extends sfActions {
     }
 
     public function executeReporteDanios(sfWebRequest $request) {
+
         //Recibimos como parámetro el ID del vehículo para el cual deseamos generar el informe de daños
         $idAuto= $request->getParameter("idAuto");
         $car = Doctrine_Core::getTable("car")->findOneById($idAuto);
-        /*
-        if($car->getSeguroOK()==0) {
-        throw new Exception("El auto no tiene su seguro verificado");
-        }   
-        */
         
-        //Obtenemos los datos del dueño del vehículo
-        
+        //Obtenemos los datos del dueño del vehículo        
         $user= Doctrine_Core::getTable("user")->findOneByID($car->getUserId());
         
         //Obtencion de los datos referentes a los daños
@@ -1939,7 +1911,6 @@ class mainActions extends sfActions {
         }
 
         return $brandOrdenadosConId;
-
     }
 
     public function executeFiltrosBusqueda(sfWebRequest $request) {
@@ -1975,8 +1946,8 @@ class mainActions extends sfActions {
                 $_output[] = array("optionValue" => $p->getId(), "optionDisplay" => $p->getName());
             }
         }
+
         return $this->renderText(json_encode($_output));
-        //return $this->renderText(json_encode(array('error'=>'Faltan par?metros para realizar la consulta')));
     }
 
     public function executeIndexOld(sfWebRequest $request) {
@@ -2586,9 +2557,7 @@ class mainActions extends sfActions {
     }
 
 	//CONTACTO
-    public function executeContact(sfWebRequest $request) {
-        
-    }
+    public function executeContact(sfWebRequest $request) {}
 	
 	//TERMINOS
     public function executeTerminos(sfWebRequest $request) {
@@ -3025,15 +2994,15 @@ class mainActions extends sfActions {
         $headers .= "X-Mailer: PHP/" . phpversion() . "\n";
 
         $mail = '
-Bienvenido a Arriendas.cl!
-<br><br>
-Gracias por suscribirte a la primera comunidad de arriendo de veh&iacute;culos entre vecinos por hora.
-<br><br>
-Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ganar $'.$result.' por hora.
-<br><br>
-- El equipo de Arriendas.cl
-<br><br>
-<em style="color: #969696">Nota: Para evitar posibles problemas con la recepci&oacute;n de este correo le aconsejamos nos agregue a su libreta de contactos.</em> ';
+            Bienvenido a Arriendas.cl!
+            <br><br>
+            Gracias por suscribirte a la primera comunidad de arriendo de veh&iacute;culos entre vecinos por hora.
+            <br><br>
+            Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ganar $'.$result.' por hora.
+            <br><br>
+            - El equipo de Arriendas.cl
+            <br><br>
+            <em style="color: #969696">Nota: Para evitar posibles problemas con la recepci&oacute;n de este correo le aconsejamos nos agregue a su libreta de contactos.</em> ';
 
 		// send email
         $this->mailSmtp($to, $subject, $mail, $headers);
@@ -3041,27 +3010,27 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
 		$this->result = "Mensaje enviado correctamente. Gracias por utilizar nuestro portal.";
     }
 
-    /**
-     * Login with facebook
-     */
     public function executeLoginFacebook(sfWebRequest $request) {
+
         $app_id = "213116695458112";
         $app_secret = "8d8f44d1d2a893e82c89a483f8830c25";
         //$my_url = "http://www.arriendas.cl/main/loginFacebook";
         $my_url = $this->generateUrl("facebook_login", array(), true);
         
-     //   $app_id = "297296160352803";
-      //  $app_secret = "e3559277563d612c3c20f2c202014cec";
-      //  $my_url = "http://test.intothewhitebox.com/yineko/arriendas/main/loginFacebook";
+        // $app_id = "297296160352803";
+        // $app_secret = "e3559277563d612c3c20f2c202014cec";
+        // $my_url = "http://test.intothewhitebox.com/yineko/arriendas/main/loginFacebook";
         $code = $request->getParameter("code");
         $state = $request->getParameter("state");
         $previousUser= $request->getParameter("logged");
         $returnRoute = $request->getParameter("return");
-	if($previousUser) {
-	    $my_url.="?logged=true";
-	}
+    	
+        if($previousUser) {
+    	   $my_url.="?logged=true";
+    	}
+
         if($returnRoute){
-	    $my_url.="?return=".$returnRoute;
+	       $my_url.="?return=".$returnRoute;
         }
         
         if (empty($code)) {
@@ -3092,9 +3061,8 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
                 $this->redirect('main/index');
             }
         }
-
 	
-	//modificacion por problema aleatorio con login with facebook
+	    //modificacion por problema aleatorio con login with facebook
         if ($state == $this->getUser()->getAttribute('state') || 1==1) {
 
             $token_url = sprintf("https://graph.facebook.com/oauth/access_token?client_id=%s&redirect_uri=%s&client_secret=%s&code=%s", $app_id, urlencode($my_url), $app_secret, $code);
@@ -3110,12 +3078,13 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
             $myUser = Doctrine::getTable('User')->findOneByFacebookId($user["id"]);
 
             if (!$myUser) {
+
                 if ($user["email"]) {
                     $myUser = Doctrine::getTable('User')->findOneByEmail($user["email"]);
-                }
-                else {
+                } else {
                     $myUser = null;
                 }
+
                 if (!$myUser) {
 					$newUser=true;
                     $myUser = new User();
@@ -3136,14 +3105,14 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
                     $myUser->setConfirmedFb(true);
                     $myUser->save();
                 }
-		//Seteamos el ID del recomendador, en caso de venir
+                //Seteamos el ID del recomendador, en caso de venir
             }
 	    
-	    if($_SESSION['sender_user']!="") {
-		$q = Doctrine_Manager::getInstance()->getCurrentConnection();
-		$query="UPDATE User SET recommender = '".$_SESSION['sender_user']."' WHERE facebook_id='".$user['id']."';";
-		$result = $q->execute($query);
-	    }
+            if($_SESSION['sender_user']!="") {
+            	$q = Doctrine_Manager::getInstance()->getCurrentConnection();
+            	$query="UPDATE User SET recommender = '".$_SESSION['sender_user']."' WHERE facebook_id='".$user['id']."';";
+            	$result = $q->execute($query);
+            }
 	    
             $q = Doctrine::getTable('user')->createQuery('u')->where('u.facebook_id = ? ', array($user["id"]));
 
@@ -3202,55 +3171,51 @@ Con tu '.htmlentities($brand).' '.htmlentities($model).' del '.$year.' puedes ga
 
     public function executeCaptcha() {
 
-//    $this->get('profiler')->disable();
+        // $this->get('profiler')->disable();
 
- $this->getResponse()->setContentType('image/png');
+        $this->getResponse()->setContentType('image/png');
 
+        sfConfig::set('sf_web_debug', false);  
 
-sfConfig::set('sf_web_debug', false);  
-
-	$this->setLayout(false);
+        $this->setLayout(false);
     }
     
     public function mailSmtp($to_input,$subject_input,$mail,$headers) {
-error_reporting(0);
-require_once "Mail.php";
-require_once "Mail/mime.php";
- 
- $from = "No Reply <noreply@arriendas.cl>";
- $to = $to_input;
- $subject = $subject_input;
- $body = $mail;
- 
- $host = "smtp.sendgrid.net";
- $username = "german@arriendas.cl";
- $password = "whisper00@@__";
- 
- $headers = array ('From' => $from,
-   'To' => $to,
-   'Subject' => $subject);
- 
- $mime= new Mail_mime();
- $mime->setHTMLBody($body);
- $body=$mime->get();
-$headers = $mime->headers($headers);
- 
- $smtp = Mail::factory('smtp',
-   array ('host' => $host,
-     'auth' => true,
-     'username' => $username,
-     'password' => $password));
- 
- $mail = $smtp->send($to, $headers, $body);
- 
+        error_reporting(0);
+        require_once "Mail.php";
+        require_once "Mail/mime.php";
 
-}
+        $from = "No Reply <noreply@arriendas.cl>";
+        $to = $to_input;
+        $subject = $subject_input;
+        $body = $mail;
 
-public function calificacionesPendientes(){
-    //crear tabla en calificaciones una vez que la reserva haya expirado
-    //enviar mail a propietario y arrendatario informando
-    
-}
+        $host = "smtp.sendgrid.net";
+        $username = "german@arriendas.cl";
+        $password = "whisper00@@__";
+
+        $headers = array ('From' => $from,
+        'To' => $to,
+        'Subject' => $subject);
+
+        $mime= new Mail_mime();
+        $mime->setHTMLBody($body);
+        $body=$mime->get();
+        $headers = $mime->headers($headers);
+
+        $smtp = Mail::factory('smtp',
+        array ('host' => $host,
+         'auth' => true,
+         'username' => $username,
+         'password' => $password));
+
+        $mail = $smtp->send($to, $headers, $body);
+    }
+
+    public function calificacionesPendientes(){
+        //crear tabla en calificaciones una vez que la reserva haya expirado
+        //enviar mail a propietario y arrendatario informando
+    }
 
     public function executeGenerateRegionesSlugs(sfWebRequest $request) {
         
@@ -3265,12 +3230,6 @@ public function calificacionesPendientes(){
     // PROCESO ARTIFICIAL DE UPDATE PARA FACTURAS ENTRE 1306 Y 2000
     // CORRESPONDIENTE A TRANSACCIONES COMPLETADAS
     
-    /** 
-     * proceso de update manual de nro. de factura
-     * en tablas Reserve y Transaction
-     * @param type $reserve
-     * @param type $order
-     */
     public function executeUpdateManualNroFactura(sfWebRequest $request){
         
         ini_set('memory_limit', '1024M');
@@ -3303,12 +3262,6 @@ public function calificacionesPendientes(){
         exit;
     }
     
-    /** 
-     * generación de nro. de factura
-     * en tablas Reserve y Transaction
-     * @param type $reserve
-     * @param type $order
-     */
     private function generarNroFactura($reserve, $order){
         
         // primero valido que no exista otra factura ya generada 
@@ -3494,12 +3447,4 @@ public function calificacionesPendientes(){
 
         $this->redirect('cars');
     }
-
-    /*public function executeGetComunas(sfWebRequest $request) {
-        $this->setLayout(false);
-        $idRegion = $request->getParameter('idRegion');
-        if ($idRegion) {
-            $this->comunas = Doctrine::getTable('comunas')->findByPadre($idRegion);
-        }
-    }*/
 }
