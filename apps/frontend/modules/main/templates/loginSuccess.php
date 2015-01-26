@@ -34,7 +34,7 @@
                             <a class="pull-left forgot" href="<?php echo url_for('main/forgot')?>">&iquest;Olvidaste tu clave?</a>
                         </div>
                         <div class="col-md-6" style="padding: 0"> 
-                            <input class="btn-block btn-a-primary pull-right" type="submit" value="Ingresar">
+                            <input class="btn btn-a-primary btn-block pull-right" type="submit" value="Ingresar">
                         </div>
                     </div>
                 </form>
