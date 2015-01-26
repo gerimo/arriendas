@@ -70,6 +70,14 @@ opportunities_approve:
     url: /oportunidades/aprobar
     param: { module: opportunities, action: approve }
 
+opportunities_mailing_approve:
+    url: /oportunidades/mailing/aprobar/:reserve_id/:car_id/:signature
+    param: { module: opportunities, action: mailingApprove }
+
+opportunities_mailing_open:
+    url: /oportunidades/mailing/:id/:signature
+    param: { module: main, action: mailingOpen }
+
 questions:
     url: /preguntas-frecuentes
     param: { module: main , action: questions }
@@ -79,7 +87,7 @@ rent_a_car_region_commune:
     param: {module: main, action: index }
 
 reserve:
-    url: /reserva/:c/:f/:t
+    url: /reserva/auto/:carId
     param: { module: main, action: reserve }
 
 reserve_approve:
@@ -187,14 +195,6 @@ aprobarReserve:
 aprobarOportunidad:
     url:  /profile/aprobarOportunidad/:idReserve/:idCar/:idUser
     param:  { module: profile, action: aprobarOportunidad }
-
-checkOpenedEmail:
-    url: /img
-    param: { module: main, action: openOpportunityEmail }
-
-opportunityAccept:
-    url: /accept
-    param: { module: profile, action: oportunidadAceptar }
 
 availability:
     url: /availability

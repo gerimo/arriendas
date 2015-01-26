@@ -22,7 +22,8 @@
                             <?php if($User->getFacebookId() != null):?>
                                 <img src="http://res.cloudinary.com/arriendas-cl/image/facebook/w_194,h_204,c_fill,g_face/<?php echo $User->getFacebookId();?>.jpg">
                             <?php else: ?>
-                                <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_194,h_204,c_fill,g_face/http://www.arriendas.cl/images/users/<?php echo $User->getFileName() ?>">
+                                <!-- <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_194,h_204,c_fill,g_face/http://www.arriendas.cl/images/users/<?php echo $User->getFileName() ?>">-->
+                                <?php echo image_tag('/images/users/'.$User->getFileName(), 'size=194x204') ?>
                             <?php endif ?>
                         <?php endif ?>
                     </div> 
@@ -36,7 +37,7 @@
                 <div class="regis_foto_frame">
                     <div id="previewlicense">
                         <?php if ($User->getDriverLicenseFile() == null): ?>
-                            <?php echo image_tag('pimg_asegura_tu_auto/foto_padron_reverso.png', 'size=194x204') ?>
+                            <?php echo image_tag('/images/newDesign/foto_padron_reverso.png', 'size=194x204') ?>
                         <?php else: ?>
                             <?php echo image_tag('licence/'.$User->getLicenceFileName(), 'size=194x204') ?>
                         <?php endif ?>

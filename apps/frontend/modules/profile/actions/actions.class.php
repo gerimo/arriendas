@@ -337,7 +337,7 @@ class profileActions extends sfActions {
             $Reserve->setConfirmed(true);
         }
 
-        $Reserve->setPrice(Car::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth()));
+        $Reserve->setPrice(CarTable::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth()));
         $Reserve->setMontoLiberacion($amountWarranty);
         $Reserve->setFechaReserva(date("Y-m-d H:i:s"));
 
@@ -507,9 +507,6 @@ class profileActions extends sfActions {
 
         return sfView::NONE;
     }
-
-  
-
 
     //////////////////////////////////////////////////////////////////////////////////
 
@@ -2472,12 +2469,12 @@ class profileActions extends sfActions {
 
                 //comprueba que no haya una reserva PAGA para la fecha y hora señalada, al mismo auto, a cualquier usuario          
                 $q = Doctrine_Query::create()
-                        ->from('reserve r')
-//                    ->leftJoin('transaction t ON r.id = t.reserve_id')
-                        ->leftJoin('r.Transaction t')
-                        ->where('t.completed = ?', true)
-                        ->andwhere('r.car_id = ?', $carid)
-                        ->andwhere('? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR ? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR r.date BETWEEN ? AND ? OR DATE_ADD(r.date, INTERVAL r.duration HOUR) BETWEEN ? AND ?', $rangeDates);
+                    ->from('reserve r')
+                    ->leftJoin('transaction t ON r.id = t.reserve_id')
+                    ->leftJoin('r.Transaction t')
+                    ->where('t.completed = ?', true)
+                    ->andwhere('r.car_id = ?', $carid)
+                    ->andwhere('? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR ? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR r.date BETWEEN ? AND ? OR DATE_ADD(r.date, INTERVAL r.duration HOUR) BETWEEN ? AND ?', $rangeDates);
 
                 $checkAvailability = $q->fetchArray();
 
@@ -2495,30 +2492,9 @@ class profileActions extends sfActions {
                 $reservaPrevia = false;
 
                 foreach ($reservas as $reserva) {
-//                    //comprueba que sea el mismo auto
+                    // comprueba que sea el mismo auto
                     if ($carid == $reserva->getCarId() && $startDate == $reserva->getDate() && $durationReserva == $reserva->getDuration()) {
-//
-//                        //comprueba que la reserva no esté eliminada o anulada
-//                        if(!$reserva->getCanceled()){
-//
-                        //                          $date = $reserva->getDate();
-                        //                        $date = strtotime($date);
-                        //                      $duration = $reserva->getDuration();
-                        //                         $fechaActual = strtotime($this->formatearHoraChilena(strftime("%Y-%m-%d %H:%M:%S")));
-//                            $dateInicio = strtotime($startDate);
-                        //                          $dateFin = strtotime($endDate);
-                        //                        if($date>=$fechaActual){
-                        //echo $date." ".$dateInicio." ".$dateFin."<br>";
-                        //fecha de inicio y fecha de termino se encuentra dentro del rango $dateInicio y $dateFin
-                        //                          if($date>=$dateInicio && $date<=$dateFin){
-                        //                            $reservaPrevia = true;
-                        //                      }
-                        //                         $date = $date+$duration*3600;
-                        //                         if($date>=$dateInicio && $date<=$dateFin){
                         $reservaPrevia = true;
-                        //                        }
-                        //                  }
-                        //            }
                     }
                 }
 
@@ -3025,9 +3001,6 @@ class profileActions extends sfActions {
 
     public function executeConfirmMyRating(sfWebRequest $request) {
 
-
-
-
         $rating = Doctrine_Core::getTable('Rating')->find(array($request->getParameter('id')));
         $rating->setUserOwnerOpnion($request->getParameter('user_owner_opnion'));
         $rating->setIntime($request->getParameter('intime'));
@@ -3088,21 +3061,6 @@ class profileActions extends sfActions {
 
         throw new sfStopException();
     }
-
-    /*
-      public function executeSaveTransaction(sfWebRequest $request) {
-
-      $idreserve = '';
-      if($request->getParameter('idreserve')) $idreserve = $request->getParameter('idreserve');
-
-      $this->trans = Doctrine_Core::getTable("Transaction")->saveTransaction($idreserve);
-      }
-
-      public function executePuntoPagos() {
-
-      $this->trans = Doctrine_Core::getTable("Transaction")->successTransaction(28, '121389126', 1, 1);
-      }
-      /* */
 
     public function executeTransactions(sfWebRequest $request) {
 
@@ -3167,7 +3125,7 @@ class profileActions extends sfActions {
 
         $q = Doctrine_Query::create()->from('message')
                 ->where('message.user_to > ?', $this->getUser()->getAttribute("userid"))
-//->andWhere('message.user_from > ?', 2)
+                //->andWhere('message.user_from > ?', 2)
                 ->andwhere('message.id IN (SELECT MAX(id) FROM Message GROUP BY conversation)');
         $this->messages = $q->fetchArray();
     }
@@ -3728,61 +3686,51 @@ class profileActions extends sfActions {
 
 
         if ($request->getParameter('id')) {
-
-
-                //check if facebook discount has been used
-//                $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
-//                $q = Doctrine_Query::create()
-//                        ->from('transaction t')
-//                        ->where('t.user_id = ?', $idUsuario)
-//                        ->andwhere('t.discountfb = ?', true);
-//
-//                $discountAlready = $q->fetchArray();
                 
-                /* los descuentos estan deshabilitados por el momento */
-                $discountAlready = TRUE;
+            /* los descuentos estan deshabilitados por el momento */
+            $discountAlready = TRUE;
 
-                if ($discountAlready) {
-                    $this->getRequest()->setParameter('hideNoDiscountLabel', true);
-                    $this->forward('profile', 'payReserve');
-                };
+            if ($discountAlready) {
+                $this->getRequest()->setParameter('hideNoDiscountLabel', true);
+                $this->forward('profile', 'payReserve');
+            };
 
-                //die();
-                $this->reserve = Doctrine_Core::getTable('reserve')->find(array($request->getParameter('id')));
+            //die();
+            $this->reserve = Doctrine_Core::getTable('reserve')->find(array($request->getParameter('id')));
 
-                //var_dump($this->reserve);
-                //die();
-                $this->car = Doctrine_Core::getTable('car')->find(array($this->reserve->getCarId()));
-                $this->model = Doctrine_Core::getTable('Model')->find(array($this->car->getModels()->getId()));
-                $this->user = $this->car->getUser();
+            //var_dump($this->reserve);
+            //die();
+            $this->car = Doctrine_Core::getTable('car')->find(array($this->reserve->getCarId()));
+            $this->model = Doctrine_Core::getTable('Model')->find(array($this->car->getModels()->getId()));
+            $this->user = $this->car->getUser();
 
-                $this->trans = Doctrine_Core::getTable("Transaction")->getTransactionByReserve($this->reserve->getId());
+            $this->trans = Doctrine_Core::getTable("Transaction")->getTransactionByReserve($this->reserve->getId());
 
-                $this->getUser()->setAttribute('lastview', $request->getReferer());
+            $this->getUser()->setAttribute('lastview', $request->getReferer());
 
+            //$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(1);
+            //$this->monto = $deposito[0]['monto'];
+            $this->monto = sfConfig::get("app_monto_garantia_por_dia");
+            $this->montoDiaUnico = sfConfig::get("app_monto_garantia_por_dia");
+            //$depo = Doctrine_Core::getTable("liberacionDeposito")->findById(2);
+            //$this->garantia = $depo[0]['monto'];
+            $this->garantia = sfConfig::get("app_monto_garantia");
+
+            $this->deposito = $request->getParameter("deposito");
+            $this->montoDeposito = 0;
+            if ($this->deposito == "depositoGarantia") {
+                //$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(2);
+                $this->montoDeposito = sfConfig::get("app_monto_garantia");
+                //$this->enviarCorreoTransferenciaBancaria();
+            } else if ($this->deposito == "pagoPorDia") {
                 //$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(1);
-                //$this->monto = $deposito[0]['monto'];
-                $this->monto = sfConfig::get("app_monto_garantia_por_dia");
-                $this->montoDiaUnico = sfConfig::get("app_monto_garantia_por_dia");
-                //$depo = Doctrine_Core::getTable("liberacionDeposito")->findById(2);
-                //$this->garantia = $depo[0]['monto'];
-                $this->garantia = sfConfig::get("app_monto_garantia");
-
-                $this->deposito = $request->getParameter("deposito");
-                $this->montoDeposito = 0;
-                if ($this->deposito == "depositoGarantia") {
-                    //$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(2);
-                    $this->montoDeposito = sfConfig::get("app_monto_garantia");
-                    //$this->enviarCorreoTransferenciaBancaria();
-                } else if ($this->deposito == "pagoPorDia") {
-                    //$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(1);
-                    $this->montoDeposito = $montoTotalPagoPorDia;
-                }
+                $this->montoDeposito = $montoTotalPagoPorDia;
+            }
 
 
-                $idArrendatario = $this->reserve->getUserId();
-                $arrendatario = Doctrine_Core::getTable('user')->find($idArrendatario);
-                $this->licenseUp = $arrendatario->getDriverLicenseFile();
+            $idArrendatario = $this->reserve->getUserId();
+            $arrendatario = Doctrine_Core::getTable('user')->find($idArrendatario);
+            $this->licenseUp = $arrendatario->getDriverLicenseFile();
         }
     }
 
@@ -4835,34 +4783,6 @@ class profileActions extends sfActions {
             } while ($reservasRecibidas);
         }
         $this->logMessage("cant oportunidades: ".count($reservasRecibidasAux));
-        
-//        $fechaReservasRealizadas = array();
-//        if (isset($reservasRecibidasAux)) {
-//            foreach ($reservasRecibidasAux as $i => $reservasRealizadas) {
-//                $reservasRealizadas['show'] = false;
-//                if( isset($reservasRecibidasAux[$i]['estado']) && ($reservasRecibidasAux[$i]['estado'] == 0  || $reservasRecibidasAux[$i]['estado'] == 1) ){
-//                    $reservasRealizadas['show'] = true;
-//                    if (!$fechaReservasRealizadas) { //no hay elemento
-//                        $fechaReservasRealizadas[$i]['fechaInicio'] = $reservasRealizadas['fechaInicio'];
-//                        $fechaReservasRealizadas[$i]['userId'] = $reservasRealizadas['userId'];
-//                    }
-//
-//                    //verifica que la fecha y hora no se encuentren almacenadas
-//                    $existe = false;
-//                    foreach ($fechaReservasRealizadas as $reserva) {
-//                        if (isset($reserva['fechaInicio'])) {
-//                            if ($reserva['fechaInicio'] == $reservasRealizadas['fechaInicio'] && $reserva['userId'] == $reservasRealizadas['userId'] ) {
-//                                $reservasRealizadas['show'] = false;
-//                            }
-//                        }
-//                    }
-//                    if (!$existe) {
-//                        $fechaReservasRealizadas[$i]['fechaInicio'] = $reservasRealizadas['fechaInicio'];
-//                        $fechaReservasRealizadas[$i]['userId'] = $reservasRealizadas['userId'];
-//                    }
-//                }
-//            }
-//        }
 
         $this->reservasRecibidas = $reservasRecibidasAux;
         $this->cars = $activeCars;
@@ -4889,8 +4809,6 @@ class profileActions extends sfActions {
         $usuario->setPropietario(true);
         $this->getUser()->setAttribute("propietario", true);
         $usuario->save();
-
-//      $this->logMessage($usuario->getPropietario());
 
         require sfConfig::get('sf_app_lib_dir') . "/mail/mail.php";
         $mail = new Email();
@@ -5003,9 +4921,6 @@ class profileActions extends sfActions {
 
         $this->comunas = Doctrine_Core::getTable('Comunas')->createQuery('a')->execute();
         $this->getResponse()->setHttpHeader('Access-Control-Allow-Origin', '*');
-
-//      
-//      
     }
 
     public function ordenarBrand($brand) {
@@ -5105,24 +5020,68 @@ class profileActions extends sfActions {
         return sfView::NONE;
     }
 
-    /* public function executeRentings(sfWebRequest $request)
-      {
-
-      $this->car = Doctrine_Core::getTable('car')->find(array($request->getParameter('id')));
-
-      }
-     */
-
     public function executeRental(sfWebRequest $request) {
 
         $q = Doctrine_Query::create()
-                ->select('r.id , ca.id idcar , mo.name model, 
-      br.name brand, ca.year year, 
-      ca.address address, ci.name city, 
-      st.name state, co.name country, 
-      user.firstname firstname, user.lastname lastname,
-      r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin'
+            ->select('r.id , ca.id idcar , mo.name model, 
+                br.name brand, ca.year year, 
+                ca.address address, ci.name city, 
+                st.name state, co.name country, 
+                user.firstname firstname, user.lastname lastname,
+                r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin'
                 )
+            ->from('Reserve r')
+            ->innerJoin('r.Car ca')
+            ->innerJoin('ca.Model mo')
+            ->innerJoin('ca.User owner')
+            ->innerJoin('r.User user')
+            ->innerJoin('mo.Brand br')
+            ->innerJoin('ca.City ci')
+            ->innerJoin('ci.State st')
+            ->innerJoin('st.Country co')
+            ->where('owner.id = ?', $this->getUser()->getAttribute("userid"))
+            ->andWhere('r.confirmed = ?', true)
+            ->andWhere('r.complete = ?', false)
+            ->andWhere('r.canceled = ?', false)
+            ->andWhere('r.ini_km_owner_confirmed = ?', true)
+            ->andWhere('r.ini_km_confirmed = ?', true);
+
+        $this->ownerinprogress = $q->execute();
+
+        $q = Doctrine_Query::create()
+            ->select('r.id , ca.id idcar , mo.name model, 
+                br.name brand, ca.year year, 
+                ca.address address, ci.name city, 
+                st.name state, co.name country, 
+                user.firstname firstname, user.lastname lastname,
+                r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin'
+                )
+            ->from('Reserve r')
+            ->innerJoin('r.Car ca')
+            ->innerJoin('ca.Model mo')
+            ->innerJoin('ca.User owner')
+            ->innerJoin('r.User user')
+            ->innerJoin('mo.Brand br')
+            ->innerJoin('ca.City ci')
+            ->innerJoin('ci.State st')
+            ->innerJoin('st.Country co')
+            ->where('owner.id = ?', $this->getUser()->getAttribute("userid"))
+            ->andWhere('r.confirmed = ?', true)
+            ->andWhere('r.complete = ?', false)
+            ->andWhere('r.canceled = ?', false)
+            ->andWhere('(r.ini_km_owner_confirmed = ?', false)
+            ->orWhere('r.ini_km_confirmed = ?)', false);
+        $this->cars = $q->execute();
+
+        try {
+            $q = Doctrine_Query::create()
+                ->select('r.id , ca.id idcar , mo.name model, 
+                    br.name brand, ca.year year, 
+                    ca.address address, ci.name city, 
+                    st.name state, co.name country, 
+                    user.firstname firstname, user.lastname lastname,
+                    r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin'
+                    )
                 ->from('Reserve r')
                 ->innerJoin('r.Car ca')
                 ->innerJoin('ca.Model mo')
@@ -5132,93 +5091,39 @@ class profileActions extends sfActions {
                 ->innerJoin('ca.City ci')
                 ->innerJoin('ci.State st')
                 ->innerJoin('st.Country co')
-                ->where('owner.id = ?', $this->getUser()->getAttribute("userid"))
+                ->where('r.user_id = ?', $this->getUser()->getAttribute("userid"))
                 ->andWhere('r.confirmed = ?', true)
                 ->andWhere('r.complete = ?', false)
                 ->andWhere('r.canceled = ?', false)
                 ->andWhere('r.ini_km_owner_confirmed = ?', true)
                 ->andWhere('r.ini_km_confirmed = ?', true);
 
-//->andWhere('r.date > ?',  date('Y-m-d H:i:s.u'));
-        $this->ownerinprogress = $q->execute();
-
-        $q = Doctrine_Query::create()
-                ->select('r.id , ca.id idcar , mo.name model, 
-      br.name brand, ca.year year, 
-      ca.address address, ci.name city, 
-      st.name state, co.name country, 
-      user.firstname firstname, user.lastname lastname,
-      r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin'
-                )
-                ->from('Reserve r')
-                ->innerJoin('r.Car ca')
-                ->innerJoin('ca.Model mo')
-                ->innerJoin('ca.User owner')
-                ->innerJoin('r.User user')
-                ->innerJoin('mo.Brand br')
-                ->innerJoin('ca.City ci')
-                ->innerJoin('ci.State st')
-                ->innerJoin('st.Country co')
-                ->where('owner.id = ?', $this->getUser()->getAttribute("userid"))
-                ->andWhere('r.confirmed = ?', true)
-                ->andWhere('r.complete = ?', false)
-                ->andWhere('r.canceled = ?', false)
-                ->andWhere('(r.ini_km_owner_confirmed = ?', false)
-                ->orWhere('r.ini_km_confirmed = ?)', false);
-        $this->cars = $q->execute();
-
-        try {
-            $q = Doctrine_Query::create()
-                    ->select('r.id , ca.id idcar , mo.name model, 
-      br.name brand, ca.year year, 
-      ca.address address, ci.name city, 
-      st.name state, co.name country, 
-      user.firstname firstname, user.lastname lastname,
-      r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin'
-                    )
-                    ->from('Reserve r')
-                    ->innerJoin('r.Car ca')
-                    ->innerJoin('ca.Model mo')
-                    ->innerJoin('ca.User owner')
-                    ->innerJoin('r.User user')
-                    ->innerJoin('mo.Brand br')
-                    ->innerJoin('ca.City ci')
-                    ->innerJoin('ci.State st')
-                    ->innerJoin('st.Country co')
-                    ->where('r.user_id = ?', $this->getUser()->getAttribute("userid"))
-                    ->andWhere('r.confirmed = ?', true)
-                    ->andWhere('r.complete = ?', false)
-                    ->andWhere('r.canceled = ?', false)
-                    ->andWhere('r.ini_km_owner_confirmed = ?', true)
-                    ->andWhere('r.ini_km_confirmed = ?', true);
-
-//->andWhere('r.date > ?',  date('Y-m-d H:i:s.u'));
             $this->inprogress = $q->execute();
         } catch (Exception $e) {
             
         }
 
         $q = Doctrine_Query::create()
-                ->select('r.id , ca.id idcar , mo.name model, 
-      br.name brand, ca.year year, 
-      ca.address address, ci.name city, 
-      st.name state, co.name country, 
-      user.firstname firstname, user.lastname lastname,
-      r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin '
+            ->select('r.id , ca.id idcar , mo.name model, 
+                br.name brand, ca.year year, 
+                ca.address address, ci.name city, 
+                st.name state, co.name country, 
+                user.firstname firstname, user.lastname lastname,
+                r.date date, ADDDATE(r.date, INTERVAL r.duration HOUR) fechafin '
                 )
-                ->from('Reserve r')
-                ->innerJoin('r.Car ca')
-                ->innerJoin('ca.Model mo')
-                ->innerJoin('ca.User owner')
-                ->innerJoin('r.User user')
-                ->innerJoin('mo.Brand br')
-                ->innerJoin('ca.City ci')
-                ->innerJoin('ci.State st')
-                ->innerJoin('st.Country co')
-                ->where('owner.id = ?', $this->getUser()->getAttribute("userid"))
-                ->andWhere('r.confirmed = ?', false)
-                ->andWhere('r.complete = ?', false)
-                ->andWhere('r.canceled = ?', false);
+            ->from('Reserve r')
+            ->innerJoin('r.Car ca')
+            ->innerJoin('ca.Model mo')
+            ->innerJoin('ca.User owner')
+            ->innerJoin('r.User user')
+            ->innerJoin('mo.Brand br')
+            ->innerJoin('ca.City ci')
+            ->innerJoin('ci.State st')
+            ->innerJoin('st.Country co')
+            ->where('owner.id = ?', $this->getUser()->getAttribute("userid"))
+            ->andWhere('r.confirmed = ?', false)
+            ->andWhere('r.complete = ?', false)
+            ->andWhere('r.canceled = ?', false);
         $this->toconfirm = $q->execute();
     }
 
@@ -5366,7 +5271,7 @@ class profileActions extends sfActions {
         $to = $reserve->getUser()->getEmail();
         $subject = "Reserva Confirmada";
 
-// compose headers
+        // compose headers
         $headers = "From: \"Arriendas Reservas\" <no-reply@arriendas.cl>\n";
         $headers .= "Content-type: text/html\n";
         $headers .= "X-Mailer: PHP/" . phpversion() . "\n";
@@ -5383,13 +5288,13 @@ class profileActions extends sfActions {
         $mail = 'Su reserva para el auto ' . $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
                 ' del usuario ' . $reserve->getCar()->getUser()->getFirstName() . ' ' . $reserve->getCar()->getUser()->getLastName() . ' ha sido confirmada.<br/><br/>
     
-    Debes retirar el auto el d&iacute;a <b>' . $date_from . '</b> a las <b>' . $hour_from . '</b> y devolverlo el d&iacute;a <b>' . $date_to . '</b> a las <b>' . $hour_to . '</b>.<br/>
-    Recuerda que debes verificar el estado del auto antes de subirte. Si el auto presenta otros daños debes anular la reserva. <br /><br />
-    
-    El equipo de Arriendas.cl
-    <br><br>
-    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-    ';
+        Debes retirar el auto el d&iacute;a <b>' . $date_from . '</b> a las <b>' . $hour_from . '</b> y devolverlo el d&iacute;a <b>' . $date_to . '</b> a las <b>' . $hour_to . '</b>.<br/>
+        Recuerda que debes verificar el estado del auto antes de subirte. Si el auto presenta otros daños debes anular la reserva. <br /><br />
+        
+        El equipo de Arriendas.cl
+        <br><br>
+        <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
+        ';
 
 
         /*
@@ -5397,15 +5302,15 @@ class profileActions extends sfActions {
           $reserve->getCar()->getUser()->getFirstname() . ' ' . $reserve->getCar()->getUser()->getLastname() . ' has click <a href="' . $url . '">aqui</a>. <br/><br/>
          */
 
-// send email
+        // send email
         $this->smtpMail($to, $subject, $mail, $headers);
 
-//MAIL DUEÑO
+        //MAIL DUEÑO
 
         $to = $reserve->getCar()->getUser()->getEmail();
         $subject = "Has recibido una reserva!";
 
-// compose headers
+        // compose headers
 
         $url = $_SERVER['SERVER_NAME'];
         $url = str_replace('http://', '', $url);
@@ -5430,10 +5335,10 @@ class profileActions extends sfActions {
                 ' hasta el d&iacute;a ' . $date_to . ' a las ' . $hour_to . ' cuando el usuario ' . $reserve->getUser()->getFirstname() . ' ' . $reserve->getUser()->getLastname() . ' devuelva el auto. <br/>' .
                 'Recuerda que debes verificar el estado del auto en la devolución. De haber ocurrido daños al auto durante el arriendo, debes informar a Arriendas.cl en el acto.<br /><br />
     
-    El equipo de Arriendas.cl
-    <br><br>
-    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-    ';
+        El equipo de Arriendas.cl
+        <br><br>
+        <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
+        ';
 
 
 
@@ -5444,7 +5349,7 @@ class profileActions extends sfActions {
          */
 
 
-// send email
+        // send email
         $this->smtpMail($to, $subject, $mail, $headers);
     }
 
@@ -5453,7 +5358,7 @@ class profileActions extends sfActions {
         $to = $reserve->getUser()->getEmail();
         $subject = 'Has realizado una reserva!';
 
-// compose headers
+        // compose headers
         $headers = "From: \"Arriendas Reservas\" <no-reply@arriendas.cl>\n";
         $headers .= "Content-type: text/html\n";
         $headers .= "X-Mailer: PHP/" . phpversion() . "\n";
@@ -5461,21 +5366,21 @@ class profileActions extends sfActions {
         $mail = 'Se ha solicitado una reserva para el auto ' . $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
                 ' del usuario ' . $reserve->getCar()->getUser()->getFirstName() . ' ' . $reserve->getCar()->getUser()->getLastName() . '.
     
-    Gracias
-    Arriendas.cl
-    <br><br>
-    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-    ';
+        Gracias
+        Arriendas.cl
+        <br><br>
+        <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
+        ';
 
-// send email
+        // send email
         $this->smtpMail($to, $subject, $mail, $headers);
 
-//MAIL DUEÑO
+        //MAIL DUEÑO
 
         $to = $reserve->getCar()->getUser()->getEmail();
         $subject = 'Has recibido un pedido de reserva!';
 
-// compose headers
+        // compose headers
         $url = $_SERVER['SERVER_NAME'];
         $url = str_replace('http://', '', $url);
         $url = str_replace('https://', '', $url);
@@ -5504,10 +5409,10 @@ class profileActions extends sfActions {
     
         Para ver la reserva has click <a href="http://' . $site . $this->getController()->genUrl('profile/rentalToConfirm') . '">aquí</a><br/><br/>
     
-    El equipo de Arriendas.cl
-    <br><br>
-    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em>  
-    ';
+        El equipo de Arriendas.cl
+        <br><br>
+        <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em>  
+        ';
 
 
         /*
@@ -5516,7 +5421,7 @@ class profileActions extends sfActions {
          */
 
 
-// send email
+        // send email
         $this->smtpMail($to, $subject, $mail, $headers, "german@arriendas.cl");
     }
 
@@ -5525,7 +5430,7 @@ class profileActions extends sfActions {
         $to = $reserve->getUser()->getEmail();
         $subject = 'Finalizacion de Reserva';
 
-// compose headers
+        // compose headers
         $headers = "From: \"Arriendas Reservas\" <no-reply@arriendas.cl>\n";
         $headers .= "Content-type: text/html\n";
         $headers .= "X-Mailer: PHP/" . phpversion() . "\n";
@@ -5533,22 +5438,22 @@ class profileActions extends sfActions {
         $mail = 'Ha finalizado la reseva para el auto ' . $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
                 ' del usuario ' . $reserve->getCar()->getUser()->getFirstName() . ' ' . $reserve->getCar()->getUser()->getLastName() . ' que usted realizo.
     
-    Gracias
-    Arriendas.cl
-    <br><br>
-    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-    ';
+        Gracias
+        Arriendas.cl
+        <br><br>
+        <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
+        ';
 
-// send email
+        // send email
         $this->smtpMail($to, $subject, $mail, $headers);
 
-//MAIL ALQUILANDO
-//MAIL DUEÑO
+        //MAIL ALQUILANDO
+        //MAIL DUEÑO
 
         $to = $reserve->getCar()->getUser()->getEmail();
         $subject = 'Finalizacion de Reserva';
 
-// compose headers
+        // compose headers
         $headers = "From: \"Arriendas Reservas\" <no-reply@arriendas.cl>\n";
         $headers .= "Content-type: text/html\n";
         $headers .= "X-Mailer: PHP/" . phpversion() . "\n";
@@ -5556,13 +5461,13 @@ class profileActions extends sfActions {
         $mail = 'Ha solicitado la reserva de su auto ' . $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
                 ' alquilado por el usuario ' . $reserve->getUser()->getFirstName() . ' ' . $reserve->getUser()->getLastName() . '.
     
-    Gracias
-    Arriendas.cl
-    <br><br>
-    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-    ';
+        Gracias
+        Arriendas.cl
+        <br><br>
+        <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
+        ';
 
-// send email
+        // send email
         $this->smtpMail($to, $subject, $mail, $headers);
     }
 
@@ -5580,24 +5485,6 @@ class profileActions extends sfActions {
         }
 
         $reserve->save();
-
-        /*$to = $reserve->getUser()->getEmail();
-        $subject = 'Reserva Anulada';
-
-        // compose headers
-        $headers = "From: \"Arriendas Reservas\" <no-reply@arriendas.cl>\n";
-        $headers .= "Content-type: text/html\n";
-        $headers .= "X-Mailer: PHP/" . phpversion() . "\n";
-
-        $mail = 'Su reserva para el auto ' . $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
-                ' del usuario ' . $reserve->getCar()->getUser()->getFirstName() . ' ' . $reserve->getCar()->getUser()->getLastName() . ' ha sido anulada.<br/><br/>
-    
-    El equipo de Arriendas.cl
-    <br><br>
-    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-    ';
-        // send email
-        $this->smtpMail($to, $subject, $mail, $headers);*/
 
         $user = Doctrine_Core::getTable('User')->find($this->getUser()->getId());
 
@@ -5768,15 +5655,6 @@ class profileActions extends sfActions {
                 $run = $request->getParameter('run');
                 $userid = $profile->getId();
                 
-                /* validacion rut */
-//                $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:RutValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
-//                exec($comando);
-                
-                
-                /* validacion judicial */
-                //$comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$run.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
-                //exec($comando);
-                
             }
             
             
@@ -5816,10 +5694,6 @@ class profileActions extends sfActions {
         sfConfig::set('sf_web_debug', false);
         $_output;
 
-        /* Asegurar que la solicitud sea AJAX */
-//if (!$request->isXmlHttpRequest())
-//return $this->renderText(json_encode(array('error'=>'S�lo respondo consultas v�a AJAX.')));
-
         if ($request->getParameter('id')) {
 
             $brand = Doctrine_Core::getTable('Brand')->find(array($request->getParameter('id')));
@@ -5838,10 +5712,6 @@ class profileActions extends sfActions {
         sfConfig::set('sf_web_debug', false);
         $_output;
 
-        /* Asegurar que la solicitud sea AJAX */
-//if (!$request->isXmlHttpRequest())
-//return $this->renderText(json_encode(array('error'=>'S�lo respondo consultas v�a AJAX.')));
-
         if ($request->getParameter('id')) {
 
             $country = Doctrine_Core::getTable('Country')->find(array($request->getParameter('id')));
@@ -5859,10 +5729,6 @@ class profileActions extends sfActions {
 
         sfConfig::set('sf_web_debug', false);
         $_output;
-
-        /* Asegurar que la solicitud sea AJAX */
-//if (!$request->isXmlHttpRequest())
-//return $this->renderText(json_encode(array('error'=>'S�lo respondo consultas v�a AJAX.')));
 
         if ($request->getParameter('id')) {
 
@@ -6256,6 +6122,7 @@ class profileActions extends sfActions {
     }
 
     public function executeDetalleReserva(sfWebRequest $request) {
+        
         if ($this->getUser()->isAuthenticated()) {
 
             $id = $request->getParameter('id');
@@ -6263,31 +6130,29 @@ class profileActions extends sfActions {
             try {
 
                 $q = Doctrine_Query::create()
-                        ->select('r.id , ca.id idcar , mo.name model, 
-      br.name brand, ca.year year, 
-          ca.price_per_hour pricehour, ca.price_per_day priceday,
-      ca.address address, ci.name city, 
-      st.name state, co.name country, 
-      user.firstname firstname, user.lastname lastname,
-      r.date date, r.duration'
+                    ->select('r.id , ca.id idcar , mo.name model, 
+                        br.name brand, ca.year year, 
+                        ca.price_per_hour pricehour, ca.price_per_day priceday,
+                        ca.address address, ci.name city, 
+                        st.name state, co.name country, 
+                        user.firstname firstname, user.lastname lastname,
+                        r.date date, r.duration'
                         )
-                        ->from('Reserve r')
-                        ->innerJoin('r.Car ca')
-                        ->innerJoin('ca.Model mo')
-                        ->innerJoin('ca.User owner')
-                        ->innerJoin('r.User user')
-                        ->innerJoin('mo.Brand br')
-                        ->innerJoin('ca.City ci')
-                        ->innerJoin('ci.State st')
-                        ->innerJoin('st.Country co')
-                        ->where('r.user_id = ?', $this->getUser()->getAttribute("userid"))
-                        ->andWhere('r.confirmed = ?', 0)
-                        ->andWhere('r.complete = ?', 0)
-                        ->andWhere('r.id = ?', $id);
-//->andWhere('r.date > ?',  date('Y-m-d H:i:s.u'));
+                    ->from('Reserve r')
+                    ->innerJoin('r.Car ca')
+                    ->innerJoin('ca.Model mo')
+                    ->innerJoin('ca.User owner')
+                    ->innerJoin('r.User user')
+                    ->innerJoin('mo.Brand br')
+                    ->innerJoin('ca.City ci')
+                    ->innerJoin('ci.State st')
+                    ->innerJoin('st.Country co')
+                    ->where('r.user_id = ?', $this->getUser()->getAttribute("userid"))
+                    ->andWhere('r.confirmed = ?', 0)
+                    ->andWhere('r.complete = ?', 0)
+                    ->andWhere('r.id = ?', $id);
 
                 $this->misreservas = $q->execute();
-//echo $q->getSqlQuery();die;
             } catch (Exception $e) {
                 echo $e->getMessage();
             }
@@ -6413,28 +6278,24 @@ class profileActions extends sfActions {
         $id = $request->getParameter('id');
 
         $q = Doctrine_Query::create()
-                ->select('r.id , ca.id idcar , r.confirmed, mo.name model, 
-      br.name brand, ca.year year, 
-          ca.price_per_hour pricehour, ca.price_per_day priceday,
-      ca.address address, ci.name city, 
-      st.name state, co.name country, 
-      user.firstname firstname, user.lastname lastname,
-      r.date date, r.duration, date_add(r.date, INTERVAL r.duration HOUR) fechafin'
+            ->select('r.id , ca.id idcar , r.confirmed, mo.name model, 
+              br.name brand, ca.year year, 
+                  ca.price_per_hour pricehour, ca.price_per_day priceday,
+              ca.address address, ci.name city, 
+              st.name state, co.name country, 
+              user.firstname firstname, user.lastname lastname,
+              r.date date, r.duration, date_add(r.date, INTERVAL r.duration HOUR) fechafin'
                 )
-                ->from('Reserve r')
-                ->innerJoin('r.Car ca')
-                ->innerJoin('ca.Model mo')
-                ->innerJoin('ca.User owner')
-                ->innerJoin('r.User user')
-                ->innerJoin('mo.Brand br')
-                ->innerJoin('ca.City ci')
-                ->innerJoin('ci.State st')
-                ->innerJoin('st.Country co')
-//->where('r.user_id = ?', $this->getUser()->getAttribute("userid"))
-//->andWhere('r.confirmed = ?', 1)
-//->andWhere('r.complete = ?', 0)
-//->andWhere('r.canceled = ?', 0)
-                ->andWhere('r.id = ?', $id);
+            ->from('Reserve r')
+            ->innerJoin('r.Car ca')
+            ->innerJoin('ca.Model mo')
+            ->innerJoin('ca.User owner')
+            ->innerJoin('r.User user')
+            ->innerJoin('mo.Brand br')
+            ->innerJoin('ca.City ci')
+            ->innerJoin('ci.State st')
+            ->innerJoin('st.Country co')
+            ->andWhere('r.id = ?', $id);
 
         $this->reserva = $q->fetchOne();
     }
@@ -6496,11 +6357,11 @@ class profileActions extends sfActions {
             $mail = 'Se ha solicitado confirmación de kms para el auto ' . $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
                     ' reservado por el usuario ' . $reserve->getUser()->getFirstName() . ' ' . $reserve->getUser()->getLastName() . '.
     
-    Gracias
-    Arriendas.cl
-    <br><br>
-    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-    ';
+            Gracias
+            Arriendas.cl
+            <br><br>
+            <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
+            ';
         } else {
             $to = $reserve->getUser()->getEmail();
 
@@ -6513,11 +6374,11 @@ class profileActions extends sfActions {
             $mail = 'Se ha solicitado confirmación de kms para el auto ' . $reserve->getCar()->getModel()->getBrand()->getName() . ' ' . $reserve->getCar()->getModel()->getName() .
                     ' del usuario ' . $reserve->getCar()->getUser()->getFirstName() . ' ' . $reserve->getCar()->getUser()->getLastName() . '.
     
-    Gracias
-    Arriendas.cl
-    <br><br>
-    <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
-    ';
+            Gracias
+            Arriendas.cl
+            <br><br>
+            <em style="color: #969696">Nota: Para evitar posibles problemas con la recepcion de este correo le aconsejamos nos agregue a su libreta de contactos.</em> 
+            ';
         }
 
         $this->smtpMail($to, $subject, $mail, $headers);
@@ -6596,7 +6457,7 @@ class profileActions extends sfActions {
         $mimeparams = array();
 
 
-// It refused to change to UTF-8 even if the header was set to this, after adding the following lines it worked.
+        // It refused to change to UTF-8 even if the header was set to this, after adding the following lines it worked.
 
         $mimeparams['text_encoding'] = "8bit";
         $mimeparams['text_charset'] = "UTF-8";
@@ -6636,80 +6497,6 @@ class profileActions extends sfActions {
         }
         echo $valid;
         die();
-    }
-
-    public function executeOportunidadAceptar(sfWebRequest $request) {
-
-        $this->error = false;
-
-        $originalReserveId = $request->getGetParameter("reserve_id", null);
-        $signature = $request->getGetParameter("signature", null);
-
-        try {
-
-            $originalReserve = Doctrine_Core::getTable('Reserve')->find($originalReserveId);
-
-            if ($originalReserve) {
-                if ($originalReserve->getSignature() == $signature) {
-
-                    $already = false;
-                    $userId = $this->getUser()->getAttribute('userid');
-
-                    $allReservations = Doctrine_Core::getTable('Reserve')->findByReservaOriginal($originalReserveId);
-
-                    foreach ($allReservations as $reserve) {
-                        if ($userId == $reserve->getCar()->getUserId()) {
-                            $already = true;
-                            break;
-                        }
-                    }
-
-                    if (!$already) {
-
-                        $car = Doctrine_Core::getTable('Car')->findOneByUserId($userId);
-                    
-                        $reserve = new Reserve();
-                        $reserve->setDuration($originalReserve->getDuration());
-                        $reserve->setDate($originalReserve->getDate());
-                        $reserve->setUser($originalReserve->getUser());
-                        $reserve->setCar($car);
-                        $reserve->setPrice($originalReserve->getPrice());
-                        $reserve->setFechaReserva(date("Y-m-d H:i:s"));
-                        $reserve->setConfirmed(true);
-                        $reserve->setImpulsive(true);
-                        $reserve->setComentario('Reserva oportunidad - nuevo flujo');
-                        $reserve->setReservaOriginal($originalReserve->getId());
-                        $reserve->save();
-
-                        $originalTransaction = $originalReserve->getTransaction();
-
-                        $transaction = new Transaction();
-                        $transaction->setCar($car);
-                        $transaction->setPrice($originalTransaction->getPrice());
-                        $transaction->setUser($originalTransaction->getUser());
-                        $transaction->setDate($originalTransaction->getDate());
-                        $transaction->setTransactionType($originalTransaction->getTransactionType());
-                        $transaction->setReserve($reserve);
-                        $transaction->setCompleted(false);
-                        $transaction->setImpulsive(true);
-                        $transaction->setTransaccionOriginal($originalTransaction->getId());
-                        $transaction->save();
-
-                    } else {
-                        $this->error = "Oportunidad ya aceptada";
-                    }
-                } else {
-                    $this->error = "Problemas al validar la oportunidad";
-                }
-            } else {
-                $this->error = "Oportunidad no encontrada";
-            }
-
-        } catch ( Exception $e ) {
-            $this->error = "ERROR: ".$e->getMessage();
-        }
-
-        $this->redirect('pedidos');
     }
 
     public function executeNuevoFlujoCambiar(sfWebRequest $request) {
@@ -6887,128 +6674,7 @@ class profileActions extends sfActions {
 
         return sfView::NONE;
     }
-
-    private function cambiarReserva($reserveId, $isSpecific = false) {
-error_log("RESERVA: ".$reserveId);
-        try {
-
-            $r = Doctrine_Core::getTable("Reserve")->find($reserveId);
-            if (!$r) {
-                throw new Exception("No se encontró la reserva", 1);
-            }
-
-            if (!$r->getImpulsive()) {
-                throw new Exception("La reserva no pertenece al nuevo flujo", 2);
-            }
-
-            if ($isSpecific) { // Se debe cambiar específicamente a la reserva proporcionada
-error_log("CAMBIO ESPECIFICO");
-                if ($r->getReservaOriginal()) {
-                    $reserveId = $r->getReservaOriginal(); // Si tiene una reserva original (es hija), usamos ese id
-                } else {
-                    $reserveId = $r->getId(); // Si no tiene reserva original (es padre) usamos el id de la reserva
-                }
-
-                // pasamos la reserva padre a completed = 0 y todas las reservas hijas
-                $originalReserve = Doctrine_Core::getTable("Reserve")->find($reserveId);
-                $originalReserve->getTransaction()->setCompleted(false);
-                $originalReserve->save();
-
-                $childReserves = Doctrine_Core::getTable("Reserve")->findByReservaOriginal($reserveId);
-                foreach ($childReserves as $rOportunidad) {
-
-                    if ($rOportunidad->getTransaction()->getCompleted()) {
-                        $rOportunidad->getTransaction()->setCompleted(false);
-                        $rOportunidad->save();
-                    }
-                }
-
-                // Finalmente se deja como completa la reserva que se solicitó
-                $r->getTransaction()->setCompleted(true);
-                $r->save();
-            } else {
-error_log("CAMBIO MEJOR OPORTUNIDAD");
-                if ($r->getReservaOriginal()) {
-                    $originalReserve = Doctrine_Core::getTable("Reserve")->find($r->getReservaOriginal());
-                } else {
-                    $originalReserve = $r;
-                }
-
-                $table = Doctrine_Core::getTable('Reserve');
-                $q = $table
-                    ->createQuery('R')
-                    ->where('R.reserva_original = ?', $originalReserve->getId())
-                    ->andWhere('R.canceled = 0')
-                ;
-                $opportunityReservations = $q->execute();
-
-                $originalTransaction = Doctrine_Core::getTable("Transaction")->findOneByReserveId($originalReserve->getId());
-
-error_log("ORIGINAL RESERVE: ".$originalReserve->getId().", COMPLETE: ".$originalTransaction->getCompleted().", OPORTUNIDADES: ".count($opportunityReservations));
-
-                if ($originalTransaction->getCompleted() && count($opportunityReservations) == 0) {
-error_log("NO HAY OPORTUNIDADES. NOTIFICANDO...");
-                    // Notificar cancelación de reserva pagada sin oportunidad para cambiar
-                    $mail = new Email();
-
-                    $subject = "Reserva pagada sin auto";
-                    $body = "<p>La reserva ".$originalReserve->getId()." ha sido concelada por el dueño del auto y no hay oportunidades a la cual cambiar.</p>";
-
-                    $message = $mail->getMessage()
-                        ->setSubject($subject)
-                        ->setBody($body, 'text/html')
-                        ->setFrom(array("Notificaciones Arriendas.cl" => "no-reply@arriendas.cl"))
-                        ->setTo(array("Soporte Arriendas.cl" => "soporte@arriendas.cl"))
-                    ;
-                    
-                    $mail->getMailer()->send($message);
-                } else {
-error_log("BUSCANDO LA MEJOR OPORTUNIDAD");
-                    // pasamos la reserva padre a completed = 0 y todas las reservas hijas
-                    $originalTransaction->setCompleted(false);
-                    $originalTransaction->save();
-
-                    foreach ($opportunityReservations as $oReserve) {
-
-                        $oTransaction = Doctrine_Core::getTable("Transaction")->findOneByReserveId($oReserve->getId());
-                        if ($oTransaction->getCompleted()) {
-                            $oTransaction->setCompleted(false);
-                            $oTransaction->save();
-                        }
-                    }
-
-                    // Si no es la original, dejamos la original si es que está confirmada
-                    if ($r->getId() != $originalReserve->getId() && $originalReserve->getConfirmed()) {
-
-                        $originalTransaction->setCompleted(true);
-                        $originalTransaction->save();
-
-                    // Si es original, cambiamos a la primera oportunidad
-                    } else {
-
-                        $oTransaction = Doctrine_Core::getTable("Transaction")->findOneByReserveId($opportunityReservations[0]->getId());
-                        $oTransaction->setCompleted(true);
-                        $oTransaction->save();
-                    }
-                }
-            }
-
-        } catch (Exception $e) {
-
-            error_log("[Error al cambiar reserva] ".$e->getMessage());
-            return false;
-        }
-
-        return true;
-    }
-
-
-
-
     
-
-    
-    // FUNCIONES PRIVADAS
     // FUNCIONES PRIVADAS
     private function validateDates ($from, $to) {
 
