@@ -7,7 +7,7 @@ class CarTable extends Doctrine_Table {
         $CarsFound = array();
         $isWeekend = false;
 
-        error_log("FROM: ".$from);
+        /*error_log("FROM: ".$from);
         error_log("TO: ".$to);
         error_log("ISMAP: ".$isMap);
         error_log("NELAT: ".$NELat);
@@ -18,7 +18,7 @@ class CarTable extends Doctrine_Table {
         error_log("COMMUNEID: ".$communeId);
         error_log("ISAUTOMATIC: ".$isAutomatic);
         error_log("ISLOWCONSUMPTION: ".$isLowConsumption);
-        error_log("ISMOREPASSENGERS: ".$isMorePassengers);
+        error_log("ISMOREPASSENGERS: ".$isMorePassengers);*/
         
         try {
 
@@ -50,13 +50,13 @@ class CarTable extends Doctrine_Table {
             }
 
             if ($isMap) {
-                error_log("Mapa");
+                /*error_log("Map");*/
                 $q->andWhere('C.lat < ?', $NELat);
                 $q->andWhere('C.lng < ?', $NELng);
                 $q->andWhere('C.lat > ?', $SWLat);
                 $q->andWhere('C.lng > ?', $SWLng);
             } else {
-                error_log("Lista");
+                /*error_log("List");*/
                 $q->andWhere("R.id = ?", $regionId);
 
                 if ($communeId > 0) {
@@ -65,22 +65,21 @@ class CarTable extends Doctrine_Table {
             }
 
             if ($isAutomatic) {
-                error_log("isAutomatic");
+                /*error_log("isAutomatic");*/
                 $q->andWhere("C.transmission = 1");
             }
 
             if ($isLowConsumption) {
-                error_log("isLowConsumption");
+                /*error_log("isLowConsumption");*/
                 $q->andWhere("C.tipobencina = 'Diesel'");
             }
 
             if ($isMorePassengers) {
-                error_log("isMorePassengers");
+                /*error_log("isMorePassengers");*/
                 $q->andWhere("M.id_otro_tipo_vehiculo = 3");
             }
 
             $Cars = $q->execute();
-            error_log("AUTOS ENCONTRADOS: ".count($Cars));
 
             foreach ($Cars as $i => $Car) {
                 if (!$Car->hasReserve(date("Y-m-d H:i:s", strtotime($from)), date("Y-m-d H:i:s", strtotime($to)))) {
