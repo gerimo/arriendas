@@ -285,6 +285,11 @@
             }
         });
 
+        var isMap = false;
+        if ($("#tab-map").is(":visible")) {
+            isMap = true;
+        }
+
         // Validación de la búsqueda
         var error = false;
         var errorMessage = "<p style='padding: 5% 5% 0 5%'>Para buscar, debes:<ul>";
@@ -311,7 +316,7 @@
         }
 
         var parameters = {
-            isMap: $('div[data-target="#tab-map"]').hasClass("activo"),
+            isMap: isMap,//$('div[data-target="#tab-map"]').hasClass("activo"),
             SWLat: swLat,
             SWLng: swLng,
             NELat: neLat,

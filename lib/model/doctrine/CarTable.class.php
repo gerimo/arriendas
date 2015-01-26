@@ -6,6 +6,19 @@ class CarTable extends Doctrine_Table {
 
         $CarsFound = array();
         $isWeekend = false;
+
+        error_log("FROM: ".$from);
+        error_log("TO: ".$to);
+        error_log("ISMAP: ".$isMap);
+        error_log("NELAT: ".$NELat);
+        error_log("NELNG: ".$NELng);
+        error_log("SWLAT: ".$SWLat);
+        error_log("SWLNG: ".$SWLng);
+        error_log("REGIONID: ".$regionId);
+        error_log("COMMUNEID: ".$communeId);
+        error_log("ISAUTOMATIC: ".$isAutomatic);
+        error_log("ISLOWCONSUMPTION: ".$isLowConsumption);
+        error_log("ISMOREPASSENGERS: ".$isMorePassengers);
         
         try {
 
@@ -20,14 +33,14 @@ class CarTable extends Doctrine_Table {
 
             $MD = new Mobile_Detect;
             if ($MD->isMobile()) {
-                $q->limit(33);
+                $q->limit(10);
             } else {
                 $q->limit(33);
             }
 
             $weekendDays = Utils::isWeekend(true);
             // Si es Feriado o Fin de Semana, se buscan los autos de la tabla CarAvailability
-            if (count($weekendDays) > 0) {
+            if ($weekendDays) {
                 if (in_array(date("Y-m-d", strtotime($from)), $weekendDays)) {
                     $q->innerJoin("C.CarAvailabilities CA");
                     $q->andWhere("CA.is_deleted IS FALSE");
@@ -37,12 +50,13 @@ class CarTable extends Doctrine_Table {
             }
 
             if ($isMap) {
+                error_log("Mapa");
                 $q->andWhere('C.lat < ?', $NELat);
                 $q->andWhere('C.lng < ?', $NELng);
                 $q->andWhere('C.lat > ?', $SWLat);
                 $q->andWhere('C.lng > ?', $SWLng);
             } else {
-                
+                error_log("Lista");
                 $q->andWhere("R.id = ?", $regionId);
 
                 if ($communeId > 0) {
@@ -51,18 +65,22 @@ class CarTable extends Doctrine_Table {
             }
 
             if ($isAutomatic) {
+                error_log("isAutomatic");
                 $q->andWhere("C.transmission = 1");
             }
 
             if ($isLowConsumption) {
+                error_log("isLowConsumption");
                 $q->andWhere("C.tipobencina = 'Diesel'");
             }
 
             if ($isMorePassengers) {
+                error_log("isMorePassengers");
                 $q->andWhere("M.id_otro_tipo_vehiculo = 3");
             }
 
             $Cars = $q->execute();
+            error_log("AUTOS ENCONTRADOS: ".count($Cars));
 
             foreach ($Cars as $i => $Car) {
                 if (!$Car->hasReserve(date("Y-m-d H:i:s", strtotime($from)), date("Y-m-d H:i:s", strtotime($to)))) {
