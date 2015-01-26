@@ -35,7 +35,7 @@ all:
     use_database:           true
 
     #Doctrine Guard
-    # enabled_modules:        [sfGuardGroup, sfGuardUser, sfGuardPermission, sfGuardAuth]
+    enabled_modules:        [sfGuardGroup, sfGuardUser, sfGuardPermission, sfGuardAuth]
 
     login_module:           sfGuardAuth
     login_action:           signin
