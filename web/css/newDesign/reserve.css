@@ -825,6 +825,11 @@ a:focus {
     .panel-title img {
         height: 22px;
     }
+
+    .price-area strong {
+        font-size: 36px;
+    }
+
     .reserve-title {
         padding-left: 14px;
     }
@@ -849,7 +854,7 @@ a:focus {
         font-size: 24px;
         font-weight: 400;
         margin: 10px 0 20px 0;
-        text-indent: 10px;
+        padding: 0 10px;
     }
 
     h1.body-title {
@@ -862,7 +867,7 @@ a:focus {
         font-size: 16px;
         font-weight: 300;
         margin: 30px 0 20px 0;
-        text-indent: 10px;
+        padding: 0 10px;
         text-transform: uppercase;
     }
 
@@ -887,7 +892,7 @@ a:focus {
     }
 
     .features {
-        margin: 0 0 0 40px;
+        margin: 0 0 0 20px;
         padding: 0;
     }
 

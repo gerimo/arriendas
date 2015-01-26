@@ -506,7 +506,7 @@
         <!-- List -->
         <div class="col-xs-6 col-sm-3 col-md-3" id="region-container">
             <select class="region form-control" id="region">
-                <option disabled value="<?php echo $Region->id ?>"><?php echo $Region->name ?></option>
+                <option disabled selected value="<?php echo $Region->id ?>"><?php echo $Region->name ?></option>
             </select>
         </div>
         <div class="col-xs-6 col-sm-3 col-md-3" id="commune-container">
@@ -603,7 +603,7 @@
 
         <div class="tab-container" id="tab-list">
             <div class="row" id="list">
-                <div id="list-loading" class="loading" style="text-align: center; margin-top: 10%"><?php echo image_tag('ajax-loader.gif', array("width" => "80px", "height" => "80px")) ?></div>
+                <div id="list-loading" class="loading" style="text-align: center; margin: 4% 0 4% 0"><?php echo image_tag('ajax-loader.gif', array("width" => "80px", "height" => "80px")) ?></div>
                 <div class="row" id="list-container"></div>
             </div>
         </div>
