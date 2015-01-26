@@ -197,16 +197,16 @@
     <div class="row">
         <div class="steps col-md-offset-1 col-md-10">            
             <ul class="list-warranty">
-                <li><i class="fa fa-check"></i></span>Calidad Arriendas: el auto se encuentra verificado por Arriendas.</li>
-                <li><i class="fa fa-check"></i></span>Garantía Arriendas: 2 opciones de reemplazo o te devolvemos el dinero.</li>
-                <li><i class="fa fa-check"></i></span>Ofertas: Recibirás ofertas de otros dueños manteniendo este precio.</li>
+                <li><i class="fa fa-check"></i></span><strong>Calidad Arriendas: el auto se encuentra verificado por Arriendas.</strong></li>
+                <li><i class="fa fa-check"></i></span><strong>Garantía Arriendas: 2 opciones de reemplazo o te devolvemos el dinero.</strong></li>
+                <li><i class="fa fa-check"></i></span><strong>Ofertas: Recibirás ofertas de otros dueños manteniendo este precio.</strong></li>
             </ul>
         </div>
     </div>
 
     <form action="<?php echo url_for('reserve_pay') ?>" id="reserve-form" method="post">
         
-        <h1 class="body-title" id="reserve">Arriendo de <b><?php echo $Car->getModel()->getBrand()->name ?></b> <b><?php echo $Car->getModel()->name ?></b> a <b>$<span class="price"><?php echo number_format($price, 0, ',', '.') ?></span></b> en <b><?php echo $Car->getCommune()->name ?></b></h1>
+        <h1 class="body-title" id="reserve">Arriendo de <?php echo $Car->getModel()->getBrand()->name ?> <?php echo $Car->getModel()->name ?> a $<span class="price"><?php echo number_format($price, 0, ',', '.') ?></span> en <?php echo $Car->getCommune()->name ?></h1>
         
         <div class="body row">
             <div class="col-sm-12 col-xs-12 col-md-offset-1 col-md-10">

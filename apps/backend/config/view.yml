@@ -1,28 +1,25 @@
 # You can find more information about this file on the symfony website:
 # http://www.symfony-project.org/reference/1_4/en/13-View
 
-default:
-  http_metas:
-    content-type: text/html
+all:
 
-  metas:
-    #title:        symfony project
-    #description:  symfony project
-    #keywords:     symfony, project
-    #language:     en
-    #robots:       index, follow
+    http_metas:
+        content-type: text/html
 
-  stylesheets:    [main.css]
+    metas:
+        robots: noindex, nofollow
 
-  javascripts:    [chosen/chosen.jquery.min.js]
+    stylesheets: [main.css]
 
-  has_layout:     true
-  layout:         layout
-  
-subirPadronSuccess:
-  has_layout: true
-  layout: layout_alt
+    javascripts: [chosen/chosen.jquery.min.js]
 
-signinSuccess:
-  has_layout: true
-  layout: layout_alt
+    has_layout: true
+    layout: layout
+
+    subirPadronSuccess:
+        has_layout: true
+        layout: layout_alt
+
+    signinSuccess:
+        has_layout: true
+        layout: layout_alt
