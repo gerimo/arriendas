@@ -2770,12 +2770,37 @@ class mainActions extends sfActions {
         
     }
 
+     //////////////////Busca un auto//////////////////////////////
 
-    //////////////////Preguntas Frecuentes//////////////////////////////
+    public function executeSearchACars(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+        $this->forward("main","index");
+    }
+
+    //////////////////Enlasnoticias//////////////////////////////
+
+    public function executeNews(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+    }
+
+    //////////////////¿ComoFunciona?//////////////////////////////
+
+    public function executeHowWorks(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+    }
+
+    //////////////////ComparePrecios//////////////////////////////
+
+    public function executePricesCompare(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+    }
+
+    //////////////////PreguntasFrecuentes//////////////////////////////
 
     public function executeQuestions(sfWebRequest $request) {
         $this->setLayout("newIndexLayout");
     }
+
 
     //////////////////LOGIN//////////////////////////////
 

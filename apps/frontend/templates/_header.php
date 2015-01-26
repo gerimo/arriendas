@@ -36,9 +36,9 @@
                         <li><a href="<?php echo url_for("reserves") ?>" data-target="reserves">Reservas</a></li>
                     <?php else: ?>
                         <li><a class="animate" data-target="#section-map-form-search" href="">Buscar autos</a></li>
-                        <li><a class="animate" data-target="#section-how-works" href="">¿Cómo funciona?</a></li>
-                        <li><a class="animate" data-target="#section-compare-prices" href="">Compara precios</a></li>
-                        <li><a class="animate" data-target="#section-on-news" href="">En las noticias</a></li>
+                        <li><a href="<?php echo url_for("how-works")?>">¿Cómo funciona?</a></li>
+                        <li><a href="<?php echo url_for("prices_compare")?>">Compara precios</a></li>
+                        <li><a href="<?php echo url_for("news")?>">En las noticias</a></li>
                         <!-- <li><a onclick="playPause()">Play / Pause</a></li> -->
                     <?php endif ?>
 

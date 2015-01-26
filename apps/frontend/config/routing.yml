@@ -38,6 +38,10 @@ homepage:
     url: /
     param: { module: main, action: index }
 
+how-works:
+    url: /como-funciona
+    param: { module: main, action:howWorks }
+
 login:
     url: /login
     param: { module: main, action: login }
@@ -58,6 +62,10 @@ messages_inbox:
     url: /mis-mensajes
     param: { module: messages, action: inbox }
 
+news:
+    url: /arrienda-en-las-noticias
+    param: { module: main , action: news }
+
 opportunities:
     url: /oportunidades
     param: { module: opportunities, action: index }
@@ -65,6 +73,10 @@ opportunities:
 opportunities_approve:
     url: /oportunidades/aprobar
     param: { module: opportunities, action: approve }
+
+prices_compare:
+    url: /compare-precios
+    param: { module: main, action: pricesCompare }
 
 questions:
     url: /preguntas-frecuentes
@@ -110,6 +122,10 @@ return_form:
     url: /informe-de-devolucion/:tokenReserve
     param: { module: main, action: generarFormularioEntregaDevolucion }
 
+search_cars:
+    url: /busca-un-auto
+    param: { module: main, action:searchACars }
+    
 terms_and_conditions:
     url: /terminos-y-condiciones
     param: { module: main, action: terminos }
