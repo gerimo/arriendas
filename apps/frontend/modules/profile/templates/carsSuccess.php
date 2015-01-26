@@ -33,7 +33,7 @@
                             </div>
                             
                             <div class="col-offset-md-2 col-md-5 ">
-                                <a class= "misautos_marca" href="#"><span><?=$c->getModel()->getBrand()->getName()?> <?=$c->getModel()->getName()?></span></a>
+                                <a class= "misautos_marca"  href="<?php echo url_for('car_edit', array('id' => $c->id)) ?>"><span><?=$c->getModel()->getBrand()->getName()?> <?=$c->getModel()->getName()?></span></a>
                             </div>                            
                             
                             <div class="col-md-1" id="car_<?php echo $c->getId() ?>">
