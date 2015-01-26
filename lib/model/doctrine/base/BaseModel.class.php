@@ -147,5 +147,11 @@ abstract class BaseModel extends sfDoctrineRecord
         $this->hasMany('ModelPrice as ModelPrices', array(
              'local' => 'id',
              'foreign' => 'Model_id'));
+
+        $this->hasOne('CarType', array(
+             'local' => 'id_otro_tipo_vehiculo',
+             'foreign' => 'id',
+             'onDelete' => 'no action',
+             'onUpdate' => 'no action'));
     }
 }

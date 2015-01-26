@@ -17,6 +17,7 @@
 
                        
             <div class="row">
+
                 <?php foreach ($cars as $c): ?>
                     <br/><br/>
                     
@@ -24,7 +25,7 @@
                                             
                         <div class="row grey">
                             <div class="col-md-3 ">
-                                <a href="#" >
+                                <a href="<?php echo url_for('car_edit', array('id' => $c->id)) ?>" >
                                     <?php if($c->getPhotoS3() == 1): ?>
                                         <?php echo image_tag($c->getFoto(),array("width"=>"84px","height"=>"84px")) ?>
                                     <?php else: ?>
@@ -35,9 +36,8 @@
                             </div>
                             
                             <div class="col-offset-md-2 col-md-5 ">
-                                <a class= "misautos_marca" href="#" ><span><?=$c->getModel()->getBrand()->getName()?> <?=$c->getModel()->getName()?></span></a>
-                           </div>
-                            
+                                <a class= "misautos_marca" href="#"><span><?=$c->getModel()->getBrand()->getName()?> <?=$c->getModel()->getName()?></span></a>
+                            </div>                            
                             
                             <div class="col-md-1" id="car_<?php echo $c->getId() ?>">
                                 <div class="imgActivo col-md-offset-11 col-md-1" style="margin-top:12px">
@@ -45,6 +45,7 @@
                                         <div class="circuloInactivo" style="display: <?= ($c->getActivo() == 0)?"block":"none" ?>" ></div>
                                 </div>
                             </div>
+
                             <div class="col-md-3">    
                                 <select class="form-control selectorActivo" >
                                     <option  value="1" <?= ($c->getActivo() == 1)?"selected":"" ?>>Activo</option>
@@ -52,6 +53,55 @@
                                 </select>
                             </div>     
                         </div>
+                        <?php if($c->getActivo() == 1): ?>
+                            <div>
+                            <div class="visible-xs space-10"></div>
+
+                            <h3 class="text-center">¿Qué días de la semana puedes recibir clientes?</h3>
+
+                            <div class="radio">
+                                <label>
+                                    <input class="check" data-car-id="<?php echo $c->id ?>" name="option1" type="checkbox" value="1" <?php if ($c->getOptions() & 1) echo 'checked' ?>>
+                                    Puedo recibir clientes en la semana.
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input class="check" data-car-id="<?php echo $c->id ?>" name="option2" type="checkbox" value="2" <?php if($c->getOptions() & 2) echo 'checked' ?>>
+                                     Puedo recibir clientes los fines de semana.   
+                                </label>
+                            </div> 
+
+                            <p>Si tienes disponibilidad todos los días, selecciona fines de semana y semana.</p>
+
+                            <div class="hidden-xs space-20"></div>
+                            
+                            <h3 class="text-center">Otros filtros de busqueda</h3>
+
+                            <div class="radio">
+                                <label>
+                                    <input class="check" data-car-id="<?php echo $c->id ?>" name="option3" type="checkbox" value="4" <?php if($c->getOptions() & 4) echo 'checked' ?>>
+                                    Puedo recibir clientes que pagan el mismo día.
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input class="check" data-car-id="<?php echo $c->id ?>" name="option4" type="checkbox" value="8" <?php if($c->getOptions() & 8) echo 'checked' ?>>
+                                    Solo arriendos mayores a 24 horas.
+                                </label>
+                            </div>
+
+                            <div class="space-50"></div>
+
+
+                            <div class="col-md-offset-1 col-md-10 text-center">
+                                <p style="color:#00aced; font-size: 25px; font-weight: 300;">Aparicion en busqueda: <span id="percent">0</span>% de reservas<span id="more"><span></p>
+                            </div>
+                            <div class="space-50"></div>    
+                            </div>
+                        <?php endif; ?>
+
+                        
                         <!-- Esto es para mostrar el form desde - hasta-->
                         <div class="row">                                   
                             <div id="<?php echo $c->getId() ?>">
@@ -105,7 +155,9 @@
                                             </div>
                                         <?php endforeach; ?>
                                     </div><!--fin availabilityOfCars-->
-                                <?php else: ?>                                    
+
+                                    
+                                <?php else: ?>                                   
                                     <div class="disabledOfCars" id="dis_unt_<?php echo $c->getId() ?>" style="display: <?= ($c->getActivo() == 0)?"block":"none" ?>">
                                         <div clas="DOC-container" data-car-id="<?php echo $c->getId() ?>">
                                             <div class="col-md-offset-9 col-md-3">
@@ -157,6 +209,8 @@
     }
         
     $(document).on('ready',function(){
+
+        isChecked();
           
         $(".selectorActivo").change(function() {
 
@@ -296,4 +350,55 @@
         });
 
     });
+
+    /*js availability*/
+
+    $('.check').change(function() {
+
+        var carId     = $(this).data("car-id");
+        var option    = $(this).val();        
+        var isChecked = $(this).is(":checked") ? 1 : 0;
+
+        $.post("<?php echo url_for('cars/getChecked') ?>", {"option": option, "isChecked": isChecked, "carId": carId}, function(r){
+
+            
+            $(".alert").removeClass("alert-a-danger");
+            $(".alert").removeClass("alert-a-success");
+
+            if (r.error) {
+                $(".alert").addClass("alert-a-danger");
+                $(".alert").html(r.errorMessage);
+            } else {
+                $(".alert").addClass("alert-a-danger");
+                $(".alert").html("Datos del vehículo editado con exito");
+            }
+
+        }, 'json');
+
+    });
+
+    $('.check').change(function(){
+        isChecked();
+    });
+
+    function isChecked(){
+
+        var total = 0;
+        $("#more").html("");
+
+        if($('input:checkbox[name=option1]').is(':checked')) {
+            total+= 40;
+        }
+        if($('input:checkbox[name=option2]').is(':checked')) {
+            total+= 40;
+        }
+        if($('input:checkbox[name=option3]').is(':checked')) {
+            total+= 20;
+        }
+        if($('input:checkbox[name=option4]').is(':checked')) {
+            $("#more").html(" mayores a 24 horas");
+        }
+
+        $("#percent").html(total);
+    }
 </script>

@@ -2,6 +2,70 @@
 
 class carsActions extends sfActions {
 
+    /*editar auto*/   
+    public function executeEdit(sfWebRequest $request){
+        $this->setLayout("newIndexLayout");
+
+        $carId          = $request->getParameter("id", null);
+        $userId         = sfContext::getInstance()->getUser()->getAttribute('userid');
+        $this->Communes = Commune::getByRegion(false);
+        $this->Brands   = Brand::getBrand();
+        $this->Car      = Doctrine_Core::getTable('car')->find($carId);
+        $this->CarTypes = CarType::getCarType();
+
+
+        /*precios*/
+        $price = $this->Car->getModel()->getPrice();
+        $priceDay = $price/300;
+        $this->day   = round($priceDay,-2);
+        $this->week  = round((($priceDay * 7)*0.9),-2);
+        $this->hour  = round(($priceDay/6),-2);
+        $this->month = round((($priceDay * 30) * 0.7),-2);
+
+        if(!$userId == $this->Car->getUserId()){
+        }
+    }
+
+    public function executeGetChecked(sfWebRequest $request){
+
+        $return = array("error" => false);
+
+        try {
+
+            $option     = (int)$request->getPostParameter("option", null);
+            $isChecked  = $request->getPostParameter("isChecked", null);
+            $carId      = $request->getPostParameter("carId", null);
+
+            $Car  = Doctrine_Core::getTable('car')->find($carId);
+            $options = $Car->options;
+
+            if ($isChecked) {
+                if (!($options & $option)) {
+                    $options += $option;
+                }
+            }
+
+            if (!$isChecked) {
+                if ($options & $option) {
+                    $options -= $option;
+                }
+            }
+
+            $Car->setOptions($options);
+
+            $Car->save();
+
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorCode"] = $e->getCode();
+            $return["errorMessage"] = $e->getMessage();
+        }
+
+        $this->renderText(json_encode($return));
+        
+        return sfView::NONE;
+        
+    }
 
     /*Crear auto vista 1*/    
     
@@ -9,6 +73,9 @@ class carsActions extends sfActions {
           $this->setLayout("newIndexLayout");
           $this->Communes = Commune::getByRegion(false);
           $this->Brands = Brand::getBrand();
+          $this->CarTypes = CarType::getCarType();
+
+          $carId = $request->getParameter("c", null);     
     }
 
     public function executeGetModels(sfWebRequest $request) {
@@ -55,6 +122,7 @@ class carsActions extends sfActions {
             $color          = $request->getPostParameter("color", null);
             $lat            = $request->getPostParameter("lat", null);
             $lng            = $request->getPostParameter("lng", null);
+            $carId          = $request->getPostParameter("carId", null);
 
 
             /*$userId_session = $this->getUser()->getAttribute("userid");
@@ -117,8 +185,12 @@ class carsActions extends sfActions {
             /*if ((is_null($User) && $User->getConfirmed()) || !$User->getConfirmedFb()) {
                 $this->redirect('main/index');
             }*/
-
-            $Car = new Car();
+            if (is_null($carId) || $carId == "") {
+                $Car = new Car();
+            }else{
+                $Car = Doctrine_Core::getTable('car')->find($carId);
+            }
+            
             $fechaHoy = Date("Y-m-d");
 
             $Car->setAddress($address);
@@ -132,6 +204,7 @@ class carsActions extends sfActions {
             $Car->setPatente($patent);
             $Car->setUserId($idUsuario);
             $Car->setFechaSubida($fechaHoy);
+            $Car->setColor($color);
             $Car->setLat($lat);
             $Car->setLng($lng);
             $Car->setCityId(27);
@@ -161,6 +234,7 @@ class carsActions extends sfActions {
         try {
 
             $patente = $request->getPostParameter("patente", null);
+            $carId = $request->getPostParameter("carId", null);
 
             $regex = '/^[a-z]{2}[\.\ ]?[0-9]{2}[\.\ ]?[0-9]{2}|[b-d,f-h,j-l,p,r-t,v-z]{2}[\-\. ]?[b-d,f-h,j-l,p,r-t,v-z]{2}[\.\- ]?[0-9]{2}$/i';
 
@@ -169,7 +243,7 @@ class carsActions extends sfActions {
             }
 
             if(($patente != "") && ($patente != null)){    
-                $result = Car::getExistPatent($patente);
+                $result = Car::getExistPatent($patente, $carId);
 
                 if (count($result) > 0) {
                     throw new Exception("patente ya existe!", 2);
@@ -239,6 +313,7 @@ class carsActions extends sfActions {
 
             $url = $this->generateUrl('car_availability');
             $return["url_complete"] = $url;
+
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorCode"] = $e->getCode();

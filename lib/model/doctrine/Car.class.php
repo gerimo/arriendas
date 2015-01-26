@@ -5,11 +5,12 @@ class Car extends BaseCar {
     // $Car->getOpportunities();
     // Car::getPrice();
 
-    public function getExistPatent($patent = false){
+    public function getExistPatent($patent = false, $idCar = false){
 
         $q = Doctrine_Core::getTable("Car")
             ->createQuery('C')
-            ->where('C.patente = ?', $patent);
+            ->where('C.patente = ?', $patent)
+            ->andWhere('C.id != ?', $idCar);
        
 
         return $q->execute();

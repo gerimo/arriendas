@@ -512,9 +512,10 @@ abstract class BaseCar extends sfDoctrineRecord
         $this->option('type', 'InnoDB');
     }
 
-    public function setUp()
-    {
+    public function setUp() {
+
         parent::setUp();
+        
         $this->hasOne('User', array(
              'local' => 'User_id',
              'foreign' => 'id',
