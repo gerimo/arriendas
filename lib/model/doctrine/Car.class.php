@@ -29,6 +29,16 @@ class Car extends BaseCar {
         return $q->execute();
     }
 
+    public function getNearestMetro() {
+
+        $q = Doctrine_Core::getTable("CarProximityMetro")
+            ->createQuery('CPM')
+            ->where('CPM.car_id = ?', $this->id)
+            ->orderBy('CPM.distance ASC');
+
+        return $q->fetchOne();
+    }
+
     public function getOpportunities() {
 
         $maxDistance = 4;

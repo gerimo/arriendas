@@ -184,7 +184,7 @@
                 <input id="lng" name="lng" type="hidden" value="">
             </form>
             <div class="col-md-offset-8 col-md-4">
-                <button class="btn-a-primary btn-block" name="save" onclick="validateForm()">Siguiente</button>
+                <button class="btn btn-a-primary btn-block" name="save" onclick="validateForm()">Siguiente</button>
                 <p class="alert"></p> 
             </div>
             
