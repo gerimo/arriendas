@@ -8,11 +8,20 @@ class carsActions extends sfActions {
 
         $carId          = $request->getParameter("id", null);
         $userId         = sfContext::getInstance()->getUser()->getAttribute('userid');
-        $this->Communes = Commune::getByRegion(false);
+        $this->Communes = Commune::getByRegion(false);  
         $this->Brands   = Brand::getBrand();
         $this->Car      = Doctrine_Core::getTable('car')->find($carId);
+        if (!$this->Car) {
+                throw new Exception("Vehículo ".$carId." no encontrado", 1);
+            }
+
         $this->CarTypes = CarType::getCarType();
 
+        if($userId != $this->Car->getUserId()){
+
+            error_log("[".date("Y-m-d H:i:s")."] [cars/edit] ERROR: Al entrar a la vista de editar el usuario ".$userId." a tratado de editar el vehiculo".$this->Car->getId()." que no es suyo. ");
+            $this->redirect('homepage');
+        }
 
         /*precios*/
         $price = $this->Car->getModel()->getPrice();
@@ -22,8 +31,7 @@ class carsActions extends sfActions {
         $this->hour  = round(($priceDay/6),-2);
         $this->month = round((($priceDay * 30) * 0.7),-2);
 
-        if(!$userId == $this->Car->getUserId()){
-        }
+        
     }
 
     public function executeGetChecked(sfWebRequest $request){
