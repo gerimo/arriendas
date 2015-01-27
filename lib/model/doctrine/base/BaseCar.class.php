@@ -38,38 +38,39 @@
  * @property Commune $commune
  * @property integer $options
  * @property date disabled_until
+ * @property Doctrine_Collection $CarProximityMetros
  * 
- * @method integer             getId()             Returns the current record's "id" value
- * @method integer             getUserId()         Returns the current record's "User_id" value
- * @method string              getKm()             Returns the current record's "km" value
- * @method integer             getCityId()         Returns the current record's "City_id" value
- * @method integer             getComunaId()       Returns the current record's "comuna_id" value
- * @method integer             getStateId()        Returns the current record's "State_id" value
- * @method string              getAddress()        Returns the current record's "address" value
- * @method float               getLat()            Returns the current record's "lat" value
- * @method float               getLng()            Returns the current record's "lng" value
- * @method integer             getOffer()          Returns the current record's "offer" value
- * @method string              getObservations()   Returns the current record's "observations" value
- * @method decimal             getPricePerHour()   Returns the current record's "price_per_hour" value
- * @method decimal             getPricePerDay()    Returns the current record's "price_per_day" value
- * @method decimal             getPricePerWeek()   Returns the current record's "price_per_week" value
- * @method decimal             getPricePerMonth()  Returns the current record's "price_per_month" value
- * @method integer             getModelId()        Returns the current record's "Model_id" value
- * @method integer             getYear()           Returns the current record's "year" value
- * @method string              getPatente()        Returns the current record's "patente" value
- * @method string              getTipoBencina()    Returns the current record's "tipobencina" value
- * @method string              getDescription()    Returns the current record's "description" value
- * @method User                getUser()           Returns the current record's "User" value
- * @method Model               getModel()          Returns the current record's "Model" value
- * @method City                getCity()           Returns the current record's "City" value
- * @method float               getRatioAprobacion() Returns the current record's "ratio_aprobacion" value
- * @method integer             getTransmission()   Returns the current record's "transmission" value
- * @method accesoriosSeguro    getAccesoriosSeguro() Returns the current record's "accesoriosSeguro" value
- * @method Comunas             getComuna()         Returns the current record's "Comuna" value
- * @method Commune             getCommune()        Returns the current record's "commune" value
- * @method integer             getRegion()
- * @method integer             getOptions()        Returns the current record's "options" value
- * 
+ * @method integer             getId()                Returns the current record's "id" value
+ * @method integer             getUserId()            Returns the current record's "User_id" value
+ * @method string              getKm()                Returns the current record's "km" value
+ * @method integer             getCityId()            Returns the current record's "City_id" value
+ * @method integer             getComunaId()          Returns the current record's "comuna_id" value
+ * @method integer             getStateId()           Returns the current record's "State_id" value
+ * @method string              getAddress()           Returns the current record's "address" value
+ * @method float               getLat()               Returns the current record's "lat" value
+ * @method float               getLng()               Returns the current record's "lng" value
+ * @method integer             getOffer()             Returns the current record's "offer" value
+ * @method string              getObservations()      Returns the current record's "observations" value
+ * @method decimal             getPricePerHour()      Returns the current record's "price_per_hour" value
+ * @method decimal             getPricePerDay()       Returns the current record's "price_per_day" value
+ * @method decimal             getPricePerWeek()      Returns the current record's "price_per_week" value
+ * @method decimal             getPricePerMonth()     Returns the current record's "price_per_month" value
+ * @method integer             getModelId()           Returns the current record's "Model_id" value
+ * @method integer             getYear()              Returns the current record's "year" value
+ * @method string              getPatente()           Returns the current record's "patente" value
+ * @method string              getTipoBencina()       Returns the current record's "tipobencina" value
+ * @method string              getDescription()       Returns the current record's "description" value
+ * @method User                getUser()              Returns the current record's "User" value
+ * @method Model               getModel()             Returns the current record's "Model" value
+ * @method City                getCity()              Returns the current record's "City" value
+ * @method float               getRatioAprobacion()   Returns the current record's "ratio_aprobacion" value
+ * @method integer             getTransmission()      Returns the current record's "transmission" value
+ * @method accesoriosSeguro    getAccesoriosSeguro()  Returns the current record's "accesoriosSeguro" value
+ * @method Comunas             getComuna()            Returns the current record's "Comuna" value
+ * @method Commune             getCommune()           Returns the current record's "commune" value
+ * @method integer             getRegion()            Returns the current record's "region" value
+ * @method integer             getOptions()           Returns the current record's "options" value
+ * @method Doctrine_Collection getCarProximityMetros()   Returns the current record's "CarProximityMetros" collection
  * @method Doctrine_Collection getAvailabilities() Returns the current record's "Availabilities" collection
  * @method Doctrine_Collection getDamages()        Returns the current record's "Damages" collection
  * @method Doctrine_Collection getPhotoes()        Returns the current record's "Photoes" collection
@@ -111,6 +112,7 @@
  * @method Car                 setDisabledUntil()   Sets the current record's "disable_until" value
  * @method Car                 setCommune()        Sets the current record's "commune" value
  * @method Car                 setOptions()        Sets the current record's "options" value
+ * @method Car                 setCarProximityMetros()   Sets the current record's "CarProximityMetros" collection
  *
  * @package    CarSharing
  * @subpackage model
@@ -467,47 +469,47 @@ abstract class BaseCar extends sfDoctrineRecord
       $this->hasColumn('commune_id', 'integer', 11, array(
             'notnull' => true
       ));
-      $this->hasColumn('options', 'integer', 4, array(
-             'type' => 'integer',
-             'notnull' => true,
-             'length' => 4,
-             ));
+
+        $this->hasColumn('options', 'integer', 4, array(
+            'type' => 'integer',
+            'notnull' => true,
+            'length' => 4,
+        ));
+
+        $this->hasColumn('car_proximity_metro_id', 'integer', 4, array(
+            'type' => 'integer',
+            'notnull' => true,
+            'length' => 4,
+        ));
       
-      $this->index('fk_Car_Commune', array(
+        // Indices
+        $this->index('fk_Car_Commune', array(
             'fields' => array(
                 0 => 'commune_id',
             ),
-
-
-
-      ));
-
-
+        ));
         $this->index('fk_Car_User', array(
-             'fields' => 
-             array(
-              0 => 'User_id',
-             ),
-             ));
+            'fields' => array(
+                0 => 'User_id',
+            ),
+        ));
         $this->index('fk_Car_Model1', array(
-             'fields' => 
-             array(
-              0 => 'Model_id',
-             ),
-             ));
+            'fields' => array(
+                0 => 'Model_id',
+            ),
+        ));
         $this->index('fk_Car_City1', array(
-             'fields' => 
-             array(
-              0 => 'City_id',
-             ),
-             ));
+            'fields' => array(
+                0 => 'City_id',
+            ),
+        ));
         $this->index('id_UNIQUE', array(
-             'fields' => 
-             array(
-              0 => 'id',
-             ),
-             'type' => 'unique',
-             ));
+            'fields' => array(
+                0 => 'id',
+            ),
+            'type' => 'unique',
+        ));
+
         $this->option('charset', 'utf8');
         $this->option('type', 'InnoDB');
     }
@@ -568,6 +570,11 @@ abstract class BaseCar extends sfDoctrineRecord
             'foreign' => 'id',
             'onDelete' => 'no action',
             'onUpdate' => 'no action'
+        ));
+
+        $this->hasMany('CarProximityMetro as CarProximityMetros', array(
+            'local' => 'id',
+            'foreign' => 'car_id'
         ));
     }
 }
