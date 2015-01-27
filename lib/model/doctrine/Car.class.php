@@ -444,4 +444,24 @@ where c.id=
 
     return $ret;
   }
+
+    // Función publica que devuelve un array con las distancias
+    // del vehículo en relacion al metro mas próximo.
+    public function getDistancesToMetros() {
+
+        $Metros = Doctrine_Core::getTable("Metro")->findAll();
+        $metroArray = array();
+                
+        foreach ($Metros as $Metro) {
+
+            $distance = round(Utils::distance($this->lat, $this->lng, $Metro->lat, $Metro->lng), 2);
+            $metroArray[$Metro->id] = $distance;
+        }
+
+        if($metroArray){
+            return $metroArray;
+        } else { 
+            return false;
+        }
+    }
 }

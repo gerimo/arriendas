@@ -129,8 +129,10 @@ class carsActions extends sfActions {
             $Car->setFechaSubida($fechaHoy);
             $Car->setLat($lat);
             $Car->setLng($lng);
+            
+            $Car->save();       
 
-            $Car->save();
+            CarProximityMetro::setNewCarProximityMetro($Car);
 
             $this->getUser()->setAttribute("carId", $Car->getId());
 
