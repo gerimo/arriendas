@@ -28,36 +28,40 @@ class reservesActions extends sfActions {
         $reserveId = $request->getPostParameter("reserveId", null);
 
         try {
-    
+
             if (is_null($reserveId) || $reserveId == "") {
-                throw new Exception("Falta la reserva");
+                throw new Exception("Falta reserveId", 1);
             }
 
             $Reserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
             if (!$Reserve) {
-                throw new Exception("Reserva no encontrada");
+                throw new Exception("Reserve ".$Reserve->id." no encontrada", 1);
             }
 
             if ($Reserve->getCar()->getUser()->getId() != $this->getUser()->getAttribute("userid")) {
-                throw new Exception("La reserva corresponde a otro usuario");
+                throw new Exception("User ".$this->getUser()->getAttribute("userid")." intenta aprobar Reserve ".$Reserve->id." de User ".$Reserve->getCar()->getUser()->getId(), 1);
             }
 
             if ($Reserve->getConfirmed()) {
-                throw new Exception("La reserva ya se encuentra aprobada");
+                throw new Exception("Reserve ".$Reserve->id." intenta ser aprobada y esta ya la está");
             }
 
             if ($Reserve->getUser()->getBlocked()){            
-                throw new Exception("No se pudo aprobar la reserva. El arrendatario se encuentra bloqueado");
+                throw new Exception("User ".$Reserve->getCar()->getUser()->id." intenta aprobar Reserve ".$Reserve->id." y este se encuentra bloqueado");
             }
 
             $Reserve->setConfirmed(1);
-            $Reserve->setCanceled(0);
+            /*$Reserve->setCanceled(0);*/
             $Reserve->setFechaConfirmacion(date("Y-m-d H:i:s"));
 
             // Cancelamos el envío de oportunidades
-            $OpportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findByReserve($Reserve);
-            $OpportunityQueue->setIsActive(false);
-            $OpportunityQueue->save();
+            $OpportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findOneByReserveId($Reserve->id);
+            if ($OpportunityQueue) {
+                $OpportunityQueue->setIsActive(false);
+                $OpportunityQueue->save();
+            } else {
+                error_log("[".date("Y-m-d H:i:s")."] [reserves/approve] ERROR: Al aprobar la Reserve ".$Reserve->id." no se ha podido encontrar la OpportunityQueue para ser desactivada");
+            }
 
             // Correo de notificación
             $User    = $Reserve->getUser();
@@ -94,14 +98,17 @@ class reservesActions extends sfActions {
             }
             
             $mailer->send($message);
+            
+            $Reserve->save();
 
-            $Reserve->save();            
         } catch (Exception $e) {
             $return["error"] = true;
-            $return["errorMessage"] = $e->getMessage();
+            $return["errorMessage"] = "Hubo un problema al aprobar la reserva. Por favor, intentalo más tarde.";
 
             if ($request->getHost() == "www.arriendas.cl") {
                 Utils::reportError($e->getMessage(), "reserves/approve");
+            } else {
+                error_log("[".date("Y-m-d H:i:s")."] ERROR: ".$e->getMessage());
             }
         }
     
@@ -122,24 +129,34 @@ class reservesActions extends sfActions {
 
             $datesError = $this->validateDates($from, $to);
             if ($datesError) {
-                throw new Exception($datesError, 1);
+                throw new Exception($datesError, 2);
             }
 
             if (is_null($carId) || $carId == '' || $carId == 0) {
-                throw new Exception("No se encontró el auto", 1);
+                throw new Exception("Falta el carId", 1);
             }
 
             $Car = Doctrine_Core::getTable('car')->findOneById($carId);
             if (!$Car) {
-                throw new Exception("El auto no existe", 1);
+                throw new Exception("El Car ".$carId." no fue encontrado", 1);
             }
 
             $return["price"] = CarTable::getPrice($from, $to, $Car->price_per_hour, $Car->price_per_day, $Car->price_per_week, $Car->price_per_month);
+
         } catch (Exception $e) {
+
             $return["error"] = true;
-            $return["errorMessage"] = $e->getMessage();
+
+            if ($e->getCode() == 2) {
+                $return["errorMessage"] = $e->getMessage();
+            } else {
+                $return["errorMessage"] = "Problemas a calcular el precio. Por favor, intentalo más tarde";
+            }
+            
             if ($request->getHost() == "www.arriendas.cl") {
                 Utils::reportError($e->getMessage(), "reserves/calculatePrice");
+            } else {
+                error_log("[".date("Y-m-d H:i:s")."] ERROR: ".$e->getMessage());
             }
         }
     

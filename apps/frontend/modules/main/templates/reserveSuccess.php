@@ -197,9 +197,9 @@
     <div class="row">
         <div class="steps col-md-offset-1 col-md-10">            
             <ul class="list-warranty">
-                <li><i class="fa fa-check"></i></span><strong>Calidad Arriendas: el auto se encuentra verificado por Arriendas.</strong></li>
-                <li><i class="fa fa-check"></i></span><strong>Garantía Arriendas: 2 opciones de reemplazo o te devolvemos el dinero.</strong></li>
-                <li><i class="fa fa-check"></i></span><strong>Ofertas: Recibirás ofertas de otros dueños manteniendo este precio.</strong></li>
+                <li><i class="fa fa-check"></i></span><strong>Calidad Arriendas:</strong> el auto se encuentra verificado por Arriendas.</li>
+                <li><i class="fa fa-check"></i></span><strong>Garantía Arriendas:</strong> 2 opciones de reemplazo o te devolvemos el dinero.</li>
+                <li><i class="fa fa-check"></i></span><strong>Ofertas:</strong> Recibirás ofertas de otros dueños manteniendo este precio.</li>
             </ul>
         </div>
     </div>
@@ -333,8 +333,8 @@
             }
         });
 
-        refreshDate(true);
-        refreshDate();
+        refreshDate(true, true);
+        refreshDate(false, true);
     });
 
     $("#btn-pay").on('click', function(e) {
@@ -369,6 +369,9 @@
                             });
 
                             if (userAccept) {
+                                console.log($("#from").val());
+                                console.log($("#to").val());
+                                return false;
                                 $("#reserve-form").submit();
                             }
                         }
@@ -407,10 +410,10 @@
             }
         },
         onSelectDate: function() {
-            refreshDate(true);
+            refreshDate(true, false);
         },
         onSelectTime: function() {
-            refreshDate(true);
+            refreshDate(true, false);
         }
     });
 
@@ -443,10 +446,10 @@
             }
         },
         onSelectDate: function() {
-            refreshDate(false);
+            refreshDate(false, false);
         },
         onSelectTime: function() {
-            refreshDate(false);
+            refreshDate(false, false);
         }
     });
 
@@ -472,7 +475,7 @@
     });
 
     function dateFormat(fecha){
-        
+
         var split = fecha.split(" ");
         var f = split[1];
         var h = split[2];
@@ -496,11 +499,11 @@
         sT = sDT[1].split(":");
 
         return {
-            "year": sD[0],
-            "month": sD[1],
-            "day": sD[2],
-            "hours": sT[0],
-            "minutes": sT[1]
+            "year": parseInt(sD[0]),
+            "month": parseInt(sD[1]),
+            "day": parseInt(sD[2]),
+            "hours": parseInt(sT[0]),
+            "minutes": parseInt(sT[1])
         }
     }
 
@@ -514,9 +517,10 @@
             "carId": carId,
             "from": from,
             "to": to
-        }
+        };
 
-        $.post("<?php echo url_for('reserves/calculatePrice') ?>", parameters, function(r){
+        $.post("<?php echo url_for('reserve_calculate_price') ?>", parameters, function(r){
+
             if (r.error) {
                 $("#dialog-alert p").html(r.errorMessage);
                 $("#dialog-alert").attr("title", "Error al calcular el precio");
@@ -627,13 +631,23 @@
         return true;
     }
 
-    function refreshDate(isFrom) {
+    function refreshDate(isFrom, isDocumentReady) {
 
         if (isFrom) {
+
             var fromH = $("#fromH").val();
             s = fromH.split(" ");
             $("#fromH").val("Desde: "+translateDay(s[0])+" "+s[1]+" a las "+s[2]);
             $("#from").val(dateFormat(fromH));
+
+            if (!isDocumentReady) {
+
+                var toDate = explodeDate($("#from").val());
+                var to = new Date(toDate['year'], toDate['month']-1, toDate['day']+1, toDate['hours'], toDate['minutes'], 0, 0);
+
+                $("#toH").val("Hasta: "+translateDay(to.format('D'))+" "+to.format('d/m/Y')+" a las "+pad(to.format('H'), 2)+":"+to.format('i'));
+                $("#to").val(to.format("Y-m-d "+pad(to.format('H'), 2)+":i"));
+            }
         } else {            
             var toH = $("#toH").val();
             s = toH.split(" ");
@@ -695,6 +709,7 @@
             case "Tue": return "Mar";
             case "Wed": return "Mié";
             case "Thu": return "Jue";
+            case "Thur": return "Jue";
             case "Fri": return "Vie";
             case "Sat": return "Sáb";
             case "Sun": return "Dom";

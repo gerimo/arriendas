@@ -212,6 +212,7 @@ class khipuActions extends sfActions {
                         $Transaction->save();
 
                         $OpportunityQueue = new OpportunityQueue();
+                        $OpportunityQueue->setPaidAt(date("Y-m-d H:i:s"));
                         $OpportunityQueue->setReserve($Reserve);
                         $OpportunityQueue->save();
 
