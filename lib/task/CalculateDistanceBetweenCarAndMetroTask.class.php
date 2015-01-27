@@ -44,6 +44,7 @@ EOF;
             foreach ($Cars as $Car) {
 
                 CarProximityMetro::setNewCarProximityMetro($Car);
+                $count++;
             }
 
             $endTime = microtime(true);
