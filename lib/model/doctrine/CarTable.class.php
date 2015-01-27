@@ -2,9 +2,23 @@
 
 class CarTable extends Doctrine_Table {
 
-    public static function findCars($from, $to, $isMap, $isWeekend, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers) {
+    public static function findCars($from, $to, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers) {
 
         $CarsFound = array();
+        $isWeekend = false;
+
+        /*error_log("FROM: ".$from);
+        error_log("TO: ".$to);
+        error_log("ISMAP: ".$isMap);
+        error_log("NELAT: ".$NELat);
+        error_log("NELNG: ".$NELng);
+        error_log("SWLAT: ".$SWLat);
+        error_log("SWLNG: ".$SWLng);
+        error_log("REGIONID: ".$regionId);
+        error_log("COMMUNEID: ".$communeId);
+        error_log("ISAUTOMATIC: ".$isAutomatic);
+        error_log("ISLOWCONSUMPTION: ".$isLowConsumption);
+        error_log("ISMOREPASSENGERS: ".$isMorePassengers);*/
         
         try {
 
@@ -19,26 +33,30 @@ class CarTable extends Doctrine_Table {
 
             $MD = new Mobile_Detect;
             if ($MD->isMobile()) {
-                $q->limit(5);
+                $q->limit(10);
             } else {
                 $q->limit(33);
             }
 
+            $weekendDays = Utils::isWeekend(true);
             // Si es Feriado o Fin de Semana, se buscan los autos de la tabla CarAvailability
-            if ($isWeekend) {
-                $q->innerJoin("C.CarAvailabilities CA");
-                $q->andWhere("CA.is_deleted IS FALSE");
-                $q->andWhere("CA.day = ?", date("Y-m-d", strtotime($from)));
-                $q->andWhere('? BETWEEN CA.started_at AND CA.ended_at', date("H:i:s", strtotime($from)));
+            if ($weekendDays) {
+                if (in_array(date("Y-m-d", strtotime($from)), $weekendDays)) {
+                    $q->innerJoin("C.CarAvailabilities CA");
+                    $q->andWhere("CA.is_deleted IS FALSE");
+                    $q->andWhere("CA.day = ?", date("Y-m-d", strtotime($from)));
+                    $q->andWhere('? BETWEEN CA.started_at AND CA.ended_at', date("H:i:s", strtotime($from)));
+                }
             }
 
             if ($isMap) {
+                /*error_log("Map");*/
                 $q->andWhere('C.lat < ?', $NELat);
                 $q->andWhere('C.lng < ?', $NELng);
                 $q->andWhere('C.lat > ?', $SWLat);
                 $q->andWhere('C.lng > ?', $SWLng);
             } else {
-                
+                /*error_log("List");*/
                 $q->andWhere("R.id = ?", $regionId);
 
                 if ($communeId > 0) {
@@ -47,14 +65,17 @@ class CarTable extends Doctrine_Table {
             }
 
             if ($isAutomatic) {
+                /*error_log("isAutomatic");*/
                 $q->andWhere("C.transmission = 1");
             }
 
             if ($isLowConsumption) {
+                /*error_log("isLowConsumption");*/
                 $q->andWhere("C.tipobencina = 'Diesel'");
             }
 
             if ($isMorePassengers) {
+                /*error_log("isMorePassengers");*/
                 $q->andWhere("M.id_otro_tipo_vehiculo = 3");
             }
 
@@ -90,9 +111,6 @@ class CarTable extends Doctrine_Table {
 
         } catch (Exception $e) {
             error_log("[".date("Y-m-d H:i:s")."][CarTable::findCars()] ERROR: ".$e->getMessage());
-            /*if ($request->getHost() == "www.arriendas.cl") {
-                Utils::reportError($e->getMessage(), "carTable::findCars");
-            }*/
         }
 
         return $CarsFound;

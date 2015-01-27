@@ -81,13 +81,13 @@
                         <span class="text">$<?php echo number_format(round($Car->getPricePerHour()), 0, '', '.')?> / <small>HORA</small></span>
                     <?php endif ?>
                     <?php if ($Car->getPricePerDay() != 0):?>
-                       <span class="price">$<?php echo number_format(round($Car->getPricePerDay()), 0, '', '.')?> / <small>DÍA</small></span>
+                        <span class="text"><strong>$<?php echo number_format(round($Car->getPricePerDay()), 0, '', '.')?> / <small>DÍA</small></strong></span>
                     <?php endif ?>                    
                     <?php if ($Car->getPricePerWeek() != 0):?>
-                       <span class="text"><?php echo number_format(round(($Car->getPricePerWeek()/7)), 0, '', '.') ?> / <small>DÍA SEMANA</small></span>
+                        <span class="text">$<?php echo number_format(round(($Car->getPricePerWeek()/7)), 0, '', '.') ?> / <small>DÍA SEMANA</small></span>
                     <?php endif ?>
                     <?php if ($Car->getPricePerMonth() != 0):?>
-                        <span class="text"><?php echo number_format(round(($Car->getPricePerMonth()/30)), 0, '', '.') ?> / <small>DÍA MES</small></span>
+                        <span class="text">$<?php echo number_format(round(($Car->getPricePerMonth()/30)), 0, '', '.') ?> / <small>DÍA MES</small></span>
                     <?php endif ?> 
                 </div>
                     <ul class="list list-unstyled">
@@ -110,7 +110,7 @@
         <h2>Características:</h2>
 
         <ul class="features">
-            <?php if ($metro || true): ?>
+            <?php if ($metro): ?>
                 <li><span class="metro-mobile"></span> A <strong>1.5 km</strong> del Metro Católica</li>
             <?php endif ?>
             <?php if ($passengers): ?>
@@ -197,16 +197,16 @@
     <div class="row">
         <div class="steps col-md-offset-1 col-md-10">            
             <ul class="list-warranty">
-                <li><i class="fa fa-check"></i></span>Calidad Arriendas: el auto se encuentra verificado por Arriendas.</li>
-                <li><i class="fa fa-check"></i></span>Garantía Arriendas: 2 opciones de reemplazo o te devolvemos el dinero.</li>
-                <li><i class="fa fa-check"></i></span>Ofertas: Recibirás ofertas de otros dueños manteniendo este precio.</li>
+                <li><i class="fa fa-check"></i></span><strong>Calidad Arriendas:</strong> el auto se encuentra verificado por Arriendas.</li>
+                <li><i class="fa fa-check"></i></span><strong>Garantía Arriendas:</strong> 2 opciones de reemplazo o te devolvemos el dinero.</li>
+                <li><i class="fa fa-check"></i></span><strong>Ofertas:</strong> Recibirás ofertas de otros dueños manteniendo este precio.</li>
             </ul>
         </div>
     </div>
 
     <form action="<?php echo url_for('reserve_pay') ?>" id="reserve-form" method="post">
         
-        <h1 class="body-title" id="reserve">Arriendo de <b><?php echo $Car->getModel()->getBrand()->name ?></b> <b><?php echo $Car->getModel()->name ?></b> a <b>$<span class="price"><?php echo number_format($price, 0, ',', '.') ?></span></b> en <b><?php echo $Car->getCommune()->name ?></b></h1>
+        <h1 class="body-title" id="reserve">Arriendo de <?php echo $Car->getModel()->getBrand()->name ?> <?php echo $Car->getModel()->name ?> a $<span class="price"><?php echo number_format($price, 0, ',', '.') ?></span> en <?php echo $Car->getCommune()->name ?></h1>
         
         <div class="body row">
             <div class="col-sm-12 col-xs-12 col-md-offset-1 col-md-10">
@@ -333,10 +333,8 @@
             }
         });
 
-        // Garantía
-        $('input[type=radio][name=warranty]').change(function() {
-            refreshTotalPrice();
-        });            
+        refreshDate(true, true);
+        refreshDate(false, true);
     });
 
     $("#btn-pay").on('click', function(e) {
@@ -381,6 +379,13 @@
     });    
 
     $("#fromH").datetimepicker({ 
+        dayOfWeekStart: 1,
+        lang:'es',
+        format:'D d/m/Y H:i',
+        minDate: "<?php echo date('Y-m-d') ?>",
+        timepicker: true,
+        validateOnBlur: false,
+        value: "<?php echo date('D d/m/Y H:i', strtotime($from)) ?>",
         allowTimes:[
             "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
             "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
@@ -391,34 +396,32 @@
             "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
             "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
         ],
-        dayOfWeekStart: 1,
-        minDate: "<?php echo $from ?>",
         i18n:{
             es:{
                 months:[
-                'Enero','Febrero','Marzo','Abril',
-                'Mayo','Junio','Julio','Agosto',
-                'Septiembre','Octubre','Noviembre','Diciembre'
+                'Enero','Febrero','Marzo','Abril','Mayo',
+                'Junio','Julio','Agosto','Septiembre',
+                'Octubre','Noviembre','Diciembre'
                 ],
-                daysShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"],
-                dayOfWeek:["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"]
+                dayOfWeek:["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"]
             }
         },
-        lang:'es',
-        format:'D d/m/Y H:i',
-        timepicker: true,
-        validateOnBlur: false,
-        /*defaultDate: ' ',*/
-        /*value: "<?php echo $from ?>",*/
         onSelectDate: function() {
-            refreshDate(true);
+            refreshDate(true, false);
         },
         onSelectTime: function() {
-            refreshDate(true);
+            refreshDate(true, false);
         }
     });
 
     $("#toH").datetimepicker({ 
+        dayOfWeekStart: 1,
+        lang:'es',
+        format:'D d/m/Y H:i',
+        minDate: "<?php echo date('Y-m-d') ?>",
+        timepicker: true,
+        validateOnBlur: false,
+        value: "<?php echo date('D d/m/Y H:i', strtotime($to)) ?>",
         allowTimes:[
             "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
             "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
@@ -429,9 +432,6 @@
             "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
             "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
         ],
-        dayOfWeekStart: 1,
-        minDate: "<?php echo $to ?>",
-        lang:'es',
         i18n:{
             es:{
                 months:[
@@ -439,21 +439,19 @@
                 'Mayo','Junio','Julio','Agosto',
                 'Septiembre','Octubre','Noviembre','Diciembre'
                 ],
-                dayOfWeek:["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"]
+                dayOfWeek:["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"]
             }
         },
-        format:'D d/m/Y H:i',
-        timepicker: true,
-        validateOnBlur: false,
-        /*defaultDate: ' ',*/
-        /*value: "<?php echo $to ?>",*/
         onSelectDate: function() {
-            refreshDate(false);
+            refreshDate(false, false);
         },
-
         onSelectTime: function() {
-            refreshDate(false);
+            refreshDate(false, false);
         }
+    });
+
+    $("input[type=radio][name=warranty]").on('change', function(e) {
+        refreshTotalPrice();
     });
 
     $(".payment").on('click', function(e) {
@@ -474,7 +472,7 @@
     });
 
     function dateFormat(fecha){
-        
+
         var split = fecha.split(" ");
         var f = split[1];
         var h = split[2];
@@ -491,6 +489,21 @@
         return ano+"-"+mes+"-"+dia+" "+hora+":"+min;
     }
 
+    function explodeDate(date) {
+
+        sDT = date.split(" ");
+        sD = sDT[0].split("-");
+        sT = sDT[1].split(":");
+
+        return {
+            "year": parseInt(sD[0]),
+            "month": parseInt(sD[1]),
+            "day": parseInt(sD[2]),
+            "hours": parseInt(sT[0]),
+            "minutes": parseInt(sT[1])
+        }
+    }
+
     function getRentalPrice() {
 
         var carId = $("#car").val();
@@ -501,9 +514,10 @@
             "carId": carId,
             "from": from,
             "to": to
-        }
+        };
 
-        $.post("<?php echo url_for('reserves/calculatePrice') ?>", parameters, function(r){
+        $.post("<?php echo url_for('reserve_calculate_price') ?>", parameters, function(r){
+
             if (r.error) {
                 $("#dialog-alert p").html(r.errorMessage);
                 $("#dialog-alert").attr("title", "Error al calcular el precio");
@@ -614,20 +628,28 @@
         return true;
     }
 
-    function refreshDate(isFrom) {
+    function refreshDate(isFrom, isDocumentReady) {
 
         if (isFrom) {
-            var desde = "Desde: ";
-            var fromh = $("#fromH").val();
-            var nuevo = desde + fromh;
-            $("#fromH").val(nuevo);
-            $("#from").val(dateFormat(fromh));
+
+            var fromH = $("#fromH").val();
+            s = fromH.split(" ");
+            $("#fromH").val("Desde: "+translateDay(s[0])+" "+s[1]+" a las "+s[2]);
+            $("#from").val(dateFormat(fromH));
+
+            if (!isDocumentReady) {
+
+                var toDate = explodeDate($("#from").val());
+                var to = new Date(toDate['year'], toDate['month']-1, toDate['day']+1, toDate['hours'], toDate['minutes'], 0, 0);
+
+                $("#toH").val("Hasta: "+translateDay(to.format('D'))+" "+to.format('d/m/Y')+" a las "+pad(to.format('H'), 2)+":"+to.format('i'));
+                $("#to").val(to.format("Y-m-d "+pad(to.format('H'), 2)+":i"));
+            }
         } else {            
-            var hasta = "Hasta: ";
-            var toh = $("#toH").val();
-            var nuevo = hasta + toh;
-            $("#toH").val(nuevo);
-            $("#to").val(dateFormat(toh));
+            var toH = $("#toH").val();
+            s = toH.split(" ");
+            $("#toH").val("Hasta: "+translateDay(s[0])+" "+s[1]+" a las "+s[2]);
+            $("#to").val(dateFormat(toH));
         }
 
         getRentalPrice();
@@ -638,16 +660,18 @@
 
         var warrantyType  = $('input[type=radio][name=warranty]:checked').val();
         var warrantyPrice = parseInt($('input[type=radio][name=warranty]:checked').data("value"));
-        
-        var from     = new Date($("#from").val());
-        var to       = new Date($("#to").val());
+
+        fromDate = explodeDate($("#from").val());
+        toDate = explodeDate($("#to").val());
+
+        var from     = new Date(fromDate['year'], fromDate['month'], fromDate['day'], fromDate['hours'], fromDate['minutes'], 0, 0);
+        var to       = new Date(toDate['year'], toDate['month'], toDate['day'], toDate['hours'], toDate['minutes'], 0, 0);
         var duration = (to - from)/1000/60/60;
         var days     = Math.floor(duration/24);
         var hours    = duration % 24;
 
         var price        = parseInt($("#price").val());
         var totalPrice   = 0;
-
 
         if (warrantyType === undefined) {
             totalPrice = price;
@@ -673,5 +697,20 @@
 
         $("#total-price").val(totalPrice);
         $(".total-price").html($.number(totalPrice, 0, ',', '.'));
+    }
+
+    function translateDay(day) {
+
+        switch (day) {
+            case "Mon": return "Lun";
+            case "Tue": return "Mar";
+            case "Wed": return "Mié";
+            case "Thu": return "Jue";
+            case "Thur": return "Jue";
+            case "Fri": return "Vie";
+            case "Sat": return "Sáb";
+            case "Sun": return "Dom";
+            default: return false;
+        }
     }
 </script>

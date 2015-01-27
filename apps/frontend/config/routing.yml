@@ -17,6 +17,10 @@ car_photo:
    url: /auto/foto
    param: { module: cars, action: photo }
 
+car_edit:
+   url: /auto/editar/:id
+   param: { module: cars, action: edit }
+
 car_create:
    url: /auto/crear
    param: { module: cars, action: create }
@@ -38,6 +42,10 @@ homepage:
     url: /
     param: { module: main, action: index }
 
+how-works:
+    url: /como-funciona
+    param: { module: main, action:howWorks }
+
 login:
     url: /login
     param: { module: main, action: login }
@@ -58,6 +66,10 @@ messages_inbox:
     url: /mis-mensajes
     param: { module: messages, action: inbox }
 
+news:
+    url: /arrienda-en-las-noticias
+    param: { module: main , action: news }
+
 opportunities:
     url: /oportunidades
     param: { module: opportunities, action: index }
@@ -73,6 +85,9 @@ opportunities_mailing_approve:
 opportunities_mailing_open:
     url: /oportunidades/mailing/:id/:signature
     param: { module: main, action: mailingOpen }
+prices_compare:
+    url: /compare-precios
+    param: { module: main, action: pricesCompare }
 
 questions:
     url: /preguntas-frecuentes
@@ -80,7 +95,7 @@ questions:
 
 rent_a_car_region_commune:
     url: /arriendo-de-autos/:region/:commune
-    param: {module: main, action: index }
+    param: {module: main, action: searchACars }
 
 reserve:
     url: /reserva/auto/:carId
@@ -89,6 +104,10 @@ reserve:
 reserve_approve:
     url: /reserva/aprobar
     param: { module: reserves, action: approve }
+
+reserve_calculate_price:
+    url: /reserva/calcular-precio
+    param: { module: reserves, action: calculatePrice }
 
 reserve_change:
     url: /reserva/cambiar
@@ -118,6 +137,10 @@ return_form:
     url: /informe-de-devolucion/:tokenReserve
     param: { module: main, action: generarFormularioEntregaDevolucion }
 
+search_cars:
+    url: /arriendo-de-autos
+    param: { module: main, action:searchACars }
+    
 terms_and_conditions:
     url: /terminos-y-condiciones
     param: { module: main, action: terminos }

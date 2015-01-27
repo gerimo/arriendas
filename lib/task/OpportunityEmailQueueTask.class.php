@@ -42,13 +42,12 @@ EOF;
                 $host = 'http://www.arriendas.cl';
             }
 
-            $routing    = $this->getRouting();            
+            $routing = $this->getRouting();
 
             // Se obtiene una oportunidad por cada reserva diferente
             $q = Doctrine_Core::getTable('OpportunityEmailQueue')
                 ->createQuery('OEQ')
                 ->where('OEQ.sended_at IS NULL');
-                /*->groupBy('OEQ.reserve_id');*/
 
             $OpportunityEmails = $q->execute();
 
@@ -57,11 +56,13 @@ EOF;
                 $Owner   = $OpportunityEmail->getCar()->getUser();
                 $Reserve = $OpportunityEmail->getReserve();
 
-                $acceptUrl  = $host . $routing->generate('opportunities_mailing_approve', array(
+                /*$acceptUrl  = $host . $routing->generate('opportunities_mailing_approve', array(
                     'reserve_id' => $OpportunityEmail->getReserve()->id,
                     'car_id'     => $OpportunityEmail->getCar()->id,
                     'signature'  => $OpportunityEmail->getReserve()->getSignature(),
-                ));
+                ));*/
+
+                $acceptUrl  = $host . $routing->generate('opportunities');
 
                 $imageUrl   = $host . $routing->generate('opportunities_mailing_open', array(
                     'id'         => $OpportunityEmail->id,
@@ -70,7 +71,7 @@ EOF;
 
                 $this->log("[".date("Y-m-d H:i:s")."] Envio de correo de opportunidad a {$Owner->firstname} {$Owner->lastname}, Reserva {$Reserve->id}");
 
-                $subject = "Oportunidad especial para arrendar tu auto";
+                $subject = "Oportunidad especial para arrendar tu auto patente ".$OpportunityEmail->getCar()->patente;
                 $body    = get_partial('emails/opportunityMailing', array('Reserve' => $Reserve, 'Car' => $OpportunityEmail->getCar(), "acceptUrl" => $acceptUrl, "imageUrl" => $imageUrl));
                 $from    = array("soporte@arriendas.cl" => "Oportunidades Arriendas.cl");
                 $to      = array($Owner->email => $Owner->firstname." ".$Owner->lastname);
@@ -79,7 +80,7 @@ EOF;
                 $message->setSubject($subject);
                 $message->setBody($body, "text/html");
                 $message->setFrom($from);
-                /*$message->setTo($to);*/
+                $message->setTo($to);
                 $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
                 
                 $this->getMailer()->send($message);

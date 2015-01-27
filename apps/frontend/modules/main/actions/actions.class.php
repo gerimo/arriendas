@@ -32,8 +32,7 @@ class mainActions extends sfActions {
             $this->getUser()->setAttribute('geolocalizacion', false);
         }
 
-        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
-        if ($Holiday || date("N") == 6 || date("N") == 7) {
+        if (Utils::isWeekend()) {
             $this->isWeekend = true;
         }
     }
@@ -259,21 +258,14 @@ class mainActions extends sfActions {
         $isLowConsumption   = $request->getPostParameter('isLowConsumption', false) === 'true' ? true : false;
         $isMorePassengers   = $request->getPostParameter('isMorePassengers', false) === 'true' ? true : false;
 
-        $isWeekend = false;
-
         try {
-
-            $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
-            if ($Holiday || date("N") == 6 || date("N") == 7) {
-                $isWeekend = true;
-            }
 
             $this->getUser()->setAttribute('from', date("Y-m-d H:i:s", strtotime($from)));
             $this->getUser()->setAttribute('to', date("Y-m-d H:i:s", strtotime($to)));
             $this->getUser()->setAttribute("mapCenterLat", $mapCenterLat);
-            $this->getUser()->setAttribute("mapCenterLng", $mapCenterLng);            
+            $this->getUser()->setAttribute("mapCenterLng", $mapCenterLng);
 
-            $return["cars"] = CarTable::findCars($from, $to, $isMap, $isWeekend, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers);
+            $return["cars"] = CarTable::findCars($from, $to, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers);
 
         } catch (Exception $e) {
             $return["error"] = true;
@@ -2642,12 +2634,46 @@ class mainActions extends sfActions {
         
     }
 
+     //////////////////Busca un auto//////////////////////////////
 
-    //////////////////Preguntas Frecuentes//////////////////////////////
+    public function executeSearchACars(sfWebRequest $request) {
+        
+        $this->setLayout("newIndexLayout");
+
+        $this->Region = Doctrine_Core::getTable("Region")->find(13);
+        $this->hasCommune = false;
+
+        if ($request->hasParameter('region','commune')){
+            $communeSlug = $request->getParameter('commune');
+            $this->hasCommune = Doctrine_Core::getTable('Commune')->findOneBySlug($communeSlug)->id;
+        }
+
+    }
+
+    //////////////////Enlasnoticias//////////////////////////////
+
+    public function executeNews(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+    }
+
+    //////////////////¿ComoFunciona?//////////////////////////////
+
+    public function executeHowWorks(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+    }
+
+    //////////////////ComparePrecios//////////////////////////////
+
+    public function executePricesCompare(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+    }
+
+    //////////////////PreguntasFrecuentes//////////////////////////////
 
     public function executeQuestions(sfWebRequest $request) {
         $this->setLayout("newIndexLayout");
     }
+
 
     //////////////////LOGIN//////////////////////////////
 

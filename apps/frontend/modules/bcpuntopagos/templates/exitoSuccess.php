@@ -40,10 +40,10 @@
             <p>Te enviamos estos datos a tu correo</p>
         </div>  
         <div class="row hidden-xs" style="margin-top: 30px">
-          <a class="col-md-offset-7 col-md-4 btn-a-action" href="<?php echo url_for("reserves")?>">Siguiente</a>
+          <a class="col-md-offset-7 col-md-4 btn btn-a-action" href="<?php echo url_for("reserves")?>">Siguiente</a>
         </div>
         <div class="row visible-xs" style="margin-top: 8px">
-          <a class="btn-block btn-a-action" href="<?php echo url_for("reserves")?>">Siguiente</a>
+          <a class="btn-block btn btn-a-action" href="<?php echo url_for("reserves")?>">Siguiente</a>
         </div> 
       </div>
     </div>

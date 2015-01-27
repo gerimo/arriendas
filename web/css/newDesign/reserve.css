@@ -825,6 +825,11 @@ a:focus {
     .panel-title img {
         height: 22px;
     }
+
+    .price-area strong {
+        font-size: 36px;
+    }
+
     .reserve-title {
         padding-left: 14px;
     }
@@ -849,7 +854,7 @@ a:focus {
         font-size: 24px;
         font-weight: 400;
         margin: 10px 0 20px 0;
-        text-indent: 10px;
+        padding: 0 10px;
     }
 
     h1.body-title {
@@ -862,7 +867,7 @@ a:focus {
         font-size: 16px;
         font-weight: 300;
         margin: 30px 0 20px 0;
-        text-indent: 10px;
+        padding: 0 10px;
         text-transform: uppercase;
     }
 
@@ -887,7 +892,7 @@ a:focus {
     }
 
     .features {
-        margin: 0 0 0 40px;
+        margin: 0 0 0 20px;
         padding: 0;
     }
 
@@ -995,179 +1000,4 @@ a:focus {
     #btn-pay {
         margin-top: 40px;
     }
-
-    /*********************************/
-    
-    /*#payments input{
-        width: 17px;
-        margin: -1px 0px 0px -31px;
-    }
-
-    .time{
-        font-size: 15px;
-        line-height: 24px;
-    }
-
-    .datetimepicker{
-        font-size: 18px;
-        line-height: 25px;
-        font-weight: 500;
-        margin: 0 0 14px;
-        padding: 2px 19px 2px 0;
-    }
-    .disponibilidad .km-area:after {
-        top: 111px;
-    }
-    
-    .step-list .info{
-        padding: 18px 0 0 0;
-    }
-    .mobile .auto , .mobile .disponibilidad{
-        margin-top: 20px;
-    }
-    .carousal-area{
-        margin: 0px 0 20px 0px;
-        padding: 0;
-    }
-    .dis{
-        display: inline;
-    }
-    .secure-payment{
-        display: none;
-    }
-    .content h1 {
-        display: block;
-        font-size: 19px;
-        font-weight: 300;
-        text-align: center;
-        margin: 0 0 11px;
-    }
-    .steps-title {
-        font-size: 20px;
-        font-weight: 300;
-        margin: 35px 0 35px 0;
-    }
-    .step-list .list li .icon-svg_16 {
-        left: 5px;
-        color: #00bf00;
-        top: 8px;
-        font-size: 13px;
-    }
-    .step-list .list li {
-        font-size: 15px;
-        font-weight: 300;
-        padding: 0 0 22px 24px;
-    }
-    .step-list h2 {
-        font-size: 12px;
-        line-height: 24px;
-        margin: 0 0 5px;
-    }
-    .radio label {
-        font-size: 12px;
-        line-height: 18px;
-    }
-    .tres{
-        font-size: 12px;
-        line-height: 24px;
-        margin: 0 40px 5px;
-    }
-    .step-list .text {
-        font-size: 14px;
-        line-height: 28px;
-        padding: 0 10px;
-        margin: 0 0 23px;
-    }
-
-    .info .display {
-        margin-left: 19px;
-    }
-
-    .fake{
-        padding: 0;
-    }
-
-    
-
-    
-
-    #license-container h1 {
-        font-size: 22px;
-        font-weight: 600;
-        margin: 30px 0;
-        text-transform: uppercase;
-    }
-
-    #license-container h2 {
-        font-size: 16px;
-        font-weight: 500;
-        margin: 40px 0;
-    }
-
-    #license-container button {
-        background-color: white;
-        border: solid 1px white;
-        border-radius: 0;
-        margin: 0 0 40px 0;
-        text-transform: uppercase;
-        width: 90%;
-    }
-
-    .reserve-title {
-        font: 700 18px 'Roboto', sans-serif;
-    }
-
-    .reserve-subtitle {
-        font: 500 16px 'Roboto', sans-serif;
-        margin-top: 10px;
-    }
-
-    .title-price {
-        color: #c8427f;
-        display: inline;
-        font-size: 48px;
-        font-weight: 700;
-        line-height: 55px;
-        margin: 0;
-    }
-
-    
-
-    .reserve-box-summary li {
-        margin-top: 20px;
-    }
-
-    .reserve-box-summary i {
-        font-size: 18px;
-    }    
-
-    #fromTo li {
-        background: #464646;
-        color: #fff;
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 35px;
-        margin: 15px 0 0 0;
-        text-align: center;
-    }
-
-    #warranty-container {
-        font-size: 18px;
-    }
-
-    #sub-price-container {
-        padding-bottom: 5px;
-    }
-
-    #warranty-form label {
-        font-size: 14px;
-    }
-
-    #total {
-        padding-bottom: 5px;
-    }
-
-    #payments-form .radio {
-        height: 100px;
-    }*/
 }

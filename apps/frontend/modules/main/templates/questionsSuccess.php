@@ -7,7 +7,84 @@
     <div class="col-md-offset-3 col-md-6">
         <div class="BCW">
 	        <h1>Preguntas Frecuentes</h1>
-	        <h2>Información para Dueños</h2>
+	        
+			 <h2>Información para Arrendatarios</h2>
+			<div class="panel-group-Leese" id="accordions" role="tablist" aria-multiselectable="true">
+			 	<div class="panel panel-default">
+			    	<div class="panel-heading" role="tab" id="headingOne">
+			      <h4 class="panel-title">
+			        <a class="collapsed"data-toggle="collapse" data-parent="#accordions" href="#leeseOne" aria-expanded="false" aria-controls="leeseOne">
+			           ¿Qué debo hacer para reservar un auto?<i class="pull-right fa fa-chevron-down"></i>
+			        </a>
+			      </h4>
+			    	</div>
+				    <div id="leeseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+				     	<div class="panel-body">
+							Debes registrarte y pagar el auto que necesites.
+						</div>
+				    </div>
+			  	</div>
+			  	<div class="panel panel-default">
+				    <div class="panel-heading" role="tab" id="headingTwo">
+				      <h4 class="panel-title">
+				        <a class="collapsed" data-toggle="collapse" data-parent="#accordions" href="#leeseTwo" aria-expanded="false" aria-controls="leeseTwo">
+				           ¿Qué necesito para arrendar?<i class="pull-right fa fa-chevron-down"></i>
+				        </a>
+				      </h4>
+				    </div>
+				    <div id="leeseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+				      <div class="panel-body">
+				        Necesitas registrarte en la página conforme a lo solicitado,
+				        tener una licencia válida y cédula de identidad, ser mayor de 24 años
+				        y pagar el arriendo con un medio de pago a tu nombre.
+				      </div>
+				    </div>
+				</div>
+			  	<div class="panel panel-default">
+			    	<div class="panel-heading" role="tab" id="headingThree">
+			      <h4 class="panel-title">
+			        <a class="collapsed" data-toggle="collapse" data-parent="#accordions" href="#leeseThree" aria-expanded="false" aria-controls="leeseThree">
+			           ¿Dónde se retira el auto?<i class="pull-right fa fa-chevron-down"></i>
+			        </a>
+			      </h4>
+			    	</div>
+			    	<div id="leeseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+			      <div class="panel-body">
+			        El auto se retira en el domicilio del dueño del auto. Puedes buscar autos en tu comuna, a través de nuestro mapa de búsqueda.
+			      </div>
+			    	</div>
+			  	</div>
+			  	<div class="panel panel-default">
+			    	<div class="panel-heading" role="tab" id="headingFour">
+			      		<h4 class="panel-title">
+			        	<a class="collapsed" data-toggle="collapse" data-parent="#accordions" href="#leeseFour" aria-expanded="false" aria-controls="leeseFour">
+			          		¿Es necesario realizar un depósito en garantía?<i class="pull-right fa fa-chevron-down"></i>
+			        	</a>
+			      		</h4>
+			    	</div>
+			    	<div id="leeseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+			      		<div class="panel-body">
+							El depósito en garantía es opcional por $180,000, estos se devuelven al final del arriendo en caso de que el auto vuelva en buenas condiciones. Si decides no realizar el depósito en garantía debes pagar un fijo adicional de 8,700 pesos que van a un fondo solidario (estos NO se devuelven).
+			      		</div>
+			    	</div>
+			  	</div>
+			  	<div class="panel panel-default">
+			    	<div class="panel-heading" role="tab" id="headingFive">
+			      <h4 class="panel-title">
+			        <a class="collapsed" data-toggle="collapse" data-parent="#accordions" href="#leeseFive" aria-expanded="false" aria-controls="leeseFive">
+			           ¿Cuáles son los medios de pago?<i class="pull-right fa fa-chevron-down"></i>
+			        </a>
+			      </h4>
+			    	</div>
+			    	<div id="leeseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+			      <div class="panel-body">
+			        Debes pagar por transferencia bancaria desde una cuenta a tu nombre . No aceptamos efectivo, cheques o tarjetas de crédito.
+			      </div>
+			    	</div>
+			  	</div>
+			</div>
+			<br>
+			<h2>Información para Dueños</h2>
 			<div class="panel-group-Owner" id="accordion" role="tablist" aria-multiselectable="true">
 			 	<div class="panel panel-default">
 			    	<div class="panel-heading" role="tab" id="headingOne">
@@ -84,86 +161,12 @@
 			    	</div>
 			  	</div>
 			</div>
-			<br>
-
-			 <h2>Información para Arrendatarios</h2>
-			<div class="panel-group-Leese" id="accordions" role="tablist" aria-multiselectable="true">
-			 	<div class="panel panel-default">
-			    	<div class="panel-heading" role="tab" id="headingOne">
-			      <h4 class="panel-title">
-			        <a class="collapsed"data-toggle="collapse" data-parent="#accordions" href="#leeseOne" aria-expanded="false" aria-controls="leeseOne">
-			           ¿Qué debo hacer para reservar un auto?<i class="pull-right fa fa-chevron-down"></i>
-			        </a>
-			      </h4>
-			    	</div>
-				    <div id="leeseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-				     	<div class="panel-body">
-							Debes registrarte y pagar el auto que necesites.
-						</div>
-				    </div>
-			  	</div>
-			  	<div class="panel panel-default">
-				    <div class="panel-heading" role="tab" id="headingTwo">
-				      <h4 class="panel-title">
-				        <a class="collapsed" data-toggle="collapse" data-parent="#accordions" href="#leeseTwo" aria-expanded="false" aria-controls="leeseTwo">
-				           ¿Qué necesito para arrendar?<i class="pull-right fa fa-chevron-down"></i>
-				        </a>
-				      </h4>
-				    </div>
-				    <div id="leeseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-				      <div class="panel-body">
-				        Necesitas registrarte en la página conforme a lo solicitado,
-				        tener una licencia válida y cédula de identidad, ser mayor de 24 años
-				        y pagar el arriendo con un medio de pago a tu nombre.
-				      </div>
-				    </div>
-				</div>
-			  	<div class="panel panel-default">
-			    	<div class="panel-heading" role="tab" id="headingThree">
-			      <h4 class="panel-title">
-			        <a class="collapsed" data-toggle="collapse" data-parent="#accordions" href="#leeseThree" aria-expanded="false" aria-controls="leeseThree">
-			           ¿Dónde se retira el auto?<i class="pull-right fa fa-chevron-down"></i>
-			        </a>
-			      </h4>
-			    	</div>
-			    	<div id="leeseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-			      <div class="panel-body">
-			        El auto se retira en el domicilio del dueño del auto. Puedes buscar autos en tu comuna, a través de nuestro mapa de búsqueda.
-			      </div>
-			    	</div>
-			  	</div>
-			  	<div class="panel panel-default">
-			    	<div class="panel-heading" role="tab" id="headingFour">
-			      		<h4 class="panel-title">
-			        	<a class="collapsed" data-toggle="collapse" data-parent="#accordions" href="#leeseFour" aria-expanded="false" aria-controls="leeseFour">
-			          		¿Es necesario realizar un depósito en garantía?<i class="pull-right fa fa-chevron-down"></i>
-			        	</a>
-			      		</h4>
-			    	</div>
-			    	<div id="leeseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-			      		<div class="panel-body">
-							El depósito en garantía es opcional por $180,000, estos se devuelven al final del arriendo en caso de que el auto vuelva en buenas condiciones. Si decides no realizar el depósito en garantía debes pagar un fijo adicional de 8,700 pesos que van a un fondo solidario (estos NO se devuelven).
-			      		</div>
-			    	</div>
-			  	</div>
-			  	<div class="panel panel-default">
-			    	<div class="panel-heading" role="tab" id="headingFive">
-			      <h4 class="panel-title">
-			        <a class="collapsed" data-toggle="collapse" data-parent="#accordions" href="#leeseFive" aria-expanded="false" aria-controls="leeseFive">
-			           ¿Cuáles son los medios de pago?<i class="pull-right fa fa-chevron-down"></i>
-			        </a>
-			      </h4>
-			    	</div>
-			    	<div id="leeseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-			      <div class="panel-body">
-			        Debes pagar por transferencia bancaria desde una cuenta a tu nombre . No aceptamos efectivo, cheques o tarjetas de crédito.
-			      </div>
-			    	</div>
-			  	</div>
-			</div>
-
        	</div>
  	</div>
 </div>
 
 <div class="hidden-xs space-100"></div>
+
+<script>
+	$("a[data-target='questions']").parent().addClass("active");
+</script>

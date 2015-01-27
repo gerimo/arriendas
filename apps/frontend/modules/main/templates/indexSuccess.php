@@ -265,19 +265,30 @@
         var communeId = parseInt($("#commune option:selected").val());
 
         var isAutomatic = false;
-        if ($('#isAutomatic').is(':checked')) {
-            isAutomatic = true;
-        }
+        $(".isAutomatic").each(function(){
+            if ($(this).is(':checked')) {
+                isAutomatic = true;
+            }
+        });
         
         var isLowConsumption = false;
-        if ($('#isLowConsumption').is(':checked')) {
-            isLowConsumption = true;
-        }
+        $(".isLowConsumption").each(function(){
+            if ($(this).is(':checked')) {
+                isLowConsumption = true;
+            }
+        });
 
         var isMorePassengers = false;
-        if ($('#isMorePassengers').is(':checked')) {
-            isMorePassengers = true;
-        }        
+        $(".isMorePassengers").each(function(){
+            if ($(this).is(':checked')) {
+                isMorePassengers = true;
+            }
+        });
+
+        var isMap = false;
+        if ($("#tab-map").is(":visible")) {
+            isMap = true;
+        }
 
         // Validación de la búsqueda
         var error = false;
@@ -305,7 +316,7 @@
         }
 
         var parameters = {
-            isMap: $('div[data-target="#tab-map"]').hasClass("activo"),
+            isMap: isMap,//$('div[data-target="#tab-map"]').hasClass("activo"),
             SWLat: swLat,
             SWLng: swLng,
             NELat: neLat,
@@ -377,7 +388,7 @@
                     
                     windowMarker += "</div>";
 
-                    windowMarker += "<p class='text-right'><a class='btn-a-action' href='"+reserveUrl.replace("carId", Car.id)+"' target='_blank'>RESERVAR</a></p>";
+                    windowMarker += "<p class='text-right'><a class='btn btn-a-action btn-sm' href='"+reserveUrl.replace("carId", Car.id)+"' target='_blank'>RESERVAR</a></p>";
 
                     if (infowindow) {
                         infowindow.close();
@@ -423,7 +434,7 @@
                     article += "<h2>"+ Car.brand +" "+ Car.model +"<small>, "+Car.year+"</small></h2>";
                     /*article += "<span class='sub-heading'>A 2 km Metro <strong>Tobalaba</strong></span>";*/
                     article += "<p class='price'>$"+ Car.price +" <small style='color: black; font-weight: 300'>TOTAL</small></p>";
-                    article += "<p class='text-right'><a class='btn-a-action' href='"+reserveUrl.replace("carId", Car.id)+"' class='reserve' target='_blank'>RESERVAR</a></p>";
+                    article += "<p class='text-right'><a class='btn btn-a-action btn-sm' href='"+reserveUrl.replace("carId", Car.id)+"' class='reserve' target='_blank'>RESERVAR</a></p>";
                     /*article += "<img src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + contador + "|05a4e7|ffffff' />";*/
                     article += "</div>";
                     article += "</div>";
@@ -472,12 +483,8 @@
         <video id="video" autoplay loop >
             <source src="/videos/video.mp4" type="video/mp4">
                 Your browser does not support HTML5 video.
-            </video> 
-        </div>
-
-   <!--  <div class="col-xs-12 m hidden-md" id="section-home-background">
-        <img id="section-home-background-img" src="/images/newDesign/background-home.jpg">
-    </div> -->
+        </video> 
+    </div>
 
     <div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
 
@@ -504,7 +511,7 @@
         <!-- List -->
         <div class="col-xs-6 col-sm-3 col-md-3" id="region-container">
             <select class="region form-control" id="region">
-                <option disabled value="<?php echo $Region->id ?>"><?php echo $Region->name ?></option>
+                <option disabled selected value="<?php echo $Region->id ?>"><?php echo $Region->name ?></option>
             </select>
         </div>
         <div class="col-xs-6 col-sm-3 col-md-3" id="commune-container">
@@ -533,21 +540,22 @@
 
         <!-- Search -->
         <div class="col-xs-12 col-sm-2 col-md-2 text-center">
-            <a class="btn-a-action btn-block" href id="search">Buscar</a>
+            <a class="btn btn-a-action btn-block" href id="search">Buscar</a>
         </div>
     </div>
 </section>
 
 <section id="section-map">
+
     <div class="hidden-xs row" id="section-map-filters">
         <div class=" col-sm-2 col-md-2 text-center">
             <strong class="heading">Filtros</strong>
         </div>
         <div class="col-sm-7 col-md-7">
             <ul>
-                <li><input type="checkbox" name="filter" id="isAutomatic"> Automático</li>
-                <li><input type="checkbox" name="filter" id="isLowConsumption"> Petrolero</li>
-                <li><input type="checkbox" name="filrer" id="isMorePassengers"> Más de 5 pasajeros</li>
+                <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
+                <li><input type="checkbox" name="filter" class="isLowConsumption"> Petrolero</li>
+                <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
             </ul>
         </div>
         <div class="col-sm-3 col-md-3 hidden-xs tabset">
@@ -574,9 +582,9 @@
             <div class="collapse navbar-collapse" id="filters">
                 <div class="container">
                     <ul class="nav navbar-nav">
-                        <li><input type="checkbox" name="filter" id="isAutomatic"> Automático</li>
-                        <li><input type="checkbox" name="filter" id="isLowConsumption"> Petrolero</li>
-                        <li><input type="checkbox" name="filrer" id="isMorePassengers"> Más de 5 pasajeros</li>
+                        <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
+                        <li><input type="checkbox" name="filter" class="isLowConsumption"> Petrolero</li>
+                        <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
                     </ul>
                 </div>
             </div>
@@ -600,7 +608,7 @@
 
         <div class="tab-container" id="tab-list">
             <div class="row" id="list">
-                <div id="list-loading" class="loading" style="text-align: center; margin-top: 10%"><?php echo image_tag('ajax-loader.gif', array("width" => "80px", "height" => "80px")) ?></div>
+                <div id="list-loading" class="loading" style="text-align: center; margin: 4% 0 4% 0"><?php echo image_tag('ajax-loader.gif', array("width" => "80px", "height" => "80px")) ?></div>
                 <div class="row" id="list-container"></div>
             </div>
         </div>
@@ -609,117 +617,106 @@
 
 <section id="section-how-works">
     <div class="row">
-        <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
-            <div class="col-xs-12 col-sm-offset-0  col-md-offset-0 "> <h2 class="title"><span>¿Cómo Funciona?</span></h2></div>
+        <div class="col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
+            <h2 class="title"><span>¿Cómo Funciona?</span></h2>
             <iframe class="iframe" src="//player.vimeo.com/video/45668172?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff"  frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>    
         </div>
     </div>
 </section>
 
 <section id="section-compare-prices">
-    <div class="row text-center">
-        <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
-            <div class="col-xs-12 col-sm-offset-0  col-md-offset-0">
-               <h2 class="title">Compare precios</h2>
-           </div>
+
+    <div class="row">
+        <div class="col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
+            <h2 class="title">Compare precios</h2>
        </div>
-   </div>
-   <div class="visible-xs space-20"></div>
-   <div class="row">
-    <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 table-responsive text-center">
-        <table id="compare-prices-table">
-            <thead>
-                <tr>
-                    <th class="table-transparent text-"></th>
-                    <th><img src="/images/newDesign/logo-avis.svg"></th>
-                    <th><img src="/images/newDesign/logo-hertz.svg"></th>
-                    <th><img src="/images/newDesign/logo-europcar.svg"></th>
-                    <th class="table-active"><img src="/images/newDesign/logo.svg"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><span class = "td">City Car</span></td>
-                    <td><span class = "td">$ 40.877</span></td>
-                    <td><span class = "td">$ 33.858</span></td>
-                    <td><span class = "td">$ 34.580</span></td>
-                    <td class = "last"><span class = "td">$ 17.000</span></td>
-                </tr>
-                <tr>
-                    <td><span class = "td">Mediano</span></td>
-                    <td><span class = "td">$ 49.207</span></td>
-                    <td><span class = "td">$ 51.946</span></td>
-                    <td><span class = "td">$ 54.081</span></td>
-                    <td class = "last"><span class = "td">$ 25.000</span></td>
-                </tr>
-                <tr>
-                    <td><span class = "td">Camioneta SUV</span></td>
-                    <td><span class = "td">$ 89.667</span></td>
-                    <td><span class = "td">$ 73.337</span></td>
-                    <td><span class = "td">$ 74.413</span></td>
-                    <td class = "last" ><span class = "td">$ 35.000</span></td>
-                </tr>
-            </tbody>
-        </table>
     </div>
-    <div class="hidden-xs col-sm-offset-2 col-sm-8 col-md-offset-1 col-md-10 text-center">
-        <p class = "text-table">Precios con IVA, aplicando descuento por reservas en internet, con seguro de daños, 
-            robo y accidentes personales. Muestra tomada 1/1/2015 en sus páginas de internet</p>
+   
+    <div class="visible-xs space-20"></div>
+
+    <div class="row">
+        <div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 table-responsive text-center">
+            <table id="compare-prices-table">
+                <thead>
+                    <tr>
+                        <th class="table-transparent text-"></th>
+                        <th><img src="/images/newDesign/logo-avis.svg"></th>
+                        <th><img src="/images/newDesign/logo-hertz.svg"></th>
+                        <th><img src="/images/newDesign/logo-europcar.svg"></th>
+                        <th class="table-active"><img src="/images/newDesign/logo.svg"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class = "td">City Car</span></td>
+                        <td><span class = "td">$ 40.877</span></td>
+                        <td><span class = "td">$ 33.858</span></td>
+                        <td><span class = "td">$ 34.580</span></td>
+                        <td class = "last"><span class = "td">$ 17.000</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class = "td">Mediano</span></td>
+                        <td><span class = "td">$ 49.207</span></td>
+                        <td><span class = "td">$ 51.946</span></td>
+                        <td><span class = "td">$ 54.081</span></td>
+                        <td class = "last"><span class = "td">$ 25.000</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class = "td">Camioneta SUV</span></td>
+                        <td><span class = "td">$ 89.667</span></td>
+                        <td><span class = "td">$ 73.337</span></td>
+                        <td><span class = "td">$ 74.413</span></td>
+                        <td class = "last" ><span class = "td">$ 35.000</span></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <section class="hidde-sm hidden-md visible-xs"id="section-condition">
-        <div class="row">
-            <div class="col-xs-offset-1 col-xs-10 hidden-sm hidden-md">
-                <div class="col-xs-12 col-sm-offset-0  col-md-offset-0"> <h2 class="title"><span>Condiciones de Arriendo</span></h2></div>
-                <p>Debes tener al menos 24 años para poder arrendar.</p>
-                <p>Tienes que contar con una licencia de conducir valida.</p>
-                <p>Debes pagar con una cuenta bancaria a tu nombre (no puede ser de un tercero).</p>
+    <div class="row">
+        <div class="col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
+            <br>
+            <p class="hidden-xs text-center">Precios con IVA, aplicando descuento por reservas en internet, con seguro de daños, robo y accidentes personales. Muestra tomada 1/1/2015 en sus páginas de internet</p>
+       </div>
+    </div>
+</section>
+
+<section class="visible-xs hidden-sm hidden-md" id="section-condition">
+    
+    <div class="row">
+        <div class="col-xs-offset-1 col-xs-10">
+            <h2 class="title"><span>Condiciones de Arriendo</span></h2>
+            <p>Debes tener al menos 24 años para poder arrendar.</p>
+            <p>Tienes que contar con una licencia de conducir valida.</p>
+            <p>Debes pagar con una cuenta bancaria a tu nombre (no puede ser de un tercero).</p>
+        </div>
+    </div>
+    <div class="visible-xs hidden-sm hidden-md space-40"></div>
+</section>
+
+<section class="hidden-xs" id="section-on-news">
+
+    <div class="row">
+        <div class="col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
+            <h2 class="title">Arriendas en las noticias</h2>
+        </div>
+    </div>
+
+    <div class="row" id="noticias">
+        <div class="col-sm-offset-2 col-sm-8 col-md-offset-2 col-md-8">
+            <div id="section-on-news-carousel">
+                <div class="normal"><a href="http://www.t13.cl/videos/actualidad/arrienda-tu-auto-es-la-nueva-tendencia-entre-los-chilenos" target="_blank"><img src="/images/newDesign/logos_canais/13.png" alt="Canal 13"></a></div>
+                <div><a href="http://www.cnnchile.com/noticia/2014/01/10/arriendas-el-emprendimiento-que-permite-arrendar-tu-propio-auto" target="_blank"><img src="/images/newDesign/logos_canais/LogoCNN.png" alt="CNN Chile"></a></div>
+                <div class="normal"><a href="http://www.24horas.cl/nacional/rent-a-car-vecino-la-nueva-forma-de-viajar-906946" target="_blank"><img src="/images/newDesign/logos_canais/logotvn2.png" alt="TVN"></a></div>
+                <div><a href="http://www.emol.com/noticias/economia/2012/07/27/552815/emprendedor-estrenara-primer-sistema-de-arriendo-de-vehiculos-por-hora-de-chile.html" target="_blank"><img src="/images/newDesign/logos_canais/LogoEmol.png" alt="EMOL"></a></div>
+                <div><a href="http://www.lun.com/lunmobile//pages/NewsDetailMobile.aspx?IsNPHR=1&dt=2012-10-23&NewsID=0&BodyId=0&PaginaID=6&Name=6&PagNum=0&SupplementId=0&Anchor=20121023_6_0_0" target="_blank"><img src="/images/newDesign/logos_canais/LogoLUN.png" alt="Las Últimas Noticias"></a></div>
+                <div><a href="http://www.tacometro.cl/prontus_tacometro/site/artic/20121030/pags/20121030152946.html" target="_blank"><img src="/images/newDesign/logos_canais/LogoPublimetro.png" alt="Publimetro" ></a></div>
+                <div><a href="http://www.lasegunda.com/Noticias/CienciaTecnologia/2012/08/774751/arriendascl-sistema-de-alquiler-de-autos-por-horas-debuta-en-septiembre" target="_blank"><img src="/images/newDesign/logos_canais/LogoLaSegunda.png" alt="La Segunda"></a></div>
+                <div><a href="http://www.lacuarta.com/noticias/cronica/2013/08/63-157571-9-ahora-puedes-arrendar-el-automovil-de-tu-vecino.shtml" target="_blank"><img src="/images/newDesign/logos_canais/LogoLaCuarta.png" alt="La Cuarta"></a></div>
+                <div><a href="http://www.diariopyme.cl/arrienda-tu-auto-y-gana-dinero-extra-a-fin-de-mes/prontus_diariopyme/2013-06-23/212000.html" target="_blank"><img src="/images/newDesign/logos_canais/LogoDiarioPyme.png" alt="Diario PYME"></a></div>
             </div>
         </div>
-        <div class="visible-xs hidden-sm hidden-md space-40"></div>
-    </section>
-
-    <div>
-        <?php $U = sfContext::getInstance()->getUser(); ?>
-        <?php if ($sf_user->isAuthenticated()): ?>
-           <section class="hidden-sm hidden-md hidden-xs"id="section-condition"></section>
-       <?php else: ?>                        
-        <section class="visible-xs hidden-sm hidden-md text-center">
-            <div class="row" id = "link-holder">
-                <a href="<?php echo url_for('main/login') ?>" style="font-size: 18px"><strong>INGRESAR</strong></a>
-            </div>
-        </section>
-
-    <?php endif ?>
-    <div>
-    </section>
-
-    <section class="hidden-xs" id="section-on-news">
-
-        <div class="row">
-            <div class="hidden-xs col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
-             <div class="col-xs-offset-3 col-xs-8 col-sm-offset-0 col-md-offset-0"> <h2 class="title">Arriendas en las noticias</h2></div>
-         </div>
-     </div>
- </div>
-
- <div class="row" id = "noticias">
-
-    <div class="hidden-xs col-sm-offset-2 col-sm-8 col-md-offset-2 col-md-8">
-        <div id="section-on-news-carousel">
-            <div class = "normal"><a href="http://www.t13.cl/videos/actualidad/arrienda-tu-auto-es-la-nueva-tendencia-entre-los-chilenos" target="_blank"><img src="/images/newDesign/logos_canais/13.png" alt="Canal 13"></a></div>
-            <div><a href="http://www.cnnchile.com/noticia/2014/01/10/arriendas-el-emprendimiento-que-permite-arrendar-tu-propio-auto" target="_blank"><img src="/images/newDesign/logos_canais/LogoCNN.png" alt="CNN Chile"></a></div>
-            <div class = "normal"><a href="http://www.24horas.cl/nacional/rent-a-car-vecino-la-nueva-forma-de-viajar-906946" target="_blank"><img src="/images/newDesign/logos_canais/logotvn2.png" alt="TVN"></a></div>
-            <div><a href="http://www.emol.com/noticias/economia/2012/07/27/552815/emprendedor-estrenara-primer-sistema-de-arriendo-de-vehiculos-por-hora-de-chile.html" target="_blank"><img src="/images/newDesign/logos_canais/LogoEmol.png" alt="EMOL"></a></div>
-            <div><a href="http://www.lun.com/lunmobile//pages/NewsDetailMobile.aspx?IsNPHR=1&dt=2012-10-23&NewsID=0&BodyId=0&PaginaID=6&Name=6&PagNum=0&SupplementId=0&Anchor=20121023_6_0_0" target="_blank"><img src="/images/newDesign/logos_canais/LogoLUN.png" alt="Las Últimas Noticias"></a></div>
-            <div><a href="http://www.tacometro.cl/prontus_tacometro/site/artic/20121030/pags/20121030152946.html" target="_blank"><img src="/images/newDesign/logos_canais/LogoPublimetro.png" alt="Publimetro" ></a></div>
-            <div><a href="http://www.lasegunda.com/Noticias/CienciaTecnologia/2012/08/774751/arriendascl-sistema-de-alquiler-de-autos-por-horas-debuta-en-septiembre" target="_blank"><img src="/images/newDesign/logos_canais/LogoLaSegunda.png" alt="La Segunda"></a></div>
-            <div><a href="http://www.lacuarta.com/noticias/cronica/2013/08/63-157571-9-ahora-puedes-arrendar-el-automovil-de-tu-vecino.shtml" target="_blank"><img src="/images/newDesign/logos_canais/LogoLaCuarta.png" alt="La Cuarta"></a></div>
-            <div><a href="http://www.diariopyme.cl/arrienda-tu-auto-y-gana-dinero-extra-a-fin-de-mes/prontus_diariopyme/2013-06-23/212000.html" target="_blank"><img src="/images/newDesign/logos_canais/LogoDiarioPyme.png" alt="Diario PYME"></a></div>
-        </div>
     </div>
-</div>
 </section>
 
 <section class="hidden-xs" id="section-testimonials">
