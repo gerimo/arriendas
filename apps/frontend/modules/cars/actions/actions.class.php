@@ -195,11 +195,13 @@ class carsActions extends sfActions {
             }*/
             if (is_null($carId) || $carId == "") {
                 $Car = new Car();
+                $fechaHoy = Date("Y-m-d");
+                $Car->setFechaSubida($fechaHoy);
             }else{
                 $Car = Doctrine_Core::getTable('car')->find($carId);
             }
             
-            $fechaHoy = Date("Y-m-d");
+
 
             $Car->setAddress($address);
             $Car->setCommuneId($commune);
@@ -211,7 +213,6 @@ class carsActions extends sfActions {
             $Car->setTipoBencina($benzine);
             $Car->setPatente($patent);
             $Car->setUserId($idUsuario);
-            $Car->setFechaSubida($fechaHoy);
             $Car->setColor($color);
             $Car->setLat($lat);
             $Car->setLng($lng);
