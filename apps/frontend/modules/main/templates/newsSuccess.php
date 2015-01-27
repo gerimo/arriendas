@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-md-offset-3 col-md-6">
         <div class="BCW">
-            <h1>Arrienda en las noticias</h1>
+            <h1><i>Arriendas</i> en las noticias</h1>
                 <div class="row col-md-offset-2">
 
                 	<div class="row logos">
