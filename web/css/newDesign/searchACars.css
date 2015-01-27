@@ -101,3 +101,8 @@ h3 .filter{
 .panel-heading{
     background-color: #FAFAFA;
 }
+
+.box {
+    background-color: #fff;
+    padding: 10px;
+}
