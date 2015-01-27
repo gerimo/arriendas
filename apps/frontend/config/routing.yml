@@ -18,7 +18,7 @@ car_photo:
    param: { module: cars, action: photo }
 
 car_edit:
-   url: /auto/editar/:id/
+   url: /auto/editar/:id
    param: { module: cars, action: edit }
 
 car_create:

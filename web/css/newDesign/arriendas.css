@@ -318,6 +318,11 @@ fieldset[disabled] .btn-a-action.active {
   background-color: #fff;
 }
 
+header .btn-a-primary {
+    margin: 5px;
+    padding: 8px 21px !important;
+}
+
 .ui-widget-header {
     background: none;
     background-color: rgb(70, 70, 70);
