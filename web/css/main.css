@@ -1,3 +1,10 @@
+.btn-login {
+    font-size: 16px;
+    margin: 5px;
+    padding: 8px 21px;
+    vertical-align: middle;
+}
+
 /* HEADER TIPO FACEBOOK */
 .header_tools {
     position: relative; 

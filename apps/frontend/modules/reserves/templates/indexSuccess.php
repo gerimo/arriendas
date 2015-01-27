@@ -15,19 +15,22 @@
                 <?php foreach ($PaidReserves as $PaidReserve): ?>
                     <div class="row paid-reserve-container">
                         <div class="col-md-3">
-                            <p class="text-center">Desde</p>
-                            <p class="text-center"><strong><?php echo date("d-m-Y H:i", strtotime($PaidReserve->getDate())) ?></strong></p>
-                            <p class="text-center">Hasta</p>
-                            <p class="text-center"><strong><?php echo date("d-m-Y H:i", strtotime("+".$PaidReserve->getDuration()." hour", strtotime($PaidReserve->getDate()))) ?></strong></p>
+                            <p class="text-center">&nbsp;</p>
+                            <p class="text-center">Desde :<strong><?php echo date("d-m-Y H:i", strtotime($PaidReserve->getDate())) ?></strong></p>
+                            <p class="text-center">Hasta :<strong><?php echo date("d-m-Y H:i", strtotime("+".$PaidReserve->getDuration()." hour", strtotime($PaidReserve->getDate()))) ?></strong></p>
+                            <p class="text-center">&nbsp;</p>
                         </div>
                         <div class="col-md-3">
+                            <p class="text-center">&nbsp;</p>
                             <p class="text-center"><?php echo '$'.number_format(CarTable::getPrice($PaidReserve->getFechaInicio2(), $PaidReserve->getFechaTermino2(), $PaidReserve->getCar()->getPricePerHour(), $PaidReserve->getCar()->getPricePerDay(), $PaidReserve->getCar()->getPricePerWeek(), $PaidReserve->getCar()->getPricePerMonth()), 0, ',', '.') ?></p>
                             <p class="text-center"><?php echo $PaidReserve->getCar()->getModel()->getBrand()->getName()." ".$PaidReserve->getCar()->getModel()->getName() ?></p>
-                            <p class="text-center"></p>
+                            <p class="text-center">&nbsp;</p>
                         </div>
                         <div class="col-md-3">
+                            <p class="text-center">&nbsp;</p>
                             <p class="text-center"><?php echo $PaidReserve->getUser()->getFirstname()." ".$PaidReserve->getUser()->getLastname() ?></p>
                             <p class="text-center"><span class="glyphicon glyphicon-earphone"></span> <?php echo $PaidReserve->getUser()->getTelephone() ?></p>
+                            <p class="text-center">&nbsp;</p>
                         </div>
                         <div class="col-md-3 text-center">
                             <?php if ($PaidReserve->confirmed): ?>

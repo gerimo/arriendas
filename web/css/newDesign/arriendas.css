@@ -14,7 +14,7 @@
 }
 
 .BCW h1 {
-    border-bottom: 1px dashed rgba(70, 70, 70, 0.5);
+    /*border-bottom: 1px dashed rgba(70, 70, 70, 0.5);*/
     color: rgb(70, 70, 70);
     font-size: 32px;
     font-weight: 300;
@@ -316,6 +316,11 @@ fieldset[disabled] .btn-a-action.active {
 .btn-a-action .badge {
   color: #008acb;
   background-color: #fff;
+}
+
+header .btn-a-primary {
+    margin: 5px;
+    padding: 8px 21px !important;
 }
 
 .ui-widget-header {

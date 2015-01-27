@@ -53,6 +53,7 @@ abstract class BaseOpportunityQueue extends sfDoctrineRecord {
              ));
         $this->hasColumn('paid_at', 'timestamp', null, array(
              'type' => 'timestamp',
+             'notnull' => true,
              ));
         $this->hasColumn('reserve_id', 'integer', 4, array(
              'type' => 'integer',

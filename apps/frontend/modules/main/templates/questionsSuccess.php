@@ -166,3 +166,7 @@
 </div>
 
 <div class="hidden-xs space-100"></div>
+
+<script>
+	$("a[data-target='questions']").parent().addClass("active");
+</script>

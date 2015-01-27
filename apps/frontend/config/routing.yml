@@ -17,6 +17,10 @@ car_photo:
    url: /auto/foto
    param: { module: cars, action: photo }
 
+car_edit:
+   url: /auto/editar/:id
+   param: { module: cars, action: edit }
+
 car_create:
    url: /auto/crear
    param: { module: cars, action: create }
@@ -100,6 +104,10 @@ reserve:
 reserve_approve:
     url: /reserva/aprobar
     param: { module: reserves, action: approve }
+
+reserve_calculate_price:
+    url: /reserva/calcular-precio
+    param: { module: reserves, action: calculatePrice }
 
 reserve_change:
     url: /reserva/cambiar

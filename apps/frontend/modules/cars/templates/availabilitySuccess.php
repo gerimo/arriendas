@@ -89,7 +89,7 @@
 
 <script>
 
-function validateForm() {
+    function validateForm() {
 
         var option1     = $('input:checkbox[name=option1]:checked').val();
         var option2     = $('input:checkbox[name=option2]:checked').val();
@@ -124,7 +124,6 @@ function validateForm() {
 
     $('.check').change(function(){
         isChecked();
-        console.log("pls");
     });
 
     function isChecked(){

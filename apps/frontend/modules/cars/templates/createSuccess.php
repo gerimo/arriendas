@@ -129,15 +129,18 @@
                     </div>
 
                     <div class="espacio col-sm-12 col-md-12">
-                        <!--Tipo de Vehículo -->
+                        <!-- Tipo de Vehículo -->
                         <div class="col-sm-4 col-md-4">
-                            <label>Tipo de Vehículo (*)</label>
+                            <label>Tipo de Vehículo (*)</label><br>
                             <select class="form-control" id="typeCar" name="typeCar" placeholder="" type="text">
-                                <option value="">--</option>
-                                <option value="1">Particular</option>
-                                <option value="2">Utilitario</option>
-                                <option value="3">Pick-up</option>
-                                <option value="4">SUV</option>
+                                    <option value="">--</option>
+                                <?php
+                                    foreach ($CarTypes as $CarType):
+                                ?>
+                                    <option value="<?php echo $CarType['id']?>"><?php echo $CarType['name']?></option>
+                                <?php
+                                    endforeach;
+                                ?>
                             </select>
                         </div>
 
