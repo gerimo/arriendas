@@ -201,7 +201,6 @@ class carsActions extends sfActions {
                 $Car->setFechaSubida($fechaHoy);
 
                 // Correo de notificación
-                $User    = $Car->getUser();
 
                 $mail    = new Email();
                 $mailer  = $mail->getMailer();
@@ -226,7 +225,7 @@ class carsActions extends sfActions {
             
 
             error_log($commune);
-            
+
             $Car->setAddress($address);
             $Car->setCommuneId($commune);
             $Car->setModelId($model);
