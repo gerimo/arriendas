@@ -27,7 +27,10 @@
                             <td><?php echo date("Y-m-d H:i", strtotime($Opp["Reserve"]->getFechaTermino2())) ?></td>
                             <td><?php echo '$'.number_format(CarTable::getPrice($Opp["Reserve"]->getFechaInicio2(), $Opp["Reserve"]->getFechaTermino2(), $Opp["Reserve"]->getCar()->getPricePerHour(), $Opp["Reserve"]->getCar()->getPricePerDay(), $Opp["Reserve"]->getCar()->getPricePerWeek(), $Opp["Reserve"]->getCar()->getPricePerMonth()), 0, ',', '.') ?></td>
                             <td><?php echo $Opp["Reserve"]->getUser()->getFirstname() ." ". $Opp["Reserve"]->getUser()->getLastname() ?></td>
-                            <td><button class="approve btn btn-a-primary">Postular</button></td>
+                            <td>
+                                <button class="approve btn btn-a-primary">Postular</button>
+                                <img class="loading" src="/images/ajax-loader.gif">
+                            </td>
                         </tr>
                     <?php endforeach ?>
                 </tbody>
@@ -42,15 +45,26 @@
 <div style="display:none">
 
     <div id="dialog-cars" data-number-of-cars="<?php echo count($Cars) ?>">
-        <h1>Escoge el auto con el qué deseas postular</h1>
-        <?php foreach($Cars as $k => $Car): ?>
-            <div class="radio">
-                <label>
-                    <input id="car<?php echo $k ?>" name="optionsCars" type="radio" value="<?php echo $Car->getId() ?>" <?php if (count($Cars) == 1) echo 'checked' ?>>
-                    <?php echo $Car->getModel()->getBrand()->getName() ." ". $Car->getModel()->getName() ?>
-                </label>
-            </div>
-        <?php endforeach ?>
+        <h3 class="text-center">Escoge el auto con el qué deseas postular</h3>
+        <div class="row">
+            <?php foreach($Cars as $k => $Car): ?>
+
+                <?php $photo = image_path('../uploads/cars/'.$Car->foto_perfil) ?>
+                <?php if ($Car->photoS3 == 1): ?>
+                    <?php $photo = image_path($Car->foto_perfil) ?>
+                <?php endif ?>
+                
+                <div class="col-md-offset-1 col-md-5">
+                    <div class="radio">
+                        <label>
+                            <input id="car<?php echo $k ?>" name="optionsCars" type="radio" value="<?php echo $Car->getId() ?>" <?php if (count($Cars) == 1) echo 'checked' ?>>
+                            <img class='car img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_134,h_99,c_fill,g_center/http://www.arriendas.cl<?php echo $photo ?>' height='99' width='134' alt='<?php echo $Car->getModel()->getBrand()->name." ".$Car->getModel()->name ?>'>                            
+                            <?php echo $Car->getModel()->getBrand()->getName() ." ". $Car->getModel()->getName() ?>
+                        </label><br>
+                    </div>
+                </div>
+            <?php endforeach ?>
+        </div>
     </div>
 
     <div id="dialog-alert" title="">
@@ -73,7 +87,8 @@
 
     $(".approve").click(function(){
 
-        var numberOfCars = $("#dialog-cars").data("data-number-of-cars");
+        var numberOfCars = $("#dialog-cars").data("number-of-cars");
+        var reserveId    = $(this).parent().parent().data("reserve-id");
 
         if (numberOfCars > 1) {
             $("#dialog-cars").dialog({
@@ -81,24 +96,30 @@
                 modal: true,
                 resizable: true,
                 title: "Mis autos activos",
-                width: "75%",
+                width: "50%",
                 buttons: [
                     {
                         text: "Seleccionar",
                         click: function() {
                             if ($("input[name='optionsCars']").is(":checked")) {
                                 $( this ).dialog( "close" );
+                                approve(reserveId);
                             }
                         }
                     }
                 ]
             });
-        }
+        } else {
+            approve(reserveId);
+        }        
+    });
+
+    function approve(reserveId) {
 
         $(this).attr("disabled", true);
+        $("[data-reserve-id="+reserveId+"]").find(".loading").show();
 
-        var carId     = $("input[name='optionsCars']:checked").val();
-        var reserveId = $(this).parent().parent().data("reserve-id");
+        var carId = $("input[name='optionsCars']:checked").val();
 
         $.post("<?php echo url_for('opportunities_approve') ?>", {"reserveId": reserveId, "carId": carId}, function(r){
 
@@ -118,7 +139,8 @@
             }
 
             $(this).removeAttr("disabled");
+            $("[data-reserve-id="+reserveId+"]").find(".loading").hide();
 
         }, "json");
-    });
+    }
 </script>
