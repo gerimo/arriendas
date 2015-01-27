@@ -384,6 +384,8 @@
                     windowMarker += "<p class='paragraph' style='margin-top: 5px'>Hora: <b>$" + Car.price_per_hour + " </b></p>";
                     windowMarker += "<p class='paragraph' style='margin-top: 5px'>Dia: <b>$" + Car.price_per_day + " </b></p>";
                     windowMarker += "<p class='paragraph' style='margin-top: 5px'>Transmisión: <b>" + Car.transmission + "</b></p>";
+                    windowMarker += "<div class='metro'><p><img class='km-area' src='/images/newDesign/ico.png' alt='metro'> A <b><em>"+Car.nearestMetroDistance+"</em> km</b> del Metro "+Car.nearestMetroName+"</p></div>"
+
                     windowMarker += "</div>";                    
                     
                     windowMarker += "</div>";
