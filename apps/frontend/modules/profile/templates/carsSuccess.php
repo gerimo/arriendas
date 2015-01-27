@@ -7,14 +7,11 @@
     <div class="col-md-offset-3 col-md-6">
         <div class="BCW">
             
-            <div class="encabezado">
-                <h1>MIS AUTOS</h1>
-            </div>  
-            
             <div class="col-md-offset-8 col-md-4">
-                    <a class="col-md-12  btn-block btn-a-primary" href="<?php echo url_for('profile/addCar') ?>">¡Sube un auto!</a>
+                <button class="col-md-12 btn btn-a-primary btn-block" onclick="location.href='<?php echo url_for('cars/create') ?>'">¡Sube un auto!</button>
             </div>
 
+            <h1>Mis Autos</h1>
                        
             <div class="row">
                 <?php foreach ($cars as $c): ?>
@@ -24,7 +21,7 @@
                                             
                         <div class="row grey">
                             <div class="col-md-3 ">
-                                <a href="<?php echo url_for('profile/addCar?id=' . $c->getId() )?>" >
+                                <a href="#" >
                                     <?php if($c->getPhotoS3() == 1): ?>
                                         <?php echo image_tag($c->getFoto(),array("width"=>"84px","height"=>"84px")) ?>
                                     <?php else: ?>
@@ -35,7 +32,7 @@
                             </div>
                             
                             <div class="col-offset-md-2 col-md-5 ">
-                                <a class= "misautos_marca" href="<?php echo url_for('profile/addCar?id=' . $c->getId() )?>" ><span><?=$c->getModel()->getBrand()->getName()?> <?=$c->getModel()->getName()?></span></a>
+                                <a class= "misautos_marca" href="#" ><span><?=$c->getModel()->getBrand()->getName()?> <?=$c->getModel()->getName()?></span></a>
                            </div>
                             
                             
@@ -86,13 +83,13 @@
                                                     <br><br>
                                                     </div>
                                                     <div class="botones col-md-12 hidden-xs" style="margin-top:22px">
-                                                        <a class="btn-a-action col-md-offset-4 col-md-2 btnCars-delete-availability" href="">Eliminar</a>
-                                                        <a style="margin-left: 87px" class="btn-a-action col-md-offset-1 col-md-2 btnCars-save-availability" href="">Guardar</a>
+                                                        <a class="btn btn-a-action col-md-offset-4 col-md-2 btnCars-delete-availability" href="">Eliminar</a>
+                                                        <a style="margin-left: 87px" class="btn btn-a-action col-md-offset-1 col-md-2 btnCars-save-availability" href="">Guardar</a>
                                                         <br/>
                                                     </div>
                                                     <div class="visible-xs">
-                                                        <a class="btn-a-action btn-block btnCars-delete-availability" href="">Eliminar</a>
-                                                        <a class="btn-a-action btn-block btnCars-save-availability" href="">Guardar</a>
+                                                        <a class="btn btn-a-action btn-block btnCars-delete-availability" href="">Eliminar</a>
+                                                        <a class="btn btn-a-action btn-block btnCars-save-availability" href="">Guardar</a>
                                                         <br/>
                                                     </div>
 

@@ -10,5 +10,8 @@ login_do:
 logout:
     is_secure: false
 
+opportunities_mailing_open:
+    is_secure: false
+
 reserve:
     is_secure: true

@@ -1,231 +1,37 @@
 <link href="/css/newDesign/searchACars.css" rel="stylesheet" type="text/css">
-
-<!-- Google Maps -->
-<script src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;sensor=false" type="text/javascript"></script>
 <script src="/js/newDesign/markerclusterer.js" type="text/javascript"></script>
 
-<!-- Varios -->
-<script type="text/javascript">
 
-    /*google.maps.event.addDomListener(window, 'load', initialize);*/
 
-        var reserveUrl = "<?php echo url_for('reserve', array('c' => 'carId', 'f' => 'from', 't' => 'to'), true) ?>";
+<script>
+    var reserveUrl = "<?php echo url_for('reserve', array('carId' => 'carId'), true) ?>";
+    var usuarioLogeado = "<?php echo $usuarioLog; ?>";
 
-        var usuarioLogeado = "<?php echo $usuarioLog; ?>";
-        var geolocalizacion; // coordenadas
-        var latitud; // coordenadas
-        var lastValidCenter; // initialize
-        var longitud; // coordenadas
-        var map; // initialize, searchCars
-        var markerCluster; // searchCars
-        var markers = []; // searchCars
-        var strictBounds = null; // initialize
+    var map; // initialize, searchCars
+    var markerCluster; // searchCars
+    var markers = []; // searchCars
 
-        var swLat; // searchCars
-        var swLng; // searchCars
-        var neLat; // searchCars
-        var neLng; // searchCars
+    function errores(err) {
 
-        function coordenadas(position) {
-            latitud  = position.coords.latitude; // Guardamos nuestra latitud
-            longitud = position.coords.longitude; // Guardamos nuestra longitud
-            <?php if ($sf_user->getAttribute('geolocalizacion') == true): ?>
-                geolocalizacion = true;
-            <?php else: ?>
-                geolocalizacion = false;
-            <?php endif; ?>
+        // Controlamos los posibles errores
+        if (err.code == 0) {
+            alert("¡Oops! Algo ha salido mal");
         }
-
-        function errores(err) {
-
-            // Controlamos los posibles errores
-            if (err.code == 0) {
-                alert("¡Oops! Algo ha salido mal");
-            }
-            if (err.code == 1) {
-                alert("¡Oops! No has aceptado compartir tu posición");
-            }
-            if (err.code == 2) {
-                alert("¡Oops! No se puede obtener la posición actual");
-            }
-            if (err.code == 3) {
-                alert("¡Oops! Hemos superado el tiempo de espera");
-            }
+        if (err.code == 1) {
+            alert("¡Oops! No has aceptado compartir tu posición");
         }
-
-        function initialize() {
-
-            var center = null;
-
-            <?php if (stripos($_SERVER['SERVER_NAME'], "arrendas") !== FALSE): ?>
-                center = new google.maps.LatLng(-34.59, -58.401604);
-            <?php else: ?>
-                center = new google.maps.LatLng(-33.436024, -70.632858);
-            <?php endif ?>
-                if (geolocalizacion) {
-                        center = new google.maps.LatLng(latitud, longitud);
-                }
-
-            <?php if (isset($_GET['ciudad']) && $_GET['ciudad'] == "arica"): ?>
-                center = new google.maps.LatLng(-18.32, -70.20);
-            <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "concepcion"): ?>
-                center = new google.maps.LatLng(-37.00, -72.30);
-            <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "laserena"): ?>
-                center = new google.maps.LatLng(-29.75, -71.10);
-            <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "temuco"): ?>
-                center = new google.maps.LatLng(-38.45, -72.40);
-            <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "valparaiso"): ?>
-                center = new google.maps.LatLng(-33.2, -71.4);
-            <?php elseif (isset($_GET['ciudad']) && $_GET['ciudad'] == "viña"): ?>
-                center = new google.maps.LatLng(-33.0, -71.3);
-            <?php elseif (isset($map_clat) && isset($map_clng)): ?>
-                center = new google.maps.LatLng(<?= $map_clat ?>, <?= $map_clng ?>);
-            <?php endif; ?>
-
-            map = new google.maps.Map(document.getElementById('map-container'), {
-                zoom: 14,
-                center: center,
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                scrollwheel: false
-        });
-
-        var market = null;
-
-        if (geolocalizacion) {
-
-            marker = new google.maps.Marker({
-                position: center,
-                map: map,
-                draggable: true,
-            });
+        if (err.code == 2) {
+            alert("¡Oops! No se puede obtener la posición actual");
         }
-
-        lastValidCenter = center;
-
-        google.maps.event.addListener(map, 'idle', function() {
-
-            google.maps.event.clearListeners(map, 'idle');
-            searchCars();
-        });
-
-        google.maps.event.addListener(map, 'dragend', function() {
-
-            if (strictBounds === null || strictBounds.contains(map.getCenter())) {
-                lastValidCenter = map.getCenter();
-            } else {
-                map.panTo(lastValidCenter);
-            }
-            searchCars();
-        });
-
-        google.maps.event.addListener(map, 'zoom_changed', function() {
-
-            if (strictBounds === null || strictBounds.contains(map.getCenter())) {
-                lastValidCenter = map.getCenter();
-            } else {
-                map.panTo(lastValidCenter);
-            }
-            searchCars();
-        });
-
-        //Autocomplete
-        var input = document.getElementById('direction');
-        var autocomplete = new google.maps.places.Autocomplete(input);
-
-        autocomplete.bindTo('bounds', map);
-
-        var infowindow = new google.maps.InfoWindow();
-        var marker = new google.maps.Marker({
-            map: map
-        });
-
-        google.maps.event.addListener(autocomplete, 'place_changed', function() {
-
-            infowindow.close();
-            marker.setVisible(false);
-            /*input.className = '';*/
-
-            var place = autocomplete.getPlace();
-
-            if (!place.geometry) {
-                // Inform the user that the place was not found and return.
-                input.className = 'notfound';
-                return;
-            }
-
-            // If the place has a geometry, then present it on a map.
-            if (place.geometry.viewport) {
-                map.fitBounds(place.geometry.viewport);
-            } else {
-                map.setCenter(place.geometry.location);
-                map.setZoom(17);  // Why 17? Because it looks good.
-            }
-
-            var image = new google.maps.MarkerImage(
-                place.icon,
-                new google.maps.Size(71, 71),
-                new google.maps.Point(0, 0),
-                new google.maps.Point(17, 34),
-                new google.maps.Size(35, 35)
-                );
-
-            marker.setIcon(image);
-            marker.setPosition(place.geometry.location);
-
-            var address = '';
-            if (place.address_components) {
-                address = [
-                (place.address_components[0] && place.address_components[0].short_name || ''),
-                (place.address_components[1] && place.address_components[1].short_name || ''),
-                (place.address_components[2] && place.address_components[2].short_name || '')
-                ].join(' ');
-            }
-
-            infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
-            infowindow.open(map, marker);
-            searchCars();
-        });
-}
-
-    function localizame() {
-        if (navigator.geolocation) { // Si el navegador tiene geolocalizacion
-            navigator.geolocation.getCurrentPosition(coordenadas, errores);
-        } else {
-            alert('¡Oops! Tu navegador no soporta geolocalización. Bájate Chrome, que es gratis!');
+        if (err.code == 3) {
+            alert("¡Oops! Hemos superado el tiempo de espera");
         }
-    }
-
-    function validateTime(){
-
-        var fechaF = splitTime($("#from").val());
-        var fechaT = splitTime($("#to").val());
-
-        console.log(fechaF);
-        console.log(fechaT);
-
-        if(fechaF > fechaT){
-            return true;
-        }
-        return false;
-    }
-
-    function splitTime(time){
-        var split = time.split(" ");
-        var f = split[0];
-        var h = split[1];
-
-        var split = f.split("-");
-        var dia = split[0];
-        var mes = split[1];
-        var ano = split[2];
-
-        return (mes+dia+ano);
     }
 
     function searchCars() {
 
         if (validateTime()) {
-
+            
             $("#dialog-alert p").html('Fecha "Hasta" debe ser posterior a la fecha "Desde"');
             $("#dialog-alert").attr('title','Fecha "Hasta" mal ingresada');
             $("#dialog-alert").dialog({
@@ -238,127 +44,101 @@
             });
             return false;
         }
+        if(validateMin()){
+            $("#dialog-alert p").html('No se puede ingresar "Fechas" con duraciones de media hora.');
+            $("#dialog-alert").attr('title','Fecha "Hasta" mal ingresada');
+            $("#dialog-alert").dialog({
+                buttons: [{
+                    text: "Aceptar",
+                    click: function() {
+                        $( this ).dialog( "close" );
+                    }
+                }]
+            });
+            return false;
 
-        $('#map-list-container, #list-container').hide();
+        }
+
+        $('#list-container').hide();
         $(".loading").show();
 
-        // First, determine the map bounds
-        var bounds = map.getBounds();
 
-        // Then the points
-        var swPoint = bounds.getSouthWest();
-        var nePoint = bounds.getNorthEast();
+        var from      = $("#from").val();
+        var to        = $("#to").val();
+        var regionId  = parseInt($("#region option:selected").val());
+        var communeId = parseInt($("#commune option:selected").val());
 
-        // Now, each individual coordinate
-        swLat = swPoint.lat();
-        swLng = swPoint.lng();
-        neLat = nePoint.lat();
-        neLng = nePoint.lng();
-
-        var center = map.getCenter();
-        var map_center_lat = center.lat();
-        var map_center_lng = center.lng();
-
-        // Inputs and Selects
-        var from = null;
-        if ($("#from").val() != "") {
-            from = $("#from").val();
-        }
-
-        var to = null;
-        if ($("#to").val() != "") {
-            to = $("#to").val();
-        }
+        //Filtro busqueda
+        var isAutomatic = false;
+        $(".isAutomatic").each(function(){
+            if ($(this).is(':checked')) {
+                isAutomatic = true;
+            }
+        });
         
-        var automatic = null;
-        if ($('#automatic').is(':checked')) {
-            automatic = true;
-        }
-        
-        var low = null;
-        if ($('#low').is(':checked')) {
-            low = true;
-        }
+        var isLowConsumption = false;
+        $(".isLowConsumption").each(function(){
+            if ($(this).is(':checked')) {
+                isLowConsumption = true;
+            }
+        });
 
-        var pasenger = null;
-        if ($('#pasenger').is(':checked')) {
-            pasenger = true;
-        }
+        var isMorePassengers = false;
+        $(".isMorePassengers").each(function(){
+            if ($(this).is(':checked')) {
+                isMorePassengers = true;
+            }
+        });
 
-        var commune = null;
-        if ($("#commune option:selected").val() > 0) {
-            commune = $("#commune option:selected").val();
-        }
-
+        // Validación de la búsqueda
         var error = false;
-        var errorMap = "<p style='padding: 5% 5% 0 5%'>Para buscar, debes:<ul>";
-        var errorList = "<p style='padding: 5% 5% 0 5%'>Para buscar, debes:<ul>";
+        var errorMessage = "<p style='padding: 5% 5% 0 5%'>Para buscar, debes:<ul>";
 
-        // List
-        if (!region || region == 0) {
-            errorList += "<li>Seleccionar una región</li>";
-        }
-
-        if (!commune || commune == 0) {
-            errorList += "<li>Seleccionar una comuna</li>";
-        }
-
-        if ($("#tab-list").is(":visible") && errorList != "<p style='padding: 5% 5% 0 5%'>Para buscar, debes:<ul>") {
+        if (from == "") {
+            errorMessage += "<li>Seleccionar una fecha de inicio</li>";
             error = true;
         }
 
-        // All
-        if (!from || from == "") {
-            e = "<li>Seleccionar una fecha de inicio</li>";
-            errorMap += e;
-            errorList += e;
+        if (to == "") {
+            errorMessage += "<li>Seleccionar una fecha de término</li>";
             error = true;
         }
-
-        if (!to || to == "") {
-            e = "<li>Seleccionar una fecha de término</li>";
-            errorMap += e;
-            errorList += e;
-            error = true;
-        }
-
-        errorMap += "</ul></p>";
-        errorList += "</ul></p>";
+        errorMessage += "</ul></p>";
 
         if (error) {
 
-            $("#map-list-container").html(errorMap);
-            $("#list-container").html(errorList);
-
+            $("#list-container").html(errorMessage);
             $('.loading').hide();
-            $("#map-list-container, #list-container").show();
+            $("#list-container").show();
 
             return false;
         }
 
         var parameters = {
-            swLat: swLat,
-            swLng: swLng,
-            neLat: neLat,
-            neLng: neLng,
-            map_center_lat: map_center_lat,
-            map_center_lng: map_center_lng,
+            /*isMap: isMap,//$('div[data-target="#tab-map"]').hasClass("activo"),
+            SWLat: swLat,
+            SWLng: swLng,
+            NELat: neLat,
+            NELng: neLng,
+            mapCenterLat: mapCenterLat,
+            mapCenterLng: mapCenterLng,*/
+            
+            //Parameters List
             from : from,
             to: to,
-            automatic: automatic,
-            low: low,
-            pasenger: pasenger,
-            commune: commune
+            regionId: regionId,
+            communeId: communeId,
+            isAutomatic: isAutomatic,
+            isLowConsumption: isLowConsumption,
+            isMorePassengers: isMorePassengers            
         }
 
-        $.post("<?php echo url_for('main/getCars') ?>", parameters, function(response){
+        $.post("<?php echo url_for('main/getCars') ?>", parameters, function(r){
 
-            var contador = 0;
             var listContent = "";
-            var mapListContent = "";
             var markersLength = markers.length;
 
-            if (markers) {
+            /*if (markers) {
 
                 var i = 0;
                 
@@ -367,143 +147,58 @@
                 }
 
                 markers = [];
-            }
-
+            }*/
             if (markersLength > 0) {
                 markerCluster.clearMarkers();
             }
 
-            if (response.cars.length > 0) {
+            if (r.cars.length > 0) {
+                for (var i = 0 ; i < r.cars.length ; i++) {
 
-                for (var i = 0; i < response.cars.length; i++) {
+                    var Car = r.cars[i];
 
-                    var dataCar = response.cars[i];
-                    var latLng = new google.maps.LatLng(dataCar.latitude, dataCar.longitude);
+                    var urlFotoTipo      = "<?php echo image_path('../uploads/cars/" + Car.photo + "'); ?>";
+                    var urlFotoThumbTipo = "<?php echo image_path('../uploads/cars/" + Car.photo + "'); ?>";
                     
-                    if (dataCar.verificado) {
-                        var verificado = "<img src='http://www.arriendas.cl/images/verificado.png' class='img_verificado' title='Auto Asegurado'/>";
-                    } else {
-                        var verificado = "";
+                    if (Car.photoType == 1) {
+                        urlFotoTipo = Car.photo;
+                        urlFotoThumbTipo = Car.photo;
                     }
 
-                    if (dataCar.cantidadCalificacionesPositivas == 0) {
-                        var calificacionesPositivas = "";
-                    } else {
-                        var calificacionesPositivas = "- " + dataCar.cantidadCalificacionesPositivas + "<img src='http://www.arriendas.cl/images/Medalla.png' class='medallita'/>";
-                    }
+                    var windowMarker = "";
+                    windowMarker += "<div class='infowindow row' id='" + Car.id + "'>";
 
-                    if (dataCar.userVelocidadRespuesta == "") {
-                        velocidadDeRespuesta = "<span style='font-style: italic; color:#BCBEB0;font-weight: normal;'>No tiene mensajes</span>";
-                    } else {
-                        velocidadDeRespuesta = dataCar.userVelocidadRespuesta;
-                    }
+                    windowMarker += "<div class='col-md-4 text-center'>";
+                    /*windowMarker += "<a href='" + urlFotoTipo + "' class='thickbox'>";*/
+                    windowMarker += "<img src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "'/>";
+                    /*windowMarker += "</a>";*/
+                    windowMarker += "</div>";
 
-                    var opcionLogeado = "";
-                    if (usuarioLogeado == 1) { // Informacion cuando se esta logeado
-                        opcionLogeado = '<div class="detalles_user"><a target="_blank" href="http://www.arriendas.cl/profile/publicprofile/id/' + dataCar.userid + '" class="mapcar_user_titulo" title="Ir al perfil del dueño">Ver perfil del dueño</a><a target="_blank" href="http://www.arriendas.cl/messages/new/id/' + dataCar.userid + '" class="mapcar_user_message" title="Env&iacute;ale un mensaje al dueño"></a></div><div class="datos_user"><div class="img_vel_resp"></div><p>Velocidad de Respuesta: <br><b>' + velocidadDeRespuesta + '</b></p></div>';
-                    } else { //Informacion cuando NO se está logeado
-                        opcionLogeado = "";
-                    }
-
-                    var urlFotoTipo = "";
-                    var urlFotoThumbTipo = "";
-                    if (dataCar.photoType == 1) {
-                        urlFotoTipo = dataCar.photo;
-                        urlFotoThumbTipo = dataCar.photo;
-                    } else {
-                        urlFotoTipo = "<?php echo image_path('../uploads/cars/" + dataCar.photo + "'); ?>";
-                        urlFotoThumbTipo = "http://arriendas.cl/uploads/cars/" + dataCar.photo;
-                    }
-
-                    var contentString = "";
-                    contentString += "<div class='infowindow row' id='" + dataCar.id + "'>";
-
-                    contentString += "<div class='col-md-4 text-center'>";
-                    contentString += "<a href='" + urlFotoTipo + "' class='thickbox'>";
-                    contentString += "<img src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/" + urlFotoThumbTipo + "'/>";
-                    contentString += "</a>";
-                    contentString += "</div>";
-
-                    contentString += "<div class='col-md-8' style='padding-left: 15px'>";
-                    contentString += "<h2><a href='<?php echo url_for('arriendo-de-autos/rent-a-car') ?>/" + dataCar.brand + dataCar.model + "/" + dataCar.comuna + "/" + dataCar.id + "' target='_blank' title='Ir al perfil del auto'>" + dataCar.brand + " " + dataCar.model + "</a></h2>";
-                    /*contentString += "<div class='images'>"+ verificado +"</div>";*/                    
-                    contentString += "<p class='paragraph' style='margin-top: 5px'>Dia: <b>$" + dataCar.price_per_day + " CLP</b></p>";
-                    contentString += "<p class='paragraph'>Hora: <b>$" + dataCar.price_per_hour + " CLP</b></p>";
-                    contentString += "<p class='paragraph'>Transmisión: <b>" + dataCar.typeTransmission + "</b></p>";
-                    contentString += opcionLogeado;
-                    contentString += "</div>";                    
+                    windowMarker += "<div class='col-md-8' style='padding-left: 15px'>";
+                    windowMarker += "<h2>" + Car.brand + " " + Car.model + "</a></h2>";
+                    windowMarker += "<p class='paragraph' style='margin-top: 5px'>Hora: <b>$" + Car.price_per_hour + " </b></p>";
+                    windowMarker += "<p class='paragraph' style='margin-top: 5px'>Dia: <b>$" + Car.price_per_day + " </b></p>";
+                    windowMarker += "<p class='paragraph' style='margin-top: 5px'>Transmisión: <b>" + Car.transmission + "</b></p>";
+                    windowMarker += "</div>";                    
                     
-                    contentString += "</div>";
+                    windowMarker += "</div>";
 
-                    contentString += "<p class='text-right'><a class='btn-a-action' href='"+reserveUrl.replace("carId", dataCar.id).replace("from", dataCar.from).replace("to", dataCar.to)+"' target='_blank'>RESERVAR</a></p>";
+                    windowMarker += "<p class='text-right'><a class='btn btn-a-action btn-sm' href='"+reserveUrl.replace("carId", Car.id)+"' target='_blank'>RESERVAR</a></p>";
+                  
 
-                    if (infowindow)
-                        infowindow.close();
-                    
-                    var infowindow = new google.maps.InfoWindow({
-                        content: contentString
-                    });
-
-                    if (dataCar.verificado) {
-                        contador = contador + 1;
-                        var image = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + contador + '|05a4e7|ffffff';
-                    } else {
-                        var image = "<?php echo 'http://www.arriendas.cl/images/Home/circle.png'; ?>";
-                    }
-
-                    var marker = new google.maps.Marker({
-                        id: dataCar.id,
-                        position: latLng,
-                        icon: image,
-                        contentString: contentString
-                    });
-
-                    google.maps.event.addListener(marker, 'click', function() {
-
-                        infowindow.setContent(this.contentString);
-                        infowindow.open(map, this);
-
-                        $('a.thickbox').click(function() {
-                            var t = this.title || this.name || null;
-                            var a = this.href || this.alt;
-                            var g = this.rel || false;
-                            tb_show(t, a, g);
-                            this.blur();
-                            return false;
-                        });
-                    });
-
-                    markers.push(marker);
-
-                    switch (dataCar.typeModel) {
-                        case "1":
-                        typeModel = 'Automóvil';
-                        break;
-                        case "2":
-                        typeModel = 'Pick-Up';
-                        break;
-                        case "3":
-                        typeModel = 'Station Wagon';
-                        break;
-                        case "39":
-                        typeModel = 'SUV';
-                        break;
-                        case "4":
-                        typeModel = 'Furgón';
-                        break;
-                    }
+                    //var image = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + (i+1) + '|05a4e7|ffffff';
 
                     article = "<article class='box'>";
                     article += "<div class='row'>";
                     article += "<div class='col-xs-4 col-md-4 image'>";
-                    article += "<img class='car' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_134,h_99,c_fill,g_center/" + urlFotoThumbTipo + "' height='99' width='134' alt=''>";
-                    article += "<img class='marker' src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + contador + "|05a4e7|ffffff'>"
+                    article += "<img class='car' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_134,h_99,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='"+ Car.brand +" "+ Car.model +"'>";
+                    article += "<img class='marker' src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + (i+1) + "|05a4e7|ffffff'>";
                     article += "</div>";
                     article += "<div class='col-xs-8 col-md-8 text'>";
-                    article += "<h2><a target='_blank' href='"+reserveUrl.replace("carId", dataCar.id).replace("from", dataCar.from).replace("to", dataCar.to)+"'>"+ dataCar.brand +" "+ dataCar.model +"<small>, "+dataCar.year+"</small></a></h2>";
+                    article += "<h2>"+ Car.brand +" "+ Car.model +"<small>, "+Car.year+"</small></h2>";
                     /*article += "<span class='sub-heading'>A 2 km Metro <strong>Tobalaba</strong></span>";*/
-                    article += "<p class='price'>$"+ dataCar.priceAPuntos +" <small>Total</small></p>";
-                    article += "<p class='text-right'><a class='btn-a-action' href='"+reserveUrl.replace("carId", dataCar.id).replace("from", dataCar.from).replace("to", dataCar.to)+"' class='reserve' target='_blank'>RESERVAR</a></p>";
+                    article += "<p class='price'>$"+ Car.price +" <small style='color: black; font-weight: 300; font-size: 9px;'>TOTAL</small></p>";
+                    article += "<p class='text-right'><a class='btn btn-a-action btn-sm' href='"+reserveUrl.replace("carId", Car.id)+"' class='reserve' target='_blank'>RESERVAR</a></p>";
                     /*article += "<img src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + contador + "|05a4e7|ffffff' />";*/
                     article += "</div>";
                     article += "</div>";
@@ -512,70 +207,444 @@
                     listContent += "<div class='col-md-4'>";
                     listContent += article;
                     listContent += "</div>";
+
                     
-                    mapListContent += article;
+                   
 
                     /*listContent += "<article class='box'>";
                     listContent += "<div class='img-holder'><img src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_134,h_99,c_fill,g_center/" + urlFotoThumbTipo + "' height='99' width='134' alt=''></div>";
                     listContent += "<div class='text-area'>";
-                    listContent += "<h2><a href='<?php echo url_for("arriendo-de-autos/rent-a-car") ?>/" + dataCar.brand + dataCar.model + "/" + dataCar.comuna + "/" + dataCar.id + "'>"+ dataCar.brand +" "+ dataCar.model +"<span>, "+dataCar.year+"</span></a></h2>";
+                    listContent += "<h2><a href='<?php echo url_for("arriendo-de-autos/rent-a-car") ?>/" + Car.brand + Car.model + "/" + Car.comuna + "/" + Car.id + "'>"+ Car.brand +" "+ Car.model +"<span>, "+Car.year+"</span></a></h2>";
                     listContent += "<span class='sub'>Providencia </span>";
                     listContent += "<span class='sub-heading'>A 2 km Metro <strong>Tobalaba</strong></span>";
-                    listContent += "<span class='price'>$"+ dataCar.price_per_day +"</span>";
-                    listContent += "<a href='<?php echo url_for("profile/reserve?id=") ?>"+ dataCar.id + "' class='reserve'>RESERVAR</a>";
+                    listContent += "<span class='price'>$"+ Car.price_per_day +"</span>";
+                    listContent += "<a href='<?php echo url_for("profile/reserve?id=") ?>"+ Car.id + "' class='reserve'>RESERVAR</a>";
                     listContent += "</div>";
                     listContent += "</article>";*/
                 }
             } else {
-                mapListContent += "<h2 style='text-align: center'>No hemos encontrado vehículos</h2>";
+                //mapListContent += "<h2 style='text-align: center'>No hemos encontrado vehículos</h2>";
                 listContent += "<h2 style='text-align: center'>No hemos encontrado vehículos</h2>";
             }
 
-            $("#map-list-container").html(mapListContent);
+            //$("#map-list-container").html(mapListContent);
             $("#list-container").html(listContent);
 
             $('.loading').hide();
-            $("#map-list-container, #list-container").show();
+            $("#list-container").show();
 
             var mcOptions = {
                 maxZoom: 10
             };
 
-            markerCluster = new MarkerClusterer(map, markers, mcOptions);
+            //markerCluster = new MarkerClusterer(map, markers, mcOptions);
         }, "json");
-}
+
+    }
+
 </script>
 
 <div class="hidden-xs space-100"></div>
 <div class="visible-xs space-50"></div>
 
 <div class="row">
-    <div class="col-md-offset-1 col-md-10">
+    <div class="col-md-12">
         <div class="BCW">
-            <h1>¡Busca un Auto!</h1>
+            <h1>¡Arrienda un Auto!</h1>
 
+            <!--Solo debe aparecer la Lista-->
+            <div class="lista grey">
+                <div class="row ">
+                    <div class="col-xs-6 col-sm-3 col-md-3" id="region-container">
+                        <select class="region form-control" id="region">
+                            <option disabled selected value="<?php echo $Region->id ?>"><?php echo $Region->name ?></option>
+                        </select>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 col-md-3" id="commune-container">
+                        <select class="commune form-control" id="commune">
+                            <option value="0">Todas Las Comunas</option>
+                            <?php foreach ($Region->getCommunes() as $Commune): ?>
+                                   <?php if ($hasCommune && $Commune->id == $hasCommune): ?>
+                                        <option selected value="<?php echo $Commune->id ?>"><?php echo ucwords(strtolower($Commune->name)) ?></option> 
+                                    <?php else: ?>
+                                        <option value="<?php echo $Commune->id ?>"><?php echo ucwords(strtolower($Commune->name)) ?></option>
+                                    <?php endif ?>
+                            <?php endforeach ?>
+                        </select>
+                    </div>
 
-            <!-- List -->
-        <div class="col-xs-6 col-sm-3 col-md-3" id="region-container">
-            <select class="region form-control" id="region">
-                <option disabled value="<?php echo $Region->id ?>"><?php echo $Region->name ?></option>
-            </select>
-        </div>
-        <div class="col-xs-6 col-sm-3 col-md-3" id="commune-container">
-            <select class="commune form-control" id="commune">
-                <option value="0">Comuna</option>
-                <?php foreach ($Region->getCommunes() as $Commune): ?>
-                    <?php if ($hasCommune && $Commune->id == $hasCommune): ?>
-                        <option selected value="<?php echo $Commune->id ?>"><?php echo ucwords(strtolower($Commune->name)) ?></option> 
-                    <?php else: ?>
-                        <option value="<?php echo $Commune->id ?>"><?php echo ucwords(strtolower($Commune->name)) ?></option>
-                    <?php endif ?>
-                <?php endforeach ?>
-            </select>
-        </div>
+                    <div class="col-xs-6 col-sm-2 col-md-2" id="from-container">
+                        <input class="from daepicker form-control" id="from" placeholder="Desde" type="text" value="<?php if(date("H:i") >= "20:00" || date("H:i") <= "08:00"):echo date("d-m-Y 08:00",(strtotime ("+12 Hours"))); else:echo date("d-m-Y H:i", (strtotime ("+4 Hours"))); endif; ?>" >
+                    </div>
+                    <div class="col-xs-6 col-sm-2 col-md-2" id="to-container">
+                        <input class="to datetimepicker form-control" id="to" placeholder="Hasta" type="text" value="<?php if(date("H:i") >= "20:00" || date("H:i") <= "08:00"):echo date("d-m-Y 08:00",(strtotime ("+32 Hours"))); else:echo date("d-m-Y H:i", (strtotime ("+24 Hours"))); endif; ?>" >
+                    </div>
 
+                     <!-- Search -->
+                    <div class="col-xs-12 col-sm-2 col-md-2 text-center">
+                        <a class="btn btn-a-action btn-block" href id="search">Buscar</a>
+                    </div>
+                </div>
+
+                <div class="hidden-xs row" id="section-map-filters">
+                    <div class=" col-md-offset-2 col-md-6 col-sm-2 col-md-2 text-center">
+                        <strong class="heading">Filtros:</strong>
+                    </div>
+                    <div class="col-sm-7 col-md-7">
+                        <ul>
+                            <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
+                            <li><input type="checkbox" name="filter" class="isLowConsumption"> Petrolero</li>
+                            <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!--Mobile-->
+            <section id="section-map">
+                <nav class="visible-xs navbar navbar-default" id="filters-navbar" role="navigation">
+                    <div class="container">
+
+                        <!-- Brand and toggle get grouped for better mobile display -->
+                        <div class="navbar-filters">
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#filters">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <h3 class="filter"style="margin-top: 5px; padding-top: 12px">Filtros:</h3>
+                        </div>
+
+                        <!-- Collect the nav links, forms, and other content for toggling -->
+                        <div class="collapse navbar-collapse" id="filters">
+                            <div class="container">
+                                <ul class="nav navbar-nav">
+                                    <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
+                                    <li><input type="checkbox" name="filter" class="isLowConsumption"> Petrolero</li>
+                                    <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+                <br><br>
+                <div id="section-map-body">
+                    <div class="tab-container" id="tab-list">
+                        <div class="row" id="list">
+                            <div id="list-loading" class="loading" style="text-align: center; margin: 4% 0 4% 0"><?php echo image_tag('ajax-loader.gif', array("width" => "80px", "height" => "80px")) ?></div>
+                            <div class="row" id="list-container"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!--Alert-->
+            <div style="display:none">
+                <div id="dialog-alert" title="">
+                    <p></p>
+                </div>
+            </div>
+            <br>
+
+            <!--Anuncios-->
+            <div class="panel-group-spam" id="accordions" role="tablist" aria-multiselectable="true">
+                <div class="panel panel-default hidden-xs">
+                    <div class="panel-heading" role="tab" id="spam">
+                          <h4 class="panel-title text-center">
+                            <a class="collapsed"data-toggle="collapse" data-parent="#accordions" href="#spamFooter" aria-expanded="true" aria-controls="spamFooter">
+                               Arriendo de autos en otras comunas de Santiago<i class="pull-right fa fa-chevron-down"></i>
+                            </a>
+                          </h4>
+                    </div>
+                    <div id="spamFooter" class="panel-collapse collapse" role="tabpanel" aria-labelledby="spamFooter">
+                        <div class="panel-body text-center">
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'alhue'), true) ?>">Rent a Car Alhue</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'buin'), true) ?>">Rent a Car Buin</a> |
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'calera-de-tango'), true) ?>">Rent a Car Calera de Tango</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'cerrillos'), true) ?>">Rent a Car Cerrillos</a> |   
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'cerro-navia'), true) ?>">Rent a Car Cerro Navia</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'colina'), true) ?>">Rent a Car Colina</a> |
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'conchali'), true) ?>">Rent a Car Conchalí</a> | 
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'curacavi'), true) ?>">Rent a Car Curacaví</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'el-bosque'), true) ?>">Rent a Car El Bosque</a> |
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'el-monte'), true) ?>">Rent a Car El Monte</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'estacion-central'), true) ?>">Rent a Car Estación Central</a> |   
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'huechuraba'), true) ?>">Rent a Car Huechuraba</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'independencia'), true) ?>">Rent a Car Independencia</a> |
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'isla-de-maipo'), true) ?>">Rent a Car Isla de Maipo</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'la-cisterna'), true) ?>">Rent a Car La Cisterna</a> |
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'la-florida'), true) ?>">Rent a Car La Florida</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'la-granja'), true) ?>">Rent a Car La Granja</a> |
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'la-pintana'), true) ?>">Rent a Car La Pintana</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'las-condes'), true) ?>">Rent a Car Las Condes</a> |   
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'lampa'), true) ?>">Rent a Car Lampa</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'lo-espejo'), true) ?>">Rent a Car Lo Espejo</a> |
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'lo-barnechea'), true) ?>">Rent a Car Lo Barnechea</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'macul'), true) ?>">Rent a Car Macul</a> |
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'lo-prado'), true) ?>">Rent a Car Lo Prado</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'macul'), true) ?>">Rent a Car Macul</a> |
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'maipu'), true) ?>">Rent a Car Maipu</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'maria-pinto'), true) ?>">Rent a Car María Pinto</a> |   
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'melipilla'), true) ?>">Rent a Car Melipilla</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'ñuñoa'), true) ?>">Rent a Car Ñuñoa</a> |
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'padre-hurtado'), true) ?>">Rent a Car Padre Hurtado</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'la-cisterna'), true) ?>">Rent a Car La Cisterna</a> |
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'paine'), true) ?>">Rent a Car Paine</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'pedro-aguirre-cerda'), true) ?>">Rent a Car Pedro Aguirre Cerda</a> |
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'peñaflor'), true) ?>">Rent a Car Peñaflor</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'peñalolen'), true) ?>">Rent a Car Peñalolen</a> |   
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'pirque'), true) ?>">Rent a Car Pirque</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'providencia'), true) ?>">Rent a Car Providencia</a> |
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'pudahuel'), true) ?>">Rent a Car Pudahuel</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'puente-alto'), true) ?>">Rent a Car Puente Alto</a> |  
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'quilicura'), true) ?>">Rent a Car Quilicura</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'quinta-normal'), true) ?>">Rent a Car Quinta Normal</a> |
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'recoleta'), true) ?>">Rent a Car Recoleta</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'renca'), true) ?>">Rent a Car Renca</a> |   
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'san-bernardo'), true) ?>">Rent a Car San Bernardo</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'san-joaquin'), true) ?>">Rent a Car San Joaquin</a> |
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'san-jose-de-maipo'), true) ?>">Rent a Car San Jose de Maipo</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'san-miguel'), true) ?>">Rent a Car San Miguel</a> |
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'san-pedro'), true) ?>">Rent a Car San Pedro</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'san-ramon'), true) ?>">Rent a Car San Ramon</a> |
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'santiago-centro'), true) ?>">Rent a Car Santiago Centro</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'las-condes'), true) ?>">Rent a Car Las Condes</a> | 
+                            <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'til-til'), true) ?>">Rent a Car Til-Til</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'vitacura'), true) ?>">Rent a Car Vitacura</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
         </div>
     </div>
 </div>
 
 <div class="hidden-xs space-100"></div>
+
+
+<script>
+    $(document).ready(function(){
+        
+        $('#from').datetimepicker({
+            allowTimes:[
+            "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
+            "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
+            "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
+            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+            "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+            "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
+            "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
+            "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
+            ],
+            format:'d-m-Y H:i',
+            minDate : "<?php echo date('d-m-Y') ?>",
+            dayOfWeekStart: 1,
+            lang:'es',
+            onSelectTime: function() {
+                    var to = $("#from").val();
+                    times(to);
+            },
+            onSelectDate: function() {
+                var to = $("#from").val();
+                times(to);
+            }
+        });
+
+        $("#search").click(function(e){
+            e.preventDefault();
+            searchCars();
+        });
+
+        $("#commune").change(function(){
+            searchCars(); 
+        });
+
+        $("input[type='checkbox']").change(function(){
+            searchCars();
+        });
+
+        $("#from").val(roundTime($("#from").val()));
+        $("#to").val(roundTime($("#to").val()));
+
+        <?php if (!($hasCommune)): ?>
+            $("#commune").focus();
+        <?php endif ?>
+
+        $("#search").click();
+
+        
+    });
+
+        function roundTime(valor){
+
+        var fechaH = valor;
+
+        var split = fechaH.split(" ");
+        var f = split[0];
+        var h = split[1];
+
+        var split3 = h.split(":");
+        var hora = parseInt(split3[0]);
+        var min = parseInt(split3[1]);
+
+        if (min > 14 && min <= 45){
+            min = "30";
+            $('#to').datetimepicker({
+                allowTimes:[
+                "00:30", "01:30", "02:30",
+                "03:30", "04:30", "05:30",
+                "06:30", "07:30", "08:30",
+                "09:30", "10:30", "11:30",
+                "12:30", "13:30", "14:30",
+                "15:30", "16:30", "17:30",
+                "18:30", "19:30", "20:30",
+                "21:30", "22:30", "23:30",
+                ],
+                lang:'es',
+                dayOfWeekStart: 1,
+                minDate:get_date($('#from').val())?get_date($('#from').val()):false,
+                format:'d-m-Y H:i'
+            });
+
+        } else if (min > 45){
+            min = "00";
+            hora = (hora+1).toString();
+        
+            $('#to').datetimepicker({
+                allowTimes:[
+                "00:00", "01:00", "02:00",
+                "03:00", "04:00", "05:00",
+                "06:00", "07:00", "08:00",
+                "09:00", "10:00", "11:00",
+                "12:00", "13:00", "14:00",
+                "15:00", "16:00", "17:00",
+                "18:00", "19:00", "20:00",
+                "21:00", "22:00", "23:00",
+                ],
+                lang:'es',
+                dayOfWeekStart: 1,
+                minDate:get_date($('#from').val())?get_date($('#from').val()):false,
+                format:'d-m-Y H:i'
+            });
+
+        } else {
+            min = "00";
+            $('#to').datetimepicker({
+                allowTimes:[
+                "00:00", "01:00", "02:00",
+                "03:00", "04:00", "05:00",
+                "06:00", "07:00", "08:00",
+                "09:00", "10:00", "11:00",
+                "12:00", "13:00", "14:00",
+                "15:00", "16:00", "17:00",
+                "18:00", "19:00", "20:00",
+                "21:00", "22:00", "23:00",
+                ],
+                lang:'es',
+                dayOfWeekStart: 1,
+                minDate:get_date($('#from').val())?get_date($('#from').val()):false,
+                format:'d-m-Y H:i'
+            });
+        }
+
+        fecha = f+" "+hora+":"+min;
+
+        return fecha;
+    }
+
+    //Permite establecer un horario correcto.
+    function times(valor){
+        var fechaF = valor
+
+
+        var split = fechaF.split(" ");
+        var f = split[0];
+        var h = split[1];
+
+        var split3 = h.split(":");
+        var hora = split3[0];
+        var min = split3[1];
+
+        if(min=="30"){
+            $('#to').datetimepicker({
+                allowTimes:[
+                "00:30", "01:30", "02:30",
+                "03:30", "04:30", "05:30",
+                "06:30", "07:30", "08:30",
+                "09:30", "10:30", "11:30",
+                "12:30", "13:30", "14:30",
+                "15:30", "16:30", "17:30",
+                "18:30", "19:30", "20:30",
+                "21:30", "22:30", "23:30",
+                ],
+                lang:'es',
+                dayOfWeekStart: 1,
+                minDate:get_date($('#from').val())?get_date($('#from').val()):false,
+                format:'d-m-Y H:i'
+            });
+        }else{
+            $('#to').datetimepicker({
+                allowTimes:[
+                "00:00", "01:00", "02:00",
+                "03:00", "04:00", "05:00",
+                "06:00", "07:00", "08:00",
+                "09:00", "10:00", "11:00",
+                "12:00", "13:00", "14:00",
+                "15:00", "16:00", "17:00",
+                "18:00", "19:00", "20:00",
+                "21:00", "22:00", "23:00",
+                ],
+                lang:'es',
+                dayOfWeekStart: 1,
+                minDate:get_date($('#from').val())?get_date($('#from').val()):false,
+                format:'d-m-Y H:i'
+            });
+        }
+
+    }
+
+    function get_date(input) {
+        if(input == '') {
+            return false;
+        }else{
+            var parts = input.match(/(\d+)/g);
+            return parts[2]+'/'+parts[1]+'/'+parts[0];
+        } 
+    }
+
+    function validateTime(){
+
+        if($("#from").val() && $("#to").val()){
+            var fechaF = splitTime($("#from").val());
+            var fechaT = splitTime($("#to").val());
+            if(fechaF >= fechaT){
+              return true;
+            }
+            return false;
+        }
+    }
+
+    function splitTime(time){
+        var split = time.split(" ");
+        var f = split[0];
+        var h = split[1];
+
+        var split = f.split("-");
+        var dia = split[0];
+        var mes = split[1];
+        var ano = split[2];
+        if(dia){
+            var time = h.split(":");
+            var hora = time[0];
+            var min = time[1]
+        }
+        return (mes+dia+ano+hora+min);
+    }
+
+    //valida que los no existan lapsus de media hora en los arriendos
+    function validateMin(){
+        if($("#from").val() && $("#to").val()){
+            var minF = $("#from").val();
+            var splitF = minF.split(" ");
+            //separa fecha de hora
+            var ff = splitF[0];
+            var tf = splitF[1];
+            //separa hora de min
+            var timeF = tf.split(":");
+            var hf = timeF[0]; 
+            var mf = timeF[1];
+
+            //Hasta 
+            var minT = $("#to").val();        
+            var splitT = minT.split(" ");
+            var ft = splitT[0];
+            var tt = splitT[1];
+            var timeT = tt.split(":");
+            var ht = timeT[0];
+            var mt = timeT[1];
+            
+            if (mt != mf){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    }
+
+</script>

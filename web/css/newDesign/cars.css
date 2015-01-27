@@ -1,6 +1,7 @@
 body {
     background-image: url('/images/newDesign/background.jpg');
 }
+
 .circuloActivo { 
 	/*display: block;*/ 
 	width: 8px; 
