@@ -105,7 +105,7 @@ class CarTable extends Doctrine_Table {
                         'price_per_month' => number_format(round($Car->getPricePerMonth()), 0, '', '.'),
                         'transmission' => $Car->transmission == 1 ? 'Automática' : 'Manual',
                         'count' => $count,
-                        'nearestMetroDistance' => $CarProximityMetro->distance,
+                        'nearestMetroDistance' => round($CarProximityMetro->distance, 1),
                         'nearestMetroName' => $CarProximityMetro->getMetro()->name
                     );
 

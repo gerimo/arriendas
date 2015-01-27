@@ -5,6 +5,10 @@
 <h3>Datos del propietario</h3>
 <table>
     <tr>
+        <th style='text-align: left'>ID</th>
+        <td><?php echo $Owner->id ?></td>
+    </tr>
+    <tr>
         <th style='text-align: left'>Nombre</th>
         <td><?php echo $Owner->firstname." ".$Owner->lastname ?></td>
     </tr>
@@ -33,6 +37,10 @@
 
 <h3>Datos del vehículo</h3>
 <table>
+    <tr>
+        <th style='text-align: left'>ID</th>
+        <td><?php echo $Car->id ?></td>
+    </tr>
     <tr>
         <th style='text-align: left'>Marca</th>
         <td><?php echo $Car->getModel()->getBrand()->name ?></td>

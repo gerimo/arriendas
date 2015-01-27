@@ -135,7 +135,7 @@ class opportunitiesActions extends sfActions {
             $OriginalReserve = Doctrine_Core::getTable('Reserve')->find($reserveId);            
 
             if ($Car->hasReserve($OriginalReserve->getFechaInicio2(), $OriginalReserve->getFechaTermino2())) {
-                throw new Exception("El auto seleccionado para postular ya posee una reserva en las fechas de la postulación", 1);                
+                throw new Exception("Este auto ya posee una reserva en las fechas de la oportundiad", 1);                
             }
 
             // Comentado porque cuando se aprueba por correo no necesariamente debería estar logueado

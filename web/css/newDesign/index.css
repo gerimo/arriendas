@@ -188,6 +188,7 @@ header .navbar-nav .navbar-right ul {
 }
 
 #section-map-filters li {
+    padding-right: 8px;
     float: left;
     list-style: none;   
     font: 600 18px/20px 'Open Sans', sans-serif;
@@ -256,7 +257,7 @@ header .navbar-nav .navbar-right ul {
     padding: 0 0 0 10px;
 }
 .infowindow .metro{
-    padding-top: 10px;
+    padding-top: 4px;
     padding-left: 10px;
 }
 

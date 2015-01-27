@@ -199,6 +199,27 @@ class carsActions extends sfActions {
                 $Car = new Car();
                 $fechaHoy = Date("Y-m-d");
                 $Car->setFechaSubida($fechaHoy);
+
+                // Correo de notificación
+                $User    = $Car->getUser();
+
+                $mail    = new Email();
+                $mailer  = $mail->getMailer();
+                $message = $mail->getMessage();            
+
+                $subject = "¡Tu vehículo ha sido registrado!";
+                $body    = $this->getPartial('emails/carCreateSupport', array('Car' => $Car));
+                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+                $to      = array("teayuda@arriendas.cl");
+
+                $message->setSubject($subject);
+                $message->setBody($body, 'text/html');
+                $message->setFrom($from);
+                $message->setTo($to);
+                /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
+                
+                $mailer->send($message);
+
             }else{
                 $Car = Doctrine_Core::getTable('car')->find($carId);
             }
@@ -225,26 +246,7 @@ class carsActions extends sfActions {
 
             $this->getUser()->setAttribute("carId", $Car->getId());
 
-            // Correo de notificación
-            $User    = $Car->getUser();
-
-            $mail    = new Email();
-            $mailer  = $mail->getMailer();
-            $message = $mail->getMessage();            
-
-            $subject = "¡Tu reserva ha sido aprobada!";
-            $body    = $this->getPartial('emails/carCreateSupport', array('Car' => $Car));
-            $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-            $to      = array("franco.inostrozah@gmail.com");
-
-            $message->setSubject($subject);
-            $message->setBody($body, 'text/html');
-            $message->setFrom($from);
-            $message->setTo($to);
-            /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
             
-            $mailer->send($message);
-
 
             $url = $this->generateUrl('car_price');
             $return["url_complete"] = $url;
