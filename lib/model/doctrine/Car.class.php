@@ -6,8 +6,12 @@ class Car extends BaseCar {
 
         $q = Doctrine_Core::getTable("Car")
             ->createQuery('C')
-            ->where('C.patente = ?', $patent)
-            ->andWhere('C.id != ?', $idCar);
+            ->where('C.patente = ?', $patent);
+            
+
+        if($idCar){
+              $q->andWhere('C.id != ?', $idCar);
+        }
        
 
         return $q->execute();
