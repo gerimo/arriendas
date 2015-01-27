@@ -490,14 +490,17 @@ class mainActions extends sfActions {
                         $OpportunityEmailQueue->save();
                     }
                 } else {
-                    throw new Exception("Firma no coincide", 1);                
+                    throw new Exception("La firma de OpportunityEmailQueue ".$opportunityEmailQueueId." no coincide", 2);                
                 }
             } else {
-                throw new Exception("OpportunityEmailQueue no encontrada", 1);                
+                throw new Exception("OpportunityEmailQueue no encontrada", 2);
             }
 
         } catch (Exception $e) {
-            Utils::reportError($e->getMessage(), "main/opportunityMailingOpen");
+            error_log("[".date("Y-m-d H:i:s")."] ERROR: ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "main/opportunityMailingOpen");
+            }
         }
 
         $this->getResponse()->setContentType('image/gif');
