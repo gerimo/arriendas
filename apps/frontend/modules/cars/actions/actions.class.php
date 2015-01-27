@@ -225,7 +225,8 @@ class carsActions extends sfActions {
             }
             
 
-
+            error_log($commune);
+            
             $Car->setAddress($address);
             $Car->setCommuneId($commune);
             $Car->setModelId($model);
@@ -242,6 +243,7 @@ class carsActions extends sfActions {
             $Car->setCityId(27);
 
             $Car->save();
+
             CarProximityMetro::setNewCarProximityMetro($Car);
 
             $this->getUser()->setAttribute("carId", $Car->getId());
