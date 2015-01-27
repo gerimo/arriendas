@@ -266,6 +266,10 @@ header .navbar-nav .navbar-right ul {
     padding: 10px;
 }
 
+.box .metro p {
+    height: 40px;
+}
+
 #tab-map .box {
     /*border-bottom: solid 1px #ddd;*/
 }

@@ -201,7 +201,6 @@ class carsActions extends sfActions {
                 $Car->setFechaSubida($fechaHoy);
 
                 // Correo de notificación
-                $User    = $Car->getUser();
 
                 $mail    = new Email();
                 $mailer  = $mail->getMailer();
@@ -224,10 +223,10 @@ class carsActions extends sfActions {
                 $Car = Doctrine_Core::getTable('car')->find($carId);
             }
             
-
+            $Commune = Doctrine_Core::getTable('Commune')->find($commune);
 
             $Car->setAddress($address);
-            $Car->setCommuneId($commune);
+            $Car->setCommune($Commune);
             $Car->setModelId($model);
             $Car->setYear($ano);
             $Car->setAddress($address);
@@ -242,6 +241,7 @@ class carsActions extends sfActions {
             $Car->setCityId(27);
 
             $Car->save();
+
             CarProximityMetro::setNewCarProximityMetro($Car);
 
             $this->getUser()->setAttribute("carId", $Car->getId());
