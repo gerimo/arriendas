@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-md-offset-2 col-md-8">
         <div class="BCW">
-            <h1>Compare Precios</h1>        
+            <h1>Compara Precios</h1>        
             <section id="section-compare-prices">
                <div class="visible-xs space-20"></div>
                <div class="row">

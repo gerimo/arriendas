@@ -147,16 +147,16 @@ class reservesActions extends sfActions {
 
             $return["error"] = true;
 
-            if ($e->getCode() == 2) {
+            if ($e->getCode() >= 2) {
                 $return["errorMessage"] = $e->getMessage();
             } else {
                 $return["errorMessage"] = "Problemas a calcular el precio. Por favor, intentalo más tarde";
             }
             
-            if ($request->getHost() == "www.arriendas.cl") {
+            error_log("[".date("Y-m-d H:i:s")."] ERROR: ".$e->getMessage());
+            
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
                 Utils::reportError($e->getMessage(), "reserves/calculatePrice");
-            } else {
-                error_log("[".date("Y-m-d H:i:s")."] ERROR: ".$e->getMessage());
             }
         }
     
