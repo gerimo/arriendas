@@ -375,7 +375,7 @@
 
                     windowMarker += "<div class='col-md-4 text-center'>";
                     /*windowMarker += "<a href='" + urlFotoTipo + "' class='thickbox'>";*/
-                    windowMarker += "<img src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "'/>";
+                    windowMarker += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "'/>";
                     /*windowMarker += "</a>";*/
                     windowMarker += "</div>";
 
