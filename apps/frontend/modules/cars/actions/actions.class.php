@@ -221,6 +221,7 @@ class carsActions extends sfActions {
             $Car->setCityId(27);
 
             $Car->save();
+            CarProximityMetro::setNewCarProximityMetro($Car);
 
             $this->getUser()->setAttribute("carId", $Car->getId());
 
@@ -536,7 +537,6 @@ class carsActions extends sfActions {
             echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";*/
 
             $Car = Doctrine_Core::getTable('car')->find($carId);
-            error_log($carId);
             $Car->setAccesoriosSeguro("/images/cars/".$actual_image_name);
             $Car->save();
 
