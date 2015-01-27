@@ -223,11 +223,10 @@ class carsActions extends sfActions {
                 $Car = Doctrine_Core::getTable('car')->find($carId);
             }
             
-
-            error_log($commune);
+            $Commune = Doctrine_Core::getTable('Commune')->find($commune);
 
             $Car->setAddress($address);
-            $Car->setCommuneId($commune);
+            $Car->setCommune($Commune);
             $Car->setModelId($model);
             $Car->setYear($ano);
             $Car->setAddress($address);
