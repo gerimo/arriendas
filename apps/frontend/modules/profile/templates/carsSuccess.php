@@ -184,6 +184,8 @@
 
 <script type="text/javascript">
 
+    $("a[data-target='cars']").parent().addClass("active");
+
     var toggleActiveCarAjax = <?php echo "'".url_for("profile/toggleActiveCarAjax")."';" ?>
 
     function deleteDisabled(idCar){
