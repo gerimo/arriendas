@@ -427,13 +427,14 @@
                     article = "<article class='box'>";
                     article += "<div class='row'>";
                     article += "<div class='col-xs-4 col-md-4 image'>";
-                    article += "<img class='car' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_134,h_99,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='"+ Car.brand +" "+ Car.model +"'>";
+                    article += "<img class='car img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_134,h_99,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='"+ Car.brand +" "+ Car.model +"'>";
                     article += "<img class='marker' src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + (i+1) + "|05a4e7|ffffff'>";
                     article += "</div>";
                     article += "<div class='col-xs-8 col-md-8 text'>";
                     article += "<h2>"+ Car.brand +" "+ Car.model +"<small>, "+Car.year+"</small></h2>";
                     /*article += "<span class='sub-heading'>A 2 km Metro <strong>Tobalaba</strong></span>";*/
                     article += "<p class='price'>$"+ Car.price +" <small style='color: black; font-weight: 300'>TOTAL</small></p>";
+                    article += "<div class='metro'><p><img class='km-area' src='/images/newDesign/ico.png' alt='metro'> A <b><em>"+Car.nearestMetroDistance+"</em> km</b> del Metro "+Car.nearestMetroName+"</p></div>"
                     article += "<p class='text-right'><a class='btn btn-a-action btn-sm' href='"+reserveUrl.replace("carId", Car.id)+"' class='reserve' target='_blank'>RESERVAR</a></p>";
                     /*article += "<img src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + contador + "|05a4e7|ffffff' />";*/
                     article += "</div>";
@@ -551,14 +552,14 @@
         <div class=" col-sm-2 col-md-2 text-center">
             <strong class="heading">Filtros</strong>
         </div>
-        <div class="col-sm-7 col-md-7">
+        <div class="col-sm-6 col-md-6">
             <ul>
                 <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
                 <li><input type="checkbox" name="filter" class="isLowConsumption"> Petrolero</li>
                 <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
             </ul>
         </div>
-        <div class="col-sm-3 col-md-3 hidden-xs tabset">
+        <div class="col-sm-4 col-md-4 hidden-xs tabset">
             <div class="map col-sm-6 col-md-6 text-center tab activo" data-target="#tab-map"><strong><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Mapa</strong></div>
             <div class="list col-sm-6 col-md-6 text-center tab" data-target="#tab-list"><strong><span class="glyphicon glyphicon-list" aria-hidden="true"></span> Lista</strong></div>
         </div>
@@ -595,11 +596,11 @@
 
         <div class="tab-container hidden-xs" id="tab-map">
             <div class="row">
-                <div class="col-sm-9 col-md-9" id="map">
+                <div class="col-sm-8 col-md-8" id="map">
                     <div id="map-container"></div>
                 </div>
 
-                <div class="col-sm-3 col-md-3" id="map-list">
+                <div class="col-sm-4 col-md-4" id="map-list">
                     <div id="map-list-loading" class="loading" style="text-align: center; margin-top: 30%"><?php echo image_tag('ajax-loader.gif', array("width" => "80px", "height" => "80px")) ?></div>
                     <div id="map-list-container"></div>
                 </div>
