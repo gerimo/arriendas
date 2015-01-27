@@ -202,7 +202,7 @@ class carsActions extends sfActions {
 
                 // Correo de notificación
 
-                $mail    = new Email();
+                /*$mail    = new Email();
                 $mailer  = $mail->getMailer();
                 $message = $mail->getMessage();            
 
@@ -214,16 +214,18 @@ class carsActions extends sfActions {
                 $message->setSubject($subject);
                 $message->setBody($body, 'text/html');
                 $message->setFrom($from);
-                $message->setTo($to);
+                $message->setTo($to);*/
                 /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
                 
-                $mailer->send($message);
+                /*$mailer->send($message);*/
 
             }else{
                 $Car = Doctrine_Core::getTable('car')->find($carId);
             }
             
             $Commune = Doctrine_Core::getTable('Commune')->find($commune);
+
+            error_log($Commune);
 
             $Car->setAddress($address);
             $Car->setCommune($Commune);
