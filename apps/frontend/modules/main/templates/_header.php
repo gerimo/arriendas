@@ -65,7 +65,7 @@
                             </ul>
                         </li>
                     <?php else: ?>                        
-                        <li><a class="btn-a-secondary" href="<?php echo url_for('login') ?>">INGRESAR</a></li>
+                        <li><a class="btn btn-a-primary" href="<?php echo url_for('login') ?>">INGRESAR</a></li>
                     <?php endif ?>
                 </ul>
             </div>
