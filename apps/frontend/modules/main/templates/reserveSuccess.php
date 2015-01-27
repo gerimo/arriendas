@@ -369,9 +369,6 @@
                             });
 
                             if (userAccept) {
-                                console.log($("#from").val());
-                                console.log($("#to").val());
-                                return false;
                                 $("#reserve-form").submit();
                             }
                         }
