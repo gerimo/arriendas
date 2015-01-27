@@ -11,7 +11,7 @@ class opportunitiesActions extends sfActions {
 
         $User = Doctrine_Core::getTable('User')->find($userId);
 
-        $this->Cars = Doctrine_Core::getTable('Car')->findByUserIdAndActivo($userId, true);
+        $this->Cars = Doctrine_Core::getTable('Car')->findByUserIdAndActivoAndSeguroOk($userId, true, 4);
 
         foreach ($this->Cars as $Car) {
 
