@@ -1310,8 +1310,8 @@ ReserveFile:
     charset: utf8
     type: InnoDB
 
-OportunityTaksConfiguration:
-  tableName: OportunityTaksConfiguration
+OpportunityTaksConfiguration:
+  tableName: OpportunityTaksConfiguration
   columns:
     id:
       type: integer(4)
@@ -1323,8 +1323,8 @@ OportunityTaksConfiguration:
     simultanious_mails:
       type: integer(4)
 
-OportunityQueue:
-  tableName: OportunityQueue
+OpportunityQueue:
+  tableName: OpportunityQueue
   columns:
     id:
       type: integer(4)
@@ -1353,28 +1353,25 @@ OportunityQueue:
       class: Reserve
       local: reserve_id
       foreign: id
-      foreignAlias: OportunityQueues
+      foreignAlias: OpportunityQueues
       onDelete: no action
       onUpdate: no action
   options:
     charset: utf8
     type: InnoDB
 
-OportunityEmailQueue:
-  tableName: OportunityEmailQueue
+OpportunityEmailQueue:
+  tableName: OpportunityEmailQueue
   columns:
     id:
       type: integer(4)
       primary: true
       notnull: true
       autoincrement: true
-    renter_id:
-      type: integer(4)
-      notnull: true
-    owner_id:
-      type: integer(4)
-      notnull: true
     reserve_id:
+      type: integer(4)
+      notnull: true
+    car_id:
       type: integer(4)
       notnull: true
     created_at:
@@ -1384,24 +1381,17 @@ OportunityEmailQueue:
     opened_at:
       type: timestamp
   relations:
-    Renter:
-      class: User
-      local: renter_id
-      foreign: id
-      foreignAlias: RenterOportunities
-      onDelete: no action
-      onUpdate: no action
-    Owner:
-      class: User
-      local: owner_id
-      foreign: id
-      foreignAlias: OwnerOportunities
-      onDelete: no action
-      onUpdate: no action
     Reserve:
       class: Reserve
       local: reserve_id
       foreign: id
-      foreignAlias: Oportunities
+      foreignAlias: Opportunities
+      onDelete: no action
+      onUpdate: no action
+    Car:
+      class: Car
+      local: car_id
+      foreign: id
+      foreignAlias: Opportunities
       onDelete: no action
       onUpdate: no action

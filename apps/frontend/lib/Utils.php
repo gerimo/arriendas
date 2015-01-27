@@ -26,7 +26,7 @@ class Utils {
         $mailer->send($message);
     }
 
-    public static function validateRUT($rut) {
+    public static function isValidRUT($rut) {
 
        $rut = str_replace(array('.', ',', '-', ' '), '', $rut);
 
@@ -42,4 +42,37 @@ class Utils {
 
        return strtolower($newDv) == strtolower($dv);
    }
+
+    public static function isWeekend($getDays = false) {
+
+        $days = array();
+
+        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
+        if ($Holiday || date("N") == 6 || date("N") == 7) {
+
+            if (!$getDays) {
+                return true;
+            }
+
+            $days[0] = date("Y-m-d");
+            $i = 1;
+
+            $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+".$i." day")));            
+            while ($Holiday || date("N", strtotime("+".$i." day")) == 6 || date("N", strtotime("+".$i." day")) == 7) {
+
+                $days[$i] = date("Y-m-d", strtotime("+".$i." day"));
+                $i++;
+
+                $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("N", strtotime("+".$i." day")));
+            }
+
+            $isWeekend = true;
+        }
+
+        if (count($days) > 0) {
+            return $days;
+        }
+
+        return false;
+    }
 }

@@ -1,0 +1,18 @@
+body {
+    background-image: url('/images/newDesign/background.jpg');
+}
+
+.BCW h2 {
+   /*color: #fff;*/
+   color: #ba135f;
+   font-weight: 400;
+}
+
+.panel-body{
+
+	background: #FAFAFA;
+}
+
+.collapsed{
+	font-weight: 300;
+}

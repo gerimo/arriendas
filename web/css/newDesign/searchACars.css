@@ -1,0 +1,103 @@
+body {
+    background-image: url('/images/newDesign/background.jpg');
+}
+
+#list-container {
+    background-color: white;
+    min-height: 250px;
+}
+
+#list-container h2 {
+    font-weight: 300;
+}
+
+#filters-navbar {
+    background-color: white;
+    border-color: white;
+    margin: 0;
+}
+
+#section-map-filters {
+    color:rgb(10, 9, 9);
+    font-family: 'Open Sans', sans-serif;
+    font-size: 15px;
+    padding: 29px 0px 26px 0px;
+}
+
+#section-map-filters .heading {
+    float: left;
+    font: 500 24px/26px 'Open Sans', sans-serif;
+    color: #050505;
+    position: relative;
+    padding: 0 30px 0 30px;
+}
+
+#section-map-filters ul {
+    margin-top: 4px;
+    margin-left: -10%;
+}
+
+#section-map-filters li {
+    float: left;
+    list-style: none;   
+    font: 600 18px/20px 'Open Sans', sans-serif;
+}
+
+#section-map-filters .col-md-7 input[type=checkbox] { 
+	margin: 0 10px 0 10px; 
+}
+
+
+h3 .filter{
+	color:rgb(10, 9, 9);
+}
+
+.box .price {
+    color: #c8427f;
+    font: 700 20px/22px 'Roboto', sans-serif;
+}
+
+.box .image .car {
+    height: 100%;
+    width: 100%;
+}
+
+.box .image .marker {
+    left: 3px;
+    position: absolute;
+}
+
+.box .text h2 a small {
+    font: 300 13px/20px 'Roboto', sans-serif;
+}
+
+.box .text h2 {
+    font: 700 16px/20px 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.grey{
+
+    background: #FAFAFA;
+    border-radius: 5px;
+    margin-top: 2px;
+    margin-bottom: 5px;
+}
+
+.links{
+    margin-top: 55px;
+    margin-left: 70px;
+    margin-right: 78px;
+}
+.panel-title{
+    font: 400 23px/20px 'Roboto', sans-serif;
+
+}
+.panel-group-spam{
+     margin-top: 55px;
+}
+
+.panel-heading{
+    background-color: #FAFAFA;
+}

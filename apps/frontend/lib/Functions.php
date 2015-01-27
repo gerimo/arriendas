@@ -58,8 +58,9 @@ class Functions {
     $datosContrato->domicilio_arrendatario=$arrendatario->getAddress();
 	
     //Comuna Arrendatario
-    $comuna_arr= ComunasTable::getInstance()->findOneByCodigoInterno($arrendatario->getComuna());
-    $datosContrato->comuna_arrendatario=$comuna_arr->getNombre();
+    /*$comuna_arr = ComunasTable::getInstance()->findOneByCodigoInterno($arrendatario->getComuna());*/
+    $comuna_arr = CommuneTable::getInstance()->find($arrendatario->getCommune()->id);
+    $datosContrato->comuna_arrendatario=$comuna_arr->name;
     
     //Dueno
     $duenio= UserTable::getInstance()->findOneById($auto->getUserId());
@@ -76,8 +77,9 @@ class Functions {
     $datosContrato->domicilio_duenio=$duenio->getAddress();
 
     //Comuna Duenio
-    $comuna_due= ComunasTable::getInstance()->findOneByCodigoInterno($duenio->getComuna());
-    $datosContrato->comuna_duenio= $comuna_due->getNombre();
+    /*$comuna_due= ComunasTable::getInstance()->findOneByCodigoInterno($duenio->getComuna());*/
+    $comuna_due = CommuneTable::getInstance()->find($duenio->getCommune()->id);
+    $datosContrato->comuna_duenio= $comuna_due->name;
     
     
   
@@ -1134,8 +1136,9 @@ p{
         $datosContrato->domicilio_arrendatario = $arrendatario->getAddress();
 
         //Comuna Arrendatario
-        $comuna_arr = ComunasTable::getInstance()->findOneByCodigoInterno($arrendatario->getComuna());
-        $datosContrato->comuna_arrendatario = $comuna_arr->getNombre();
+        /*$comuna_arr = ComunasTable::getInstance()->findOneByCodigoInterno($arrendatario->getComuna());*/
+        $comuna_arr = CommuneTable::getInstance()->find($arrendatario->getCommune()->id);
+        $datosContrato->comuna_arrendatario = $comuna_arr->name;
 
         
         
@@ -1157,8 +1160,9 @@ p{
         $datosContrato->domicilio_duenio = $duenio->getAddress();
 
         //Comuna Duenio
-        $comuna_due = ComunasTable::getInstance()->findOneByCodigoInterno($duenio->getComuna());
-        $datosContrato->comuna_duenio = $comuna_due->getNombre();
+        /*$comuna_due = ComunasTable::getInstance()->findOneByCodigoInterno($duenio->getComuna());*/
+        $comuna_due = CommuneTable::getInstance()->find($duenio->getCommune()->id);
+        $datosContrato->comuna_duenio = $comuna_due->name;
 
         //Cargamos el texto del contrato desde el archivo fuente
         $contrato = file_get_contents(sfConfig::get("sf_app_template_dir") . "/pagare.html");

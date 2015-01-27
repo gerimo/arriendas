@@ -1,3 +1,7 @@
+body {
+    background-image: url('/images/newDesign/background.jpg');
+}
+
 p {
     margin: 0;
     padding: 0;
@@ -18,11 +22,11 @@ p {
 }
 
 .btn-a-primary {
-    margin-top: 8px;
+    margin-top: 16px;
 }
 
 .btn-a-action {
-    margin-top: 20px;
+    margin-top: 16px;
 }
 
 .fa-check {

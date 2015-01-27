@@ -23,11 +23,11 @@
                         <div class="col-sm-6 col-md-6"> 
 
                             <label>Precio por hora (*)</label>
-                            <input class="form-control" id="priceHour" name="priceHour" placeholder="Precio referencia $<?php if($hour<4000): echo 4000; else: echo $hour; endif;    ?>" type="text">
+                            <input class="form-control" id="priceHour" name="priceHour" placeholder="Precio referencia $<?php if($hour<4000): echo "4.000"; else: echo number_format(round($hour), 0, '', '.'); endif;    ?>" type="text">
                         </div>
                         <div class="col-sm-6 col-md-6">
                             <label>Precio por día (*)</label>
-                            <input class="form-control" id="priceDay" name="priceDay" placeholder="Precio referencia $<?php echo $day ?>" type="text">
+                            <input class="form-control" id="priceDay" name="priceDay" placeholder="Precio referencia $<?php echo number_format(round($day), 0, '', '.') ?>" type="text">
                         </div>
                         </div>
                     </div>
@@ -37,14 +37,13 @@
                     <div class="col-md-12">
                         <div class="col-sm-6 col-md-6">
                             <label>Precio por semana (Opcional)</label>
-                            <input class="form-control" id="priceWeek" name="priceWeek" placeholder="Precio referencia $<?php echo $week ?>" type="text">
+                            <input class="form-control" id="priceWeek" name="priceWeek" placeholder="Precio referencia $<?php echo number_format(round($week), 0, '', '.') ?>" type="text">
                         </div>
                         <div class="col-sm-6 col-md-6">
                             <label>Precio por mes (Opcional)</label>
-                            <input class="form-control" id="priceMonth" name="priceMonth" placeholder="Precio referencia $<?php echo $month ?>" type="text">
+                            <input class="form-control" id="priceMonth" name="priceMonth" placeholder="Precio referencia $<?php echo number_format(round($month), 0, '', '.') ?>" type="text">
                         </div>
                     </div>
-                    
                 </fieldset>
             </form>
 
@@ -64,10 +63,6 @@
 
 
 <script>
-
-$(document).ready(function(){
-
-});
 
 function validateForm() {
 

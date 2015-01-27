@@ -25,9 +25,9 @@
                         <tr data-reserve-id="<?php echo $Opp["Reserve"]->getId() ?>">
                             <td><?php echo date("Y-m-d H:i", strtotime($Opp["Reserve"]->getFechaInicio2())) ?></td>
                             <td><?php echo date("Y-m-d H:i", strtotime($Opp["Reserve"]->getFechaTermino2())) ?></td>
-                            <td><?php echo '$'.number_format(Car::getPrice($Opp["Reserve"]->getFechaInicio2(), $Opp["Reserve"]->getFechaTermino2(), $Opp["Reserve"]->getCar()->getPricePerHour(), $Opp["Reserve"]->getCar()->getPricePerDay(), $Opp["Reserve"]->getCar()->getPricePerWeek(), $Opp["Reserve"]->getCar()->getPricePerMonth()), 0, ',', '.') ?></td>
+                            <td><?php echo '$'.number_format(CarTable::getPrice($Opp["Reserve"]->getFechaInicio2(), $Opp["Reserve"]->getFechaTermino2(), $Opp["Reserve"]->getCar()->getPricePerHour(), $Opp["Reserve"]->getCar()->getPricePerDay(), $Opp["Reserve"]->getCar()->getPricePerWeek(), $Opp["Reserve"]->getCar()->getPricePerMonth()), 0, ',', '.') ?></td>
                             <td><?php echo $Opp["Reserve"]->getUser()->getFirstname() ." ". $Opp["Reserve"]->getUser()->getLastname() ?></td>
-                            <td><button class="approve btn-a-primary">Postular</button></td>
+                            <td><button class="approve btn btn-a-primary">Postular</button></td>
                         </tr>
                     <?php endforeach ?>
                 </tbody>

@@ -1,4 +1,3 @@
-
 @font-face {
     font-family: 'icomoon';
     src: url('/fonts/newDesign/reserva/icomoon.eot?ffv0vx');
@@ -6,6 +5,7 @@
     font-weight: normal;
     font-style: normal;
 }
+
 [class^="icon-"], [class*=" icon-"] {
    font-family: 'icomoon';
    speak: none;
@@ -27,6 +27,7 @@
 .container{
     padding: 0;
 }
+
 .upload-link{
     background: #fff;
     text-align: center;
@@ -54,6 +55,10 @@
     font-style: italic;
 }
 
+.panel-default>.panel-heading {
+    background-color: white;
+}
+
 #gallery ul{
     list-style: none;
 }
@@ -70,7 +75,7 @@
 
 .carousel { margin: 0 -8px 0 0; }
 .carousel-control.left, .carousel-control.right {
-    background: url(/images/newDesign/reserva/left-arrow.svg) no-repeat;
+    background: url(/images/newDesign/reserve/left-arrow.svg) no-repeat;
     width: 28px;
     height: 64px;
     opacity: 1;
@@ -80,7 +85,7 @@
 .carousel-control.right {
     left: auto;
     right: 22px;
-    background: url(/images/newDesign/reserva/right-arrow.svg) no-repeat;
+    background: url(/images/newDesign/reserve/right-arrow.svg) no-repeat;
 }
 .carousel-control.left:hover, .carousel-control.right:hover { opacity: .8; }
 .carousel-control {
@@ -180,8 +185,8 @@
 
 .reserve-area .saved {
     position: absolute;
-    right: -12px;
-    top: -92px;
+    right: -55px;
+    top: -60px;
     width: 114px;
     height: 114px;
     border-radius: 100%;
@@ -274,16 +279,14 @@
 .step-list li.gray { background:#e2e1e1; }
 
 .num {  
-    float: left;
-    border-radius: 100%;
-    width: 66px;
-    margin: 0 -13px 0 0;
-    text-align: center;
-    line-height: 61px;
-    padding: 0 0 5px;
-    font-size: 49px;
-    font-weight: 800;
     background: #e2e1e1;
+    border-radius: 100%;
+    margin: -10px 10px 0 0;
+    font-size: 36px;
+    font-weight: 500;
+    padding: 4px 14px;
+    text-align: center;
+    width: 66px;
 }
 
 .tres{
@@ -424,19 +427,6 @@ a:focus {
     padding: 0;
 }
 
-.nums {
-    float: left;
-    border-radius: 100%;
-    width: 66px;
-    margin: 0px 18px 0 0;
-    text-align: center;
-    line-height: 61px;
-    padding: 0 0 5px;
-    font-size: 49px;
-    font-weight: 800;
-    background: #e2e1e1;
-}
-
 #payments input {
     display: inline-block;
     width: 26px;
@@ -465,12 +455,27 @@ a:focus {
     padding: 0 5px 0 0;
 }
 
-.secure-payment{
-    float: left !important  ;
-    font-size: 19px;
+.list-warranty {
+    font-size: 23px;
     font-weight: 300;
-    line-height: 26px;
-    padding: 26px 0 0 0;
+    line-height: 50px;
+    list-style: none;
+    margin: 0;
+    padding: 20px 20px 20px 80px;
+}
+
+.list-warranty i {
+    color: #00bf00;
+    font-size: 30px;
+    font-weight: 300;
+    padding: 0 10px;
+}
+
+.secure-payment{
+    font-size: 18px;
+    font-weight: 400;
+    padding: 10px 0 0 0;
+    text-align: center;
 }   
 
 .icon-svg_21:before {
@@ -478,37 +483,19 @@ a:focus {
 }
 
 .mobile h1 {
-    font-size: 15px;
+    font-size: 22px;
     line-height: 20px;
     text-indent:6px;
     margin:0 0 0 8px;
 }
-.mobile h2{
-    font-size: 10px;
+.mobile h2 {
+    font-size: 15px;
     margin: 0 0 9px;
     font-weight: 300;
     line-height: 15px;
 }
-.mobile h1 span{
-    font-size: 12px;
-}
 
-.block-mobile{
-    border: none;
-margin: 0 -15px;
-border-radius: 0;
-padding: 17px 26px 8px;
-background: #f8f8f8;
-}
 
-.mobile .auto li{
-    font-size: 10px;
-    padding: 0 0 13px 19px;
-    line-height: 15px;
-    list-style: none;
-    font-weight: 300;
-    position: relative;
-}
 
 .mobile li .icon-svg{
     background: url(/images/newDesign/reserva/svg_04.svg) no-repeat;
@@ -578,29 +565,6 @@ background: #f8f8f8;
     max-width: none;
     padding: 18px 5px !important;
     width: 100%;
-}
-
-.saved {
-    background: #fdcf22;
-    border-radius: 100%;
-    font-size: 17px;
-    height: 114px;
-    font-weight: 700;
-    line-height: 18px;
-    padding: 22px 0 0;
-    position: absolute;
-    right: -24px;
-    text-align: center;
-    text-transform: uppercase;
-    top: -16px;
-    width: 114px;
-}
-
-.saved strong {
-    display: block;
-    font-size: 45px;
-    line-height: 50px;
-    margin: 0 0 -4px;
 }
 
 .rating-container {
@@ -729,18 +693,14 @@ background: #f8f8f8;
     line-height: 26px;
 }
 
-#total {
-    border-bottom: 1px solid #6d6969;
-    margin-top: 20px;
-    padding-bottom: 5px;
-}
 
-.price {
+
+/*.price {
     font-size: 39px;
     line-height: 25px;
     font-weight: 300;
     color: #464646;
-}
+}*/
 
 .price-count{
     padding: 15px 0 15px;
@@ -805,7 +765,7 @@ background: #f8f8f8;
     color: white;
     font-size: 30px;
     font-weight: 800;
-    margin: 0 0 50px;
+    margin: 0 ;
     padding: 18px 5px !important;
 }
 
@@ -841,114 +801,74 @@ background: #f8f8f8;
 }
 
 @media only screen and (min-width:768px) {
-    .reserve-title {
-        color: #6d6969;
-        font: 500 36px 'Roboto', sans-serif;
+
+    .body h2 {
+        font-size: 28px;
+        font-weight: 400px;
+        margin: 40px 0 60px 0;
+        padding: 0;
     }
 
+    .body-title {
+        font-size: 36px;
+        font-weight: 300;
+        margin: 50px 0 30px 0;
+        text-align: center;
+    }
+
+    .body-title b {
+        font-weight: 500;
+    }
+    .panel-body p {
+        padding: 15px 20px 25px 20px;
+    }
+    .panel-title img {
+        height: 22px;
+    }
+
+    .price-area strong {
+        font-size: 36px;
+    }
+
+    .reserve-title {
+        padding-left: 14px;
+    }
     .reserve-subtitle {
         color: #6d6969;
         font: 300 32px 'Roboto', sans-serif;
     }
+    .total-box {
+        border-bottom: 1px solid #6d6969;
+        margin-top: 20px;
+        padding-bottom: 5px;
+    }
 }
 
 @media only screen and (max-width:767px) {
-    #payments input{
-        width: 17px;
-        margin: -1px 0px 0px -31px;
-    }
-
-    .time{
-        font-size: 15px;
-        line-height: 24px;
-    }
-
-    .datetimepicker{
-        font-size: 18px;
-        line-height: 25px;
-        font-weight: 500;
-        margin: 0 0 14px;
-        padding: 2px 19px 2px 0;
-    }
-    .disponibilidad .km-area:after {
-        top: 111px;
-    }
-    .price-count {
-        border-top: 2px solid #6d6969;
-    }
-    .step-list .info{
-        padding: 18px 0 0 0;
-    }
-    .mobile .auto , .mobile .disponibilidad{
-        margin-top: 20px;
-    }
-    .carousal-area{
-        margin: 0px 0 20px 0px;
-        padding: 0;
-    }
-    .dis{
-        display: inline;
-    }
-    .secure-payment{
-        display: none;
-    }
-    .content h1 {
-        display: block;
-        font-size: 19px;
-        font-weight: 300;
-        text-align: center;
-        margin: 0 0 11px;
-    }
-    .step-list .list li .icon-svg_16 {
-        left: 5px;
-        color: #00bf00;
-        top: 8px;
-        font-size: 13px;
-    }
-    .step-list .list li {
-        font-size: 15px;
-        font-weight: 300;
-        padding: 0 0 22px 24px;
-    }
-    .price {
-        font-size: 20px;
-        line-height: 25px;
-        font-weight: 400;
-        padding: 3px 0 7px;
-    }
-    .step-list h2 {
-        font-size: 12px;
-        line-height: 24px;
-        margin: 0 0 5px;
-    }
-    .radio label {
-        font-size: 12px;
-        line-height: 18px;
-    }
-    .tres{
-        font-size: 12px;
-        line-height: 24px;
-        margin: 0 40px 5px;
-    }
-    .step-list .text {
-        font-size: 14px;
-        line-height: 28px;
-        padding: 0 10px;
-        margin: 0 0 23px;
-    }   
-    .num, .nums{
-        display: none;      
-    }
-    .info .display {
-        margin-left: 19px;
-    }
-
-    .fake{
-        padding: 0;
-    }
 
     body {
         color: rgb(70, 70, 70);
+    }
+
+    h1 {
+        font-size: 24px;
+        font-weight: 400;
+        margin: 10px 0 20px 0;
+        padding: 0 10px;
+    }
+
+    h1.body-title {
+        margin-top: 40px;
+        padding: 0 5px;
+        text-align: center;
+    }
+
+    h2 {
+        font-size: 16px;
+        font-weight: 300;
+        margin: 30px 0 20px 0;
+        padding: 0 10px;
+        text-transform: uppercase;
     }
 
     p {
@@ -960,44 +880,42 @@ background: #f8f8f8;
         font: 500 16px 'Roboto', sans-serif;
     }
 
-    #license-container h1 {
-        font-size: 22px;
-        font-weight: 600;
-        margin: 30px 0;
-        text-transform: uppercase;
+    .carousal-area {
+        margin: 8px 0 0 -8px;
     }
 
-    #license-container h2 {
-        font-size: 16px;
-        font-weight: 500;
-        margin: 40px 0;
-    }
-
-    #license-container button {
-        background-color: white;
-        border: solid 1px white;
+    .block-mobile {
+        border: none;
         border-radius: 0;
-        margin: 0 0 40px 0;
-        text-transform: uppercase;
-        width: 90%;
+        padding: 20px 0px 8px 0px;
+        background: #f6f6f6;
     }
 
-    .reserve-title {
-        font: 700 18px 'Roboto', sans-serif;
+    .features {
+        margin: 0 0 0 20px;
+        padding: 0;
     }
 
-    .reserve-subtitle {
-        font: 500 16px 'Roboto', sans-serif;
-        margin-top: 10px;
+    .features li {
+        font-size: 14px;
+        font-weight: 300;
+        list-style: none;
+        margin-top: 4px;
     }
 
-    .title-price {
-        color: #c8427f;
-        display: inline;
-        font-size: 48px;
-        font-weight: 700;
-        line-height: 55px;
-        margin: 0;
+    .features li span {
+        padding-right: 2px;
+    }
+
+    .features li span.metro-mobile {
+        background: url('/images/newDesign/reserve/metro.png') no-repeat;
+        background-size: 16px 15px;
+        padding-right: 18px;
+    }
+
+    .features li i {
+        width: 13px;
+        text-align: center;
     }
 
     .saved {
@@ -1008,12 +926,11 @@ background: #f8f8f8;
         height: 65px;
         font-weight: 700;
         line-height: 12px;
+        margin-right: 6%;
+        margin-top: -55px;
         padding: 13px 0 0;
-        position: absolute;
-        right: 4%;
         text-align: center;
         text-transform: uppercase;
-        top: -16px;
         width: 65px;
     }
 
@@ -1023,43 +940,64 @@ background: #f8f8f8;
         line-height: 26px;
     }
 
-    .reserve-box-summary li {
-        margin-top: 20px;
+    .block-mobile .prices p {
+        color: #ba135f;
+        margin: 0 0 10px 25%;
     }
 
-    .reserve-box-summary i {
-        font-size: 18px;
-    }    
+    .list-warranty {
+        padding: 0;
+    }
 
-    #fromTo li {
-        background: #464646;
-        color: #fff;
-        font-size: 14px;
+    .list-warranty li {
+        font-size: 15px;
+        line-height: 22px;
+        margin-bottom: 10px;
+    }
+
+    .list-warranty li i {
+        font-size: 28px;
+    }
+
+    .body h2 {
+        font-size: 20px;
+        margin: 50px 0;
+    }
+
+    .body h2 .num {
+        font-size: 25px;
+    }
+
+    .datetimepicker{
+        font-size: 18px;
+        line-height: 25px;
         font-weight: 500;
-        line-height: 35px;
-        margin: 15px 0 0 0;
-        text-align: center;
-    }
-
-    #warranty-container {
-        font-size: 18px;
+        margin: 0 0 14px;
+        padding: 2px 19px 2px 0;
     }
 
     #sub-price-container {
-        padding-bottom: 5px;
+        font-size: 20px;
     }
 
-    #warranty-form label {
-        font-size: 14px;
+    .price-count {
+        border-top: 1px solid #6d6969;
+        border-bottom: 1px solid #6d6969;
     }
 
-    #total {
-        padding-bottom: 5px;
+    .price-count label {
+        font-size: 18px;
     }
 
-    #payments-form .radio {
-        height: 100px;
+    .total-box strong {
+        color: #ba135f;
     }
 
+    .panel-default>.panel-heading img {
+        margin-top: -6px;
+    }
 
+    #btn-pay {
+        margin-top: 40px;
+    }
 }
