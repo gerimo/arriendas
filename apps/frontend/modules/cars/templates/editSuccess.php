@@ -185,7 +185,6 @@
                 <input id="lat" name="lat" type="hidden" value="<?php if($Car->lat) echo $Car->lat ?>">
                 <input id="lng" name="lng" type="hidden" value="<?php if($Car->lng) echo $Car->lng ?>">
                 <input id="carId" name="carId" type="hidden" value="<?php if($Car->id) echo $Car->id ?>">
-
             </form>
             <div class="col-md-offset-8 col-md-4">
                 <button class="btn-a-primary btn-block" name="save" onclick="validateFormCreate()">Guardar</button>
@@ -313,7 +312,7 @@
 
             <div class="hidden-xs space-100"></div> 
 
-            <form id="photoCar">
+
                 <fieldset id="paso4">
                         <h1>Foto Del Vehículo</h1>
                         <div class="space-50"></div> 
@@ -398,7 +397,7 @@
                             </div>
                 </fieldset>
                 <div class="space-20"></div>
-            </form><!-- 
+            <!-- 
             <div class="col-md-offset-8 col-md-4">
                 <button class="btn-a-primary btn-block" name="save" onclick="location.href='<?php echo url_for('cars') ?>'">Guardar</button>
             </div> -->
@@ -406,40 +405,40 @@
            
             <div style="display:none">
 
-            <form action="<?php echo url_for('cars/uploadPhoto?photo=cars&width=194&height=204&file=filePhotoCar') ?>" enctype="multipart/form-data" id="formPhotoCar" method="post">
-                <input id="filePhotoCar" name="filePhotoCar" type="file">
-                <input type="submit">
-            </form>
+                <form action="<?php echo url_for('cars/uploadPhoto?photo=cars&width=194&height=204&file=filePhotoCar') ?>" enctype="multipart/form-data" id="formPhotoCar" method="post">
+                    <input id="filePhotoCar" name="filePhotoCar" type="file">
+                    <input type="submit">
+                </form>
 
-            <form action="<?php echo url_for('cars/uploadPhotoAccessory?photo=cars&width=194&height=204&file=filePhotoCarAccessory') ?>" enctype="multipart/form-data" id="formPhotoCarAccessory" method="post">
-                <input id="filePhotoCarAccessory" name="filePhotoCarAccessory" type="file">
-                <input type="submit">
-            </form>
+                <form action="<?php echo url_for('cars/uploadPhotoAccessory?photo=cars&width=194&height=204&file=filePhotoCarAccessory') ?>" enctype="multipart/form-data" id="formPhotoCarAccessory" method="post">
+                    <input id="filePhotoCarAccessory" name="filePhotoCarAccessory" type="file">
+                    <input type="submit">
+                </form>
 
-            <form action="<?php echo url_for('cars/uploadPhotoFront?photo=cars&width=194&height=204&file=filePhotoCarFront') ?>" enctype="multipart/form-data" id="formPhotoCarFront" method="post">
-                <input id="filePhotoCarFront" name="filePhotoCarFront" type="file">
-                <input type="submit">
-            </form>
+                <form action="<?php echo url_for('cars/uploadPhotoFront?photo=cars&width=194&height=204&file=filePhotoCarFront') ?>" enctype="multipart/form-data" id="formPhotoCarFront" method="post">
+                    <input id="filePhotoCarFront" name="filePhotoCarFront" type="file">
+                    <input type="submit">
+                </form>
 
-            <form action="<?php echo url_for('cars/uploadPhotoSideRight?photo=cars&width=194&height=204&file=filePhotoCarSideRight') ?>" enctype="multipart/form-data" id="formPhotoCarSideRight" method="post">
-                <input id="filePhotoCarSideRight" name="filePhotoCarSideRight" type="file">
-                <input type="submit">
-            </form>
+                <form action="<?php echo url_for('cars/uploadPhotoSideRight?photo=cars&width=194&height=204&file=filePhotoCarSideRight') ?>" enctype="multipart/form-data" id="formPhotoCarSideRight" method="post">
+                    <input id="filePhotoCarSideRight" name="filePhotoCarSideRight" type="file">
+                    <input type="submit">
+                </form>
 
-            <form action="<?php echo url_for('cars/uploadPhotoSideLeft?photo=cars&width=194&height=204&file=filePhotoCarSideLeft') ?>" enctype="multipart/form-data" id="formPhotoCarSideLeft" method="post">
-                <input id="filePhotoCarSideLeft" name="filePhotoCarSideLeft" type="file">
-                <input type="submit">
-            </form>
+                <form action="<?php echo url_for('cars/uploadPhotoSideLeft?photo=cars&width=194&height=204&file=filePhotoCarSideLeft') ?>" enctype="multipart/form-data" id="formPhotoCarSideLeft" method="post">
+                    <input id="filePhotoCarSideLeft" name="filePhotoCarSideLeft" type="file">
+                    <input type="submit">
+                </form>
 
-            <form action="<?php echo url_for('cars/uploadPhotoBackRight?photo=cars&width=194&height=204&file=filePhotoCarBackRight') ?>" enctype="multipart/form-data" id="formPhotoCarBackRight" method="post">
-                <input id="filePhotoCarBackRight" name="filePhotoCarBackRight" type="file">
-                <input type="submit">
-            </form>
+                <form action="<?php echo url_for('cars/uploadPhotoBackRight?photo=cars&width=194&height=204&file=filePhotoCarBackRight') ?>" enctype="multipart/form-data" id="formPhotoCarBackRight" method="post">
+                    <input id="filePhotoCarBackRight" name="filePhotoCarBackRight" type="file">
+                    <input type="submit">
+                </form>
 
-            <form action="<?php echo url_for('cars/uploadPhotoBackLeft?photo=cars&width=194&height=204&file=filePhotoCarBackLeft') ?>" enctype="multipart/form-data" id="formPhotoCarBackLeft" method="post">
-                <input id="filePhotoCarBackLeft" name="filePhotoCarBackLeft" type="file">
-                <input type="submit">
-            </form>
+                <form action="<?php echo url_for('cars/uploadPhotoBackLeft?photo=cars&width=194&height=204&file=filePhotoCarBackLeft') ?>" enctype="multipart/form-data" id="formPhotoCarBackLeft" method="post">
+                    <input id="filePhotoCarBackLeft" name="filePhotoCarBackLeft" type="file">
+                    <input type="submit">
+                </form>
                 <div id="dialog-alert" title="">
                     <p></p>
                 </div>
@@ -724,9 +723,6 @@
 
         }, 'json');
     }
-
-    
-
 
     /*js photo */
     

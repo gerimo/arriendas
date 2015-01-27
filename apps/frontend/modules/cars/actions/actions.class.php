@@ -23,6 +23,8 @@ class carsActions extends sfActions {
             $this->redirect('homepage');
         }
 
+        $this->getUser()->setAttribute('carId', $carId);
+
         /*precios*/
         $price = $this->Car->getModel()->getPrice();
         $priceDay = $price/300;
@@ -534,8 +536,10 @@ class carsActions extends sfActions {
             echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";*/
 
             $Car = Doctrine_Core::getTable('car')->find($carId);
+            error_log($carId);
             $Car->setAccesoriosSeguro("/images/cars/".$actual_image_name);
             $Car->save();
+
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
