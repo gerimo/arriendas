@@ -116,8 +116,8 @@
 
     function approve(reserveId) {
 
-        $(this).attr("disabled", true);
-        $("[data-reserve-id="+reserveId+"]").find(".loading").show();
+        $("[data-reserve-id="+reserveId+"]").find("button").attr("disabled", true);
+        $("[data-reserve-id="+reserveId+"]").find("img").show();
 
         var carId = $("input[name='optionsCars']:checked").val();
 
@@ -134,13 +134,11 @@
                         }
                     }]
                 });
+                $("[data-reserve-id="+reserveId+"]").find("button").removeAttr("disabled");
+                $("[data-reserve-id="+reserveId+"]").find(".loading").hide();
             } else {
                 location.reload();
             }
-
-            $(this).removeAttr("disabled");
-            $("[data-reserve-id="+reserveId+"]").find(".loading").hide();
-
         }, "json");
     }
 </script>

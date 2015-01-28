@@ -14,32 +14,35 @@
 
                 <?php foreach ($PaidReserves as $PaidReserve): ?>
                     <div class="row paid-reserve-container">
-                        <div class="col-md-3">
-                            <p class="text-center">&nbsp;</p>
-                            <p class="text-center">Desde :<strong><?php echo date("d-m-Y H:i", strtotime($PaidReserve->getDate())) ?></strong></p>
-                            <p class="text-center">Hasta :<strong><?php echo date("d-m-Y H:i", strtotime("+".$PaidReserve->getDuration()." hour", strtotime($PaidReserve->getDate()))) ?></strong></p>
-                            <p class="text-center">&nbsp;</p>
-                        </div>
-                        <div class="col-md-3">
-                            <p class="text-center">&nbsp;</p>
-                            <p class="text-center"><?php echo '$'.number_format(CarTable::getPrice($PaidReserve->getFechaInicio2(), $PaidReserve->getFechaTermino2(), $PaidReserve->getCar()->getPricePerHour(), $PaidReserve->getCar()->getPricePerDay(), $PaidReserve->getCar()->getPricePerWeek(), $PaidReserve->getCar()->getPricePerMonth()), 0, ',', '.') ?></p>
-                            <p class="text-center"><?php echo $PaidReserve->getCar()->getModel()->getBrand()->getName()." ".$PaidReserve->getCar()->getModel()->getName() ?></p>
-                            <p class="text-center">&nbsp;</p>
-                        </div>
-                        <div class="col-md-3">
-                            <p class="text-center">&nbsp;</p>
-                            <p class="text-center"><?php echo $PaidReserve->getUser()->getFirstname()." ".$PaidReserve->getUser()->getLastname() ?></p>
-                            <p class="text-center"><span class="glyphicon glyphicon-earphone"></span> <?php echo $PaidReserve->getUser()->getTelephone() ?></p>
-                            <p class="text-center">&nbsp;</p>
+                        <div class="col-md-8">
+                            <div class="row" style="margin-top: 10px">
+                                <div class="col-md-4">
+                                    <p class="text-center"><strong>Desde: </strong><?php echo date("d-m-Y H:i", strtotime($PaidReserve->getDate())) ?></p>
+                                    <p class="text-center"><strong>Hasta: </strong><?php echo date("d-m-Y H:i", strtotime("+".$PaidReserve->getDuration()." hour", strtotime($PaidReserve->getDate()))) ?></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="price text-center"><?php echo '$'.number_format(CarTable::getPrice($PaidReserve->getFechaInicio2(), $PaidReserve->getFechaTermino2(), $PaidReserve->getCar()->getPricePerHour(), $PaidReserve->getCar()->getPricePerDay(), $PaidReserve->getCar()->getPricePerWeek(), $PaidReserve->getCar()->getPricePerMonth()), 0, ',', '.') ?></p>
+                                    <p class="text-center"><?php echo $PaidReserve->getCar()->getModel()->getBrand()->getName()." ".$PaidReserve->getCar()->getModel()->getName() ?></p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p class="text-center"><?php echo $PaidReserve->getUser()->getFirstname()." ".$PaidReserve->getUser()->getLastname() ?></p>
+                                    <p class="text-center">
+                                        <span class="glyphicon glyphicon-earphone"></span> <a href="tel:<?php echo $PaidReserve->getUser()->getTelephone() ?>"><?php echo $PaidReserve->getUser()->getTelephone() ?></a>
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-3 text-center">
                             <?php if ($PaidReserve->confirmed): ?>
-                                <button class="btn btn-a-action btn-block" disabled>CONFIRMADA</button>
+                                <button class="approved btn btn-a-primary btn-block" disabled>Aprobada</button>
                                 <a class="download-contracts" data-car-id="<?php echo $PaidReserve->getCar()->id ?>" data-reserve-token="<?php echo $PaidReserve->token ?>" href="#">Descargar contratos</a>
                             <?php else: ?>
                                 <button class="approve btn btn-a-primary btn-block" data-reserve-id="<?php echo $PaidReserve->getId() ?>">Aprobar</button>
                                 <a class="reject" data-reserve-id="<?php echo $PaidReserve->getId() ?>">Rechazar</a>
                             <?php endif ?>
+                        </div>
+                        <div class="col-md-1 text-center">
+                            <img class="loading" src="/images/ajax-loader.gif">
                         </div>
                     </div>
                 <?php endforeach ?>
@@ -54,13 +57,17 @@
                         <div class="panel panel-default">
                             <div class="panel-heading" role="tab" id="reserve-<?php echo $Reserve->getId() ?>">
                                 <div class="row">
-                                    <div class="col-xs-6 col-sm-6 col-md-3 text-center">
-                                        <p><strong>Desde</strong></p>
-                                        <p><?php echo date("d-m-Y H:i", strtotime($Reserve->getDate())) ?></p>
-                                    </div>
-                                    <div class="col-xs-6 col-sm-6 col-md-3 text-center">
-                                        <p><strong>Hasta</strong></p>
-                                        <p><?php echo date("d-m-Y H:i", strtotime("+".$Reserve->getDuration()." hour", strtotime($Reserve->getDate()))) ?></p>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-xs-6 col-sm-6 col-md-6 text-center">
+                                                <p><strong>Desde</strong></p>
+                                                <p><?php echo date("d-m-Y H:i", strtotime($Reserve->getDate())) ?></p>
+                                            </div>
+                                            <div class="col-xs-6 col-sm-6 col-md-6 text-center">
+                                                <p><strong>Hasta</strong></p>
+                                                <p><?php echo date("d-m-Y H:i", strtotime("+".$Reserve->getDuration()." hour", strtotime($Reserve->getDate()))) ?></p>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-md-3 text-center">
                                         <p class="price"><strong><?php echo '$'.number_format($Reserve->getPrice(), 0, ',', '.') ?></strong></p>
@@ -70,6 +77,7 @@
                                         <?php if ($Reserve->getConfirmed()): ?>
                                             <button class="extend btn btn-a-primary btn-block" data-reserve-id="<?php echo $Reserve->getId() ?>" data-reserve-to="<?php echo date("d-m-Y H:i", strtotime($Reserve->getFechaTermino2())) ?>">Extender</button>
                                         <?php else: ?>
+                                            <p>&nbsp;</p>
                                             <p>En espera de confirmación</p>
                                         <?php endif ?>
                                     </div>
@@ -85,34 +93,41 @@
                             <div id="collapse-<?php echo $Reserve->getId() ?>" data-reserve-id="<?php echo $Reserve->getId() ?>" class="panel-collapse collapse <?php if ($key >= 0) echo 'in' ?>" role="tabpanel" aria-labelledby="reserve-<?php echo $Reserve->getId() ?>">
                                 <div class="panel-body">
 
-                                    <?php foreach ($ChangeOptions[$Reserve->getId()] as $CO): ?>
+                                    <?php foreach ($ChangeOptions[$Reserve->getId()] as $i => $CO): ?>
                                         <div class="row">
-                                            <div class="col-md-9">
+                                            <div class="col-md-8">
                                                 <div class="col-md-3 text-center">
-                                                    <img src="/uploads/cars/thumbs/<?php echo $CO->getCar()->getFotoPerfil() ?>" width="75%">
+                                                    <img src="/uploads/cars/thumbs/<?php echo $CO->getCar()->getFotoPerfil() ?>" width="80%">
                                                 </div>
-                                                <div class="col-md-3 text-center">
-                                                    <p><?php echo $CO->getCar()->getModel()->getBrand()->getName() ." ". $CO->getCar()->getModel()->getName() ?></p>
-                                                    <p><?php if ($CO->getCar()->getTransmission()) echo "Automático"; else echo "Mecánico"; ?></p>
-                                                </div>
-                                                <div class="col-md-3 text-center">
-                                                    <p><?php echo $CO->getCar()->getAddress() .", ". $CO->getCar()->getCommune()->name ?></p>
-                                                </div>
-                                                <div class="col-md-3 text-center">
-                                                    <p><?php echo $CO->getCar()->getUser()->getFirstname() ." ". substr($CO->getCar()->getUser()->lastname, 0, 1) ?></p>
+                                                <div class="col-md-9">
+                                                    <br class="visible-xs">
+                                                    <p><b>Auto: </b><?php echo $CO->getCar()->getModel()->getBrand()->getName() ." ". $CO->getCar()->getModel()->getName() ?>, <?php if ($CO->getCar()->getTransmission()) echo "Automático"; else echo "Mecánico"; ?></p>
+                                                    <p><b>Dirección: </b><?php echo $CO->getCar()->getAddress() .", ". $CO->getCar()->getCommune()->name ?></p>
+                                                    <p><b>Dueño: </b><?php echo $CO->getCar()->getUser()->firstname ." ". substr($CO->getCar()->getUser()->lastname, 0, 1) ?></p>
                                                     <?php if ($CO->getTransaction()->completed): ?>
-                                                        <p><span class="glyphicon glyphicon-earphone"></span> <?php echo $CO->getCar()->getUser()->getTelephone() ?></p>
+                                                        <p><b>Contacto:</b>
+                                                            <span class="glyphicon glyphicon-earphone"></span> <a href="tel:<?php echo $CO->getCar()->getUser()->getTelephone() ?>"><?php echo $CO->getCar()->getUser()->getTelephone() ?></a>
+                                                            <span class="glyphicon glyphicon-envelope"></span> <a href="mailto:<?php echo $CO->getCar()->getUser()->getEmail() ?>"><?php echo $CO->getCar()->getUser()->getEmail() ?></a>
+                                                        </p>
                                                     <?php endif ?>
+                                                    </p>
+                                                    <p><img class="metro" src='/images/newDesign/ico.png' alt='metro'> A <b><?php echo round($CO->getCar()->getNearestMetro()->distance, 1) ?> km</b> del Metro <?php echo $CO->getCar()->getNearestMetro()->getMetro()->name ?></p>
                                                 </div>
                                             </div>
-                                            <div class="col-md-3 text-center">
+                                            <div class="col-md-3">
                                                 <?php if ($CO->getTransaction()->getCompleted()): ?>
-                                                    <i class="selected fa fa-check"></i>
+                                                    <button class="reserved btn btn-a-primary btn-block" disabled>Reservado</button>
                                                 <?php else: ?>
                                                     <button class="change btn btn-a-action btn-block" data-reserve-id="<?php echo $CO->getId() ?>">Cambiar</button>
                                                 <?php endif ?>
                                             </div>
+                                            <div class="col-md-1 text-center">
+                                                <img class="loading" src="/images/ajax-loader.gif">
+                                            </div>
                                         </div>
+                                        <?php if ($i < count($ChangeOptions[$Reserve->getId()])-1): ?>
+                                            <hr>
+                                        <?php endif ?>
                                     <?php endforeach ?>
                                 </div>
                             </div>
@@ -195,9 +210,11 @@
     $(document).on("click", ".approve", function(){
 
         var button    = $(this);
+        var grandpa = $(this).parent().parent();
         var reserveId = $(this).data("reserve-id");
 
         button.attr("disabled", true);
+        grandpa.find(".loading").show();
 
         $.post("<?php echo url_for('reserve_approve') ?>", {"reserveId": reserveId}, function(r){
             console.log(r);
@@ -212,21 +229,22 @@
                         }
                     }]
                 });
+                button.removeAttr("disabled");
+                grandpa.find(".loading").hide();
             } else {
                 location.reload();
             }
-
-            button.removeAttr("disabled");
         }, "json");
     });
 
     $(document).on("click", ".change", function(){
 
         var button = $(this);
-        var panelBody = $(this).parent().parent().parent();
+        var grandpa = $(this).parent().parent();
         var newReserveId = $(this).data("reserve-id");
 
-        $(".change").attr("disabled", true);
+        button.attr("disabled", true);
+        grandpa.find(".loading").show();
 
         $.post("<?php echo url_for('reserve_change') ?>", {"newReserveId": newReserveId}, function(r){
 
@@ -243,12 +261,12 @@
                     }]
                 });
 
+                button.removeAttr("disabled");
+                grandpa.find(".loading").hide();
             } else {
 
                 location.reload();
-            }
-
-            $(".change").removeAttr("disabled");
+            }            
         }, "json");
     });
 
@@ -267,7 +285,10 @@
 
         e.preventDefault;
 
+        var grandpa = $(this).parent().parent();
         var reserveId = $(this).data("reserve-id");
+
+        grandpa.find(".loading").show();
 
         $.post("<?php echo url_for('reserve_reject') ?>", {"reserveId": reserveId}, function(r){
 
@@ -283,7 +304,7 @@
                         }
                     }]
                 });
-
+                grandpa.find(".loading").hide();
             } else {
 
                 location.reload();
