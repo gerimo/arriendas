@@ -31,6 +31,7 @@
  * @property integer $numero_factura
  * @property OportunityQueue $OportunityQueue
  * @property boolean $liberadoDeGarantia
+ * @property timestamp $fecha_pago
  * 
  * @method integer             getId()          Returns the current record's "id" value
  * @method timestamp           getDate()        Returns the current record's "date" value
@@ -59,7 +60,8 @@
  * @method integer             getReservaOriginal()      Returns the current record's "reserva_original" value
  * @method integer             getNumeroFactura()      Returns the current record's "numero_factura" value
  * @method OportunityQueue     getOportunityQueue()      Returns the current record's "OportunityQueue" value
- * @method boolean             getLiberadoDeGarantia   Return the current record's "liberadoDeGarantia" value
+ * @method boolean             getLiberadoDeGarantia()   Return the current record's "liberadoDeGarantia" value
+ * @method boolean             getFechaPago()   Return the current record's "fecha_pago" value
  *
  * @method Reserve             setId()          Sets the current record's "id" value
  * @method Reserve             setDate()        Sets the current record's "date" value
@@ -90,7 +92,8 @@
  * @method integer             setReservaOriginal()   Sets the current record's "reserva_original" value
  * @method integer             setNumeroFactura()      Sets the current record's "numero_factura" value
  * @method Reserve             setOportunityQueue() Sets the current record's "OportunityQueue" value
- * @method Reserve             setLiberadoDeGarantia Sets the current record's "liberadoDeGarantia" value
+ * @method Reserve             setLiberadoDeGarantia() Sets the current record's "liberadoDeGarantia" value
+ * @method Reserve             setFechaPago() Sets the current record's "fecha_pago" value
  * 
  * @package    CarSharing
  * @subpackage model
