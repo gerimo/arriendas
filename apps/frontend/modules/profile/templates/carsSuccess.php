@@ -23,12 +23,11 @@
                         <div class="row grey">
                             <div class="col-md-3 ">
                                 <a href="<?php echo url_for('car_edit', array('id' => $c->id)) ?>" >
-                                    <?php if($c->getPhotoS3() == 1): ?>
-                                        <?php echo image_tag($c->getFoto(),array("width"=>"84px","height"=>"84px")) ?>
+                                    <?php if ($c->getFotoPerfil() == null): ?>
+                                    <?php echo image_tag('img_asegura_tu_auto/AutoVistaAerea.png', array("width"=>"84px","height"=>"84px")) ?>
                                     <?php else: ?>
-                                        <?php $base_url = $sf_request->getUriPrefix().$sf_request->getRelativeUrlRoot() ?>
-                                        <?php echo "<img class='foto' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_84,h_84,c_fill,g_center/".$base_url."/uploads/cars/".$c->getFoto()."'/>" ?>
-                                    <?php endif; ?>
+                                    <?php echo image_tag($c->getFotoPerfil(),array("width"=>"84px","height"=>"84px")) ?>
+                                    <?php endif ?>
                                 </a>
                             </div>
                             
