@@ -639,6 +639,11 @@ class mainActions extends sfActions {
             $arrayImagenes[$i] = $rutaFotoTrasera;
             $i++;
         }
+        if (strpos($this->Car->getSeguroFotoTraseroIzquierdo(), "http") != -1 && $this->Car->getSeguroFotoTraseroIzquierdo() != "") {
+            $rutaFotoTrasera = $this->Car->getSeguroFotoTraseroIzquierdo();
+            $arrayImagenes[$i] = $rutaFotoTrasera;
+            $i++;
+        }
         if (strpos($this->Car->getTablero(), "http") != -1 && $this->Car->getTablero() != "") {
             $rutaFotoPanel = $this->Car->getTablero();
             $arrayImagenes[$i] = $rutaFotoPanel;

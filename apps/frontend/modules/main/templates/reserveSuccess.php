@@ -32,7 +32,11 @@
                 <?php if ($arrayFotos): ?>                        
                     <?php for ($i = 0; $i < count($arrayFotos); $i++): ?>
                         <div class="item <?php if ($i == 0) echo 'active' ?>">
-                            <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/c_fill,g_center/http://www.arriendas.cl/uploads/verificaciones/<?= $arrayFotos[$i]?>" >
+                        <?php if (strtotime($Car->getFechaSubida()) > strtotime("2015-01-01")): ?>
+                        <?php echo image_tag($arrayFotos[$i]) ?>
+                        <?php else:?>
+                              <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/c_fill,g_center/http://www.arriendas.cl/uploads/verificaciones/<?= $arrayFotos[$i]?>" >
+                        <?php endif ?>
                         </div>
                     <?php endfor ?>
                 <?php endif ?>
@@ -41,6 +45,8 @@
             <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next"></a>
         </div>
     </div> 
+
+    
 
     <div class="hidden-xs hidden-sm row">
         <div class="col-md-3 car-sep">
