@@ -10,9 +10,9 @@ class OpportunityQueueTask extends sfBaseTask {
             new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine'),
         ));
 
-        $this->namespace = 'arriendas';
-        $this->name = 'opportunityQueueTask';
-        $this->briefDescription = '';
+        $this->namespace = 'opportunities';
+        $this->name = 'send';
+        $this->briefDescription = 'Envío de oportunidades para reservas no confirmadas por su dueño original';
         $this->detailedDescription = <<<EOF
 The [OpportunityQueueTask|INFO] task does things.
 Call it with:
@@ -30,26 +30,20 @@ EOF;
         $databaseManager = new sfDatabaseManager($this->configuration);
         $conn = $databaseManager->getDatabase($options['connection'])->getConnection();
 
-        // Este task debiera correr cada 10 minutos app
-        // Este task toma todas las reservas pagas que se hayan hecho y que esten pendientes para generar
-        //  la lista de usuarios a los cuales se les debe enviar correos de "oportunidades"
-
         try {
 
-            $maxIterations = 5;
-            $kmPerIteration = 1;
+            $maxIterations = 5; // Cantidad máxima de iteraciones
+            $kmPerIteration = 1; // Radio en KM de cada iteración
             $exclusivityTime = 60; // En minutos // Exclusividad que se le entrega al dueño original antes de enviar oportunidades
-            //$baseKpi = 20; //en porcentaje
+            $timePerIteration = 20; // En minutos // Tiempo entre cada iteración
 
             // Se obtienen todas las reservas para procesar
             $q = Doctrine_Core::getTable("OpportunityQueue")
                 ->createQuery('OQ')
-                ->innerJoin('OQ.Reserve R')
                 ->where('OQ.is_active IS TRUE')
-                ->andWhere('R.confirmed = 0')
                 ->andWhere("DATE_ADD(OQ.paid_at, INTERVAL {$exclusivityTime} MINUTE) < NOW()")
+                ->andWhere("OQ.last_iteration_at IS NULL OR DATE_ADD(OQ.last_iteration_at, INTERVAL {$timePerIteration} MINUTE) < NOW()")
                 ->andWhere('OQ.iteration <= ?', $maxIterations);
-                /*->andWhere('R.date < ?', date("Y-m-d H:i:s"));*/
 
             $OpportunitiesQueue = $q->execute();
 
@@ -61,9 +55,17 @@ EOF;
 
                     $Reserve = $OpportunityQueue->getReserve();
 
+                    // Si la reserva ya se encuentra confirmada, desactivamos el envío de oportunidades
+                    if ($Reserve->getConfirmed()) {
+                        $this->log("[".date("Y-m-d H:i:s")."] La reserva {$Reserve->id} de oportunidad {$OpportunityQueue->id} ya fue confirmada por el dueño original. Se inactiva la oportundiad");
+                        $OpportunityQueue->setIsActive(false);
+                        $OpportunityQueue->save();
+                        continue;
+                    }
+
                     // Si la reserva ya posee mas de 5 opciones de cambio, no se generan oportunidades y se cancela
-                    if (count($Reserve->getChangeOptions()) > 5) {
-                        $this->log("[".date("Y-m-d H:i:s")."] La oportunidad {$OpportunityQueue->id} ya posee mas de 5 opciones de cambios");
+                    if (count($Reserve->getChangeOptions()) >= 5) {
+                        $this->log("[".date("Y-m-d H:i:s")."] La oportunidad {$OpportunityQueue->id} ya posee mas de 5 opciones de cambios. Se inactiva la oportunidad");
                         $OpportunityQueue->setIsActive(false);
                         $OpportunityQueue->save();
                         continue;
@@ -71,10 +73,14 @@ EOF;
 
                     // Si el usuario que realizó la reserva o el pago se encuentra bloqueado, no se generan oportunidades
                     if ($Reserve->getUser()->getBlocked()) {
-                        $this->log("[".date("Y-m-d H:i:s")."] El usuario ({$Reserve->getUser()->getBlocked()}) que realizo la reserva se encuentra bloqueado");
+                        $this->log("[".date("Y-m-d H:i:s")."] El usuario {$Reserve->getUser()->getBlocked()} que realizo la reserva {$Reserve->id} se encuentra bloqueado. Se inactiva la oportunidad");
+                        $OpportunityQueue->setIsActive(false);
+                        $OpportunityQueue->save();
                         continue;
                     }
 
+                    // Esto es para evitar generar los registros para una reserva en la que aun no se envian todos los correos
+                    // generados para la iteracion anterior
                     $q = Doctrine_Core::getTable('OpportunityEmailQueue')
                         ->createQuery('OEQ')
                         ->select('OEQ.*, count(OEQ.id) AS total')
@@ -83,14 +89,13 @@ EOF;
                         ->groupBy('OEQ.reserve_id');
 
                     $result = $q->execute();
-
-                    // Esto es para evitar generar los registros para una reserva en la que aun no se envian todos los correos
-                    //  generados para la iteracion anterior
+                    
                     if (isset($result[0]) && $result[0]->getTotal() > 0) {
                         $this->log("[".date("Y-m-d H:i:s")."] Evitando generar registros para un reserva en la que aun no se envian todos los correos");
                         continue;
                     }
 
+                    // Comenzamos
                     $desde = $OpportunityQueue->getIteration() - 1;
                     $hasta = $OpportunityQueue->getIteration();
 
@@ -98,18 +103,12 @@ EOF;
                     
                     $q = Doctrine_Core::getTable('Car')
                         ->createQuery('C')
-                        /*->innerJoin('C.Reserves R')*/
                         ->innerJoin('C.Model M')
                         ->where('distancia(?, ?, C.lat, C.lng) > ?', array($Reserve->getCar()->getLat(), $Reserve->getCar()->getLng(), $desde))
                         ->andWhere('distancia(?, ?, C.lat, C.lng) <= ?',  array($Reserve->getCar()->getLat(), $Reserve->getCar()->getLng(), $hasta))
                         ->andWhere('C.seguro_ok = 4')
                         ->andWhere('C.activo = 1')
                         ->andWhere('C.transmission = ?', $Reserve->getCar()->getTransmission());
-                        /*->andWhere('R.comentario = "null"')*/
-                        /*->andWhere('(day(R.date) - day(R.fecha_reserva)) > 0')*/
-                        /*->andWhere("hour(R.fecha_reserva) < 22 AND hour(R.fecha_reserva) > 5")*/                    
-                        /*->groupBy('C.user_id')*/
-                        /*->orderBy('C.ratio_aprobacion DESC');*/
 
                     if ($Reserve->getCar()->getModel()->getIdOtroTipoVehiculo() == 1) {
                         $q->andWhere('M.id_otro_tipo_vehiculo IN (1,2)');
@@ -139,11 +138,12 @@ EOF;
                 }
             }
         } catch (Exception $e) {
+            
+            $this->log("[".date("Y-m-d H:i:s")."] ERROR: {$e->getMessage()}");    
+
             if ($options['env'] == 'prod') {
                 Utils::reportError($e->getMessage(), "OpportunityQueueTask");
-            } else {
-                $this->log("[".date("Y-m-d H:i:s")."] ERROR: {$e->getMessage()}");
-            }    
+            }            
         }
     }
 }
