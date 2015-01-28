@@ -370,22 +370,24 @@
         
                     }
 
-                    if(Car.fecha_subida > "2015-01-01") {
+                    var str = Car.photo.indexOf("cars");
+
+                    if(str > 0) {
                         urlFotoTipo = Car.photo;
                         urlFotoThumbTipo = Car.photo;
+                        console.log("0");
                     }
-
-                    console.log(urlFotoThumbTipo);
-                    
 
                     var windowMarker = "";
                     windowMarker += "<div class='infowindow row' id='" + Car.id + "'>";
 
                     windowMarker += "<div class='col-md-4 text-center'>";
                     /*windowMarker += "<a href='" + urlFotoTipo + "' class='thickbox'>";*/
-                    if(Car.fecha_subida > "2015-01-01") {
+                    if(str > 0) {
+                        console.log("1");
                         windowMarker += "<img class='img-responsive' src='http://www.arriendas.cl" + urlFotoThumbTipo + "'/>";
                     }else {
+                        console.log("2");
                         windowMarker += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "'/>";
                     }
                     /*windowMarker += "</a>";*/
@@ -441,7 +443,7 @@
                     article = "<article class='box'>";
                     article += "<div class='row'>";
                     article += "<div class='col-xs-4 col-md-4 image'>";
-                    if(Car.fecha_subida > "2015-01-01") {
+                    if(str > 0) {
                         article += "<img class='img-responsive' src='http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='"+ Car.brand +" "+ Car.model +"'/>";
                     }else   {
                         article += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='"+ Car.brand +" "+ Car.model +"'/>";

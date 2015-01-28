@@ -32,10 +32,10 @@
                 <?php if ($arrayFotos): ?>                        
                     <?php for ($i = 0; $i < count($arrayFotos); $i++): ?>
                         <div class="item <?php if ($i == 0) echo 'active' ?>">
-                        <?php if (strtotime($Car->getFechaSubida()) > strtotime("2015-01-01")): ?>
-                        <?php echo image_tag($arrayFotos[$i]) ?>
-                        <?php else:?>
-                              <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/c_fill,g_center/http://www.arriendas.cl/uploads/verificaciones/<?= $arrayFotos[$i]?>" >
+                        <?php if (strpos($arrayFotos[$i], "cars")): ?>
+                            <?php echo image_tag($arrayFotos[$i]) ?>
+                        <?php else: ?>
+                            <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/c_fill,g_center/http://www.arriendas.cl/uploads/verificaciones/<?= $arrayFotos[$i]?>" >
                         <?php endif ?>
                         </div>
                     <?php endfor ?>
