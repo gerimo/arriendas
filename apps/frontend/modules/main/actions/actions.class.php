@@ -41,6 +41,9 @@ class mainActions extends sfActions {
 
         $this->setLayout("newIndexLayout");
 
+        $this->referer = $this->getContext()->getActionStack()->getSize() > 1 ? $request->getUri() : $request->getReferer();
+        $this->getUser()->setAttribute("referer", $this->referer);
+
         //$userId = $request->getParameter('userId');
         $userId_session = $this->getUser()->getAttribute("userid");
         $User = Doctrine_Core::getTable('user')->find($userId_session);
@@ -56,7 +59,6 @@ class mainActions extends sfActions {
     public function executeDoCompleteRegister(sfWebRequest $request) {
         
         $return = array("error" => false);
-
         try {
 
             //$motherLastname = $request->getPostParameter("motherLastname", null);
@@ -159,6 +161,9 @@ class mainActions extends sfActions {
             $this->getUser()->setAttribute("firstname", $User->getFirstName());
             $this->getUser()->setAttribute("name", current(explode(' ' , $User->getFirstName())) . " " . substr($User->getLastName(), 0, 1) . '.');
             $this->getUser()->setAttribute("email", $User->getEmail());
+
+            // (error_log("REF:");
+            // $this->redirect($this->getUser()->getAttribute("referer"));
 
         } catch (Exception $e) {
             $return["error"] = true;
@@ -3058,6 +3063,9 @@ class mainActions extends sfActions {
         $state = $request->getParameter("state");
         $previousUser= $request->getParameter("logged");
         $returnRoute = $request->getParameter("return");
+
+        $referer = $this->getContext()->getActionStack()->getSize() > 1 ? $request->getUri() : $request->getReferer();
+        $this->getUser()->setAttribute("referer", $referer);
     	
         if($previousUser) {
     	   $my_url.="?logged=true";
@@ -3091,6 +3099,7 @@ class mainActions extends sfActions {
     	    $myUser->save();
             if($returnRoute){
                 $this->redirect($this->generateUrl($returnRoute));
+
             }else{
                 $this->redirect('main/index');
             }
@@ -3181,8 +3190,8 @@ class mainActions extends sfActions {
 		            //$this->getRequest()->setParameter('userId', $userdb->getId());
 					$this->redirect("main/completeRegister");
 				}else{
-					if ($this->getUser()->getAttribute("lastview") != null) {
-						$this->redirect($this->getUser()->getAttribute("lastview"));
+					if ($this->getUser()->getAttribute("referer") != null) {
+						$this->redirect($this->getUser()->getAttribute("referer"));
 					} else {
 						$this->redirect('main/index');
 						//$this->redirect('profile/cars');

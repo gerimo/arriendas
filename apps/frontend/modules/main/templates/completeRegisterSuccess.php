@@ -97,7 +97,8 @@
 <div class="hidden-xs space-100"></div>
 
 <script type="text/javascript">
-    
+    var referer = "<?php echo $referer ?>";
+
     $("#foreign").change(function(){
         var foreign = $(this).val();
         $('#rut').val('');
@@ -180,10 +181,14 @@
                 $(".alert").addClass("alert-a-danger");
                 $(".alert").html(r.errorMessage);
             } else {
-                $("#message p:first-child").html(r.message);
-                $("#message").removeAttr("style");
-                $("#frm").css("display", "none");
-                window.scrollTo(0, 0);
+                if(referer != '') {
+                    window.location = referer;
+                } else {
+                    $("#message p:first-child").html(r.message);
+                    $("#message").removeAttr("style");
+                    $("#frm").css("display", "none");
+                    window.scrollTo(0, 0);
+                }
             }
 
         }, 'json');
