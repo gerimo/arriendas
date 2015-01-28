@@ -44,9 +44,8 @@
 
     <div class="hidden-xs hidden-sm row">
         <div class="col-md-3 car-sep">
+            <h2>Características:</h2>
             <ul id="features">
-                <h2>Características:</h2>
-
                 <?php if ($passengers): ?>
                     <li><span class="icon-svg_01"></span> 5 o más pasajeros</li>
                 <?php else: ?>
@@ -68,6 +67,8 @@
                 <?php else: ?>
                     <li><span><i class="fa fa-cog"></i></span> Mecánico</li>
                 <?php endif ?>
+
+                <li><img class="metro" src='/images/newDesign/ico.png' alt='metro'> A <b><?php echo round($Car->getNearestMetro()->distance, 1) ?> km</b> del Metro <?php echo $Car->getNearestMetro()->getMetro()->name ?></li>
             </ul>
         </div>
 
@@ -134,6 +135,8 @@
             <?php else: ?>
                 <li><i class="fa fa-cog"></i> Mecánico</li>
             <?php endif ?>
+
+            <li><img class="metro" src='/images/newDesign/ico.png' alt='metro'> A <b><?php echo round($Car->getNearestMetro()->distance, 1) ?> km</b> del Metro <?php echo $Car->getNearestMetro()->getMetro()->name ?></li>
         </ul>
 
         <div class="space-20 visible-xs"></div>
