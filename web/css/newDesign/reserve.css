@@ -183,6 +183,15 @@
     top: 7px;
 }
 
+.car-sep #features li .metro {
+    color: #464646;
+    font-size: 27px;
+    left: 3px;
+    position: absolute;
+    top: 7px;
+    width: 28px;
+}
+
 .reserve-area .saved {
     position: absolute;
     right: -55px;
@@ -907,14 +916,13 @@ a:focus {
         padding-right: 2px;
     }
 
-    .features li span.metro-mobile {
-        background: url('/images/newDesign/reserve/metro.png') no-repeat;
-        background-size: 16px 15px;
-        padding-right: 18px;
-    }
-
     .features li i {
         width: 13px;
+        text-align: center;
+    }
+
+    .features .metro {
+        width: 14px;
         text-align: center;
     }
 
