@@ -1119,18 +1119,20 @@ class mainActions extends sfActions {
         $arrendador['direccion'] = $arrendadorClass->getAddress();
         $arrendador['telefono'] = $arrendadorClass->getTelephone();
 
-        $comunaId = $arrendadorClass->getComuna();
+        /*$comunaId = $arrendadorClass->getComuna();
         $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
-        $arrendador['comuna'] = ucfirst(strtolower($comunaClass['nombre']));
+        $arrendador['comuna'] = ucfirst(strtolower($comunaClass['nombre']));*/
+        $arrendador['comuna'] = ucfirst(strtolower($arrendadorClass->getCommune()->name));
 
         $propietario['nombreCompleto'] = $propietarioClass->getFirstname()." ".$propietarioClass->getLastname();
         $propietario['rut'] = $propietarioClass->getRut();
         $propietario['direccion'] = $propietarioClass->getAddress();
         $propietario['telefono'] = $propietarioClass->getTelephone();
 
-        $comunaId = $propietarioClass->getComuna();
+        /*$comunaId = $propietarioClass->getComuna();
         $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
-        $propietario['comuna'] = ucfirst(strtolower($comunaClass['nombre']));
+        $propietario['comuna'] = ucfirst(strtolower($comunaClass['nombre']));*/
+        $propietario['comuna'] = ucfirst(strtolower($propietarioClass->getCommune()->name));
 
         //echo $carId;
         $damageClass = Doctrine_Core::getTable('damage')->findByCarId($carId);
