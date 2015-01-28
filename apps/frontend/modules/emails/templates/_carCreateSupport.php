@@ -55,7 +55,7 @@
     </tr>
     <tr>
         <th style='text-align: left'>Comuna</th>
-        <td><?php echo $Car->getCommune()->id ?></td>
+        <td><?php echo $Car->getCommune()->name ?></td>
     </tr>
     <tr>
         <th style='text-align: left'>Patente</th>
