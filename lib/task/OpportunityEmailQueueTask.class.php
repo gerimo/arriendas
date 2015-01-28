@@ -37,9 +37,9 @@ EOF;
 
         try {
             if ($options['env'] == 'dev') {
-                $host = 'http://test.arriendas.cl';
+                $host = 'http://local.api.arriendas.cl';
             } else {
-                $host = 'http://www.arriendas.cl';
+                $host = 'http://api.arriendas.cl';
             }
 
             $routing = $this->getRouting();

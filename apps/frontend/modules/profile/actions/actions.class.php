@@ -3097,7 +3097,7 @@ class profileActions extends sfActions {
         foreach ($User->getTransaccionesWithOwner() as $i => $T) {
             //selecciona solo las transacciones pagadas (completed=1)
             if ($T['completed']) {
-                error_log("yes!");
+                
                 $Reserve = Doctrine_Core::getTable("Reserve")->findOneById($T['reserve_id']);
 
                 $this->TransactionsOwner[$i]['fechaInicio']  = $Reserve->getFechaInicio2();
