@@ -2,7 +2,7 @@
     $Owner  = $Car->getUser();
 ?>
 
-<p>Hola <?php echo $Renter->firstname ?></p>
+<p>Hola <?php echo $Owner->firstname ?></p>
 
 <p>Has subido un auto!</p> 
 
