@@ -2,7 +2,7 @@
     $Owner  = $Car->getUser();
 ?>
 
-<p>Hola <?php echo $Renter->firstname ?></p>
+<p>Hola <?php echo $Owner->firstname ?></p>
 
 <p>Has subido un auto!</p> 
 
@@ -14,7 +14,6 @@
 <p>1.TOMAS MORO 1371</p>
 <p>Lunes a Sábado de 10:00 a 20:00 Horas</p>
 <p>Domingos y Festivos Cerrado</p>
-
 <p>2.BATTLE Y ORDOÑEZ 4830 ÑUÑOA</p>
 <p>Lunes a Viernes de 9:00 a 20:00 Horas</p>
 <p>Domingos y Festivos Cerrado</p>

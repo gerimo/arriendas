@@ -232,7 +232,7 @@ class carsActions extends sfActions {
                 $subject = "¡Se ha registrado un nuevo vehículo!";
                 $body    = $this->getPartial('emails/carCreateSupport', array('Car' => $Car));
                 $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-                $to      = array("franco16_roy@hotmail.com");
+                $to      = array("soporte@arriedas.cl");
 
                 $message->setSubject($subject);
                 $message->setBody($body, 'text/html');
