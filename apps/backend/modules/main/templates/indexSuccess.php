@@ -1,1 +1,1 @@
-<h1><?php echo $msg ?></h1>
+<p> Hola Dr. mario </p>

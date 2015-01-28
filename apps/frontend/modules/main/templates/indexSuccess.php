@@ -332,8 +332,6 @@
             isMorePassengers: isMorePassengers            
         }
 
-        console.log(parameters);
-
         $.post("<?php echo url_for('main/getCars') ?>", parameters, function(r){
 
             var listContent = "";
@@ -365,9 +363,19 @@
                     var urlFotoTipo      = "<?php echo image_path('../uploads/cars/" + Car.photo + "'); ?>";
                     var urlFotoThumbTipo = "<?php echo image_path('../uploads/cars/" + Car.photo + "'); ?>";
                     
+
                     if (Car.photoType == 1) {
                         urlFotoTipo = Car.photo;
                         urlFotoThumbTipo = Car.photo;
+        
+                    }
+
+                    var str = Car.photo.indexOf("cars");
+
+                    if(str > 0) {
+                        urlFotoTipo = Car.photo;
+                        urlFotoThumbTipo = Car.photo;
+                        console.log("0");
                     }
 
                     var windowMarker = "";
@@ -375,7 +383,13 @@
 
                     windowMarker += "<div class='col-md-4 text-center'>";
                     /*windowMarker += "<a href='" + urlFotoTipo + "' class='thickbox'>";*/
-                    windowMarker += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "'/>";
+                    if(str > 0) {
+                        console.log("1");
+                        windowMarker += "<img class='img-responsive' src='http://www.arriendas.cl" + urlFotoThumbTipo + "'/>";
+                    }else {
+                        console.log("2");
+                        windowMarker += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "'/>";
+                    }
                     /*windowMarker += "</a>";*/
                     windowMarker += "</div>";
 
@@ -429,7 +443,12 @@
                     article = "<article class='box'>";
                     article += "<div class='row'>";
                     article += "<div class='col-xs-4 col-md-4 image'>";
-                    article += "<img class='car img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_134,h_99,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='"+ Car.brand +" "+ Car.model +"'>";
+                    if(str > 0) {
+                        article += "<img class='img-responsive' src='http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='"+ Car.brand +" "+ Car.model +"'/>";
+                    }else   {
+                        article += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='"+ Car.brand +" "+ Car.model +"'/>";
+                    }
+                    /*article += "<img class='car img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_134,h_99,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='"+ Car.brand +" "+ Car.model +"'>";*/
                     article += "<img class='marker' src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + (i+1) + "|05a4e7|ffffff'>";
                     article += "</div>";
                     article += "<div class='col-xs-8 col-md-8 text'>";
