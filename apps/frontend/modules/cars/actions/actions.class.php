@@ -198,34 +198,13 @@ class carsActions extends sfActions {
             if (is_null($carId) || $carId == "") {
                 $Car = new Car();
                 $fechaHoy = Date("Y-m-d");
-                $Car->setFechaSubida($fechaHoy);
-
-                // Correo de notificación
-
-                /*$mail    = new Email();
-                $mailer  = $mail->getMailer();
-                $message = $mail->getMessage();            
-
-                $subject = "¡Tu vehículo ha sido registrado!";
-                $body    = $this->getPartial('emails/carCreateSupport', array('Car' => $Car));
-                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-                $to      = array("teayuda@arriendas.cl");
-
-                $message->setSubject($subject);
-                $message->setBody($body, 'text/html');
-                $message->setFrom($from);
-                $message->setTo($to);*/
-                /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
-                
-                /*$mailer->send($message);*/
-
+                $Car->setFechaSubida($fechaHoy); 
+                $send = 1;
             }else{
                 $Car = Doctrine_Core::getTable('car')->find($carId);
             }
             
             $Commune = Doctrine_Core::getTable('Commune')->find($commune);
-
-            error_log($Commune);
 
             $Car->setAddress($address);
             $Car->setCommune($Commune);
@@ -243,6 +222,28 @@ class carsActions extends sfActions {
             $Car->setCityId(27);
 
             $Car->save();
+
+            if($send == 1){
+                // Correo de notificación
+
+                $mail    = new Email();
+                $mailer  = $mail->getMailer();
+                $message = $mail->getMessage();            
+
+                $subject = "¡Tu vehículo ha sido registrado!";
+                $body    = $this->getPartial('emails/carCreateSupport', array('Car' => $Car));
+                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+                $to      = array("franco.inostrozah@gmail.com");
+
+                $message->setSubject($subject);
+                $message->setBody($body, 'text/html');
+                $message->setFrom($from);
+                $message->setTo($to);
+                /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
+                
+                $mailer->send($message);
+
+            }
 
             CarProximityMetro::setNewCarProximityMetro($Car);
 
