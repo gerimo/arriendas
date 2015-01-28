@@ -7,6 +7,22 @@ p {
     padding: 0;
 }
 
+.loading {
+    display: none;
+    height: 31px;
+    margin-top: 30px;
+    width: 31px;
+}
+
+.paid-reserve-container .loading {
+    margin-top: 14px;
+}
+
+.metro {
+    height: 15px;
+    width:20px;
+}
+
 .price {
     color: rgb(186, 19, 95);
     font-size: 16px;
@@ -21,12 +37,12 @@ p {
     cursor: pointer;
 }
 
-.btn-a-primary {
-    margin-top: 16px;
+.extend, .approve, .approved {
+    margin-top: 6px;
 }
 
-.btn-a-action {
-    margin-top: 16px;
+.reserved, .change {
+    margin-top: 30px;
 }
 
 .fa-check {
@@ -68,4 +84,14 @@ p {
 
 #payExtend {
     margin-left: 10px;
+}
+
+@media only screen and (max-width:767px){
+
+    .loading {
+    display: none;
+    height: 31px;
+    margin-top: 5px;
+    width: 31px;
+}
 }

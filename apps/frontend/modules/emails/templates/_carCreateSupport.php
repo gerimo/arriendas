@@ -26,7 +26,7 @@
     </tr>
     <tr>
         <th style='text-align: left'>Comuna</th>
-        <td><?php echo $Owner->getCommune() ?></td>
+        <td><?php echo $Owner->getCommune()->name ?></td>
     </tr>
     <tr>
         <th style='text-align: left'>Rut</th>
@@ -47,7 +47,7 @@
     </tr>
     <tr>
         <th style='text-align: left'>Modelo</th>
-        <td><?php echo $Car->getModel() ?></td>
+        <td><?php echo $Car->getModel()->name ?></td>
     </tr>
     <tr>
         <th style='text-align: left'>Dirección</th>
@@ -55,7 +55,7 @@
     </tr>
     <tr>
         <th style='text-align: left'>Comuna</th>
-        <td><?php echo $Car->getCommune() ?></td>
+        <td><?php echo $Car->getCommune()->id ?></td>
     </tr>
     <tr>
         <th style='text-align: left'>Patente</th>
