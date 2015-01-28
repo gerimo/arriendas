@@ -106,7 +106,8 @@ class CarTable extends Doctrine_Table {
                         'transmission' => $Car->transmission == 1 ? 'Automática' : 'Manual',
                         'count' => $count,
                         'nearestMetroDistance' => round($CarProximityMetro->distance, 1),
-                        'nearestMetroName' => $CarProximityMetro->getMetro()->name
+                        'nearestMetroName' => $CarProximityMetro->getMetro()->name,
+                        'fecha_subida' =>$Car->fecha_subida
                     );
 
                     $count++;
