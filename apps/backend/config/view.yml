@@ -6,19 +6,10 @@ default:
         content-type: text/html
 
     metas:
-        title:        Rent a car vecino. Arriendo de autos en Chile | Arriendas.cl
-        description:  Arriendo de autos vecinos con seguro premium, asistencia de viaje y TAGs incluídos. Busca un auto por ubicación o por precio. Rent a car Vecino.
-        keywords:     arriendo, autos, santiago
+        title:        Backend | Arriendas.cl
+        description:  Backoffice de Arriendas
         language:     es
-        robots:       index, follow
+        robots:       noindex, nofollow
 
-    #stylesheets:    [http://cdn1.arriendas.cl/css/ui-lightness/jquery-ui-1.8.18.custom.css?v=25022014, http://cdn2.arriendas.cl/css/style_ui.css?v=18082014, http://cdn3.arriendas.cl/css/jquery.timepicker-1.2.2.css?v=25022014,http://cdn1.arriendas.cl/css/timePicker.css?v=25022014, http://cdn2.arriendas.cl/css/jquery.weekcalendar.css?v=25022014,  http://cdn3.arriendas.cl/css/default.css?v=25022014, http://cdn1.arriendas.cl/css/demo.css?v=25022014, http://cdn2.arriendas.cl/css/main.css?v=25022014, http://cdn3.arriendas.cl/css/trickbox.css?v=25022014, http://cdn1.arriendas.cl/fancybox/source/jquery.fancybox.css?v=25022014]
-    #stylesheets:    [ui-lightness/jquery-ui-1.8.18.custom.css?v=20122013, style_ui.css?v=20122013, jquery.timepicker-1.2.2.css?v=20122013,timePicker.css?v=20122013, jquery.weekcalendar.css,  default.css?v=20122013, demo.css?v=20122013, main.css?v=20122013, trickbox.css, http://cdn1.arriendas.cl/fancybox/source/jquery.fancybox.css]
-
-    #javascripts:    [http://cdn1.arriendas.cl/js/jquery-1.7.1.js,http://cdn2.arriendas.cl/js/jquery-ui-1.8.16.custom.min.js, http://cdn3.arriendas.cl/js/jquery.ui.core.js,http://cdn1.arriendas.cl/js/jquery.ui.widget.js,http://cdn2.arriendas.cl/js/jquery.ui.tabs.js, http://cdn3.arriendas.cl/js/scripts.js, http://cdn1.arriendas.cl/js/markerclusterer.js, http://cdn2.arriendas.cl/js/jquery.jcarousel.min.js,http://cdn1.arriendas.cl/js/jquery-ui-sliderAccess.js, http://cdn2.arriendas.cl/js/jquery.form.js, http://cdn3.arriendas.cl/js/gen_validatorv4.js,http://cdn1.arriendas.cl/js/jquery.timePicker.js, http://cdn2.arriendas.cl/js/date.js, http://cdn3.arriendas.cl/js/jquery.weekcalendar.js, http://cdn1.arriendas.cl/js/functions.js, http://cdn2.arriendas.cl/js/trickbox.js, http://cdn3.arriendas.cl/fancybox/source/jquery.fancybox.pack.js]
-    #javascripts:    [jquery-1.7.1.js,jquery-ui-1.8.16.custom.min.js, jquery.ui.core.js,jquery.ui.widget.js,jquery.ui.tabs.js, scripts.js, markerclusterer.js, jquery.ui.position.js,jquery.jcarousel.min.js,jquery-ui-sliderAccess.js, jquery.form.js, gen_validatorv4.js,jquery.timePicker.js, date.js, jquery.weekcalendar.js, functions.js, trickbox.js, http://cdn3.arriendas.cl/fancybox/source/jquery.fancybox.pack.js]
-    #javascripts:    [http://cdn1.arriendas.cl/js/jquery-1.7.1.js?v=25022014,http://cdn2.arriendas.cl/js/jquery-ui-1.8.16.custom.min.js?v=25022014, http://cdn3.arriendas.cl/js/jquery.ui.core.js?v=25022014,http://cdn1.arriendas.cl/js/jquery.ui.widget.js?v=25022014,http://cdn2.arriendas.cl/js/jquery.ui.tabs.js?v=25022014, http://cdn3.arriendas.cl/js/scripts.js?v=25022014, http://cdn1.arriendas.cl/js/markerclusterer.js?v=25022014, http://cdn2.arriendas.cl/js/jquery.jcarousel.min.js?v=25022014,http://cdn1.arriendas.cl/js/jquery-ui-sliderAccess.js?v=25022014, http://cdn2.arriendas.cl/js/jquery.form.js?v=25022014, http://cdn3.arriendas.cl/js/gen_validatorv4.js?v=25022014,jquery.timePicker.js?v=25022014, http://cdn2.arriendas.cl/js/date.js?v=25022014, http://cdn3.arriendas.cl/js/jquery.weekcalendar.js?v=25022014, http://cdn1.arriendas.cl/js/functions.js?v=25022014, http://cdn2.arriendas.cl/js/trickbox.js, http://cdn3.arriendas.cl/fancybox/source/jquery.fancybox.pack.js]
-    #javascripts:    [http://cdn1.arriendas.cl/js/jquery-1.7.1.js,http://cdn2.arriendas.cl/js/jquery-ui-1.8.16.custom.min.js, http://cdn3.arriendas.cl/js/jquery.ui.core.js,http://cdn1.arriendas.cl/js/jquery.ui.widget.js,http://cdn2.arriendas.cl/js/jquery.ui.tabs.js, http://cdn3.arriendas.cl/js/scripts.js,http://cdn1.arriendas.cl/js/jquery.timePicker.js,http://cdn1.arriendas.cl/js/markerclusterer.js]
-
-    has_layout:     false
+    has_layout:     true
     layout:         layout
