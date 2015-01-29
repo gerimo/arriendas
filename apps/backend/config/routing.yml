@@ -1,4 +1,19 @@
-# default rules
 homepage:
     url: /
     param: { module: main, action: index }
+
+login:
+    url: /login
+    param: { module: main, action: login }
+
+login_do:
+    url: /login/do
+    param: { module: main, action: loginDo }
+
+logout:
+    url: /logout
+    param: { module: main, action: logout }
+
+user_without_pay:
+    url: /usuarios/sin-pago
+    param: { module: user, action: whitoutPay }
