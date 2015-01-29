@@ -41,19 +41,24 @@ class mainActions extends sfActions {
 
         $this->setLayout("newIndexLayout");
 
-        $this->referer = $this->getContext()->getActionStack()->getSize() > 1 ? $request->getUri() : $request->getReferer();
-        $this->getUser()->setAttribute("referer", $this->referer);
+        try {
+            $this->referer = $this->getUser()->getAttribute("referer");
 
-        //$userId = $request->getParameter('userId');
-        $userId_session = $this->getUser()->getAttribute("userid");
-        $User = Doctrine_Core::getTable('user')->find($userId_session);
+            //$userId = $request->getParameter('userId');
+            $userId_session = $this->getUser()->getAttribute("userid");
+            $User = Doctrine_Core::getTable('user')->find($userId_session);
 
-        if ((!is_null($User) && !$User->getConfirmed()) || $User->getConfirmedFb()) {
-            $this->Regions = Region::getRegionsByNaturalOrder();
-            $this->User = $User;
-        } else {
-            $this->redirect('main/index');
+            if ((!is_null($User) && !$User->getConfirmed()) || $User->getConfirmedFb()) {
+                $this->Regions = Region::getRegionsByNaturalOrder();
+                $this->User = $User;
+            } else {
+                $this->redirect('main/index');
+            }
+        } catch (Exception $e) { 
+            throw new Exception("Session User Id: ".$userId_session." || User id: ".$User->id." || referer: ".
+                $this->referer." || error_message: ".$e->getMessage() , 1);
         }
+        
     }
 
     public function executeDoCompleteRegister(sfWebRequest $request) {
@@ -3064,8 +3069,8 @@ class mainActions extends sfActions {
         $previousUser= $request->getParameter("logged");
         $returnRoute = $request->getParameter("return");
 
-        $referer = $this->getContext()->getActionStack()->getSize() > 1 ? $request->getUri() : $request->getReferer();
-        $this->getUser()->setAttribute("referer", $referer);
+        /*$referer = $this->getContext()->getActionStack()->getSize() > 1 ? $request->getUri() : $request->getReferer();
+        $this->getUser()->setAttribute("referer", $referer);*/
     	
         if($previousUser) {
     	   $my_url.="?logged=true";
