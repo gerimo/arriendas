@@ -6,18 +6,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <?php include_metas() ?>
-        <?php //include_title() ?>
-        <?php //include_stylesheets() ?>
+        <?php include_title() ?>
 
-        <link href="http://arriendas.assets.s3.amazonaws.com/images/favicon.ico" rel="shortcut icon" type="image/x-icon">
-
-        <!-- Metas -->
-        <meta property="og:description" content="Arriendo de autos vecinos con seguro premium, asistencia de viaje y TAGs incluídos. Busca un auto por ubicación o por precio. Rent a car Vecino.">
-        <meta property="og:title" content="Rent a car vecino. Arriendo de autos, cerca de ti - Arriendas.cl">
-        <meta property="og:type" content="website">
-        <meta property="og:image" content="<?php echo image_path('newDesign/logo.jpg', 'absolute=true') ?>">
-        <meta property="og:url" content="http://arriendas.cl<?php echo sfContext::getInstance()->getController()->genUrl(sfContext::getInstance()->getRouting()->getCurrentInternalUri());?>">
-        <meta property="og:site_name" content="Rent a car vecino. Arriendo de autos, cerca de ti - Arriendas.cl">
+        <a style="color:black" href="" rel="shortcut icon" type="image/x-icon">Arriendas</a>
 
         <!-- JQuery UI -->
         <link href="/css/newDesign/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css">
@@ -72,8 +63,6 @@
 
         <?php include_component('main', 'header') ?>
 
-        <?php echo $sf_content ?>
-
-                
+        <?php echo $sf_content ?>                
     </body>
 </html>
