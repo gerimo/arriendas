@@ -9,7 +9,7 @@
         <?php //include_title() ?>
         <?php //include_stylesheets() ?>
 
-        <link href="http://arriendas.assets.s3.amazonaws.com/images/favicon.ico" rel="shortcut icon" type="image/x-icon">
+        <a style="color:black" href="" rel="shortcut icon" type="image/x-icon">Arriendas</a>
 
         <!-- Metas -->
         <meta property="og:description" content="Arriendo de autos vecinos con seguro premium, asistencia de viaje y TAGs incluídos. Busca un auto por ubicación o por precio. Rent a car Vecino.">
