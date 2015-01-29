@@ -276,10 +276,12 @@ class mainActions extends sfActions {
             $this->getUser()->setAttribute("mapCenterLng", $mapCenterLng);
 
             $return["cars"] = CarTable::findCars($from, $to, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers);
+            /*error_log("Autos encontrados: ".count($return["cars"]));*/
 
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
+            error_log("[".date("Y-m-d H:i:s")."] [main/getCars] ERROR: ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl") {
                 Utils::reportError($e->getMessage(), "main/getCars");
             }

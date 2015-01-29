@@ -2,42 +2,6 @@
 
 class Transaction extends BaseTransaction {
 
-    public function select() {
-
-        $numero_factura = 0;
-
-        try {
-
-            $q = Doctrine_Query::create()
-                ->select('T.numero_factura')
-                ->from('Transaction T')
-                ->innerJoin('T.Reserve R')
-                ->where('DATE_FORMAT(R.date, "%Y-%m-%d %H:%i") = ?', date("Y-m-d H:i", strtotime($this->getReserve()->date)))
-                ->andWhere('T.numero_factura != 0');
-
-            $numero_factura = $q->fetchArray()[0]['numero_factura'];
-
-            $q = Doctrine_Query::create()
-                ->update('Transaction T')
-                ->set('T.completed', 0)
-                ->set('T.numero_factura', 0)
-                ->where('T.user_id = ?', $this->user_id)
-                ->andWhere('DATE(T.date) = ?', date("Y-m-d", strtotime($this->date)));
-
-            $q->execute();
-        } catch (Exception $e) {
-            return false;
-        }
-
-        $this->completed = true;
-        $this->numero_factura = $numero_factura;
-        $this->save();
-
-        return true;
-    }
-
-    ///////////////////////////////////////////////////////
-
     public function getDateFormato(){
 
         $date = $this->getDate();
