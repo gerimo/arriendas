@@ -1,69 +1,68 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-  <head>
-    <?php include_http_metas() ?>
-    <?php include_metas() ?>
-    <?php include_title() ?>
-    <link rel="shortcut icon" href="/favicon.ico" />
-    <?php include_stylesheets() ?>
-    <?php include_javascripts() ?>
+<!DOCTYPE html>
+<html>
 
-<script src="http://localhost/arriendas_backend/web/chosen/chosen.jquery.js" type="text/javascript"></script>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="http://localhost/arriendas_backend/web/chosen/chosen.css"/>
-    
-    <script>
-      
-      function subir_padron(idPadron,accion) {
-        window.open("car/subirPadron/?id=" + idPadron + "&accion=" + accion ,"ventana","width=400,height=150,toolbars=no,scrollbars=no");
-      }
-      
-      function refrescar() {
-        location.reload();
-      }
-      
-    </script>
-    
-    <style>
-      
-      #menu_principal {
-        font-family: Verdana;
-        font-size: 14px;
-        color: black;
-        margin-left: 50px;
-      }
-      
-      #menu_principal a {
-        text-decoration: none;
-      }
-      
-      #menu_principal a:hover {
-        text-decoration: underline;
-      }
-      
-    </style>
-    
-  </head>
-  <body>
-    <div id="titulo_principal" style="width:100%; text-align: center;">
-      <h3 style="font-family: Verdana; font-size: 24px; color: #2E6E9E;">Backend Prueba</h3>
-    <div style="width:100%; text-align: center;">
-      <nav id="menu_principal">
-      <span><?php echo link_to('Reserve', 'reserve') ?></span>
-      <span><?php echo link_to('User', 'user') ?></span>
-      <span><?php echo link_to('Car', 'car') ?></span>
-      <span><?php echo link_to('Dashboard', 'dashboard') ?></span>
-    </nav>
-    </div>
-    <div style="width:100%; text-align: center;">
-    <nav id="menu_principal">
-      <span><?php echo link_to('Marcas', 'brand') ?></span>
-      <span><?php echo link_to('Modelo', 'model') ?></span>
-      <span><?php echo link_to('Users2Excel','users2Excel/export') ?></span>
-    </nav>
-    </div>
-    <?php echo $sf_content ?>
-    
-    <script type="text/javascript"> $(".chzn-select").chosen(); $(".chzn-select-deselect").chosen({allow_single_deselect:true}); </script>
-  </body>
+        <?php include_metas() ?>
+        <?php include_title() ?>
+
+        <a style="color:black" href="" rel="shortcut icon" type="image/x-icon">Arriendas</a>
+
+        <!-- JQuery UI -->
+        <link href="/css/newDesign/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css">
+        <link href="/css/newDesign/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" type="text/css">
+        <link href="/css/newDesign/jquery-ui/jquery-ui.theme.min.css" rel="stylesheet" type="text/css">
+        
+        <!-- Bootstrap -->
+        <link href="/css/newDesign/bootstrap.min.css" rel="stylesheet" type="text/css">
+
+        <!-- Font Awesome -->
+        <link href="/css/newDesign/font-awesome/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+        <!-- Complementos -->
+        <link href="/css/newDesign/datetimepicker/jquery.datetimepicker.css" rel="stylesheet" type="text/css">
+        <link href="/css/newDesign/slick/slick.css" rel="stylesheet" type="text/css">
+        <link href="/css/newDesign/raty/jquery.raty.css" rel="stylesheet" type="text/css">
+        <link href="/css/newDesign/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+        <!-- <link href="/css/newDesign/datatablesp/jquery.dataTables_themeroller.css" rel="stylesheet" type="text/css"> -->
+        <link href="/css/newDesign/datatables/dataTables.responsive.css" rel="stylesheet" type="text/css">
+
+        <!-- Estilos para todo el proyecto -->
+        <link href="/css/newDesign/backend.css" rel="stylesheet" type="text/css">
+
+        <!-- Fonts -->
+        <link href="http://fonts.googleapis.com/css?family=Roboto:300,350,400,500,600,700,800" rel="stylesheet" type="text/css">
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,500,600,700,800,400italic,700italic" rel="stylesheet" type="text/css">
+    </head>
+
+    <body>
+
+        <!-- Arriendas -->
+        <script src="/js/newDesign/arriendas.js" type="text/javascript"></script>
+
+        <!-- JQuery -->
+        <script src="/js/newDesign/jquery-2.1.3.min.js" type="text/javascript"></script>
+
+        <!-- JQuery UI -->
+        <script src="/js/newDesign/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+        
+        <!-- Bootstrap -->
+        <script src="/js/newDesign/bootstrap.min.js" type="text/javascript"></script>
+
+        <!-- Complementos -->
+        <script src="/js/newDesign/datetimepicker/jquery.datetimepicker.js" type="text/javascript"></script>
+        <script src="/js/newDesign/slick/slick.min.js" type="text/javascript"></script>
+        <script src="/js/newDesign/raty/jquery.raty.js" type="text/javascript"></script>
+        <script src="/js/newDesign/number/jquery.number.min.js" type="text/javascript"></script>
+        <script src="/js/newDesign/jquery-form/jquery.form.min.js" type="text/javascript"></script>
+        <script src="/js/newDesign/datatables/jquery.dataTables.min.js" type="text/javascript"></script>
+        <script src="/js/newDesign/datatables/dataTables.responsive.min.js" type="text/javascript"></script>
+        <script src="/js/newDesign/formToWizard/formToWizard.js" type="text/javascript"></script>
+
+        <?php include_component('main', 'header') ?>
+
+        <?php echo $sf_content ?>                
+    </body>
 </html>

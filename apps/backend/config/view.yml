@@ -1,25 +1,15 @@
 # You can find more information about this file on the symfony website:
 # http://www.symfony-project.org/reference/1_4/en/13-View
 
-all:
-
+default:
     http_metas:
         content-type: text/html
 
     metas:
-        robots: noindex, nofollow
+        title:        Backend | Arriendas.cl
+        description:  Backoffice de Arriendas
+        language:     es
+        robots:       noindex, nofollow
 
-    stylesheets: [main.css]
-
-    javascripts: [chosen/chosen.jquery.min.js]
-
-    has_layout: true
-    layout: layout
-
-    subirPadronSuccess:
-        has_layout: true
-        layout: layout_alt
-
-    signinSuccess:
-        has_layout: true
-        layout: layout_alt
+    has_layout:     true
+    layout:         layout

@@ -86,6 +86,8 @@ class CarTable extends Doctrine_Table {
 
                     $count = 1;
 
+                    $CarProximityMetro = $Car->getNearestMetro();
+
                     $CarsFound[] = array(
                         'id' => $Car->id,
                         'latitude' => $Car->lat,
@@ -102,7 +104,10 @@ class CarTable extends Doctrine_Table {
                         'price_per_week' => number_format(round($Car->getPricePerWeek()), 0, '', '.'),
                         'price_per_month' => number_format(round($Car->getPricePerMonth()), 0, '', '.'),
                         'transmission' => $Car->transmission == 1 ? 'Automática' : 'Manual',
-                        'count' => $count
+                        'count' => $count,
+                        'nearestMetroDistance' => round($CarProximityMetro->distance, 1),
+                        'nearestMetroName' => $CarProximityMetro->getMetro()->name,
+                        'fecha_subida' =>$Car->fecha_subida
                     );
 
                     $count++;

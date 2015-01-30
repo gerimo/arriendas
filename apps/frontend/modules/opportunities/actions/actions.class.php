@@ -11,7 +11,7 @@ class opportunitiesActions extends sfActions {
 
         $User = Doctrine_Core::getTable('User')->find($userId);
 
-        $this->Cars = Doctrine_Core::getTable('Car')->findByUserIdAndActivo($userId, true);
+        $this->Cars = Doctrine_Core::getTable('Car')->findByUserIdAndActivoAndSeguroOk($userId, true, 4);
 
         foreach ($this->Cars as $Car) {
 
@@ -135,7 +135,7 @@ class opportunitiesActions extends sfActions {
             $OriginalReserve = Doctrine_Core::getTable('Reserve')->find($reserveId);            
 
             if ($Car->hasReserve($OriginalReserve->getFechaInicio2(), $OriginalReserve->getFechaTermino2())) {
-                throw new Exception("El auto seleccionado para postular ya posee una reserva en las fechas de la postulación", 1);                
+                throw new Exception("Este auto ya posee una reserva en las fechas de la oportundiad", 1);                
             }
 
             // Comentado porque cuando se aprueba por correo no necesariamente debería estar logueado

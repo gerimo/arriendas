@@ -13,6 +13,17 @@ header .navbar-nav .navbar-right ul {
     border-color: rgba(0, 0, 0, 0.8);
 }
 
+.metro .km-area{
+    width: 18px;
+    height: 15px;
+    margin-bottom: 6px;
+}
+.metro{
+    margin-bottom: 10px;
+    padding-top: 2px;
+
+}
+
 #filters-navbar {
     background-color: white;
     border-color: white;
@@ -177,6 +188,7 @@ header .navbar-nav .navbar-right ul {
 }
 
 #section-map-filters li {
+    padding-right: 8px;
     float: left;
     list-style: none;   
     font: 600 18px/20px 'Open Sans', sans-serif;
@@ -244,10 +256,18 @@ header .navbar-nav .navbar-right ul {
     margin: 0;
     padding: 0 0 0 10px;
 }
+.infowindow .metro{
+    padding-top: 4px;
+    padding-left: 10px;
+}
 
 .box {
     background-color: #fff;
     padding: 10px;
+}
+
+.box .metro p {
+    height: 1em;
 }
 
 #tab-map .box {
@@ -297,6 +317,7 @@ header .navbar-nav .navbar-right ul {
 .box .price {
     color: #c8427f;
     font: 700 20px/22px 'Roboto', sans-serif;
+    margin-bottom: 0px;
 }
 
 #section-map #section-map-filters .tabset {
