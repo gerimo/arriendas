@@ -34,6 +34,10 @@ cars:
     param: { module: profile, action: cars }
     #param: { module: cars, action: index }
 
+data_for_payment:
+    url: /data-for-payment
+    param: { module: main, action: dataForPayment }
+
 forgot_password:
     url: /recuperar-contrasena
     param: { module: main, action: forgot }
@@ -85,6 +89,7 @@ opportunities_mailing_approve:
 opportunities_mailing_open:
     url: /oportunidades/mailing/:id/:signature
     param: { module: main, action: mailingOpen }
+    
 prices_compare:
     url: /compare-precios
     param: { module: main, action: pricesCompare }
@@ -107,7 +112,7 @@ reserve_approve:
 
 reserve_calculate_price:
     url: /reserva/calcular-precio
-    param: { module: reserves, action: calculatePrice }
+    param: { module: main, action: calculatePrice }
 
 reserve_change:
     url: /reserva/cambiar

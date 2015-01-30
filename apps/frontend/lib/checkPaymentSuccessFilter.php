@@ -24,6 +24,7 @@ class CheckPaymentSuccessFilter extends sfFilter
             if($toShow > 0){
                 
                 $this->getContext()->getController()->forward('bcpuntopagos', 'showExito');
+                throw new sfStopException();
 
             }
         }

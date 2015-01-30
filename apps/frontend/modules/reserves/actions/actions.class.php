@@ -117,7 +117,7 @@ class reservesActions extends sfActions {
         return sfView::NONE;
     }
 
-    public function executeCalculatePrice (sfWebRequest $request) {
+    /*public function executeCalculatePrice (sfWebRequest $request) {
 
         $return = array("error" => false);
 
@@ -163,7 +163,7 @@ class reservesActions extends sfActions {
         $this->renderText(json_encode($return));
 
         return sfView::NONE;
-    }
+    }*/
 
     public function executeCalculateTime (sfWebRequest $request) {
 
@@ -429,14 +429,28 @@ class reservesActions extends sfActions {
 
     public function executePay (sfWebRequest $request) {
 
+
         $userId = sfContext::getInstance()->getUser()->getAttribute('userid');
 
-        $warranty = $request->getPostParameter("warranty", null);
-        $payment  = $request->getPostParameter("payment-group", null); // Se saco la selección de khipu
+        if($request->hasParameter('warranty','payment-group','car','from','to')){ 
 
-        $carId = $request->getPostParameter("car", null);
-        $from  = $request->getPostParameter("from", null);
-        $to    = $request->getPostParameter("to", null);
+            $warranty = $request->getPostParameter("warranty", null);
+            $payment  = $request->getPostParameter("payment-group", null); // Se saco la selección de khipu
+
+            $carId = $request->getPostParameter("car", null);
+            $from  = $request->getPostParameter("from", null);
+            $to    = $request->getPostParameter("to", null);
+        
+        }else{
+            
+            $warranty = $this->getUser()->getAttribute("warranty");
+            $payment  = $this->getUser()->getAttribute("payment",null);
+
+            $carId    = $this->getUser()->getAttribute("carId");
+            $from     = $this->getUser()->getAttribute("from");
+            $to       = $this->getUser()->getAttribute("to");
+        }
+
 
         if (is_null($warranty) || is_null($carId) || is_null($from) || is_null($to)) {
             throw new Exception("No, no, no.", 1);
