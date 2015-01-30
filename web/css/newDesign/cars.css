@@ -2,43 +2,13 @@ body {
     background-image: url('/images/newDesign/background.jpg');
 }
 
-.circuloActivo { 
-	/*display: block;*/ 
-	width: 8px; 
-	height: 8px;
-	background: #12b312; 
-	-webkit-border-radius: 4px; 
-	-moz-border-radius: 4px; 
-	border-radius: 4px;
-}
-.circuloInactivo { 
-	/*display: none;*/ 
-	width: 8px; 
-	height: 8px; 
-	background: #999999;; 
-	-webkit-border-radius: 4px; 
-	-moz-border-radius: 4px; 
-	border-radius: 4px;
-	margin-top: 3px;
-	margin-right: 2px;
-} 
-
-.misautos_marca {
-	font-weight: bold;
-}
-.encabezado p{
-	font-weight: bold;
-    text-align: center;
-
-}
-
 h2 {
-	margin-top: 20px;
-	padding: 6px;
-	color:#575757;
-	font-size:13px;
-	font-weight:bold;
-	text-align:center;
+    margin-top: 20px;
+    padding: 6px;
+    color:#575757;
+    font-size:13px;
+    font-weight:bold;
+    text-align:center;
 }
 
 h3 {
@@ -47,59 +17,42 @@ h3 {
     text-align:center;
 }
 
+.circuloActivo { 
+    /*display: block;*/ 
+    width: 8px; 
+    height: 8px;
+    background: #12b312; 
+    -webkit-border-radius: 4px; 
+    -moz-border-radius: 4px; 
+    border-radius: 4px;
+}
+.circuloInactivo { 
+    /*display: none;*/ 
+    width: 8px; 
+    height: 8px; 
+    background: #999999;; 
+    -webkit-border-radius: 4px; 
+    -moz-border-radius: 4px; 
+    border-radius: 4px;
+    margin-top: 3px;
+    margin-right: 2px;
+}
 
 .misautos_marca {
-	
-	font-size: 21px;
-	font-weight: bold;
+    font-size: 21px;
+    font-weight: bold;
 }
 
 .misautos_user_item h3 {
-	font-size: 21px;
-	font-weight: 300;
+    font-size: 21px;
+    font-weight: 300;
 }
 
-/*.btn-a-action {
-    background-image: url('/images/newDesign/bt_blue_on_v2.png');
-    border: 2px solid #36cced;
-    border-radius: 1;
-    color: #fff;
-    font: 400 13.5px/14px 'Open Sans', sans-serif;
-    padding: 10px 14px;
-    text-align: center;
-    text-transform: uppercase !important;
-    vertical-align: middle;
-}
-
-.btn-a-primary {
-    background: #ca236f;
-    border: 2px solid #dc89af;
-    border-radius: 0;
-    color: #fff !important;
-    font: 700 16px/19px 'Open Sans', sans-serif;
-    padding: 10px 17px !important;
-    text-align: center;
-    text-transform: uppercase !important;
-    vertical-align: middle;
-}
-
-.btn-a-primary:hover {
-    background: #ba135f !important;
-    color: #eee !important;
-    text-decoration: none;
-}
-
-.btn-a-action:hover{
-	background-image: url('/images/newDesign/bt_blue_hover_v2.png');
-	
-}*/
-.grey{
-
-	background: #FAFAFA;
+.grey {
+    background: #FAFAFA;
 }
 
 .btn-a-action{
-	font-size: 16px;
-
+    font-size: 16px;
 }
 

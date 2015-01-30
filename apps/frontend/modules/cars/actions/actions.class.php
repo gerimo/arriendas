@@ -2,6 +2,225 @@
 
 class carsActions extends sfActions {
 
+    public function executeCarAvailabilityRemove(sfWebRequest $request) {
+        
+        $return = array("error" => false);
+
+        $carId = $request->getPostParameter('car', null);
+        $day   = $request->getPostParameter('day', null);
+
+        try {
+
+            if (is_null($carId)) {
+                throw new Exception("Falta Car ID", 1);                
+            }
+
+            if (is_null($day)) {
+                throw new Exception("Falta dia", 1);                
+            }
+
+            $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $carId, false);
+            if ($CarAvailability) {
+                $CarAvailability->setIsDeleted(true);
+                $CarAvailability->save();
+            }
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+            error_log("[".date("Y-m-d H:i:s")."] [cars/carAvailabilityRemove] ERROR: ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "cars/carAvailabilityRemove");
+            }
+        }
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
+    public function executeCarAvailabilitySave(sfWebRequest $request) {
+        
+        $return = array("error" => false);
+
+        $carId = $request->getPostParameter('car');
+        $day   = $request->getPostParameter('day');
+        $from  = $request->getPostParameter('from', null);
+        $to    = $request->getPostParameter('to', null);                
+
+        try {
+
+            $datesError = Utils::validateDates($from, $to);
+            if ($datesError) {
+                throw new Exception($datesError, 2);
+            }
+
+            if (is_null($from) || $from == "") {
+                throw new Exception("Debes indicar desde que hora está disponible tu auto", 2);
+            }
+
+            if (is_null($to) || $to == "") {
+                throw new Exception("Debes indicar hasta que hora está disponible tu auto", 2);
+            }
+
+            if ((strtotime($to) - strtotime($from)) / 3600 < 1) {
+                throw new Exception("La disponibilidad mínima debe ser de 1 hora", 2);
+            }
+
+            if (strtotime($to) < strtotime($from)) {
+                throw new Exception("Error en las horas", 2);
+            }
+
+            $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $carId, false);
+            if (!$CarAvailability) {
+
+                $CarAvailability = new CarAvailability();
+
+                $Car = Doctrine_Core::getTable("Car")->find($carId);
+                if (!$Car) {
+                    throw new Exception("No se encuentra el auto. ¿Trampa?", 1);
+                }
+
+                $CarAvailability->setCar($Car);
+                $CarAvailability->setDay($day);
+            }
+
+            $CarAvailability->setStartedAt(date("H:i:s", strtotime($from)));
+            $CarAvailability->setEndedAt(date("H:i:s", strtotime($to)));
+
+            $CarAvailability->save();
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+            error_log("[".date("Y-m-d H:i:s")."] [cars/carAvailabilitySave] ERROR: ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "cars/carAvailabilitySave");
+            }
+        }
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
+    public function executeSetActive(sfWebRequest $request) {
+
+        $return = array("error" => false);
+        
+        try {
+
+            $carId    = $request->getPostParameter('carId', null);
+            $isActive = $request->getPostParameter('isActive', null);
+
+            if (is_null($carId)) {
+                throw new Exception("Falta el ID de Car", 1);
+            }
+
+            if (is_null($isActive)) {
+                throw new Exception("Falta el el nuevo estado de Car", 1);
+            }
+
+            $Car = Doctrine_Core::getTable("Car")->find($carId);
+            $Car->setActivo($isActive);
+            $Car->setDisabledUntil(null);
+            $Car->save();
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorMessage"] = "No se pudo realizar el cambio. Por favor, intentalo nuevamente más tarde";
+            error_log("[".date("Y-m-d H:i:s")."] [cars/setActive] ERROR: ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "cars/setActive");
+            }
+        }
+        
+        $this->renderText(json_encode($return));
+        
+        return sfView::NONE;
+    }
+
+    public function executeSetDisabledUntil(sfWebRequest $request) {
+        
+        $return = array("error" => false);
+        
+        $carId     = $request->getPostParameter('carId', null);
+        $untilDate = $request->getPostParameter('untilDate', null);
+
+        try {
+
+            if (is_null($carId)) {
+                throw new Exception("Falta Car ID", 1);                
+            }
+
+            if (is_null($untilDate)) {
+                throw new Exception("Falta fecha", 1);                
+            }
+
+            $DisabledCar = Doctrine_Core::getTable("Car")->find($carId);
+            if(!$DisabledCar){
+                throw new Exception("No se encuentra el auto", 1);
+            }            
+            
+            $DisabledCar->setDisabledUntil(date("Y-m-d", strtotime($untilDate)));
+            $DisabledCar->save();
+
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorMessage"] = "No se pudo guardar la fecha. Por favor, intentalo nuevamente más tarde";
+            error_log("[".date("Y-m-d H:i:s")."] [cars/setDisabledUntil] ERROR: ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "cars/setDisabledUntil");
+            }
+        }
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
+    public function executeSetOption(sfWebRequest $request){
+
+        $return = array("error" => false);
+
+        try {
+
+            $option     = (int)$request->getPostParameter("option", null);
+            $isChecked  = $request->getPostParameter("isChecked", null);
+            $carId      = $request->getPostParameter("carId", null);
+
+            $Car  = Doctrine_Core::getTable('car')->find($carId);
+            $options = $Car->options;
+
+            if ($isChecked) {
+                if (!($options & $option)) {
+                    $options += $option;
+                }
+            }
+
+            if (!$isChecked) {
+                if ($options & $option) {
+                    $options -= $option;
+                }
+            }
+
+            $Car->setOptions($options);
+
+            $Car->save();
+
+        } catch (Exception $e) {
+            $return["error"] = true;
+            /*$return["errorMessage"] = "No se pudo realizar el cambio. Por favor, intentalo nuevamente más tarde";*/
+            error_log("[".date("Y-m-d H:i:s")."] [cars/setOption] ERROR: ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "cars/setOption");
+            }
+        }
+
+        $this->renderText(json_encode($return));
+        
+        return sfView::NONE;        
+    }
+
+    ///////////////////////
+
     /*editar auto*/   
     public function executeEdit(sfWebRequest $request){
         $this->setLayout("newIndexLayout");
@@ -33,47 +252,6 @@ class carsActions extends sfActions {
         $this->hour  = round(($priceDay/6),-2);
         $this->month = round((($priceDay * 30) * 0.7),-2);
 
-        
-    }
-
-    public function executeGetChecked(sfWebRequest $request){
-
-        $return = array("error" => false);
-
-        try {
-
-            $option     = (int)$request->getPostParameter("option", null);
-            $isChecked  = $request->getPostParameter("isChecked", null);
-            $carId      = $request->getPostParameter("carId", null);
-
-            $Car  = Doctrine_Core::getTable('car')->find($carId);
-            $options = $Car->options;
-
-            if ($isChecked) {
-                if (!($options & $option)) {
-                    $options += $option;
-                }
-            }
-
-            if (!$isChecked) {
-                if ($options & $option) {
-                    $options -= $option;
-                }
-            }
-
-            $Car->setOptions($options);
-
-            $Car->save();
-
-        } catch (Exception $e) {
-            $return["error"] = true;
-            $return["errorCode"] = $e->getCode();
-            $return["errorMessage"] = $e->getMessage();
-        }
-
-        $this->renderText(json_encode($return));
-        
-        return sfView::NONE;
         
     }
 
