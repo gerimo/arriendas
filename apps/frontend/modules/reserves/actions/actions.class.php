@@ -327,10 +327,13 @@ class reservesActions extends sfActions {
         }
 
         if (is_null($reserveId) || $reserveId == "") {
-            throw new Exception("Falta la reserva", 1);
+            throw new Exception("Falta el ID de Reserve para poder extender", 1);
         }
 
         $Reserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
+        if (!$Reserve) {
+            throw new Exception("No se encontró la Reserve ".$reserveId, 1);
+        }
 
         if (is_null($from) || $from == "") {
             throw new Exception("Falta fecha desde", 1);
@@ -358,9 +361,9 @@ class reservesActions extends sfActions {
         $NewReserve->setConfirmed(false);
 
         if ($Reserve->getLiberadoDeGarantia()) {
-            $NewReserve->montoLiberacion(0);
+            $NewReserve->setMontoLiberacion(Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to));
         } else {
-            $NewReserve->montoLiberacion(Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to));
+            $NewReserve->setMontoLiberacion(0);
         }
 
         $NewReserve->save();
@@ -417,10 +420,20 @@ class reservesActions extends sfActions {
                 throw new Exception("La extensión no se puede realizar debido a que el auto ya posee una reserva en la fecha consultada", 1);
             }
 
-            $return["price"] = CarTable::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth());
+            $price = CarTable::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth());
+
+            if ($Reserve->getLiberadoDeGarantia()) {
+                $price += Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to);
+            }
+
+            $return["price"] = $price;
+
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
+
+            error_log("[".date("Y-m-d H:i:s")."] [reserves/getExtendPrice] ERROR: ".$e->getMessage());
+
             if ($request->getHost() == "www.arriendas.cl") {
                 Utils::reportError($e->getMessage(), "reserves/getExtendPrice");
             }
