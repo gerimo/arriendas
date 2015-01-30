@@ -242,13 +242,11 @@ class carsActions extends sfActions {
                 
                 $mailer->send($message);
 
-
-
                 // Correo de notificación del registro del vehículo al usuario
                 $subject = "¡Tu vehículo ha sido registrado!";
                 $body    = $this->getPartial('emails/carCreateOwner', array('Car' => $Car));
-                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-                $to      = array($Car->getUser()->email);
+                $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+                $to      = array($Car->getUser()->email => $Car->getUser()->firstname." ".$Car->getUser()->lastname);
 
                 $message->setSubject($subject);
                 $message->setBody($body, 'text/html');

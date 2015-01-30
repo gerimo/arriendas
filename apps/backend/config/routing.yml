@@ -1,6 +1,9 @@
+# You can find more information about this file on the symfony website:
+# http://www.symfony-project.org/reference/1_4/en/10-Routing
+
 homepage:
-    url: /
-    param: { module: main, action: index }
+  url:   /
+  param: { module: main, action: index }
 
 login:
     url: /login
@@ -17,3 +20,11 @@ logout:
 user_without_pay:
     url: /usuarios/sin-pago
     param: { module: user, action: whitoutPay }
+
+user_without_pay_get:
+    url: /usuarios/sin-pago/obtener
+    param: { module: user, action: whitoutPayGet }
+
+user_without_pay_comment:
+    url: /usuarios/sin-pago/comentario
+    param: { module: user, action: whitoutPayComment }

@@ -16,7 +16,7 @@
 
             <?php if($sf_user->getFlash('show')): ?>
                 <p class="error-message" >
-                    <?php echo html_entity_decode($sf_user -> getFlash('msg')); ?>
+                    <?php echo html_entity_decode($sf_user->getFlash('msg')) ?>
                 </p>
             <?php endif ?>
 
