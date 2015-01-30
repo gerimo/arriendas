@@ -77,7 +77,11 @@
 
         <?php echo $sf_content ?>
 
-        <?php include_component('main', 'footer') ?>
+        <?php if($this->context->getActionName()!="reserve"): ?>
+
+            <?php include_component('main', 'footer') ?>
+
+        <?php endif ?>
 
         <?php if ($_SERVER['HTTP_HOST'] == "www.arriendas.cl"): ?>
             

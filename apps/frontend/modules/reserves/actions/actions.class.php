@@ -117,7 +117,7 @@ class reservesActions extends sfActions {
         return sfView::NONE;
     }
 
-    public function executeCalculatePrice (sfWebRequest $request) {
+    /*public function executeCalculatePrice (sfWebRequest $request) {
 
         $return = array("error" => false);
 
@@ -163,7 +163,7 @@ class reservesActions extends sfActions {
         $this->renderText(json_encode($return));
 
         return sfView::NONE;
-    }
+    }*/
 
     public function executeCalculateTime (sfWebRequest $request) {
 
@@ -429,81 +429,103 @@ class reservesActions extends sfActions {
 
     public function executePay (sfWebRequest $request) {
 
+
         $userId = sfContext::getInstance()->getUser()->getAttribute('userid');
 
-        $warranty = $request->getPostParameter("warranty", null);
-        $payment  = $request->getPostParameter("payment-group", null); // Se saco la selección de khipu
+        if($request->hasParameter('warranty','payment-group','car','from','to')){ 
 
-        $carId = $request->getPostParameter("car", null);
-        $from  = $request->getPostParameter("from", null);
-        $to    = $request->getPostParameter("to", null);
+            $warranty = $request->getPostParameter("warranty", null);
+            $payment  = $request->getPostParameter("payment-group", null); // Se saco la selección de khipu
 
-        if (is_null($warranty) || is_null($carId) || is_null($from) || is_null($to)) {
-            throw new Exception("No, no, no.", 1);
+            $carId = $request->getPostParameter("car", null);
+            $from  = $request->getPostParameter("from", null);
+            $to    = $request->getPostParameter("to", null);
+        
+        }else{
+            
+            $warranty = $this->getUser()->getAttribute("warranty");
+            $payment  = $this->getUser()->getAttribute("payment",null);
+
+            $carId    = $this->getUser()->getAttribute("carId");
+            $from     = $this->getUser()->getAttribute("from");
+            $to       = $this->getUser()->getAttribute("to");
         }
 
-        $datesError = $this->validateDates($from, $to);
-        if ($datesError) {
-            throw new Exception($datesError, 1);
+
+        try {
+
+            if (is_null($warranty) || is_null($carId) || is_null($from) || is_null($to)) {
+                throw new Exception("El User ".$userId." esta intentando pagar pero uno de los campos es nulo. Garantia: ".$warranty.", Car: ".$carId.", Desde: ".$from.", Hasta: ".$to, 1);
+            }
+
+            $datesError = $this->validateDates($from, $to);
+            if ($datesError) {
+                throw new Exception($datesError, 1);
+            }
+
+            $User = Doctrine_Core::getTable('User')->find($userId);
+            if ($User->getBlocked()) {
+                throw new Exception("Rechazado el pago de User ".$userId." debido a que se encuentra bloqueado, por lo que no esta autorizado para generar pagos", 1);            
+            }
+
+            $Car = Doctrine_Core::getTable('Car')->find($carId);
+            if (!$Car) {
+                throw new Exception("El User ".$userId." esta intentando pagar pero no se encontró el auto.", 1);
+            }
+
+            if ($Car->hasReserve($from, $to)) {
+                throw new Exception("El User ".$userId." esta intentando pagar pero el Car ".$carId." ya posee un reserva en las fechas indicadas.", 1);
+            }
+
+            $Reserve = new Reserve();
+            $Reserve->setDuration(Utils::calculateDuration($from, $to));
+            $Reserve->setDate(date("Y-m-d H:i:s", strtotime($from)));
+            $Reserve->setUser($User);
+            $Reserve->setCar($Car);
+
+            if ($User->getBlocked()) {
+                $Reserve->setVisibleOwner(false);
+                $Reserve->setConfirmed(true);
+            }
+
+            if ($warranty) {
+                $amountWarranty = sfConfig::get("app_monto_garantia");
+                $Reserve->setLiberadoDeGarantia(false);
+            } else {
+                $amountWarranty = Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to);
+                $Reserve->setLiberadoDeGarantia(true);
+            }
+
+            $Reserve->setPrice(CarTable::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth()));
+            $Reserve->setMontoLiberacion($amountWarranty);
+            $Reserve->setFechaReserva(date("Y-m-d H:i:s"));
+            $Reserve->setConfirmed(false);
+            $Reserve->setImpulsive(true);
+
+            $Reserve->save();
+
+            $Transaction = new Transaction();
+            $Transaction->setCar($Car->getModel()->getName()." ".$Car->getModel()->getBrand()->getName());
+            $Transaction->setPrice($Reserve->getPrice());
+            $Transaction->setUser($Reserve->getUser());
+            $Transaction->setDate(date("Y-m-d H:i:s"));
+
+            $TransactionType = Doctrine_Core::getTable('TransactionType')->find(1);
+            $Transaction->setTransactionType($TransactionType);
+            $Transaction->setReserve($Reserve);
+            $Transaction->setCompleted(false);
+            $Transaction->setImpulsive(true);
+            $Transaction->setSelected(true);
+            $Transaction->save();
+
+            $this->getRequest()->setParameter("reserveId", $Reserve->getId());
+            $this->getRequest()->setParameter("transactionId", $Transaction->getId());
+        } catch (Exception $e) {
+            error_log("[".date("Y-m-d H:i:s")."] [reserves/pay] ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "reserves/pay");
+            }
         }
-
-        $User = Doctrine_Core::getTable('User')->find($userId);
-        if ($User->getBlocked()) {
-            throw new Exception("Usuario no autorizado para generar pagos", 1);            
-        }
-
-        $Car = Doctrine_Core::getTable('Car')->find($carId);
-        if (!$Car) {
-            throw new Exception("No se encontró el auto.", 1);
-        }
-
-        if ($Car->hasReserve($from, $to)) {
-            throw new Exception("El auto ya posee un reserva en las fechas indicadas.", 1);
-        }
-
-        $Reserve = new Reserve();
-        $Reserve->setDuration(Utils::calculateDuration($from, $to));
-        $Reserve->setDate(date("Y-m-d H:i:s", strtotime($from)));
-        $Reserve->setUser($User);
-        $Reserve->setCar($Car);
-
-        if ($User->getBlocked()) {
-            $Reserve->setVisibleOwner(false);
-            $Reserve->setConfirmed(true);
-        }
-
-        if ($warranty) {
-            $amountWarranty = sfConfig::get("app_monto_garantia");
-            $Reserve->setLiberadoDeGarantia(false);
-        } else {
-            $amountWarranty = Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to);
-            $Reserve->setLiberadoDeGarantia(true);
-        }
-
-        $Reserve->setPrice(CarTable::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth()));
-        $Reserve->setMontoLiberacion($amountWarranty);
-        $Reserve->setFechaReserva(date("Y-m-d H:i:s"));
-        $Reserve->setConfirmed(false);
-        $Reserve->setImpulsive(true);
-
-        $Reserve->save();
-
-        $Transaction = new Transaction();
-        $Transaction->setCar($Car->getModel()->getName()." ".$Car->getModel()->getBrand()->getName());
-        $Transaction->setPrice($Reserve->getPrice());
-        $Transaction->setUser($Reserve->getUser());
-        $Transaction->setDate(date("Y-m-d H:i:s"));
-
-        $TransactionType = Doctrine_Core::getTable('TransactionType')->find(1);
-        $Transaction->setTransactionType($TransactionType);
-        $Transaction->setReserve($Reserve);
-        $Transaction->setCompleted(false);
-        $Transaction->setImpulsive(true);
-        $Transaction->setSelected(true);
-        $Transaction->save();
-
-        $this->getRequest()->setParameter("reserveId", $Reserve->getId());
-        $this->getRequest()->setParameter("transactionId", $Transaction->getId());
 
         $this->forward("khipu", "generatePayment");
     }

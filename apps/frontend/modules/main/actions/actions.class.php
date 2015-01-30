@@ -37,6 +37,62 @@ class mainActions extends sfActions {
         }
     }
 
+    public function executeCalculatePrice (sfWebRequest $request) {
+
+        $return = array("error" => false);
+
+        if($request->hasParameter('carId','from','to')){
+
+            $carId = $request->getPostParameter("carId", null);
+            $from  = $request->getPostParameter("from", null);
+            $to    = $request->getPostParameter("to", null);
+        }else{
+            
+            $carId = $this->getUser()->getAttribute("carId");
+            $from  = $this->getUser()->getAttribute("from");
+            $to    = $this->getUser()->getAttribute("to");
+        }
+
+        try {
+
+            $datesError = $this->validateDates($from, $to);
+            if ($datesError) {
+                throw new Exception($datesError, 2);
+            }
+
+            if (is_null($carId) || $carId == '' || $carId == 0) {
+                throw new Exception("Falta el carId", 1);
+            }
+
+            $Car = Doctrine_Core::getTable('car')->findOneById($carId);
+            if (!$Car) {
+                throw new Exception("El Car ".$carId." no fue encontrado", 1);
+            }
+
+            $return["price"] = CarTable::getPrice($from, $to, $Car->price_per_hour, $Car->price_per_day, $Car->price_per_week, $Car->price_per_month);
+
+        } catch (Exception $e) {
+
+            $return["error"] = true;
+
+            if ($e->getCode() >= 2) {
+                $return["errorMessage"] = $e->getMessage();
+            } else {
+                $return["errorMessage"] = "Problemas a calcular el precio. Por favor, intentalo más tarde";
+            }
+            
+            error_log("[".date("Y-m-d H:i:s")."] ERROR: ".$e->getMessage());
+            
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "reserves/calculatePrice");
+            }
+        }
+    
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
     public function executeCompleteRegister(sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
@@ -59,6 +115,39 @@ class mainActions extends sfActions {
                 $this->referer." || error_message: ".$e->getMessage() , 1);
         }
         
+    }
+
+    public function executeDataForPayment(sfWebRequest $request){
+
+        $return = array("error" => false);
+
+        try {
+
+            $carId    = $request->getPostParameter("carId");
+            $from     = $request->getPostParameter("from");
+            $to       = $request->getPostParameter("to");
+            $warranty = $request->getPostParameter("warranty");
+            $payment  = $request->getPostParameter("payment");
+
+            if (!$carId || !$from || !$to || is_null($warranty) || !$payment) {
+                throw new Exception("Falta un parametro", 1);
+            }
+            
+            $this->getUser()->setAttribute("warranty", $warranty);
+            $this->getUser()->setAttribute("payment", $payment);
+            $this->getUser()->setAttribute("carId", $carId);
+            $this->getUser()->setAttribute("from", $from);
+            $this->getUser()->setAttribute("to", $to);
+
+
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+        }
+        
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
     }
 
     public function executeDoCompleteRegister(sfWebRequest $request) {
@@ -323,6 +412,7 @@ class mainActions extends sfActions {
         if ($this->getUser()->isAuthenticated()) {
             $this->redirect('homepage');
         }
+
         
         $referer = $this->getContext()->getActionStack()->getSize() > 1 ? $request->getUri() : $request->getReferer();
         $this->getUser()->setAttribute("referer", $referer);
@@ -544,14 +634,16 @@ class mainActions extends sfActions {
         } else {
             $from = date("Y-m-d H:i:s");
         }
-
+        
         if ($this->getUser()->getAttribute("to", false)) {
             $to = $this->getUser()->getAttribute("to");
         } else {
             $to = date("Y-m-d H:i:s", strtotime("+1 day", strtotime($from)));
         }
+        //fechas no cambian, debido a que el usuario no esta logueado 
+        
 
-        $userId = $this->getUser()->getAttribute("userid");
+        /*$userId = $this->getUser()->getAttribute("userid");*/
 
         $carId = $request->getParameter("carId", null);
 
@@ -573,7 +665,7 @@ class mainActions extends sfActions {
         $this->to = date("Y-m-d H:i", $t);
         $this->toHuman = date("D d/m/Y H:i", $t);
 
-        $this->User = Doctrine_Core::getTable('User')->find($userId);
+        /*$this->User = Doctrine_Core::getTable('User')->find($userId);*/
         $this->Car = Doctrine_Core::getTable('Car')->find($carId);
 
         if ($this->Car->hasReserve($from, $to)) {
@@ -618,11 +710,11 @@ class mainActions extends sfActions {
             $this->transmission = true;
         }
 
-        $userId = $this->getUser()->getAttribute("userid");
+        /*$userId = $this->getUser()->getAttribute("userid");
         $User = Doctrine_Core::getTable('User')->find($userId);
 
         $this->license            = $User->getDriverLicenseFile();
-        $this->isDebtor           = $User->moroso;
+        $this->isDebtor           = $User->moroso;*/
         $this->amountWarranty     = sfConfig::get("app_monto_garantia");
         $this->amountWarrantyFree = sfConfig::get("app_monto_garantia_por_dia");
 
@@ -2043,6 +2135,8 @@ class mainActions extends sfActions {
         $this->offers = $q->execute();
         //echo $q->getSqlQuery();
     }
+
+    
 
     public function executeMap(sfWebRequest $request) {
 
@@ -3495,4 +3589,17 @@ class mainActions extends sfActions {
 
         $this->redirect('cars');
     }
+
+    private function validateDates ($from, $to) {
+
+        $from = strtotime($from);
+        $to   = strtotime($to);
+
+        if ($from >= $to) {
+            return "La fecha de inicio debe ser menor a la fecha de término.";
+        }
+
+        return false;
+    }
+
 }

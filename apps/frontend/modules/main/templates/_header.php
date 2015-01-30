@@ -28,30 +28,33 @@
             <div class="collapse navbar-collapse" id="header">
                 
                 <ul class="nav navbar-nav">
+                    <?php if($this->context->getActionName()!="reserve"): ?>
+                    
+                        <?php if ($sf_user->isAuthenticated()): ?>
+                            <li><a href="<?php echo url_for("homepage") ?>" data-target="homepage">Inicio</a></li>
 
-                    <?php if ($sf_user->isAuthenticated()): ?>
-                        <li><a href="<?php echo url_for("homepage") ?>" data-target="homepage">Inicio</a></li>
-
-                        <?php if($hasCars): ?>
-                            <li><a href="<?php echo url_for("cars") ?>" data-target="cars">Mis autos</a></li>
+                            <?php if($hasCars): ?>
+                                <li><a href="<?php echo url_for("cars") ?>" data-target="cars">Mis autos</a></li>
+                            <?php else: ?>
+                                <li><a href="<?php echo url_for("car_create") ?>" data-target="cars">Subir Auto</a></li>
+                            <?php endif ?>
+                            
+                            <?php if ($hasActiveCars): ?>
+                                <li><a href="<?php echo url_for("opportunities") ?>" data-target="opportunities">Oportunidades</a></li>
+                            <?php endif ?>
+                            
+                            <li><a href="<?php echo url_for("reserves") ?>" data-target="reserves">Reservas</a></li>
                         <?php else: ?>
-                            <li><a href="<?php echo url_for("car_create") ?>" data-target="cars">Subir Auto</a></li>
-                        <?php endif ?>
-                        
-                        <?php if ($hasActiveCars): ?>
-                            <li><a href="<?php echo url_for("opportunities") ?>" data-target="opportunities">Oportunidades</a></li>
-                        <?php endif ?>
-                        
-                        <li><a href="<?php echo url_for("reserves") ?>" data-target="reserves">Reservas</a></li>
-                    <?php else: ?>
-                        <li><a href="<?php echo url_for("search_cars")?>">Buscar autos</a></li>
-                        <li><a href="<?php echo url_for("how-works")?>">¿Cómo funciona?</a></li>
-                        <li><a href="<?php echo url_for("prices_compare")?>">Compara precios</a></li>
-                        <li><a href="<?php echo url_for("news")?>">En las noticias</a></li>
-                        <!-- <li><a onclick="playPause()">Play / Pause</a></li> -->
+                            
+                            <li><a href="<?php echo url_for("search_cars")?>">Buscar autos</a></li>
+                            <li><a href="<?php echo url_for("how-works")?>">¿Cómo funciona?</a></li>
+                            <li><a href="<?php echo url_for("prices_compare")?>">Compara precios</a></li>
+                            <li><a href="<?php echo url_for("news")?>">En las noticias</a></li>
+                            <!-- <li><a onclick="playPause()">Play / Pause</a></li> -->
+                        <?php endif?>
+                        <li><a href="<?php echo url_for('questions') ?>" data-target="questions">Preguntas Frecuentes</a></li>
+                    
                     <?php endif ?>
-
-                    <li><a href="<?php echo url_for('questions') ?>" data-target="questions">Preguntas Frecuentes</a></li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">

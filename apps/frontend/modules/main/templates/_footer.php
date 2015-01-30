@@ -59,7 +59,13 @@
         <div class="hidden-xs col-sm-12 col-md-12 text-center" id="address"> 
             <p class= "direccion">Manuel Montt 1404, Providencia, Santiago de Chile</p>
             <p>
+
                 <i class="fa fa-phone"></i> <a href="<?php echo $telefono?>"><?php echo $telefonoText?></a> 
+                <img style="width: 23px; height: 24px; margin-top: -4px;" src="/images/newDesign/logo-whatsapp.png"><a>+569-53332105</a>  
+                <!-- <i class="fa fa-whatsapp"></i> +56 95 3332105 -->
+                
+            </p>
+            <p>
                 <i class="fa fa-support"></i> <a href="mailto:soporte@arrienda<?php echo $telefonoText?>s.cl">soporte@arriendas.cl</a>
             </p>
         </div>
