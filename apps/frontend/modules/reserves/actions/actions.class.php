@@ -373,6 +373,7 @@ class reservesActions extends sfActions {
         $NewTransaction->setDate($Reserve->getFechaTermino2());
         $NewTransaction->setReserve($NewReserve);
         $NewTransaction->setCompleted(false);
+        $NewTransaction->setShowSuccess(0);
         $NewTransaction->save();
 
         $this->getRequest()->setParameter("reserveId", $NewReserve->getId());
