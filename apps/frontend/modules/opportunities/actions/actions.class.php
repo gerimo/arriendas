@@ -113,9 +113,9 @@ class opportunitiesActions extends sfActions {
 
     private function approve($reserveId, $carId, $isMailing = false) {
 
-        error_log("Reserva: ".$reserveId);
+        /*error_log("Reserva: ".$reserveId);
         error_log("Car: ".$carId);
-        error_log("isMailing: ".$isMailing);
+        error_log("isMailing: ".$isMailing);*/
 
         try {
 
@@ -146,6 +146,7 @@ class opportunitiesActions extends sfActions {
             $O = $OriginalReserve->copy(true);
             $O->setCar($Car);
             $O->setFechaReserva(date("Y-m-d H:i:s"));
+            $O->setFechaConfirmacion(date("Y-m-d H:i:s"));
             $O->setConfirmed(true);
             $O->setImpulsive(true);
             $O->setReservaOriginal($OriginalReserve->getId());

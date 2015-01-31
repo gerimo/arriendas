@@ -8,7 +8,7 @@
 
         <div class="BCW">
 
-            <h1>Oportunidades <small>(<?php echo count($Opportunities) ?>)</small></h1>
+            <h1>Oportunidades</h1>
 
             <table class="display responsive no-wrap" id="opportunities" cellspacing="0" width="100%">
                 <thead>

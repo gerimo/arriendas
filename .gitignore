@@ -13,3 +13,5 @@
 *.orig
 
 /web/old/
+
+queries.sql
