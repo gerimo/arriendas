@@ -650,7 +650,7 @@
 <section id="section-compare-prices">
 
     <div class="row">
-        <div class="col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
+        <div class="col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10 text-center">
             <h2 class="title">Compare precios</h2>
        </div>
     </div>

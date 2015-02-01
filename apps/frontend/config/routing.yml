@@ -108,8 +108,8 @@ opportunities_mailing_approve:
 
 opportunities_mailing_open:
     url: /oportunidades/mailing/:id/:signature
-    param: { module: main, action: mailingOpen }
-    
+    param: { module: opportunities, action: mailingOpen }
+
 prices_compare:
     url: /compare-precios
     param: { module: main, action: pricesCompare }
@@ -165,7 +165,7 @@ return_form:
 search_cars:
     url: /arriendo-de-autos
     param: { module: main, action:searchACars }
-    
+
 terms_and_conditions:
     url: /terminos-y-condiciones
     param: { module: main, action: terminos }

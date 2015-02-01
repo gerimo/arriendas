@@ -217,7 +217,6 @@
         grandpa.find(".loading").show();
 
         $.post("<?php echo url_for('reserve_approve') ?>", {"reserveId": reserveId}, function(r){
-            console.log(r);
             if (r.error) {
                 $("#dialog-alert p").html(r.errorMessage);
                 $("#dialog-alert").attr("title", "Problemas al aprobar la reserva");

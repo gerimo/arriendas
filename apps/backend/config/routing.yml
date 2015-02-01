@@ -17,6 +17,14 @@ logout:
     url: /logout
     param: { module: main, action: logout }
 
+opportunity_mailing:
+    url: /oportunidades/mailing
+    param: { module: opportunity, action: mailing }
+
+opportunity_mailing_config_save:
+    url: /oportunidades/mailing/guardar
+    param: { module: opportunity, action: mailingConfigSave }
+
 user_without_pay:
     url: /usuarios/sin-pago
     param: { module: user, action: whitoutPay }
