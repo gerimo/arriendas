@@ -355,6 +355,7 @@
 
             if (r.cars.length > 0) {
                 for (var i = 0 ; i < r.cars.length ; i++) {
+                    console.log(r.cars[i].photo);
 
                     var Car = r.cars[i];
                     
@@ -370,12 +371,14 @@
         
                     }
 
-                    var str = Car.photo.indexOf("cars");
+                    var str = 0;
+                    if (Car.photo) {
+                        str = Car.photo.indexOf("cars");
+                    }
 
                     if(str > 0) {
                         urlFotoTipo = Car.photo;
                         urlFotoThumbTipo = Car.photo;
-                        console.log("0");
                     }
 
                     var windowMarker = "";
@@ -384,10 +387,8 @@
                     windowMarker += "<div class='col-md-4 text-center'>";
                     /*windowMarker += "<a href='" + urlFotoTipo + "' class='thickbox'>";*/
                     if(str > 0) {
-                        console.log("1");
                         windowMarker += "<img class='img-responsive' src='http://www.arriendas.cl" + urlFotoThumbTipo + "'/>";
-                    }else {
-                        console.log("2");
+                    } else {
                         windowMarker += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "'/>";
                     }
                     /*windowMarker += "</a>";*/
@@ -649,7 +650,7 @@
 <section id="section-compare-prices">
 
     <div class="row">
-        <div class="col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
+        <div class="col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10 text-center">
             <h2 class="title">Compare precios</h2>
        </div>
     </div>

@@ -7,6 +7,7 @@
  * 
  * @property integer $id-
  * @property string $username
+ * @property string $comentario_recordar
  * @property string $password
  * @property string $facebook_id
  * @property string $url
@@ -40,6 +41,7 @@
  * @property boolean $confirmed_fb
  * @property boolean $confirmed_sms
  * @property boolean $friend_invite
+ * @property boolean $is_suspect
  * @property Doctrine_Collection $Cars
  * @property Doctrine_Collection $Conversation
  * @property Doctrine_Collection $Message
@@ -51,6 +53,7 @@
  * 
  * @method integer             getId()                    Returns the current record's "id" value
  * @method string              getUsername()              Returns the current record's "username" value
+ * @method string              getComentariosRecordar()   Returns the current record's "comentarios_recordar" value
  * @method string              getPassword()              Returns the current record's "password" value
  * @method string              getFacebookId()            Returns the current record's "facebook_id" value
  * @method string              getUrl()                   Returns the current record's "url" value
@@ -87,6 +90,7 @@
  * @method boolean             getLicenciaFalsa()         Returns the current record's "licencia_falsa" value
  * @method boolean             getChequeoLicencia()       Returns the current record's "chequeo_licencia" value
  * @method boolean             getChequeoJudicial()       Returns the current record's "chequeo_judicial" value
+ * @method boolean             getIsSuspect()             Returns the current record's "is_suspect" value
  * @method Doctrine_Collection getCars()                  Returns the current record's "Cars" collection
  * @method Doctrine_Collection getConversation()          Returns the current record's "Conversation" collection
  * @method Doctrine_Collection getMessage()               Returns the current record's "Message" collection
@@ -97,6 +101,7 @@
  *
  * @method User                setId()                    Sets the current record's "id" value
  * @method User                setUsername()              Sets the current record's "username" value
+ * @method User                setComentariosRecordar()   Sets the current record's "comentarios_recordar" value
  * @method User                setPassword()              Sets the current record's "password" value
  * @method User                setFacebookId()            Sets the current record's "facebook_id" value
  * @method User                setUrl()                   Sets the current record's "url" value
@@ -133,6 +138,7 @@
  * @method User                setLicenciaFalsa()         Sets the current record's "licencia_falsa" value
  * @method User                setChequeoLicencia()       Sets the current record's "chequeo_licencia" value
  * @method User                setChequeoJudicial()       Sets the current record's "chequeo_judicial" value
+ * @method User                setIsSuspect()             Sets the current record's "is_suspect" value
  * @method User                setCars()                  Sets the current record's "Cars" collection
  * @method User                setConversation()          Sets the current record's "Conversation" collection
  * @method User                setMessage()               Sets the current record's "Message" collection
@@ -156,6 +162,10 @@ abstract class BaseUser extends sfDoctrineRecord {
             'length' => 4,
         ));
         $this->hasColumn('username', 'string', 45, array(
+            'type' => 'string',
+            'length' => 45,
+        ));
+        $this->hasColumn('comentarios_recordar', 'string', 45, array(
             'type' => 'string',
             'length' => 45,
         ));
@@ -317,6 +327,11 @@ abstract class BaseUser extends sfDoctrineRecord {
             'notnull' => true,
             'default' => false,
         ));
+        $this->hasColumn('is_suspect', 'boolean', false, array(
+            'type' => 'boolean',
+            'notnull' => true,
+            'default' => false,
+        ));
         $this->hasColumn('address', 'string', 255, array(
             'type' => 'string',
             'length' => 255,
@@ -386,11 +401,15 @@ abstract class BaseUser extends sfDoctrineRecord {
 
         $this->hasMany('Reserve as Reserves', array(
             'local' => 'id',
-            'foreign' => 'User_id'));
+            'foreign' => '  '));
 
         $this->hasMany('Transaction as Transactions', array(
             'local' => 'id',
             'foreign' => 'User_id'));
+
+        $this->hasMany('UserMailingConfig as UserMailingConfigs', array(
+            'local' => 'id',
+            'foreign' => 'user_mailing_config_id'));
         
         $this->hasOne('Commune', array(
             'local' => 'commune_id',

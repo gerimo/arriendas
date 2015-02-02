@@ -72,8 +72,9 @@ class contratoActions extends sfActions
     $datosContrato->domicilio_arrendatario=$arrendatario->getAddress();
 	
     //Comuna Arrendatario
-    $comuna_arr= ComunasTable::getInstance()->findOneByCodigoInterno($arrendatario->getComuna());
-    $datosContrato->comuna_arrendatario=$comuna_arr->getNombre();
+    /*$comuna_arr= ComunasTable::getInstance()->findOneByCodigoInterno($arrendatario->getComuna());*/
+    $comuna_arr= CommuneTable::getInstance()->find($arrendatario->getCommune()->id);
+    $datosContrato->comuna_arrendatario = $comuna_arr->name;
     
     //Dueno
     $duenio= UserTable::getInstance()->findOneById($auto->getUserId());
@@ -90,8 +91,9 @@ class contratoActions extends sfActions
     $datosContrato->domicilio_duenio=$duenio->getAddress();
 
     //Comuna Duenio
-    $comuna_due= ComunasTable::getInstance()->findOneByCodigoInterno($duenio->getComuna());
-    $datosContrato->comuna_duenio= $comuna_due->getNombre();
+    /*$comuna_due= ComunasTable::getInstance()->findOneByCodigoInterno($duenio->getComuna());*/
+    $comuna_due = CommuneTable::getInstance()->find($duenio->getCommune()->id);
+    $datosContrato->comuna_duenio = $comuna_due->name;
     
     
   

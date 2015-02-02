@@ -1,4 +1,38 @@
-# default rules
+# You can find more information about this file on the symfony website:
+# http://www.symfony-project.org/reference/1_4/en/10-Routing
+
 homepage:
-    url: /
-    param: { module: main, action: index }
+  url:   /
+  param: { module: main, action: index }
+
+login:
+    url: /login
+    param: { module: main, action: login }
+
+login_do:
+    url: /login/do
+    param: { module: main, action: loginDo }
+
+logout:
+    url: /logout
+    param: { module: main, action: logout }
+
+opportunity_mailing:
+    url: /oportunidades/mailing
+    param: { module: opportunity, action: mailing }
+
+opportunity_mailing_config_save:
+    url: /oportunidades/mailing/guardar
+    param: { module: opportunity, action: mailingConfigSave }
+
+user_without_pay:
+    url: /usuarios/sin-pago
+    param: { module: user, action: whitoutPay }
+
+user_without_pay_get:
+    url: /usuarios/sin-pago/obtener
+    param: { module: user, action: whitoutPayGet }
+
+user_without_pay_comment:
+    url: /usuarios/sin-pago/comentario
+    param: { module: user, action: whitoutPayComment }

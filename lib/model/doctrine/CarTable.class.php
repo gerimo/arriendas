@@ -2,7 +2,7 @@
 
 class CarTable extends Doctrine_Table {
 
-    public static function findCars($from, $to, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers) {
+    public function findCars($from, $to, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers) {
 
         $CarsFound = array();
         $isWeekend = false;
@@ -119,6 +119,27 @@ class CarTable extends Doctrine_Table {
         }
 
         return $CarsFound;
+    }
+
+    public function findDisabledCars($date = null) {
+
+        if (is_null($date)) {
+            $date = date("Y-m-d");
+        }
+
+        try {
+
+            $q = Doctrine_Core::getTable("Car")
+                ->createQuery('C')
+                ->Where('C.activo = 0')
+                ->andWhere('C.disabled_until < ?', $date);
+
+            $oCars = $q->execute();
+        } catch (Exception $e) {
+            error_log("[".date("Y-m-d H:i:s")."][CarTable::findDisabledCars()] ERROR: ".$e->getMessage());
+        }
+
+        return $oCars;
     }
     
     public static function getInstance() {

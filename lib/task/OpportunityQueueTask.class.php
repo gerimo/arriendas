@@ -32,17 +32,18 @@ EOF;
 
         try {
 
-            $maxIterations = 5; // Cantidad máxima de iteraciones
-            $kmPerIteration = 1; // Radio en KM de cada iteración
-            $exclusivityTime = 60; // En minutos // Exclusividad que se le entrega al dueño original antes de enviar oportunidades
-            $timePerIteration = 20; // En minutos // Tiempo entre cada iteración
+            $OpportunityConfig = Doctrine_Core::getTable("OpportunityConfig")
+                ->createQuery('OC')->fetchOne();
+
+            $maxIterations   = $OpportunityConfig->getMaxIterations(); // Cantidad máxima de iteraciones
+            $kmPerIteration  = $OpportunityConfig->getKmPerIteration(); // Radio en KM de cada iteración
+            $exclusivityTime = $OpportunityConfig->getExclusivityTime(); // En minutos // Exclusividad que se le entrega al dueño original antes de enviar oportunidades
 
             // Se obtienen todas las reservas para procesar
             $q = Doctrine_Core::getTable("OpportunityQueue")
                 ->createQuery('OQ')
                 ->where('OQ.is_active IS TRUE')
                 ->andWhere("DATE_ADD(OQ.paid_at, INTERVAL {$exclusivityTime} MINUTE) < NOW()")
-                ->andWhere("OQ.last_iteration_at IS NULL OR DATE_ADD(OQ.last_iteration_at, INTERVAL {$timePerIteration} MINUTE) < NOW()")
                 ->andWhere('OQ.iteration <= ?', $maxIterations);
 
             $OpportunitiesQueue = $q->execute();
@@ -60,6 +61,21 @@ EOF;
                         $this->log("[".date("Y-m-d H:i:s")."] La reserva {$Reserve->id} de oportunidad {$OpportunityQueue->id} ya fue confirmada por el dueño original. Se inactiva la oportundiad");
                         $OpportunityQueue->setIsActive(false);
                         $OpportunityQueue->save();
+                        continue;
+                    }
+
+                    // Revisamos que sea tiempo de enviar los correos de oportunidades. Los correos se envían cada X minutos.
+                    // X = (D - E) / I
+                    // D: Tiempo entre que se pagó la reserva hasta su comienzo (minutos)
+                    // E: Exclusividad del dueño original para aprobar la reserva (minutos)
+                    // I: Cantidad de iteraciones seteadas para el envío de oportundiades
+                    $timeForTheStartOfReserve = Utils::calculateDuration($Reserve->getFechaPago(), $Reserve->getDate()) * 60;
+                    $minutesPerIteration = floor(($timeForTheStartOfReserve - $exclusivityTime) / $OpportunityQueue->getIteration());
+                    $lastShipment = $OpportunityQueue->getLastIterationAt();
+                    if (!$lastShipment) {
+                        $lastShipment = $Reserve->getFechaPago();
+                    }
+                    if (strtotime("+".$minutesPerIteration." minutes", $lastShipment) > strtotime("now")) {
                         continue;
                     }
 

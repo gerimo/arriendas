@@ -8,5 +8,8 @@ security:  ~
 paymentSuccessFilter:
     class: checkPaymentSuccessFilter
 
+completeRegisterFilter:
+    class:  checkCompleteRegisterFilter
+
 cache:     ~
 execution: ~

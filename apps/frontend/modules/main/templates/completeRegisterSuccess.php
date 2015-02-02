@@ -15,8 +15,8 @@
             <?php endif ?>
 
             <select class="form-control" id="foreign" name="foreign" >
-                <option value="0">Chileno - extranjero con rut</option>
-                <option value="1">Extranjero - I don't have a RUT number</option>
+                <option value="0">Tengo RUT Chileno - I have chilean RUT number</option>
+                <option value="1">No tengo RUT - I don't have chilean RUT number</option>
             </select>
 
             <input class="form-control" id="rut" name="rut" type="text" placeholder="RUT">
@@ -97,8 +97,9 @@
 <div class="hidden-xs space-100"></div>
 
 <script type="text/javascript">
-    var referer = "<?php echo $referer ?>";
 
+    var referer = "<?php echo $referer ?>";
+    console.error(referer);
     $("#foreign").change(function(){
         var foreign = $(this).val();
         $('#rut').val('');
@@ -181,8 +182,9 @@
                 $(".alert").addClass("alert-a-danger");
                 $(".alert").html(r.errorMessage);
             } else {
-                if(referer != '') {
-                    window.location = referer;
+                if(referer != '' || referer != null) {
+                    console.error(referer);
+                    window.location.href = referer;
                 } else {
                     $("#message p:first-child").html(r.message);
                     $("#message").removeAttr("style");

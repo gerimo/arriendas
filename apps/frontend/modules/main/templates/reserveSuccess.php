@@ -1,8 +1,29 @@
 <link href="/css/newDesign/reserve.css" rel="stylesheet" type="text/css">
 
+<head>
+    <script>(function() {
+        var _fbq = window._fbq || (window._fbq = []);
+        if (!_fbq.loaded) {
+        var fbds = document.createElement('script');
+        fbds.async = true;
+        fbds.src = '//connect.facebook.net/en_US/fbds.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(fbds, s);
+        _fbq.loaded = true;
+        }
+        _fbq.push(['addPixelId', '1519934024954094']);
+        })();
+        window._fbq = window._fbq || [];
+        window._fbq.push(['track', 'PixelInitialized', {}]);
+    </script>
+    <noscript>
+        <img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=1519934024954094&amp;ev=PixelInitialized" />
+    </noscript>
+</head>
+
 <div class="space-30 hidden-xs"></div>
 <div class="space-50 visible-xs"></div>
-
+<!-- 
 <?php if (is_null($license)): ?>
     <div class="row" id="license-container">
         <div class="col-xs-12 col-md-offset-4 col-md-4">
@@ -17,7 +38,7 @@
         </div>
     </div>
 <?php endif ?>
-
+ -->
 <div class="space-60 hidden-xs"></div>
 
 <div class="container">
@@ -165,40 +186,6 @@
             </div>
         </div>
     </div>
-    
-    <!-- Reviews 
-    <?php if (count($reviews) > 0): ?>
-        <div class="row">
-            <div class="panel-group col-md-offset-1 col-md-10" id="reviews">
-                <div class="panel-heading">
-                    <h1>Reviews</h1>
-                </div>
-        
-                <div id="reviewsCollapseOne" class="panel-collapse col-md-offset-1 col-md-11" >
-                    <div class="border">
-                        <?php count($reviews) ?> 
-                        <?php foreach ($reviews as $review): ?>
-                            <div class="row review">
-                                <div class="col-md-1">
-                                    <?php if ($review['picture']): ?>
-                                        <img src="<?php echo $review['picture'] ?>">
-                                    <?php else: ?>
-                                        <i class="fa fa-user" style="font-size: 38px"></i>
-                                    <?php endif ?>
-                                </div>
-
-                                <div class="col-md-11">
-                                    <p><?php echo ucfirst($review['opinion']) ?></p>
-                                    <span class="car-rating pull-right" data-number="<?php echo $review['star'] ?>" ></span>
-                                </div>
-                            </div>
-                        <?php endforeach ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <?php endif ?>
-    -->
 
     <div class="space-50 hidden-xs"></div>
 
@@ -212,6 +199,72 @@
             </ul>
         </div>
     </div>
+
+    <div class="space-50 hidden-xs"></div>
+
+    <!-- Reviews -->  
+
+    <?php if (count($reviews) > 0): ?>
+        <div class="row">
+            <div class="panel-group col-md-11" id="reviews">
+
+                <div class="panel-heading">
+                    <h2>Reviews <span class="car-rating pull-right" data-number="<?php echo $average ?>" ></span> <small>(<?php echo $quantity?>)</small></h2>
+                </div>
+
+                <div class="space-30 hidden-xs"></div>
+                <div id="reviewsCollapseOne" class="panel-collapse col-md-offset-1 col-md-11" >
+                    <div class="border">
+                        <?php count($reviews) ?> 
+
+                        <div class="row review">
+                            <div class="col-md-1">
+                                <?php if ( getimagesize($defaultReviews['picture'])): ?>
+                                    <img class="img-responsive" src="<?php echo $defaultReviews['picture'] ?>">
+                                <?php else: ?>
+                                    <i class="fa fa-user" style="font-size: 38px"></i>
+                                <?php endif ?>
+                            </div>
+                            <div class="col-md-11">
+                                <p><?php echo ucfirst($defaultReviews['opinion']) ?></p>
+                                <span class="car-rating pull-right" data-number="<?php echo $defaultReviews['star'] ?>" ></span>
+                                <i class="pull-right"><?php echo $defaultReviews['date'] ?></i>
+                            </div>
+                        </div>
+
+                        <div class="collapse" id="collapseReviews">
+
+                            <?php foreach ($reviews as $review): ?>
+                                <div class="row review">
+                                    <div class="col-md-1">
+                                        <?php if (getimagesize($review['picture'])): ?>
+                                            <img src="<?php echo $review['picture'] ?>">
+                                        <?php else: ?>
+                                            <i class="fa fa-user" style="font-size: 38px"></i>
+                                        <?php endif ?>
+                                    </div>
+                                    <div class="col-md-11">
+                                        <p><?php echo ucfirst($review['opinion']) ?></p>
+                                        <span class="car-rating pull-right" data-number="<?php echo $review['star'] ?>" ></span>
+                                        <i class="pull-right"><?php echo $review['date'] ?></i>
+                                    </div>
+                                </div>
+                            <?php endforeach ?>
+
+                        </div>
+
+                    </div>
+
+                    <a class="title-collapse text-center" data-toggle="collapse" href="#collapseReviews" aria-expanded="false" aria-controls="collapseReviews">
+                        <h1><i id="reviewArrow" class="fa fa-angle-down" data-pos="0"></i></h1>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    <?php endif ?>
+    
+    <div class="space-50 hidden-xs"></div>
 
     <form action="<?php echo url_for('reserve_pay') ?>" id="reserve-form" method="post">
         
@@ -240,14 +293,14 @@
                                 $<?php echo number_format($amountWarranty, 0, ',', '.') ?> por Depósito en Garantía <small>(se devuelve al finalizar el arriendo)</small>
                             </label>
                         </div>
-                        <?php if (!$isDebtor): ?>
+                       
                             <div class="radio">
                                 <label>
                                     <input data-value="<?php echo $amountWarrantyFree ?>" name="warranty" type="radio" value="0">
                                     $<?php echo number_format($amountWarrantyFree, 0, ',', '.') ?> por Eliminar el Depósito en Garantía <small>(por día de arriendo)</small>
                                 </label>
                             </div>
-                        <?php endif ?>
+                        
                     </div>
                     <span class="pull-right total-box">TOTAL <strong>$<span class="total-price"><?php echo number_format($price, 0, ',', '.') ?></span></strong></span>
                 </div>
@@ -292,10 +345,10 @@
         <div class="space-100 hidden-xs"></div>
         <div class="row">
             <div class="col-md-offset-4 col-md-4">
-                <?php if (!$User->getBlocked()): ?>
+                
                     <button class="btn-block" id="btn-pay" type="button">PAGAR</button>
                     <p class="secure-payment"><span class="icon-svg_21"></span> Pago seguro</p>
-                <?php endif ?>
+              
             </div>
         </div>
         <div class="space-100 hidden-xs"></div>
@@ -316,11 +369,12 @@
     </div>
 
     <?php include_partial('contratosArrendatario') ?>
-
+    <!-- 
     <form action="<?php echo url_for('main/uploadLicense?photo=licence&width=194&height=204&file=filelicence') ?>" enctype="multipart/form-data" id="formlicence" method="post">
         <input id="filelicence" name="filelicence" type="file">
         <input type="submit">
     </form>
+     -->
 </div>
 
 <script>
@@ -337,6 +391,7 @@
 
         // Rating
         $('.car-rating').raty({
+            readOnly: true,
             score: function() {
                 return $(this).attr('data-number');
             }
@@ -344,6 +399,17 @@
 
         refreshDate(true, true);
         refreshDate(false, true);
+
+    });
+
+    $('#reviews').on('shown.bs.collapse', function () {
+        $("#reviewArrow").removeClass("fa fa-angle-down");
+        $("#reviewArrow").addClass("fa fa-angle-up");
+    });
+
+    $('#reviews').on('hidden.bs.collapse', function () {
+        $("#reviewArrow").removeClass("fa fa-angle-up");
+        $("#reviewArrow").addClass("fa fa-angle-down");
     });
 
     $("#btn-pay").on('click', function(e) {
@@ -378,7 +444,31 @@
                             });
 
                             if (userAccept) {
-                                $("#reserve-form").submit();
+
+                                var carId = "<?php echo $Car->getId() ?>"
+                                var from  = $("#from").val();
+                                
+                                var to    = $("#to").val();
+                                
+                                var warranty = $('input[type=radio][name=warranty]:checked').val();
+                                var payment  =  $("input[name='payment']").val();
+
+                                parameters = {
+                                    "carId": carId,
+                                    "from": from,
+                                    "to": to,
+                                    "warranty": warranty,
+                                    "payment": payment
+                                }
+                                
+                                $.post("<?php echo url_for('data_for_payment')?>", parameters, function(r){
+                                    console.log(r);
+                                    if (r.error) {
+
+                                    } else {
+                                        $("#reserve-form").submit();
+                                    }
+                                });
                             }
                         }
                     }
@@ -707,6 +797,7 @@
         $("#total-price").val(totalPrice);
         $(".total-price").html($.number(totalPrice, 0, ',', '.'));
     }
+
 
     function translateDay(day) {
 

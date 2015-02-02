@@ -9,6 +9,26 @@ about_company:
     url: /nosotros
     param: { module: main, action: compania }
 
+car_availability_remove:
+    url: /auto/disponibilidad/eliminar
+    param: { module: cars, action: carAvailabilityRemove }
+
+car_availability_save:
+    url: /auto/disponibilidad/guardar
+    param: { module: cars, action: carAvailabilitySave }
+
+car_set_active:
+    url: /auto/cambiar/activo
+    param: { module: cars, action: setActive }
+
+car_set_option:
+    url: /auto/cambiar/opcion
+    param: { module: cars, action: setOption }
+
+car_set_disabled_until:
+    url: /auto/cambiar/deshabilitadoHasta
+    param: { module: cars, action: setDisabledUntil }
+
 car_price:
    url: /auto/precios
    param: { module: cars, action: price }
@@ -33,6 +53,10 @@ cars:
     url: /mis-autos
     param: { module: profile, action: cars }
     #param: { module: cars, action: index }
+
+data_for_payment:
+    url: /data-for-payment
+    param: { module: main, action: dataForPayment }
 
 forgot_password:
     url: /recuperar-contrasena
@@ -84,7 +108,8 @@ opportunities_mailing_approve:
 
 opportunities_mailing_open:
     url: /oportunidades/mailing/:id/:signature
-    param: { module: main, action: mailingOpen }
+    param: { module: opportunities, action: mailingOpen }
+
 prices_compare:
     url: /compare-precios
     param: { module: main, action: pricesCompare }
@@ -107,7 +132,7 @@ reserve_approve:
 
 reserve_calculate_price:
     url: /reserva/calcular-precio
-    param: { module: reserves, action: calculatePrice }
+    param: { module: main, action: calculatePrice }
 
 reserve_change:
     url: /reserva/cambiar
@@ -140,7 +165,7 @@ return_form:
 search_cars:
     url: /arriendo-de-autos
     param: { module: main, action:searchACars }
-    
+
 terms_and_conditions:
     url: /terminos-y-condiciones
     param: { module: main, action: terminos }
@@ -156,6 +181,10 @@ user_register:
 user_register_complete:
     url: /registro/completar
     param: { module: main, action: completeRegister }
+
+value_your_car:
+    url: /monetiza-tu-auto
+    param: { module: main, action: valueYourCar }
 
 # old Design
 
