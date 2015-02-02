@@ -53,6 +53,11 @@ abstract class BaseOpportunityConfig extends sfDoctrineRecord {
             'length' => 4
         ));
 
+        $this->index('id_UNIQUE', array(
+            'fields' => array(0 => 'id'),
+            'type' => 'unique',
+        ));
+
         $this->option('charset', 'utf8');
         $this->option('type', 'InnoDB');
     }

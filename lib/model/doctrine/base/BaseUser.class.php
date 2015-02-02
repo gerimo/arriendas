@@ -398,6 +398,10 @@ abstract class BaseUser extends sfDoctrineRecord {
         $this->hasMany('Transaction as Transactions', array(
             'local' => 'id',
             'foreign' => 'User_id'));
+
+        $this->hasMany('UserMailingConfig as UserMailingConfigs', array(
+            'local' => 'id',
+            'foreign' => 'user_mailing_config_id'));
         
         $this->hasOne('Commune', array(
             'local' => 'commune_id',
