@@ -8,5 +8,9 @@ security:  ~
 paymentSuccessFilter:
     class: checkPaymentSuccessFilter
 
+optionsCarFilter:
+    class: checkOptionsCarFilter
+    
+
 cache:     ~
 execution: ~
