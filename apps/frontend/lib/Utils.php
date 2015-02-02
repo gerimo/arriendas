@@ -75,4 +75,16 @@ class Utils {
 
         return false;
     }
+
+    public static function validateDates ($from, $to) {
+
+        $from = strtotime($from);
+        $to   = strtotime($to);
+
+        if ($from >= $to) {
+            return "La fecha de inicio debe ser menor a la fecha de término.";
+        }
+
+        return false;
+    }
 }

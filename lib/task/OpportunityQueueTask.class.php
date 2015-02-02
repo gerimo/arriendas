@@ -32,16 +32,18 @@ EOF;
 
         try {
 
-            $maxIterations = 5; // Cantidad máxima de iteraciones
-            $kmPerIteration = 1; // Radio en KM de cada iteración
-            $exclusivityTime = 60; // En minutos // Exclusividad que se le entrega al dueño original antes de enviar oportunidades
+            $OpportunityConfig = Doctrine_Core::getTable("OpportunityConfig")
+                ->createQuery('OC')->fetchOne();
+
+            $maxIterations   = $OpportunityConfig->getMaxIterations(); // Cantidad máxima de iteraciones
+            $kmPerIteration  = $OpportunityConfig->getKmPerIteration(); // Radio en KM de cada iteración
+            $exclusivityTime = $OpportunityConfig->getExclusivityTime(); // En minutos // Exclusividad que se le entrega al dueño original antes de enviar oportunidades
 
             // Se obtienen todas las reservas para procesar
             $q = Doctrine_Core::getTable("OpportunityQueue")
                 ->createQuery('OQ')
                 ->where('OQ.is_active IS TRUE')
                 ->andWhere("DATE_ADD(OQ.paid_at, INTERVAL {$exclusivityTime} MINUTE) < NOW()")
-                /*->andWhere("OQ.last_iteration_at IS NULL OR DATE_ADD(OQ.last_iteration_at, INTERVAL {$timePerIteration} MINUTE) < NOW()")*/
                 ->andWhere('OQ.iteration <= ?', $maxIterations);
 
             $OpportunitiesQueue = $q->execute();

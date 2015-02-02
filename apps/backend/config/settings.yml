@@ -25,7 +25,7 @@ test:
 all:
   .settings:
     # Form security secret (CSRF protection)
-    csrf_secret:            cd98daac9adcd5c0f5fc123fedfe7a4667166ea5
+    csrf_secret:            8ad50ece4793fbcae8093ac2e0178ea83dbf6e77
 
     # Output escaping settings
     escaping_strategy:      true
@@ -34,15 +34,5 @@ all:
     # Enable the database manager
     use_database:           true
 
-    default_module:         main
-    default_action:         index
-    default_culture:        es_ES
-
     login_module:           main
     login_action:           login
-
-    timeout:                36000
-    enabled_modules:        [sfVideo]
-
-    error_404_module: error
-    error_404_action: 404

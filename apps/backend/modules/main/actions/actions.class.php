@@ -1,26 +1,12 @@
 <?php
 
-/**
- * main actions.
- *
- * @package    CarSharing
- * @subpackage main
- * @author     Your name here
- * @version    SVN: $Id: actions.class.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
- */
-class mainActions extends sfActions
-{
- /**
-  * Executes index action
-  *
-  * @param sfRequest $request A request object
-  */
-  public function executeIndex(sfWebRequest $request)
-  {
-    $this->setLayout("layout");
-  }
+class mainActions extends sfActions {
 
-  public function executeLogin (sfWebRequest $request) {
+    public function executeIndex(sfWebRequest $request) {
+        /*$this->redirect("user_without_pay");*/
+    }
+
+    public function executeLogin (sfWebRequest $request) {
 
         $this->setLayout("layoutLogin");
 
@@ -31,18 +17,16 @@ class mainActions extends sfActions
         
         $referer = $this->getContext()->getActionStack()->getSize() > 1 ? $request->getUri() : $request->getReferer();
         $this->getUser()->setAttribute("referer", $referer);
+        error_log($referer);
     }
 
     public function executeLoginDo (sfWebRequest $request) {
 
-        /*if ($this->getRequest()->getMethod() != sfRequest::POST) {*/
         if ($request->isMethod("post")) {
             
-            if ($this->getRequestParameter('password') == "leonracing") {
-                $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ?', array($this->getRequestParameter('username')));
-            } else {
-                $q = Doctrine::getTable('user')->createQuery('u')->where('(u.email = ? OR u.username=?)  and u.password = ?', array($this->getRequestParameter('username'), $this->getRequestParameter('username'), md5($this->getRequestParameter('password'))));
-            }
+            $q = Doctrine::getTable('user')
+                ->createQuery('u')
+                ->where('(u.email = ? OR u.username = ?) and u.password = ?', array($this->getRequestParameter('username'), $this->getRequestParameter('username'), md5($this->getRequestParameter('password'))));
 
             try {
                 $user = $q->fetchOne();
@@ -53,64 +37,6 @@ class mainActions extends sfActions
             if ($user) {
 
                 if ($user->getConfirmed() == 1 || $user->getConfirmed() == 0) {
-
-                    /* track ip */
-                    $visitingIp = $request->getRemoteAddress();
-                    $user->trackIp($visitingIp);
-                    
-                    /* check moroso */
-                    $user->checkMoroso();
-        
-                    /** block users */
-                    
-                    // primero verifico si la IP existe en la tabla de IPs válidas
-                    //$validIp = Doctrine::getTable('ipsOk')->findByIP($visitingIp);                    
-                    $sql =  "SELECT *
-                        FROM Ips_ok
-                        WHERE ip = '". $visitingIp ."'";
-
-                    $query = Doctrine_Manager::getInstance()->connection();
-                    $validIp = $query->fetchOne($sql);
-
-                    if(empty($validIp)) {
-
-                        // Se bloquea al usuario si es que su ip corresponde a una ip que posea CUALQUIER usuario bloqueado previamente
-                        if(Doctrine::getTable('user')->isABlockedIp($visitingIp)) {
-                            $user->setBloqueado("Se loggeo desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario bloqueado.");
-                        }
-
-                        /** block propietario */
-
-                        // Update 30/09/2014 No se bloquea al usuario y se marca con un flag ip_ambiguo
-                        //  Este flag es revisado despues en una reserva paga notificando por correo para hacer una revision manual
-                        if($user->getPropietario()) {
-
-                            $noPropietarios = Doctrine::getTable('user')->getPropietarioByIp($visitingIp, false);
-                            foreach ($noPropietarios as $nopropietario) {
-                                // $nopropietario->setBloqueado("Un usuario propietario se loggeo desde la ip:".$visitingIp. ", desde la cual este usuario NO propietario se habia loggeado.");
-                                $nopropietario->setIpAmbigua(true);
-                                $nopropietario->save();
-                            }
-                            if(count($noPropietarios) > 0) {
-                                // $user->setBloqueado("Se loggeo usuario propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario NO propietario.");
-                                $user->setIpAmbigua(true);
-                                $user->save();
-                            }
-                        } else {
-
-                            $propietarios = Doctrine::getTable('user')->getPropietarioByIp($visitingIp, true);
-                            foreach ($propietarios as $propietario) {
-                                // $propietario->setBloqueado("Se loggeo usuario NO propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado este usuario propietario.");
-                                $propietario->setIpAmbigua(true);
-                                $propietario->save();
-                            }
-                            if(count($propietarios) > 0) {
-                                // $user->setBloqueado("Se loggeo este usuario NO propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario propietario.");
-                                $user->setIpAmbigua(true);
-                                $user->save();
-                            }
-                        }
-                    }
 
                     $this->getUser()->setFlash('msg', 'Autenticado');
                     $this->getUser()->setAuthenticated(true);
@@ -147,11 +73,7 @@ class mainActions extends sfActions
 
                     $this->getUser()->setAttribute('geolocalizacion', true);
 
-                    /*sfContext::getInstance()->getLogger()->info($_SESSION['login_back_url']);
-                    $this->redirect($_SESSION['login_back_url']);*/
-
                     $this->redirect($this->getUser()->getAttribute("referer"));
-                    $this->calificacionesPendientes();
                 } else {
 
                     $this->getUser()->setFlash('msg', 'Su cuenta no ha sido activada. Puede hacerlo siguiendo este <a href="activate">link</a>');
@@ -172,7 +94,6 @@ class mainActions extends sfActions
             }
         }
         
-        /*$this->forward('main', 'index');*/
         $this->redirect("homepage");
 
         return sfView::NONE;

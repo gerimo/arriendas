@@ -37,6 +37,62 @@ class mainActions extends sfActions {
         }
     }
 
+    public function executeCalculatePrice (sfWebRequest $request) {
+
+        $return = array("error" => false);
+
+        if($request->hasParameter('carId','from','to')){
+
+            $carId = $request->getPostParameter("carId", null);
+            $from  = $request->getPostParameter("from", null);
+            $to    = $request->getPostParameter("to", null);
+        }else{
+            
+            $carId = $this->getUser()->getAttribute("carId");
+            $from  = $this->getUser()->getAttribute("from");
+            $to    = $this->getUser()->getAttribute("to");
+        }
+
+        try {
+
+            $datesError = $this->validateDates($from, $to);
+            if ($datesError) {
+                throw new Exception($datesError, 2);
+            }
+
+            if (is_null($carId) || $carId == '' || $carId == 0) {
+                throw new Exception("Falta el carId", 1);
+            }
+
+            $Car = Doctrine_Core::getTable('car')->findOneById($carId);
+            if (!$Car) {
+                throw new Exception("El Car ".$carId." no fue encontrado", 1);
+            }
+
+            $return["price"] = CarTable::getPrice($from, $to, $Car->price_per_hour, $Car->price_per_day, $Car->price_per_week, $Car->price_per_month);
+
+        } catch (Exception $e) {
+
+            $return["error"] = true;
+
+            if ($e->getCode() >= 2) {
+                $return["errorMessage"] = $e->getMessage();
+            } else {
+                $return["errorMessage"] = "Problemas a calcular el precio. Por favor, intentalo más tarde";
+            }
+            
+            error_log("[".date("Y-m-d H:i:s")."] ERROR: ".$e->getMessage());
+            
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "reserves/calculatePrice");
+            }
+        }
+    
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
     public function executeCompleteRegister(sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
@@ -60,6 +116,39 @@ class mainActions extends sfActions {
         }
         return sfView::SUCCESS;
         
+    }
+
+    public function executeDataForPayment(sfWebRequest $request){
+
+        $return = array("error" => false);
+
+        try {
+
+            $carId    = $request->getPostParameter("carId");
+            $from     = $request->getPostParameter("from");
+            $to       = $request->getPostParameter("to");
+            $warranty = $request->getPostParameter("warranty");
+            $payment  = $request->getPostParameter("payment");
+
+            if (!$carId || !$from || !$to || is_null($warranty) || !$payment) {
+                throw new Exception("Falta un parametro", 1);
+            }
+            
+            $this->getUser()->setAttribute("warranty", $warranty);
+            $this->getUser()->setAttribute("payment", $payment);
+            $this->getUser()->setAttribute("carId", $carId);
+            $this->getUser()->setAttribute("from", $from);
+            $this->getUser()->setAttribute("to", $to);
+
+
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+        }
+        
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
     }
 
     public function executeDoCompleteRegister(sfWebRequest $request) {
@@ -291,10 +380,12 @@ class mainActions extends sfActions {
             $this->getUser()->setAttribute("mapCenterLng", $mapCenterLng);
 
             $return["cars"] = CarTable::findCars($from, $to, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers);
+            /*error_log("Autos encontrados: ".count($return["cars"]));*/
 
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
+            error_log("[".date("Y-m-d H:i:s")."] [main/getCars] ERROR: ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl") {
                 Utils::reportError($e->getMessage(), "main/getCars");
             }
@@ -338,6 +429,7 @@ class mainActions extends sfActions {
         if ($this->getUser()->isAuthenticated()) {
             $this->redirect('homepage');
         }
+
         
         $referer = $this->getContext()->getActionStack()->getSize() > 1 ? $request->getUri() : $request->getReferer();
         $this->getUser()->setAttribute("referer", $referer);
@@ -501,42 +593,6 @@ class mainActions extends sfActions {
         return $this->redirect('homepage');
     }
 
-    public function executeMailingOpen(sfWebRequest $request) {
-
-        $opportunityEmailQueueId        = $request->getParameter('id');
-        $opportunityEmailQueueSignature = $request->getParameter('signature');
-
-        try {
-
-            $OpportunityEmailQueue = Doctrine_Core::getTable('OpportunityEmailQueue')->find($opportunityEmailQueueId);
-
-            if ($OpportunityEmailQueue) {
-                if ($OpportunityEmailQueue->getSignature() == $opportunityEmailQueueSignature) {
-                    if (is_null($OpportunityEmailQueue->getOpenedAt())) {
-                        $OpportunityEmailQueue->setOpenedAt(date("Y-m-d H:i:s"));
-                        $OpportunityEmailQueue->save();
-                    }
-                } else {
-                    throw new Exception("La firma de OpportunityEmailQueue ".$opportunityEmailQueueId." no coincide", 2);                
-                }
-            } else {
-                throw new Exception("OpportunityEmailQueue no encontrada", 2);
-            }
-
-        } catch (Exception $e) {
-            error_log("[".date("Y-m-d H:i:s")."] ERROR: ".$e->getMessage());
-            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
-                Utils::reportError($e->getMessage(), "main/opportunityMailingOpen");
-            }
-        }
-
-        $this->getResponse()->setContentType('image/gif');
-
-        echo base64_decode("R0lGODlhAQABAIAAAP///////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACwAAAAAAQABAAACAkQBADs=");
-
-        return sfView::NONE;
-    }
-
     public function executeRegister(sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
@@ -561,14 +617,16 @@ class mainActions extends sfActions {
         } else {
             $from = date("Y-m-d H:i:s");
         }
-
+        
         if ($this->getUser()->getAttribute("to", false)) {
             $to = $this->getUser()->getAttribute("to");
         } else {
             $to = date("Y-m-d H:i:s", strtotime("+1 day", strtotime($from)));
         }
+        //fechas no cambian, debido a que el usuario no esta logueado 
+        
 
-        $userId = $this->getUser()->getAttribute("userid");
+        /*$userId = $this->getUser()->getAttribute("userid");*/
 
         $carId = $request->getParameter("carId", null);
 
@@ -590,7 +648,7 @@ class mainActions extends sfActions {
         $this->to = date("Y-m-d H:i", $t);
         $this->toHuman = date("D d/m/Y H:i", $t);
 
-        $this->User = Doctrine_Core::getTable('User')->find($userId);
+        /*$this->User = Doctrine_Core::getTable('User')->find($userId);*/
         $this->Car = Doctrine_Core::getTable('Car')->find($carId);
 
         if ($this->Car->hasReserve($from, $to)) {
@@ -657,11 +715,11 @@ class mainActions extends sfActions {
             $this->transmission = true;
         }
 
-        $userId = $this->getUser()->getAttribute("userid");
+        /*$userId = $this->getUser()->getAttribute("userid");
         $User = Doctrine_Core::getTable('User')->find($userId);
 
         $this->license            = $User->getDriverLicenseFile();
-        $this->isDebtor           = $User->moroso;
+        $this->isDebtor           = $User->moroso;*/
         $this->amountWarranty     = sfConfig::get("app_monto_garantia");
         $this->amountWarrantyFree = sfConfig::get("app_monto_garantia_por_dia");
 
@@ -714,59 +772,56 @@ class mainActions extends sfActions {
     public function executeUploadLicense (sfWebRequest $request) {
     
         $return = array("error" => false);
+        $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
 
-        try {
-            if (isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST") {
+        try {            
 
-                $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
+            $name = $_FILES[$request->getParameter('file')]['name'];
+            $size = $_FILES[$request->getParameter('file')]['size'];
+            $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
 
-                $name = $_FILES[$request->getParameter('file')]['name'];
-                $size = $_FILES[$request->getParameter('file')]['size'];
-                $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
+            list($txt, $ext) = explode(".", $name);
 
-                list($txt, $ext) = explode(".", $name);
-
-                $ext = strtolower($ext);
-                
-                if (strlen($name) == 0) {
-                    throw new Exception("Por favor, selecciona una imagen", 2);   
-                }
-                    
-                if (!in_array($ext, $valid_formats)) {
-                    throw new Exception("Formato de la imagen no permitido", 2);
-                }
-
-                if ($size >= (5 * 1024 * 1024)) { // Image size max 1 MB
-                    throw new Exception("La imagen excede el máximo permitido (1 MB)", 2);
-                }
-                    
-                $userId = $this->getUser()->getAttribute("userid");
-                
-                $newImageName = time() . "-" . $userId . "." . $ext;
-
-                $path = sfConfig::get("sf_web_dir") . '/images/licence/';
-
-                $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
-
-                if (!move_uploaded_file($tmp, $path . $newImageName)) {
-                    throw new Exception("Problemas al grabar la imagen en disco", 1);
-                }
-
-                $User = Doctrine_Core::getTable('User')->find($userId);
-                $User->setDriverLicenseFile("/images/licence/".$newImageName);
-                $User->save();
-            } else {
-                throw new Exception("No, no, no.", 1);
+            $ext = strtolower($ext);
+            
+            if (strlen($name) == 0) {
+                throw new Exception("Por favor, selecciona una imagen", 2);   
             }
+                
+            if (!in_array($ext, $valid_formats)) {
+                throw new Exception("Formato de la imagen no permitido", 2);
+            }
+
+            if ($size >= (5 * 1024 * 1024)) { // Image size max 1 MB
+                throw new Exception("La imagen excede el máximo permitido (1 MB)", 2);
+            }
+                
+            $userId = $this->getUser()->getAttribute("userid");
+            
+            $newImageName = time() . "-" . $userId . "." . $ext;
+
+            $path = sfConfig::get("sf_web_dir") . '/images/licence/';
+
+            $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
+
+            if (!move_uploaded_file($tmp, $path . $newImageName)) {
+                throw new Exception("El User ".$userId." tiene problemas para grabar la imagen de su licencia", 1);
+            }
+
+            $User = Doctrine_Core::getTable('User')->find($userId);
+            $User->setDriverLicenseFile("/images/licence/".$newImageName);
+            $User->save();
     
         } catch (Exception $e) {
             $return["error"] = true;
-            $return["errorMessage"] = $e->getMessage();
-            if ($e->getCode() == 1) {
+            if ($e->getCode() < 2) {
                 $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo nuevamente más tarde";
+            } else {
+                $return["errorMessage"] = $e->getMessage();
             }
-            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
-                Utils::reportError($e->getMessage(), "main/uploadPhoto");
+            error_log("[".date("Y-m-d H:i:s")."] [main/uploadLicense] ERROR: ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "main/uploadLicense");
             }
         }
 
@@ -1163,18 +1218,20 @@ class mainActions extends sfActions {
         $arrendador['direccion'] = $arrendadorClass->getAddress();
         $arrendador['telefono'] = $arrendadorClass->getTelephone();
 
-        $comunaId = $arrendadorClass->getComuna();
+        /*$comunaId = $arrendadorClass->getComuna();
         $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
-        $arrendador['comuna'] = ucfirst(strtolower($comunaClass['nombre']));
+        $arrendador['comuna'] = ucfirst(strtolower($comunaClass['nombre']));*/
+        $arrendador['comuna'] = ucfirst(strtolower($arrendadorClass->getCommune()->name));
 
         $propietario['nombreCompleto'] = $propietarioClass->getFirstname()." ".$propietarioClass->getLastname();
         $propietario['rut'] = $propietarioClass->getRut();
         $propietario['direccion'] = $propietarioClass->getAddress();
         $propietario['telefono'] = $propietarioClass->getTelephone();
 
-        $comunaId = $propietarioClass->getComuna();
+        /*$comunaId = $propietarioClass->getComuna();
         $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
-        $propietario['comuna'] = ucfirst(strtolower($comunaClass['nombre']));
+        $propietario['comuna'] = ucfirst(strtolower($comunaClass['nombre']));*/
+        $propietario['comuna'] = ucfirst(strtolower($propietarioClass->getCommune()->name));
 
         //echo $carId;
         $damageClass = Doctrine_Core::getTable('damage')->findByCarId($carId);
@@ -2083,6 +2140,8 @@ class mainActions extends sfActions {
         //echo $q->getSqlQuery();
     }
 
+    
+
     public function executeMap(sfWebRequest $request) {
 
 	   $modelo = new Model();
@@ -2841,10 +2900,6 @@ class mainActions extends sfActions {
 
         try {
 
-            if (!isset($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
-                throw new Exception("No! No! No!", 1);
-            }
-
             $name = $_FILES[$request->getParameter('file')]['name'];
             $size = $_FILES[$request->getParameter('file')]['size'];
 			$tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
@@ -2880,10 +2935,8 @@ class mainActions extends sfActions {
 
             $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
 
-            $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
-
-            if (!$uploaded) {
-                throw new Exception("No se pudo subir la imagen de perfil", 1);
+            if (!move_uploaded_file($tmp, $path . $actual_image_name)) {
+                throw new Exception("El User ".$userId." tiene problemas para grabar la imagen de su perfil", 1);
             }
 
             sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
@@ -2896,11 +2949,13 @@ class mainActions extends sfActions {
             $User->save();
         } catch (Exception $e) {
             $return["error"] = true;
-            $return["errorMessage"] = $e->getMessage();
-            if ($e->getCode() == 1) {
+            if ($e->getCode() < 2) {
                 $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo nuevamente más tarde";
-            }
-            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
+                error_log("[".date("Y-m-d H:i:s")."] [main/uploadPhoto] ERROR: ".$e->getMessage());
+            } else {
+                $return["errorMessage"] = $e->getMessage();
+            }            
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
                 Utils::reportError($e->getMessage(), "main/uploadPhoto");
             }
         }
@@ -3543,4 +3598,17 @@ class mainActions extends sfActions {
 
         $this->redirect('cars');
     }
+
+    private function validateDates ($from, $to) {
+
+        $from = strtotime($from);
+        $to   = strtotime($to);
+
+        if ($from >= $to) {
+            return "La fecha de inicio debe ser menor a la fecha de término.";
+        }
+
+        return false;
+    }
+
 }

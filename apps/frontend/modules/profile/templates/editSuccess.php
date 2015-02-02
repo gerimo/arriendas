@@ -8,7 +8,7 @@
 
         <div class="row BCW">
 
-            <h1>Mi perfil</h1>
+            <h1 style="text-indent: 30px">Mi perfil</h1>
 
             <div class="col-md-5 text-center">
 
@@ -23,7 +23,7 @@
                                 <img src="http://res.cloudinary.com/arriendas-cl/image/facebook/w_194,h_204,c_fill,g_face/<?php echo $User->getFacebookId();?>.jpg">
                             <?php else: ?>
                                 <!-- <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_194,h_204,c_fill,g_face/http://www.arriendas.cl/images/users/<?php echo $User->getFileName() ?>">-->
-                                <?php echo image_tag('/images/users/'.$User->getFileName(), 'size=194x204') ?>
+                                <?php echo image_tag('users/'.$User->getFileName(), 'size=194x204') ?>
                             <?php endif ?>
                         <?php endif ?>
                     </div> 
@@ -37,7 +37,7 @@
                 <div class="regis_foto_frame">
                     <div id="previewlicense">
                         <?php if ($User->getDriverLicenseFile() == null): ?>
-                            <?php echo image_tag('/images/newDesign/foto_padron_reverso.png', 'size=194x204') ?>
+                            <?php echo image_tag('newDesign/foto_padron_reverso.png', 'size=194x204') ?>
                         <?php else: ?>
                             <?php echo image_tag('licence/'.$User->getLicenceFileName(), 'size=194x204') ?>
                         <?php endif ?>
@@ -114,7 +114,7 @@
                     </div>
                 </div>-->
 
-                <button class="btn-a-primary btn-block" name="save" onclick="validateForm()">Guardar</button>
+                <button class="btn btn-a-primary btn-block" name="save" onclick="validateForm()">Guardar</button>
 
                 <p class="alert"></p>
 

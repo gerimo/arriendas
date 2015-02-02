@@ -7,6 +7,7 @@
  * 
  * @property integer $id-
  * @property string $username
+ * @property string $comentario_recordar
  * @property string $password
  * @property string $facebook_id
  * @property string $url
@@ -52,6 +53,7 @@
  * 
  * @method integer             getId()                    Returns the current record's "id" value
  * @method string              getUsername()              Returns the current record's "username" value
+ * @method string              getComentariosRecordar()   Returns the current record's "comentarios_recordar" value
  * @method string              getPassword()              Returns the current record's "password" value
  * @method string              getFacebookId()            Returns the current record's "facebook_id" value
  * @method string              getUrl()                   Returns the current record's "url" value
@@ -99,6 +101,7 @@
  *
  * @method User                setId()                    Sets the current record's "id" value
  * @method User                setUsername()              Sets the current record's "username" value
+ * @method User                setComentariosRecordar()   Sets the current record's "comentarios_recordar" value
  * @method User                setPassword()              Sets the current record's "password" value
  * @method User                setFacebookId()            Sets the current record's "facebook_id" value
  * @method User                setUrl()                   Sets the current record's "url" value
@@ -159,6 +162,10 @@ abstract class BaseUser extends sfDoctrineRecord {
             'length' => 4,
         ));
         $this->hasColumn('username', 'string', 45, array(
+            'type' => 'string',
+            'length' => 45,
+        ));
+        $this->hasColumn('comentarios_recordar', 'string', 45, array(
             'type' => 'string',
             'length' => 45,
         ));
@@ -394,7 +401,7 @@ abstract class BaseUser extends sfDoctrineRecord {
 
         $this->hasMany('Reserve as Reserves', array(
             'local' => 'id',
-            'foreign' => 'User_id'));
+            'foreign' => '  '));
 
         $this->hasMany('Transaction as Transactions', array(
             'local' => 'id',

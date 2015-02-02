@@ -1,8 +1,29 @@
 <link href="/css/newDesign/reserve.css" rel="stylesheet" type="text/css">
 
+<head>
+    <script>(function() {
+        var _fbq = window._fbq || (window._fbq = []);
+        if (!_fbq.loaded) {
+        var fbds = document.createElement('script');
+        fbds.async = true;
+        fbds.src = '//connect.facebook.net/en_US/fbds.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(fbds, s);
+        _fbq.loaded = true;
+        }
+        _fbq.push(['addPixelId', '1519934024954094']);
+        })();
+        window._fbq = window._fbq || [];
+        window._fbq.push(['track', 'PixelInitialized', {}]);
+    </script>
+    <noscript>
+        <img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=1519934024954094&amp;ev=PixelInitialized" />
+    </noscript>
+</head>
+
 <div class="space-30 hidden-xs"></div>
 <div class="space-50 visible-xs"></div>
-
+<!-- 
 <?php if (is_null($license)): ?>
     <div class="row" id="license-container">
         <div class="col-xs-12 col-md-offset-4 col-md-4">
@@ -17,7 +38,7 @@
         </div>
     </div>
 <?php endif ?>
-
+ -->
 <div class="space-60 hidden-xs"></div>
 
 <div class="container">
@@ -272,14 +293,14 @@
                                 $<?php echo number_format($amountWarranty, 0, ',', '.') ?> por Depósito en Garantía <small>(se devuelve al finalizar el arriendo)</small>
                             </label>
                         </div>
-                        <?php if (!$isDebtor): ?>
+                       
                             <div class="radio">
                                 <label>
                                     <input data-value="<?php echo $amountWarrantyFree ?>" name="warranty" type="radio" value="0">
                                     $<?php echo number_format($amountWarrantyFree, 0, ',', '.') ?> por Eliminar el Depósito en Garantía <small>(por día de arriendo)</small>
                                 </label>
                             </div>
-                        <?php endif ?>
+                        
                     </div>
                     <span class="pull-right total-box">TOTAL <strong>$<span class="total-price"><?php echo number_format($price, 0, ',', '.') ?></span></strong></span>
                 </div>
@@ -324,10 +345,10 @@
         <div class="space-100 hidden-xs"></div>
         <div class="row">
             <div class="col-md-offset-4 col-md-4">
-                <?php if (!$User->getBlocked()): ?>
+                
                     <button class="btn-block" id="btn-pay" type="button">PAGAR</button>
                     <p class="secure-payment"><span class="icon-svg_21"></span> Pago seguro</p>
-                <?php endif ?>
+              
             </div>
         </div>
         <div class="space-100 hidden-xs"></div>
@@ -348,11 +369,12 @@
     </div>
 
     <?php include_partial('contratosArrendatario') ?>
-
+    <!-- 
     <form action="<?php echo url_for('main/uploadLicense?photo=licence&width=194&height=204&file=filelicence') ?>" enctype="multipart/form-data" id="formlicence" method="post">
         <input id="filelicence" name="filelicence" type="file">
         <input type="submit">
     </form>
+     -->
 </div>
 
 <script>
@@ -422,7 +444,31 @@
                             });
 
                             if (userAccept) {
-                                $("#reserve-form").submit();
+
+                                var carId = "<?php echo $Car->getId() ?>"
+                                var from  = $("#from").val();
+                                
+                                var to    = $("#to").val();
+                                
+                                var warranty = $('input[type=radio][name=warranty]:checked').val();
+                                var payment  =  $("input[name='payment']").val();
+
+                                parameters = {
+                                    "carId": carId,
+                                    "from": from,
+                                    "to": to,
+                                    "warranty": warranty,
+                                    "payment": payment
+                                }
+                                
+                                $.post("<?php echo url_for('data_for_payment')?>", parameters, function(r){
+                                    console.log(r);
+                                    if (r.error) {
+
+                                    } else {
+                                        $("#reserve-form").submit();
+                                    }
+                                });
                             }
                         }
                     }

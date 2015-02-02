@@ -399,6 +399,7 @@
 
 
 <script>
+
     $(document).ready(function(){
         
         $('#from').datetimepicker({
@@ -447,11 +448,10 @@
         <?php endif ?>
 
         $("#search").click();
-
-        
+   
     });
 
-        function roundTime(valor){
+    function roundTime(valor){
 
         var fechaH = valor;
 
@@ -521,13 +521,12 @@
                 minDate:get_date($('#from').val())?get_date($('#from').val()):false,
                 format:'d-m-Y H:i'
             });
-        }
-
-        fecha = f+" "+hora+":"+min;
-
-        return fecha;
     }
 
+    fecha = f+" "+hora+":"+min;
+
+    return fecha;
+    }
     //Permite establecer un horario correcto.
     function times(valor){
         var fechaF = valor

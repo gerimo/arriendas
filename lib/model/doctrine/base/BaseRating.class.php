@@ -16,6 +16,7 @@
  * @property string $clean_satisfied
  * @property Doctrine_Collection $Reserve
  * @property string $opinion_about_owner
+ * @property integer $idOwner
  * @property integer $idRenter
  * 
  * @method integer             getId()                 Returns the current record's "id" value
@@ -29,6 +30,7 @@
  * @method string              getCleanSatisfied()     Returns the current record's "clean_satisfied" value
  * @method Doctrine_Collection getReserve()            Returns the current record's "Reserve" collection
  * @method string              getOpinionAboutOwner()  Returns the current record's "opinion_about_owner" value
+ * @method integer             getIdOwner()            Returns the current record's "idRenter" value
  * @method integer             getIdRenter()           Returns the current record's "idRenter" value
  *
  * @method Rating              setId()                 Sets the current record's "id" value
@@ -41,6 +43,8 @@
  * @method Rating              setKm()                 Sets the current record's "km" value
  * @method Rating              setCleanSatisfied()     Sets the current record's "clean_satisfied" value
  * @method Rating              setReserve()            Sets the current record's "Reserve" collection
+ * @method Rating              setIdOwner()            Sets the current record's "idOwner" value
+ * @method Rating              setIdRenter()           Sets the current record's "idOwner" value
  * 
  * @package    CarSharing
  * @subpackage model
