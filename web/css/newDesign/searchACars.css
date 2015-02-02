@@ -65,6 +65,7 @@ h3 .filter{
 .box .image .marker {
     left: 3px;
     position: absolute;
+    margin-top:-10px ;
 }
 
 .box .text h2 a small {
@@ -105,4 +106,74 @@ h3 .filter{
 .box {
     background-color: #fff;
     padding: 10px;
+}
+
+.metro .km-area{
+    width: 18px;
+    height: 15px;
+    margin-bottom: 6px;
+}
+.metro{
+    margin-bottom: 10px;
+    padding-top: 2px;
+
+}
+
+.box {
+    background-color: #fff;
+    padding: 10px;
+}
+
+.box .metro p {
+    height: 1em;
+}
+
+#tab-map .box {
+    /*border-bottom: solid 1px #ddd;*/
+}
+
+.box:hover {
+    background-color: #f8f8f8;
+}
+
+.box .image .car {
+    /*height: 100%;*/
+    width: 100%;
+}
+
+.box .image .marker {
+    left: 3px;
+    position: absolute;
+    top: 3px;
+}
+
+.box .text {
+    padding-left: 10px !important;
+}
+
+.box .text h2 {
+    font: 700 16px/20px 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.box .text h2 a {
+    color: #464646;
+    outline: none;
+    text-decoration: none;
+}
+
+.box .text h2 a:hover {
+    color: #464646;
+    text-decoration: underline;
+}
+
+.box .text h2 a small {
+    font: 300 13px/20px 'Roboto', sans-serif;
+}
+
+.box .price {
+    color: #c8427f;
+    font: 700 20px/22px 'Roboto', sans-serif;
+    margin-bottom: 0px;
 }
