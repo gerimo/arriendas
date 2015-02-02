@@ -328,7 +328,7 @@ class mainActions extends sfActions {
             $User->trackIp($visitingIp);
             
             if(Doctrine::getTable('user')->isABlockedIp($visitingIp)) {
-                $User->setSuspect(true);
+                $User->setIsSuspect(true);
             }
             $User->setUsername($email);
             $User->setFirstname($firstname);
@@ -479,7 +479,7 @@ class mainActions extends sfActions {
 
                         // [edit: 30/01/2015] Se califica de "sospechoso" al usuario si es que su ip corresponde a una ip que posea CUALQUIER usuario bloqueado previamente
                         if(Doctrine::getTable('user')->isABlockedIp($visitingIp)) {
-                            $user->setSuspect(true);
+                            $user->setIsSuspect(true);
                             $user->save();
                         }
 
@@ -3266,7 +3266,7 @@ class mainActions extends sfActions {
                 $userdb->trackIp($visitingIp);
 
                 if(Doctrine::getTable('user')->isABlockedIp($visitingIp)) {
-                    $userdb->setSuspect(true);
+                    $userdb->setIsSuspect(true);
                     $userdb->save();
                 }
 
