@@ -8,14 +8,17 @@
  * @property integer $id
  * @property string $name
  * @property text $description
+ * @property boolean $is_active
  * 
  * @method integer         getId()                Returns the current record's "id" value
  * @method string          getName()              Returns the current record's "name" value
  * @method text            getDescription()       Returns the current record's "description" value
+ * @method boolean         getIsActive()          Returns the current record's "is_active" value
  *
  * @method Mailing         setId()                Sets the current record's "id" value
  * @method Mailing         setName()              Sets the current record's "name" value
  * @method Mailing         setDescription()       Sets the current record's "description" value
+ * @method Mailing         setIsActive()          Sets the current record's "is_active" value
  * 
  * @package    CarSharing
  * @subpackage model
@@ -42,6 +45,11 @@ abstract class BaseMailing extends sfDoctrineRecord {
         $this->hasColumn('description', 'text', null, array(
             'type' => 'text',
             'notnull' => true
+        ));
+        $this->hasColumn('is_active', 'boolean', false, array(
+            'type' => 'boolean',
+            'notnull' => true,
+            'default' => false
         ));
 
         $this->index('id_UNIQUE', array(
