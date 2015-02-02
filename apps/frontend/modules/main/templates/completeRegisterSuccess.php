@@ -15,8 +15,8 @@
             <?php endif ?>
 
             <select class="form-control" id="foreign" name="foreign" >
-                <option value="0">Tengo RUT</option>
-                <option value="1">I don't have chilean RUT number - No tengo RUT</option>
+                <option value="0">Tengo RUT Chileno - I have chilean RUT number</option>
+                <option value="1">No tengo RUT - I don't have chilean RUT number</option>
             </select>
 
             <input class="form-control" id="rut" name="rut" type="text" placeholder="RUT">
@@ -87,8 +87,8 @@
         <div class="BCW" id="message" style="display: none">
                 <p class="text-center final-ask"></p>
                 <div class="row">
-                        <button class="col-md-4 btn btn-a-action" style="" onclick="location.href='<?php echo url_for('main/index') ?>'">Quiero Arrendar un Auto</button>
-                        <button class="col-md-offset-4 col-md-4 btn btn-a-action" onclick="location.href='<?php echo url_for('main/AddCarFromRegister') ?>'">Quero Subir mi Auto</button>
+                        <button class="col-md-4 btn btn-a-action" style="" onclick="location.href='<?php echo url_for('homepage') ?>'">Quiero Arrendar un Auto</button>
+                        <button class="col-md-offset-4 col-md-4 btn btn-a-action" onclick="location.href='<?php echo url_for('car_create') ?>'">Quero Subir mi Auto</button>
                 </div>
         </div>
     </div>
@@ -182,7 +182,7 @@
                 $(".alert").addClass("alert-a-danger");
                 $(".alert").html(r.errorMessage);
             } else {
-                if(referer != '' || referer != null) {
+                if(referer != "http://local.arriendas.cl/") {
                     console.error(referer);
                     window.location.href = referer;
                 } else {

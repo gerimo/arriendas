@@ -195,17 +195,21 @@ class reservesActions extends sfActions {
         $return = array("error" => false);
     
         $newReserveId = $request->getPostParameter("newReserveId", null);
+        $userId = $this->getUser()->getAttribute("userid");
 
         try {
     
             if (is_null($newReserveId) || $newReserveId == "") {
-                throw new Exception("Falta la reserva", 2);
+                throw new Exception("User ".$userId." intenta realizar un cambio de auto, pero falta el ID de la nueva Reserve", 1);
             }
 
             $NewReserve = Doctrine_Core::getTable('Reserve')->find($newReserveId);
+            if (!$NewReserve) {
+                throw new Exception("User ".$userId." está intentado realizar un cambio pero no se ha podido encontrar la Reserve ".$newReserveId, 1);
+            }
 
-            if (!$NewReserve->getTransaction()->select()) {
-                throw new Exception("No se pudo realizar el cambio. Por favor, intentalo nuevamente más tarde.", 1);
+            if (!$this->makeChange($NewReserve)) {
+                throw new Exception("User ".$userId." está intentado realizar un cambio a Car ".$NewReserve->getCar()->id." pero este no se ha podido concretar", 2);
             }
 
             $Renter = $NewReserve->getUser();
@@ -231,7 +235,7 @@ class reservesActions extends sfActions {
             $message->setBody($body, 'text/html');
             $message->setFrom($from);
             $message->setTo($to);
-            /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
+            // $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
 
             $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
             $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
@@ -257,7 +261,7 @@ class reservesActions extends sfActions {
             $message->setBody($body, 'text/html');
             $message->setFrom($from);
             $message->setTo($to);
-            /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
+            // $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
 
             $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
             $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
@@ -298,9 +302,9 @@ class reservesActions extends sfActions {
 
             $mailer->send($message);
         } catch (Exception $e) {
-
             $return["error"] = true;
-            $return["errorMessage"] = $e->getMessage();
+            $return["errorMessage"] = "No se pudo realizar el cambio. Por favor, intentalo nuevamente más tarde";
+            error_log("[".date("Y-m-d H:i:s")."] [reserves/change] ERROR: ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl") {
                 Utils::reportError($e->getMessage(), "reserves/change");
             }
@@ -323,10 +327,13 @@ class reservesActions extends sfActions {
         }
 
         if (is_null($reserveId) || $reserveId == "") {
-            throw new Exception("Falta la reserva", 1);
+            throw new Exception("Falta el ID de Reserve para poder extender", 1);
         }
 
         $Reserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
+        if (!$Reserve) {
+            throw new Exception("No se encontró la Reserve ".$reserveId, 1);
+        }
 
         if (is_null($from) || $from == "") {
             throw new Exception("Falta fecha desde", 1);
@@ -354,9 +361,9 @@ class reservesActions extends sfActions {
         $NewReserve->setConfirmed(false);
 
         if ($Reserve->getLiberadoDeGarantia()) {
-            $NewReserve->montoLiberacion(0);
+            $NewReserve->setMontoLiberacion(Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to));
         } else {
-            $NewReserve->montoLiberacion(Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to));
+            $NewReserve->setMontoLiberacion(0);
         }
 
         $NewReserve->save();
@@ -366,6 +373,7 @@ class reservesActions extends sfActions {
         $NewTransaction->setDate($Reserve->getFechaTermino2());
         $NewTransaction->setReserve($NewReserve);
         $NewTransaction->setCompleted(false);
+        $NewTransaction->setShowSuccess(0);
         $NewTransaction->save();
 
         $this->getRequest()->setParameter("reserveId", $NewReserve->getId());
@@ -413,10 +421,20 @@ class reservesActions extends sfActions {
                 throw new Exception("La extensión no se puede realizar debido a que el auto ya posee una reserva en la fecha consultada", 1);
             }
 
-            $return["price"] = CarTable::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth());
+            $price = CarTable::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth());
+
+            if ($Reserve->getLiberadoDeGarantia()) {
+                $price += Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to);
+            }
+
+            $return["price"] = $price;
+
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
+
+            error_log("[".date("Y-m-d H:i:s")."] [reserves/getExtendPrice] ERROR: ".$e->getMessage());
+
             if ($request->getHost() == "www.arriendas.cl") {
                 Utils::reportError($e->getMessage(), "reserves/getExtendPrice");
             }
@@ -515,7 +533,6 @@ class reservesActions extends sfActions {
             $Transaction->setReserve($Reserve);
             $Transaction->setCompleted(false);
             $Transaction->setImpulsive(true);
-            $Transaction->setSelected(true);
             $Transaction->save();
 
             $this->getRequest()->setParameter("reserveId", $Reserve->getId());
@@ -576,6 +593,46 @@ class reservesActions extends sfActions {
     }
 
     // FUNCIONES PRIVADAS
+    private function makeChange ($newActiveReserveId) {
+
+        $numero_factura = 0;
+
+        try {
+
+            $NewActiveReserve = Doctrine_Core::getTable('Reserve')->find($newActiveReserveId);
+
+            $originalReserveId = $NewActiveReserve->id;
+            if ($NewActiveReserve->reserva_original > 0) {
+                $originalReserveId = $NewActiveReserve->reserva_original;
+            }
+
+            $ActiveReserve = Doctrine_Core::getTable('Reserve')->findActiveReserve($originalReserveId);
+
+            $NewActiveReserve->setNumeroFactura($ActiveReserve->getNumeroFactura());
+            $NewActiveTransaction = $NewActiveReserve->getTransaction();
+            $NewActiveTransaction->setNumeroFactura($ActiveReserve->getTransaction()->getNumeroFactura());
+            $NewActiveTransaction->setCompleted(true);
+            $NewActiveTransaction->save();
+            $NewActiveReserve->save();
+
+            $Rating = $NewActiveReserve->getRating();
+            $Rating->setIdOwner($NewActiveReserve->getCar()->getUser()->id);
+            $Rating->save();
+
+            $ActiveReserve->setNumeroFactura(0);
+            $ActiveTransaction = $ActiveReserve->getTransaction();
+            $ActiveTransaction->setNumeroFactura(0);
+            $ActiveTransaction->setCompleted(false);
+            $ActiveTransaction->save();
+            $ActiveReserve->save();
+        } catch (Exception $e) {
+            error_log("[".date("Y-m-d H:i:s")."] [reserves/makeChange] ERROR: ".$e->getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
     private function validateDates ($from, $to) {
 
         $from = strtotime($from);

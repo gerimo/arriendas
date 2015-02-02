@@ -3,7 +3,7 @@
 class mainActions extends sfActions {
 
     public function executeIndex(sfWebRequest $request) {
-        $this->redirect("user_without_pay");
+        /*$this->redirect("user_without_pay");*/
     }
 
     public function executeLogin (sfWebRequest $request) {

@@ -62,7 +62,10 @@ class opportunitiesActions extends sfActions {
 
     public function executeMailingApprove(sfWebRequest $request) {
 
-        $this->error = false;
+        $this->setLayout("newIndexLayout");
+
+        $this->isError = false;
+        $this->message = null;
 
         $reserveId = $request->getParameter("reserve_id", null);
         $carId     = $request->getParameter("car_id", null);
@@ -71,74 +74,103 @@ class opportunitiesActions extends sfActions {
         try {
 
             $Reserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
-
-            if ($Reserve) {
-                if ($Reserve->getSignature() == $signature) {
-
-                        $already = false;
-
-                        $ChangeOptions = $Reserve->getChangeOptions();
-
-                        foreach ($ChangeOptions as $CO) {
-                            if ($carId == $CO->getCar()->id) {
-                                $already = true;
-                                break;
-                            }
-                        }
-
-                        if (!$already) {
-
-                            $error = $this->approve($reserveId, $carId, true);
-
-                            if ($error) {
-                                throw new Exception($error, 1);
-                            }
-                        } else {
-                            throw new Exception("Oportunidad ya aceptada", 2);
-                        }
-                } else {
-                    throw new Exception("Firma no coincide", 1);
-                }
-            } else {
-                throw new Exception("No se econtró la reserva", 1);
+            if (!$Reserve) {
+                throw new Exception("Reserve no encontrada");
             }
 
-        } catch ( Exception $e ) {
-            $this->error = "ERROR: ".$e->getMessage();
+            if ($Reserve->getSignature() != $signature) {
+                throw new Exception("Firma para aprobar Reserve ".$reserveId." no coincide");
+            }
+
+            $already = false;            
+
+            $ChangeOptions = $Reserve->getChangeOptions();
+
+            foreach ($ChangeOptions as $CO) {
+                if ($carId == $CO->getCar()->id) {
+                    $already = true;
+                    break;
+                }
+            }
+
+            if (!$already) {
+                $error = $this->approve($reserveId, $carId, true);
+                if ($error) {
+                    throw new Exception($error);
+                }
+            }
+
+            $this->message = "Oportunidad aprobada";
+
+        } catch (Exception $e) {
+
+            $this->isError = true;
+            $this->message = "Ha habido un problema aprobando la Oportunidad. El equipo ha sido notificado";
+
+            error_log("[".date("Y-m-d H:i:s")."] [opportunities/mailingApprove] ERROR: ".$e->getMessage());
 
             if ($request->getHost() == "www.arriendas.cl") {
                 Utils::reportError($e->getMessage(), "opportunities/mailingApprove");
             }
         }
+    }
 
-        $this->redirect('reserves');
+    public function executeMailingOpen(sfWebRequest $request) {
+
+        $opportunityEmailQueueId        = $request->getParameter('id');
+        $opportunityEmailQueueSignature = $request->getParameter('signature');
+
+        try {
+
+            $OpportunityEmailQueue = Doctrine_Core::getTable('OpportunityEmailQueue')->find($opportunityEmailQueueId);
+
+            if (!$OpportunityEmailQueue) {
+                throw new Exception("OpportunityEmailQueue no encontrada", 2);
+            }
+
+            if ($OpportunityEmailQueue->getSignature() != $opportunityEmailQueueSignature) {
+                throw new Exception("La firma para OpportunityEmailQueue ".$opportunityEmailQueueId." no coincide", 2);
+            }
+
+            if (is_null($OpportunityEmailQueue->getOpenedAt())) {
+                $OpportunityEmailQueue->setOpenedAt(date("Y-m-d H:i:s"));
+                $OpportunityEmailQueue->save();
+            }
+        } catch (Exception $e) {
+            error_log("[".date("Y-m-d H:i:s")."] [opportunity/mailingOpen] ERROR: ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "opportunity/mailingOpen");
+            }
+        }
+
+        $this->getResponse()->setContentType('image/gif');
+
+        echo base64_decode("R0lGODlhAQABAIAAAP///////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACwAAAAAAQABAAACAkQBADs=");
+
+        return sfView::NONE;
     }
 
     private function approve($reserveId, $carId, $isMailing = false) {
 
-        error_log("Reserva: ".$reserveId);
-        error_log("Car: ".$carId);
-        error_log("isMailing: ".$isMailing);
-
         try {
 
             if (is_null($reserveId) || $reserveId == 0) {
-                throw new Exception("No se encontró la reserva", 1);
+                throw new Exception("No se encontró la reserva");
             }
 
+            $OriginalReserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
+
             if (is_null($carId) || $carId == 0) {
-                throw new Exception("Falta el ID del auto", 1);
+                throw new Exception("Falta el ID del auto para aprobar oportunidad para Reserve ".$OriginalReserve->id);
             }
 
             $Car = Doctrine_Core::getTable('Car')->find($carId);
             if (!$Car) {
-                throw new Exception("No se encontró el auto", 1);                
-            }
-
-            $OriginalReserve = Doctrine_Core::getTable('Reserve')->find($reserveId);            
+                throw new Exception("No se encontró el auto para aprobar oportunidad para Reserve ".$OriginalReserve->id);
+            }            
 
             if ($Car->hasReserve($OriginalReserve->getFechaInicio2(), $OriginalReserve->getFechaTermino2())) {
-                throw new Exception("Este auto ya posee una reserva en las fechas de la oportundiad", 1);                
+                throw new Exception("Este Car ".$Car->id." ya posee una reserva en las fechas de la oportundiad");                
             }
 
             // Comentado porque cuando se aprueba por correo no necesariamente debería estar logueado
@@ -149,6 +181,7 @@ class opportunitiesActions extends sfActions {
             $O = $OriginalReserve->copy(true);
             $O->setCar($Car);
             $O->setFechaReserva(date("Y-m-d H:i:s"));
+            $O->setFechaConfirmacion(date("Y-m-d H:i:s"));
             $O->setConfirmed(true);
             $O->setImpulsive(true);
             $O->setReservaOriginal($OriginalReserve->getId());
@@ -177,6 +210,6 @@ class opportunitiesActions extends sfActions {
             return $e->getMessage();
         }
 
-        return false;
+        return null;
     }
 }

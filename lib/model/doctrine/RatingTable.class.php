@@ -16,4 +16,65 @@ class RatingTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('Rating');
     }
+
+    public function getOwnerAverageById($idOwner) {
+    	$Ratings = Doctrine_Core::getTable("Rating")->findByIdOwner($idOwner);
+    	$sum = array();
+    	$count = 0;
+    	foreach ($Ratings as $Rating) {
+    		$opinion = $Rating->getOpinionAboutOwner();
+            if ($opinion) {
+	    		$sum[]=$Rating->getOpCleaningAboutOwner();
+	    		$count ++;
+	    	}
+    	}
+    	return round((array_sum($sum)/$count),1);
+    }
+
+    public function getTheBestOwnerReviewById($idOwner) {
+	  	$Ratings = Doctrine_Core::getTable('Rating')->findByIdOwner($idOwner);
+	  		$stars = 0;
+	  		$best = array();
+	        foreach ($Ratings as $i => $Rating) {
+	            $opinion = $Rating->getOpinionAboutOwner();
+	            if ($opinion) {
+	            		if($Rating->getOpCleaningAboutOwner() > $stars) {
+	                		$stars = $Rating->getOpCleaningAboutOwner();
+	                		$best[] = $Rating;
+	            		}
+	             }
+	        
+	  		}
+	  		return array_rand($best);
+	}
+
+	public function getOwnerReviewsOrderByRateById($idOwner) {
+		$q = Doctrine_Query::create()
+                ->select('*')
+                ->from('Rating r')
+                ->where('r.idOwner = ?', $idOwner)
+                ->orderBy('r.op_cleaning_about_owner desc');
+        return $q->execute();
+	}
+
+	public function getOwnerReviewsOrderByDateById($idOwner) {
+		$q = Doctrine_Query::create()
+                ->select('*')
+                ->from('Rating r')
+                ->where('r.idOwner = ?', $idOwner)
+                ->orderBy('r.fecha_calificacion_owner desc');
+        return $q->execute();
+	}
+
+	public function getCountOwnerReviewsById($idOwner) {
+		$Ratings = Doctrine_Core::getTable("Rating")->findByIdOwner($idOwner);
+    	$count = 0;
+    	foreach ($Ratings as $Rating) {
+    		$opinion = $Rating->getOpinionAboutOwner();
+            if ($opinion) {
+	    		$count ++;
+	    	}
+    	}
+    	return $count;
+	}
 }

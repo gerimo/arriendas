@@ -41,6 +41,7 @@
  * @property boolean $confirmed_fb
  * @property boolean $confirmed_sms
  * @property boolean $friend_invite
+ * @property boolean $is_suspect
  * @property Doctrine_Collection $Cars
  * @property Doctrine_Collection $Conversation
  * @property Doctrine_Collection $Message
@@ -89,6 +90,7 @@
  * @method boolean             getLicenciaFalsa()         Returns the current record's "licencia_falsa" value
  * @method boolean             getChequeoLicencia()       Returns the current record's "chequeo_licencia" value
  * @method boolean             getChequeoJudicial()       Returns the current record's "chequeo_judicial" value
+ * @method boolean             getIsSuspect()             Returns the current record's "is_suspect" value
  * @method Doctrine_Collection getCars()                  Returns the current record's "Cars" collection
  * @method Doctrine_Collection getConversation()          Returns the current record's "Conversation" collection
  * @method Doctrine_Collection getMessage()               Returns the current record's "Message" collection
@@ -136,6 +138,7 @@
  * @method User                setLicenciaFalsa()         Sets the current record's "licencia_falsa" value
  * @method User                setChequeoLicencia()       Sets the current record's "chequeo_licencia" value
  * @method User                setChequeoJudicial()       Sets the current record's "chequeo_judicial" value
+ * @method User                setIsSuspect()             Sets the current record's "is_suspect" value
  * @method User                setCars()                  Sets the current record's "Cars" collection
  * @method User                setConversation()          Sets the current record's "Conversation" collection
  * @method User                setMessage()               Sets the current record's "Message" collection
@@ -324,6 +327,11 @@ abstract class BaseUser extends sfDoctrineRecord {
             'notnull' => true,
             'default' => false,
         ));
+        $this->hasColumn('is_suspect', 'boolean', false, array(
+            'type' => 'boolean',
+            'notnull' => true,
+            'default' => false,
+        ));
         $this->hasColumn('address', 'string', 255, array(
             'type' => 'string',
             'length' => 255,
@@ -398,6 +406,10 @@ abstract class BaseUser extends sfDoctrineRecord {
         $this->hasMany('Transaction as Transactions', array(
             'local' => 'id',
             'foreign' => 'User_id'));
+
+        $this->hasMany('UserMailingConfig as UserMailingConfigs', array(
+            'local' => 'id',
+            'foreign' => 'user_mailing_config_id'));
         
         $this->hasOne('Commune', array(
             'local' => 'commune_id',
