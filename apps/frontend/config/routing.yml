@@ -58,6 +58,10 @@ data_for_payment:
     url: /data-for-payment
     param: { module: main, action: dataForPayment }
 
+emails_unsubscribe:
+    url: /mailing/darse-de-baja/:user_id/:mailing_id/:signature
+    param: { module: emails, action: unsubscribe }
+
 forgot_password:
     url: /recuperar-contrasena
     param: { module: main, action: forgot }

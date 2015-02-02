@@ -8,16 +8,19 @@
  * @property integer $id
  * @property User $user
  * @property Mailing $mailing
+ * @property boolean $is_active
  * 
  * @method integer              getId()                Returns the current record's "id" value
  * @method User                 getUser()              Returns the current record's "User" value
  * @method Mailing              getMailing()           Returns the current record's "Mailing" value
+ * @method boolean              getIsActive()          Returns the current record's "is_active" value
  *
  * @method UserMailingConfig    setId()                Sets the current record's "id" value
  * @method UserMailingConfig    setUser()              Sets the current record's "User" value
  * @method UserMailingConfig    setMailing()           Sets the current record's "Mailing" value
+ * @method UserMailingConfig    setIsActive()          Sets the current record's "is_active" value
  * 
- * @package    CarSharing
+ * @package    UserMailingConfigSharing
  * @subpackage model
  * @author     Your name here
  * @version    SVN: $Id: Builder.php 7490 2010-03-29 19:53:27Z jwage $
@@ -43,6 +46,11 @@ abstract class BaseUserMailingConfig extends sfDoctrineRecord {
             'type' => 'integer',
             'notnull' => true,
             'length' => 4
+        ));
+        $this->hasColumn('is_active', 'boolean', false, array(
+            'type' => 'boolean',
+            'notnull' => true,
+            'default' => false
         ));
 
         $this->index('id_UNIQUE', array(
