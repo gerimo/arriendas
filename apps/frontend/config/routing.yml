@@ -157,6 +157,10 @@ user_register_complete:
     url: /registro/completar
     param: { module: main, action: completeRegister }
 
+value_your_car:
+    url: /monetiza-tu-auto
+    param: { module: main, action: valueYourCar }
+
 # old Design
 
 index_by_city:

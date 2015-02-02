@@ -40,6 +40,7 @@
  * @property boolean $confirmed_fb
  * @property boolean $confirmed_sms
  * @property boolean $friend_invite
+ * @property boolean $suspect
  * @property Doctrine_Collection $Cars
  * @property Doctrine_Collection $Conversation
  * @property Doctrine_Collection $Message
@@ -87,6 +88,7 @@
  * @method boolean             getLicenciaFalsa()         Returns the current record's "licencia_falsa" value
  * @method boolean             getChequeoLicencia()       Returns the current record's "chequeo_licencia" value
  * @method boolean             getChequeoJudicial()       Returns the current record's "chequeo_judicial" value
+ * @method boolean             getSuspect()               Returns the current record's "suspect" value
  * @method Doctrine_Collection getCars()                  Returns the current record's "Cars" collection
  * @method Doctrine_Collection getConversation()          Returns the current record's "Conversation" collection
  * @method Doctrine_Collection getMessage()               Returns the current record's "Message" collection
@@ -133,6 +135,7 @@
  * @method User                setLicenciaFalsa()         Sets the current record's "licencia_falsa" value
  * @method User                setChequeoLicencia()       Sets the current record's "chequeo_licencia" value
  * @method User                setChequeoJudicial()       Sets the current record's "chequeo_judicial" value
+ * @method User                setSuspect()               Sets the current record's "suspect" value
  * @method User                setCars()                  Sets the current record's "Cars" collection
  * @method User                setConversation()          Sets the current record's "Conversation" collection
  * @method User                setMessage()               Sets the current record's "Message" collection
@@ -313,6 +316,11 @@ abstract class BaseUser extends sfDoctrineRecord {
             'default' => false,
         ));
         $this->hasColumn('chequeo_judicial', 'boolean', null, array(
+            'type' => 'boolean',
+            'notnull' => true,
+            'default' => false,
+        ));
+        $this->hasColumn('suspect', 'boolean', null, array(
             'type' => 'boolean',
             'notnull' => true,
             'default' => false,

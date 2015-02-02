@@ -165,40 +165,6 @@
             </div>
         </div>
     </div>
-    
-    <!-- Reviews 
-    <?php if (count($reviews) > 0): ?>
-        <div class="row">
-            <div class="panel-group col-md-offset-1 col-md-10" id="reviews">
-                <div class="panel-heading">
-                    <h1>Reviews</h1>
-                </div>
-        
-                <div id="reviewsCollapseOne" class="panel-collapse col-md-offset-1 col-md-11" >
-                    <div class="border">
-                        <?php count($reviews) ?> 
-                        <?php foreach ($reviews as $review): ?>
-                            <div class="row review">
-                                <div class="col-md-1">
-                                    <?php if ($review['picture']): ?>
-                                        <img src="<?php echo $review['picture'] ?>">
-                                    <?php else: ?>
-                                        <i class="fa fa-user" style="font-size: 38px"></i>
-                                    <?php endif ?>
-                                </div>
-
-                                <div class="col-md-11">
-                                    <p><?php echo ucfirst($review['opinion']) ?></p>
-                                    <span class="car-rating pull-right" data-number="<?php echo $review['star'] ?>" ></span>
-                                </div>
-                            </div>
-                        <?php endforeach ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <?php endif ?>
-    -->
 
     <div class="space-50 hidden-xs"></div>
 
@@ -212,6 +178,72 @@
             </ul>
         </div>
     </div>
+
+    <div class="space-50 hidden-xs"></div>
+
+    <!-- Reviews -->  
+
+    <?php if (count($reviews) > 0): ?>
+        <div class="row">
+            <div class="panel-group col-md-11" id="reviews">
+
+                <div class="panel-heading">
+                    <h2>Reviews <span class="car-rating pull-right" data-number="<?php echo $average ?>" ></span> <small>(<?php echo $quantity?>)</small></h2>
+                </div>
+
+                <div class="space-30 hidden-xs"></div>
+                <div id="reviewsCollapseOne" class="panel-collapse col-md-offset-1 col-md-11" >
+                    <div class="border">
+                        <?php count($reviews) ?> 
+
+                        <div class="row review">
+                            <div class="col-md-1">
+                                <?php if ( getimagesize($defaultReviews['picture'])): ?>
+                                    <img class="img-responsive" src="<?php echo $defaultReviews['picture'] ?>">
+                                <?php else: ?>
+                                    <i class="fa fa-user" style="font-size: 38px"></i>
+                                <?php endif ?>
+                            </div>
+                            <div class="col-md-11">
+                                <p><?php echo ucfirst($defaultReviews['opinion']) ?></p>
+                                <span class="car-rating pull-right" data-number="<?php echo $defaultReviews['star'] ?>" ></span>
+                                <i class="pull-right"><?php echo $defaultReviews['date'] ?></i>
+                            </div>
+                        </div>
+
+                        <div class="collapse" id="collapseReviews">
+
+                            <?php foreach ($reviews as $review): ?>
+                                <div class="row review">
+                                    <div class="col-md-1">
+                                        <?php if (getimagesize($review['picture'])): ?>
+                                            <img src="<?php echo $review['picture'] ?>">
+                                        <?php else: ?>
+                                            <i class="fa fa-user" style="font-size: 38px"></i>
+                                        <?php endif ?>
+                                    </div>
+                                    <div class="col-md-11">
+                                        <p><?php echo ucfirst($review['opinion']) ?></p>
+                                        <span class="car-rating pull-right" data-number="<?php echo $review['star'] ?>" ></span>
+                                        <i class="pull-right"><?php echo $review['date'] ?></i>
+                                    </div>
+                                </div>
+                            <?php endforeach ?>
+
+                        </div>
+
+                    </div>
+
+                    <a class="title-collapse text-center" data-toggle="collapse" href="#collapseReviews" aria-expanded="false" aria-controls="collapseReviews">
+                        <h1><i id="reviewArrow" class="fa fa-angle-down" data-pos="0"></i></h1>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    <?php endif ?>
+    
+    <div class="space-50 hidden-xs"></div>
 
     <form action="<?php echo url_for('reserve_pay') ?>" id="reserve-form" method="post">
         
@@ -337,6 +369,7 @@
 
         // Rating
         $('.car-rating').raty({
+            readOnly: true,
             score: function() {
                 return $(this).attr('data-number');
             }
@@ -344,6 +377,17 @@
 
         refreshDate(true, true);
         refreshDate(false, true);
+
+    });
+
+    $('#reviews').on('shown.bs.collapse', function () {
+        $("#reviewArrow").removeClass("fa fa-angle-down");
+        $("#reviewArrow").addClass("fa fa-angle-up");
+    });
+
+    $('#reviews').on('hidden.bs.collapse', function () {
+        $("#reviewArrow").removeClass("fa fa-angle-up");
+        $("#reviewArrow").addClass("fa fa-angle-down");
     });
 
     $("#btn-pay").on('click', function(e) {
@@ -707,6 +751,7 @@
         $("#total-price").val(totalPrice);
         $(".total-price").html($.number(totalPrice, 0, ',', '.'));
     }
+
 
     function translateDay(day) {
 
