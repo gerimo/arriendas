@@ -15,8 +15,8 @@
             <?php endif ?>
 
             <select class="form-control" id="foreign" name="foreign" >
-                <option value="0">Tengo RUT</option>
-                <option value="1">I don't have chilean RUT number - No tengo RUT</option>
+                <option value="0">Tengo RUT Chileno - I have chilean RUT number</option>
+                <option value="1">No tengo RUT - I don't have chilean RUT number</option>
             </select>
 
             <input class="form-control" id="rut" name="rut" type="text" placeholder="RUT">

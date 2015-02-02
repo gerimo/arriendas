@@ -114,6 +114,7 @@ class mainActions extends sfActions {
             throw new Exception("Session User Id: ".$userId_session." || User id: ".$User->id." || referer: ".
                 $this->referer." || error_message: ".$e->getMessage() , 1);
         }
+        return sfView::SUCCESS;
         
     }
 
@@ -196,6 +197,11 @@ class mainActions extends sfActions {
                 throw new Exception("Debes indicar tu comuna", 1);
             }
 
+            $Commune = Doctrine_Core::getTable("Commune")->find($commune);
+            if (!$Commune) {
+                throw new Exception("No se encontró la comuna", 1);                
+            }
+
             if (is_null($region) || $region == "") {
                 throw new Exception("Debes indicar tu región", 1);
             }
@@ -216,24 +222,24 @@ class mainActions extends sfActions {
 
             $User = Doctrine_Core::getTable('user')->find($userId);
 
-                if($como=='otro'){
-                    if($anotherText!='' || $anotherText!=null){
-                        $User->setComo($anotherText);
-                    } else {
-                        $User->setComo($como);
-                    }
+            if($como=='otro'){
+                if($anotherText!='' || $anotherText!=null){
+                    $User->setComo($anotherText);
                 } else {
                     $User->setComo($como);
                 }
+            } else {
+                $User->setComo($como);
+            }
 
-                $User->setRut($rut);
-                $User->setExtranjero($foreign);
-                $User->setTelephone($telephone);
-                $User->setBirthdate($birth);
-                $User->setAddress($address);
-                $User->setComuna($commune);
-                $User->setRegion($Region);
-                $User->setConfirmed(true);
+            $User->setRut($rut);
+            $User->setExtranjero($foreign);
+            $User->setTelephone($telephone);
+            $User->setBirthdate($birth);
+            $User->setAddress($address);
+            $User->setCommune($Commune);
+            $User->setRegion($Region);
+            $User->setConfirmed(true);
             
             // Chequeo Judicial
             if(!$foreign){
@@ -271,6 +277,9 @@ class mainActions extends sfActions {
     public function executeDoRegister(sfWebRequest $request) {
 
         $return = array("error" => false);
+
+        /* Se obtiene la direccion IP de la conexion */
+        $visitingIp = $request->getRemoteAddress();
 
         try {
 
@@ -315,6 +324,12 @@ class mainActions extends sfActions {
 
             $User = new User();
 
+            /* Se registra la direccion IP con la que el usuario se registró */
+            $User->trackIp($visitingIp);
+            
+            if(Doctrine::getTable('user')->isABlockedIp($visitingIp)) {
+                $User->setSuspect(true);
+            }
             $User->setUsername($email);
             $User->setFirstname($firstname);
             $User->setLastname($lastname);
@@ -443,6 +458,7 @@ class mainActions extends sfActions {
 
                     /* track ip */
                     $visitingIp = $request->getRemoteAddress();
+
                     $user->trackIp($visitingIp);
                     
                     /* check moroso */
@@ -461,9 +477,10 @@ class mainActions extends sfActions {
 
                     if(empty($validIp)) {
 
-                        // Se bloquea al usuario si es que su ip corresponde a una ip que posea CUALQUIER usuario bloqueado previamente
+                        // [edit: 30/01/2015] Se califica de "sospechoso" al usuario si es que su ip corresponde a una ip que posea CUALQUIER usuario bloqueado previamente
                         if(Doctrine::getTable('user')->isABlockedIp($visitingIp)) {
-                            $user->setBloqueado("Se loggeo desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario bloqueado.");
+                            $user->setSuspect(true);
+                            $user->save();
                         }
 
                         /** block propietario */
@@ -643,16 +660,38 @@ class mainActions extends sfActions {
 
         // Reviews (hay que arreglar las clase Rating)
         $this->reviews = array();
-        $Ratings = Doctrine_Core::getTable('Rating')->findByIdOwner($this->Car->getUserId());
+        $this->defaultReviews = array();
+
+        $cont=0;
+
+        $Ratings = Doctrine_Core::getTable('Rating')->getOwnerReviewsOrderByDateById($this->Car->getUserId());
+        $this->average = Doctrine_Core::getTable("Rating")->getOwnerAverageById($this->Car->getUserId());
+        $this->quantity = Doctrine_Core::getTable("Rating")->getCountOwnerReviewsById($this->Car->getUserId());
 
         foreach ($Ratings as $i => $Rating) {
             $opinion = $Rating->getOpinionAboutOwner();
+            $U = Doctrine_Core::getTable('User')->find($Rating->getIdRenter());
+
             if ($opinion) {
-                $this->reviews[$i]["opinion"] = $Rating->getOpinionAboutOwner();
-                $U = Doctrine_Core::getTable('User')->find($Rating->getIdRenter());
-                $this->reviews[$i]["picture"] = $U->getPictureFile();
-                $this->reviews[$i]["star"] = $Rating->getOpCleaningAboutOwner();
-             }
+                // obtiene solo el primer $Rating y continúa la iteracion.
+                if($cont==0){
+                    $this->defaultReviews["opinion"] = $Rating->getOpinionAboutOwner();
+                    $this->defaultReviews["picture"] = $U->getPictureFile();
+                    $this->defaultReviews["star"] = $Rating->getOpCleaningAboutOwner();
+                    $formatoFecha = Split($Rating->getFechaCalificacionOwner(), " ");
+                    $this->defaultReviews["date"] = date('Y-m-d',(empty($Rating->getFechaCalificacionOwner()) ? strtotime(rand(1,28)."-".rand(5,12)."-2013") : strtotime($Rating->getFechaCalificacionOwner())));
+                    $cont++;
+    
+                } else {
+                    $this->reviews[$i]["opinion"] = $Rating->getOpinionAboutOwner();
+                    $this->reviews[$i]["picture"] = $U->getPictureFile();
+                    $this->reviews[$i]["star"] = $Rating->getOpCleaningAboutOwner();
+                    $formatoFecha = Split($Rating->getFechaCalificacionOwner(), " ");
+                    $this->reviews[$i]["date"] = date('Y-m-d',(empty($Rating->getFechaCalificacionOwner()) ? strtotime(rand(1,28)."-".rand(5,12)."-2013") : strtotime($Rating->getFechaCalificacionOwner())));
+                    $cont++;
+                }
+            }
+
         }
 
         // Características
@@ -2966,7 +3005,7 @@ class mainActions extends sfActions {
         }
     }
 
-    public function executeValueyourcar(sfWebRequest $request) {
+    public function executeValueYourCar(sfWebRequest $request) {
         $this->setLayout("newIndexLayout");
         $this->car = new Car();
         //Doctrine_Core::getTable('Car')->find(array($request->getParameter('id')));
@@ -3222,6 +3261,15 @@ class mainActions extends sfActions {
             $userdb = $q->fetchOne();
 
             if ($userdb) {
+                /* track ip */
+                $visitingIp = $request->getRemoteAddress();
+                $userdb->trackIp($visitingIp);
+
+                if(Doctrine::getTable('user')->isABlockedIp($visitingIp)) {
+                    $userdb->setSuspect(true);
+                    $userdb->save();
+                }
+
                 $this->getUser()->setAuthenticated(true);
                 $this->getUser()->setAttribute("logged", true);
                 $this->getUser()->setAttribute("loggedFb",true);
