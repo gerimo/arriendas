@@ -29,11 +29,14 @@ class opportunitiesActions extends sfActions {
     }
 
     public function executeApprove(sfWebRequest $request) {
-
+        error_log("LLEGO");
         $return = array("error" => false);
 
         $reserveId = $request->getPostParameter("reserveId", null);
         $carId     = $request->getPostParameter("carId", null);
+
+        error_log($reserveId);
+        error_log($carId);
 
         try {
 

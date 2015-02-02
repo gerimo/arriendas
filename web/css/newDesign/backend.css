@@ -43,3 +43,15 @@
     margin-top: 25px;
     position: absolute;
 }
+
+.find {
+
+    position: absolute;
+    margin: -25px 0 0 92%;
+}
+
+.found {
+
+    position: absolute;
+    margin: -47px 0 0 92%;
+}

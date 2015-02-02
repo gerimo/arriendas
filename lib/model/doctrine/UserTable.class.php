@@ -7,10 +7,26 @@ class UserTable extends Doctrine_Table {
             ->createQuery('R')
             ->where('R.fecha_pago IS NULL')
             ->andWhere('R.reserva_original = 0')
+            ->groupBy('R.user_id')
             ->orderBy('R.fecha_reserva ASC');
+
 
         if ($date) {
             $q->andWhere('DATE(R.fecha_reserva) = ?', $date);
+        }
+
+        return $q->execute();
+    }
+
+    public function findUsersWithoutCar($date = null) {
+        $q = Doctrine_Core::getTable("User")
+            ->createQuery('U')
+            ->leftJoin('U.Car c')
+            ->orderBy('C.user_id');
+
+
+        if ($date) {
+            $q->andWhere('DATE(U.fecha_registro) = ?', $date);
         }
 
         return $q->execute();

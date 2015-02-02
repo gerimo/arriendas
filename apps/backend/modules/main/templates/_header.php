@@ -21,7 +21,12 @@
                 
                 <ul class="nav navbar-nav">
                     <li><a href="#">Reservas</a></li>
-                    <li><a href="#">Oportunidades</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Oportunidades<span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="<?php echo url_for('opportunity_create') ?>">Crear</a></li>
+                        </ul>
+                    </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Usuarios<span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
