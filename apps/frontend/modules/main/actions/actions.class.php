@@ -324,7 +324,7 @@ class mainActions extends sfActions {
 
             $User = new User();
 
-            /* Se registra la direccion IP con la que el usuario se registró */
+            /* Se registra la direccion IP con la que el usuario entró */
             $User->trackIp($visitingIp);
             
             if(Doctrine::getTable('user')->isABlockedIp($visitingIp)) {
