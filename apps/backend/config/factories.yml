@@ -13,7 +13,6 @@ test:
     class: sfSessionTestStorage
     param:
       session_path: %SF_TEST_CACHE_DIR%/sessions
-      auto_start: false
 
   response:
     class: sfWebResponse
@@ -41,16 +40,3 @@ all:
     param:
       cache_key_use_vary_headers: true
       cache_key_use_host_name:    true
-  mailer:
-    class: sfMailer
-    param:
-      logging:           %SF_LOGGING_ENABLED%
-      charset:           %SF_CHARSET%
-      transport:
-        class: Swift_SmtpTransport
-        param:
-          host:       smtp.sendgrid.net
-          port:       465
-          encryption: ssl
-          username:   german@arriendas.cl
-          password:   whisper00@@__

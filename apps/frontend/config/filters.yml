@@ -8,6 +8,8 @@ security:  ~
 paymentSuccessFilter:
     class: checkPaymentSuccessFilter
 
+completeRegisterFilter:
+    class:  checkCompleteRegisterFilter
 optionsCarFilter:
     class: checkOptionsCarFilter
     

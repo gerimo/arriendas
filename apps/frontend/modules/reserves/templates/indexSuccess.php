@@ -181,7 +181,7 @@
                 <div class="modal-footer">
                     <button class="btn btn-a-primary pull-right" id="payExtend">Pagar</button>
                     <span id="extendAlert" style="display: none"></span>
-                    <img id="extendLoading" src="/images/newDesign/loading.gif" style="display: none">
+                    <img id="extendLoading" src="/images/newDesign/loading.gif" style="display: none; margin-top: 4px; width: 28px">
                 </div>
             </form>
         </div>
@@ -217,7 +217,6 @@
         grandpa.find(".loading").show();
 
         $.post("<?php echo url_for('reserve_approve') ?>", {"reserveId": reserveId}, function(r){
-            console.log(r);
             if (r.error) {
                 $("#dialog-alert p").html(r.errorMessage);
                 $("#dialog-alert").attr("title", "Problemas al aprobar la reserva");
@@ -314,7 +313,10 @@
 
     $(document).on("click", "#payExtend", function(){
 
+        $("#extendLoading").show();
+        $("#payExtend").attr("disabled", true);
         $("#extendFrom").removeAttr("disabled");
+
         $("#extendForm").submit();
     });
 
@@ -452,7 +454,7 @@
         }, "json");
     }
 
-function rounMinutos(valor){
+    function rounMinutos(valor){
         var fechaH = valor
 
         var split = fechaH.split(" ");

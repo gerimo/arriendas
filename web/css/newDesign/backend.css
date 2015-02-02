@@ -36,3 +36,10 @@
 .space-100 {
     height: 100px;
 }
+
+.loading {
+    width: 30px;
+    margin-left: 68%;
+    margin-top: 25px;
+    position: absolute;
+}

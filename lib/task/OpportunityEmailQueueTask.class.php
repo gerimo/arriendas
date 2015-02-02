@@ -1,24 +1,23 @@
 <?php
 
-class OpportunityEmailQueueTask extends sfBaseTask {
+class OpportunitySendEmailQueueTask extends sfBaseTask {
 
     protected function configure() {
 
         $this->addOptions(array(
             new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name', 'frontend'),
             new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
-            new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine'),
-            new sfCommandOption('numberOfMails', null, sfCommandOption::PARAMETER_REQUIRED, 'Cantidad de correos', 16),
+            new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine')
         ));
 
-        $this->namespace = 'arriendas';
-        $this->name = 'opportunityEmailQueueTask';
+        $this->namespace = 'opportunity';
+        $this->name = 'sendEmailQueueTask';
         $this->briefDescription = '';
         $this->detailedDescription = <<<EOF
-The [OpportunityEmailQueueTask|INFO] task does things.
+The [OpportunitySendEmailQueueTask|INFO] task does things.
 Call it with:
 
-  [php symfony arriendas:opportunityEmailQueueTask|INFO]
+  [php symfony opportunity:sendEmailQueue|INFO]
 EOF;
     }
 
@@ -36,10 +35,11 @@ EOF;
         // Este task toma un registro por cada reserva y envia un correo de opportunidad al dueño
 
         try {
+
             if ($options['env'] == 'dev') {
-                $host = 'http://local.api.arriendas.cl';
+                $host = 'http://local.arriendas.cl';
             } else {
-                $host = 'http://api.arriendas.cl';
+                $host = 'http://www.arriendas.cl';
             }
 
             $routing = $this->getRouting();
@@ -56,13 +56,11 @@ EOF;
                 $Owner   = $OpportunityEmail->getCar()->getUser();
                 $Reserve = $OpportunityEmail->getReserve();
 
-                /*$acceptUrl  = $host . $routing->generate('opportunities_mailing_approve', array(
+                $acceptUrl  = $host . $routing->generate('opportunities_mailing_approve', array(
                     'reserve_id' => $OpportunityEmail->getReserve()->id,
                     'car_id'     => $OpportunityEmail->getCar()->id,
                     'signature'  => $OpportunityEmail->getReserve()->getSignature(),
-                ));*/
-
-                $acceptUrl  = $host . $routing->generate('opportunities');
+                ));
 
                 $imageUrl   = $host . $routing->generate('opportunities_mailing_open', array(
                     'id'         => $OpportunityEmail->id,
@@ -76,11 +74,15 @@ EOF;
                 $from    = array("soporte@arriendas.cl" => "Oportunidades Arriendas.cl");
                 $to      = array($Owner->email => $Owner->firstname." ".$Owner->lastname);
 
+                $this->log("[".date("Y-m-d H:i:s")."] Enviando a ".$Owner->firstname." ".$Owner->lastname);
+                $this->log("[".date("Y-m-d H:i:s")."] URL Apertura".$imageUrl);
+                $this->log("[".date("Y-m-d H:i:s")."] URL Aprobacion".$acceptUrl);
+
                 $message = $this->getMailer()->compose();
                 $message->setSubject($subject);
                 $message->setBody($body, "text/html");
                 $message->setFrom($from);
-                $message->setTo($to);
+                /*$message->setTo($to);*/
                 $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
                 
                 $this->getMailer()->send($message);
@@ -89,11 +91,12 @@ EOF;
                 $OpportunityEmail->save();
             }
         } catch (Execption $e) {
+
+            $this->log("[".date("Y-m-d H:i:s")."] ERROR: ".$e->getMessage());
+
             if ($options['env'] == 'prod') {
                 Utils::reportError($e->getMessage(), "OpportunityEmailQueueTask");
-            } else {
-                $this->log("[".date("Y-m-d H:i:s")."] ERROR: {$e->getMessage()}");
-            }            
+            }
         }
     }
 }

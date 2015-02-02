@@ -1,8 +1,2 @@
-login:
-    is_secure: false
-
-login_do:
-    is_secure: false
-
-logout:
+all:
     is_secure: false
