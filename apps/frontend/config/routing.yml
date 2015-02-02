@@ -13,6 +13,10 @@ car_availability_remove:
     url: /auto/disponibilidad/eliminar
     param: { module: cars, action: carAvailabilityRemove }
 
+car_availability:
+   url: /auto/disponibilidad
+   param: { module: cars, action: availability }
+
 car_availability_save:
     url: /auto/disponibilidad/guardar
     param: { module: cars, action: carAvailabilitySave }
@@ -44,10 +48,6 @@ car_edit:
 car_create:
    url: /auto/crear
    param: { module: cars, action: create }
-
-car_availability:
-   url: /auto/disponibilidad
-   param: { module: cars, action: availability }
 
 cars:
     url: /mis-autos
@@ -136,7 +136,7 @@ reserve_approve:
 
 reserve_calculate_price:
     url: /reserva/calcular-precio
-    param: { module: main, action: calculatePrice }
+    param: { module: reserves, action: calculatePrice }
 
 reserve_change:
     url: /reserva/cambiar
