@@ -537,7 +537,7 @@ class reservesActions extends sfActions {
 
             $User = Doctrine_Core::getTable('User')->find($userId);
             if ($User->getBlocked()) {
-                throw new Exception("Rechazado el pago de User ".$userId." debido a que se encuentra bloqueado, por lo que no esta autorizado para generar pagos", 1);            
+                throw new Exception("Rechazado el pago de User ".$userId." (".$User->firstname." ".$User->lastname.") debido a que se encuentra bloqueado, por lo que no esta autorizado para generar pagos", 1);            
             }
 
             $Car = Doctrine_Core::getTable('Car')->find($carId);
