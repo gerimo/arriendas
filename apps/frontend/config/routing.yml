@@ -1,9 +1,9 @@
 # You can find more information about this file on the symfony website:
 # http://www.symfony-project.org/reference/1_4/en/10-Routing
 
-test_khipu:
-    url: /test/khipu
-    param: { module: main, action: testKhipu }
+# test_khipu:
+#     url: /test/khipu
+#     param: { module: main, action: testKhipu }
 
 about_company:
     url: /nosotros
@@ -63,8 +63,12 @@ emails_unsubscribe:
     param: { module: emails, action: unsubscribe }
 
 forgot_password:
-    url: /recuperar-contrasena
+    url: /contrasena/recuperar
     param: { module: main, action: forgot }
+
+forgot_password_send:
+    url: /contrasena/enviar
+    param: { module: main, action: forgotSend }
 
 homepage:
     url: /
@@ -72,7 +76,7 @@ homepage:
 
 how-works:
     url: /como-funciona
-    param: { module: main, action:howWorks }
+    param: { module: main, action: howWorks }
 
 login:
     url: /login
@@ -122,6 +126,10 @@ questions:
     url: /preguntas-frecuentes
     param: { module: main , action: questions }
 
+rent_a_car:
+    url: /arriendo-de-autos
+    param: { module: main, action: searchACars }
+
 rent_a_car_region_commune:
     url: /arriendo-de-autos/:region/:commune
     param: {module: main, action: searchACars }
@@ -166,10 +174,6 @@ return_form:
     url: /informe-de-devolucion/:tokenReserve
     param: { module: main, action: generarFormularioEntregaDevolucion }
 
-search_cars:
-    url: /arriendo-de-autos
-    param: { module: main, action:searchACars }
-
 terms_and_conditions:
     url: /terminos-y-condiciones
     param: { module: main, action: terminos }
@@ -192,9 +196,9 @@ value_your_car:
 
 # old Design
 
-index_by_city:
-  url:    /c/:c
-  param:  { module: main, action: index }
+# index_by_city:
+#   url:    /c/:c
+#   param:  { module: main, action: index }
 
 perfil_auto:
     url:  /arriendo-de-autos/rent-a-car/*/:chile/:id

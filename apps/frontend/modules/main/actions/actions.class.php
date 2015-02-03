@@ -2689,6 +2689,22 @@ class mainActions extends sfActions {
     public function executeForgot(sfWebRequest $request) {
         $this->setLayout("newIndexLayout");
     }
+
+    public function executeForgotSend(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+
+        $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ?', $this->getRequestParameter('email'));
+        $user = $q->fetchOne();
+        if ($user != null) {
+            $this->sendRecoverEmail($user);
+            $this->getUser()->setFlash('msg', 'Se ha enviado un correo a tu casilla');
+        } else {
+            $this->getUser()->setFlash('msg', 'No se ha encontrado ese correo electrónico en nuestra base');
+        }
+
+        $this->getUser()->setFlash('show', true);
+        $this->forward('main', 'forgot');
+    }
 	
     public function executeActivate(sfWebRequest $request) {
         
@@ -2788,22 +2804,6 @@ class mainActions extends sfActions {
         }
         else
             exit();
-    }
-
-    public function executeDoRecover(sfWebRequest $request) {
-        $this->setLayout("newIndexLayout");
-
-        $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ?', $this->getRequestParameter('email'));
-        $user = $q->fetchOne();
-        if ($user != null) {
-            $this->sendRecoverEmail($user);
-            $this->getUser()->setFlash('msg', 'Se ha enviado un correo a tu casilla');
-        } else {
-            $this->getUser()->setFlash('msg', 'No se ha encontrado ese correo electrónico en nuestra base');
-        }
-
-        $this->getUser()->setFlash('show', true);
-        $this->forward('main', 'forgot');
     }
 	
     public function executeDoActivate(sfWebRequest $request) {
