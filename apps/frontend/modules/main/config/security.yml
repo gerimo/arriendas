@@ -1,0 +1,68 @@
+availability:
+    is_secure: false
+
+availabilityEmailOpen:
+    is_secure: false
+
+compania:
+    is_secure: false
+
+completeRegister:
+    is_secure: false
+
+dataForPayment:
+    is_secure: false
+
+fbShare:
+    is_secure: false
+
+forgot:
+    is_secure: false
+
+forgotSend:
+    is_secure: false
+
+generarFormularioEntregaDevolucion:
+    is_secure: false
+
+howWorks:
+    is_secure: false
+
+index:
+    is_secure: false
+
+login:
+    is_secure: false
+
+loginDo:
+    is_secure: false
+
+loginFacebook:
+    is_secure: false
+
+logout:
+    is_secure: false
+
+news:
+    is_secure: false
+
+pricesCompare:
+    is_secure: false
+
+questions:
+    is_secure: false
+
+register:
+    is_secure: false
+
+reserve:
+    is_secure: false
+
+searchACars:
+    is_secure: false
+
+terminos:
+    is_secure: false
+
+valueYourCar:
+    is_secure: false

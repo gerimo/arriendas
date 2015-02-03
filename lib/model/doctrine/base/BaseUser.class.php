@@ -50,6 +50,7 @@
  * @property Doctrine_Collection $Comuna
  * @property Doctrine_Collection $Region
  * @property Commune $commune
+ * @property Doctrine_Collection $UserManagements
  * 
  * @method integer             getId()                    Returns the current record's "id" value
  * @method string              getUsername()              Returns the current record's "username" value
@@ -98,6 +99,7 @@
  * @method Doctrine_Collection getTransactions()          Returns the current record's "Transactions" collection
  * @method timestamp           getFechaRegistro()         Returns the current record's "fecha_registro" value
  * @method Commune             getCommune()               Returns the current record's "commune" value
+ * @method Doctrine_Collection getUserManagements()       Returns the current record's "UserManagements" collection
  *
  * @method User                setId()                    Sets the current record's "id" value
  * @method User                setUsername()              Sets the current record's "username" value
@@ -145,6 +147,7 @@
  * @method User                setReserves()              Sets the current record's "Reserves" collection
  * @method User                setTransactions()          Sets the current record's "Transactions" collection
  * @method User                setCommune()               Sets the current record's "commune" value
+ * @method User                setUserManagements()       Sets the current record's "UserManagements" collection
  * 
  * @package    CarSharing
  * @subpackage model
@@ -410,6 +413,10 @@ abstract class BaseUser extends sfDoctrineRecord {
         $this->hasMany('UserMailingConfig as UserMailingConfigs', array(
             'local' => 'id',
             'foreign' => 'user_mailing_config_id'));
+
+        $this->hasMany('UserManagement as UserManagements', array(
+            'local' => 'id',
+            'foreign' => 'user_id'));
         
         $this->hasOne('Commune', array(
             'local' => 'commune_id',

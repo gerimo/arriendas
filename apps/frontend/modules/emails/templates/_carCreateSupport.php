@@ -61,6 +61,10 @@
         <th style='text-align: left'>Patente</th>
         <td><?php echo $Car->patente ?></td>
     </tr>
+    <tr>
+        <th style='text-align: left'>Año</th>
+        <td><?php echo $Car->year ?></td>
+    </tr>
     
 </table>
 
