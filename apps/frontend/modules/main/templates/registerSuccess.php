@@ -18,7 +18,7 @@
 
             <div class="row">
                 <div class="col-md-offset-7 col-md-5" style="padding: 0">
-                    <button class="btn-a-primary btn-block" id="save" onclick="validateForm()">Siguiente</button>
+                    <button class="btn btn-a-primary btn-block" id="save" onclick="validateForm()">Siguiente</button>
                 </div>
             </div>
         </div>
