@@ -21,25 +21,8 @@
     </noscript>
 </head>
 
-<div class="space-30 hidden-xs"></div>
+<div class="space-90 hidden-xs"></div>
 <div class="space-50 visible-xs"></div>
-<!-- 
-<?php if (is_null($license)): ?>
-    <div class="row" id="license-container">
-        <div class="col-xs-12 col-md-offset-4 col-md-4">
-            <h1>¡FALTA TU CÉDULA DE CONDUCIR!</h1>
-            <h2>Es necesario que la subas una vez para seguirrealizando arriendos.</h2>
-            <div id="previewlicence">
-            <a href="#" class="upload-link" id="linklicence">
-                <span class="icon-svg_17"></span>
-                <strong class="text">(la puedes sacar con tu celular)</strong>
-            </a>
-            </div>
-        </div>
-    </div>
-<?php endif ?>
- -->
-<div class="space-60 hidden-xs"></div>
 
 <div class="container">
 

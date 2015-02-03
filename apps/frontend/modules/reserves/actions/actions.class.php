@@ -117,54 +117,6 @@ class reservesActions extends sfActions {
         return sfView::NONE;
     }
 
-    /*public function executeCalculatePrice (sfWebRequest $request) {
-
-        $return = array("error" => false);
-
-        $carId = $request->getPostParameter("carId", null);
-        $from  = $request->getPostParameter("from", null);
-        $to    = $request->getPostParameter("to", null);
-
-        try {
-
-            $datesError = $this->validateDates($from, $to);
-            if ($datesError) {
-                throw new Exception($datesError, 2);
-            }
-
-            if (is_null($carId) || $carId == '' || $carId == 0) {
-                throw new Exception("Falta el carId", 1);
-            }
-
-            $Car = Doctrine_Core::getTable('car')->findOneById($carId);
-            if (!$Car) {
-                throw new Exception("El Car ".$carId." no fue encontrado", 1);
-            }
-
-            $return["price"] = CarTable::getPrice($from, $to, $Car->price_per_hour, $Car->price_per_day, $Car->price_per_week, $Car->price_per_month);
-
-        } catch (Exception $e) {
-
-            $return["error"] = true;
-
-            if ($e->getCode() >= 2) {
-                $return["errorMessage"] = $e->getMessage();
-            } else {
-                $return["errorMessage"] = "Problemas a calcular el precio. Por favor, intentalo más tarde";
-            }
-            
-            error_log("[".date("Y-m-d H:i:s")."] ERROR: ".$e->getMessage());
-            
-            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
-                Utils::reportError($e->getMessage(), "reserves/calculatePrice");
-            }
-        }
-    
-        $this->renderText(json_encode($return));
-
-        return sfView::NONE;
-    }*/
-
     public function executeCalculatePrice (sfWebRequest $request) {
 
         $return = array("error" => false);
@@ -537,7 +489,7 @@ class reservesActions extends sfActions {
 
             $User = Doctrine_Core::getTable('User')->find($userId);
             if ($User->getBlocked()) {
-                throw new Exception("Rechazado el pago de User ".$userId." debido a que se encuentra bloqueado, por lo que no esta autorizado para generar pagos", 1);            
+                throw new Exception("Rechazado el pago de User ".$userId." (".$User->firstname." ".$User->lastname.") debido a que se encuentra bloqueado, por lo que no esta autorizado para generar pagos", 1);            
             }
 
             $Car = Doctrine_Core::getTable('Car')->find($carId);
@@ -591,6 +543,8 @@ class reservesActions extends sfActions {
 
             $this->getRequest()->setParameter("reserveId", $Reserve->getId());
             $this->getRequest()->setParameter("transactionId", $Transaction->getId());
+
+            $this->forward("khipu", "generatePayment");
         } catch (Exception $e) {
             error_log("[".date("Y-m-d H:i:s")."] [reserves/pay] ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl") {
@@ -598,7 +552,7 @@ class reservesActions extends sfActions {
             }
         }
 
-        $this->forward("khipu", "generatePayment");
+        $this->redirect("homepage");
     }
 
     public function executeReject (sfWebRequest $request) {
