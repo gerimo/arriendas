@@ -42,6 +42,7 @@ class mainActions extends sfActions {
         $this->setLayout("newIndexLayout");
 
         try {
+
             $this->referer = $this->getUser()->getAttribute("referer");
 
             //$userId = $request->getParameter('userId');
@@ -54,9 +55,11 @@ class mainActions extends sfActions {
             } else {
                 $this->redirect('main/index');
             }
-        } catch (Exception $e) { 
-            throw new Exception("Session User Id: ".$userId_session." || User id: ".$User->id." || referer: ".
-                $this->referer." || error_message: ".$e->getMessage() , 1);
+        } catch (Exception $e) {
+            error_log("[".date("Y-m-d H:i:s")."] [main/completeRegister] ERROR: ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "main/completeRegister");
+            }
         }
         return sfView::SUCCESS;
         

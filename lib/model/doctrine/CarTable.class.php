@@ -2,7 +2,20 @@
 
 class CarTable extends Doctrine_Table {
 
-    public function findCars($from, $to, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers) {
+    public function isActive($id) {
+
+        $q = Doctrine_Core::getTable("Car")
+            ->createQuery('C')
+            ->where('C.id = ?', $id)
+            ->andWhere('C.activo = 1')
+            ->andWhere('C.seguro_ok = 4');
+
+            return $q->execute();
+    }
+
+    ///////////////////////////////////////////////////////////7
+
+    public static function findCars($from, $to, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers) {
 
         $CarsFound = array();
         $isWeekend = false;
