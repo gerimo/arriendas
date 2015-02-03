@@ -591,6 +591,8 @@ class reservesActions extends sfActions {
 
             $this->getRequest()->setParameter("reserveId", $Reserve->getId());
             $this->getRequest()->setParameter("transactionId", $Transaction->getId());
+
+            $this->forward("khipu", "generatePayment");
         } catch (Exception $e) {
             error_log("[".date("Y-m-d H:i:s")."] [reserves/pay] ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl") {
@@ -598,7 +600,7 @@ class reservesActions extends sfActions {
             }
         }
 
-        $this->forward("khipu", "generatePayment");
+        $this->redirect("homepage");
     }
 
     public function executeReject (sfWebRequest $request) {
