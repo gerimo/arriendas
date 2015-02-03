@@ -10,6 +10,9 @@ paymentSuccessFilter:
 
 completeRegisterFilter:
     class:  checkCompleteRegisterFilter
+optionsCarFilter:
+    class: checkOptionsCarFilter
+    
 
 cache:     ~
 execution: ~
