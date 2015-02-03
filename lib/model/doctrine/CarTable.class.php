@@ -145,6 +145,7 @@ class CarTable extends Doctrine_Table {
             $q = Doctrine_Core::getTable("Car")
                 ->createQuery('C')
                 ->Where('C.activo = 0')
+                ->andWhere('C.disabled_until IS NOT NULL')
                 ->andWhere('C.disabled_until < ?', $date);
 
             $oCars = $q->execute();
