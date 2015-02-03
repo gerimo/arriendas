@@ -14,7 +14,7 @@
             </div>
 
             <div class="col-md-4">
-                <button class="buscar btn btn-block btn-primary" onclick="getUserWhitoutPay()">Buscar</button>
+                <button class="buscar btn btn-block btn-primary" onclick="getUserWhitoutCar()">Buscar</button>
             </div>
         </div>
 
@@ -22,7 +22,7 @@
 
         <div class="space-100"></div>
 
-        <table  class="display responsive no-wrap " id="userWhitoutPayTable" cellspacing="0" width="100%">
+        <table  class="display responsive no-wrap " id="userWhitoutCarTable" cellspacing="0" width="100%">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -75,22 +75,22 @@
 
     $(document).ready(function() {
 
-        getUserWhitoutPay();
+        getUserWhitoutCar();
      
-        $('#userWhitoutPayTable').DataTable({
+        $('#userWhitoutCarTable').DataTable({
             info: false,
             paging: true,
             responsive: true
         });    
     }); 
 
-    function getUserWhitoutPay() {
+    function getUserWhitoutCar() {
 
         var from = $("#from").val();
         var to   = $("#to").val();
         $(".loading").show();
 
-        $.post("<?php echo url_for('user_without_pay_get') ?>", {"from": from, "to": to}, function(r){
+        $.post("<?php echo url_for('user_without_car_get') ?>", {"from": from, "to": to}, function(r){
 
             if (r.error) {
                 $("#dialog-alert p").html("No se encontraron usuarios");
@@ -107,9 +107,9 @@
                 });
             } else {
                 
-                $('#userWhitoutPayTable').DataTable().rows().remove().draw();
+                $('#userWhitoutCarTable').DataTable().rows().remove().draw();
                 $.each(r.data, function(k, v){
-                    $('#userWhitoutPayTable').DataTable().row.add([ v.user_id, v.user_fullname, v.user_telephone, v.user_email, v.user_address, v.user_commnet ]).draw();
+                    $('#userWhitoutCarTable').DataTable().row.add([ v.user_id, v.user_fullname, v.user_telephone, v.user_email, v.user_address, v.user_commnet ]).draw();
                 });
                     $(".loading").hide();
 
@@ -136,13 +136,13 @@
         maxDate: "<?php echo date('Y-m-d') ?>"
     });
 
-    $('#userWhitoutPayTable tbody').on( 'click', 'td', function () {
+    $('#userWhitoutCarTable tbody').on( 'click', 'td', function () {
 
-        var dato = $('#userWhitoutPayTable').DataTable().cell( this ).index().row;
+        var dato = $('#userWhitoutCarTable').DataTable().cell( this ).index().row;
         console.log(this);
-        var row  = $('#userWhitoutPayTable').DataTable().row(dato).data();
+        var row  = $('#userWhitoutCarTable').DataTable().row(dato).data();
 
-        if($('#userWhitoutPayTable').DataTable().cell( this ).index().column == 5) {
+        if($('#userWhitoutCarTable').DataTable().cell( this ).index().column == 5) {
 
             $("#userId").val(row[0]);
             $("#myModal").modal('show');
@@ -165,7 +165,7 @@
             } else {
 
                 $("#myModal").modal('hide');
-                GetUserWhitoutPay(); 
+                GetUserWhitoutCar(); 
             }
 
         }, 'json');

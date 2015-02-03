@@ -10,14 +10,14 @@ class OpportunityQueueTask extends sfBaseTask {
             new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine'),
         ));
 
-        $this->namespace = 'opportunities';
-        $this->name = 'send';
-        $this->briefDescription = 'Envío de oportunidades para reservas no confirmadas por su dueño original';
+        $this->namespace = 'opportunity';
+        $this->name = 'generate';
+        $this->briefDescription = 'Generación de oportunidades para reservas no confirmadas por su dueño original';
         $this->detailedDescription = <<<EOF
 The [OpportunityQueueTask|INFO] task does things.
 Call it with:
 
-  [php symfony arriendas:OpportunityQueueTask|INFO]
+  [php symfony opportunity:generate|INFO]
 EOF;
     }
 

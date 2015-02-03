@@ -37,67 +37,12 @@ class mainActions extends sfActions {
         }
     }
 
-    public function executeCalculatePrice (sfWebRequest $request) {
-
-        $return = array("error" => false);
-
-        if($request->hasParameter('carId','from','to')){
-
-            $carId = $request->getPostParameter("carId", null);
-            $from  = $request->getPostParameter("from", null);
-            $to    = $request->getPostParameter("to", null);
-        }else{
-            
-            $carId = $this->getUser()->getAttribute("carId");
-            $from  = $this->getUser()->getAttribute("from");
-            $to    = $this->getUser()->getAttribute("to");
-        }
-
-        try {
-
-            $datesError = $this->validateDates($from, $to);
-            if ($datesError) {
-                throw new Exception($datesError, 2);
-            }
-
-            if (is_null($carId) || $carId == '' || $carId == 0) {
-                throw new Exception("Falta el carId", 1);
-            }
-
-            $Car = Doctrine_Core::getTable('car')->findOneById($carId);
-            if (!$Car) {
-                throw new Exception("El Car ".$carId." no fue encontrado", 1);
-            }
-
-            $return["price"] = CarTable::getPrice($from, $to, $Car->price_per_hour, $Car->price_per_day, $Car->price_per_week, $Car->price_per_month);
-
-        } catch (Exception $e) {
-
-            $return["error"] = true;
-
-            if ($e->getCode() >= 2) {
-                $return["errorMessage"] = $e->getMessage();
-            } else {
-                $return["errorMessage"] = "Problemas a calcular el precio. Por favor, intentalo más tarde";
-            }
-            
-            error_log("[".date("Y-m-d H:i:s")."] ERROR: ".$e->getMessage());
-            
-            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
-                Utils::reportError($e->getMessage(), "reserves/calculatePrice");
-            }
-        }
-    
-        $this->renderText(json_encode($return));
-
-        return sfView::NONE;
-    }
-
     public function executeCompleteRegister(sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
 
         try {
+
             $this->referer = $this->getUser()->getAttribute("referer");
 
             //$userId = $request->getParameter('userId');
@@ -110,9 +55,11 @@ class mainActions extends sfActions {
             } else {
                 $this->redirect('main/index');
             }
-        } catch (Exception $e) { 
-            throw new Exception("Session User Id: ".$userId_session." || User id: ".$User->id." || referer: ".
-                $this->referer." || error_message: ".$e->getMessage() , 1);
+        } catch (Exception $e) {
+            error_log("[".date("Y-m-d H:i:s")."] [main/completeRegister] ERROR: ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "main/completeRegister");
+            }
         }
         return sfView::SUCCESS;
         
@@ -324,7 +271,7 @@ class mainActions extends sfActions {
 
             $User = new User();
 
-            /* Se registra la direccion IP con la que el usuario se registró */
+            /* Se registra la direccion IP con la que el usuario entró */
             $User->trackIp($visitingIp);
             
             if(Doctrine::getTable('user')->isABlockedIp($visitingIp)) {
@@ -350,50 +297,6 @@ class mainActions extends sfActions {
         }
 
         $this->renderText(json_encode($return));
-        return sfView::NONE;
-    }
-
-    public function executeGetCars(sfWebRequest $request) {
-
-        $return = array("error" => false);
-
-        $isMap              = $request->getPostParameter('isMap', true) === 'true' ? true : false;
-        $mapCenterLat       = (float) $request->getPostParameter('mapCenterLat', null);
-        $mapCenterLng       = (float) $request->getPostParameter('mapCenterLng', null);
-        $from               = $request->getPostParameter('from', date("Y-m-d H:i:s"));
-        $to                 = $request->getPostParameter('to', date("Y-m-d H:i:s", strtotime("+1 day", strtotime($from))));
-        $NELat              = (float) $request->getPostParameter('NELat', null);
-        $NELng              = (float) $request->getPostParameter('NELng', null);
-        $SWLat              = (float) $request->getPostParameter('SWLat', null);
-        $SWLng              = (float) $request->getPostParameter('SWLng', null);
-        $regionId           = (int) $request->getPostParameter('regionId', 13);
-        $communeId          = (int) $request->getPostParameter('communeId', 0);
-        $isAutomatic        = $request->getPostParameter('isAutomatic', false) === 'true' ? true : false;
-        $isLowConsumption   = $request->getPostParameter('isLowConsumption', false) === 'true' ? true : false;
-        $isMorePassengers   = $request->getPostParameter('isMorePassengers', false) === 'true' ? true : false;
-        $nearToSubway       = $request->getPostParameter('nearToSubway',false) === 'true' ? true : false ;
-
-        try {
-
-            $this->getUser()->setAttribute('from', date("Y-m-d H:i:s", strtotime($from)));
-            $this->getUser()->setAttribute('to', date("Y-m-d H:i:s", strtotime($to)));
-            $this->getUser()->setAttribute("mapCenterLat", $mapCenterLat);
-            $this->getUser()->setAttribute("mapCenterLng", $mapCenterLng);
-
-            $return["cars"] = CarTable::findCars($from, $to, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway);
-            /*error_log("Autos encontrados: ".count($return["cars"]));*/
-
-        } catch (Exception $e) {
-            $return["error"] = true;
-            $return["errorMessage"] = $e->getMessage();
-            error_log("[".date("Y-m-d H:i:s")."] [main/getCars] ERROR: ".$e->getMessage());
-            if ($request->getHost() == "www.arriendas.cl") {
-                Utils::reportError($e->getMessage(), "main/getCars");
-            }
-        }
-
-        $this->renderText(json_encode($return));
-
         return sfView::NONE;
     }
 
@@ -2746,6 +2649,22 @@ class mainActions extends sfActions {
     public function executeForgot(sfWebRequest $request) {
         $this->setLayout("newIndexLayout");
     }
+
+    public function executeForgotSend(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+
+        $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ?', $this->getRequestParameter('email'));
+        $user = $q->fetchOne();
+        if ($user != null) {
+            $this->sendRecoverEmail($user);
+            $this->getUser()->setFlash('msg', 'Se ha enviado un correo a tu casilla');
+        } else {
+            $this->getUser()->setFlash('msg', 'No se ha encontrado ese correo electrónico en nuestra base');
+        }
+
+        $this->getUser()->setFlash('show', true);
+        $this->forward('main', 'forgot');
+    }
 	
     public function executeActivate(sfWebRequest $request) {
         
@@ -2845,22 +2764,6 @@ class mainActions extends sfActions {
         }
         else
             exit();
-    }
-
-    public function executeDoRecover(sfWebRequest $request) {
-        $this->setLayout("newIndexLayout");
-
-        $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ?', $this->getRequestParameter('email'));
-        $user = $q->fetchOne();
-        if ($user != null) {
-            $this->sendRecoverEmail($user);
-            $this->getUser()->setFlash('msg', 'Se ha enviado un correo a tu casilla');
-        } else {
-            $this->getUser()->setFlash('msg', 'No se ha encontrado ese correo electrónico en nuestra base');
-        }
-
-        $this->getUser()->setFlash('show', true);
-        $this->forward('main', 'forgot');
     }
 	
     public function executeDoActivate(sfWebRequest $request) {

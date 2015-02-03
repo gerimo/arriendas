@@ -1,5 +1,7 @@
 <?php
 
+require_once sfConfig::get('sf_lib_dir') . '/vendor/mobile-detect/Mobile_Detect.php';
+
 class carsActions extends sfActions {
 
     public function executeCarAvailabilityRemove(sfWebRequest $request) {
@@ -94,6 +96,51 @@ class carsActions extends sfActions {
             error_log("[".date("Y-m-d H:i:s")."] [cars/carAvailabilitySave] ERROR: ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
                 Utils::reportError($e->getMessage(), "cars/carAvailabilitySave");
+            }
+        }
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
+    public function executeSearch(sfWebRequest $request) {
+
+        $return = array("error" => false);
+
+        $isMap              = $request->getPostParameter('isMap', true) === 'true' ? true : false;
+        $mapCenterLat       = (float) $request->getPostParameter('mapCenterLat', null);
+        $mapCenterLng       = (float) $request->getPostParameter('mapCenterLng', null);
+        $from               = $request->getPostParameter('from', date("Y-m-d H:i:s"));
+        $to                 = $request->getPostParameter('to', date("Y-m-d H:i:s", strtotime("+1 day", strtotime($from))));
+        $NELat              = (float) $request->getPostParameter('NELat', null);
+        $NELng              = (float) $request->getPostParameter('NELng', null);
+        $SWLat              = (float) $request->getPostParameter('SWLat', null);
+        $SWLng              = (float) $request->getPostParameter('SWLng', null);
+        $regionId           = (int) $request->getPostParameter('regionId', 13);
+        $communeId          = (int) $request->getPostParameter('communeId', 0);
+        $isAutomatic        = $request->getPostParameter('isAutomatic', false) === 'true' ? true : false;
+        $isLowConsumption   = $request->getPostParameter('isLowConsumption', false) === 'true' ? true : false;
+        $isMorePassengers   = $request->getPostParameter('isMorePassengers', false) === 'true' ? true : false;
+        $nearToSubway       = $request->getPostParameter('nearToSubway', false) === 'true' ? true : false;
+
+
+        try {
+
+            $this->getUser()->setAttribute('from', date("Y-m-d H:i:s", strtotime($from)));
+            $this->getUser()->setAttribute('to', date("Y-m-d H:i:s", strtotime($to)));
+            $this->getUser()->setAttribute("mapCenterLat", $mapCenterLat);
+            $this->getUser()->setAttribute("mapCenterLng", $mapCenterLng);
+
+            $return["cars"] = CarTable::findCars($from, $to, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway);
+            /*error_log("Autos encontrados: ".count($return["cars"]));*/
+
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+            error_log("[".date("Y-m-d H:i:s")."] [cars/search] ERROR: ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "cars/search");
             }
         }
 
@@ -258,12 +305,23 @@ class carsActions extends sfActions {
     /*Crear auto vista 1*/    
     
     public function executeCreate(sfWebRequest $request){
-          $this->setLayout("newIndexLayout");
-          $this->Communes = Commune::getByRegion(false);
-          $this->Brands = Brand::getBrand();
-          $this->CarTypes = CarType::getCarType();
 
-          $carId = $request->getParameter("c", null);     
+        $referer = $this->getContext()->getActionStack()->getSize() > 1 ? $request->getUri() : $request->getReferer();
+
+        if($referer == "http://local.arriendas.cl/registro/completar") {
+            $User = Doctrine_Core::getTable("user")->find($this->getUser()->getAttribute("userid"));
+                if($User) {
+                    $User->setPropietario(true);
+                    $User->save();
+                }
+        }
+
+        $this->setLayout("newIndexLayout");
+        $this->Communes = Commune::getByRegion(false);
+        $this->Brands = Brand::getBrand();
+        $this->CarTypes = CarType::getCarType();
+
+        $carId = $request->getParameter("c", null);     
     }
 
     public function executeGetModels(sfWebRequest $request) {

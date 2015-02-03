@@ -83,7 +83,7 @@
             paging: false,
             responsive: true
         });
-    });
+    });zz
 
     $(".approve").click(function(){
 

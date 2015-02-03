@@ -38,8 +38,8 @@
         <div class="hidden-xs col-sm-3 col-md-3">
             <h1>Acerca de Arriendas</h1>
             <ul>
-                <li><a href="<?php echo url_for('main/compania') ?>" title="La compañía Arriendas.cl">La Compañía</a></li>
-                <li><a href="<?php echo url_for('main/terminos') ?>" target="_blank" title="Términos y Condiciones">Términos y Condiciones</a></li>
+                <li><a href="<?php echo url_for('about_company') ?>" title="La compañía Arriendas.cl">La Compañía</a></li>
+                <li><a href="<?php echo url_for('terms_and_conditions') ?>" target="_blank" title="Términos y Condiciones">Términos y Condiciones</a></li>
                 <li><a href="https://arriendascl.zendesk.com/anonymous_requests/new" target="_blank" title="Contacto">Contacto</a></li>
                 <li><a href="https://arriendascl.zendesk.com/forums" target="_blank" title="Foro">Foro</a></li>
             </ul>
@@ -48,8 +48,8 @@
         <div class="hidden-xs col-sm-3 col-md-3">
             <h1>Herramientas</h1>
             <ul>
-                <li><a href="<?php echo url_for('cars/create') ?>" title="Sube tu auto">Sube tu auto</a></li>
-                <li><a href="<?php echo url_for("search_cars")?>">Busca un auto</a></li>
+                <li><a href="<?php echo url_for('car_create') ?>" title="Sube tu auto">Sube tu auto</a></li>
+                <li><a href="<?php echo url_for("rent_a_car")?>">Busca un auto</a></li>
                 <li><a class="item_thm fancybox" href="<?php echo url_for('value_your_car') ?>">¿Cuánto puedo ganar con mi auto?</a></li>
             </ul>
         </div>

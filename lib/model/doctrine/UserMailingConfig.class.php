@@ -1,5 +1,5 @@
 <?php
 
-class UserMailingConfig extends BaseOpportunityConfig {
+class UserMailingConfig extends BaseUserMailingConfig {
 
 }

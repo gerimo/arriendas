@@ -46,7 +46,7 @@
                             <li><a href="<?php echo url_for("reserves") ?>" data-target="reserves">Reservas</a></li>
                         <?php else: ?>
                             
-                            <li><a href="<?php echo url_for("search_cars")?>">Buscar autos</a></li>
+                            <li><a href="<?php echo url_for("rent_a_car")?>">Buscar autos</a></li>
                             <li><a href="<?php echo url_for("how-works")?>">¿Cómo funciona?</a></li>
                             <li><a href="<?php echo url_for("prices_compare")?>">Compara precios</a></li>
                             <li><a href="<?php echo url_for("news")?>">En las noticias</a></li>

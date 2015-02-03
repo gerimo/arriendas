@@ -132,7 +132,7 @@
             nearToSubway: nearToSubway
         }
 
-        $.post("<?php echo url_for('main/getCars') ?>", parameters, function(r){
+        $.post("<?php echo url_for('car_search') ?>", parameters, function(r){
 
             var listContent = "";
             var markersLength = markers.length;
