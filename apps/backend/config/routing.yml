@@ -25,6 +25,14 @@ opportunity_mailing_config_save:
     url: /oportunidades/mailing/guardar
     param: { module: opportunity, action: mailingConfigSave }
 
+user_without_car:
+    url: /usuarios/sin-vehículo/
+    param: { module: user, action: whitoutCar }
+
+user_without_car_get:
+    url: /usuarios/sin-vehículo/obtener
+    param: { module: user, action: whitoutCarGet }
+
 user_without_pay:
     url: /usuarios/sin-pago
     param: { module: user, action: whitoutPay }
@@ -36,3 +44,16 @@ user_without_pay_get:
 user_without_pay_comment:
     url: /usuarios/sin-pago/comentario
     param: { module: user, action: whitoutPayComment }
+
+opportunity_create:
+    url: /oportunidades/crear
+    param: { module: opportunity, action: create }
+
+opportunity_is_original_reserve:
+    url: /oportunidades/crear/es-reserva-original
+    param: { module: opportunity, action: isOriginalReserve }
+
+opportunity_is_active_car:
+    url: /oportunidades/crear/es-vehiculo-activo
+    param: { module: opportunity, action: isActiveCar }
+

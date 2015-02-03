@@ -49,6 +49,10 @@ car_create:
    url: /auto/crear
    param: { module: cars, action: create }
 
+car_search:
+    url: /autos/buscar
+    param: { module: cars, action: search }
+
 cars:
     url: /mis-autos
     param: { module: profile, action: cars }
