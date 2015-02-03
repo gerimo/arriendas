@@ -151,13 +151,13 @@
 			      </h4>
 			    	</div>
 			    	<div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-			      <div class="panel-body">
-			        Lo primero es realizar la CONSTANCIA por el siniestro dentro de 24 horas y enviar ese número a soporte@arriendas.cl 
-			        Luego debes firmar el formulario de devolución junto con el arrendatario e indicar el daño en el mismo formulario.
-			        Para reclamar la cobertura que te corresponde debes enviar una foto del formulario y comunicarte con nosotros por teléfono o correo,
-			        en el acto.
-			        <b>Arriendas.cl se encarga de procesar el arreglo y de la aplicación de la póliza, junto con la entrega del formulario y aviso conforme</b>
-			      </div>
+				      <div class="panel-body">
+				        Lo primero es realizar la CONSTANCIA por el siniestro dentro de 24 horas y enviar ese número a soporte@arriendas.cl 
+				        Luego debes firmar el formulario de devolución junto con el arrendatario e indicar el daño en el mismo formulario.
+				        Para reclamar la cobertura que te corresponde debes enviar una foto del formulario y comunicarte con nosotros por teléfono o correo,
+				        en el acto.
+				        <b>Arriendas.cl se encarga de procesar el arreglo y de la aplicación de la póliza, junto con la entrega del formulario y aviso conforme</b>
+				      </div>
 			    	</div>
 			  	</div>
 			</div>

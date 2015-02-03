@@ -81,7 +81,8 @@ class CarTable extends Doctrine_Table {
 
             if ($nearToSubway) {
                 /*error_log($nearToSubway);*/
-                $distanceMax = 0.66;
+                //15 cuadras->18 minutos a pie
+                $distanceMax = 1.5;
 
                 $q->innerJoin('C.CarProximityMetros CPM');
                 $q->andWhere('CPM.distance < ?', $distanceMax);
