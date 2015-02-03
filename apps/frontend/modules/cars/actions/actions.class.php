@@ -136,9 +136,9 @@ class carsActions extends sfActions {
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
-            error_log("[".date("Y-m-d H:i:s")."] [main/getCars] ERROR: ".$e->getMessage());
+            error_log("[".date("Y-m-d H:i:s")."] [cars/search] ERROR: ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl") {
-                Utils::reportError($e->getMessage(), "main/getCars");
+                Utils::reportError($e->getMessage(), "cars/search");
             }
         }
 
