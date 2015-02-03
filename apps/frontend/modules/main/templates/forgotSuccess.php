@@ -4,7 +4,7 @@
 <div class="visible-xs space-50"></div>
 
 <div class="group_form" style="height: 340px;">
-	<?php echo form_tag('main/doRecover', array('method'=>'post', 'id'=>'frm1')); ?>
+	<?php echo form_tag('forgot_password_send', array('method'=>'post', 'id'=>'frm1')); ?>
 	<div class="row">
 	    <div class="col-md-offset-4 col-md-4">
 	        <div class="BCW">
@@ -17,7 +17,7 @@
 
 	           	<div class="row">
 	                <div class="col-md-offset-7 col-md-5" style="padding: 0">
-	                    <button class="btn-a-primary btn-block" onclick="submitFrom" id="change">Conectar</button>
+	                    <button class="btn btn-a-primary btn-block" onclick="submitFrom" id="change">Conectar</button>
 	                </div>	                
 	            </div>
 	            <div>
