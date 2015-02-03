@@ -165,6 +165,60 @@ class reservesActions extends sfActions {
         return sfView::NONE;
     }*/
 
+    public function executeCalculatePrice (sfWebRequest $request) {
+
+        $return = array("error" => false);
+
+        if ($request->hasParameter('carId','from','to')) {
+            $carId = $request->getPostParameter("carId", null);
+            $from  = $request->getPostParameter("from", null);
+            $to    = $request->getPostParameter("to", null);
+        } else {
+            $carId = $this->getUser()->getAttribute("carId");
+            $from  = $this->getUser()->getAttribute("from");
+            $to    = $this->getUser()->getAttribute("to");
+        }
+
+        try {
+
+            $datesError = $this->validateDates($from, $to);
+            if ($datesError) {
+                throw new Exception($datesError, 2);
+            }
+
+            if (is_null($carId) || $carId == '' || $carId == 0) {
+                throw new Exception("Falta el carId", 1);
+            }
+
+            $Car = Doctrine_Core::getTable('car')->findOneById($carId);
+            if (!$Car) {
+                throw new Exception("El Car ".$carId." no fue encontrado", 1);
+            }
+
+            $return["price"] = CarTable::getPrice($from, $to, $Car->price_per_hour, $Car->price_per_day, $Car->price_per_week, $Car->price_per_month);
+
+        } catch (Exception $e) {
+
+            $return["error"] = true;
+
+            if ($e->getCode() >= 2) {
+                $return["errorMessage"] = $e->getMessage();
+            } else {
+                $return["errorMessage"] = "Problemas a calcular el precio. Por favor, intentalo más tarde";
+            }
+            
+            error_log("[".date("Y-m-d H:i:s")."] [reserves/calculatePrice] ERROR: ".$e->getMessage());
+            
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "reserves/calculatePrice");
+            }
+        }
+    
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
     public function executeCalculateTime (sfWebRequest $request) {
 
         $return = array("error" => false);

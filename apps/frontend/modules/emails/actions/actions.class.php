@@ -52,7 +52,7 @@ class emailsActions extends sfActions {
                 $UserMailingConfig->setMailing($Mailing);
             }
 
-            $UserMailingConfig->setIsActive(false);
+            $UserMailingConfig->setIsSubscribed(false);
             $UserMailingConfig->save();
 
         } catch (Exception $e) {
