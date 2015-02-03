@@ -1,23 +1,2 @@
-reserve_approve:
-    is_secure: true
-
-reserve_calculate_price:
+calculatePrice:
     is_secure: false
-
-reserve_change:
-    is_secure: true
-
-reserve_extend:
-    is_secure: true
-
-reserve_extend_get_price:
-    is_secure: true
-
-reserve_pay:
-    is_secure: true
-
-reserve_reject:
-    is_secure: true
-
-reserves:
-    is_secure: true
