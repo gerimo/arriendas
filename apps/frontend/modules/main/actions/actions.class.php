@@ -222,12 +222,10 @@ class mainActions extends sfActions {
     }
 
     public function executeDoRegister(sfWebRequest $request) {
-
         $return = array("error" => false);
 
         /* Se obtiene la direccion IP de la conexion */
         $visitingIp = $request->getRemoteAddress();
-
         try {
 
             $firstname      = $request->getPostParameter("firstname", null);
@@ -2720,9 +2718,9 @@ class mainActions extends sfActions {
         $url = $_SERVER['SERVER_NAME'];
         $url = str_replace('http://', '', $url);
         $url = str_replace('https://', '', $url);
-        $url = 'http://www.arriendas.cl/main/recover?email=' . $user->getEmail() . "&hash=" . $user->getHash();
+        // $url = 'http://www.arriendas.cl/main/recover?email=' . $user->getEmail() . "&hash=" . $user->getHash();
+        $url = 'http://www.arriendas.cl/contrasena/modificar/' . $user->getId() . "/" . $user->getHash();
         $this->logMessage($url);
-
         $body = "<p>Hola:</p><p>Para generar una nueva contraseña, haz click <a href='$url'>aqu&iacute;</a></p>";
         $message = $this->getMailer()->compose();
         $message->setSubject("Recuperar Password");
@@ -2736,16 +2734,16 @@ class mainActions extends sfActions {
     }
 
     public function executeRecover(sfWebRequest $request) {
-
         $this->setLayout("newIndexLayout");
-        
-        $this->email = $this->getRequestParameter('email');
-        $this->email = str_replace("%2540", "@", $this->email);
-        $this->email = str_replace("%40", "@", $this->email);
-	
-        $this->hash = $this->getRequestParameter('hash');
 
-        $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ? and u.hash = ?', array($this->email, $this->hash));
+        $this->id = $request->getParameter('id');
+
+        $this->id = str_replace("%2540", "@", $this->id);
+        $this->id = str_replace("%40", "@", $this->id);
+	
+        $this->hash = $request->getParameter('hash');
+
+        $q = Doctrine::getTable('user')->createQuery('u')->where('u.id = ? and u.hash = ?', array($this->id, $this->hash));
         $user = $q->fetchOne();
         if ($user == null)
             exit();
@@ -2753,11 +2751,11 @@ class mainActions extends sfActions {
 
     public function executeDoChangePSW(sfWebRequest $request) {
 
-        $email = $this->getRequestParameter('email');
+        // $email = $this->getRequestParameter('email');
+        $id = $this->getRequestParameter('id');
         $hash = $this->getRequestParameter('hash');
-        $password = $this->getRequestParameter('password');
-
-        $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ? and u.hash = ?', array($email, $hash));
+        $password = $this->getRequestParameter('password');;
+        $q = Doctrine::getTable('user')->createQuery('u')->where('u.id = ? and u.hash = ?', array($id, $hash));
         $user = $q->fetchOne();
         if ($user != null) {
             $user->setPassword(md5($password));

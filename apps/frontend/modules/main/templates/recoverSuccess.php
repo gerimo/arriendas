@@ -9,32 +9,32 @@
             <h1>Ingresa tu nueva contraseña</h1>
 
             <?php echo form_tag('main/doChangePSW', array('method'=>'post', 'id'=>'frm1')); ?>
+
                 <div class="c1">
                     <label>Ingrese contraseña</label>
-                    <input type="password" id="password" name="password" value=""onfocus="checkclear(this)"/>
+                    <input type="password" class="form-control" id="password" name="password" value=""onfocus="checkclear(this)"/>
                 </div>
 
                 <div class="c1">
                     <label>Ingrese nuevamente su contraseña</label>
-                    <input type="Password" id="passwordAgain" name="passwordAgain" value="" onfocus="checkclear(this)"/>
+                    <input type="Password" class="form-control" id="passwordAgain" name="passwordAgain" value="" onfocus="checkclear(this)"/>
                 </div>
 
                 <input type="hidden" id="hash" name="hash" value="<?=$hash?>" />
-                <input type="hidden" id="email" name="email" value="<?=$email?>" />
-                <button class="login_btn_conectar" onclick="submitFrom()" ></button>
+                <input type="hidden" id="id" name="id" value="<?=$id?>" />
 
             </form>
-
-            <div class="alert"></div>
-
+            <div class="visible-xs space-20"></div> 
+            <div class="hidden-xs space-40"></div> 
             <div class="row">
+            <div class="alert"></div>
                 <div class="col-md-offset-7 col-md-5" style="padding: 0">
-                    <button class="btn-a-primary btn-block" id="save" onclick="validateForm()">Siguiente</button>
+                    <button class="btn btn-a-primary btn-block" id="save" onclick="submitFrom()">Aceptar</button>
                 </div>
             </div>
-        </div>
 
-        <!-- Mensaje desplegable -->
+        </div>
+        
         <div class="BCW" id="message" style="display: none">
             <p class="text-center"></p>
             <p class="text-center"><?php echo link_to("Volver al inicio","main/index"); ?> </p>
@@ -56,7 +56,15 @@ function checkclear(what) {
 
 
 function submitFrom() {
-    if(document.myform.onsubmit()) {
+    $(".alert").removeClass("alert-a-danger");
+    $(".alert").removeClass("alert-a-success");
+
+    if($("password").val() != $("passwordAgain").val() $("passwordAgain").val() == '' || $("password").val() == '') {
+        $(".alert").addClass("alert-a-danger");
+        $(".alert").html("las password deben coincidir y no pueden ser campos vacíos");
+    } else {
+        $(".alert").addClass("alert-a-success");
+        $(".alert").html("la password fué cambiada exitosamente");
         document.forms["frm1"].submit();
     }
 }
@@ -73,13 +81,13 @@ function DoPassValidation() {
 
 
 
-var frmvalidator = new Validator("frm1");
+/*var frmvalidator = new Validator("frm1");
 frmvalidator.EnableMsgsTogether();
 
 frmvalidator.addValidation("password","req", "Ingrese su contraseña");
 frmvalidator.addValidation("passwordAgain","req", "Vuelva a ingresar su contraseña");
 
-frmvalidator.setAddnlValidationFunction(DoPassValidation);
+frmvalidator.setAddnlValidationFunction(DoPassValidation);*/
 
  
 </script>

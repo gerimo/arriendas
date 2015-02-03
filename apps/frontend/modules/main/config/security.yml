@@ -13,6 +13,15 @@ completeRegister:
 dataForPayment:
     is_secure: false
 
+doChangePSW:
+    is_secure: false
+
+doCompleteRegister:
+    is_secure: false
+
+doRegister:
+    is_secure: false
+
 fbShare:
     is_secure: false
 
@@ -23,6 +32,9 @@ forgotSend:
     is_secure: false
 
 generarFormularioEntregaDevolucion:
+    is_secure: false
+
+getCommunes:
     is_secure: false
 
 howWorks:
@@ -50,6 +62,9 @@ pricesCompare:
     is_secure: false
 
 questions:
+    is_secure: false
+
+recover:
     is_secure: false
 
 register:

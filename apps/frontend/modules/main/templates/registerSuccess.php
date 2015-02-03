@@ -31,6 +31,7 @@
     </div>
 </div>
 <div class="hidden-xs space-100"></div>  
+
 <script type="text/javascript">
     $(document).ready(function() { 
 
@@ -83,7 +84,7 @@
         var password       = $("#password").val();
 
         $.post("<?php echo url_for('main/doRegister') ?>", {"firstname": firstname, "lastname": lastname, "email": email, "emailAgain": emailAgain, "password": password}, function(r){
-
+            
             $(".alert").removeClass("alert-a-danger");
             $(".alert").removeClass("alert-a-success");
 
