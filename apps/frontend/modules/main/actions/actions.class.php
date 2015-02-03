@@ -603,7 +603,8 @@ class mainActions extends sfActions {
         $this->price = CarTable::getPrice($from, $to, $this->Car->getPricePerHour(), $this->Car->getPricePerDay(), $this->Car->getPricePerWeek(), $this->Car->getPricePerMonth());
 
         // Reviews (hay que arreglar las clase Rating)
-        $this->reviews = array();
+        // Comentado, Estrellas erroneas en produccion
+        /*$this->reviews = array();
         $this->defaultReviews = array();
 
         $cont=0;
@@ -636,7 +637,7 @@ class mainActions extends sfActions {
                 }
             }
 
-        }
+        }*/
 
         // Características
         $this->passengers = false;
@@ -2760,6 +2761,8 @@ class mainActions extends sfActions {
 
     public function executeRecover(sfWebRequest $request) {
 
+        $this->setLayout("newIndexLayout");
+        
         $this->email = $this->getRequestParameter('email');
         $this->email = str_replace("%2540", "@", $this->email);
         $this->email = str_replace("%40", "@", $this->email);

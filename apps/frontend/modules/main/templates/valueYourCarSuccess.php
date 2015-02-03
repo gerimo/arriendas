@@ -63,7 +63,7 @@
 			    		<div class="visible-xs space-20"></div>
 			    		<div class="hidden-xs space-30"></div>
 				    	<div class="clearfix col-md-offset-4 col-md-4 col-xs-12">
-			    			<a href="<?php echo url_for('profile/addCar') ?>" class="btn btn-block regular-link btn-a-primary">Sube un auto</a>
+			    			<a href="<?php echo url_for('car_create') ?>" class="btn btn-block regular-link btn-a-primary">Sube un auto</a>
 			    		</div>
 			    	</div>				    
 			    </div>
