@@ -7,9 +7,6 @@ availabilityEmailOpen:
 compania:
     is_secure: false
 
-completeRegister:
-    is_secure: false
-
 dataForPayment:
     is_secure: false
 

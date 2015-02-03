@@ -49,12 +49,17 @@ class mainActions extends sfActions {
             $userId_session = $this->getUser()->getAttribute("userid");
             $User = Doctrine_Core::getTable('user')->find($userId_session);
 
-            if ((!is_null($User) && !$User->getConfirmed()) || $User->getConfirmedFb()) {
-                $this->Regions = Region::getRegionsByNaturalOrder();
-                $this->User = $User;
+            if($User) {
+                if($User->getConfirmed()) {
+                    $this->redirect('homepage');
+                } else {
+                    $this->Regions = Region::getRegionsByNaturalOrder();
+                    $this->User = $User;
+                }
             } else {
-                $this->redirect('main/index');
+                $this->redirect('homepage');
             }
+
         } catch (Exception $e) {
             error_log("[".date("Y-m-d H:i:s")."] [main/completeRegister] ERROR: ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl") {
@@ -284,7 +289,14 @@ class mainActions extends sfActions {
             $User->save();
 
             $url = $this->generateUrl('user_register_complete');
+
+            // Login
+            $this->getUser()->setAuthenticated(true);
+            $this->getUser()->setAttribute("logged", true);
             $this->getUser()->setAttribute("userid", $User->getId());
+            $this->getUser()->setAttribute("firstname", $User->getFirstName());
+            $this->getUser()->setAttribute("name", current(explode(' ' , $User->getFirstName())) . " " . substr($User->getLastName(), 0, 1) . '.');
+            $this->getUser()->setAttribute("email", $User->getEmail());
 
             $return["url_complete"] = $url;
 
@@ -2745,8 +2757,9 @@ class mainActions extends sfActions {
 
         $q = Doctrine::getTable('user')->createQuery('u')->where('u.id = ? and u.hash = ?', array($this->id, $this->hash));
         $user = $q->fetchOne();
-        if ($user == null)
-            exit();
+        if (!$user) {
+            $this->redirect('homepage');
+        }
     }
 
     public function executeDoChangePSW(sfWebRequest $request) {
@@ -2763,7 +2776,7 @@ class mainActions extends sfActions {
             $user->save();
             $this->redirect('main/login');
         }
-        else
+        else 
             exit();
     }
 	

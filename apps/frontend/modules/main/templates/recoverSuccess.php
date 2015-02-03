@@ -12,7 +12,7 @@
 
                 <div class="c1">
                     <label>Ingrese contraseña</label>
-                    <input type="password" class="form-control" id="password" name="password" value=""onfocus="checkclear(this)"/>
+                    <input type="password" class="form-control" id="password" name="password" value="" onfocus="checkclear(this)"/>
                 </div>
 
                 <div class="c1">
@@ -27,7 +27,7 @@
             <div class="visible-xs space-20"></div> 
             <div class="hidden-xs space-40"></div> 
             <div class="row">
-            <div class="alert"></div>
+                <div class="alert"></div>
                 <div class="col-md-offset-7 col-md-5" style="padding: 0">
                     <button class="btn btn-a-primary btn-block" id="save" onclick="submitFrom()">Aceptar</button>
                 </div>
@@ -56,10 +56,13 @@ function checkclear(what) {
 
 
 function submitFrom() {
+    var password      = $("#password").val();
+    var passwordAgain = $("#passwordAgain").val();
+
     $(".alert").removeClass("alert-a-danger");
     $(".alert").removeClass("alert-a-success");
 
-    if($("password").val() != $("passwordAgain").val() $("passwordAgain").val() == '' || $("password").val() == '') {
+    if((password != passwordAgain) || (password == '' || passwordAgain == '')) {
         $(".alert").addClass("alert-a-danger");
         $(".alert").html("las password deben coincidir y no pueden ser campos vacíos");
     } else {
