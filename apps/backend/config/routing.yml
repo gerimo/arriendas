@@ -25,6 +25,14 @@ opportunity_mailing_config_save:
     url: /oportunidades/mailing/guardar
     param: { module: opportunity, action: mailingConfigSave }
 
+user_without_car:
+    url: /usuarios/sin-vehículo/
+    param: { module: user, action: whitoutCar }
+
+user_without_car_get:
+    url: /usuarios/sin-vehículo/obtener
+    param: { module: user, action: whitoutCarGet }
+
 user_without_pay:
     url: /usuarios/sin-pago
     param: { module: user, action: whitoutPay }

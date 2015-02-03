@@ -2,7 +2,7 @@
 
 class UserTable extends Doctrine_Table {
 
-    public function findUsersWithoutPay($date = null) {
+    public function findUsersWithoutPay($from = false, $to = false) {
         $q = Doctrine_Core::getTable("Reserve")
             ->createQuery('R')
             ->where('R.fecha_pago IS NULL')
@@ -11,23 +11,27 @@ class UserTable extends Doctrine_Table {
             ->orderBy('R.fecha_reserva ASC');
 
 
-        if ($date) {
-            $q->andWhere('DATE(R.fecha_reserva) = ?', $date);
-        }
+            if ($from && $to) {
+                $q->andWhere('DATE(R.fecha_reserva) >= ?', $from);
+                $q->andWhere('DATE(R.fecha_reserva) <= ?', $to);
+            }
+
+
 
         return $q->execute();
     }
 
-    public function findUsersWithoutCar($date = null) {
+    public function findUsersWithoutCar($from = false, $to = false) {
         $q = Doctrine_Core::getTable("User")
             ->createQuery('U')
             ->leftJoin('U.Car c')
             ->orderBy('C.user_id');
 
 
-        if ($date) {
-            $q->andWhere('DATE(U.fecha_registro) = ?', $date);
-        }
+            if ($from && $to) {
+                $q->andWhere('DATE(R.fecha_reserva) >= ?', $from);
+                $q->andWhere('DATE(R.fecha_reserva) <= ?', $to);
+            }
 
         return $q->execute();
     }

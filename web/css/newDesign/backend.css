@@ -38,10 +38,7 @@
 }
 
 .loading {
-    width: 30px;
-    margin-left: 68%;
-    margin-top: 25px;
-    position: absolute;
+    margin: auto 43%;
 }
 
 .find {

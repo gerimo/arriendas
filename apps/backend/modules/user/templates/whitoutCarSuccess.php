@@ -3,14 +3,26 @@
 <div class="visible-xs space-50"></div>
 
 <div class="row">
-    <div class="col-md-offset-2 col-md-8">
-        <img class="loading" src="/images/ajax-loader.gif">   
-        <div style="padding:0px" class="col-md-offset-9 col-md-3">
-            <label class="pull-right">Fecha:</label>
-            <input style="margin-left: 0.5em;" class="datepicker form-control text-center" id="date" placeholder="Fecha" type="text" value="<?php echo date("Y-m-d", strtotime("-34 day"))?>" onblur="GetUserWhitoutPay()" >
-            <div class="space-30"></div>
+    <div class="col-md-offset-2 col-md-8"> 
+        <div class="col-md-12">
+            <div class="col-md-4">
+                <input class="datepicker form-control text-center" id="from" placeholder="from" type="text" value="<?php echo date("Y-m-d", strtotime("-35 day"))?>"  >
+            </div>
+            <div class="col-md-4">
+                <input  class="datepicker form-control text-center" id="to" placeholder="to" type="text" value="<?php echo date("Y-m-d", strtotime("-34 day"))?>"  >
+                
+            </div>
+
+            <div class="col-md-4">
+                <button class="buscar btn btn-block btn-primary" onclick="getUserWhitoutCar()">Buscar</button>
+            </div>
         </div>
-        <table  class="display responsive no-wrap " id="userWhitoutPay" cellspacing="0" width="100%">
+
+        <img class="loading" src="/images/ajax-loader.gif">
+
+        <div class="space-100"></div>
+
+        <table  class="display responsive no-wrap " id="userWhitoutCarTable" cellspacing="0" width="100%">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -21,8 +33,15 @@
                     <th>Comentario</th>
                 </tr>
             </thead>
+
             <tbody>
                 <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Teléfono</th>
+                    <th>email</th>
+                    <th>dirección</th>
+                    <th>Comentario</th>
                 </tr>
             </tbody>
         </table>
@@ -48,7 +67,7 @@
     </div>
 </div>
 
-<div class="hidden-xs space-100"></div>
+<div class="hidden-xs space-10f0"></div>
 
     
 
@@ -56,23 +75,22 @@
 
     $(document).ready(function() {
 
-        GetUserWhitoutPay();
-        
-        $('#userWhitoutPay').DataTable({
+        getUserWhitoutCar();
+     
+        $('#userWhitoutCarTable').DataTable({
             info: false,
             paging: true,
             responsive: true
         });    
-
-        $(".loading").hide();
     }); 
 
-    function GetUserWhitoutPay() {
+    function getUserWhitoutCar() {
 
-        var fecha = $("#date").val();
+        var from = $("#from").val();
+        var to   = $("#to").val();
         $(".loading").show();
 
-        $.post("<?php echo url_for('user_without_pay_get') ?>", {"fecha": fecha}, function(r){
+        $.post("<?php echo url_for('user_without_car_get') ?>", {"from": from, "to": to}, function(r){
 
             if (r.error) {
                 $("#dialog-alert p").html("No se encontraron usuarios");
@@ -89,9 +107,9 @@
                 });
             } else {
                 
-                $('#userWhitoutPay').DataTable().rows().remove().draw();
+                $('#userWhitoutCarTable').DataTable().rows().remove().draw();
                 $.each(r.data, function(k, v){
-                    $('#userWhitoutPay').DataTable().row.add([ v.user_id, v.user_fullname, v.user_telephone, v.user_email, v.user_address, v.user_comment,  ]).draw();
+                    $('#userWhitoutCarTable').DataTable().row.add([ v.user_id, v.user_fullname, v.user_telephone, v.user_email, v.user_address, v.user_commnet ]).draw();
                 });
                     $(".loading").hide();
 
@@ -100,7 +118,7 @@
         }, 'json');
     }
 
-    $('#date').datetimepicker({
+    $('#from').datetimepicker({
 
         dayOfWeekStart: 1,
         format:'Y-m-d',
@@ -109,13 +127,22 @@
         maxDate: "<?php echo date('Y-m-d') ?>"
     });
 
-    $('#userWhitoutPay tbody').on( 'click', 'td', function () {
+    $('#to').datetimepicker({
 
-        var dato = $('#userWhitoutPay').DataTable().cell( this ).index().row;
+        dayOfWeekStart: 1,
+        format:'Y-m-d',
+        lang:'es',
+        timepicker: false,
+        maxDate: "<?php echo date('Y-m-d') ?>"
+    });
+
+    $('#userWhitoutCarTable tbody').on( 'click', 'td', function () {
+
+        var dato = $('#userWhitoutCarTable').DataTable().cell( this ).index().row;
         console.log(this);
-        var row  = $('#userWhitoutPay').DataTable().row(dato).data();
+        var row  = $('#userWhitoutCarTable').DataTable().row(dato).data();
 
-        if($('#userWhitoutPay').DataTable().cell( this ).index().column == 5) {
+        if($('#userWhitoutCarTable').DataTable().cell( this ).index().column == 5) {
 
             $("#userId").val(row[0]);
             $("#myModal").modal('show');
@@ -138,7 +165,7 @@
             } else {
 
                 $("#myModal").modal('hide');
-                GetUserWhitoutPay(); 
+                GetUserWhitoutCar(); 
             }
 
         }, 'json');
