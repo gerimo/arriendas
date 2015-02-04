@@ -178,6 +178,7 @@ class opportunitiesActions extends sfActions {
                 throw new Exception("No! No! No!", 1);
             }*/
             
+            error_log(1);
             $O = $OriginalReserve->copy(true);
             $O->setCar($Car);
             $O->setFechaReserva(date("Y-m-d H:i:s"));
@@ -192,9 +193,10 @@ class opportunitiesActions extends sfActions {
                 $O->setComentario('Reserva oportunidad');
             }
             
-            $O->setUniqueToken(true);            
+            $O->setUniqueToken(true);
+            error_log(2);
             $O->save();
-            
+            error_log(3);
             $OT = $OriginalReserve->getTransaction()->copy(true);
             $OT->setCar($Car->getModel()->getBrand()->getName() ." ". $Car->getModel()->getName());
             $OT->setReserve($O);
