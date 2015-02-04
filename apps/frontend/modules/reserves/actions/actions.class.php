@@ -453,20 +453,16 @@ class reservesActions extends sfActions {
 
     public function executePay (sfWebRequest $request) {
 
+        $userId = $this->getUser()->getAttribute('userid');
 
-        $userId = sfContext::getInstance()->getUser()->getAttribute('userid');
-
-        if($request->hasParameter('warranty','payment-group','car','from','to')){ 
-
+        if ($request->hasParameter('warranty','payment-group','car','from','to')) {
             $warranty = $request->getPostParameter("warranty", null);
             $payment  = $request->getPostParameter("payment-group", null); // Se saco la selección de khipu
 
             $carId = $request->getPostParameter("car", null);
             $from  = $request->getPostParameter("from", null);
-            $to    = $request->getPostParameter("to", null);
-        
-        }else{
-            
+            $to    = $request->getPostParameter("to", null);        
+        } else {            
             $warranty = $this->getUser()->getAttribute("warranty");
             $payment  = $this->getUser()->getAttribute("payment",null);
 
@@ -475,7 +471,6 @@ class reservesActions extends sfActions {
             $to       = $this->getUser()->getAttribute("to");
         }
 
-
         try {
 
             if (is_null($warranty) || is_null($carId) || is_null($from) || is_null($to)) {
@@ -483,8 +478,8 @@ class reservesActions extends sfActions {
             }
 
             $datesError = $this->validateDates($from, $to);
-            if ($datesError) {
-                throw new Exception($datesError, 1);
+            if (!is_null($datesError)) {
+                throw new Exception($datesError, 2);
             }
 
             $User = Doctrine_Core::getTable('User')->find($userId);
@@ -506,11 +501,6 @@ class reservesActions extends sfActions {
             $Reserve->setDate(date("Y-m-d H:i:s", strtotime($from)));
             $Reserve->setUser($User);
             $Reserve->setCar($Car);
-
-            if ($User->getBlocked()) {
-                $Reserve->setVisibleOwner(false);
-                $Reserve->setConfirmed(true);
-            }
 
             if ($warranty) {
                 $amountWarranty = sfConfig::get("app_monto_garantia");
@@ -547,12 +537,11 @@ class reservesActions extends sfActions {
             $this->forward("khipu", "generatePayment");
         } catch (Exception $e) {
             error_log("[".date("Y-m-d H:i:s")."] [reserves/pay] ".$e->getMessage());
-            if ($request->getHost() == "www.arriendas.cl") {
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
                 Utils::reportError($e->getMessage(), "reserves/pay");
             }
-        }
-
-        $this->redirect("homepage");
+            $this->redirect("homepage");
+        }        
     }
 
     public function executeReject (sfWebRequest $request) {
@@ -647,9 +636,9 @@ class reservesActions extends sfActions {
         $to   = strtotime($to);
 
         if ($from >= $to) {
-            return "La fecha de inicio debe ser menor a la fecha de término.";
+            return "La fecha de término debe ser al menos 3 horas superior a la fecha de inicio.";
         }
 
-        return false;
+        return null;
     }
 }
