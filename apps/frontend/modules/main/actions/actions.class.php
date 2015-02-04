@@ -3072,7 +3072,7 @@ class mainActions extends sfActions {
         $app_secret = "8d8f44d1d2a893e82c89a483f8830c25";
         //$my_url = "http://www.arriendas.cl/main/loginFacebook";
         $my_url = $this->generateUrl("facebook_login", array(), true);
-        
+        $referer = $this->getUser()->getAttribute("referer");
         // $app_id = "297296160352803";
         // $app_secret = "e3559277563d612c3c20f2c202014cec";
         // $my_url = "http://test.intothewhitebox.com/yineko/arriendas/main/loginFacebook";
@@ -3080,9 +3080,6 @@ class mainActions extends sfActions {
         $state = $request->getParameter("state");
         $previousUser= $request->getParameter("logged");
         $returnRoute = $request->getParameter("return");
-
-        /*$referer = $this->getContext()->getActionStack()->getSize() > 1 ? $request->getUri() : $request->getReferer();
-        $this->getUser()->setAttribute("referer", $referer);*/
     	
         if($previousUser) {
     	   $my_url.="?logged=true";
@@ -3118,7 +3115,7 @@ class mainActions extends sfActions {
                 $this->redirect($this->generateUrl($returnRoute));
 
             }else{
-                $this->redirect('main/index');
+                $this->redirect('homepage');
             }
         }
 	
@@ -3156,7 +3153,6 @@ class mainActions extends sfActions {
                     $myUser->setFacebookId($user["id"]);
                     $myUser->setPictureFile($photo_indexurl);
                     $myUser->setConfirmedFb(true);
-                    $myUser->setConfirmed(true);
                     $myUser->save();
                 } else {
 					$newUser=false;
@@ -3214,10 +3210,10 @@ class mainActions extends sfActions {
 
                 if ($newUser) {
 		            //$this->getRequest()->setParameter('userId', $userdb->getId());
-					$this->redirect("main/completeRegister");
+					$this->redirect('user_register_complete');
 				}else{
-					if ($this->getUser()->getAttribute("referer") != null) {
-						$this->redirect($this->getUser()->getAttribute("referer"));
+					if ($referer != null) {
+						$this->redirect($referer);
 					} else {
 						$this->redirect('main/index');
 						//$this->redirect('profile/cars');
