@@ -58,7 +58,7 @@ EOF;
 
                     // Si la reserva ya se encuentra confirmada, desactivamos el envío de oportunidades
                     if ($Reserve->getConfirmed()) {
-                        $this->log("[".date("Y-m-d H:i:s")."] La reserva {$Reserve->id} de oportunidad {$OpportunityQueue->id} ya fue confirmada por el dueño original. Se inactiva la oportundiad");
+                        $this->log("[".date("Y-m-d H:i:s")."] La Reserve {$Reserve->id} de OpportunityQueue {$OpportunityQueue->id} ya fue confirmada por el dueño original. Se inactiva la oportundiad");
                         $OpportunityQueue->setIsActive(false);
                         $OpportunityQueue->save();
                         continue;
@@ -81,7 +81,7 @@ EOF;
 
                     // Si la reserva ya posee mas de 5 opciones de cambio, no se generan oportunidades y se cancela
                     if (count($Reserve->getChangeOptions()) >= 5) {
-                        $this->log("[".date("Y-m-d H:i:s")."] La oportunidad {$OpportunityQueue->id} ya posee mas de 5 opciones de cambios. Se inactiva la oportunidad");
+                        $this->log("[".date("Y-m-d H:i:s")."] La OpportunityQueue {$OpportunityQueue->id} ya posee mas de 5 opciones de cambios. Se inactiva la oportunidad");
                         $OpportunityQueue->setIsActive(false);
                         $OpportunityQueue->save();
                         continue;
@@ -89,7 +89,7 @@ EOF;
 
                     // Si el usuario que realizó la reserva o el pago se encuentra bloqueado, no se generan oportunidades
                     if ($Reserve->getUser()->getBlocked()) {
-                        $this->log("[".date("Y-m-d H:i:s")."] El usuario {$Reserve->getUser()->getBlocked()} que realizo la reserva {$Reserve->id} se encuentra bloqueado. Se inactiva la oportunidad");
+                        $this->log("[".date("Y-m-d H:i:s")."] El User {$Reserve->getUser()->id} que realizo la Reserve {$Reserve->id} se encuentra bloqueado. Se inactiva la oportunidad");
                         $OpportunityQueue->setIsActive(false);
                         $OpportunityQueue->save();
                         continue;
