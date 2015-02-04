@@ -3,6 +3,6 @@
 class OpportunityQueueTable extends Doctrine_Table {
     
     public static function getInstance() {
-        return Doctrine_Core::getTable('OportunityQueue');
+        return Doctrine_Core::getTable('OpportunityQueue');
     }
 }
