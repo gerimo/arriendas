@@ -174,7 +174,7 @@ class opportunitiesActions extends sfActions {
         error_log(1);
 
         $O = $OriginalReserve->copy(true);
-        $O->setCar($Car);
+        $O->setCarId($Car->id);
         $O->save();
         error_log(2);
 
@@ -183,8 +183,6 @@ class opportunitiesActions extends sfActions {
         $O->setConfirmed(true);
         $O->setImpulsive(true);
         $O->setReservaOriginal($OriginalReserve->getId());
-        $O->save();
-        error_log(3);
 
         if ($isMailing) {
             $O->setComentario('Reserva oportunidad - mailing');
@@ -194,7 +192,6 @@ class opportunitiesActions extends sfActions {
         
         $O->setUniqueToken(true);
         $O->save();
-        error_log(4);
 
         $OT = $OriginalReserve->getTransaction()->copy(true);
         $OT->setCar($Car->getModel()->getBrand()->getName() ." ". $Car->getModel()->getName());
