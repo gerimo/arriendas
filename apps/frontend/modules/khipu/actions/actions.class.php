@@ -33,7 +33,10 @@ class khipuActions extends sfActions {
 
             $url = $khipuService->createPaymentURL($data)->url;
         } catch (Execption $e) {
-            Utils::reportError($e->getMessage(), "khipu/generatePayment");
+            error_log("[".date("Y-m-d H:i:s")."] [khipu/generatePayment] ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "khipu/generatePayment");
+            }
         }
 
         $this->redirect($url);
