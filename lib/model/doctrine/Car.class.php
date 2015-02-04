@@ -336,12 +336,8 @@ where c.id=
 
         return $rs[0]['percentile_rank'];
     }
-
-
     
-    
-    
-    public function save(Doctrine_Connection $conn = null)  {
+    /*public function save(Doctrine_Connection $conn = null)  {
     
         if (!$this->getId() || $this->getCustomerio()<=0) {
 
@@ -349,37 +345,37 @@ where c.id=
             $patente = $this->getPatente();
             $comuna = $this->getNombreComuna();
         
-      $session = curl_init();
+            $session = curl_init();
 
-      $customer_id = 'a_'.$this->getUserId(); // You'll want to set this dynamically to the unique id of the user
-      $customerio_url = 'https://track.customer.io/api/v1/customers/'.$customer_id.'/events';
-      $site_id = '3a9fdc2493ced32f26ee';
-      $api_key = '4f191ca12da03c6edca4';
+            $customer_id = 'a_'.$this->getUserId(); // You'll want to set this dynamically to the unique id of the user
+            $customerio_url = 'https://track.customer.io/api/v1/customers/'.$customer_id.'/events';
+            $site_id = '3a9fdc2493ced32f26ee';
+            $api_key = '4f191ca12da03c6edca4';
 
-      sfContext::getInstance()->getLogger()->err($customerio_url);
+            sfContext::getInstance()->getLogger()->err($customerio_url);
 
-      $data = array("name" => "subir_auto", "data[brand]" => $brand, "data[patente]" => $patente, "data[comuna]" => $comuna);
+            $data = array("name" => "subir_auto", "data[brand]" => $brand, "data[patente]" => $patente, "data[comuna]" => $comuna);
 
-      curl_setopt($session, CURLOPT_URL, $customerio_url);
-      curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-      curl_setopt($session, CURLOPT_HEADER, false);
-      curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
-      curl_setopt($session, CURLOPT_VERBOSE, 1);
-      curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
-      curl_setopt($session, CURLOPT_POSTFIELDS,http_build_query($data));
+            curl_setopt($session, CURLOPT_URL, $customerio_url);
+            curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($session, CURLOPT_HEADER, false);
+            curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($session, CURLOPT_VERBOSE, 1);
+            curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
+            curl_setopt($session, CURLOPT_POSTFIELDS,http_build_query($data));
 
-      curl_setopt($session,CURLOPT_USERPWD,$site_id . ":" . $api_key);
+            curl_setopt($session,CURLOPT_USERPWD,$site_id . ":" . $api_key);
 
-      //if(ereg("^(https)",$request)) 
-      curl_setopt($session,CURLOPT_SSL_VERIFYPEER,false);
+            //if(ereg("^(https)",$request)) 
+            curl_setopt($session,CURLOPT_SSL_VERIFYPEER,false);
 
-      curl_exec($session);
-      curl_close($session);
+            curl_exec($session);
+            curl_close($session);
 
-      $this->setCustomerio(true);
-      }
+            $this->setCustomerio(true);
+        }
 
-    $ret = parent::save($conn);
+        $ret = parent::save($conn);
 
         $car = Doctrine_Core::getTable('car')->find($this->getId());
         $user = Doctrine_Core::getTable('user')->find($car->getUserId());   
@@ -391,42 +387,42 @@ where c.id=
         $q = Doctrine_Manager::getInstance()->getCurrentConnection();
         $query = "update Car set Cant_Reservas_Aprobadas='$CantReservasAprobadas', contesta_pedidos='$percTotalContestadas', velocidad_contesta_pedidos='$velocidadContestaPedidos' where user_id='$ownerUserId'";
 
-    $result = $q->execute($query);
+        $result = $q->execute($query);
 
-    /* nuevo flujo */
+        // NUEVO FLUJO
 
-    // Se genera el calculo asociado al ratio de aprobacion del propietario
-    $limit = 7;
+        // Se genera el calculo asociado al ratio de aprobacion del propietario
+        $limit = 7;
 
-    $table = Doctrine_Core::getTable('Reserve');
-    $q = $table
-        ->createQuery('r')
-        ->select('ROUND(SUM(r.confirmed)/count(r.confirmed) * 100, 2) AS ratio')
-        ->innerJoin('r.Car c')
-        ->where('c.user_id = ?', $ownerUserId)
-        ->andWhere('r.comentario = "null"')
-        ->andWhere('(day(r.date) - day(r.fecha_reserva)) > 0')
-        ->andWhere("hour(r.fecha_reserva) < 22 AND hour(r.fecha_reserva) > 5")
-        ->limit($limit)
-        ;
+        $table = Doctrine_Core::getTable('Reserve');
+        $q = $table
+            ->createQuery('r')
+            ->select('ROUND(SUM(r.confirmed)/count(r.confirmed) * 100, 2) AS ratio')
+            ->innerJoin('r.Car c')
+            ->where('c.user_id = ?', $ownerUserId)
+            ->andWhere('r.comentario = "null"')
+            ->andWhere('(day(r.date) - day(r.fecha_reserva)) > 0')
+            ->andWhere("hour(r.fecha_reserva) < 22 AND hour(r.fecha_reserva) > 5")
+            ->limit($limit)
+            ;
 
-    $results = $q->execute();
+        $results = $q->execute();
 
-    if (isset($results[0])) {
+        if (isset($results[0])) {
 
-        $ratio = (float)$results[0]->getRatio();
-    } else {
+            $ratio = (float)$results[0]->getRatio();
+        } else {
 
-        $ratio = 100;
-    }
+            $ratio = 100;
+        }
 
-    // Se setea el nuevo ratio para el auto en particular
-    $this->setRatioAprobacion($ratio);
+        // Se setea el nuevo ratio para el auto en particular
+        $this->setRatioAprobacion($ratio);
 
-    parent::save($conn);
+        parent::save($conn);
 
-    return $ret;
-  }
+        return $ret;
+    }*/
 
     // Función publica que devuelve un array con las distancias
     // del vehículo en relacion al metro mas próximo.

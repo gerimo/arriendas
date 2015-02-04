@@ -170,14 +170,9 @@ class opportunitiesActions extends sfActions {
         if ($Car->hasReserve($OriginalReserve->getFechaInicio2(), $OriginalReserve->getFechaTermino2())) {
             return "Este Car ".$Car->id." ya posee una reserva en las fechas de la oportundiad";
         }
-        
-        error_log(1);
 
         $O = $OriginalReserve->copy(true);
-        $O->setCarId($Car->id);
-        $O->save();
-        error_log(2);
-
+        $O->setCar($Car);
         $O->setFechaReserva(date("Y-m-d H:i:s"));
         $O->setFechaConfirmacion(date("Y-m-d H:i:s"));
         $O->setConfirmed(true);
