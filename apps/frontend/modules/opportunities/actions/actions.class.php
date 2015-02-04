@@ -153,28 +153,23 @@ class opportunitiesActions extends sfActions {
     private function approve($reserveId, $carId, $isMailing = false) {
 
         if (is_null($reserveId) || $reserveId == 0) {
-            return "No se encontró la reserva"
+            return "No se encontró la reserva";
         }
 
         $OriginalReserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
 
         if (is_null($carId) || $carId == 0) {
-            return "Falta el ID del auto para aprobar oportunidad para Reserve ".$OriginalReserve->id
+            return "Falta el ID del auto para aprobar oportunidad para Reserve ".$OriginalReserve->id;
         }
 
         $Car = Doctrine_Core::getTable('Car')->find($carId);
         if (!$Car) {
-            return "No se encontró el auto para aprobar oportunidad para Reserve ".$OriginalReserve->id
+            return "No se encontró el auto para aprobar oportunidad para Reserve ".$OriginalReserve->id;
         }            
 
         if ($Car->hasReserve($OriginalReserve->getFechaInicio2(), $OriginalReserve->getFechaTermino2())) {
-            return "Este Car ".$Car->id." ya posee una reserva en las fechas de la oportundiad");
+            return "Este Car ".$Car->id." ya posee una reserva en las fechas de la oportundiad";
         }
-
-        // Comentado porque cuando se aprueba por correo no necesariamente debería estar logueado
-        /*if ($Car->getUserId() != $this->getUser()->getAttribute("userid")) {
-            return "No! No! No!", 1
-        }*/
         
         error_log(1);
 
@@ -200,7 +195,7 @@ class opportunitiesActions extends sfActions {
         $O->setUniqueToken(true);
         $O->save();
         error_log(4);
-        
+
         $OT = $OriginalReserve->getTransaction()->copy(true);
         $OT->setCar($Car->getModel()->getBrand()->getName() ." ". $Car->getModel()->getName());
         $OT->setReserve($O);
