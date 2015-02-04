@@ -28,19 +28,23 @@ class Utils {
 
     public static function isValidRUT($rut) {
 
-       $rut = str_replace(array('.', ',', '-', ' '), '', $rut);
+        $rut = str_replace(array('.', ',', '-', ' '), '', $rut);
 
-       $dv     = substr($rut, -1);
-       $number = substr($rut, 0, -1);
+        $dv     = substr($rut, -1);
+        $number = substr($rut, 0, -1);
 
-       $s = 1;
-       for($m = 0; $number != 0; $number /= 10) {
-           $s = ($s + $number % 10 * (9 - $m++ % 6)) % 11;
-       }
+        $s = 1;
+        for($m = 0; $number != 0; $number /= 10) {
+            $s = ($s + $number % 10 * (9 - $m++ % 6)) % 11;
+        }
 
-       $newDv = chr($s ? $s + 47 : 75);
+        $newDv = chr($s ? $s + 47 : 75);
 
-       return strtolower($newDv) == strtolower($dv);
+        if (strtolower($newDv) == strtolower($dv)) {
+            return $rut;
+        }
+
+        return false;
    }
 
     public static function isWeekend($getDays = false) {

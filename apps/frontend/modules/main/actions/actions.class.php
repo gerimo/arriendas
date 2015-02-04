@@ -111,7 +111,7 @@ class mainActions extends sfActions {
             //$motherLastname = $request->getPostParameter("motherLastname", null);
             $como           = $request->getPostParameter("como", null);
             $userId         = $request->getPostParameter("userId", null);
-            $rut            = $request->getPostParameter("rut", null);
+            $rut            = Utils::isValidRUT($request->getPostParameter("rut", null));
             $foreign        = $request->getPostParameter("foreign", null);
             $telephone      = $request->getPostParameter("telephone", null);
             $birth          = $request->getPostParameter("birth", null);
@@ -120,14 +120,24 @@ class mainActions extends sfActions {
             $region         = $request->getPostParameter("region", null);
             $anotherText    = $request->getPostParameter("anotherText", null);
 
-            if(!$foreign) {
-                if (is_null($rut) || $rut == "") {
-                    throw new Exception("Debes indicar tu RUT", 1);
-                }            
-            }
             if (is_null($foreign) || $foreign == "") {
                 throw new Exception("Debes indicar tu nacionalidad", 1);
             }
+
+            if(!$foreign) {
+                if (is_null($rut) || $rut == "") {
+                    throw new Exception("Debes indicar tu RUT", 1);
+                } else {
+                    if ($rut == false) {
+                        throw new Exception("el rut ingresado es inválido", 1);
+                    } else {
+                        if(User::rutExist($rut)) {
+                            throw new Exception("el rut ingresado ya se encuentra registrado", 1);
+                        }
+                    }
+                }
+            }        
+            
             //borrar
             if (is_null($userId) || $userId == "") {
                 throw new Exception("userId", 1);
@@ -157,14 +167,9 @@ class mainActions extends sfActions {
             if (is_null($region) || $region == "") {
                 throw new Exception("Debes indicar tu región", 1);
             }
+
             if(!$foreign) {
-                if (!Utils::isValidRUT($rut)) {
-                    throw new Exception("el rut ingresado es inválido", 1);
-                } else {
-                    if(User::rutExist($rut)) {
-                        throw new Exception("el rut ingresado ya se encuentra registrado", 1);
-                    }
-                }
+                
             }
 
             if (is_null($como) || $como == "") {
@@ -197,6 +202,7 @@ class mainActions extends sfActions {
             if(!$foreign){
                 $basePath = sfConfig::get('sf_root_dir');
                 $userid = $User->getId();
+                $rut = substr($rut, 0, -1)."-".substr($rut, -1);
                 $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$rut.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
                 exec($comando);
             }
