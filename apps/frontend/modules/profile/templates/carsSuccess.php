@@ -261,7 +261,7 @@
         };
 
         $.post("<?php echo url_for('car_set_disabled_until') ?>", parameters, function(r){
-            
+            console.log(r);
             if (r.error) {
 
             } else {
