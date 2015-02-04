@@ -64,6 +64,14 @@ EOF;
                         continue;
                     }
 
+                    // Si la reserva ya comenzó, desactivamos el envío de oportunidades
+                    if (strtotime($Reserve->getDate()) <= time()) {
+                        $this->log("[".date("Y-m-d H:i:s")."] La Reserve {$Reserve->id} de OpportunityQueue {$OpportunityQueue->id} ya comenzo. Se inactiva la oportundiad");
+                        $OpportunityQueue->setIsActive(false);
+                        $OpportunityQueue->save();
+                        continue;
+                    }
+
                     // Revisamos que sea tiempo de enviar los correos de oportunidades. Los correos se envían cada X minutos.
                     // X = (D - E) / I
                     // D: Tiempo entre que se pagó la reserva hasta su comienzo (minutos)
