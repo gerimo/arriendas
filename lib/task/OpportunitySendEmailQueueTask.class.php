@@ -11,13 +11,13 @@ class OpportunitySendEmailQueueTask extends sfBaseTask {
         ));
 
         $this->namespace = 'opportunity';
-        $this->name = 'sendEmailQueueTask';
+        $this->name = 'send';
         $this->briefDescription = '';
         $this->detailedDescription = <<<EOF
 The [OpportunitySendEmailQueueTask|INFO] task does things.
 Call it with:
 
-  [php symfony opportunity:sendEmailQueue|INFO]
+  [php symfony opportunity:send|INFO]
 EOF;
     }
 
@@ -80,7 +80,7 @@ EOF;
 
                 $message = $this->getMailer()->compose();
                 $message->setSubject($subject);
-                $message->setBody($body, "text/html");
+                $message->setBody($body."<br><br>USER: ".$Owner->email, "text/html");
                 $message->setFrom($from);
                 /*$message->setTo($to);*/
                 $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
