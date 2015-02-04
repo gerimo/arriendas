@@ -74,6 +74,10 @@ forgot_password_send:
     url: /contrasena/enviar
     param: { module: main, action: forgotSend }
 
+forgot_password_update:
+    url: /contrasena/modificar/:id/:hash
+    param: { module: main, action: recover }
+
 homepage:
     url: /
     param: { module: main, action: index }

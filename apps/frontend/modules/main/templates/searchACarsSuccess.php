@@ -44,6 +44,7 @@
             });
             return false;
         }
+
         if(validateMin()){
             $("#dialog-alert p").html('No se puede ingresar "Fechas" con duraciones de media hora.');
             $("#dialog-alert").attr('title','Fecha "Hasta" mal ingresada');
@@ -56,12 +57,10 @@
                 }]
             });
             return false;
-
         }
 
         $('#list-container').hide();
         $(".loading").show();
-
 
         var from      = $("#from").val();
         var to        = $("#to").val();
@@ -90,6 +89,13 @@
             }
         });
 
+        var nearToSubway = false;
+        $(".nearToSubway").each(function(){
+            if ($(this).is(':checked')) {
+                nearToSubway = true;
+            }
+        });
+
         // Validación de la búsqueda
         var error = false;
         var errorMessage = "<p style='padding: 5% 5% 0 5%'>Para buscar, debes:<ul>";
@@ -115,14 +121,6 @@
         }
 
         var parameters = {
-            /*isMap: isMap,//$('div[data-target="#tab-map"]').hasClass("activo"),
-            SWLat: swLat,
-            SWLng: swLng,
-            NELat: neLat,
-            NELng: neLng,
-            mapCenterLat: mapCenterLat,
-            mapCenterLng: mapCenterLng,*/
-            
             //Parameters List
             from : from,
             to: to,
@@ -130,7 +128,8 @@
             communeId: communeId,
             isAutomatic: isAutomatic,
             isLowConsumption: isLowConsumption,
-            isMorePassengers: isMorePassengers            
+            isMorePassengers: isMorePassengers,
+            nearToSubway: nearToSubway
         }
 
         $.post("<?php echo url_for('car_search') ?>", parameters, function(r){
@@ -138,16 +137,6 @@
             var listContent = "";
             var markersLength = markers.length;
 
-            /*if (markers) {
-
-                var i = 0;
-                
-                for (i ; i < markers.length ; i++) {
-                    markers[i].setMap(null)
-                }
-
-                markers = [];
-            }*/
             if (markersLength > 0) {
                 markerCluster.clearMarkers();
             }
@@ -164,30 +153,7 @@
                         urlFotoTipo = Car.photo;
                         urlFotoThumbTipo = Car.photo;
                     }
-
-                    var windowMarker = "";
-                    windowMarker += "<div class='infowindow row' id='" + Car.id + "'>";
-
-                    windowMarker += "<div class='col-md-4 text-center'>";
-                    /*windowMarker += "<a href='" + urlFotoTipo + "' class='thickbox'>";*/
-                    windowMarker += "<img src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "'/>";
-                    /*windowMarker += "</a>";*/
-                    windowMarker += "</div>";
-
-                    windowMarker += "<div class='col-md-8' style='padding-left: 15px'>";
-                    windowMarker += "<h2>" + Car.brand + " " + Car.model + "</a></h2>";
-                    windowMarker += "<p class='paragraph' style='margin-top: 5px'>Hora: <b>$" + Car.price_per_hour + " </b></p>";
-                    windowMarker += "<p class='paragraph' style='margin-top: 5px'>Dia: <b>$" + Car.price_per_day + " </b></p>";
-                    windowMarker += "<p class='paragraph' style='margin-top: 5px'>Transmisión: <b>" + Car.transmission + "</b></p>";
-                    windowMarker += "</div>";                    
-                    
-                    windowMarker += "</div>";
-
-                    windowMarker += "<p class='text-right'><a class='btn btn-a-action btn-sm' href='"+reserveUrl.replace("carId", Car.id)+"' target='_blank'>RESERVAR</a></p>";
-                  
-
-                    //var image = 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + (i+1) + '|05a4e7|ffffff';
-
+    
                     article = "<article class='box'>";
                     article += "<div class='row'>";
                     article += "<div class='col-xs-4 col-md-4 image'>";
@@ -198,6 +164,7 @@
                     article += "<h2>"+ Car.brand +" "+ Car.model +"<small>, "+Car.year+"</small></h2>";
                     /*article += "<span class='sub-heading'>A 2 km Metro <strong>Tobalaba</strong></span>";*/
                     article += "<p class='price'>$"+ Car.price +" <small style='color: black; font-weight: 300; font-size: 9px;'>TOTAL</small></p>";
+                    article += "<div class='metro'><p><img class='km-area' src='/images/newDesign/ico.png' alt='metro'> A <b><em>"+Car.nearestMetroDistance+"</em> km</b> del Metro "+Car.nearestMetroName+"</p></div>";
                     article += "<p class='text-right'><a class='btn btn-a-action btn-sm' href='"+reserveUrl.replace("carId", Car.id)+"' class='reserve' target='_blank'>RESERVAR</a></p>";
                     /*article += "<img src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + contador + "|05a4e7|ffffff' />";*/
                     article += "</div>";
@@ -206,9 +173,7 @@
 
                     listContent += "<div class='col-md-4'>";
                     listContent += article;
-                    listContent += "</div>";
-
-                    
+                    listContent += "</div>";  
                    
 
                     /*listContent += "<article class='box'>";
@@ -295,6 +260,7 @@
                             <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
                             <li><input type="checkbox" name="filter" class="isLowConsumption"> Petrolero</li>
                             <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
+                            <li><input type="checkbox" name="filrer" class="nearToSubway"> Cercano al metro (máximo 15 minutos)</li>
                         </ul>
                     </div>
                 </div>
@@ -323,6 +289,7 @@
                                     <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
                                     <li><input type="checkbox" name="filter" class="isLowConsumption"> Petrolero</li>
                                     <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
+                                    <li><input type="checkbox" name="filrer" class="nearToSubway"> Cercano al metro (máximo 15 minutos)</li>
                                 </ul>
                             </div>
                         </div>
@@ -448,7 +415,6 @@
         <?php endif ?>
 
         $("#search").click();
-   
     });
 
     function roundTime(valor){
@@ -521,12 +487,13 @@
                 minDate:get_date($('#from').val())?get_date($('#from').val()):false,
                 format:'d-m-Y H:i'
             });
+        }
+
+        fecha = f+" "+hora+":"+min;
+
+        return fecha;  
     }
 
-    fecha = f+" "+hora+":"+min;
-
-    return fecha;
-    }
     //Permite establecer un horario correcto.
     function times(valor){
         var fechaF = valor

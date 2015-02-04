@@ -122,6 +122,8 @@ class carsActions extends sfActions {
         $isAutomatic        = $request->getPostParameter('isAutomatic', false) === 'true' ? true : false;
         $isLowConsumption   = $request->getPostParameter('isLowConsumption', false) === 'true' ? true : false;
         $isMorePassengers   = $request->getPostParameter('isMorePassengers', false) === 'true' ? true : false;
+        $nearToSubway       = $request->getPostParameter('nearToSubway', false) === 'true' ? true : false;
+
 
         try {
 
@@ -130,7 +132,7 @@ class carsActions extends sfActions {
             $this->getUser()->setAttribute("mapCenterLat", $mapCenterLat);
             $this->getUser()->setAttribute("mapCenterLng", $mapCenterLng);
 
-            $return["cars"] = CarTable::findCars($from, $to, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers);
+            $return["cars"] = CarTable::findCars($from, $to, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway);
             /*error_log("Autos encontrados: ".count($return["cars"]));*/
 
         } catch (Exception $e) {
@@ -204,7 +206,12 @@ class carsActions extends sfActions {
                 throw new Exception("No se encuentra el auto", 1);
             }            
             
-            $DisabledCar->setDisabledUntil(date("Y-m-d", strtotime($untilDate)));
+            if (is_null($untilDate) || $untilDate == "") {
+                $DisabledCar->setDisabledUntil(null);
+            } else {
+                $DisabledCar->setDisabledUntil(date("Y-m-d", strtotime($untilDate)));
+            }
+            
             $DisabledCar->save();
 
         } catch (Exception $e) {

@@ -14,7 +14,7 @@
 			    	<div class="panel-heading" role="tab" id="headingOne">
 			      <h4 class="panel-title">
 			        <a class="collapsed"data-toggle="collapse" data-parent="#accordions" href="#leeseOne" aria-expanded="false" aria-controls="leeseOne">
-			           ¿Qué debo hacer para reservar un auto?<i class="pull-right fa fa-chevron-down"></i>
+			           ¿Qué debo hacer para reservar un auto?<i class="pull-right fa fa-angle-down"></i>
 			        </a>
 			      </h4>
 			    	</div>
@@ -28,7 +28,7 @@
 				    <div class="panel-heading" role="tab" id="headingTwo">
 				      <h4 class="panel-title">
 				        <a class="collapsed" data-toggle="collapse" data-parent="#accordions" href="#leeseTwo" aria-expanded="false" aria-controls="leeseTwo">
-				           ¿Qué necesito para arrendar?<i class="pull-right fa fa-chevron-down"></i>
+				           ¿Qué necesito para arrendar?<i class="pull-right fa fa-angle-down"></i>
 				        </a>
 				      </h4>
 				    </div>
@@ -44,7 +44,7 @@
 			    	<div class="panel-heading" role="tab" id="headingThree">
 			      <h4 class="panel-title">
 			        <a class="collapsed" data-toggle="collapse" data-parent="#accordions" href="#leeseThree" aria-expanded="false" aria-controls="leeseThree">
-			           ¿Dónde se retira el auto?<i class="pull-right fa fa-chevron-down"></i>
+			           ¿Dónde se retira el auto?<i class="pull-right fa fa-angle-down"></i>
 			        </a>
 			      </h4>
 			    	</div>
@@ -58,7 +58,7 @@
 			    	<div class="panel-heading" role="tab" id="headingFour">
 			      		<h4 class="panel-title">
 			        	<a class="collapsed" data-toggle="collapse" data-parent="#accordions" href="#leeseFour" aria-expanded="false" aria-controls="leeseFour">
-			          		¿Es necesario realizar un depósito en garantía?<i class="pull-right fa fa-chevron-down"></i>
+			          		¿Es necesario realizar un depósito en garantía?<i class="pull-right fa fa-angle-down"></i>
 			        	</a>
 			      		</h4>
 			    	</div>
@@ -72,7 +72,7 @@
 			    	<div class="panel-heading" role="tab" id="headingFive">
 			      <h4 class="panel-title">
 			        <a class="collapsed" data-toggle="collapse" data-parent="#accordions" href="#leeseFive" aria-expanded="false" aria-controls="leeseFive">
-			           ¿Cuáles son los medios de pago?<i class="pull-right fa fa-chevron-down"></i>
+			           ¿Cuáles son los medios de pago?<i class="pull-right fa fa-angle-down"></i>
 			        </a>
 			      </h4>
 			    	</div>
@@ -90,7 +90,7 @@
 			    	<div class="panel-heading" role="tab" id="headingOne">
 				      <h4 class="panel-title">
 				        <a class="collapsed " data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-				           ¿Qué cubre la póliza de seguros?<i class="pull-right fa fa-chevron-down"></i>
+				           ¿Qué cubre la póliza de seguros?<i class="pull-right fa fa-angle-down"></i>
 				        </a>
 				      </h4>
 			    	</div>
@@ -104,7 +104,7 @@
 				    <div class="panel-heading" role="tab" id="headingTwo">
 				      <h4 class="panel-title">
 				        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-				           ¿Debo llevar el auto a algún lugar o los clientes van a mi casa?<i class="pull-right fa fa-chevron-down"></i>
+				           ¿Debo llevar el auto a algún lugar o los clientes van a mi casa?<i class="pull-right fa fa-angle-down"></i>
 				        </a>
 				      </h4>
 				    </div>
@@ -118,7 +118,7 @@
 			    	<div class="panel-heading" role="tab" id="headingThree">
 			      <h4 class="panel-title">
 			        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-			           ¿Quién decide qué pedidos se aceptan y cuales no?<i class="pull-right fa fa-chevron-down"></i>
+			           ¿Quién decide qué pedidos se aceptan y cuales no?<i class="pull-right fa fa-angle-down"></i>
 			        </a>
 			      </h4>
 			    	</div>
@@ -132,7 +132,7 @@
 			    	<div class="panel-heading" role="tab" id="headingOne">
 			      		<h4 class="panel-title">
 			        	<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-			          	 ¿Cómo y cuándo me pagan mis arriendos?<i class="pull-right fa fa-chevron-down"></i>
+			          	 ¿Cómo y cuándo me pagan mis arriendos?<i class="pull-right fa fa-angle-down"></i>
 			        	</a>
 			      		</h4>
 			    	</div>
@@ -146,18 +146,18 @@
 			    	<div class="panel-heading" role="tab" id="headingTwo">
 			      <h4 class="panel-title">
 			        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-			           ¿Qué se hace en caso de daños?<i class="pull-right fa fa-chevron-down"></i>
+			           ¿Qué se hace en caso de daños?<i class="pull-right fa fa-angle-down"></i>
 			        </a>
 			      </h4>
 			    	</div>
 			    	<div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-			      <div class="panel-body">
-			        Lo primero es realizar la CONSTANCIA por el siniestro dentro de 24 horas y enviar ese número a soporte@arriendas.cl 
-			        Luego debes firmar el formulario de devolución junto con el arrendatario e indicar el daño en el mismo formulario.
-			        Para reclamar la cobertura que te corresponde debes enviar una foto del formulario y comunicarte con nosotros por teléfono o correo,
-			        en el acto.
-			        <b>Arriendas.cl se encarga de procesar el arreglo y de la aplicación de la póliza, junto con la entrega del formulario y aviso conforme</b>
-			      </div>
+				      <div class="panel-body">
+				        Lo primero es realizar la CONSTANCIA por el siniestro dentro de 24 horas y enviar ese número a soporte@arriendas.cl 
+				        Luego debes firmar el formulario de devolución junto con el arrendatario e indicar el daño en el mismo formulario.
+				        Para reclamar la cobertura que te corresponde debes enviar una foto del formulario y comunicarte con nosotros por teléfono o correo,
+				        en el acto.
+				        <b>Arriendas.cl se encarga de procesar el arreglo y de la aplicación de la póliza, junto con la entrega del formulario y aviso conforme</b>
+				      </div>
 			    	</div>
 			  	</div>
 			</div>

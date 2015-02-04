@@ -49,12 +49,17 @@ class mainActions extends sfActions {
             $userId_session = $this->getUser()->getAttribute("userid");
             $User = Doctrine_Core::getTable('user')->find($userId_session);
 
-            if ((!is_null($User) && !$User->getConfirmed()) || $User->getConfirmedFb()) {
-                $this->Regions = Region::getRegionsByNaturalOrder();
-                $this->User = $User;
+            if($User) {
+                if($User->getConfirmed()) {
+                    $this->redirect('homepage');
+                } else {
+                    $this->Regions = Region::getRegionsByNaturalOrder();
+                    $this->User = $User;
+                }
             } else {
-                $this->redirect('main/index');
+                $this->redirect('homepage');
             }
+
         } catch (Exception $e) {
             error_log("[".date("Y-m-d H:i:s")."] [main/completeRegister] ERROR: ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl") {
@@ -222,12 +227,10 @@ class mainActions extends sfActions {
     }
 
     public function executeDoRegister(sfWebRequest $request) {
-
         $return = array("error" => false);
 
         /* Se obtiene la direccion IP de la conexion */
         $visitingIp = $request->getRemoteAddress();
-
         try {
 
             $firstname      = $request->getPostParameter("firstname", null);
@@ -286,7 +289,14 @@ class mainActions extends sfActions {
             $User->save();
 
             $url = $this->generateUrl('user_register_complete');
+
+            // Login
+            $this->getUser()->setAuthenticated(true);
+            $this->getUser()->setAttribute("logged", true);
             $this->getUser()->setAttribute("userid", $User->getId());
+            $this->getUser()->setAttribute("firstname", $User->getFirstName());
+            $this->getUser()->setAttribute("name", current(explode(' ' , $User->getFirstName())) . " " . substr($User->getLastName(), 0, 1) . '.');
+            $this->getUser()->setAttribute("email", $User->getEmail());
 
             $return["url_complete"] = $url;
 
@@ -563,7 +573,8 @@ class mainActions extends sfActions {
         $this->price = CarTable::getPrice($from, $to, $this->Car->getPricePerHour(), $this->Car->getPricePerDay(), $this->Car->getPricePerWeek(), $this->Car->getPricePerMonth());
 
         // Reviews (hay que arreglar las clase Rating)
-        $this->reviews = array();
+        // Comentado, Estrellas erroneas en produccion
+        /*$this->reviews = array();
         $this->defaultReviews = array();
 
         $cont=0;
@@ -596,7 +607,7 @@ class mainActions extends sfActions {
                 }
             }
 
-        }
+        }*/
 
         // Características
         $this->passengers = false;
@@ -2719,9 +2730,9 @@ class mainActions extends sfActions {
         $url = $_SERVER['SERVER_NAME'];
         $url = str_replace('http://', '', $url);
         $url = str_replace('https://', '', $url);
-        $url = 'http://www.arriendas.cl/main/recover?email=' . $user->getEmail() . "&hash=" . $user->getHash();
+        // $url = 'http://www.arriendas.cl/main/recover?email=' . $user->getEmail() . "&hash=" . $user->getHash();
+        $url = 'http://www.arriendas.cl/contrasena/modificar/' . $user->getId() . "/" . $user->getHash();
         $this->logMessage($url);
-
         $body = "<p>Hola:</p><p>Para generar una nueva contraseña, haz click <a href='$url'>aqu&iacute;</a></p>";
         $message = $this->getMailer()->compose();
         $message->setSubject("Recuperar Password");
@@ -2735,26 +2746,29 @@ class mainActions extends sfActions {
     }
 
     public function executeRecover(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
 
-        $this->email = $this->getRequestParameter('email');
-        $this->email = str_replace("%2540", "@", $this->email);
-        $this->email = str_replace("%40", "@", $this->email);
+        $this->id = $request->getParameter('id');
+
+        $this->id = str_replace("%2540", "@", $this->id);
+        $this->id = str_replace("%40", "@", $this->id);
 	
-        $this->hash = $this->getRequestParameter('hash');
+        $this->hash = $request->getParameter('hash');
 
-        $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ? and u.hash = ?', array($this->email, $this->hash));
+        $q = Doctrine::getTable('user')->createQuery('u')->where('u.id = ? and u.hash = ?', array($this->id, $this->hash));
         $user = $q->fetchOne();
-        if ($user == null)
-            exit();
+        if (!$user) {
+            $this->redirect('homepage');
+        }
     }
 
     public function executeDoChangePSW(sfWebRequest $request) {
 
-        $email = $this->getRequestParameter('email');
+        // $email = $this->getRequestParameter('email');
+        $id = $this->getRequestParameter('id');
         $hash = $this->getRequestParameter('hash');
-        $password = $this->getRequestParameter('password');
-
-        $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ? and u.hash = ?', array($email, $hash));
+        $password = $this->getRequestParameter('password');;
+        $q = Doctrine::getTable('user')->createQuery('u')->where('u.id = ? and u.hash = ?', array($id, $hash));
         $user = $q->fetchOne();
         if ($user != null) {
             $user->setPassword(md5($password));
@@ -2762,7 +2776,7 @@ class mainActions extends sfActions {
             $user->save();
             $this->redirect('main/login');
         }
-        else
+        else 
             exit();
     }
 	
