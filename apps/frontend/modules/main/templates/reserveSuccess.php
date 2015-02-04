@@ -307,16 +307,22 @@
                             <div class="panel-body">
                                 <p>Paga a través de una Transferencia Bancaria, mediante Khipu. Podrás hacerlo a través de los diversos bancos nacionales.</p>
                                 <div class="hidden-xs row">
-                                    <div class="col-md-2" style="height: 80px"><img class="img-responsive" src="/images/newDesign/payments/svg_07.svg" alt=""></div>
-                                    <div class="col-md-2" style="height: 80px"><img class="img-responsive" src="/images/newDesign/payments/svg_08.svg" alt=""></div>
-                                    <div class="col-md-2" style="height: 80px"><img class="img-responsive" src="/images/newDesign/payments/svg_09.svg" alt=""></div>
-                                    <div class="col-md-2" style="height: 80px"><img class="img-responsive" src="/images/newDesign/payments/svg_10.svg" alt=""></div>
-                                    <div class="col-md-2" style="height: 80px"><img class="img-responsive" src="/images/newDesign/payments/svg_11.svg" alt=""></div>
-                                    <div class="col-md-2" style="height: 80px"><img class="img-responsive" src="/images/newDesign/payments/svg_12.svg" alt=""></div>
-                                    <div class="col-md-2" style="height: 80px"><img class="img-responsive" src="/images/newDesign/payments/svg_13.svg" alt=""></div>
-                                    <div class="col-md-2" style="height: 80px"><img class="img-responsive" src="/images/newDesign/payments/svg_14.svg" alt=""></div>
-                                    <div class="col-md-2" style="height: 80px"><img class="img-responsive" src="/images/newDesign/payments/svg_15.svg" alt=""></div>
-                                    <div class="col-md-2" style="height: 80px"><img class="img-responsive" src="/images/newDesign/payments/Santander.png" alt=""></div>
+                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/banco_estado.png" alt="Banco Estado"></div>
+                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/consorcio.png" alt="Consorcio"></div>
+                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/banco_chile.png" alt="Banco de Chile"></div>
+                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/scotiabank.png" alt="Scotiabank"></div>
+                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/bice.png" alt="Bancio Bice"></div>
+                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/falabella.png" alt="Banco Falabella"></div>
+                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/bbva.png" alt="Banco BBVA"></div>
+                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/ripley.png" alt="Banco Ripley"></div>
+                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/bcinova.png" alt="BCI Nova"></div>
+                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/bci.png" alt="Banco Crédito e Inversiones"></div>
+                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/itau.png" alt="Banco Itaú"></div>
+                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/tbanc.png" alt="T Bank"></div>
+                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/security.png" alt="Banco Security"></div>
+                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/paris.png" alt="Banco Pais"></div>
+                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/santander.png" alt="Banco Santander"></div>
+                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/internacional.png" alt="Banco Internacional"></div>
                                 </div>
                             </div>
                         </div>

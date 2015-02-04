@@ -1,2 +1,8 @@
-all:
+login:
+    is_secure: false
+
+loginDo:
+    is_secure: false
+
+logout:
     is_secure: false

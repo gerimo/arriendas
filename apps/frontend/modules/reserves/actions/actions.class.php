@@ -453,20 +453,18 @@ class reservesActions extends sfActions {
 
     public function executePay (sfWebRequest $request) {
 
+        $userId = $this->getUser()->getAttribute('userid');
 
-        $userId = sfContext::getInstance()->getUser()->getAttribute('userid');
+        $debug = 0;
 
-        if($request->hasParameter('warranty','payment-group','car','from','to')){ 
-
+        if ($request->hasParameter('warranty','payment-group','car','from','to')) {
             $warranty = $request->getPostParameter("warranty", null);
             $payment  = $request->getPostParameter("payment-group", null); // Se saco la selección de khipu
 
             $carId = $request->getPostParameter("car", null);
             $from  = $request->getPostParameter("from", null);
-            $to    = $request->getPostParameter("to", null);
-        
-        }else{
-            
+            $to    = $request->getPostParameter("to", null);        
+        } else {            
             $warranty = $this->getUser()->getAttribute("warranty");
             $payment  = $this->getUser()->getAttribute("payment",null);
 
@@ -474,44 +472,38 @@ class reservesActions extends sfActions {
             $from     = $this->getUser()->getAttribute("from");
             $to       = $this->getUser()->getAttribute("to");
         }
-
-
+        $debug = 1;
         try {
 
             if (is_null($warranty) || is_null($carId) || is_null($from) || is_null($to)) {
                 throw new Exception("El User ".$userId." esta intentando pagar pero uno de los campos es nulo. Garantia: ".$warranty.", Car: ".$carId.", Desde: ".$from.", Hasta: ".$to, 1);
             }
-
+            $debug = 2;
             $datesError = $this->validateDates($from, $to);
-            if ($datesError) {
-                throw new Exception($datesError, 1);
+            if (!is_null($datesError)) {
+                throw new Exception($datesError, 2);
             }
-
+            $debug = 3;
             $User = Doctrine_Core::getTable('User')->find($userId);
             if ($User->getBlocked()) {
                 throw new Exception("Rechazado el pago de User ".$userId." (".$User->firstname." ".$User->lastname.") debido a que se encuentra bloqueado, por lo que no esta autorizado para generar pagos", 1);            
             }
-
+            $debug = 4;
             $Car = Doctrine_Core::getTable('Car')->find($carId);
             if (!$Car) {
                 throw new Exception("El User ".$userId." esta intentando pagar pero no se encontró el auto.", 1);
             }
-
+            $debug = 5;
             if ($Car->hasReserve($from, $to)) {
                 throw new Exception("El User ".$userId." esta intentando pagar pero el Car ".$carId." ya posee un reserva en las fechas indicadas.", 1);
             }
-
+            $debug = 6;
             $Reserve = new Reserve();
             $Reserve->setDuration(Utils::calculateDuration($from, $to));
             $Reserve->setDate(date("Y-m-d H:i:s", strtotime($from)));
             $Reserve->setUser($User);
             $Reserve->setCar($Car);
-
-            if ($User->getBlocked()) {
-                $Reserve->setVisibleOwner(false);
-                $Reserve->setConfirmed(true);
-            }
-
+            $debug = 7;
             if ($warranty) {
                 $amountWarranty = sfConfig::get("app_monto_garantia");
                 $Reserve->setLiberadoDeGarantia(false);
@@ -519,40 +511,41 @@ class reservesActions extends sfActions {
                 $amountWarranty = Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to);
                 $Reserve->setLiberadoDeGarantia(true);
             }
-
+            $debug = 8;
             $Reserve->setPrice(CarTable::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth()));
             $Reserve->setMontoLiberacion($amountWarranty);
             $Reserve->setFechaReserva(date("Y-m-d H:i:s"));
             $Reserve->setConfirmed(false);
             $Reserve->setImpulsive(true);
-
+            $debug = 9;
             $Reserve->save();
-
+            $debug = 10;
             $Transaction = new Transaction();
             $Transaction->setCar($Car->getModel()->getName()." ".$Car->getModel()->getBrand()->getName());
             $Transaction->setPrice($Reserve->getPrice());
             $Transaction->setUser($Reserve->getUser());
             $Transaction->setDate(date("Y-m-d H:i:s"));
-
+            $debug = 11;
             $TransactionType = Doctrine_Core::getTable('TransactionType')->find(1);
             $Transaction->setTransactionType($TransactionType);
             $Transaction->setReserve($Reserve);
             $Transaction->setCompleted(false);
             $Transaction->setImpulsive(true);
+            $debug = 12;
             $Transaction->save();
+            $debug = 13;
 
             $this->getRequest()->setParameter("reserveId", $Reserve->getId());
             $this->getRequest()->setParameter("transactionId", $Transaction->getId());
-
+            $debug = 14;
             $this->forward("khipu", "generatePayment");
         } catch (Exception $e) {
             error_log("[".date("Y-m-d H:i:s")."] [reserves/pay] ".$e->getMessage());
-            if ($request->getHost() == "www.arriendas.cl") {
-                Utils::reportError($e->getMessage(), "reserves/pay");
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError("DEBUG: ".$debug.". ".$e->getMessage(), "reserves/pay");
             }
-        }
-
-        $this->redirect("homepage");
+            $this->redirect("homepage");
+        }        
     }
 
     public function executeReject (sfWebRequest $request) {
@@ -647,9 +640,9 @@ class reservesActions extends sfActions {
         $to   = strtotime($to);
 
         if ($from >= $to) {
-            return "La fecha de inicio debe ser menor a la fecha de término.";
+            return "La fecha de término debe ser al menos 3 horas superior a la fecha de inicio.";
         }
 
-        return false;
+        return null;
     }
 }

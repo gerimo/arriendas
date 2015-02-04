@@ -206,7 +206,12 @@ class carsActions extends sfActions {
                 throw new Exception("No se encuentra el auto", 1);
             }            
             
-            $DisabledCar->setDisabledUntil(date("Y-m-d", strtotime($untilDate)));
+            if (is_null($untilDate) || $untilDate == "") {
+                $DisabledCar->setDisabledUntil(null);
+            } else {
+                $DisabledCar->setDisabledUntil(date("Y-m-d", strtotime($untilDate)));
+            }
+            
             $DisabledCar->save();
 
         } catch (Exception $e) {
