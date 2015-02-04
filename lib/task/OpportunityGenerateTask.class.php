@@ -1,6 +1,6 @@
 <?php
 
-class OpportunityQueueTask extends sfBaseTask {
+class OpportunityGenerateTask extends sfBaseTask {
 
     protected function configure() {
 
@@ -14,7 +14,7 @@ class OpportunityQueueTask extends sfBaseTask {
         $this->name = 'generate';
         $this->briefDescription = 'Generación de oportunidades para reservas no confirmadas por su dueño original';
         $this->detailedDescription = <<<EOF
-The [OpportunityQueueTask|INFO] task does things.
+The [OpportunityGenerateTask|INFO] task does things.
 Call it with:
 
   [php symfony opportunity:generate|INFO]
@@ -158,7 +158,7 @@ EOF;
             $this->log("[".date("Y-m-d H:i:s")."] ERROR: {$e->getMessage()}");    
 
             if ($options['env'] == 'prod') {
-                Utils::reportError($e->getMessage(), "OpportunityQueueTask");
+                Utils::reportError($e->getMessage(), "OpportunityGenerateTask");
             }            
         }
     }
