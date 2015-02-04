@@ -463,7 +463,7 @@ class Reserve extends BaseReserve {
         return $isReady;
     }
 
-    /*public function save(Doctrine_Connection $conn = null) {
+    public function save(Doctrine_Connection $conn = null) {
 
         $car = Doctrine_Core::getTable('car')->findOneById($this->getCarId());
         $user = Doctrine_Core::getTable('user')->findOneById($car->getUserId());
@@ -655,7 +655,7 @@ class Reserve extends BaseReserve {
         }
 
         return $ret;
-    }*/
+    }
     
     public function setUniqueToken($replace = false){
         
