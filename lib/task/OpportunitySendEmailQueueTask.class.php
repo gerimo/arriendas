@@ -95,7 +95,7 @@ EOF;
             $this->log("[".date("Y-m-d H:i:s")."] ERROR: ".$e->getMessage());
 
             if ($options['env'] == 'prod') {
-                Utils::reportError($e->getMessage(), "OpportunityEmailQueueTask");
+                Utils::reportError($e->getMessage(), "OpportunitySendEmailQueueTask");
             }
         }
     }
