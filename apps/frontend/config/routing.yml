@@ -9,13 +9,17 @@ about_company:
     url: /nosotros
     param: { module: main, action: compania }
 
-car_availability_remove:
-    url: /auto/disponibilidad/eliminar
-    param: { module: cars, action: carAvailabilityRemove }
-
 car_availability:
    url: /auto/disponibilidad
    param: { module: cars, action: availability }
+
+car_availability_email:
+    url: /availability/:id/:o/:signature
+    param: { module: cars, action: availabilityEmail }
+
+car_availability_remove:
+    url: /auto/disponibilidad/eliminar
+    param: { module: cars, action: carAvailabilityRemove }
 
 car_availability_save:
     url: /auto/disponibilidad/guardar
@@ -260,9 +264,7 @@ aprobarOportunidad:
     url:  /profile/aprobarOportunidad/:idReserve/:idCar/:idUser
     param:  { module: profile, action: aprobarOportunidad }
 
-availability:
-    url: /availability
-    param: { module: main, action: availability }
+
 
 availabilityEmailOpen:
     url: /availability/open

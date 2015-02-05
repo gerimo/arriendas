@@ -1,3 +1,6 @@
+.row {
+    margin: 0;
+}
 .navbar-brand img {
     margin-top: -7px;
 }
@@ -52,3 +55,4 @@
     position: absolute;
     margin: -47px 0 0 92%;
 }
+

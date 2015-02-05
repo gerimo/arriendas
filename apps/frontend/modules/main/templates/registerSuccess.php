@@ -1,4 +1,4 @@
-<link href="/css/newDesign/completeRegister.css" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/register.css" rel="stylesheet" type="text/css">
 
 <div class="hidden-xs space-100"></div>
 <div class="visible-xs space-50"></div>
@@ -17,9 +17,16 @@
             <div class="alert"></div>
 
             <div class="row">
-                <div class="col-md-offset-7 col-md-5" style="padding: 0">
+
+                <div class="col-md-6 hidden-xs text-center" style="padding: 0">
+                    <div class="hidden-xs space-10"></div>
+                    <img class="loading" src="/images/ajax-loader.gif">
+                </div>
+                
+                <div class="col-md-6 col-xs-12" style="padding: 0">
                     <button class="btn btn-a-primary btn-block" id="save" onclick="validateForm()">Siguiente</button>
                 </div>
+
             </div>
         </div>
 
@@ -34,7 +41,7 @@
 
 <script type="text/javascript">
     $(document).ready(function() { 
-
+        $(".loading").hide();
         $('#foreign').click(function() {
             $('#rut').val('');
             if($('#rut').attr('disabled')){
@@ -82,7 +89,7 @@
         var email          = $("#email").val();
         var emailAgain     = $("#emailAgain").val();
         var password       = $("#password").val();
-
+        $(".loading").show();
         $.post("<?php echo url_for('main/doRegister') ?>", {"firstname": firstname, "lastname": lastname, "email": email, "emailAgain": emailAgain, "password": password}, function(r){
             
             $(".alert").removeClass("alert-a-danger");
@@ -94,7 +101,7 @@
             } else {
                 window.location.href = r.url_complete;
             }
-
+            $(".loading").hide();
         }, 'json');
     }
 

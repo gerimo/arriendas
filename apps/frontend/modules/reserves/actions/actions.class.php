@@ -60,7 +60,7 @@ class reservesActions extends sfActions {
                 $OpportunityQueue->setIsActive(false);
                 $OpportunityQueue->save();
             } else {
-                error_log("[".date("Y-m-d H:i:s")."] [reserves/approve] ERROR: Al aprobar la Reserve ".$Reserve->id." no se ha podido encontrar la OpportunityQueue para ser desactivada");
+                error_log("[".date("Y-m-d H:i:s")."] [reserves/approve] Hubo un problema al aprobar la Reserve ".$Reserve->id.". No se ha podido encontrar la OpportunityQueue para ser desactivada");
             }
 
             // Correo de notificación

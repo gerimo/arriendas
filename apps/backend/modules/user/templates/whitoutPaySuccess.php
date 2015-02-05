@@ -1,9 +1,8 @@
-    
 <div class="hidden-xs space-100"></div>
 <div class="visible-xs space-50"></div>
 
 <div class="row">
-    <div class="col-md-offset-2 col-md-8"> 
+    <div class="col-md-offset-2 col-md-8">
         <div class="col-md-12">
             <div class="col-md-4">
                 <input class="datepicker form-control text-center" id="from" placeholder="from" type="text" value="<?php echo date("Y-m-d", strtotime("-35 day"))?>"  >
@@ -14,7 +13,7 @@
             </div>
 
             <div class="col-md-4">
-                <button class="buscar btn btn-block btn-primary" onclick="getUserWhitoutPay()">Buscar</button>
+                <button class="buscar btn btn-block btn-primary" id="buscar" onclick="getUserWhitoutPay()">Buscar</button>
             </div>
         </div>
 
@@ -46,19 +45,6 @@
             </tbody>
         </table>
     </div>
-
-    <div class="modal fade bs-example-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="input-group">
-                <input type="text" class="form-control" id="comment" placeholder="Comentario...">
-                <span class="input-group-btn">
-                    <button class="btn btn-primary" type="button" onclick="editComment()">Update</button>
-                </span>
-            </div>
-        </div>
-      </div>
-    </div>
     <div style="display:none">
         <div id="dialog-alert" title="">
             <p></p>
@@ -73,6 +59,8 @@
 
 <script>
 
+    var urlComment = "<?php echo url_for('comment', array('userId' => 'userIdPattern', 'managementId' => '1')) ?>";
+
     $(document).ready(function() {
 
         getUserWhitoutPay();
@@ -81,8 +69,18 @@
             info: false,
             paging: true,
             responsive: true
-        });    
-    }); 
+        });
+    });
+
+    $('body').on("click", ".comment", function(e){
+
+        $(this).colorbox({
+            height: "75%",
+            width: "85%"
+        });
+
+        e.preventDefault();
+    });
 
     function getUserWhitoutPay() {
 
@@ -99,7 +97,7 @@
                     buttons: [{
                     text: "Aceptar",
                     click: function() {
-                        $('#userWhitoutPay').DataTable().rows().remove().draw();
+                        $('#userWhitoutPayTable').DataTable().rows().remove().draw();
                         $( this ).dialog( "close" );
 
                     }
@@ -108,11 +106,13 @@
             } else {
                 
                 $('#userWhitoutPayTable').DataTable().rows().remove().draw();
-                $.each(r.data, function(k, v){
-                    $('#userWhitoutPayTable').DataTable().row.add([ v.user_id, v.user_fullname, v.user_telephone, v.user_email, v.user_address, v.user_commnet ]).draw();
-                });
-                    $(".loading").hide();
 
+                $.each(r.data, function(k, v) {
+                    var button = "<a class='btn btn-block btn-primary comment' href='"+urlComment.replace("userIdPattern", v.user_id)+"'>Comentarios</a>";
+                    $('#userWhitoutPayTable').DataTable().row.add([ v.user_id, v.user_fullname, v.user_telephone, v.user_email, v.user_address, button ]).draw();
+                });
+
+                $(".loading").hide();
             }
 
         }, 'json');
@@ -136,41 +136,5 @@
         maxDate: "<?php echo date('Y-m-d') ?>"
     });
 
-    $('#userWhitoutPayTable tbody').on( 'click', 'td', function () {
-
-        var dato = $('#userWhitoutPayTable').DataTable().cell( this ).index().row;
-        console.log(this);
-        var row  = $('#userWhitoutPayTable').DataTable().row(dato).data();
-
-        if($('#userWhitoutPayTable').DataTable().cell( this ).index().column == 5) {
-
-            $("#userId").val(row[0]);
-            $("#myModal").modal('show');
-
-
-        }
-    } );
-
-    function editComment() {
-
-        var userId  = $("#userId").val();
-        var comment = $("#comment").val();
-
-        console.log(userId);
-        console.log(comment);
-        $.post("<?php echo url_for('user_without_pay_comment') ?>", {"userId": userId, "comment": comment}, function(r){
-
-            if (r.error) {
-                console.log(r.errorMessage);
-            } else {
-
-                $("#myModal").modal('hide');
-                GetUserWhitoutPay(); 
-            }
-
-        }, 'json');
-    }
-
-    
    
 </script>

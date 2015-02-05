@@ -26,6 +26,7 @@
         <link href="/css/newDesign/slick/slick.css" rel="stylesheet" type="text/css">
         <link href="/css/newDesign/raty/jquery.raty.css" rel="stylesheet" type="text/css">
         <link href="/css/newDesign/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+        <link href="/css/newDesign/colorbox/colorbox.css" rel="stylesheet" type="text/css">
         <!-- <link href="/css/newDesign/datatablesp/jquery.dataTables_themeroller.css" rel="stylesheet" type="text/css"> -->
         <link href="/css/newDesign/datatables/dataTables.responsive.css" rel="stylesheet" type="text/css">
 
@@ -60,6 +61,8 @@
         <script src="/js/newDesign/datatables/jquery.dataTables.min.js" type="text/javascript"></script>
         <script src="/js/newDesign/datatables/dataTables.responsive.min.js" type="text/javascript"></script>
         <script src="/js/newDesign/formToWizard/formToWizard.js" type="text/javascript"></script>
+        <script src="/js/newDesign/colorbox/jquery.colorbox-min.js" type="text/javascript"></script>
+        <script src="/js/newDesign/colorbox/jquery.colorbox.js" type="text/javascript"></script>
 
         <?php include_component('main', 'header') ?>
 
