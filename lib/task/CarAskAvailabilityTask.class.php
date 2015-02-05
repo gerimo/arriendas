@@ -110,7 +110,7 @@ EOF;
                         $this->log("[".date("Y-m-d H:i:s")."] Enviando consulta a ".$oCar->getUser()->firstname." ".$oCar->getUser()->lastname." Car ".$oCar->getId());                        
 
                         $subject = "¿Tienes disponibilidad para recibir clientes este fin de semana? [E".$CarAvailabilityEmail->getId()."]";
-                        $body    = get_partial('emails/CarAskAvailabilityMailing', array(
+                        $body    = get_partial('emails/carAskAvailabilityMailing', array(
                             'Car' => $oCar,
                             'imageUrl' => $imageUrl,
                             'urlAllAva' => $urlAllAva,
@@ -141,6 +141,7 @@ EOF;
             }
 
         } catch (Exception $e) {
+            $this->log("[".date("Y-m-d H:i:s")."] ERROR: ".$e->getMessage());
             Utils::reportError($e->getMessage(), "CarAskAvailabilityTask");
         }
     }
