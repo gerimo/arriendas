@@ -13,17 +13,6 @@ class ReserveTable extends Doctrine_Table {
         return $q->fetchOne();
     }
 
-    public function isOriginalReserve($id) {
-
-        $q = Doctrine_Core::getTable("Reserve")
-            ->createQuery('R')
-            ->where('R.id = ?', $id)
-            ->andWhere('R.comentario = "null"')
-            ->andWhere('R.reserva_original = 0');
-
-            return $q->execute();
-    }
-
     ///////////////////////////
 
     /**

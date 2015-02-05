@@ -47,30 +47,30 @@ class Utils {
         return false;
    }
 
-    public static function isWeekend($getDays = false) {
+    public static function isWeekend($getDays = false, $tomorrow = false) {
 
         $days = array();
 
-        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
-        if ($Holiday || date("N") == 6 || date("N") == 7) {
+        $tomorrow ? $i = 1 : $i = 0;
+
+        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+".$i." day")));
+        if ($Holiday || date("N", strtotime("+".$i." day")) == 6 || date("N", strtotime("+".$i." day")) == 7) {
 
             if (!$getDays) {
                 return true;
             }
 
-            $days[0] = date("Y-m-d");
-            $i = 1;
+            $days[] = date("Y-m-d", strtotime("+".$i." day"));
+            $i++;
 
-            $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+".$i." day")));            
+            $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+".$i." day")));
             while ($Holiday || date("N", strtotime("+".$i." day")) == 6 || date("N", strtotime("+".$i." day")) == 7) {
 
-                $days[$i] = date("Y-m-d", strtotime("+".$i." day"));
+                $days[] = date("Y-m-d", strtotime("+".$i." day"));
                 $i++;
 
                 $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("N", strtotime("+".$i." day")));
             }
-
-            $isWeekend = true;
         }
 
         if (count($days) > 0) {

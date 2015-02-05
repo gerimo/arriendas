@@ -9,6 +9,7 @@
     <?php if ($mailingId == 1): ?>
         <p style='color: #aaa; font-size:10px; margin: 0; padding: 3px 0 0 0'>Si no deseas recibir más notificaciones de oportunindades has click <a href="<?php echo $host.$url ?>">aquí</a>.</p>
     <?php elseif ($mailingId == 2): ?>
+        <p style='color: #aaa; font-size:10px; margin: 0; padding: 3px 0 0 0'>Si no deseas recibir más solicitudes de disponibilidad has click <a href="<?php echo $host.$url ?>">aquí</a>.</p>
     <?php endif ?>
 <?php endif ?>
 <br><br>

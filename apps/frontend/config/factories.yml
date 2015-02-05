@@ -41,6 +41,7 @@ all:
     param:
       cache_key_use_vary_headers: true
       cache_key_use_host_name:    true
+
   mailer:
     class: sfMailer
     param:
@@ -54,3 +55,9 @@ all:
           encryption: ssl
           username:   german@arriendas.cl
           password:   whisper00@@__
+
+  storage:
+    class: sfSessionStorage
+    param:
+      session_name: Arriendas
+      session_cookie_domain: .arriendas.cl

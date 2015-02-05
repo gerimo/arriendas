@@ -9,13 +9,13 @@
  * @property User $user
  * @property Management $management
  * @property string $commnet
- * @property time $created_at
+ * @property timestamp $created_at
  * 
  * @method integer              getId()                Returns the current record's "id" value
  * @method User                 getUser()              Returns the current record's "User" value
  * @method Management           getManagement()        Returns the current record's "Management" value
  * @method string               getComment()           Returns the current record's "comment" value
- * @method time                 getCreatedAt()         Returns the current record's "created_at" value 
+ * @method timestamp            getCreatedAt()         Returns the current record's "created_at" value 
  *
  * @method UserManagement       setId()                Sets the current record's "id" value
  * @method UserManagement       setUser()              Sets the current record's "User" value
@@ -53,6 +53,10 @@ abstract class BaseUserManagement extends sfDoctrineRecord {
         $this->hasColumn('comment', 'string', 50, array(
             'type' => 'string',
             'length' => 50
+        ));
+
+        $this->hasColumn('created_at', 'timestamp', null, array(
+             'type' => 'timestamp',
         ));
 
         $this->index('id_UNIQUE', array(

@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 class UserTable extends Doctrine_Table {
 
@@ -10,30 +10,28 @@ class UserTable extends Doctrine_Table {
             ->groupBy('R.user_id')
             ->orderBy('R.fecha_reserva ASC');
 
-
-            if ($from && $to) {
-                $q->andWhere('DATE(R.fecha_reserva) >= ?', $from);
-                $q->andWhere('DATE(R.fecha_reserva) <= ?', $to);
-            }
-
-
+        if ($from && $to) {
+            $q->andWhere('DATE(R.fecha_reserva) >= ?', $from);
+            $q->andWhere('DATE(R.fecha_reserva) <= ?', $to);
+        }
 
         return $q->execute();
     }
 
     public function findUsersWithoutCar($from = false, $to = false) {
+
         $q = Doctrine_Core::getTable("User")
             ->createQuery('U')
-            ->leftJoin('U.Car c')
-            ->orderBy('C.user_id');
+            ->leftJoin('U.Cars C')
+            ->groupBy('U.id');
 
-
-            if ($from && $to) {
-                $q->andWhere('DATE(R.fecha_reserva) >= ?', $from);
-                $q->andWhere('DATE(R.fecha_reserva) <= ?', $to);
-            }
+        if ($from && $to) {
+            $q->andWhere('DATE(U.fecha_registro) >= ?', $from);
+            $q->andWhere('DATE(U.fecha_registro) <= ?', $to);
+        }        
 
         return $q->execute();
+
     }
 
     //////////////////////////////////
