@@ -75,10 +75,7 @@ EOF;
                 
                 $from = $days[0] .= " 00:00:00";
                 $to   = $days[count($days)-1] .= " 23:59:59";
-
-                $this->log("[".date("Y-m-d H:i:s")."] FROM: ".$from);
-                $this->log("[".date("Y-m-d H:i:s")."] TO: ".$to);
-
+                
                 foreach ($oCars as $oCar) {
                     if (!$oCar->hasReserve($from, $to)) {
 

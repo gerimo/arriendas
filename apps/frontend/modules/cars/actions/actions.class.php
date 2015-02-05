@@ -4,7 +4,7 @@ require_once sfConfig::get('sf_lib_dir') . '/vendor/mobile-detect/Mobile_Detect.
 
 class carsActions extends sfActions {
 
-    public function executeAvailability(sfWebRequest $request) {
+    public function executeAvailabilityEmail(sfWebRequest $request) {
 
         $carAvailabilityEmailId = $request->getGetParameter("id");
         $option                 = $request->getGetParameter("o");
@@ -80,7 +80,7 @@ class carsActions extends sfActions {
         $this->redirect('cars');
     }
 
-    public function executeCarAvailabilityEmailOpen(sfWebRequest $request) {
+    public function executeAvailabilityEmailOpen(sfWebRequest $request) {
 
         try {
 
