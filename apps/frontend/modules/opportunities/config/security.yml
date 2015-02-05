@@ -1,14 +1,5 @@
-index:
-    is_secure: true
-
-opportunities_approve:
-    is_secure: true
-
-opportunities_mailing_approve:
+mailingApprove:
     is_secure: false
 
-opportunities_mailing_open:
+mailingOpen:
     is_secure: false
-
-opportunities_approve:
-    is_secure: true

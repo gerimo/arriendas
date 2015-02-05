@@ -1,5 +1,7 @@
 <?php
 
+require_once sfConfig::get('sf_lib_dir') . '/vendor/mobile-detect/Mobile_Detect.php';
+
 class carsActions extends sfActions {
 
     public function executeCarAvailabilityRemove(sfWebRequest $request) {
@@ -102,6 +104,51 @@ class carsActions extends sfActions {
         return sfView::NONE;
     }
 
+    public function executeSearch(sfWebRequest $request) {
+
+        $return = array("error" => false);
+
+        $isMap              = $request->getPostParameter('isMap', true) === 'true' ? true : false;
+        $mapCenterLat       = (float) $request->getPostParameter('mapCenterLat', null);
+        $mapCenterLng       = (float) $request->getPostParameter('mapCenterLng', null);
+        $from               = $request->getPostParameter('from', date("Y-m-d H:i:s"));
+        $to                 = $request->getPostParameter('to', date("Y-m-d H:i:s", strtotime("+1 day", strtotime($from))));
+        $NELat              = (float) $request->getPostParameter('NELat', null);
+        $NELng              = (float) $request->getPostParameter('NELng', null);
+        $SWLat              = (float) $request->getPostParameter('SWLat', null);
+        $SWLng              = (float) $request->getPostParameter('SWLng', null);
+        $regionId           = (int) $request->getPostParameter('regionId', 13);
+        $communeId          = (int) $request->getPostParameter('communeId', 0);
+        $isAutomatic        = $request->getPostParameter('isAutomatic', false) === 'true' ? true : false;
+        $isLowConsumption   = $request->getPostParameter('isLowConsumption', false) === 'true' ? true : false;
+        $isMorePassengers   = $request->getPostParameter('isMorePassengers', false) === 'true' ? true : false;
+        $nearToSubway       = $request->getPostParameter('nearToSubway', false) === 'true' ? true : false;
+
+
+        try {
+
+            $this->getUser()->setAttribute('from', date("Y-m-d H:i:s", strtotime($from)));
+            $this->getUser()->setAttribute('to', date("Y-m-d H:i:s", strtotime($to)));
+            $this->getUser()->setAttribute("mapCenterLat", $mapCenterLat);
+            $this->getUser()->setAttribute("mapCenterLng", $mapCenterLng);
+
+            $return["cars"] = CarTable::findCars($from, $to, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway);
+            /*error_log("Autos encontrados: ".count($return["cars"]));*/
+
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+            error_log("[".date("Y-m-d H:i:s")."] [cars/search] ERROR: ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "cars/search");
+            }
+        }
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
     public function executeSetActive(sfWebRequest $request) {
 
         $return = array("error" => false);
@@ -159,7 +206,12 @@ class carsActions extends sfActions {
                 throw new Exception("No se encuentra el auto", 1);
             }            
             
-            $DisabledCar->setDisabledUntil(date("Y-m-d", strtotime($untilDate)));
+            if (is_null($untilDate) || $untilDate == "") {
+                $DisabledCar->setDisabledUntil(null);
+            } else {
+                $DisabledCar->setDisabledUntil(date("Y-m-d", strtotime($untilDate)));
+            }
+            
             $DisabledCar->save();
 
         } catch (Exception $e) {

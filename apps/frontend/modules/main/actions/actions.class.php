@@ -49,12 +49,17 @@ class mainActions extends sfActions {
             $userId_session = $this->getUser()->getAttribute("userid");
             $User = Doctrine_Core::getTable('user')->find($userId_session);
 
-            if ((!is_null($User) && !$User->getConfirmed()) || $User->getConfirmedFb()) {
-                $this->Regions = Region::getRegionsByNaturalOrder();
-                $this->User = $User;
+            if($User) {
+                if($User->getConfirmed()) {
+                    $this->redirect('homepage');
+                } else {
+                    $this->Regions = Region::getRegionsByNaturalOrder();
+                    $this->User = $User;
+                }
             } else {
-                $this->redirect('main/index');
+                $this->redirect('homepage');
             }
+
         } catch (Exception $e) {
             error_log("[".date("Y-m-d H:i:s")."] [main/completeRegister] ERROR: ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl") {
@@ -106,7 +111,7 @@ class mainActions extends sfActions {
             //$motherLastname = $request->getPostParameter("motherLastname", null);
             $como           = $request->getPostParameter("como", null);
             $userId         = $request->getPostParameter("userId", null);
-            $rut            = $request->getPostParameter("rut", null);
+            $rut            = Utils::isValidRUT($request->getPostParameter("rut", null));
             $foreign        = $request->getPostParameter("foreign", null);
             $telephone      = $request->getPostParameter("telephone", null);
             $birth          = $request->getPostParameter("birth", null);
@@ -115,14 +120,24 @@ class mainActions extends sfActions {
             $region         = $request->getPostParameter("region", null);
             $anotherText    = $request->getPostParameter("anotherText", null);
 
-            if(!$foreign) {
-                if (is_null($rut) || $rut == "") {
-                    throw new Exception("Debes indicar tu RUT", 1);
-                }            
-            }
             if (is_null($foreign) || $foreign == "") {
                 throw new Exception("Debes indicar tu nacionalidad", 1);
             }
+
+            if(!$foreign) {
+                if (is_null($rut) || $rut == "") {
+                    throw new Exception("Debes indicar tu RUT", 1);
+                } else {
+                    if ($rut == false) {
+                        throw new Exception("el rut ingresado es inválido", 1);
+                    } else {
+                        if(User::rutExist($rut)) {
+                            throw new Exception("el rut ingresado ya se encuentra registrado", 1);
+                        }
+                    }
+                }
+            }        
+            
             //borrar
             if (is_null($userId) || $userId == "") {
                 throw new Exception("userId", 1);
@@ -152,14 +167,9 @@ class mainActions extends sfActions {
             if (is_null($region) || $region == "") {
                 throw new Exception("Debes indicar tu región", 1);
             }
+
             if(!$foreign) {
-                if (!Utils::isValidRUT($rut)) {
-                    throw new Exception("el rut ingresado es inválido", 1);
-                } else {
-                    if(User::rutExist($rut)) {
-                        throw new Exception("el rut ingresado ya se encuentra registrado", 1);
-                    }
-                }
+                
             }
 
             if (is_null($como) || $como == "") {
@@ -192,6 +202,7 @@ class mainActions extends sfActions {
             if(!$foreign){
                 $basePath = sfConfig::get('sf_root_dir');
                 $userid = $User->getId();
+                $rut = substr($rut, 0, -1)."-".substr($rut, -1);
                 $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$rut.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
                 exec($comando);
             }
@@ -222,12 +233,10 @@ class mainActions extends sfActions {
     }
 
     public function executeDoRegister(sfWebRequest $request) {
-
         $return = array("error" => false);
 
         /* Se obtiene la direccion IP de la conexion */
         $visitingIp = $request->getRemoteAddress();
-
         try {
 
             $firstname      = $request->getPostParameter("firstname", null);
@@ -286,7 +295,14 @@ class mainActions extends sfActions {
             $User->save();
 
             $url = $this->generateUrl('user_register_complete');
+
+            // Login
+            $this->getUser()->setAuthenticated(true);
+            $this->getUser()->setAttribute("logged", true);
             $this->getUser()->setAttribute("userid", $User->getId());
+            $this->getUser()->setAttribute("firstname", $User->getFirstName());
+            $this->getUser()->setAttribute("name", current(explode(' ' , $User->getFirstName())) . " " . substr($User->getLastName(), 0, 1) . '.');
+            $this->getUser()->setAttribute("email", $User->getEmail());
 
             $return["url_complete"] = $url;
 
@@ -297,49 +313,6 @@ class mainActions extends sfActions {
         }
 
         $this->renderText(json_encode($return));
-        return sfView::NONE;
-    }
-
-    public function executeGetCars(sfWebRequest $request) {
-
-        $return = array("error" => false);
-
-        $isMap              = $request->getPostParameter('isMap', true) === 'true' ? true : false;
-        $mapCenterLat       = (float) $request->getPostParameter('mapCenterLat', null);
-        $mapCenterLng       = (float) $request->getPostParameter('mapCenterLng', null);
-        $from               = $request->getPostParameter('from', date("Y-m-d H:i:s"));
-        $to                 = $request->getPostParameter('to', date("Y-m-d H:i:s", strtotime("+1 day", strtotime($from))));
-        $NELat              = (float) $request->getPostParameter('NELat', null);
-        $NELng              = (float) $request->getPostParameter('NELng', null);
-        $SWLat              = (float) $request->getPostParameter('SWLat', null);
-        $SWLng              = (float) $request->getPostParameter('SWLng', null);
-        $regionId           = (int) $request->getPostParameter('regionId', 13);
-        $communeId          = (int) $request->getPostParameter('communeId', 0);
-        $isAutomatic        = $request->getPostParameter('isAutomatic', false) === 'true' ? true : false;
-        $isLowConsumption   = $request->getPostParameter('isLowConsumption', false) === 'true' ? true : false;
-        $isMorePassengers   = $request->getPostParameter('isMorePassengers', false) === 'true' ? true : false;
-
-        try {
-
-            $this->getUser()->setAttribute('from', date("Y-m-d H:i:s", strtotime($from)));
-            $this->getUser()->setAttribute('to', date("Y-m-d H:i:s", strtotime($to)));
-            $this->getUser()->setAttribute("mapCenterLat", $mapCenterLat);
-            $this->getUser()->setAttribute("mapCenterLng", $mapCenterLng);
-
-            $return["cars"] = CarTable::findCars($from, $to, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers);
-            /*error_log("Autos encontrados: ".count($return["cars"]));*/
-
-        } catch (Exception $e) {
-            $return["error"] = true;
-            $return["errorMessage"] = $e->getMessage();
-            error_log("[".date("Y-m-d H:i:s")."] [main/getCars] ERROR: ".$e->getMessage());
-            if ($request->getHost() == "www.arriendas.cl") {
-                Utils::reportError($e->getMessage(), "main/getCars");
-            }
-        }
-
-        $this->renderText(json_encode($return));
-
         return sfView::NONE;
     }
 
@@ -606,7 +579,8 @@ class mainActions extends sfActions {
         $this->price = CarTable::getPrice($from, $to, $this->Car->getPricePerHour(), $this->Car->getPricePerDay(), $this->Car->getPricePerWeek(), $this->Car->getPricePerMonth());
 
         // Reviews (hay que arreglar las clase Rating)
-        $this->reviews = array();
+        // Comentado, Estrellas erroneas en produccion
+        /*$this->reviews = array();
         $this->defaultReviews = array();
 
         $cont=0;
@@ -639,7 +613,7 @@ class mainActions extends sfActions {
                 }
             }
 
-        }
+        }*/
 
         // Características
         $this->passengers = false;
@@ -2762,9 +2736,9 @@ class mainActions extends sfActions {
         $url = $_SERVER['SERVER_NAME'];
         $url = str_replace('http://', '', $url);
         $url = str_replace('https://', '', $url);
-        $url = 'http://www.arriendas.cl/main/recover?email=' . $user->getEmail() . "&hash=" . $user->getHash();
+        // $url = 'http://www.arriendas.cl/main/recover?email=' . $user->getEmail() . "&hash=" . $user->getHash();
+        $url = 'http://www.arriendas.cl/contrasena/modificar/' . $user->getId() . "/" . $user->getHash();
         $this->logMessage($url);
-
         $body = "<p>Hola:</p><p>Para generar una nueva contraseña, haz click <a href='$url'>aqu&iacute;</a></p>";
         $message = $this->getMailer()->compose();
         $message->setSubject("Recuperar Password");
@@ -2778,26 +2752,29 @@ class mainActions extends sfActions {
     }
 
     public function executeRecover(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
 
-        $this->email = $this->getRequestParameter('email');
-        $this->email = str_replace("%2540", "@", $this->email);
-        $this->email = str_replace("%40", "@", $this->email);
+        $this->id = $request->getParameter('id');
+
+        $this->id = str_replace("%2540", "@", $this->id);
+        $this->id = str_replace("%40", "@", $this->id);
 	
-        $this->hash = $this->getRequestParameter('hash');
+        $this->hash = $request->getParameter('hash');
 
-        $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ? and u.hash = ?', array($this->email, $this->hash));
+        $q = Doctrine::getTable('user')->createQuery('u')->where('u.id = ? and u.hash = ?', array($this->id, $this->hash));
         $user = $q->fetchOne();
-        if ($user == null)
-            exit();
+        if (!$user) {
+            $this->redirect('homepage');
+        }
     }
 
     public function executeDoChangePSW(sfWebRequest $request) {
 
-        $email = $this->getRequestParameter('email');
+        // $email = $this->getRequestParameter('email');
+        $id = $this->getRequestParameter('id');
         $hash = $this->getRequestParameter('hash');
-        $password = $this->getRequestParameter('password');
-
-        $q = Doctrine::getTable('user')->createQuery('u')->where('u.email = ? and u.hash = ?', array($email, $hash));
+        $password = $this->getRequestParameter('password');;
+        $q = Doctrine::getTable('user')->createQuery('u')->where('u.id = ? and u.hash = ?', array($id, $hash));
         $user = $q->fetchOne();
         if ($user != null) {
             $user->setPassword(md5($password));
@@ -2805,7 +2782,7 @@ class mainActions extends sfActions {
             $user->save();
             $this->redirect('main/login');
         }
-        else
+        else 
             exit();
     }
 	
@@ -3101,7 +3078,7 @@ class mainActions extends sfActions {
         $app_secret = "8d8f44d1d2a893e82c89a483f8830c25";
         //$my_url = "http://www.arriendas.cl/main/loginFacebook";
         $my_url = $this->generateUrl("facebook_login", array(), true);
-        
+        $referer = $this->getUser()->getAttribute("referer");
         // $app_id = "297296160352803";
         // $app_secret = "e3559277563d612c3c20f2c202014cec";
         // $my_url = "http://test.intothewhitebox.com/yineko/arriendas/main/loginFacebook";
@@ -3109,9 +3086,6 @@ class mainActions extends sfActions {
         $state = $request->getParameter("state");
         $previousUser= $request->getParameter("logged");
         $returnRoute = $request->getParameter("return");
-
-        /*$referer = $this->getContext()->getActionStack()->getSize() > 1 ? $request->getUri() : $request->getReferer();
-        $this->getUser()->setAttribute("referer", $referer);*/
     	
         if($previousUser) {
     	   $my_url.="?logged=true";
@@ -3147,7 +3121,7 @@ class mainActions extends sfActions {
                 $this->redirect($this->generateUrl($returnRoute));
 
             }else{
-                $this->redirect('main/index');
+                $this->redirect('homepage');
             }
         }
 	
@@ -3185,7 +3159,6 @@ class mainActions extends sfActions {
                     $myUser->setFacebookId($user["id"]);
                     $myUser->setPictureFile($photo_indexurl);
                     $myUser->setConfirmedFb(true);
-                    $myUser->setConfirmed(true);
                     $myUser->save();
                 } else {
 					$newUser=false;
@@ -3243,10 +3216,10 @@ class mainActions extends sfActions {
 
                 if ($newUser) {
 		            //$this->getRequest()->setParameter('userId', $userdb->getId());
-					$this->redirect("main/completeRegister");
+					$this->redirect('user_register_complete');
 				}else{
-					if ($this->getUser()->getAttribute("referer") != null) {
-						$this->redirect($this->getUser()->getAttribute("referer"));
+					if ($referer != null) {
+						$this->redirect($referer);
 					} else {
 						$this->redirect('main/index');
 						//$this->redirect('profile/cars');

@@ -7,10 +7,16 @@ availabilityEmailOpen:
 compania:
     is_secure: false
 
-completeRegister:
+dataForPayment:
     is_secure: false
 
-dataForPayment:
+doChangePSW:
+    is_secure: false
+
+doCompleteRegister:
+    is_secure: false
+
+doRegister:
     is_secure: false
 
 fbShare:
@@ -23,6 +29,9 @@ forgotSend:
     is_secure: false
 
 generarFormularioEntregaDevolucion:
+    is_secure: false
+
+getCommunes:
     is_secure: false
 
 howWorks:
@@ -52,6 +61,9 @@ pricesCompare:
 questions:
     is_secure: false
 
+recover:
+    is_secure: false
+
 register:
     is_secure: false
 
@@ -62,4 +74,7 @@ searchACars:
     is_secure: false
 
 terminos:
+    is_secure: false
+
+valueYourCar:
     is_secure: false

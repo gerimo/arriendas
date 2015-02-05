@@ -49,6 +49,10 @@ car_create:
    url: /auto/crear
    param: { module: cars, action: create }
 
+car_search:
+    url: /autos/buscar
+    param: { module: cars, action: search }
+
 cars:
     url: /mis-autos
     param: { module: profile, action: cars }
@@ -69,6 +73,10 @@ forgot_password:
 forgot_password_send:
     url: /contrasena/enviar
     param: { module: main, action: forgotSend }
+
+forgot_password_update:
+    url: /contrasena/modificar/:id/:hash
+    param: { module: main, action: recover }
 
 homepage:
     url: /

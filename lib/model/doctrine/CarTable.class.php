@@ -15,7 +15,7 @@ class CarTable extends Doctrine_Table {
 
     ///////////////////////////////////////////////////////////7
 
-    public static function findCars($from, $to, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers) {
+    public function findCars($from, $to, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway) {
 
         $CarsFound = array();
         $isWeekend = false;
@@ -92,6 +92,17 @@ class CarTable extends Doctrine_Table {
                 $q->andWhere("M.id_otro_tipo_vehiculo = 3");
             }
 
+            if ($nearToSubway) {
+                /*error_log($nearToSubway);*/
+                //15 cuadras->18 minutos a pie
+                $distanceMax = 1.5;
+
+                $q->innerJoin('C.CarProximityMetros CPM');
+                $q->andWhere('CPM.distance < ?', $distanceMax);
+                $q->addOrderBy('CPM.distance ASC');
+
+            }
+
             $Cars = $q->execute();
 
             foreach ($Cars as $i => $Car) {
@@ -145,6 +156,7 @@ class CarTable extends Doctrine_Table {
             $q = Doctrine_Core::getTable("Car")
                 ->createQuery('C')
                 ->Where('C.activo = 0')
+                ->andWhere('C.disabled_until IS NOT NULL')
                 ->andWhere('C.disabled_until < ?', $date);
 
             $oCars = $q->execute();
