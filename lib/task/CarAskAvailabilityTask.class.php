@@ -88,7 +88,7 @@ EOF;
                         $CarAvailabilityEmail->setSentAt(date("Y-m-d H:i:s"));
                         $CarAvailabilityEmail->save();
 
-                        $imageUrl = $host . $routing->generate('availabilityEmailOpen', array("id" => $CarAvailabilityEmail->id));
+                        $imageUrl = $host . $routing->generate('car_availability_email_open', array("id" => $CarAvailabilityEmail->id));
 
                         $urlAllAva  = $host . $routing->generate('car_availability_email', array(
                             'id' => $CarAvailabilityEmail->getId(),
