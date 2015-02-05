@@ -14,8 +14,12 @@ car_availability:
    param: { module: cars, action: availability }
 
 car_availability_email:
-    url: /availability/:id/:o/:signature
+    url: /disponibilidad/:id/:o/:signature
     param: { module: cars, action: availabilityEmail }
+
+car_availability_email_open:
+    url: /disponibilidad/imagen/:id
+    param: { module: main, action: availabilityEmailOpen }
 
 car_availability_remove:
     url: /auto/disponibilidad/eliminar
@@ -263,12 +267,6 @@ aprobarReserve:
 aprobarOportunidad:
     url:  /profile/aprobarOportunidad/:idReserve/:idCar/:idUser
     param:  { module: profile, action: aprobarOportunidad }
-
-
-
-availabilityEmailOpen:
-    url: /availability/open
-    param: { module: main, action: availabilityOpen }
 
 facebook_login:
     url: /main/loginFacebook 
