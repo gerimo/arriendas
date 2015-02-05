@@ -120,6 +120,7 @@ EOF;
                         $from  = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
                         $to    = array($oCar->getUser()->email => $oCar->getUser()->firstname." ".$oCar->getUser()->lastname);
 
+                        $message = $this->getMailer()->compose();
                         $message->setSubject($subject);
                         $message->setBody($body, 'text/html');
                         $message->setFrom($from);
