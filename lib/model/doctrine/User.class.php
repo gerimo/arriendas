@@ -1568,7 +1568,7 @@ class User extends BaseUser {
             $messageBody .= "<p> first name: " . $this->getFirstname() . "</p>";
             $messageBody .= "<p> last name: " . $this->getLastname() . "</p>";
             $messageBody .= "<p> teléfono: " . $this->getTelephone() . "</p>";
-            $messageBody .= "<p> RUT: " . $this->getRut() . "</p>";
+            $messageBody .= "<p> RUT: " . $this->getRutFormatted() . "</p>";
             if (!is_null($this->getCity())) {
                 $messageBody .= "<p> ciudad: " . $this->getCity()->getName() . "</p>";
                 if (!is_null($this->getCity()->getComuna())) {
@@ -1648,5 +1648,16 @@ class User extends BaseUser {
         }
 
         return false;
+    }
+
+    public function getRutFormatted() {
+        $rutNumber = number_format($this->rut,0,"",".");
+        $rutFormatted = (string)$rutNumber."-".$this->rut_dv;
+        return $rutFormatted;
+    }
+
+    public function getRutComplete() {
+        $rutComplete = (string)$this->rut."-".$this->rut_dv;
+        return $rutComplete;
     }
 }

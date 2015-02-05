@@ -154,13 +154,14 @@ class profileActions extends sfActions {
         $return = array("error" => false);
     
         try {
-    
             $firstname      = $request->getPostParameter("firstname", null);
             $lastname       = $request->getPostParameter("lastname", null);
             $motherLastname = $request->getPostParameter("motherLastname", null);
             $email          = $request->getPostParameter("email", null);
             $emailAgain     = $request->getPostParameter("emailAgain", null);
-            $rut            = $request->getPostParameter("rut", null);
+            /*$rut            = Utils::isValidRUT($request->getPostParameter("rut", null));
+            $dv             = substr($rut, -1);
+            $number         = substr($rut, 0, -1);*/
             $foreign        = $request->getPostParameter("foreign", null);
             $telephone      = $request->getPostParameter("telephone", null);
             $birth          = $request->getPostParameter("birth", null);
@@ -187,9 +188,17 @@ class profileActions extends sfActions {
                 throw new Exception("Debes indicar tu correo electrónico", 1);
             }
 
-            if (is_null($rut) || $rut == "") {
+            /*if (is_null($rut) || $rut == "") {
                 throw new Exception("Debes indicar tu RUT", 1);
-            }
+            } else {
+                if ($rut == false || strlen($number)>8) {
+                    throw new Exception("el rut ingresado es inválido", 1);
+                } else {
+                    if(User::rutExist($number)) {
+                        throw new Exception("el rut ingresado ya se encuentra registrado", 1);
+                    }
+                }
+            }*/
 
             if (is_null($foreign) || $foreign == "") {
                 throw new Exception("Debes indicar tu nacionalidad", 1);
@@ -216,7 +225,8 @@ class profileActions extends sfActions {
             $User->setApellidoMaterno($motherLastname);
             $User->setFirstname($firstname);
             $User->setEmail($email);
-            $User->setRut($rut);
+            /*$User->setRut($number);
+            $User->setRutDv($dv);*/
             $User->setExtranjero($foreign);
             $User->setTelephone($telephone);
             $User->setBirthdate($birth);
@@ -756,7 +766,7 @@ class profileActions extends sfActions {
             if ($car->getSeguroOk() != 4) {
                 echo "error:seguro4";
                 die();
-            } else if ($reserve->getCar()->getUser()->getRut() == "") {
+            } else if (empty($reserve->getCar()->getUser()->getRut())) {
                 echo "error:rutdueñonulo";
                 die();
             }
@@ -919,7 +929,7 @@ class profileActions extends sfActions {
         if ($car->getSeguroOk() != 4) {
             echo "error:seguro4";
             die();
-        } else if ($reserve->getCar()->getUser()->getRut() == "") {
+        } else if (empty($reserve->getCar()->getUser()->getRut())) {
             echo "error:rutdueñonulo";
             die();
         }
@@ -1085,7 +1095,7 @@ class profileActions extends sfActions {
         if ($car->getSeguroOk() != 4) {
             echo "error:seguro4";
             die();
-        } else if ($reserve->getCar()->getUser()->getRut() == "") {
+        } else if (empty($reserve->getCar()->getUser()->getRut())) {
             echo "error:rutdueñonulo";
             die();
         }
@@ -1399,7 +1409,7 @@ class profileActions extends sfActions {
         }
 
         $arrendador['nombreCompleto'] = $arrendadorClass->getFirstname() . " " . $arrendadorClass->getLastname();
-        $arrendador['rut'] = $arrendadorClass->getRut();
+        $arrendador['rut'] = $arrendadorClass->getRutFormatted();
         $arrendador['direccion'] = $arrendadorClass->getAddress();
         $arrendador['telefono'] = $arrendadorClass->getTelephone();
 
@@ -1408,7 +1418,7 @@ class profileActions extends sfActions {
         $arrendador['comuna'] = ucfirst(strtolower($comunaClass['nombre']));
 
         $propietario['nombreCompleto'] = $propietarioClass->getFirstname() . " " . $propietarioClass->getLastname();
-        $propietario['rut'] = $propietarioClass->getRut();
+        $propietario['rut'] = $propietarioClass->getRutFormatted();
         $propietario['direccion'] = $propietarioClass->getAddress();
         $propietario['telefono'] = $propietarioClass->getTelephone();
 
@@ -3061,11 +3071,11 @@ class profileActions extends sfActions {
             //Reemplazo variables
             $utf8text = str_replace('[$fecha_arriendo]', date('d/m/Y'), $utf8text);
             $utf8text = str_replace('[$nombre_dueno]', $dueno->getFirstname() . " " . $dueno->getLastname(), $utf8text);
-            $utf8text = str_replace('[$rut_dueno]', $dueno->getRut(), $utf8text);
+            $utf8text = str_replace('[$rut_dueno]', $dueno->getRutFormatted(), $utf8text);
             $utf8text = str_replace('[$domicilio_dueno]', $dueno->getAddress(), $utf8text);
             $utf8text = str_replace('[$comuna_dueno]', $comunaDueno->getNombre(), $utf8text);
             $utf8text = str_replace('[$nombre_usuario]', $user->getFirstname() . " " . $user->getLastname(), $utf8text);
-            $utf8text = str_replace('[$rut_usuario]', $user->getRut(), $utf8text);
+            $utf8text = str_replace('[$rut_usuario]', $user->getRutFormatted(), $utf8text);
             $utf8text = str_replace('[$domicilio_usuario]', $user->getAddress(), $utf8text);
             $utf8text = str_replace('[$comuna_usuario]', $comunaUser->getNombre(), $utf8text);
             $utf8text = str_replace('[$marca_auto]', $car->getModel()->getBrand(), $utf8text);
@@ -3170,11 +3180,11 @@ class profileActions extends sfActions {
         //Reemplazo variables
         $utf8text = str_replace('[$fecha_arriendo]', date('d/m/Y'), $utf8text);
         $utf8text = str_replace('[$nombre_dueno]', $dueno->getFirstname() . " " . $dueno->getLastname(), $utf8text);
-        $utf8text = str_replace('[$rut_dueno]', $dueno->getRut(), $utf8text);
+        $utf8text = str_replace('[$rut_dueno]', $dueno->getRutFormatted(), $utf8text);
         $utf8text = str_replace('[$domicilio_dueno]', $dueno->getAddress(), $utf8text);
         $utf8text = str_replace('[$comuna_dueno]', $comunaDueno->getNombre(), $utf8text);
         $utf8text = str_replace('[$nombre_usuario]', $user->getFirstname() . " " . $user->getLastname(), $utf8text);
-        $utf8text = str_replace('[$rut_usuario]', $user->getRut(), $utf8text);
+        $utf8text = str_replace('[$rut_usuario]', $user->getRutFormatted(), $utf8text);
         $utf8text = str_replace('[$domicilio_usuario]', $user->getAddress(), $utf8text);
         $utf8text = str_replace('[$comuna_usuario]', $comunaUser->getNombre(), $utf8text);
         $utf8text = str_replace('[$marca_auto]', $car->getModel()->getBrand(), $utf8text);
@@ -3419,7 +3429,7 @@ class profileActions extends sfActions {
 
         if ($idUsuario) {
             $user = Doctrine_Core::getTable('user')->find($idUsuario);
-            if ($user->getRut() == "") {
+            if (empty($user->getRut())) {
                 $errorMessage = "error:rutnulo";
             }
 
@@ -3438,7 +3448,7 @@ class profileActions extends sfActions {
                 $_SESSION['login_back_url'] = $redirectUrl;
             }else{
                 $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
-                if ($reserve->getUser()->getRut() == "") {
+                if (empty($reserve->getUser()->getRut())) {
                     $errorMessage = "error:rutnulo";
                 }
 

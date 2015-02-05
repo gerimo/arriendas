@@ -73,7 +73,7 @@
             <p class="alert"></p>
             <div class="row">
                 <div class="col-md-offset-7 col-md-5" style="padding: 0">
-                    <button class="btn btn-a-primary btn-block" id="save" data-id="<?php echo $User->getId(); ?>" onclick="validateForm()">Finalizar</button>
+                    <button class="btn btn-a-primary btn-block" id="save"  onclick="validateForm()">Finalizar</button>
                 </div>
             </div>
             <div class="hidden-xs space-100"></div>
@@ -164,7 +164,6 @@
     function validateForm() {
         var como           = $('input:radio[name=como]:checked').val();
         var anotherText   = $("#another-text").val();
-        var userId         = $("#save").data("id"); 
         var rut            = $("#rut").val();
         var foreign        = $("#foreign option:selected").val();
         var telephone      = $("#telephone").val();
@@ -173,7 +172,7 @@
         var commune        = $("#commune option:selected").val();
         var region         = $("#region option:selected").val();
 
-        $.post("<?php echo url_for('main/doCompleteRegister') ?>", {"como": como, "anotherText": anotherText, "userId": userId, "rut": rut, "foreign": foreign, "telephone": telephone, "birth": birth, "address": address, "commune": commune, "region": region}, function(r){
+        $.post("<?php echo url_for('main/doCompleteRegister') ?>", {"como": como, "anotherText": anotherText, "rut": rut, "foreign": foreign, "telephone": telephone, "birth": birth, "address": address, "commune": commune, "region": region}, function(r){
 
             $(".alert").removeClass("alert-a-danger");
             $(".alert").removeClass("alert-a-success");
