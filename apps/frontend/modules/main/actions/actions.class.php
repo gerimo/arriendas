@@ -49,10 +49,6 @@ class mainActions extends sfActions {
             $userId_session = $this->getUser()->getAttribute("userid");
             $User = Doctrine_Core::getTable('user')->find($userId_session);
 
-            if(empty($User->getRut())) {
-                throw new Exception("usuario no rut, pero esta confirmado", 1);
-            }
-
             if($User) {
                 if($User->getConfirmed()) {
                     $this->redirect('homepage');
