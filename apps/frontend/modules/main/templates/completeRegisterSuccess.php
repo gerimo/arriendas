@@ -73,7 +73,7 @@
             <p class="alert"></p>
             <div class="row">
                 <div class="col-md-offset-7 col-md-5" style="padding: 0">
-                    <button class="btn btn-a-primary btn-block" id="save" onclick="validateForm()">Finalizar</button>
+                    <button class="btn btn-a-primary btn-block" id="save"  onclick="validateForm()">Finalizar</button>
                 </div>
             </div>
             <div class="hidden-xs space-100"></div>

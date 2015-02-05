@@ -110,8 +110,10 @@ class mainActions extends sfActions {
 
             //$motherLastname = $request->getPostParameter("motherLastname", null);
             $como           = $request->getPostParameter("como", null);
-            $userId         = $this->getUser()->getAttribute("userid");
+            $userId         = $this->getUser()->getParameter("userid");
             $rut            = Utils::isValidRUT($request->getPostParameter("rut", null));
+            $dv             = substr($rut, -1);
+            $number         = substr($rut, 0, -1);
             $foreign        = $request->getPostParameter("foreign", null);
             $telephone      = $request->getPostParameter("telephone", null);
             $birth          = $request->getPostParameter("birth", null);
@@ -128,10 +130,10 @@ class mainActions extends sfActions {
                 if (is_null($rut) || $rut == "") {
                     throw new Exception("Debes indicar tu RUT", 1);
                 } else {
-                    if ($rut == false) {
+                    if ($rut == false || strlen($number)>8) {
                         throw new Exception("el rut ingresado es inválido", 1);
                     } else {
-                        if(User::rutExist($rut)) {
+                        if(User::rutExist($number)) {
                             throw new Exception("el rut ingresado ya se encuentra registrado", 1);
                         }
                     }
@@ -189,7 +191,8 @@ class mainActions extends sfActions {
                 $User->setComo($como);
             }
 
-            $User->setRut($rut);
+            $User->setRut($number);
+            $User->setRutDv($dv);
             $User->setExtranjero($foreign);
             $User->setTelephone($telephone);
             $User->setBirthdate($birth);
@@ -1135,7 +1138,7 @@ class mainActions extends sfActions {
         }
 
         $arrendador['nombreCompleto'] = $arrendadorClass->getFirstname()." ".$arrendadorClass->getLastname();
-        $arrendador['rut'] = $arrendadorClass->getRut();
+        $arrendador['rut'] = $arrendadorClass->getRutFormatted();
         $arrendador['direccion'] = $arrendadorClass->getAddress();
         $arrendador['telefono'] = $arrendadorClass->getTelephone();
 
@@ -1145,7 +1148,7 @@ class mainActions extends sfActions {
         $arrendador['comuna'] = ucfirst(strtolower($arrendadorClass->getCommune()->name));
 
         $propietario['nombreCompleto'] = $propietarioClass->getFirstname()." ".$propietarioClass->getLastname();
-        $propietario['rut'] = $propietarioClass->getRut();
+        $propietario['rut'] = $propietarioClass->getRutFormatted();
         $propietario['direccion'] = $propietarioClass->getAddress();
         $propietario['telefono'] = $propietarioClass->getTelephone();
 
@@ -3418,105 +3421,6 @@ class mainActions extends sfActions {
 
         $next_numero = ($trans[0]['nro_fac'] > $res[0]['nro_fac']? $trans[0]['nro_fac'] : $res[0]['nro_fac']) + 1;
         return $next_numero;
-    }
-
-    public function executeAvailabilityOpen(sfWebRequest $request) {
-
-        try {
-
-            $CarAvailabilityEmail = Doctrine_Core::getTable('CarAvailabilityEmail')->find($request->getParameter('id'));
-
-            if (is_null($CarAvailabilityEmail->getOpenedAt())) {
-                $CarAvailabilityEmail->setOpenedAt(date("Y-m-d H:i:s"));
-                $CarAvailabilityEmail->save();
-            }
-
-        } catch (Exception $e) {
-            
-            Utils::reportError($e->getMessage(), "profile/executeAvailabilityOpen");
-        }
-
-        $this->getResponse()->setContentType('image/gif');
-
-        echo base64_decode("R0lGODlhAQABAIAAAP///////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACwAAAAAAQABAAACAkQBADs=");
-
-        return sfView::NONE;
-    }
-
-    public function executeAvailability(sfWebRequest $request) {
-
-        $carAvailabilityEmailId = $request->getGetParameter("id");
-        $option = $request->getGetParameter("o");
-        $signature = $request->getGetParameter("signature");
-
-        try {
-
-            $CarAvailabilityEmail = Doctrine_Core::getTable("CarAvailabilityEmail")->find($carAvailabilityEmailId);
-
-            if (!$CarAvailabilityEmail) {
-                throw new Exception("No se encontró el registro.", 1);
-            }
-
-            if ($CarAvailabilityEmail->getSignature() != $signature) {
-                throw new Exception("Las firmas no coinciden. ¿Trampa?", 2);
-            }
-
-            if (is_null($CarAvailabilityEmail->getCheckedAt())) {
-                $CarAvailabilityEmail->setCheckedAt(date("Y-m-d H:i:s"));
-                $CarAvailabilityEmail->save();
-            }
-            
-            $sentAt = strtotime(date("Y-m-d", strtotime($CarAvailabilityEmail->getSentAt())));
-            $i      = 0;
-            $day    = date("Y-m-d", strtotime("+".$i." day", $sentAt));
-
-            $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate($day);
-            if ($Holiday || date("N", strtotime($day)) == 6) {
-
-                $Car  = $CarAvailabilityEmail->getCar();
-
-                if ($option == 2) {
-                    
-                    do {
-
-                        $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
-                        if (!$CarAvailability) {
-
-                            $CarAvailability = new CarAvailability();
-                            $CarAvailability->setCar($Car);
-                            $CarAvailability->setDay($day);
-                        }
-
-                        $CarAvailability->setStartedAt("08:00:00");
-                        $CarAvailability->setEndedAt("20:00:00");
-                        $CarAvailability->save();
-
-                        $i++;
-                        $day    = date("Y-m-d", strtotime("+".$i." day", strtotime(date("Y-m-d", strtotime($CarAvailabilityEmail->getSentAt())))));
-
-                        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate($day);
-                    } while($Holiday || date("N", strtotime($day)) == 6 || date("N", strtotime($day)) == 7);
-                } elseif ($option == 1) {
-
-                    $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
-                    if (!$CarAvailability) {
-
-                        $CarAvailability = new CarAvailability();
-                        $CarAvailability->setCar($Car);
-                        $CarAvailability->setDay($day);
-                    }
-
-                    $CarAvailability->setStartedAt("08:00:00");
-                    $CarAvailability->setEndedAt("20:00:00");
-                    $CarAvailability->save();
-                }
-            }
-        } catch (Exception $e) {
-
-            Utils::reportError($e->getMessage(), "profile/executeAvailability");
-        }
-
-        $this->redirect('cars');
     }
 
     private function validateDates ($from, $to) {

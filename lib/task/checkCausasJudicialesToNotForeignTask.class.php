@@ -1,7 +1,7 @@
 <?php
 require_once sfConfig::get('sf_lib_dir') . '/vendor/fabpot/goutte.phar';
 
-class CheckPoderJudicialTask extends sfBaseTask {
+class checkCausasJudicialesToNotForeignTask extends sfBaseTask {
 
     protected function configure() {
 
@@ -12,13 +12,13 @@ class CheckPoderJudicialTask extends sfBaseTask {
         ));
 
         $this->namespace = 'arriendas';
-        $this->name = 'CheckPoderJudicialTask';
-        $this->briefDescription = 'Verifica a todos los usuarios bloqueados, desbloqueando a los que no posean causas judiciales';
+        $this->name = 'checkCausasJudicialesToNotForeign';
+        $this->briefDescription = 'Analiza los rut de los usuarios Chilenos que no han sido chequeados';
         $this->detailedDescription = <<<EOF
-The [CheckPoderJudicial|INFO] task does things.
+The [checkCausasJudicialesToNotForeign|INFO] task does things.
 Call it with:
 
-  [php symfony arriendas:CheckPoderJudicial|INFO]
+  [php symfony arriendas:checkCausasJudicialesToNotForeign|INFO]
 EOF;
     }
 
@@ -40,25 +40,22 @@ EOF;
 
             $Users = Doctrine_Core::getTable("User")->findAll();
 
-            $countTotal= 0;
             $countProblemasConexion=0;
             $countSinCusas=0;
             $countTieneCausas=0;
-            $countSinRut=0;
             $startTime = microtime(true);
             
             foreach ($Users as $User) {
-                $portions = explode("-", $User->getRut());
-                $run = $portions[0];
-                $rundv = $portions[1];
+                $causa = 0;
                 
-                if($User->getRut()) {
-                    if($User->getBlocked()) {
+                if(!$User->getExtranjero()) {
+                    if(!$User->getChequeoJudicial()) {
                         if (strlen($viewStateId) > 0) {
+
                             /* verification call */
                             $params = array(
-                                'formConsultaCausas:idFormRut' => $run,
-                                'formConsultaCausas:idFormRutDv' => $rundv,
+                                'formConsultaCausas:idFormRut' => $User->rut,
+                                'formConsultaCausas:idFormRutDv' => $User->rut_dv,
                                 'formConsultaCausas:idSelectedCodeTribunalRut' => "0",
                                 'formConsultaCausas:buscar1.x' => "66",
                                 'formConsultaCausas:buscar1.y' => "19",
@@ -72,29 +69,28 @@ EOF;
                                 $User->setBlocked(true);
                                 $User->setChequeoJudicial(true);
                                 $countTieneCausas++;
+                                $causa = 2;
                             } else {
                                 $User->setBlocked(false);
                                 $User->setChequeoJudicial(true);
                                 $countSinCusas++;
+                                $causa = 1;
                             }
 
                         } else {
                             $User->setChequeoJudicial(false);
                             $countProblemasConexion++;
+                            $causa = 0;
                         }
+                        $this->log("ID: ".$User->getId()." RUT: ".$User->getRutComplete()." causa:".$causa);
                     }
-                } else {
-                    $countSinRut++;
                 }
                 
-                $countTotal++;
                 $User->save();
             }
 
             $endTime = microtime(true);
 
-            $this->log("[".date("Y-m-d H:i:s")."] Total usuarios:               ".$countSinRut);
-            $this->log("[".date("Y-m-d H:i:s")."] Total usuarios sin rut:       ".$countTotal);
             $this->log("[".date("Y-m-d H:i:s")."] Usuarios con causas:          ".$countTieneCausas);
             $this->log("[".date("Y-m-d H:i:s")."] Usuarios sin Causas:          ".$countSinCusas);
             $this->log("[".date("Y-m-d H:i:s")."] Problemas de Conexión:        ".$countProblemasConexion);
