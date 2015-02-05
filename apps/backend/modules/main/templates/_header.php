@@ -1,8 +1,3 @@
-<?php
-
-    $U = sfContext::getInstance()->getUser();
-?>
-
 <header>
     <nav class="navbar navbar-default navbar-fixed-top" id="header-navbar" role="navigation">
         <div class="container">
@@ -39,7 +34,7 @@
 
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php echo $sf_user->getAttribute('firstname')?><span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php echo $sf_user->getAttribute('fullname') ?><span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="<?php echo url_for('logout') ?>">Salir</a></li>
                         </ul>

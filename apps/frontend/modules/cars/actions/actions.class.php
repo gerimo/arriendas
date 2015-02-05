@@ -4,6 +4,17 @@ require_once sfConfig::get('sf_lib_dir') . '/vendor/mobile-detect/Mobile_Detect.
 
 class carsActions extends sfActions {
 
+    public function executeCarAvailabilityEmail(sfWebRequest $request) {
+
+        try {
+        } catch (Exception $e) {
+            error_log("[".date("Y-m-d H:i:s")."] [cars/carAvailabilityRemove] ERROR: ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "cars/carAvailabilityRemove");
+            }
+        }
+    }
+    
     public function executeCarAvailabilityRemove(sfWebRequest $request) {
         
         $return = array("error" => false);

@@ -10,6 +10,9 @@
     </head>
 
     <body>
+        <!-- JQuery -->
+        <script src="/js/newDesign/jquery-2.1.3.min.js" type="text/javascript"></script>
+        
         <!-- Bootstrap -->
         <script src="/js/newDesign/bootstrap.min.js" type="text/javascript"></script>
 

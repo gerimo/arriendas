@@ -11,10 +11,9 @@ class carActions extends sfActions {
 
 	    try {
 
+	        $reserveId  = $request->getPostParameter("reserveId", null);
 
-	        $idReserve  = $request->getPostParameter("idReserve", null);
-
-	        $Reserve    = Doctrine_Core::getTable('Reserve')->find($idReserve);
+	        $Reserve    = Doctrine_Core::getTable('Reserve')->find($reserveId);
 	        $Cars       = Doctrine_Core::getTable('Car')->findCarsActives();
 
 	        $return["data"] = array();

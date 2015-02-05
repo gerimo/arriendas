@@ -1,4 +1,4 @@
-<?php use_helper('FrontendRouting'); ?>
+<?php use_helper('FrontendRouting') ?>
 
 <div class="hidden-xs space-100"></div>
 <div class="visible-xs space-50"></div>
@@ -32,24 +32,6 @@
                         <th>Crear Oportunidad</th>
                     </tr>
                 </thead>
-
-                <tbody>
-                    <tr>
-                        <th>ID</th>
-                        <th>Comuna</th>
-                        <th>Marca</th>
-                        <th>Modelo</th>
-                        <th>Año</th>
-                        <th>Transmisión</th>
-                        <th>Tipo Bencina</th>
-                        <th>Tipo Vehículo</th>
-                        <th>Metro Cercano</th> 
-                        <th>Cant. reserva ult. 3 meses</th> 
-                        <th>Crear Oportunidad</th>
-                        <th>Nombre usuario</th>
-                        <th>Telefono usuario</th>
-                    </tr>
-                </tbody>
             </table>
         </div>
     </div>
@@ -62,14 +44,12 @@
 
 </div>
 
-<div class="hidden-xs space-100"></div>
-
-    
+<div class="hidden-xs space-100"></div>    
 
 <script>
 
-    var urlCreate = "<?php echo url_for_frontend('opportunities_approve', array('carId' => 'carIdPattern', 'reserveId' => 'reserveIdPattern')) ?>";
-
+    /*var urlCreate = "<?php echo url_for_frontend('opportunities_approve', array('carId' => 'carIdPattern', 'reserveId' => 'reserveIdPattern')) ?>";*/
+    
 	$(document).ready(function() {
 
         $(".found").hide();  
@@ -78,7 +58,32 @@
 
         $('#carsActivesTable').hide();
         $('.loading').hide();  
-    }); 
+    });
+
+    $(document).on("click", ".opp-approve", function(){
+
+        var reserveId = $(this).data("reserve-id");
+        var carId = $(this).data("car-id");
+    
+        var parameters = {
+            "reserveId" : reserveId,
+            "carId" : carId
+        };
+
+        $.post("<?php echo url_for_frontend('opportunities_approve') ?>", parameters, function(r){
+            console.log("SUCCESS");
+            if (r.error) {
+                console.log(r.errorMessage);
+            } else {
+                console.log("ok");
+            }
+
+        }, 'json')
+        .fail(function(r) {
+            console.log("FAIL");
+            console.log(r);
+        });
+    });
 
     function isOriginalReserve() {
 
@@ -110,50 +115,13 @@
         }, 'json');
     }
 
-    function isActiveCar() {
-
-        var idCar = $("#idVehiculo").val();
-		$("#car-check").hide();
- 		$("#car-remove").hide();
-
-        $.post("<?php echo url_for('car_is_active_car') ?>", {"idCar": idCar}, function(r){
-
-        	if (r.error) {
-           		console.log(r.errorMessage);
-            } else {
-            	if (r.original !=  null) {
-	            	if (r.original) {
-	            		$("#car-check").show();
-	            		if ($("#reserve-check").is(":visible")) {
-	            				$("#create").prop("disabled", false );
-	            			}
-	            	}else {
-	            		$("#car-remove").show();
-	            	} 
-           		}
-            }
-
-        }, 'json');
-    }
-
-    function getActivesCars(idReserve) {
+    function getActivesCars(reserveId) {
 
         $(".loading").show();
 
-        $.post("<?php echo url_for('car_get_actives_cars') ?>", {"idReserve": idReserve} , function(r){
+        $.post("<?php echo url_for('car_get_actives_cars') ?>", {"reserveId": reserveId} , function(r){
 
             if (r.error) {
-                /*$("#dialog-alert p").html("No se encontraron usuarios");
-                $("#dialog-alert").attr('title','Error!');
-                $("#dialog-alert").dialog({
-                    buttons: [{
-                    text: "Aceptar",
-                    click: function() {
-                        $('#carsActivesTable').DataTable().rows().remove().draw();s
-                        $( this ).dialog( "close" );
-                    }
-                    }]
-                });*/
                 console.log(r.errorMessage);
             } else {
                 
@@ -169,29 +137,11 @@
                 $('#carsActivesTable').DataTable().rows().remove().draw();
                 
                 $.each(r.data, function(k, v){
-                    var button = "<a class='btn btn-block btn-primary comment' href=''>Crear</a>";
+                    var button = "<button class='btn btn-block btn-primary opp-approve' data-reserve-id='"+reserveId+"' data-car-id='"+v.car_id+"'>Crear</button>";
                     $('#carsActivesTable').DataTable().row.add([ v.car_id, v.car_commune, v.car_brand, v.car_model, v.car_year, v.car_transmission, v.car_benzine, v.car_type, v.car_subway, v.car_cant, v.user_fullname , v.user_telephone, button ]).draw();
                 });
-                    $(".loading").hide();
-            }
-
-        }, 'json');
-    }
-
-    function oppApprove(reserveId, carId) {
-
-        var parameters {
-
-            "reserveId" : reserveId,
-            "carId" : carId
-        }
-
-        $.post("<?php echo url_for_frontend('opportunities_approve') ?>", parameters, function(r){
-
-            if (r.error) {
-                console.log(r.errorMessage);
-            } else {
-                console.log("ok");
+                
+                $(".loading").hide();
             }
 
         }, 'json');
