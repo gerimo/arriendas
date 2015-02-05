@@ -110,7 +110,7 @@ class mainActions extends sfActions {
 
             //$motherLastname = $request->getPostParameter("motherLastname", null);
             $como           = $request->getPostParameter("como", null);
-            $userId         = $request->getPostParameter("userId", null);
+            $userId         = $this->getUser()->getAttribute("userid");
             $rut            = Utils::isValidRUT($request->getPostParameter("rut", null));
             $foreign        = $request->getPostParameter("foreign", null);
             $telephone      = $request->getPostParameter("telephone", null);
