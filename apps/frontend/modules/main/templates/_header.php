@@ -2,7 +2,7 @@
 
     $U = sfContext::getInstance()->getUser();
 
-    if (strtotime(date("H:i")) > strtotime("19:00") || strtotime(date("H:i")) < strtotime("09:00")) {
+    if (strtotime(date("H:i")) > strtotime("19:00") || strtotime(date("H:i")) < strtotime("09:00") || strtotime(date("l")) == strtotime("Saturday") || strtotime(date("l")) == strtotime("Sunday")) {
         $telefono = "tel:0223333714";
         $telefonoText = "(02) 2333 3714"; 
     } else {

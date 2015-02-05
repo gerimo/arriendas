@@ -32,6 +32,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Usuarios<span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="<?php echo url_for('user_without_pay') ?>">Usuario sin pago</a></li>
+                            <li><a href="<?php echo url_for('user_without_car') ?>">Usuario sin auto</a></li>
                         </ul>
                     </li>
                 </ul>

@@ -2,15 +2,15 @@
 
 class CarTable extends Doctrine_Table {
 
-    public function isActive($id) {
+    public function findCarsActives($limit = 50) {
 
         $q = Doctrine_Core::getTable("Car")
             ->createQuery('C')
-            ->where('C.id = ?', $id)
+            ->where('C.seguro_ok = 4')
             ->andWhere('C.activo = 1')
-            ->andWhere('C.seguro_ok = 4');
+            ->limit($limit);
 
-            return $q->execute();
+        return $q->execute();
     }
 
     ///////////////////////////////////////////////////////////7
