@@ -73,7 +73,7 @@
                         <option value="0" <?php echo $User->getExtranjero() == 0 ? "selected" : ""; ?> >Chileno</option>
                         <option value="1" <?php echo $User->getExtranjero() == 1 ? "selected" : ""; ?> >Extranjero</option>
                     </select>
-                    <input class="form-control" id="run" name="run" placeholder="RUT" value="<?php if ($User->getRut()) echo $User->getRut() ?>" type="text">
+                    <input class="form-control" id="run" name="run" placeholder="RUT" disabled value="<?php if ($User->getRut()) echo $User->getRutFormatted() ?>" type="text">
                 </div>
 
                 <input class="form-control" name="telephone" id="telephone" placeholder="Teléfono" value="<?php if ($User->getTelephone()) echo $User->getTelephone() ?>" title="Celular" type="text">
@@ -227,7 +227,7 @@
         var motherLastname = $("#motherLastname").val();
         var email          = $("#email").val();
         var emailAgain     = $("#emailAgain").val();
-        var rut            = $("#run").val();
+        /*var rut            = $("#run").val();*/
         var foreign        = $("#foreign option:selected").val();
         var telephone      = $("#telephone").val();
         var birth          = $("#birth").val();
@@ -240,7 +240,7 @@
             "motherLastname": motherLastname,
             "email": email,
             "emailAgain": emailAgain,
-            "rut": rut,
+            /*"rut": rut,*/
             "foreign": foreign,
             "telephone": telephone,
             "birth": birth,

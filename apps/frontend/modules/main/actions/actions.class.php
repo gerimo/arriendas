@@ -110,8 +110,10 @@ class mainActions extends sfActions {
 
             //$motherLastname = $request->getPostParameter("motherLastname", null);
             $como           = $request->getPostParameter("como", null);
-            $userId         = $this->getUser()->getAttribute("userid");
+            $userId         = $this->getUser()->getParameter("userid");
             $rut            = Utils::isValidRUT($request->getPostParameter("rut", null));
+            $dv             = substr($rut, -1);
+            $number         = substr($rut, 0, -1);
             $foreign        = $request->getPostParameter("foreign", null);
             $telephone      = $request->getPostParameter("telephone", null);
             $birth          = $request->getPostParameter("birth", null);
@@ -128,10 +130,10 @@ class mainActions extends sfActions {
                 if (is_null($rut) || $rut == "") {
                     throw new Exception("Debes indicar tu RUT", 1);
                 } else {
-                    if ($rut == false) {
+                    if ($rut == false || strlen($number)>8) {
                         throw new Exception("el rut ingresado es inválido", 1);
                     } else {
-                        if(User::rutExist($rut)) {
+                        if(User::rutExist($number)) {
                             throw new Exception("el rut ingresado ya se encuentra registrado", 1);
                         }
                     }
@@ -189,7 +191,8 @@ class mainActions extends sfActions {
                 $User->setComo($como);
             }
 
-            $User->setRut($rut);
+            $User->setRut($number);
+            $User->setRutDv($dv);
             $User->setExtranjero($foreign);
             $User->setTelephone($telephone);
             $User->setBirthdate($birth);
@@ -1135,7 +1138,7 @@ class mainActions extends sfActions {
         }
 
         $arrendador['nombreCompleto'] = $arrendadorClass->getFirstname()." ".$arrendadorClass->getLastname();
-        $arrendador['rut'] = $arrendadorClass->getRut();
+        $arrendador['rut'] = $arrendadorClass->getRutFormatted();
         $arrendador['direccion'] = $arrendadorClass->getAddress();
         $arrendador['telefono'] = $arrendadorClass->getTelephone();
 
@@ -1145,7 +1148,7 @@ class mainActions extends sfActions {
         $arrendador['comuna'] = ucfirst(strtolower($arrendadorClass->getCommune()->name));
 
         $propietario['nombreCompleto'] = $propietarioClass->getFirstname()." ".$propietarioClass->getLastname();
-        $propietario['rut'] = $propietarioClass->getRut();
+        $propietario['rut'] = $propietarioClass->getRutFormatted();
         $propietario['direccion'] = $propietarioClass->getAddress();
         $propietario['telefono'] = $propietarioClass->getTelephone();
 

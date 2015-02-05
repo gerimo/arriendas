@@ -47,14 +47,14 @@ class Functions {
     $datosContrato->nombre_arrendatario=$arrendatario->getFirstname()." ".$arrendatario->getLastname();
 	
 	/*if (!$confirmed){
-		$datosContrato->rut_arrendatario=preg_replace("/[\w\.]/","X",$arrendatario->getRut());
+		$datosContrato->rut_arrendatario=preg_replace("/[\w\.]/","X",$arrendatario->getRutFormatted());
 		$datosContrato->domicilio_arrendatario=preg_replace("/[\w\.]/","X",$arrendatario->getAddress());
     }else{
-		$datosContrato->rut_arrendatario=$arrendatario->getRut();
+		$datosContrato->rut_arrendatario=$arrendatario->getRutFormatted();
 		$datosContrato->domicilio_arrendatario=$arrendatario->getAddress();
     };*/
 
-    $datosContrato->rut_arrendatario=$arrendatario->getRut();
+    $datosContrato->rut_arrendatario=$arrendatario->getRutFormatted();
     $datosContrato->domicilio_arrendatario=$arrendatario->getAddress();
 	
     //Comuna Arrendatario
@@ -67,13 +67,13 @@ class Functions {
     $datosContrato->nombre_duenio=$duenio->getFirstname()." ".$duenio->getLastname();
 
 	/*if (!$confirmed){
-		$datosContrato->rut_duenio=preg_replace("/[\w\.]/","X",$duenio->getRut());
+		$datosContrato->rut_duenio=preg_replace("/[\w\.]/","X",$duenio->getRutFormatted());
 		$datosContrato->domicilio_duenio=preg_replace("/[\w\.]/","X",$duenio->getAddress());
 	}else{
-		$datosContrato->rut_duenio=$duenio->getRut();
+		$datosContrato->rut_duenio=$duenio->getRutFormatted();
 		$datosContrato->domicilio_duenio=$duenio->getAddress();
 	};*/
-    $datosContrato->rut_duenio=$duenio->getRut();
+    $datosContrato->rut_duenio=$duenio->getRutFormatted();
     $datosContrato->domicilio_duenio=$duenio->getAddress();
 
     //Comuna Duenio
@@ -639,7 +639,7 @@ $html  .='
     }
 
     $arrendador['nombreCompleto'] = $arrendadorClass->getFirstname()." ".$arrendadorClass->getLastname();
-    $arrendador['rut'] = $arrendadorClass->getRut();
+    $arrendador['rut'] = $arrendadorClass->getRutFormatted();
     $arrendador['direccion'] = $arrendadorClass->getAddress();
     $arrendador['telefono'] = $arrendadorClass->getTelephone();
 
@@ -649,7 +649,7 @@ $html  .='
     $arrendador['comuna'] = ucfirst(strtolower($arrendadorClass->getCommune()->name));
 
     $propietario['nombreCompleto'] = $propietarioClass->getFirstname()." ".$propietarioClass->getLastname();
-    $propietario['rut'] = $propietarioClass->getRut();
+    $propietario['rut'] = $propietarioClass->getRutFormatted();
     $propietario['direccion'] = $propietarioClass->getAddress();
     $propietario['telefono'] = $propietarioClass->getTelephone();
 
@@ -1128,13 +1128,13 @@ p{
         $datosContrato->nombre_arrendatario = $arrendatario->getFirstname() . " " . $arrendatario->getLastname();
 
         /*if (!$confirmed) {
-            $datosContrato->rut_arrendatario = preg_replace("/[\w\.]/", "X", $arrendatario->getRut());
+            $datosContrato->rut_arrendatario = preg_replace("/[\w\.]/", "X", $arrendatario->getRutFormatted());
             $datosContrato->domicilio_arrendatario = preg_replace("/[\w\.]/", "X", $arrendatario->getAddress());
         } else {
-            $datosContrato->rut_arrendatario = $arrendatario->getRut();
+            $datosContrato->rut_arrendatario = $arrendatario->getRutFormatted();
             $datosContrato->domicilio_arrendatario = $arrendatario->getAddress();
         };*/
-        $datosContrato->rut_arrendatario = $arrendatario->getRut();
+        $datosContrato->rut_arrendatario = $arrendatario->getRutFormatted();
         $datosContrato->domicilio_arrendatario = $arrendatario->getAddress();
 
         //Comuna Arrendatario
@@ -1152,13 +1152,13 @@ p{
         $datosContrato->name_region_duenio = $duenio->getRegion();
 
         /*if (!$confirmed) {
-            $datosContrato->rut_duenio = preg_replace("/[\w\.]/", "X", $duenio->getRut());
+            $datosContrato->rut_duenio = preg_replace("/[\w\.]/", "X", $duenio->getRutFormatted());
             $datosContrato->domicilio_duenio = preg_replace("/[\w\.]/", "X", $duenio->getAddress());
         } else {
-            $datosContrato->rut_duenio = $duenio->getRut();
+            $datosContrato->rut_duenio = $duenio->getRutFormatted();
             $datosContrato->domicilio_duenio = $duenio->getAddress();
         };*/
-        $datosContrato->rut_duenio = $duenio->getRut();
+        $datosContrato->rut_duenio = $duenio->getRutFormatted();
         $datosContrato->domicilio_duenio = $duenio->getAddress();
 
         //Comuna Duenio
