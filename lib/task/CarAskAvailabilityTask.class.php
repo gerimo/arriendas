@@ -121,7 +121,7 @@ EOF;
 
                         $message = $this->getMailer()->compose();
                         $message->setSubject($subject);
-                        $message->setBody($body."USER: ".$oCar->getUser()->email, 'text/html');
+                        $message->setBody($body, 'text/html');
                         $message->setFrom($from);
                         /*$message->setTo($to);*/
                         $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
