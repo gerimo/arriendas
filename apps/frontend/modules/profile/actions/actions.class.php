@@ -37,28 +37,39 @@ class profileActions extends sfActions {
                     
                     $this->availabilityOfCars[$Car->getId()] = array();
 
-                    $i       = 0;
-                    $day     = date("Y-m-d");
+                    $i       = 1;
+                    $day     = date("Y-m-d", strtotime("+1 day"));
                     $Holiday = null;
                     
                     do {
 
-                        $this->availabilityOfCars[$Car->getId()][$i] = array();
+                        $data = array(
+                            "day" => $day,
+                            "dayName" => $week[date("N", strtotime($day))]
+                        );
+
+                        /*$this->availabilityOfCars[$Car->getId()][$i] = array();
 
                         $this->availabilityOfCars[$Car->getId()][$i]["day"]     = $day;
-                        $this->availabilityOfCars[$Car->getId()][$i]["dayName"] = $week[date("N", strtotime($day))];
+                        $this->availabilityOfCars[$Car->getId()][$i]["dayName"] = $week[date("N", strtotime($day))];*/
                         
                         $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime($day)));
                         if ($Holiday) {
-                            $this->availabilityOfCars[$Car->getId()][$i]["dayName"] .= " (Feriado)";
+                            /*$this->availabilityOfCars[$Car->getId()][$i]["dayName"] .= " (Feriado)";*/
+                            $data["dayName"] .= " (Feriado)";
                         }
 
                         $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
                         if ($CarAvailability) {
-                            $this->availabilityOfCars[$Car->getId()][$i]["from"] = $CarAvailability->getStartedAt();
-                            $this->availabilityOfCars[$Car->getId()][$i]["to"] = $CarAvailability->getEndedAt();
+                            /*$this->availabilityOfCars[$Car->getId()][$i]["from"] = $CarAvailability->getStartedAt();
+                            $this->availabilityOfCars[$Car->getId()][$i]["to"] = $CarAvailability->getEndedAt();*/
+                            $data["from"] = $CarAvailability->getStartedAt();
+                            $data["to"] = $CarAvailability->getEndedAt();
                         }
                         
+                        $this->availabilityOfCars[$Car->getId()][] = $data;
+
+
                         $i++;
                         $day = date("Y-m-d", strtotime("+".$i." day"));
                         $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime($day)));                         

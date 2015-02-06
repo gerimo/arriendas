@@ -99,6 +99,7 @@
 
 <script type="text/javascript">
 
+    var referer = "<?php echo $referer ?>";
     $("#foreign").change(function(){
         var foreign = $(this).val();
         $('#rut').val('');
