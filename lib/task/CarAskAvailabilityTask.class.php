@@ -145,47 +145,4 @@ EOF;
             Utils::reportError($e->getMessage(), "CarAskAvailabilityTask");
         }
     }
-
-    private function getAvailabilitiesMissing($day, $expectedAvailabilities) {
-
-        $q = Doctrine_Core::getTable("CarAvailability")
-            ->createQuery('CA')
-            ->where('CA.day = ?', $day)
-            ->andWhere('CA.is_deleted = 0');
-
-        $CarAvailabilities = $q->execute();
-
-        $availabilities = count($CarAvailabilities);
-        $missing        = $expectedAvailabilities - $availabilities;
-
-        if ($missing > 0) {
-            return $missing;
-        }
-
-        return 0;
-    }
-
-    private function getNotifiedUsers($day) {
-
-        $usersAlreadyNotified = array();
-
-        $q = Doctrine_Core::getTable("User")
-            ->createQuery('U')
-            ->innerJoin('U.cars C')
-            ->innerJoin('C.carAvailabilityEmails CAE')
-            ->where('DATE(CAE.sent_at) >= ?', $day);
-
-        $Users = $q->execute();
-
-        if (count($Users) > 0) {
-            
-            foreach ($Users as $User) {
-                $usersAlreadyNotified[] = $User->getId();
-            }
-
-            return $usersAlreadyNotified;
-        }
-
-        return array(0);
-    }
 }
