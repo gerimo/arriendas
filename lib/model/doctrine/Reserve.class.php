@@ -465,16 +465,11 @@ class Reserve extends BaseReserve {
 
     public function save(Doctrine_Connection $conn = null) {
 
-
         $car = Doctrine_Core::getTable('car')->findOneById($this->getCarId());
         $user = Doctrine_Core::getTable('user')->findOneById($car->getUserId());
         $ownerUserId = $user->getId();
 
-
-
         $this->setUniqueToken();
-
-
 
         if (!$this->getId()) {
             //event to renter
@@ -524,8 +519,6 @@ class Reserve extends BaseReserve {
 
             curl_exec($session);
             curl_close($session);
-
-//						$this->setCustomerio(true);
         }
 
         if ($this->getCustomerio() <= 0) {
@@ -635,10 +628,7 @@ class Reserve extends BaseReserve {
             }
         }
 
-//	  return parent::save($conn);
-
         $ret = parent::save($conn);
-
 
         $percTotalContestadas = $user->getPercReservasContestadas();
         $velocidadContestaPedidos = $user->getVelocidadRespuesta('0');
@@ -647,7 +637,7 @@ class Reserve extends BaseReserve {
         $query = "update Car set Cant_Reservas_Aprobadas= '$CantReservasAprobadas', contesta_pedidos='$percTotalContestadas', velocidad_contesta_pedidos='$velocidadContestaPedidos' where user_id='$ownerUserId'";
         $result = $q->execute($query);
 
-        /* nuevo flujo */
+        // NUEVO FLUJO
 
         // Se obtienen todos los autos del dueño
         //  y se llama al metodo save, ya que internamente el save de Car genera el calculo

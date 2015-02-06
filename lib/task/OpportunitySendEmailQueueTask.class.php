@@ -69,14 +69,14 @@ EOF;
 
                 $this->log("[".date("Y-m-d H:i:s")."] Envio de correo de opportunidad a {$Owner->firstname} {$Owner->lastname}, Reserva {$Reserve->id}");
 
-                $subject = "Oportunidad especial para arrendar tu auto patente ".$OpportunityEmail->getCar()->patente;
+                $subject = "Oportunidad especial para arrendar tu auto patente ".strtoupper($OpportunityEmail->getCar()->patente);
                 $body    = get_partial('emails/opportunityMailing', array('Reserve' => $Reserve, 'Car' => $OpportunityEmail->getCar(), "acceptUrl" => $acceptUrl, "imageUrl" => $imageUrl));
                 $from    = array("soporte@arriendas.cl" => "Oportunidades Arriendas.cl");
                 $to      = array($Owner->email => $Owner->firstname." ".$Owner->lastname);
 
                 $this->log("[".date("Y-m-d H:i:s")."] Enviando a ".$Owner->firstname." ".$Owner->lastname);
-                $this->log("[".date("Y-m-d H:i:s")."] URL Apertura".$imageUrl);
-                $this->log("[".date("Y-m-d H:i:s")."] URL Aprobacion".$acceptUrl);
+                /*$this->log("[".date("Y-m-d H:i:s")."] URL Apertura".$imageUrl);*/
+                /*$this->log("[".date("Y-m-d H:i:s")."] URL Aprobacion".$acceptUrl);*/
 
                 $message = $this->getMailer()->compose();
                 $message->setSubject($subject);
