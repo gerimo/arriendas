@@ -1,15 +1,17 @@
     
-<div class="hidden-xs space-100"></div>
+<div class="hidden-xs space-40"></div>
 <div class="visible-xs space-50"></div>
 
 <div class="row">
-    <div class="col-md-offset-2 col-md-8"> 
+    <div class="col-md-offset-2 col-md-8">
+        <h1> Usuarios que no registraron auto</h1> 
+        <div class="space-30"> </div>
         <div class="col-md-12">
             <div class="col-md-4">
-                <input class="datepicker form-control text-center" id="from" placeholder="from" type="text" value="<?php echo date("Y-m-d")?>"  >
+                <input class="datepicker form-control" id="from" placeholder="Desde" type="text" value="<?php echo date("Y-m-d")?>"  >
             </div>
             <div class="col-md-4">
-                <input  class="datepicker form-control text-center" id="to" placeholder="to" type="text" value="<?php echo date("Y-m-d")?>"  >
+                <input  class="datepicker form-control" id="to" placeholder="Hasta" type="text" value="<?php echo date("Y-m-d")?>"  >
                 
             </div>
 
@@ -82,7 +84,7 @@
         $(".load").show();
 
         $.post("<?php echo url_for('user_without_car_get') ?>", {"from": from, "to": to}, function(r){
-
+            console.log(r);
             if (r.error) {
                /* $("#dialog-alert p").html("No se encontraron usuarios");
                 $("#dialog-alert").attr('title','Error!');

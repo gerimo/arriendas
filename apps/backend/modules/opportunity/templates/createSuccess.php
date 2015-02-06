@@ -93,6 +93,7 @@
     function isOriginalReserve() {
 
         var idReservaOriginal = $("#idReservaOriginal").val();
+
 		$("#reserve-check").hide();
  		$("#reserve-remove").hide();
 
@@ -130,8 +131,6 @@
                 console.log(r.errorMessage);
             } else {
                 
-                
- 
                 $('#carsActivesTable').DataTable().column(9).order( 'desc' );
 
                 $('#carsActivesTable').show();

@@ -10,7 +10,7 @@ class backendConfiguration extends sfApplicationConfiguration
  	protected $frontendRouting = null;
  
   	public function generateFrontendUrl($name, $parameters = array()) {
-    	return 'http://local.arriendas.cl'.$this->getFrontendRouting()->generate($name, $parameters);
+    	return $this->getFrontendRouting()->generate($name, $parameters);
   		}
 
  	public function getFrontendRouting() {
