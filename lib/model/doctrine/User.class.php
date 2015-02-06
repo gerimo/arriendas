@@ -1455,7 +1455,7 @@ class User extends BaseUser {
         }
 
 
-        if ($this->getCustomerio() <= 0) {
+        /*if ($this->getCustomerio() <= 0) {
 
             $session = curl_init();
 
@@ -1477,15 +1477,13 @@ class User extends BaseUser {
             curl_setopt($session, CURLOPT_POSTFIELDS, http_build_query($data));
 
             curl_setopt($session, CURLOPT_USERPWD, $site_id . ":" . $api_key);
-
-//if(ereg("^(https)",$request)) 
             curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
 
             curl_exec($session);
             curl_close($session);
 
             $this->setCustomerio(true);
-        }
+        }*/
 
 
         return parent::save($conn);

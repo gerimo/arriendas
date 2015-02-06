@@ -1,5 +1,20 @@
 <?php
     $Owner = $Car->getUser();
+
+    $week = array(
+        1 => "Lunes",
+        2 => "Martes",
+        3 => "Miércoles",
+        4 => "Jueves",
+        5 => "Viernes",
+        6 => "Sábado",
+        7 => "Domingo"
+    );
+
+    $dayNames = array();
+
+    foreach ($days as $day)
+        $dayNames[] = $week[date("N", strtotime($day))];
 ?>
 
 <p>Hola <?php echo $Owner->firstname ?>,</p>
@@ -7,8 +22,8 @@
 <p>Necesitaríamos que nos indiques en qué horarios podrías recibir clientes durante los próximos días.</p>
 
 <ul>
-    <li>Si puedes recibir clientes el <?php ?> entre 8am y 8pm, has <a href='<?php echo $urlAllAva ?>'>click aquí</a>.</li>
-    <li>Si sólo puedes recibir clientes el ".$days[1]." entre 8am y 8pm, has <a href='<?php echo $urlOneAva ?>'>click aquí</a>.</li>
+    <li>Si puedes recibir clientes el <strong><?php echo implode(",", $dayNames) ?></strong> entre 8am y 8pm, has <a href='<?php echo $urlAllAva ?>'>click aquí</a>.</li>
+    <li>Si sólo puedes recibir clientes el <strong><?php echo $dayNames[count($dayNames)-1] ?></strong> entre 8am y 8pm, has <a href='<?php echo $urlOneAva ?>'>click aquí</a>.</li>
     <li>Si puedes recibir clientes en horarios específicos, has <a href='<?php echo $urlCusAva ?>'>click aquí</a>.</li>
 </ul>
 
