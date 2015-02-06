@@ -6,9 +6,9 @@ class carsActions extends sfActions {
 
     public function executeAvailabilityEmail(sfWebRequest $request) {
 
-        $carAvailabilityEmailId = $request->getGetParameter("id");
-        $option                 = $request->getGetParameter("o");
-        $signature              = $request->getGetParameter("signature");
+        $carAvailabilityEmailId = $request->getParameter("id");
+        $option                 = $request->getParameter("o");
+        $signature              = $request->getParameter("signature");
 
         error_log("ID: ".$carAvailabilityEmailId);
         error_log("option: ".$option);
