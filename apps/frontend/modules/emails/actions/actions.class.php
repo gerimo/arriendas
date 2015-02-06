@@ -55,6 +55,8 @@ class emailsActions extends sfActions {
             $UserMailingConfig->setIsSubscribed(false);
             $UserMailingConfig->save();
 
+            $this->message = "Suscripción cancelada";
+
         } catch (Exception $e) {
             $this->isError = true;
             $this->message = "Ha habido un problema realizando la desuscripción. El equipo ha sido notificado";
