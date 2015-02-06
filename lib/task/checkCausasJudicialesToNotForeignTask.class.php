@@ -55,7 +55,7 @@ EOF;
                             /* verification call */
                             $params = array(
                                 'formConsultaCausas:idFormRut' => $User->rut,
-                                'formConsultaCausas:idFormRutDv' => $User->rut_dv,
+                                'formConsultaCausas:idFormRutDv' => strtoupper($User->rut_dv),
                                 'formConsultaCausas:idSelectedCodeTribunalRut' => "0",
                                 'formConsultaCausas:buscar1.x' => "66",
                                 'formConsultaCausas:buscar1.y' => "19",
