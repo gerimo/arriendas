@@ -40,8 +40,10 @@ class carsActions extends sfActions {
 
             $Car  = $CarAvailabilityEmail->getCar();
 
-            if ($option == 2) {                
+            if ($option == 2) {
+                error_log("opt: ".$option);
                 foreach ($days as $day) {
+                    error_log("day: ".$day);
                     $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
                     if (!$CarAvailability) {
 
@@ -55,9 +57,9 @@ class carsActions extends sfActions {
                     $CarAvailability->save();
                 }
             } elseif ($option == 1) {
-
+                error_log("opt: ".$option);
                 $day = $days[count($days)-1];
-
+                error_log("day: ".$day);
                 $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
                 if (!$CarAvailability) {
 
