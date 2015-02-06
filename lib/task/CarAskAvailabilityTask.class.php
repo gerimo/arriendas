@@ -77,7 +77,7 @@ EOF;
                 $to   = $days[count($days)-1] .= " 23:59:59";
 
                 foreach ($oCars as $oCar) {
-                    if (!$oCar->hasReserve($from, $to)) {
+                    if (!$oCar->hasReserve($from, $to) && $oCar->getCommune()->getRegion()->id == 13) {
 
                         $CarAvailabilityEmail = new CarAvailabilityEmail();
 
