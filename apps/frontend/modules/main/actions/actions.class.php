@@ -200,7 +200,7 @@ class mainActions extends sfActions {
             $number         = substr($rut, 0, -1);
 
             $User->setRut($number ? $number : null );
-            $User->setRutDv($dv ? $dv : null );
+            $User->setRutDv($dv ? strtoupper($dv) : null );
             $User->setExtranjero($foreign);
             $User->setTelephone($telephone);
             $User->setBirthdate($birth);
@@ -591,7 +591,8 @@ class mainActions extends sfActions {
 
         // Reviews (hay que arreglar las clase Rating)
         // Comentado, Estrellas erroneas en produccion
-        /*$this->reviews = array();
+        /*
+        $this->reviews = array();
         $this->defaultReviews = array();
 
         $cont=0;

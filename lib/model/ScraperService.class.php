@@ -102,7 +102,7 @@ class ScraperService {
             /* verification call */
             $params = array(
                 'formConsultaCausas:idFormRut' => $run,
-                'formConsultaCausas:idFormRutDv' => $rundv,
+                'formConsultaCausas:idFormRutDv' => strtoupper($rundv),
                 'formConsultaCausas:idSelectedCodeTribunalRut' => "0",
                 'formConsultaCausas:buscar1.x' => "66",
                 'formConsultaCausas:buscar1.y' => "19",
