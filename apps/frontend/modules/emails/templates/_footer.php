@@ -5,6 +5,7 @@
 <?php if (isset($userId) && isset($mailingId)): ?>
 
     <?php
+        error_log("HOST: ".$_SERVER ['HTTP_HOST']);
         $host = "http://local.arriendas.cl";
         if ($_SERVER ['HTTP_HOST'] == "www.arriendas.cl") {
             $host = "http://www.arriendas.cl";
