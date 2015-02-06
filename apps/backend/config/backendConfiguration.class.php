@@ -7,7 +7,15 @@ class backendConfiguration extends sfApplicationConfiguration {
     public function configure() {}
 
     public function generateFrontendUrl($name, $parameters = array()) {
-        return $_SERVER ['HTTP_HOST'].$this->getFrontendRouting()->generate($name, $parameters);
+
+        $host = "local.arriendas.cl";
+        if ($_SERVER ['HTTP_HOST'] == "backend.arriendas.cl") {
+            $host = "arriendas.cl";
+        } elseif ($_SERVER ['HTTP_HOST'] == "dev.backend.arriendas.cl") {
+            $host = "dev.arriendas.cl";
+        }
+
+        return $host.$this->getFrontendRouting()->generate($name, $parameters);
     }
 
     public function getFrontendRouting() {
