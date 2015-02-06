@@ -27,38 +27,17 @@ class carsActions extends sfActions {
                 $CarAvailabilityEmail->save();
             }
             
-            $sentAt = strtotime(date("Y-m-d", strtotime($CarAvailabilityEmail->getSentAt())));
-            $i      = 0;
-            $day    = date("Y-m-d", strtotime("+".$i." day", $sentAt));
+            $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
+            if ($Holiday || date("N") == 6 || date("N") == 7) {
+                $days = Utils::isWeekend(true, true);
+            } else {
+                $days = Utils::isWeekend(true, false);
+            }
 
-            $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate($day);
-            if ($Holiday || date("N", strtotime($day)) == 6) {
+            $Car  = $CarAvailabilityEmail->getCar();
 
-                $Car  = $CarAvailabilityEmail->getCar();
-
-                if ($option == 2) {
-                    
-                    do {
-
-                        $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
-                        if (!$CarAvailability) {
-
-                            $CarAvailability = new CarAvailability();
-                            $CarAvailability->setCar($Car);
-                            $CarAvailability->setDay($day);
-                        }
-
-                        $CarAvailability->setStartedAt("08:00:00");
-                        $CarAvailability->setEndedAt("20:00:00");
-                        $CarAvailability->save();
-
-                        $i++;
-                        $day    = date("Y-m-d", strtotime("+".$i." day", strtotime(date("Y-m-d", strtotime($CarAvailabilityEmail->getSentAt())))));
-
-                        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate($day);
-                    } while($Holiday || date("N", strtotime($day)) == 6 || date("N", strtotime($day)) == 7);
-                } elseif ($option == 1) {
-
+            if ($option == 2) {                
+                foreach ($days as $day) {
                     $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
                     if (!$CarAvailability) {
 
@@ -71,10 +50,27 @@ class carsActions extends sfActions {
                     $CarAvailability->setEndedAt("20:00:00");
                     $CarAvailability->save();
                 }
+            } elseif ($option == 1) {
+
+                $day = $days[count($days)-1];
+
+                $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
+                if (!$CarAvailability) {
+
+                    $CarAvailability = new CarAvailability();
+                    $CarAvailability->setCar($Car);
+                    $CarAvailability->setDay($day);
+                }
+
+                $CarAvailability->setStartedAt("08:00:00");
+                $CarAvailability->setEndedAt("20:00:00");
+                $CarAvailability->save();
             }
         } catch (Exception $e) {
-
-            Utils::reportError($e->getMessage(), "profile/executeAvailability");
+            error_log("[".date("Y-m-d H:i:s")."] [cars/executeAvailabilityEmail] ERROR: ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "cars/availabilityEmail");
+            }
         }
 
         $this->redirect('cars');
@@ -92,8 +88,10 @@ class carsActions extends sfActions {
             }
 
         } catch (Exception $e) {
-            
-            Utils::reportError($e->getMessage(), "cars/availabilityEmailOpen");
+            error_log("[".date("Y-m-d H:i:s")."] [cars/executeAvailabilityEmailOpen] ERROR: ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "cars/availabilityEmailOpen");
+            }
         }
 
         $this->getResponse()->setContentType('image/gif');
