@@ -6,10 +6,10 @@
     <div class="col-md-offset-2 col-md-8"> 
         <div class="col-md-12">
             <div class="col-md-4">
-                <input class="datepicker form-control text-center" id="from" placeholder="from" type="text" value="<?php echo date("Y-m-d", strtotime("-35 day"))?>"  >
+                <input class="datepicker form-control text-center" id="from" placeholder="from" type="text" value="<?php echo date("Y-m-d")?>"  >
             </div>
             <div class="col-md-4">
-                <input  class="datepicker form-control text-center" id="to" placeholder="to" type="text" value="<?php echo date("Y-m-d", strtotime("-34 day"))?>"  >
+                <input  class="datepicker form-control text-center" id="to" placeholder="to" type="text" value="<?php echo date("Y-m-d")?>"  >
                 
             </div>
 
@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <img class="loading" src="/images/ajax-loader.gif">
+        <img class="load" src="/images/ajax-loader.gif">
 
         <div class="space-100"></div>
 
@@ -35,14 +35,6 @@
             </thead>
 
             <tbody>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Teléfono</th>
-                    <th>email</th>
-                    <th>dirección</th>
-                    <th>Comentario</th>
-                </tr>
             </tbody>
         </table>
     </div>
@@ -87,12 +79,12 @@
 
         var from = $("#from").val();
         var to   = $("#to").val();
-        $(".loading").show();
+        $(".load").show();
 
         $.post("<?php echo url_for('user_without_car_get') ?>", {"from": from, "to": to}, function(r){
 
             if (r.error) {
-                $("#dialog-alert p").html("No se encontraron usuarios");
+               /* $("#dialog-alert p").html("No se encontraron usuarios");
                 $("#dialog-alert").attr('title','Error!');
                 $("#dialog-alert").dialog({
                     buttons: [{
@@ -103,7 +95,9 @@
 
                     }
                     }]
-                });
+                });*/
+                $('#userWhitoutPayTable').DataTable().rows().remove().draw();
+                $(".load").hide();
             } else {
                 
                 $('#userWhitoutCarTable').DataTable().rows().remove().draw();
@@ -111,7 +105,7 @@
                     var button = "<a class='btn btn-block btn-primary comment' href='"+urlComment.replace("userIdPattern", v.user_id)+"'>Comentarios</a>";
                     $('#userWhitoutCarTable').DataTable().row.add([ v.user_id, v.user_fullname, v.user_telephone, v.user_email, v.user_address, button ]).draw();
                 });
-                    $(".loading").hide();
+                    $(".load").hide();
 
             }
 
