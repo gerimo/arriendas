@@ -48,9 +48,9 @@ class mainActions extends sfActions {
             //$userId = $request->getParameter('userId');
             $userId_session = $this->getUser()->getAttribute("userid");
             $User = Doctrine_Core::getTable('user')->find($userId_session);
-
+            
             if($User) {
-                if($User->getConfirmed()) {
+                if($User->getConfirmed() && !   empty($User->getRut())) {
                     $this->redirect('homepage');
                 } else {
                     $this->Regions = Region::getRegionsByNaturalOrder();
@@ -110,7 +110,7 @@ class mainActions extends sfActions {
 
             //$motherLastname = $request->getPostParameter("motherLastname", null);
             $como           = $request->getPostParameter("como", null);
-            $userId         = $this->getUser()->getParameter("userid");
+            $userId         = $this->getUser()->getAttribute("userid");
             $rut            = Utils::isValidRUT($request->getPostParameter("rut", null));
             $dv             = substr($rut, -1);
             $number         = substr($rut, 0, -1);
