@@ -49,19 +49,19 @@ reserve_is_original_reserve:
     url: /reserva/es-reserva-original
     param: { module: reserve, action: isOriginalReserve }
 
-user_without_car:
+user_whitout_car:
     url: /usuarios/sin-vehiculo/
     param: { module: user, action: whitoutCar }
 
-user_without_car_get:
+user_whitout_car_get:
     url: /usuarios/sin-vehiculo/obtener
     param: { module: user, action: whitoutCarGet }
 
-user_without_pay:
+user_whitout_pay:
     url: /usuarios/sin-pago
     param: { module: user, action: whitoutPay }
 
-user_without_pay_get:
+user_whitout_pay_get:
     url: /usuarios/sin-pago/obtener
     param: { module: user, action: whitoutPayGet }
 

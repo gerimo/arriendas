@@ -81,7 +81,7 @@
         var to   = $("#to").val();
         $(".load").show();
 
-        $.post("<?php echo url_for('user_without_pay_get') ?>", {"from": from, "to": to}, function(r){
+        $.post("<?php echo url_for('user_whitout_pay_get') ?>", {"from": from, "to": to}, function(r){
 
             if (r.error) {
                 /*$("#dialog-alert p").html("No se encontraron usuarios");
