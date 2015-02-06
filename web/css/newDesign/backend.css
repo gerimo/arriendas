@@ -50,4 +50,10 @@
     margin: -25px 0 0 95%;
 }
 
+.load {
+
+    position: absolute;
+    width: 33px;
+    left: 100%;
+}
 

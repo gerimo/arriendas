@@ -10,10 +10,6 @@ class carsActions extends sfActions {
         $option                 = $request->getParameter("o");
         $signature              = $request->getParameter("signature");
 
-        error_log("ID: ".$carAvailabilityEmailId);
-        error_log("option: ".$option);
-        error_log("signature: ".$signature);
-
         try {
 
             $CarAvailabilityEmail = Doctrine_Core::getTable("CarAvailabilityEmail")->find($carAvailabilityEmailId);
@@ -38,14 +34,10 @@ class carsActions extends sfActions {
                 $days = Utils::isWeekend(true, true);
             }
 
-            error_log(print_r($days, true));
-
             $Car  = $CarAvailabilityEmail->getCar();
 
             if ($option == 2) {
-                error_log("opt: ".$option);
                 foreach ($days as $day) {
-                    error_log("day: ".$day);
                     $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
                     if (!$CarAvailability) {
 
@@ -59,9 +51,7 @@ class carsActions extends sfActions {
                     $CarAvailability->save();
                 }
             } elseif ($option == 1) {
-                error_log("opt: ".$option);
                 $day = $days[count($days)-1];
-                error_log("day: ".$day);
                 $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
                 if (!$CarAvailability) {
 
