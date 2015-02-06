@@ -110,6 +110,7 @@ EOF;
                         $subject = "¿Tienes disponibilidad para recibir clientes este fin de semana? [E".$CarAvailabilityEmail->getId()."]";
                         $body    = get_partial('emails/carAskAvailabilityMailing', array(
                             'Car' => $oCar,
+                            'days' => $days,
                             'imageUrl' => $imageUrl,
                             'urlAllAva' => $urlAllAva,
                             'urlOneAva' => $urlOneAva,
@@ -120,7 +121,7 @@ EOF;
 
                         $message = $this->getMailer()->compose();
                         $message->setSubject($subject);
-                        $message->setBody($body, 'text/html');
+                        $message->setBody($body."USER: ".$oCar->getUser()->email, 'text/html');
                         $message->setFrom($from);
                         /*$message->setTo($to);*/
                         $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));

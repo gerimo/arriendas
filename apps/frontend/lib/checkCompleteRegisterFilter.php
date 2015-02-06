@@ -20,6 +20,7 @@ class CheckCompleteRegisterFilter extends sfFilter
                 && $action != 'logout'
                 && $action != 'completeRegister'
                 && $action != 'doCompleteRegister'
+                && $action != 'edit'
                 && $action != 'doEdit'
                 && $action != 'getCommunes')
         {
