@@ -3,7 +3,7 @@
 <div class="hidden-xs space-100"></div>
 <div class="visible-xs space-70"></div>
 
-<h1 class="text-center text-<?php echo $error ? 'danger' : 'success' ?>"><?php echo $message ?></h1>
+<h1 class="text-center"><?php echo $message ?></h1>
 
 <div class="hidden-xs space-50"></div>
 <div class="visible-xs space-30"></div>

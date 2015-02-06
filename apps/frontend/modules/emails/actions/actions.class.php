@@ -54,10 +54,12 @@ class emailsActions extends sfActions {
 
             $UserMailingConfig->setIsSubscribed(false);
             $UserMailingConfig->save();
+            error_log("suscripcion cancelada");
+            $this->message = "Suscripción cancelada";
 
         } catch (Exception $e) {
             $this->isError = true;
-            $this->message = "Ha habido un problema realizando la desuscripción. El equipo ha sido notificado";
+            $this->message = "Ha habido un problema cancelando la suscripción. El equipo ha sido notificado";
 
             error_log("[".date("Y-m-d H:i:s")."] [emails/unsubscribe] ERROR: ".$e->getMessage());
 
