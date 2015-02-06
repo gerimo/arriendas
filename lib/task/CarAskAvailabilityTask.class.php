@@ -67,7 +67,7 @@ EOF;
             }
 
             $this->log("[".date("Y-m-d H:i:s")."] Buscando autos activos...");
-            $oCars = Doctrine_Core::getTable("Car")->findCarsActives(3, false, false);
+            $oCars = Doctrine_Core::getTable("Car")->findCarsActives(false, false, false);
 
             if ($oCars) {
 
@@ -123,7 +123,7 @@ EOF;
                         $message->setSubject($subject);
                         $message->setBody($body."USER: ".$oCar->getUser()->email, 'text/html');
                         $message->setFrom($from);
-                        /*$message->setTo($to);*/
+                        $message->setTo($to);
                         $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
                         
                         $this->getMailer()->send($message);
