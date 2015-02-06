@@ -20,12 +20,18 @@ class CheckCompleteRegisterFilter extends sfFilter
                 && $action != 'logout'
                 && $action != 'completeRegister'
                 && $action != 'doCompleteRegister'
+                && $action != 'doEdit'
                 && $action != 'getCommunes')
         {
             $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
             $User = Doctrine_core::getTable("user")->find($idUsuario);
-                if(!$User->getExtranjero() && empty($User->getRut())){
+
+                if(!$User->getConfirmed()){
                     $this->getContext()->getController()->forward('main', "completeRegister");
+                    throw new sfStopException;
+                }
+                if(!$User->getExtranjero() && empty($User->getRut())){
+                    $this->getContext()->getController()->forward('profile', "edit");
                     throw new sfStopException;
                 }
         }
