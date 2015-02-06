@@ -156,6 +156,19 @@
 
         imageUpload('#formmain', '#filemain', '#previewmain','#linkmain');       
         imageUpload('#formlicense', '#filelicense', '#previewlicense','#linklicense');
+
+        //establece al campo run como disabled si la persona indica que no tiene rut
+        var foreign = $("#foreign").val();
+        $('#run').val('');
+        if(foreign > 0){  
+            $('#run').val('');
+            $('#run').attr('disabled', true);
+            $("#run").parent("label").find("span").text('');
+        } else {
+            $('#run').attr('disabled', false);
+            $("#run").parent("label").find("span").text('Rut');
+        }
+
     });
 
     $("#region").change(function(){
@@ -219,7 +232,7 @@
             $(formfile).click();
         });
     }
-
+    // establece al campo run como disabled si la persona indica que no tiene rut
     $("#foreign").change(function(){
         var foreign = $(this).val();
         $('#run').val('');
