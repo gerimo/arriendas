@@ -28,25 +28,22 @@ class carActions extends sfActions {
 						$transmission = "Automática";
 					}
 
-
 					$Price = number_format(round(CarTable::getPrice($Reserve->getFechaInicio2(), $Reserve->getFechaTermino2(), $Car->price_per_hour, $Car->price_per_day, $Car->price_per_week, $Car->price_per_month)), 0, '', '.');
 
 	                $return["data"][$i] = array(
-                    "car_id"       		   => $Car->id,
-                    "car_commune"   	   => $Car->getCommune()->name,
-                    "car_brand"  		   => $Car->getModel()->getBrand()->name,
-                    "car_model" 		   => $Car->getModel()->name,
-                    "car_year"   		   => $Car->year,
-                    "car_transmission"     => $transmission,
-                    "car_price"  		   => $Price,
-                    "car_type"	  		   => $Car->getModel()->getCarType()->name,
-                    "car_subway"   		   => $Car->getNearestMetro()->getMetro()->name,
-                    "car_cant"   		   => $Car->getQuantityOfLatestRents(),
-                    "user_fullname"        => $Car->getUser()->firstname." ".$Car->getUser()->lastname,
-                    "user_telephone"       => $Car->getUser()->telephone
-                    
-                );
-
+	                    "car_id"       		   => $Car->id,
+	                    "car_commune"   	   => $Car->getCommune()->name,
+	                    "car_brand"  		   => $Car->getModel()->getBrand()->name,
+	                    "car_model" 		   => $Car->getModel()->name,
+	                    "car_year"   		   => $Car->year,
+	                    "car_transmission"     => $transmission,
+	                    "car_price"  		   => $Price,
+	                    "car_type"	  		   => $Car->getModel()->getCarType()->name,
+	                    "car_subway"   		   => $Car->getNearestMetro()->getMetro()->name,
+	                    "car_cant"   		   => $Car->getQuantityOfLatestRents(),
+	                    "user_fullname"        => $Car->getUser()->firstname." ".$Car->getUser()->lastname,
+	                    "user_telephone"       => $Car->getUser()->telephone
+                	);
 	            }
 	        }
 

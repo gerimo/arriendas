@@ -182,8 +182,6 @@ class CarTable extends Doctrine_Table {
     }
 
     public static function getPrice($from, $to, $pricePerHour, $pricePerDay, $pricePerWeek, $pricePerMonth ) {
-        
-        error_log("acá");
 
         $from = date("Y-m-d H:i:s", strtotime($from));
         $to   = date("Y-m-d H:i:s", strtotime($to));
