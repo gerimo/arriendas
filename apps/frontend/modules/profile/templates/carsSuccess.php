@@ -63,6 +63,7 @@
                             <div class="visible-xs space-10"></div>
                             
                             <?php if (isset($availabilityOfCars[$c->getId()])): ?>
+                                <?php error_log($availabilityOfCars[$c->getId()]) ?>
                                 <div class="row">
                                     <div class="col-md-offset-1 col-md-11">
 
