@@ -111,9 +111,7 @@ class mainActions extends sfActions {
             //$motherLastname = $request->getPostParameter("motherLastname", null);
             $como           = $request->getPostParameter("como", null);
             $userId         = $this->getUser()->getAttribute("userid");
-            $rut            = Utils::isValidRUT($request->getPostParameter("rut", null));
-            $dv             = substr($rut, -1);
-            $number         = substr($rut, 0, -1);
+            $rut            = $request->getPostParameter("rut", null);
             $foreign        = $request->getPostParameter("foreign", null);
             $telephone      = $request->getPostParameter("telephone", null);
             $birth          = $request->getPostParameter("birth", null);
@@ -130,6 +128,11 @@ class mainActions extends sfActions {
                 if (is_null($rut) || $rut == "") {
                     throw new Exception("Debes indicar tu RUT", 1);
                 } else {
+
+                    $rut            = Utils::isValidRUT($request->getPostParameter("rut", null));
+                    $dv             = substr($rut, -1);
+                    $number         = substr($rut, 0, -1);
+
                     if ($rut == false || strlen($number)>8) {
                         throw new Exception("el rut ingresado es inválido", 1);
                     } else {
@@ -137,6 +140,7 @@ class mainActions extends sfActions {
                             throw new Exception("el rut ingresado ya se encuentra registrado", 1);
                         }
                     }
+                    
                 }
             }        
             
@@ -190,6 +194,10 @@ class mainActions extends sfActions {
             } else {
                 $User->setComo($como);
             }
+
+            $rut            = Utils::isValidRUT($request->getPostParameter("rut", null));
+            $dv             = substr($rut, -1);
+            $number         = substr($rut, 0, -1);
 
             $User->setRut($number);
             $User->setRutDv($dv);

@@ -37,7 +37,7 @@
             </select><br>
 
             <div class="col-md-12 btn-group">
-                <label class="form-control">Como nos conociste?</label>
+                <label class="form-control">¿Como nos conociste?</label>
                 <div class="col-md-offset-1">
                     <label class="radio">
                         <input type="radio" name="como" value="noticias" />En las noticias
@@ -66,16 +66,17 @@
                     <label class="radio">
                         <input type="radio" id="another-radio" name="como" value="otro" />Otro
                     </label>
-                    <input class="control-form another" id="another-text" placeholder="especifica">
+                    <input class="form-control another" id="another-text" placeholder="especifica">
                 </div>
             </div>
 
-            <p class="alert"></p>
             <div class="row">
                 <div class="col-md-offset-7 col-md-5" style="padding: 0">
                     <button class="btn btn-a-primary btn-block" id="save"  onclick="validateForm()">Finalizar</button>
                 </div>
             </div>
+            <div class="hidden-xs space-20"></div>
+            <p class="alert pull-right"></p>
             <div class="hidden-xs space-100"></div>
         </div>
     </div>
@@ -98,8 +99,6 @@
 
 <script type="text/javascript">
 
-    var referer = "<?php echo $referer ?>";
-    console.error(referer);
     $("#foreign").change(function(){
         var foreign = $(this).val();
         $('#rut').val('');

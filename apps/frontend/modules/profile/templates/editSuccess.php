@@ -4,7 +4,7 @@
 <div class="visible-xs space-50"></div>
 
 <div class="row">
-    <div class="col-md-offset-3 col-md-6">
+    <div class="col-md-offset-2 col-md-8">
 
         <div class="row BCW">
 
@@ -70,10 +70,10 @@
 
                 <div class="form-inline clearfix">
                     <select class="form-control" name="foreign" id="foreign">
-                        <option value="0" <?php echo $User->getExtranjero() == 0 ? "selected" : ""; ?> >Chileno</option>
-                        <option value="1" <?php echo $User->getExtranjero() == 1 ? "selected" : ""; ?> >Extranjero</option>
+                        <option value="0" <?php echo $User->getExtranjero() == 0 ? "selected" : ""; ?> >Tengo RUT Chileno - I have chilean RUT number</option>
+                        <option value="1" <?php echo $User->getExtranjero() == 1 ? "selected" : ""; ?> >No tengo RUT - I don't have chilean RUT number</option>
                     </select>
-                    <input class="form-control" id="run" name="run" placeholder="RUT" disabled value="<?php if ($User->getRut()) echo $User->getRutFormatted() ?>" type="text">
+                    <input class="form-control" id="run" name="run" placeholder="RUT" value="<?php if ($User->getRut()) echo $User->getRutFormatted() ?>" type="text">
                 </div>
 
                 <input class="form-control" name="telephone" id="telephone" placeholder="Teléfono" value="<?php if ($User->getTelephone()) echo $User->getTelephone() ?>" title="Celular" type="text">
@@ -220,6 +220,19 @@
         });
     }
 
+    $("#foreign").change(function(){
+        var foreign = $(this).val();
+        $('#run').val('');
+        if(foreign > 0){  
+            $('#run').val('');
+            $('#run').attr('disabled', true);
+            $("#run").parent("label").find("span").text('');
+        } else {
+            $('#run').attr('disabled', false);
+            $("#run").parent("label").find("span").text('Rut');
+        }
+    });
+
     function validateForm() {
 
         var firstname      = $("#firstname").val();
@@ -227,7 +240,7 @@
         var motherLastname = $("#motherLastname").val();
         var email          = $("#email").val();
         var emailAgain     = $("#emailAgain").val();
-        /*var rut            = $("#run").val();*/
+        var rut            = $("#run").val();
         var foreign        = $("#foreign option:selected").val();
         var telephone      = $("#telephone").val();
         var birth          = $("#birth").val();
@@ -240,7 +253,7 @@
             "motherLastname": motherLastname,
             "email": email,
             "emailAgain": emailAgain,
-            /*"rut": rut,*/
+            "rut": rut,
             "foreign": foreign,
             "telephone": telephone,
             "birth": birth,
