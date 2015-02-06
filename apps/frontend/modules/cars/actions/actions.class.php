@@ -10,6 +10,10 @@ class carsActions extends sfActions {
         $option                 = $request->getGetParameter("o");
         $signature              = $request->getGetParameter("signature");
 
+        error_log("ID: ".$carAvailabilityEmailId);
+        error_log("option: ".$option);
+        error_log("signature: ".$signature);
+
         try {
 
             $CarAvailabilityEmail = Doctrine_Core::getTable("CarAvailabilityEmail")->find($carAvailabilityEmailId);
@@ -67,7 +71,7 @@ class carsActions extends sfActions {
                 $CarAvailability->save();
             }
         } catch (Exception $e) {
-            error_log("[".date("Y-m-d H:i:s")."] [cars/executeAvailabilityEmail] ERROR: ".$e->getMessage());
+            error_log("[".date("Y-m-d H:i:s")."] [cars/availabilityEmail] ERROR: ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
                 Utils::reportError($e->getMessage(), "cars/availabilityEmail");
             }
@@ -88,7 +92,7 @@ class carsActions extends sfActions {
             }
 
         } catch (Exception $e) {
-            error_log("[".date("Y-m-d H:i:s")."] [cars/executeAvailabilityEmailOpen] ERROR: ".$e->getMessage());
+            error_log("[".date("Y-m-d H:i:s")."] [cars/availabilityEmailOpen] ERROR: ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
                 Utils::reportError($e->getMessage(), "cars/availabilityEmailOpen");
             }
