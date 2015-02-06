@@ -54,6 +54,7 @@
  * @property Doctrine_Collection $Region
  * @property Commune $commune
  * @property Doctrine_Collection $UserManagements
+ * @property boolean $is_employee
  * 
  * @method integer             getId()                    Returns the current record's "id" value
  * @method string              getUsername()              Returns the current record's "username" value
@@ -105,6 +106,7 @@
  * @method timestamp           getFechaRegistro()         Returns the current record's "fecha_registro" value
  * @method Commune             getCommune()               Returns the current record's "commune" value
  * @method Doctrine_Collection getUserManagements()       Returns the current record's "UserManagements" collection
+ * @method boolean             getIsEmployee()            Returns the current record's "is_employee" collection
  *
  * @method User                setId()                    Sets the current record's "id" value
  * @method User                setUsername()              Sets the current record's "username" value
@@ -155,6 +157,7 @@
  * @method User                setTransactions()          Sets the current record's "Transactions" collection
  * @method User                setCommune()               Sets the current record's "commune" value
  * @method User                setUserManagements()       Sets the current record's "UserManagements" collection
+ * @method User                setIsEmployee()            Sets the current record's "is_employee" collection
  * 
  * @package    CarSharing
  * @subpackage model
@@ -387,6 +390,11 @@ abstract class BaseUser extends sfDoctrineRecord {
         $this->hasColumn('commune_id', 'integer', 11, array(
             'notnull' => true
         ));
+        $this->hasColumn('is_employee', 'boolean', false, array(
+            'type' => 'boolean',
+            'notnull' => true,
+            'default' => false,
+            ));
         $this->index('fk_User_Commune', array(
             'fields' => array(
                 0 => 'commune_id',

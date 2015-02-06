@@ -58,13 +58,19 @@
 
         $('#carsActivesTable').hide();
         $('.loading').hide();  
+
+        /*$('#carsActivesTable').DataTable({
+            info: false,
+            paging: true,
+            responsive: true
+        });*/
     });
 
     $(document).on("click", ".opp-approve", function(){
 
         var reserveId = $(this).data("reserve-id");
         var carId = $(this).data("car-id");
-    
+        
         var parameters = {
             "reserveId" : reserveId,
             "carId" : carId
@@ -125,11 +131,7 @@
                 console.log(r.errorMessage);
             } else {
                 
-                $('#carsActivesTable').DataTable({
-                    info: false,
-                    paging: true,
-                    responsive: true
-                });
+                
  
                 $('#carsActivesTable').DataTable().column(9).order( 'desc' );
 

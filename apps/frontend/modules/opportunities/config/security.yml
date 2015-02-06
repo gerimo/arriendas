@@ -1,3 +1,6 @@
+approve:
+    is_secure: false
+
 mailingApprove:
     is_secure: false
 
