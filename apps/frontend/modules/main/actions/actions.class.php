@@ -140,7 +140,7 @@ class mainActions extends sfActions {
                             throw new Exception("el rut ingresado ya se encuentra registrado", 1);
                         }
                     }
-                    
+
                 }
             }        
             
@@ -199,8 +199,8 @@ class mainActions extends sfActions {
             $dv             = substr($rut, -1);
             $number         = substr($rut, 0, -1);
 
-            $User->setRut($number);
-            $User->setRutDv($dv);
+            $User->setRut($number ? $number : null );
+            $User->setRutDv($dv ? $dv : null );
             $User->setExtranjero($foreign);
             $User->setTelephone($telephone);
             $User->setBirthdate($birth);
