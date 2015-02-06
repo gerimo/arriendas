@@ -2,10 +2,10 @@
 
 class backendConfiguration extends sfApplicationConfiguration {
 
+	protected $frontendRouting = null;
+
 	public function configure() {}
 
- 	protected $frontendRouting = null;
- 
   	public function generateFrontendUrl($name, $parameters = array()) {
     	return $this->getHost().$this->getFrontendRouting()->generate($name, $parameters);
   	}
@@ -24,3 +24,4 @@ class backendConfiguration extends sfApplicationConfiguration {
 	 
 	    return $this->frontendRouting;
 	}
+}
