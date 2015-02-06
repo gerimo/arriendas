@@ -14,20 +14,20 @@ car_availability:
    param: { module: cars, action: availability }
 
 car_availability_email:
-    url: /disponibilidad/:id/:o/:signature
+    url: /auto/disponibilidad/:id/:o/:signature
     param: { module: cars, action: availabilityEmail }
 
 car_availability_email_open:
-    url: /disponibilidad/imagen/:id
+    url: /auto/disponibilidad/imagen/:id
     param: { module: cars, action: availabilityEmailOpen }
 
 car_availability_remove:
     url: /auto/disponibilidad/eliminar
-    param: { module: cars, action: carAvailabilityRemove }
+    param: { module: cars, action: availabilityRemove }
 
 car_availability_save:
     url: /auto/disponibilidad/guardar
-    param: { module: cars, action: carAvailabilitySave }
+    param: { module: cars, action: availabilitySave }
 
 car_set_active:
     url: /auto/cambiar/activo

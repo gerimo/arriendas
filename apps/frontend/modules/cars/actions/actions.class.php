@@ -109,7 +109,7 @@ class carsActions extends sfActions {
         return sfView::NONE;
     }
     
-    public function executeCarAvailabilityRemove(sfWebRequest $request) {
+    public function executeAvailabilityRemove(sfWebRequest $request) {
         
         $return = array("error" => false);
 
@@ -134,9 +134,9 @@ class carsActions extends sfActions {
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
-            error_log("[".date("Y-m-d H:i:s")."] [cars/carAvailabilityRemove] ERROR: ".$e->getMessage());
+            error_log("[".date("Y-m-d H:i:s")."] [cars/availabilityRemove] ERROR: ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
-                Utils::reportError($e->getMessage(), "cars/carAvailabilityRemove");
+                Utils::reportError($e->getMessage(), "cars/availabilityRemove");
             }
         }
 
@@ -145,7 +145,7 @@ class carsActions extends sfActions {
         return sfView::NONE;
     }
 
-    public function executeCarAvailabilitySave(sfWebRequest $request) {
+    public function executeAvailabilitySave(sfWebRequest $request) {
         
         $return = array("error" => false);
 
@@ -198,9 +198,9 @@ class carsActions extends sfActions {
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
-            error_log("[".date("Y-m-d H:i:s")."] [cars/carAvailabilitySave] ERROR: ".$e->getMessage());
+            error_log("[".date("Y-m-d H:i:s")."] [cars/availabilitySave] ERROR: ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
-                Utils::reportError($e->getMessage(), "cars/carAvailabilitySave");
+                Utils::reportError($e->getMessage(), "cars/availabilitySave");
             }
         }
 
