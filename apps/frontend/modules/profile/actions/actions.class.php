@@ -159,9 +159,7 @@ class profileActions extends sfActions {
             $motherLastname = $request->getPostParameter("motherLastname", null);
             $email          = $request->getPostParameter("email", null);
             $emailAgain     = $request->getPostParameter("emailAgain", null);
-            /*$rut            = Utils::isValidRUT($request->getPostParameter("rut", null));
-            $dv             = substr($rut, -1);
-            $number         = substr($rut, 0, -1);*/
+            $rut            = $request->getPostParameter("rut", null);
             $foreign        = $request->getPostParameter("foreign", null);
             $telephone      = $request->getPostParameter("telephone", null);
             $birth          = $request->getPostParameter("birth", null);
@@ -171,7 +169,31 @@ class profileActions extends sfActions {
             $userId = $this->getUser()->getAttribute("userid");
 
             $User = Doctrine_Core::getTable('User')->find($userId);
-    
+            
+            if (is_null($foreign) || $foreign == "") {
+                throw new Exception("Debes indicar tu nacionalidad", 1);
+            }
+
+            if(!$foreign) {
+                if (is_null($rut) || $rut == "") {
+                    throw new Exception("Debes indicar tu RUT", 1);
+                } else {
+
+                    $rut            = Utils::isValidRUT($request->getPostParameter("rut", null));
+                    $dv             = substr($rut, -1);
+                    $number         = substr($rut, 0, -1);
+
+                    if ($rut == false || strlen($number)>8) {
+                        throw new Exception("el rut ingresado es inválido", 1);
+                    } else {
+                        if(User::rutExist($number)) {
+                            throw new Exception("el rut ingresado ya se encuentra registrado", 1);
+                        }
+                    }
+                    
+                }
+            }
+
             if (is_null($firstname) || $firstname == "") {
                 throw new Exception("Debes indicar tu nombre", 1);
             }
@@ -180,28 +202,12 @@ class profileActions extends sfActions {
                 throw new Exception("Debes indicar tu apllellido paterno", 1);
             }
 
-            if (is_null($motherLastname) || $motherLastname == "") {
+            /*if (is_null($motherLastname) || $motherLastname == "") {
                 throw new Exception("Debes indicar tu apellido materno", 1);
-            }
+            }*/
 
             if (is_null($email) || $email == "") {
                 throw new Exception("Debes indicar tu correo electrónico", 1);
-            }
-
-            /*if (is_null($rut) || $rut == "") {
-                throw new Exception("Debes indicar tu RUT", 1);
-            } else {
-                if ($rut == false || strlen($number)>8) {
-                    throw new Exception("el rut ingresado es inválido", 1);
-                } else {
-                    if(User::rutExist($number)) {
-                        throw new Exception("el rut ingresado ya se encuentra registrado", 1);
-                    }
-                }
-            }*/
-
-            if (is_null($foreign) || $foreign == "") {
-                throw new Exception("Debes indicar tu nacionalidad", 1);
             }
 
             if (is_null($telephone) || $telephone == "") {
@@ -222,11 +228,11 @@ class profileActions extends sfActions {
 
             $User->setFirstname($firstname);
             $User->setLastname($lastname);
-            $User->setApellidoMaterno($motherLastname);
+            $User->setApellidoMaterno($motherLastname ? $motherLastname : "");
             $User->setFirstname($firstname);
             $User->setEmail($email);
-            /*$User->setRut($number);
-            $User->setRutDv($dv);*/
+            $User->setRut($number ? $number : null);
+            $User->setRutDv($dv ? $dv : null);
             $User->setExtranjero($foreign);
             $User->setTelephone($telephone);
             $User->setBirthdate($birth);
