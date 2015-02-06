@@ -51,7 +51,7 @@ EOF;
 
                         if((!empty($dv) || !is_null($dv)) && (!is_null($number) || !empty($number))) {
                             $User->setRut($number);
-                            $User->setRutDv($dv);
+                            $User->setRutDv(strtoupper($dv));
                             $User->save();  
                             $countCambiados++;
                         } else {

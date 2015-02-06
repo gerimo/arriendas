@@ -243,7 +243,7 @@ class profileActions extends sfActions {
             $User->setFirstname($firstname);
             $User->setEmail($email);
             $User->setRut($number ? $number : null);
-            $User->setRutDv($dv ? $dv : null);
+            $User->setRutDv($dv ? strtoupper($dv) : null);
             $User->setExtranjero($foreign);
             $User->setTelephone($telephone);
             $User->setBirthdate($birth);
