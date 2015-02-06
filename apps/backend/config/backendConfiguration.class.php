@@ -15,7 +15,7 @@ class backendConfiguration extends sfApplicationConfiguration {
             $host = "dev.arriendas.cl";
         }
 
-        return $host.$this->getFrontendRouting()->generate($name, $parameters);
+        return $this->getFrontendRouting()->generate($name, $parameters);
     }
 
     public function getFrontendRouting() {
