@@ -23,7 +23,7 @@
                         <th>Modelo</th>
                         <th>Año</th>
                         <th>Transmisión</th>
-                        <th>Tipo Bencina</th>
+                        <th>Precio</th>
                         <th>Tipo Vehículo</th>
                         <th>Metro Cercano</th>
                         <th>Cant. reserva ult. 3 meses</th>
@@ -51,10 +51,8 @@
     /*var urlCreate = "<?php echo url_for_frontend('opportunities_approve', array('carId' => 'carIdPattern', 'reserveId' => 'reserveIdPattern')) ?>";*/
     
 	$(document).ready(function() {
-
-        $(".found").hide();  
-        $(".find").hide();    
- 		$("#create").prop("disabled", true);
+ 
+        $(".find").hide();   
 
         $('#carsActivesTable').hide();
         $('.loading').hide();  
@@ -70,6 +68,7 @@
 
         var reserveId = $(this).data("reserve-id");
         var carId = $(this).data("car-id");
+        $(this).prop("disabled", true);
         
         var parameters = {
             "reserveId" : reserveId,
@@ -81,7 +80,7 @@
             if (r.error) {
                 console.log(r.errorMessage);
             } else {
-                console.log("ok");
+                $(this).prop("disabled", false);
             }
 
         }, 'json')
@@ -140,7 +139,7 @@
                 
                 $.each(r.data, function(k, v){
                     var button = "<button class='btn btn-block btn-primary opp-approve' data-reserve-id='"+reserveId+"' data-car-id='"+v.car_id+"'>Crear</button>";
-                    $('#carsActivesTable').DataTable().row.add([ v.car_id, v.car_commune, v.car_brand, v.car_model, v.car_year, v.car_transmission, v.car_benzine, v.car_type, v.car_subway, v.car_cant, v.user_fullname , v.user_telephone, button ]).draw();
+                    $('#carsActivesTable').DataTable().row.add([ v.car_id, v.car_commune, v.car_brand, v.car_model, v.car_year, v.car_transmission, v.car_price, v.car_type, v.car_subway, v.car_cant, v.user_fullname , v.user_telephone, button ]).draw();
                 });
                 
                 $(".loading").hide();

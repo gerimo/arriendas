@@ -10,10 +10,6 @@ class carsActions extends sfActions {
         $option                 = $request->getParameter("o");
         $signature              = $request->getParameter("signature");
 
-        error_log("ID: ".$carAvailabilityEmailId);
-        error_log("option: ".$option);
-        error_log("signature: ".$signature);
-
         try {
 
             $CarAvailabilityEmail = Doctrine_Core::getTable("CarAvailabilityEmail")->find($carAvailabilityEmailId);
@@ -38,14 +34,10 @@ class carsActions extends sfActions {
                 $days = Utils::isWeekend(true, true);
             }
 
-            error_log(print_r($days, true));
-
             $Car  = $CarAvailabilityEmail->getCar();
 
             if ($option == 2) {
-                error_log("opt: ".$option);
                 foreach ($days as $day) {
-                    error_log("day: ".$day);
                     $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
                     if (!$CarAvailability) {
 
@@ -59,9 +51,7 @@ class carsActions extends sfActions {
                     $CarAvailability->save();
                 }
             } elseif ($option == 1) {
-                error_log("opt: ".$option);
                 $day = $days[count($days)-1];
-                error_log("day: ".$day);
                 $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
                 if (!$CarAvailability) {
 
@@ -109,7 +99,7 @@ class carsActions extends sfActions {
         return sfView::NONE;
     }
     
-    public function executeCarAvailabilityRemove(sfWebRequest $request) {
+    public function executeAvailabilityRemove(sfWebRequest $request) {
         
         $return = array("error" => false);
 
@@ -134,9 +124,9 @@ class carsActions extends sfActions {
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
-            error_log("[".date("Y-m-d H:i:s")."] [cars/carAvailabilityRemove] ERROR: ".$e->getMessage());
+            error_log("[".date("Y-m-d H:i:s")."] [cars/availabilityRemove] ERROR: ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
-                Utils::reportError($e->getMessage(), "cars/carAvailabilityRemove");
+                Utils::reportError($e->getMessage(), "cars/availabilityRemove");
             }
         }
 
@@ -145,7 +135,7 @@ class carsActions extends sfActions {
         return sfView::NONE;
     }
 
-    public function executeCarAvailabilitySave(sfWebRequest $request) {
+    public function executeAvailabilitySave(sfWebRequest $request) {
         
         $return = array("error" => false);
 
@@ -198,9 +188,9 @@ class carsActions extends sfActions {
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
-            error_log("[".date("Y-m-d H:i:s")."] [cars/carAvailabilitySave] ERROR: ".$e->getMessage());
+            error_log("[".date("Y-m-d H:i:s")."] [cars/availabilitySave] ERROR: ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
-                Utils::reportError($e->getMessage(), "cars/carAvailabilitySave");
+                Utils::reportError($e->getMessage(), "cars/availabilitySave");
             }
         }
 
