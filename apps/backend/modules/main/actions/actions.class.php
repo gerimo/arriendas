@@ -85,24 +85,27 @@ class mainActions extends sfActions {
 
                 $oUser = $q->fetchOne();
             } catch (Exception $e) {
-                Utils::reportError($e->getMessage(), "main/loginDo");
+                error_log("[Backend] [".date("Y-m-d H:i:s")."] [main/loginDo] ".$e->getMessage());
             }
 
             if ($oUser) {
+                if ($oUser->getIsEmployee()) {
+                    $this->getUser()->setFlash('msg', 'Autenticado');
 
-                $this->getUser()->setFlash('msg', 'Autenticado');
+                    $this->getUser()->setAuthenticated(true);
 
-                $this->getUser()->setAuthenticated(true);
+                    $this->getUser()->setAttribute("fullname", ucwords(strtolower($oUser->firstname)." ".strtolower($oUser->lastname)));
+                    $this->getUser()->setAttribute("firstname", $oUser->getFirstName());
 
-                $this->getUser()->setAttribute("fullname", ucwords(strtolower($oUser->firstname)." ".strtolower($oUser->lastname)));
-                $this->getUser()->setAttribute("firstname", $oUser->getFirstName());
-
-                $this->redirect($this->getUser()->getAttribute("referer"));
+                    $this->redirect($this->getUser()->getAttribute("referer"));
+                } else {
+                    $this->getUser()->setFlash('msg', 'No tienes autorización');
+                    $this->getUser()->setFlash('show', true);
+                    $this->forward('main', 'login');
+                }
             } else {
-
                 $this->getUser()->setFlash('msg', 'Usuario o contraseña inválido');
                 $this->getUser()->setFlash('show', true);
-
                 $this->forward('main', 'login');
             }
         }
