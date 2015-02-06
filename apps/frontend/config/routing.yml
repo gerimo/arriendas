@@ -14,7 +14,7 @@ car_availability:
    param: { module: cars, action: availability }
 
 car_availability_email:
-    url: /disponibilidad/:id/:o/:signature
+    url: /testing/:id/:o/:signature
     param: { module: cars, action: availabilityEmail }
 
 car_availability_email_open:
