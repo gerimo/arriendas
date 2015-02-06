@@ -33,9 +33,9 @@ class carsActions extends sfActions {
             
             $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
             if ($Holiday || date("N") == 6 || date("N") == 7) {
-                $days = Utils::isWeekend(true, true);
-            } else {
                 $days = Utils::isWeekend(true, false);
+            } else {
+                $days = Utils::isWeekend(true, true);
             }
 
             error_log(print_r($days, true));
