@@ -9,11 +9,11 @@
             <input class="form-control" id="idReservaOriginal" placeholder="ID reserva original" type="text" onblur="isOriginalReserve()">
             <i class="find fa fa-check" id="reserve-check"></i>
             <i class="find fa fa-remove"id="reserve-remove"></i>
+            <img class="loading" src="/images/ajax-loader.gif">
             <div class="space-70"></div>
         </div>
 
         <div>
-            <img class="loading" src="/images/ajax-loader.gif">
             <table class="display responsive no-wrap" id="carsActivesTable" cellspacing="0" width="100%">
                 <thead>
                     <tr>
@@ -52,10 +52,11 @@
     
 	$(document).ready(function() {
  
-        $(".find").hide();   
+        
 
         $('#carsActivesTable').hide();
         $('.loading').hide();  
+        $(".find").hide();   
 
         /*$('#carsActivesTable').DataTable({
             info: false,
@@ -130,7 +131,7 @@
             if (r.error) {
                 console.log(r.errorMessage);
             } else {
-                
+
                 $('#carsActivesTable').DataTable().column(9).order( 'desc' );
 
                 $('#carsActivesTable').show();
