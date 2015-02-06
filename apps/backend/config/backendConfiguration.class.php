@@ -1,22 +1,19 @@
 <?php
 
-class backendConfiguration extends sfApplicationConfiguration
-{
+class backendConfiguration extends sfApplicationConfiguration {
 
-	public function configure() {
-  
- 		}
+	public function configure() {}
 
  	protected $frontendRouting = null;
  
   	public function generateFrontendUrl($name, $parameters = array()) {
-    	return $this->getFrontendRouting()->generate($name, $parameters);
-  		}
+    	return $this->getHost().$this->getFrontendRouting()->generate($name, $parameters);
+  	}
 
  	public function getFrontendRouting() {
 
-	    if (!$this->frontendRouting)
-	    {
+	    if (!$this->frontendRouting) {
+
 	      $this->frontendRouting = new sfPatternRouting(new sfEventDispatcher());
 	 
 	      $config = new sfRoutingConfigHandler();
@@ -26,7 +23,4 @@ class backendConfiguration extends sfApplicationConfiguration
 	    }
 	 
 	    return $this->frontendRouting;
-
-  		}
-
-}
+	}
