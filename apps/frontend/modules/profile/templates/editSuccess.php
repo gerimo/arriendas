@@ -159,14 +159,12 @@
 
         //establece al campo run como disabled si la persona indica que no tiene rut
         var foreign = $("#foreign").val();
-        $('#run').val('');
         if(foreign > 0){  
             $('#run').val('');
             $('#run').attr('disabled', true);
             $("#run").parent("label").find("span").text('');
         } else {
             $('#run').attr('disabled', false);
-            $("#run").parent("label").find("span").text('Rut');
         }
 
     });
