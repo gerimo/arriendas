@@ -33,7 +33,7 @@ EOF;
 
         $host = 'http://local.arriendas.cl';
         if ($options['env'] == 'dev') {
-            $host = 'http://local.arriendas.cl';
+            $host = 'http://dev.arriendas.cl';
         } elseif ($options['env'] == 'prod') {
             $host = 'http://www.arriendas.cl';
         }
@@ -75,7 +75,7 @@ EOF;
                 
                 $from = $days[0] .= " 00:00:00";
                 $to   = $days[count($days)-1] .= " 23:59:59";
-                
+
                 foreach ($oCars as $oCar) {
                     if (!$oCar->hasReserve($from, $to)) {
 
