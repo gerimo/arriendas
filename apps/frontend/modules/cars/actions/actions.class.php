@@ -38,6 +38,8 @@ class carsActions extends sfActions {
                 $days = Utils::isWeekend(true, false);
             }
 
+            error_log(print_r($days, true));
+
             $Car  = $CarAvailabilityEmail->getCar();
 
             if ($option == 2) {
