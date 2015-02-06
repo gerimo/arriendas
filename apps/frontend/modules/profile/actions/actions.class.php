@@ -32,8 +32,7 @@ class profileActions extends sfActions {
 
             if ($Car->getActivo()) {
 
-                $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+1 day")));  
-
+                $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+1 day")));
                 if (date("N", strtotime("+1 day")) == 7 || date("N", strtotime("+1 day")) == 6 || $Holiday) {
                     
                     $this->availabilityOfCars[$Car->getId()] = array();
@@ -66,6 +65,7 @@ class profileActions extends sfActions {
                         
                     } while(date("N", strtotime($day)) == 6 || date("N", strtotime($day)) == 7 || $Holiday);
                     //} while($i < 5);
+                    error_log(print_r($this->availabilityOfCars, true));
                 }
             }
         }
