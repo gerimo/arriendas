@@ -72,14 +72,10 @@ EOF;
             if ($oCars) {
 
                 $routing = $this->getRouting();
-                $imageUrl = $host . $routing->generate('availabilityEmailOpen');
-
+                
                 $from = $days[0] .= " 00:00:00";
                 $to   = $days[count($days)-1] .= " 23:59:59";
-
-                $this->log("[".date("Y-m-d H:i:s")."] FROM: ".$from);
-                $this->log("[".date("Y-m-d H:i:s")."] TO: ".$to);
-
+                
                 foreach ($oCars as $oCar) {
                     if (!$oCar->hasReserve($from, $to)) {
 
@@ -88,6 +84,8 @@ EOF;
                         $CarAvailabilityEmail->setCar($oCar);
                         $CarAvailabilityEmail->setSentAt(date("Y-m-d H:i:s"));
                         $CarAvailabilityEmail->save();
+
+                        $imageUrl = $host . $routing->generate('car_availability_email_open', array("id" => $CarAvailabilityEmail->id));
 
                         $urlAllAva  = $host . $routing->generate('car_availability_email', array(
                             'id' => $CarAvailabilityEmail->getId(),

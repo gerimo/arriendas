@@ -1,4 +1,7 @@
 <br><br>
+<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Atentamente</p>
+<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Equipo Arriendas.cl</p>
+<br><br>
 <?php if (isset($userId) && isset($mailingId)): ?>
 
     <?php $host = "http://local.arriendas.cl" ?>
@@ -12,6 +15,3 @@
         <p style='color: #aaa; font-size:10px; margin: 0; padding: 3px 0 0 0'>Si no deseas recibir más solicitudes de disponibilidad has click <a href="<?php echo $host.$url ?>">aquí</a>.</p>
     <?php endif ?>
 <?php endif ?>
-<br><br>
-<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Atentamente</p>
-<p style='color: #aaa; font-size:14px; margin: 0; padding: 3px 0 0 0'>Equipo Arriendas.cl</p>

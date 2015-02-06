@@ -4,15 +4,103 @@ require_once sfConfig::get('sf_lib_dir') . '/vendor/mobile-detect/Mobile_Detect.
 
 class carsActions extends sfActions {
 
-    public function executeCarAvailabilityEmail(sfWebRequest $request) {
+    public function executeAvailabilityEmail(sfWebRequest $request) {
+
+        $carAvailabilityEmailId = $request->getGetParameter("id");
+        $option                 = $request->getGetParameter("o");
+        $signature              = $request->getGetParameter("signature");
 
         try {
-        } catch (Exception $e) {
-            error_log("[".date("Y-m-d H:i:s")."] [cars/carAvailabilityRemove] ERROR: ".$e->getMessage());
-            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
-                Utils::reportError($e->getMessage(), "cars/carAvailabilityRemove");
+
+            $CarAvailabilityEmail = Doctrine_Core::getTable("CarAvailabilityEmail")->find($carAvailabilityEmailId);
+
+            if (!$CarAvailabilityEmail) {
+                throw new Exception("No se encontró el registro.", 1);
             }
+
+            if ($CarAvailabilityEmail->getSignature() != $signature) {
+                throw new Exception("Las firmas no coinciden. ¿Trampa?", 2);
+            }
+
+            if (is_null($CarAvailabilityEmail->getCheckedAt())) {
+                $CarAvailabilityEmail->setCheckedAt(date("Y-m-d H:i:s"));
+                $CarAvailabilityEmail->save();
+            }
+            
+            $sentAt = strtotime(date("Y-m-d", strtotime($CarAvailabilityEmail->getSentAt())));
+            $i      = 0;
+            $day    = date("Y-m-d", strtotime("+".$i." day", $sentAt));
+
+            $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate($day);
+            if ($Holiday || date("N", strtotime($day)) == 6) {
+
+                $Car  = $CarAvailabilityEmail->getCar();
+
+                if ($option == 2) {
+                    
+                    do {
+
+                        $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
+                        if (!$CarAvailability) {
+
+                            $CarAvailability = new CarAvailability();
+                            $CarAvailability->setCar($Car);
+                            $CarAvailability->setDay($day);
+                        }
+
+                        $CarAvailability->setStartedAt("08:00:00");
+                        $CarAvailability->setEndedAt("20:00:00");
+                        $CarAvailability->save();
+
+                        $i++;
+                        $day    = date("Y-m-d", strtotime("+".$i." day", strtotime(date("Y-m-d", strtotime($CarAvailabilityEmail->getSentAt())))));
+
+                        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate($day);
+                    } while($Holiday || date("N", strtotime($day)) == 6 || date("N", strtotime($day)) == 7);
+                } elseif ($option == 1) {
+
+                    $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
+                    if (!$CarAvailability) {
+
+                        $CarAvailability = new CarAvailability();
+                        $CarAvailability->setCar($Car);
+                        $CarAvailability->setDay($day);
+                    }
+
+                    $CarAvailability->setStartedAt("08:00:00");
+                    $CarAvailability->setEndedAt("20:00:00");
+                    $CarAvailability->save();
+                }
+            }
+        } catch (Exception $e) {
+
+            Utils::reportError($e->getMessage(), "profile/executeAvailability");
         }
+
+        $this->redirect('cars');
+    }
+
+    public function executeAvailabilityEmailOpen(sfWebRequest $request) {
+
+        try {
+
+            $CarAvailabilityEmail = Doctrine_Core::getTable('CarAvailabilityEmail')->find($request->getParameter('id'));
+
+            if (is_null($CarAvailabilityEmail->getOpenedAt())) {
+                $CarAvailabilityEmail->setOpenedAt(date("Y-m-d H:i:s"));
+                $CarAvailabilityEmail->save();
+            }
+
+        } catch (Exception $e) {
+            
+            Utils::reportError($e->getMessage(), "cars/availabilityEmailOpen");
+        }
+
+        $this->getResponse()->setContentType('image/gif');
+
+        echo base64_decode("R0lGODlhAQABAIAAAP///////yH+EUNyZWF0ZWQgd2l0aCBHSU1QACwAAAAAAQABAAACAkQBADs=");
+
+        return sfView::NONE;
     }
     
     public function executeCarAvailabilityRemove(sfWebRequest $request) {
