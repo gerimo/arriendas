@@ -65,7 +65,7 @@ class profileActions extends sfActions {
                         
                     } while(date("N", strtotime($day)) == 6 || date("N", strtotime($day)) == 7 || $Holiday);
                     //} while($i < 5);
-                    error_log(print_r($this->availabilityOfCars, true));
+                    /*error_log(print_r($this->availabilityOfCars, true));*/
                 }
             }
         }
