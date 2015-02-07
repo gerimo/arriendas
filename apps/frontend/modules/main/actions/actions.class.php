@@ -562,7 +562,7 @@ class mainActions extends sfActions {
         $carId = $request->getParameter("carId", null);
 
         if (is_null($carId)) {
-            throw new Exception("Auto no encontrado", 1);
+            $this->forward404();
         }
 
         $f = strtotime($from);
@@ -579,11 +579,13 @@ class mainActions extends sfActions {
         $this->to = date("Y-m-d H:i", $t);
         $this->toHuman = date("D d/m/Y H:i", $t);
 
-        /*$this->User = Doctrine_Core::getTable('User')->find($userId);*/
         $this->Car = Doctrine_Core::getTable('Car')->find($carId);
+        if (!$this->Car) {
+            $this->forward404();
+        }
 
         if ($this->Car->hasReserve($from, $to)) {
-            throw new Exception("Auto ya posee reserva", 1);            
+            throw new Exception("Auto ya posee reserva", 1);        
         }
 
         $this->time = Car::getTime($from, $to);
