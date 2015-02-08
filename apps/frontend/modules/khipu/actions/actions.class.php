@@ -216,14 +216,6 @@ class khipuActions extends sfActions {
                         $Transaction->setCompleted(true);
                         $Transaction->save();
 
-                        $OpportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findOneByReserve($Reserve);
-                        if (!$OpportunityQueue) {
-                            $OpportunityQueue = new OpportunityQueue();
-                            $OpportunityQueue->setPaidAt(date("Y-m-d H:i:s"));
-                            $OpportunityQueue->setReserve($Reserve);
-                            $OpportunityQueue->save();
-                        }
-
                         $mail   = new Email();
                         $mailer = $mail->getMailer();
 
@@ -320,6 +312,14 @@ class khipuActions extends sfActions {
                         $Reserve->encolarMailCalificaciones();
 
                         error_log("[khipu/notifyPayment] [".date("Y-m-d H:i:s")."] ---------- HABEMUS PAGO --------");
+
+                        $OpportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findOneByReserve($Reserve);
+                        if (!$OpportunityQueue) {
+                            $OpportunityQueue = new OpportunityQueue();
+                            $OpportunityQueue->setPaidAt(date("Y-m-d H:i:s"));
+                            $OpportunityQueue->setReserve($Reserve);
+                            $OpportunityQueue->save();
+                        }
                     }
                 }
             } else {
