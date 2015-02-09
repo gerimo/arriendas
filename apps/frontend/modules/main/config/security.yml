@@ -40,6 +40,12 @@ howWorks:
 index:
     is_secure: false
 
+indexMap:
+    is_secure: false
+
+indexList:
+    is_secure: false
+
 login:
     is_secure: false
 
