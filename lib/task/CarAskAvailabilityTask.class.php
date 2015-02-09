@@ -119,7 +119,7 @@ EOF;
                         /*$message->setTo($to);*/
                         $message->setBcc(array(
                             "cristobal@arriendas.cl" => "Cristóbal Medina Moenne",
-                            "francofre@arriendas.cl" => "Francisca Cofré Ulloa"
+                            /*"francofre@arriendas.cl" => "Francisca Cofré Ulloa"*/
                         ));
                         
                         $this->getMailer()->send($message);
