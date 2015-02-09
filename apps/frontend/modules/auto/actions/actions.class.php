@@ -63,6 +63,9 @@ class autoActions extends sfActions {
 
         $this->car = Doctrine_Core::getTable('car')->find(array($request->getParameter('id')));
 
+        // Se agrega esto porque estaba tirando error 500. Se hace sin saber que hace este controlador
+        $this->forward404If(!$this->car);
+
         /* track state */
         $stateId = $this->car->getStateId();
         $userViewingId = $this->getUser()->getAttribute('userid');

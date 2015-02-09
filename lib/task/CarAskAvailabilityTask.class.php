@@ -56,18 +56,20 @@ EOF;
 
             $tomorrow = strtotime("+1 day");
 
-            if (date("N", $tomorrow) == 6 || Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", $tomorrow))) {
+            if (date("N", $tomorrow) == 6 || date("N", $tomorrow) == 7 || Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", $tomorrow))) {
 
                 $this->log("[".date("Y-m-d H:i:s")."] Mañana ".date("Y-m-d", $tomorrow)." es fin de semana o festivo.");
 
-                $days = Utils::isWeekend(true, true);
+                $days = Utils::isWeekend(true, true); // envio de viernes
+                $days = Utils::isWeekend(true, false); // envio de sabado
             } else {
                 $this->log("[".date("Y-m-d H:i:s")."] Mañana ".date("Y-m-d", $tomorrow)." NO es fin de semana o festivo.");
                 exit;
             }
 
             $this->log("[".date("Y-m-d H:i:s")."] Buscando autos activos...");
-            $oCars = Doctrine_Core::getTable("Car")->findCarsActives(1, false, false);
+            /*$oCars = Doctrine_Core::getTable("Car")->findCarsActives(false, false, true);*/
+            $oCars = Doctrine_Core::getTable("Car")->findCarsActives(false, false, false); // TODOS
 
             if ($oCars) {
 
@@ -77,7 +79,7 @@ EOF;
                 $to   = $days[count($days)-1] .= " 23:59:59";
 
                 foreach ($oCars as $oCar) {
-                    if (!$oCar->hasReserve($from, $to) && $oCar->getCommune()->getRegion()->id == 13) {
+                    if (!$oCar->hasReserve($from, $to)) {
 
                         $CarAvailabilityEmail = new CarAvailabilityEmail();
 
@@ -121,7 +123,7 @@ EOF;
 
                         $message = $this->getMailer()->compose();
                         $message->setSubject($subject);
-                        $message->setBody($body."USER: ".$oCar->getUser()->email, 'text/html');
+                        $message->setBody($body, 'text/html');
                         $message->setFrom($from);
                         /*$message->setTo($to);*/
                         $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));

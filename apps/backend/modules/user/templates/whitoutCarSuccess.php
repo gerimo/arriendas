@@ -24,7 +24,7 @@
 
         <div class="space-100"></div>
 
-        <table  class="display responsive no-wrap " id="userWhitoutCarTable" cellspacing="0" width="100%">
+        <table  class="display responsive no-wrap" id="userWhitoutCarTable" cellspacing="0" width="100%">
             <thead>
                 <tr>
                     <th>ID</th>
