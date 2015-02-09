@@ -70,6 +70,7 @@ EOF;
             $this->log("[".date("Y-m-d H:i:s")."] Buscando autos activos...");
             /*$oCars = Doctrine_Core::getTable("Car")->findCarsActives(false, false, true);*/
             $oCars = Doctrine_Core::getTable("Car")->findCarsActives(1, false, false); // TODOS
+            $this->log("[".date("Y-m-d H:i:s")."] Autos encontrados: ".count($oCars));
 
             if ($oCars) {
 
