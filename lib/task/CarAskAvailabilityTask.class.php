@@ -60,7 +60,7 @@ EOF;
 
                 $this->log("[".date("Y-m-d H:i:s")."] Mañana ".date("Y-m-d", $tomorrow)." es fin de semana o festivo.");
 
-                $days = Utils::isWeekend(true, true); // envio de viernes
+                /*$days = Utils::isWeekend(true, true); // envio de viernes*/
                 $days = Utils::isWeekend(true, false); // envio de sabado
             } else {
                 $this->log("[".date("Y-m-d H:i:s")."] Mañana ".date("Y-m-d", $tomorrow)." NO es fin de semana o festivo.");
@@ -69,7 +69,7 @@ EOF;
 
             $this->log("[".date("Y-m-d H:i:s")."] Buscando autos activos...");
             /*$oCars = Doctrine_Core::getTable("Car")->findCarsActives(false, false, true);*/
-            $oCars = Doctrine_Core::getTable("Car")->findCarsActives(false, false, false); // TODOS
+            $oCars = Doctrine_Core::getTable("Car")->findCarsActives(1, false, false); // TODOS
 
             if ($oCars) {
 
@@ -110,7 +110,7 @@ EOF;
                         $this->log("[".date("Y-m-d H:i:s")."] Enviando consulta a ".$oCar->getUser()->firstname." ".$oCar->getUser()->lastname." Car ".$oCar->getId());                        
 
                         $subject = "¿Tienes disponibilidad para recibir clientes este fin de semana? [E".$CarAvailabilityEmail->getId()."]";
-                        $body    = get_partial('emails/carAskAvailabilityMailing', array(
+                        $body    = get_partial('emails/carAskAvailabilityMailingWeek', array(
                             'Car' => $oCar,
                             'days' => $days,
                             'imageUrl' => $imageUrl,
@@ -126,7 +126,10 @@ EOF;
                         $message->setBody($body, 'text/html');
                         $message->setFrom($from);
                         /*$message->setTo($to);*/
-                        $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                        $message->setBcc(array(
+                            "cristobal@arriendas.cl" => "Cristóbal Medina Moenne",
+                            "francofre@arriendas.cl" => "Francisca Cofré Ulloa"
+                        ));
                         
                         $this->getMailer()->send($message);
 
