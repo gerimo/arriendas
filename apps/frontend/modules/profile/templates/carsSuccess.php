@@ -258,12 +258,23 @@
         $.post("<?php echo url_for('profile/CarDisabledUntilDelete') ?>", parameters);
     }
 
-    function deleteAvailability(idCar){
-        var from = $('#from'+idCar).val();
-        var to   = $('#to'+idCar).val();
+    function deleteAvailability(carId){
+
+        var from = $('#from'+carId).val();
+        var to   = $('#to'+carId).val();
         var day  = $(".AOC-container").attr("data-day");
+
+        var parameters = {
+            "car": carId,
+            "day": day
+        };
         
-        $.post("<?php echo url_for('profile/CarAvailabilityDeleteChangeStatus') ?>", {"car": idCar, "day": day});
+        $.post("<?php echo url_for('profile/CarAvailabilityDeleteChangeStatus') ?>", parameters, function(r){
+            if (!r.error) {
+                $('#from'+carId).val("");
+                $('#to'+carId).val("");
+            }
+        });
     }
 
     $('.car-option').change(function() {
