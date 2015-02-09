@@ -151,8 +151,6 @@
 
     $(document).on('ready',function(){
 
-        /*isChecked();*/
-
         $(".disabled-until").datetimepicker({
             timepicker:false,
             dayOfWeekStart: 1,
@@ -196,13 +194,7 @@
             "to": to
         };
 
-        $.post("<?php echo url_for('car_availability_save') ?>", parameters, function(r){
-            
-            if (r.error) {
-                alert(r.errorMessage);
-            }
-
-        }, "json");
+        $.post("<?php echo url_for('car_availability_save') ?>", parameters);
     });
    
     $(".btn-disponibility-remove").click(function(){
@@ -219,14 +211,7 @@
             "day": day
         };
 
-        $.post("<?php echo url_for('car_availability_remove') ?>", parameters, function(r){
-
-            if (r.error) {
-            } else {
-                from.val("");
-                to.val("");
-            }
-        });
+        $.post("<?php echo url_for('car_availability_remove') ?>", parameters);
     });
 
     $(".selectorActivo").change(function() {
@@ -241,11 +226,8 @@
             "isActive": isActive
         }
 
-        $.post("<?php echo url_for('car_set_active') ?>", parameters, function(r) {
-            
-            if (r.error) {
-
-            } else {
+        $.post("<?php echo url_for('car_set_active') ?>", parameters, function(r){
+            if (!r.error) {
                 location.reload();
             }
         });
@@ -261,24 +243,19 @@
             "untilDate": untilDate
         };
 
-        $.post("<?php echo url_for('car_set_disabled_until') ?>", parameters, function(r){
-            if (r.error) {
-
-            } else {
-            }
-        }, "json");
+        $.post("<?php echo url_for('car_set_disabled_until') ?>", parameters);
     });
 
-    function deleteDisabled(idCar){
+    function deleteDisabled(carId){
         
-        var todisabled = $('#todisabled'+idCar).val();
+        var todisabled = $('#todisabled'+carId).val();
 
-        $.post("<?php echo url_for('profile/CarDisabledUntilDelete') ?>", {"car": idCar,"to": todisabled}, function(r){
-            
-            if (!r.error) {
-                $('#todisabled'+idCar).val("");
-            }    
-        });
+        var parameters = {
+            "car": carId,
+            "to": todisabled
+        };
+
+        $.post("<?php echo url_for('profile/CarDisabledUntilDelete') ?>", parameters);
     }
 
     function deleteAvailability(idCar){
@@ -301,39 +278,6 @@
             "carId": carId
         };
 
-        $.post("<?php echo url_for('car_set_option') ?>", parameters, function(r){
-            
-            console.log(r);
-
-            if (r.error) {
-            } else {
-            }
-
-        }, 'json');
+        $.post("<?php echo url_for('car_set_option') ?>", parameters);
     });
-
-    /*$('.check').change(function(){
-        isChecked();
-    });*/
-
-    /*function isChecked(){
-
-        var total = 0;
-        $("#more").html("");
-
-        if($('input:checkbox[name=option1]').is(':checked')) {
-            total+= 40;
-        }
-        if($('input:checkbox[name=option2]').is(':checked')) {
-            total+= 40;
-        }
-        if($('input:checkbox[name=option3]').is(':checked')) {
-            total+= 20;
-        }
-        if($('input:checkbox[name=option4]').is(':checked')) {
-            $("#more").html(" mayores a 24 horas");
-        }
-
-        $("#percent").html(total);
-    }*/
 </script>
