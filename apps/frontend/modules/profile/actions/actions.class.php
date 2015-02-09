@@ -4036,7 +4036,7 @@ class profileActions extends sfActions {
 
                 $horasFaltantes = intval(($fechaReserva - strtotime('now'))/60/60);
 
-                $oportunityQueue = Doctrine_Core::getTable('OportunityQueue')->findOneByReserveId($reserva->getId());
+                $oportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findOneByReserveId($reserva->getId());
 
                 //obtiene en que estado se encuentra (pagada(3), preaprobada(2), rechazada(1) y espera(0))
                 if ($transaction[0]['impulsive'] && $transaction[0]['completed'] == 0 && !$oportunityQueue && ($transaction[0]['transaccion_original'] == 0 || $transaction[0]['transaccion_original'] == null) /*&& $horasFaltantes > 2*/) {
@@ -6435,7 +6435,7 @@ class profileActions extends sfActions {
                 error_log("executeNuevoFlujoCambiar: no se pudo realizar el cambio de reserva");
             }*/
 
-            $oq = Doctrine_Core::getTable("OportunityQueue")->findOneByReserveId($reserveId);
+            $oq = Doctrine_Core::getTable("OpportunityQueue")->findOneByReserveId($reserveId);
             $oq->setIsActive(false);
             $oq->save();
 

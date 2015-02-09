@@ -37,6 +37,39 @@ class mainActions extends sfActions {
         }
     }
 
+    public function executeIndexList (sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+
+        $this->Region = Doctrine_Core::getTable("Region")->find(13);
+        $this->isWeekend  = false;
+
+        if (Utils::isWeekend()) {
+            $this->isWeekend = true;
+        }
+
+    }
+
+    public function executeIndexMap (sfWebRequest $request) {
+        
+        $this->setLayout("newIndexLayout");
+
+        $this->isWeekend  = false;
+        $this->Region = Doctrine_Core::getTable("Region")->find(13);
+
+        // Revisar para que se utiliza este atributo
+        if (is_null($this->getUser()->getAttribute('geolocalizacion'))) {
+            $this->getUser()->setAttribute('geolocalizacion', true);
+        } elseif ($this->getUser()->getAttribute('geolocalizacion') == true) {
+            $this->getUser()->setAttribute('geolocalizacion', false);
+        }
+
+        if (Utils::isWeekend()) {
+            $this->isWeekend = true;
+        }
+
+    }
+
     public function executeCompleteRegister(sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
@@ -45,12 +78,11 @@ class mainActions extends sfActions {
 
             $this->referer = $this->getUser()->getAttribute("referer");
 
-            //$userId = $request->getParameter('userId');
-            $userId_session = $this->getUser()->getAttribute("userid");
-            $User = Doctrine_Core::getTable('user')->find($userId_session);
-            
+            $userId = $this->getUser()->getAttribute("userid");
+
+            $User = Doctrine_Core::getTable('User')->find($userId);
             if($User) {
-                if($User->getConfirmed() && !   empty($User->getRut())) {
+                if($User->getConfirmed() && !empty($User->getRut())) {
                     $this->redirect('homepage');
                 } else {
                     $this->Regions = Region::getRegionsByNaturalOrder();
@@ -66,8 +98,8 @@ class mainActions extends sfActions {
                 Utils::reportError($e->getMessage(), "main/completeRegister");
             }
         }
-        return sfView::SUCCESS;
-        
+
+        return sfView::SUCCESS;        
     }
 
     public function executeDataForPayment(sfWebRequest $request){
@@ -562,7 +594,7 @@ class mainActions extends sfActions {
         $carId = $request->getParameter("carId", null);
 
         if (is_null($carId)) {
-            throw new Exception("Auto no encontrado", 1);
+            $this->forward404();
         }
 
         $f = strtotime($from);
@@ -579,11 +611,13 @@ class mainActions extends sfActions {
         $this->to = date("Y-m-d H:i", $t);
         $this->toHuman = date("D d/m/Y H:i", $t);
 
-        /*$this->User = Doctrine_Core::getTable('User')->find($userId);*/
         $this->Car = Doctrine_Core::getTable('Car')->find($carId);
+        if (!$this->Car) {
+            $this->forward404();
+        }
 
         if ($this->Car->hasReserve($from, $to)) {
-            throw new Exception("Auto ya posee reserva", 1);            
+            throw new Exception("Auto ya posee reserva", 1);        
         }
 
         $this->time = Car::getTime($from, $to);
@@ -2707,12 +2741,17 @@ class mainActions extends sfActions {
 
         $this->Region = Doctrine_Core::getTable("Region")->find(13);
         $this->hasCommune = false;
+        $this->hasRegion = false;
 
         if ($request->hasParameter('region','commune')){
-            $communeSlug = $request->getParameter('commune');
-            $this->hasCommune = Doctrine_Core::getTable('Commune')->findOneBySlug($communeSlug)->id;
-        }
+            $regionSlug = $request->getParameter('region');
+            $this->hasRegion = Doctrine_Core::getTable('Region')->findOneBySlug($regionSlug)->id;
 
+            $communeSlug = $request->getParameter('commune');
+            if(isset($communeSlug)){
+                $this->hasCommune = Doctrine_Core::getTable('Commune')->findOneBySlug($communeSlug)->id;
+            }
+        }
     }
 
     //////////////////Enlasnoticias//////////////////////////////

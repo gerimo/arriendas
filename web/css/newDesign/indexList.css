@@ -1,0 +1,756 @@
+header .navbar-default {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-color: rgba(0, 0, 0, 0.8);
+}
+
+header .navbar-right .dropdown-menu{
+    background-color: rgba(0, 0, 0, 0.8);
+    border-color: rgba(0, 0, 0, 0.8);
+}
+
+header .navbar-nav .navbar-right ul {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-color: rgba(0, 0, 0, 0.8);
+}
+
+.metro .km-area{
+    width: 18px;
+    height: 15px;
+    margin-bottom: 6px;
+}
+.metro{
+    margin-bottom: 10px;
+    padding-top: 2px;
+
+}
+
+#filters-navbar {
+    background-color: white;
+    border-color: white;
+    margin: 0;
+}
+
+#filters {
+    margin: 0;
+}
+
+.activo {
+    background-color: #ba135f;
+}
+
+#video {
+    position: fixed; 
+    bottom: 0px; 
+    right: 0px; 
+    min-width: 100%; 
+    min-height: 100%; 
+    width: auto; 
+    height: auto; 
+    z-index: -100;
+}
+
+#section-home {
+    position: relative;
+}
+
+#section-home-background {
+    height: 100%;
+    left: 0px;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    z-index: -100;
+}
+#section-home-background-img {
+    height: auto;
+    width: auto;
+}
+
+#section-home-carousel h1 {
+    margin-top: 30%;
+}
+
+#section-home-carousel {
+    padding-top: 250px;
+
+}
+
+#section-home-carousel h1 {
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 35px;
+    font-weight: 800;
+    margin: 0 0 30px 0;
+    text-align: center;
+    text-shadow: rgb(0, 0, 0) 1px 0px 5px;
+    text-transform: uppercase;
+}
+
+#section-home-carousel h2 {
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 24px;
+    font-style: italic;
+    font-weight: bold;
+    margin: 0 0 12px 0;
+    text-align: center;
+    text-shadow: rgb(0, 0, 0) 1px 0px 5px;
+}
+
+#section-map-form-search {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 9;
+    padding: 40px 20px;
+
+}
+
+#section-map-form-search .ico-search {
+    background: rgba(0,0,0,0.8);
+    border-radius: 42px 42px 0 0;
+    bottom: 100%;
+    cursor: pointer;
+    left: 10%;
+    position: absolute;
+}
+
+#section-map-form-search .ico-search img {
+    height: 43px;
+    margin: 10px 5px 5px 5px;
+    padding: 5px;
+    width: 87px;
+}
+
+#section-map-filters {
+    background-color: #00aced;
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 15px;
+    padding: 29px 0px 26px 0px;
+}
+
+#section-map-filters .heading {
+    float: left;
+    font: 700 24px/26px 'Open Sans', sans-serif;
+    color: #fff;
+    position: relative;
+    padding: 0 30px 0 30px;
+}
+
+#section-map-filters .heading:before {
+    content: "";
+    position: absolute;
+    top: -31px;
+    right: 9px;
+    border-right: 5px solid #fff;
+    height: 46px;
+    -webkit-transform: rotate(-25deg);
+    -o-transform: rotate(-25deg);
+    -webkit-transform: rotate(-25deg);
+    transform: rotate(-25deg);
+}
+
+#section-map-filters .heading:after {
+    content: "";
+    position: absolute;
+    bottom: -36px;
+    right: 8px;
+    border-right: 5px solid #fff;
+    height: 52px;
+    -webkit-transform: rotate(22deg);
+    -moz-transform: rotate(22deg);
+    -o-transform: rotate(22deg);
+    transform: rotate(22deg);
+}
+
+#section-map{
+    position: relative;
+    -webkit-box-shadow: 2px 2px 20px rgba(50, 50, 50, 0.5); 
+    -moz-box-shadow: 2px 2px 20px rgba(50, 50, 50, 0.5);
+    box-shadow: 2px 2px 20px rgba(50, 50, 50, 0.5);
+}
+
+/*#section-map:before{
+    content: "";
+    bottom: -11px;
+    position: absolute;
+    background: url(/images/newDesign/border-tabs.png) repeat-x 50% 0;
+    width: 100%;
+    height: 22px;
+}*/
+
+#section-map-filters ul {
+    margin-top: 4px;
+    margin-left: -10%;
+}
+
+#section-map-filters li {
+    padding-right: 8px;
+    float: left;
+    list-style: none;   
+    font: 600 18px/20px 'Open Sans', sans-serif;
+}
+
+#section-map-filters .col-md-7 input[type=checkbox] { margin: 0 10px 0 10px; }
+
+#map {
+    padding: 0;
+}
+
+#map-container {
+    height: 100%;
+    width: 100%;
+}
+
+#map-list {
+    background-color: white;
+    padding: 0;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+#tab-list {
+    background-color: white;
+}
+
+#list-container {
+    background-color: white;
+    min-height: 250px;
+}
+
+#list-container h2 {
+    font-weight: 300;
+}
+
+.infowindow {
+    height: 140px;
+    width: 280px;
+}
+
+.infowindow img {
+    width: 100%;
+}
+
+.infowindow h2 {
+    font: 700 18px/20px 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.infowindow h2 a {
+    color: #464646;
+    outline: none;
+    text-decoration: none;
+}
+
+.infowindow h2 a:hover {
+    color: #464646;
+    text-decoration: underline;
+}
+
+.infowindow .paragraph {
+    font-size: 13px;
+    margin: 0;
+    padding: 0 0 0 10px;
+}
+.infowindow .metro{
+    padding-top: 4px;
+    padding-left: 10px;
+}
+
+.box {
+    background-color: #fff;
+    padding: 10px;
+}
+
+.box .metro p {
+    height: 1em;
+}
+
+#tab-map .box {
+    /*border-bottom: solid 1px #ddd;*/
+}
+
+.box:hover {
+    background-color: #f8f8f8;
+}
+
+.box .image .car {
+    /*height: 100%;*/
+    width: 100%;
+}
+
+.box .image .marker {
+    left: 3px;
+    position: absolute;
+    top: 3px;
+}
+
+.box .text {
+    padding-left: 10px !important;
+}
+
+.box .text h2 {
+    font: 700 16px/20px 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.box .text h2 a {
+    color: #464646;
+    outline: none;
+    text-decoration: none;
+}
+
+.box .text h2 a:hover {
+    color: #464646;
+    text-decoration: underline;
+}
+
+.box .text h2 a small {
+    font: 300 13px/20px 'Roboto', sans-serif;
+}
+
+.box .price {
+    color: #c8427f;
+    font: 700 20px/22px 'Roboto', sans-serif;
+    margin-bottom: 0px;
+}
+
+#section-map #section-map-filters .tabset {
+    background-color: #c3c3c3;
+    color: white;
+    cursor: pointer;
+    margin: -29px 0 -26px 0px;
+    padding: 29px 0 30px 0px;
+    text-transform: uppercase;
+    font: 700 25px/30px 'Open Sans', sans-serif
+}
+
+#section-map #section-map-filters .tab {
+    border-left: solid 1px white;
+    border-top: solid 1px white;
+    margin: -29px 0 -30px 0px;
+    padding: 29px 0 30px 0px;
+}
+
+#section-map #section-map-filters .tab:hover {
+    background-color: #ba135f;
+    color: white;
+    text-decoration: none;
+}
+
+#link-holder {
+    background: #ba135f;
+    padding: 16px 15px 13px;
+    box-shadow: 0 0 6px rgba(0,0,0,0.3) inset;
+}
+#link-holder a{
+    display: inline-block;
+    color: #fff;
+    text-transform: uppercase;
+    font: 700 17px/20px 'Open Sans', sans-serif;
+    border: 2px solid #fff;
+    padding: 3px 14px 8px;
+}
+
+#section-condition{
+    padding: 57px 0 0 0;
+    font: 10px/20px 'Roboto', sans-serif;
+    text-align: center;
+    background: url(images/newDesign/bg-terms.png);
+    overflow: hidden;
+    display: none;
+    color: black;
+}
+
+#section-how-works{
+    padding: 57px 0 0 0;
+    text-align: center;
+}
+.video-box{
+    max-width: 1170px;
+    margin: auto;
+}
+
+#section-testimonials {
+    background-image: url("/images/newDesign/good-way.jpg");
+    background-size: 100% 100%;
+}
+#section-how-works, #section-compare-prices, #section-condition{
+    background: url(/images/newDesign/bg-pricebox.jpg) no-repeat 0 0 / 100% 100%;
+    background-size: 100% 102%;
+}
+
+#section-on-news{
+    background: url(/images/newDesign/bg-pricebox.jpg) no-repeat 0 0 / 100% 100%;
+}
+.background-img {
+    height: 100%;
+    width: 100%;
+    z-index: -50;   
+}
+
+.slick-prev, .slick-next {
+    height: 29px;
+    width: 31px;
+    position: absolute;
+    left: -10%;
+    top: 50%;
+    margin: -17px 0 0;
+    overflow: hidden;
+    text-indent: -9999px;
+    border-style: solid;
+    border-width: 17.5px 29px 14.5px 0;
+    border-color: transparent #ba135f transparent transparent;
+}
+
+.slick-next {
+    left: auto;
+    right: -10%;
+    border-width: 17.5px 0 14.5px 29px;
+    border-color: transparent transparent transparent #ba135f;
+}
+
+
+.title {
+    margin: 0 0 28px 0;
+    color: #fff;
+    font: italic 700 24px/26px 'Open Sans', sans-serif;
+    background: url(/images/newDesign/bg-title2.png) repeat-x;
+    text-shadow: 0 0 2px rgba(0,0,0,0.5);
+    float: left;
+    position: relative;
+    padding: 10px 33px 28px 23px;
+}
+.title:before {
+    content:"";
+    background:url(/images/newDesign/bg-shadow-3.png) no-repeat;
+    width:29px;
+    height:78px;
+    left:-29px;
+    position:absolute;
+    top:-6px;
+}
+.title:after {
+    /*border-color: #c8427f rgba(0, 0, 0, 0) #c8427f #c8427f;
+    border-width: 25px 14px;
+    border-style: solid;
+    left: auto;
+    right: -16px;*/
+    content:"";
+    background:url(/images/newDesign/bg-shadow4.png) no-repeat;
+    width:25px;
+    height:78px;
+    position:absolute;
+    right:-25px;
+    top:-6px;
+}
+.title span{
+    overflow:hidden;
+    max-height:29px;
+    display:block;
+    padding:0 2px 2px 2px;
+}
+
+#section-on-news .title{
+    margin: 0 -86px 60px 0;
+
+}
+
+.iframe{
+    width: 100%;
+    height: 562px;
+}
+
+#section-compare-prices{
+    padding: 57px 0 0 0;
+}
+
+#compare-prices-table {
+    width: 100%;
+    text-align: center;
+    color: #5d5d5d;
+    font: 11px/14px 'Roboto', sans-serif;
+    letter-spacing: 1px;
+}
+
+#compare-prices-table img {
+    height: 20px;
+}
+
+#compare-prices-table th {
+    background-color: #5d5d5d;
+    border-left: solid 2px white;
+    height: 40px;
+    padding: 10px;
+    text-align: center;
+    width: 20%;
+}
+#compare-prices-table td {
+    padding: 0 0 3px 3px;
+    height: 62px;
+}
+
+.td {
+    background: #edeeee; 
+    display: block;
+    height: 100%;
+    padding: 11px 18px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.last .td{
+    background-color: #00aced;
+    color: white;
+}
+
+#compare-prices-table .table-transparent {
+    background-color: transparent;
+    color: white;
+}
+
+#compare-prices-table .table-active {
+    background-color: #00aced;
+    color: white;
+}
+
+.table-responsive {
+    border: none;
+}
+
+.text-table{
+
+    margin: 47px 0 70px 0;
+    max-width: 100%;
+    color: #5d5d5d;
+    font: 11px/14px 'Roboto', sans-serif;
+    letter-spacing: 1px;
+}
+
+#section-on-news{
+    padding: 57px 0 0 0;
+}
+
+#section-on-news-carousel{
+    width: 100%;
+    height: auto;
+}
+#section-on-news-carousel a{
+    width: 25%;
+    height: auto;
+}
+
+#section-on-news-carousel a img{
+    width: 69%;
+    height: 60px;
+    margin: auto;
+}
+#section-on-news-carousel .normal a img{
+    width: 29%;
+    height: 60px;
+    margin: auto;
+}
+#noticias{
+    margin-bottom: 10%;
+}
+#section-testimonials {
+    padding: 100px 0 11px 0;
+}
+
+#testimonials-container {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 11px;
+    color: white;
+}
+
+#testimonials-container h1 {
+    font: 700 29px/32px 'Open Sans', sans-serif;
+    margin: 20px 0 50px 0;
+    padding: 0;
+    text-transform: uppercase;
+}
+
+#testimonials-container .testimonial {
+    font: 18px/35px 'Roboto', sans-serif;
+    margin: 0 0 30px 0;
+}
+
+#testimonials-container .testimonial i {
+    font-size: 26px;
+}
+
+#testimonials-container .user {
+    font: 18px/35px 'Roboto', sans-serif;
+    font-weight: bolder;
+    margin: 0;
+    padding: 0;
+    text-align: right;
+}
+
+#testimonials-container .user-type {
+    font: 18px/35px 'Roboto', sans-serif;
+    font-style: italic;
+    margin: 0 0 20px 0;
+    padding: 0;
+    text-align: right;
+}
+
+#section-testimonials:after{
+    content: "";
+    position: absolute;
+    background: url(/images/newDesign/border-tabs.png) repeat-x 50% 0;
+    width: 100%;
+    height: 22px;
+    left: 0;
+}
+
+#testimonials-container {
+    margin: auto;
+    max-width: 550px;
+    padding: 10px 40px;
+    width: 50%;
+}
+
+
+@media only screen and (min-width:768px) {
+
+    #section-map-form-search #search {
+        margin-top: -2px;
+        padding-top: 8px;
+    }
+
+    #region-container, #commune-container, #tab-list {
+        display: block;
+    }
+
+    
+}
+
+@media only screen and (max-width:767px) {
+
+    .iframe{
+        height: 200px;
+    }
+
+    .form-control {
+        font-size: 11px;
+    }
+
+    #section-map-form-search {
+        background: white;
+        padding: 5px 0 0 0;
+    }
+
+    #section-map-form-search select, #section-map-form-search input {
+        margin-top: 5px;
+    }
+
+    #region-container {
+        padding-right: 5px;
+    }
+
+    #commune-container {
+        padding-left: 5px;
+    }
+
+    #from-container {
+        padding-right: 5px;
+    }
+
+    #to-container {
+        padding-left: 5px;
+    }
+
+    #section-map-form-search #search {
+        border-radius: 4px;
+        margin-top: 5px;
+        padding-top: 8px;
+    }
+
+    .title {
+        font-size: 12px;
+        line-height: 14px;
+        float: none;
+        display: inline-block;
+        padding: 4px 13px 14px 9px;
+        margin: 0 0 17px;
+        background: url(/images/newDesign/bg-title3.png) repeat-x;
+    }
+
+    .title:before {
+        background: url(/images/newDesign/bg-shadow5.png) no-repeat;
+        width: 16px;
+        height: 39px;
+        left: -16px;
+        top: -3px;
+    }
+    .title:after {
+        background: url(/images/newDesign/bg-shadow6.png) no-repeat;
+        width: 15px;
+        height: 39px;
+        right: -15px;
+        top: -3px;
+    }
+
+    #section-on-news .title{
+        margin: 0 -86px 28px 0;
+    }
+
+    .td {
+        padding: 11px 13px;
+    }
+
+    #section-map-body div {
+        padding: 0px;
+    }
+}
+
+@media only screen and (max-width:864px) {
+
+    #section-map #section-map-filters .tabset {
+
+        font: 700 22px/30px 'Open Sans', sans-serif;
+    }
+
+    #section-map-filters li {
+        font: 600 15px/20px 'Open Sans', sans-serif;
+    }
+
+    #section-map-filters .heading {
+
+        padding: 0 30px 0 10px;
+    }
+
+    .btn-a-action {
+        font: 300 14px/20px 'Open Sans', sans-serif;
+    }
+
+    .box .price{
+        font: 700 13px/22px 'Roboto', sans-serif;
+    }
+
+    .box .text h2{
+        font: 700 13px/20px 'Roboto', sans-serif;
+    }
+    #section-home-carousel h1{
+        font-size: 25px;
+    }
+
+    #section-home-carousel h2{
+        font-size: 19px;
+        margin: 0 0 170px 0;
+    }
+}
+
+@media only screen and (max-width:992px) {
+
+    #section-home {
+        background-image: url("/images/newDesign/background-home.jpg");
+        background-size: 100% 100%;
+    }
+}

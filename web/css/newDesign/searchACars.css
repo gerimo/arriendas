@@ -84,6 +84,7 @@ h3 .filter{
     border-radius: 5px;
     margin-top: 2px;
     margin-bottom: 5px;
+    padding: inherit;
 }
 
 .links{
@@ -176,4 +177,49 @@ h3 .filter{
     color: #c8427f;
     font: 700 20px/22px 'Roboto', sans-serif;
     margin-bottom: 0px;
+}
+
+@media only screen and (max-width:767px) {
+
+    .iframe{
+        height: 200px;
+    }
+
+    .form-control {
+        font-size: 11px;
+    }
+
+    #section-map-form-search {
+        background: white;
+        padding: 5px 0 0 0;
+    }
+
+    #section-map-form-search select, #section-map-form-search input {
+        margin-top: 5px;
+    }
+
+    #region-container {
+        padding-right: 5px;
+    }
+
+    #commune-container {
+        padding-left: 5px;
+        margin-bottom: 10px;
+
+    }
+
+    #from-container {
+        padding-right: 5px;
+    }
+
+    #to-container {
+        padding-left: 5px;
+        margin-bottom: 10px;
+    }
+
+     #section-map-form-search #search {
+        border-radius: 4px;
+        margin-top: 5px;
+        padding-top: 8px;
+    }
 }

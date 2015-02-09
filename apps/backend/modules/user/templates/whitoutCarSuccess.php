@@ -24,7 +24,7 @@
 
         <div class="space-100"></div>
 
-        <table  class="display responsive no-wrap " id="userWhitoutCarTable" cellspacing="0" width="100%">
+        <table  class="display responsive no-wrap" id="userWhitoutCarTable" cellspacing="0" width="100%">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -83,7 +83,7 @@
         var to   = $("#to").val();
         $(".load").show();
 
-        $.post("<?php echo url_for('user_without_car_get') ?>", {"from": from, "to": to}, function(r){
+        $.post("<?php echo url_for('user_whitout_car_get') ?>", {"from": from, "to": to}, function(r){
             console.log(r);
             if (r.error) {
                /* $("#dialog-alert p").html("No se encontraron usuarios");

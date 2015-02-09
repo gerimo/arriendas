@@ -29,7 +29,7 @@
  * @property boolean $impulsive
  * @property integer $reserva_original
  * @property integer $numero_factura
- * @property OportunityQueue $OportunityQueue
+ * @property OpportunityQueue $OpportunityQueue
  * @property boolean $liberadoDeGarantia
  * @property timestamp $fecha_pago
  * 
@@ -59,7 +59,7 @@
  * @method boolean             getImpulsive()   Return the current record's "impulsive" value
  * @method integer             getReservaOriginal()      Returns the current record's "reserva_original" value
  * @method integer             getNumeroFactura()      Returns the current record's "numero_factura" value
- * @method OportunityQueue     getOportunityQueue()      Returns the current record's "OportunityQueue" value
+ * @method OpportunityQueue    getOpportunityQueue()      Returns the current record's "OpportunityQueue" value
  * @method boolean             getLiberadoDeGarantia()   Return the current record's "liberadoDeGarantia" value
  * @method boolean             getFechaPago()   Return the current record's "fecha_pago" value
  *
@@ -91,7 +91,7 @@
  * @method boolean             setImpulsive()   Sets the current record's "impulsive" value
  * @method integer             setReservaOriginal()   Sets the current record's "reserva_original" value
  * @method integer             setNumeroFactura()      Sets the current record's "numero_factura" value
- * @method Reserve             setOportunityQueue() Sets the current record's "OportunityQueue" value
+ * @method Reserve             setOpportunityQueue() Sets the current record's "OpportunityQueue" value
  * @method Reserve             setLiberadoDeGarantia() Sets the current record's "liberadoDeGarantia" value
  * @method Reserve             setFechaPago() Sets the current record's "fecha_pago" value
  * 
@@ -382,7 +382,7 @@ abstract class BaseReserve extends sfDoctrineRecord
              'local' => 'id',
              'foreign' => 'Reserve_id'));
 
-        $this->hasOne('OportunityQueue', array(
+        $this->hasOne('OpportunityQueue', array(
              'local' => 'id',
              'foreign' => 'reserve_id'));
     }
