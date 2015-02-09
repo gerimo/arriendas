@@ -2,12 +2,27 @@
 
 class CarTable extends Doctrine_Table {
 
-    public function findCarsActives($limit = 50, $forWeek = false, $forWeekend = false) {
+    public function findCarsActives($forWeek = false, $forWeekend = false, $isAutomatic, $isLowConsumption, $isMorePassengers, $limit = 50) {
 
         $q = Doctrine_Core::getTable("Car")
             ->createQuery('C')
+            ->innerJoin('C.Model M')
             ->where('C.seguro_ok = 4')
-            ->andWhere('C.activo = 1');        
+            ->andWhere('C.activo = 1')
+            ->limit($limit);
+        
+
+        if ($isAutomatic) {
+            $q->andWhere("C.transmission = 1");
+        }
+
+        if ($isLowConsumption) {
+            $q->andWhere("C.tipobencina = 'Diesel'");
+        }
+
+        if ($isMorePassengers) {
+            $q->andWhere("M.id_otro_tipo_vehiculo = 3");
+        }       
 
         if ($forWeek) {
             $q->andWhere("C.options & 1");
@@ -15,11 +30,7 @@ class CarTable extends Doctrine_Table {
 
         if ($forWeekend) {
             $q->andWhere("C.options & 2");
-        }
-
-        if ($limit) {
-            $q->limit($limit);
-        }
+        }   
 
         return $q->execute();
     }

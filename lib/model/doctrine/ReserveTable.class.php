@@ -2,6 +2,23 @@
 
 class ReserveTable extends Doctrine_Table {
 
+    public function findOriginalReserve($reserveId) {
+
+        error_log($reserveId);
+
+        $Reserve = Doctrine_Core::getTable("Reserve")->find($reserveId);
+
+        if ($Reserve) { 
+            if ($Reserve->reserva_original == 0) {
+                return $Reserve->id;
+            } else {
+                return $Reserve->reserva_original;
+            }
+        }
+
+        return null;
+    }   
+
     public function findActiveReserve($reserveId) {
 
         $q = Doctrine_Core::getTable("Reserve")
