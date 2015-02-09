@@ -83,11 +83,14 @@ class ScraperService {
      * @return int
      */
     public function getCausasJudicialesStatus($rut) {
-        $status = 1;
-        $portions = explode("-", $rut);
-        $run = $portions[0];
-        $rundv = $portions[1];
-        $client = new \Goutte\Client();
+        $status          = 1;
+        $rut             = str_replace(array('.', ',', '-', ' '), '', $rut);
+        /*$portions      = explode("-", strtoupper($rut));
+        $run             = $portions[0];
+        $rundv           = $portions[1];*/
+        $rundv             = substr($rut, -1);
+        $run           = substr($rut, 0, -1);
+        $client          = new \Goutte\Client();
 
         $this->_log("getCausasJudicialesStatus", "info", "se llamo al servicio");
 
@@ -102,7 +105,7 @@ class ScraperService {
             /* verification call */
             $params = array(
                 'formConsultaCausas:idFormRut' => $run,
-                'formConsultaCausas:idFormRutDv' => strtoupper($rundv),
+                'formConsultaCausas:idFormRutDv' => $rundv,
                 'formConsultaCausas:idSelectedCodeTribunalRut' => "0",
                 'formConsultaCausas:buscar1.x' => "66",
                 'formConsultaCausas:buscar1.y' => "19",
@@ -118,7 +121,6 @@ class ScraperService {
         } else {
             $status = 0;
         }
-
         return $status;
     }
 

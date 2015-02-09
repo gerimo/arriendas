@@ -245,8 +245,9 @@ class mainActions extends sfActions {
             if(!$foreign){
                 $basePath = sfConfig::get('sf_root_dir');
                 $userid = $User->getId();
-                $rut = substr($rut, 0, -1)."-".substr($rut, -1);
-                $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.$rut.'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
+                $rut = $User->getRutFormatted();
+                error_log(strtoupper($rut));
+                $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.strtoupper($rut).'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
                 exec($comando);
             }
 

@@ -413,7 +413,7 @@ class carsActions extends sfActions {
 
         $referer = $this->getContext()->getActionStack()->getSize() > 1 ? $request->getUri() : $request->getReferer();
 
-        if($referer == "http://local.arriendas.cl/registro/completar") {
+        if($referer == "http://www.arriendas.cl/registro/completar" || $referer == "https://www.arriendas.cl/registro/completar") {
             $User = Doctrine_Core::getTable("user")->find($this->getUser()->getAttribute("userid"));
                 if($User) {
                     $User->setPropietario(true);
