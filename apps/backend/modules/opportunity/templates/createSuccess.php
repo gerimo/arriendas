@@ -9,7 +9,7 @@
             <img class="loading" src="/images/ajax-loader.gif">
             <i class="find fa fa-check" id="reserve-check"></i>
             <i class="find fa fa-remove"id="reserve-remove"></i>
-            <input class="form-control" id="idReservaOriginal" placeholder="ID reserva original" type="text">
+            <input class="form-control" id="idReservaOriginal" placeholder="ID reserva" type="text">
             <div class="space-70"></div>
         </div>
 
@@ -118,7 +118,6 @@
 
     $("input[type='checkbox']").change(function(){
         getActivesCars($("#reserveFilter").val());
-        console.log("asdasd");
     });
 
     function isOriginalReserve() {
