@@ -158,7 +158,7 @@
                     article += "<div class='row'>";
                     article += "<div class='col-xs-4 col-md-4 image'>";
                     article += "<img class='car' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_134,h_99,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='"+ Car.brand +" "+ Car.model +"'>";
-                    article += "<img class='marker' src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + (i+1) + "|05a4e7|ffffff'>";
+                    //article += "<img class='marker' src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + (i+1) + "|05a4e7|ffffff'>";
                     article += "</div>";
                     article += "<div class='col-xs-8 col-md-8 text'>";
                     article += "<h2>"+ Car.brand +" "+ Car.model +"<small>, "+Car.year+"</small></h2>";
@@ -204,7 +204,6 @@
 
             //markerCluster = new MarkerClusterer(map, markers, mcOptions);
         }, "json");
-
     }
 
 </script>
@@ -222,7 +221,11 @@
                 <div class="row ">
                     <div class="col-xs-6 col-sm-3 col-md-3" id="region-container">
                         <select class="region form-control" id="region">
-                            <option disabled selected value="<?php echo $Region->id ?>"><?php echo $Region->name ?></option>
+                            <?php if ($hasRegion && $Region->id == $hasRegion): ?>
+                                <option selected value="<?php echo $Region->id ?>"><?php echo ucwords(strtolower($Region->name)) ?></option> 
+                            <?php else: ?>
+                                <option disabled selected value="<?php echo $Region->id ?>"><?php echo $Region->name ?></option>
+                            <?php endif ?>
                         </select>
                     </div>
                     <div class="col-xs-6 col-sm-3 col-md-3" id="commune-container">
@@ -252,15 +255,15 @@
                 </div>
 
                 <div class="hidden-xs row" id="section-map-filters">
-                    <div class=" col-md-offset-2 col-md-6 col-sm-2 col-md-2 text-center">
+                    <div class=" col-md-offset-1 col-md-6 col-sm-2 col-md-2 text-center">
                         <strong class="heading">Filtros:</strong>
                     </div>
-                    <div class="col-sm-7 col-md-7">
+                    <div class="col-sm-8 col-md-8">
                         <ul>
                             <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
                             <li><input type="checkbox" name="filter" class="isLowConsumption"> Petrolero</li>
-                            <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
-                            <li><input type="checkbox" name="filrer" class="nearToSubway"> Cercano al metro (máximo 15 minutos)</li>
+                            <li><input type="checkbox" name="filter" class="isMorePassengers"> Más de 5 pasajeros</li>
+                            <li><input type="checkbox" name="filter" class="nearToSubway"> Cercano al metro (máximo 15 minutos)</li>
                         </ul>
                     </div>
                 </div>
@@ -319,12 +322,12 @@
                 <div class="panel panel-default hidden-xs">
                     <div class="panel-heading" role="tab" id="spam">
                           <h4 class="panel-title text-center">
-                            <a class="collapsed"data-toggle="collapse" data-parent="#accordions" href="#spamFooter" aria-expanded="true" aria-controls="spamFooter">
+                            <a class="collapsed" id="accordionsArrow" data-toggle="collapse" data-parent="#accordions" href="#spamFooter" aria-expanded="true" aria-controls="spamFooter">
                                Arriendo de autos en otras comunas de Santiago<i class="pull-right fa fa-chevron-down"></i>
                             </a>
                           </h4>
                     </div>
-                    <div id="spamFooter" class="panel-collapse collapse" role="tabpanel" aria-labelledby="spamFooter">
+                    <div id="spamFooter" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="spamFooter">
                         <div class="panel-body text-center">
                             <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'alhue'), true) ?>">Rent a Car Alhue</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'buin'), true) ?>">Rent a Car Buin</a> |
                             <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'calera-de-tango'), true) ?>">Rent a Car Calera de Tango</a> | <a href="<?php echo url_for('rent_a_car_region_commune', array('region' => 'region-metropolitana', 'commune' => 'cerrillos'), true) ?>">Rent a Car Cerrillos</a> |   
@@ -366,6 +369,32 @@
 
 
 <script>
+
+    $('#accordions').on('hidden.bs.collapse', function () {
+        checkCollapse();
+    });
+
+    $('#accordions').on('shown.bs.collapse', function () {
+        checkCollapse();
+    });
+
+    function checkCollapse() {
+
+        $("a[data-toggle='collapse']").each(function(){
+
+            var html = "";
+            var isCollapse = $.parseJSON($(this).attr("aria-expanded"));
+            //var numberOfOpportunities = $(this).data("number-of-opportunities");
+
+            if (isCollapse) {
+                html += "Arriendo de autos en otras comunas de Santiago<i class='pull-right fa fa-chevron-up'></i>";
+            } else {
+                html += "Arriendo de autos en otras comunas de Santiago<i class='pull-right fa fa-chevron-down'></i>";
+            }
+
+            $(this).html(html);
+        });
+    }
 
     $(document).ready(function(){
         
@@ -415,6 +444,8 @@
         <?php endif ?>
 
         $("#search").click();
+        checkCollapse();
+        
     });
 
     function roundTime(valor){
@@ -612,5 +643,7 @@
             }
         }
     }
+
+    
 
 </script>

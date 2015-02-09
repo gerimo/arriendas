@@ -37,6 +37,39 @@ class mainActions extends sfActions {
         }
     }
 
+    public function executeIndexList (sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+
+        $this->Region = Doctrine_Core::getTable("Region")->find(13);
+        $this->isWeekend  = false;
+
+        if (Utils::isWeekend()) {
+            $this->isWeekend = true;
+        }
+
+    }
+
+    public function executeIndexMap (sfWebRequest $request) {
+        
+        $this->setLayout("newIndexLayout");
+
+        $this->isWeekend  = false;
+        $this->Region = Doctrine_Core::getTable("Region")->find(13);
+
+        // Revisar para que se utiliza este atributo
+        if (is_null($this->getUser()->getAttribute('geolocalizacion'))) {
+            $this->getUser()->setAttribute('geolocalizacion', true);
+        } elseif ($this->getUser()->getAttribute('geolocalizacion') == true) {
+            $this->getUser()->setAttribute('geolocalizacion', false);
+        }
+
+        if (Utils::isWeekend()) {
+            $this->isWeekend = true;
+        }
+
+    }
+
     public function executeCompleteRegister(sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
@@ -2708,12 +2741,17 @@ class mainActions extends sfActions {
 
         $this->Region = Doctrine_Core::getTable("Region")->find(13);
         $this->hasCommune = false;
+        $this->hasRegion = false;
 
         if ($request->hasParameter('region','commune')){
-            $communeSlug = $request->getParameter('commune');
-            $this->hasCommune = Doctrine_Core::getTable('Commune')->findOneBySlug($communeSlug)->id;
-        }
+            $regionSlug = $request->getParameter('region');
+            $this->hasRegion = Doctrine_Core::getTable('Region')->findOneBySlug($regionSlug)->id;
 
+            $communeSlug = $request->getParameter('commune');
+            if(isset($communeSlug)){
+                $this->hasCommune = Doctrine_Core::getTable('Commune')->findOneBySlug($communeSlug)->id;
+            }
+        }
     }
 
     //////////////////Enlasnoticias//////////////////////////////

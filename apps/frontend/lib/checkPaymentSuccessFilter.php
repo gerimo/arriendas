@@ -4,33 +4,36 @@
  * Filtro para validación de pantalla de pago exitoso
  */
 
-class CheckPaymentSuccessFilter extends sfFilter
-{
-    public function execute($filterChain)
+    class CheckPaymentSuccessFilter extends sfFilter
     {
-        $request = $this->getContext()->getRequest();
-        $user  = $this->getContext()->getUser();
-        $action = $this->context->getActionName();
-            
-        // Ejecutar este filtro solo una vez, y si el action
-        // no es el de login
-        if ($this->isFirstCall()
-                && $user 
-                && $user->isAuthenticated()
-                && $action != 'logout')
+        public function execute($filterChain)
         {
-            $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
-            $toShow = Doctrine_Core::getTable("Transaction")->countPendingToShowByUser($idUsuario);
-            if($toShow > 0){
+            $request = $this->getContext()->getRequest();
+            $user  = $this->getContext()->getUser();
+            $action = $this->context->getActionName();
                 
-                $this->getContext()->getController()->forward('bcpuntopagos', 'showExito');
-                throw new sfStopException();
+            // Ejecutar este filtro solo una vez, y si el action
+            // no es el de login y no es succes->para que no se produzca un loop con el redireccionamiento
+            if ($this->isFirstCall()
+                    && $user 
+                    && $user->isAuthenticated()
+                    && $action != 'success'
+                    && $action != 'logout')
+            {
+                $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+                $toShow = Doctrine_Core::getTable("Transaction")->countPendingToShowByUser($idUsuario);
+                if($toShow > 0){
+                    
+                    /*$this->getContext()->getController()->forward('bcpuntopagos', 'showExito');*/
+                    $this->getContext()->getController()->redirect('reserve_success', true, 301);
+                    throw new sfStopException();
 
+                }
             }
+            // Ejecutar el proximo filtro
+            $filterChain->execute();
         }
 
-        // Ejecutar el proximo filtro
-        $filterChain->execute();
     }
 
-}
+?>

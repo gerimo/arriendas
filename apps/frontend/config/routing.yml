@@ -94,6 +94,10 @@ how-works:
     url: /como-funciona
     param: { module: main, action: howWorks }
 
+index_list:
+    url: /lista
+    param: { module: main, action: indexList }
+
 login:
     url: /login
     param: { module: main, action: login }
@@ -105,6 +109,10 @@ login_do:
 logout:
     url: /logout
     param: { module: main, action: logout }
+
+index_map:
+    url: /mapa
+    param: { module: main, action: indexMap }
 
 messages:
     url: /mensajes/:id
@@ -146,6 +154,10 @@ rent_a_car:
     url: /arriendo-de-autos
     param: { module: main, action: searchACars }
 
+rent_a_car_region:
+    url: /arriendo-de-autos/:region
+    param: { module: main, action: searchACars }
+
 rent_a_car_region_commune:
     url: /arriendo-de-autos/:region/:commune
     param: {module: main, action: searchACars }
@@ -182,6 +194,10 @@ reserve_reject:
     url: /reserva/rechazar
     param: { module: reserves, action: reject }
 
+reserve_success:
+    url: /reserva/exitosa
+    param: { module: reserves, action: success }
+
 reserves:
     url: /reservas
     param: { module: reserves, action: index }
@@ -209,6 +225,8 @@ user_register_complete:
 value_your_car:
     url: /monetiza-tu-auto
     param: { module: main, action: valueYourCar }
+
+
 
 # old Design
 
