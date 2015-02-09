@@ -66,18 +66,18 @@
     /*var urlCreate = "<?php echo url_for_frontend('opportunities_approve', array('carId' => 'carIdPattern', 'reserveId' => 'reserveIdPattern')) ?>";*/
     
 	$(document).ready(function() {
- 
+        $('#carsActivesTable').DataTable({
+            info: false,
+            paging: true,
+            responsive: true
+        });
         
 
         $('#carsActivesTable').hide();
         $('.loading').hide();  
         $(".find").hide();   
 
-        /*$('#carsActivesTable').DataTable({
-            info: false,
-            paging: true,
-            responsive: true
-        });*/
+        
     });
 
     $(document).on("click", ".opp-approve", function(){
@@ -96,6 +96,18 @@
             if (r.error) {
                 console.log(r.errorMessage);
             } else {
+
+                 $("#dialog-alert p").html("Rerserva creada exitosamente");
+                $("#dialog-alert").attr('title','Reserva Creada!');
+                $("#dialog-alert").dialog({
+                    buttons: [{
+                    text: "Aceptar",
+                    click: function() {
+                        $( this ).dialog( "close" );
+                    }
+                    }]
+                });
+
                 $(this).prop("disabled", false);
             }
 
@@ -125,7 +137,6 @@
             } else {
             	if (r.original != null) {
 	            	if (r.original) {
-                        console.log(r.original);
                         getActivesCars(r.original);
 	            		$("#reserve-check").show();
                         $("#reserveFilter").val(r.original); 
