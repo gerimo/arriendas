@@ -1,4 +1,4 @@
-.row {
+    .row {
     margin: 0;
 }
 .navbar-brand img {
@@ -43,13 +43,13 @@
 .loading {
     position: absolute;
     width: 30px;
-    margin: -33px 0 0 100%;
+    margin: 0px 0px 0px -70px;
 }
 
 .find {
 
+    margin: 9px 0px 0px -25px;
     position: absolute;
-    margin: -25px 0 0 95%;
 }
 
 .load {
@@ -57,5 +57,12 @@
     position: absolute;
     width: 33px;
     left: 100%;
+}
+
+#filters li {
+    padding-right: 8px;
+    float: left;
+    list-style: none;
+    font: 600 15px/20px 'Open Sans',sans-serif;
 }
 

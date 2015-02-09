@@ -15,12 +15,15 @@ class reserveActions extends sfActions {
 
 	        if ($idReservaOriginal != "") {
 
-	            $Reserve = Doctrine_Core::getTable('Reserve')->findByIdAndComentarioAndReservaOriginal($idReservaOriginal,"null", 0);
+	            $reserveId = Doctrine_Core::getTable('Reserve')->findOriginalReserve($idReservaOriginal);
 	            
-	            if (count($Reserve) == 0) {
-	            	$return["original"] = false;
+	            error_log($reserveId);
+
+	            if ($reserveId == nul) {
+	            	throw new Exception("Reserva no encontrada", 1);
+	            	
 	            } else {
-	            	$return["original"] = true;
+	            	$return["original"] = $reserveId;
 	            }
 
 	        } 

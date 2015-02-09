@@ -16,6 +16,9 @@ class userActions extends sfActions {
 
             $from   = $request->getPostParameter("from", null);
             $to     = $request->getPostParameter("to", null);
+            $isAutomatic        = $request->getPostParameter('isAutomatic', false) === 'true' ? true : false;
+            $isLowConsumption   = $request->getPostParameter('isLowConsumption', false) === 'true' ? true : false;
+            $isMorePassengers   = $request->getPostParameter('isMorePassengers', false) === 'true' ? true : false;
 
             $return["data"] = array();
 

@@ -11,10 +11,14 @@ class carActions extends sfActions {
 
 	    try {
 
-	        $reserveId  = $request->getPostParameter("reserveId", null);
+	        $reserveId 			= $request->getPostParameter("reserveId", null);
+            $isAutomatic        = $request->getPostParameter('isAutomatic', false) === 'true' ? true : false;
+            $isLowConsumption   = $request->getPostParameter('isLowConsumption', false) === 'true' ? true : false;
+            $isMorePassengers   = $request->getPostParameter('isMorePassengers', false) === 'true' ? true : false;
+
 
 	        $Reserve    = Doctrine_Core::getTable('Reserve')->find($reserveId);
-	        $Cars       = Doctrine_Core::getTable('Car')->findCarsActives();
+	        $Cars       = Doctrine_Core::getTable('Car')->findCarsActives(0, 0, $isAutomatic, $isLowConsumption, $isMorePassengers);
 
 	        $return["data"] = array();
 	        
