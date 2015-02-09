@@ -1,8 +1,3 @@
-<?php
-
-    $U = sfContext::getInstance()->getUser();
-?>
-
 <header>
     <nav class="navbar navbar-default navbar-fixed-top" id="header-navbar" role="navigation">
         <div class="container">
@@ -24,21 +19,22 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Oportunidades<span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="<?php echo url_for('opportunity_create') ?>">Crear</a></li>
+                            <li><a href="<?php echo url_for('opportunity_create') ?>">Generar</a></li>
                             <li><a href="<?php echo url_for('opportunity_mailing') ?>">Mailing</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Usuarios<span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="<?php echo url_for('user_without_pay') ?>">Usuario sin pago</a></li>
+                            <li><a href="<?php echo url_for('user_whitout_pay') ?>">Usuario que no terminaron pago</a></li>
+                            <li><a href="<?php echo url_for('user_whitout_car') ?>">Usuario que no registraron auto</a></li>
                         </ul>
                     </li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php echo $sf_user->getAttribute('firstname')?><span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php echo $sf_user->getAttribute('fullname') ?><span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="<?php echo url_for('logout') ?>">Salir</a></li>
                         </ul>

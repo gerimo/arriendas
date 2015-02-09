@@ -32,40 +32,51 @@ class profileActions extends sfActions {
 
             if ($Car->getActivo()) {
 
-                $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+1 day")));  
-
+                $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+1 day")));
                 if (date("N", strtotime("+1 day")) == 7 || date("N", strtotime("+1 day")) == 6 || $Holiday) {
                     
                     $this->availabilityOfCars[$Car->getId()] = array();
 
-                    $i       = 0;
-                    $day     = date("Y-m-d");
+                    $i       = 1;
+                    $day     = date("Y-m-d", strtotime("+1 day"));
                     $Holiday = null;
                     
                     do {
 
-                        $this->availabilityOfCars[$Car->getId()][$i] = array();
+                        $data = array(
+                            "day" => $day,
+                            "dayName" => $week[date("N", strtotime($day))]
+                        );
+
+                        /*$this->availabilityOfCars[$Car->getId()][$i] = array();
 
                         $this->availabilityOfCars[$Car->getId()][$i]["day"]     = $day;
-                        $this->availabilityOfCars[$Car->getId()][$i]["dayName"] = $week[date("N", strtotime($day))];
+                        $this->availabilityOfCars[$Car->getId()][$i]["dayName"] = $week[date("N", strtotime($day))];*/
                         
                         $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime($day)));
                         if ($Holiday) {
-                            $this->availabilityOfCars[$Car->getId()][$i]["dayName"] .= " (Feriado)";
+                            /*$this->availabilityOfCars[$Car->getId()][$i]["dayName"] .= " (Feriado)";*/
+                            $data["dayName"] .= " (Feriado)";
                         }
 
                         $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
                         if ($CarAvailability) {
-                            $this->availabilityOfCars[$Car->getId()][$i]["from"] = $CarAvailability->getStartedAt();
-                            $this->availabilityOfCars[$Car->getId()][$i]["to"] = $CarAvailability->getEndedAt();
+                            /*$this->availabilityOfCars[$Car->getId()][$i]["from"] = $CarAvailability->getStartedAt();
+                            $this->availabilityOfCars[$Car->getId()][$i]["to"] = $CarAvailability->getEndedAt();*/
+                            $data["from"] = $CarAvailability->getStartedAt();
+                            $data["to"] = $CarAvailability->getEndedAt();
                         }
                         
+                        $this->availabilityOfCars[$Car->getId()][] = $data;
+
+
                         $i++;
                         $day = date("Y-m-d", strtotime("+".$i." day"));
                         $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime($day)));                         
                         
                     } while(date("N", strtotime($day)) == 6 || date("N", strtotime($day)) == 7 || $Holiday);
                     //} while($i < 5);
+                    /*error_log(print_r($this->availabilityOfCars, true));*/
                 }
             }
         }
@@ -154,7 +165,6 @@ class profileActions extends sfActions {
         $return = array("error" => false);
     
         try {
-    
             $firstname      = $request->getPostParameter("firstname", null);
             $lastname       = $request->getPostParameter("lastname", null);
             $motherLastname = $request->getPostParameter("motherLastname", null);
@@ -170,7 +180,31 @@ class profileActions extends sfActions {
             $userId = $this->getUser()->getAttribute("userid");
 
             $User = Doctrine_Core::getTable('User')->find($userId);
-    
+            
+            if (is_null($foreign) || $foreign == "") {
+                throw new Exception("Debes indicar tu nacionalidad", 1);
+            }
+
+            if(!$foreign) {
+                if (is_null($rut) || $rut == "") {
+                    throw new Exception("Debes indicar tu RUT", 1);
+                } else {
+
+                    $rut            = Utils::isValidRUT($request->getPostParameter("rut", null));
+                    $dv             = substr($rut, -1);
+                    $number         = substr($rut, 0, -1);
+
+                    if ($rut == false || strlen($number)>8) {
+                        throw new Exception("el rut ingresado es inválido", 1);
+                    } else {
+                        if(User::rutExist($number)) {
+                            throw new Exception("el rut ingresado ya se encuentra registrado", 1);
+                        }
+                    }
+                    
+                }
+            }
+
             if (is_null($firstname) || $firstname == "") {
                 throw new Exception("Debes indicar tu nombre", 1);
             }
@@ -179,20 +213,12 @@ class profileActions extends sfActions {
                 throw new Exception("Debes indicar tu apllellido paterno", 1);
             }
 
-            if (is_null($motherLastname) || $motherLastname == "") {
+            /*if (is_null($motherLastname) || $motherLastname == "") {
                 throw new Exception("Debes indicar tu apellido materno", 1);
-            }
+            }*/
 
             if (is_null($email) || $email == "") {
                 throw new Exception("Debes indicar tu correo electrónico", 1);
-            }
-
-            if (is_null($rut) || $rut == "") {
-                throw new Exception("Debes indicar tu RUT", 1);
-            }
-
-            if (is_null($foreign) || $foreign == "") {
-                throw new Exception("Debes indicar tu nacionalidad", 1);
             }
 
             if (is_null($telephone) || $telephone == "") {
@@ -213,10 +239,11 @@ class profileActions extends sfActions {
 
             $User->setFirstname($firstname);
             $User->setLastname($lastname);
-            $User->setApellidoMaterno($motherLastname);
+            $User->setApellidoMaterno($motherLastname ? $motherLastname : "");
             $User->setFirstname($firstname);
             $User->setEmail($email);
-            $User->setRut($rut);
+            $User->setRut($number ? $number : null);
+            $User->setRutDv($dv ? strtoupper($dv) : null);
             $User->setExtranjero($foreign);
             $User->setTelephone($telephone);
             $User->setBirthdate($birth);
@@ -756,7 +783,7 @@ class profileActions extends sfActions {
             if ($car->getSeguroOk() != 4) {
                 echo "error:seguro4";
                 die();
-            } else if ($reserve->getCar()->getUser()->getRut() == "") {
+            } else if (empty($reserve->getCar()->getUser()->getRut())) {
                 echo "error:rutdueñonulo";
                 die();
             }
@@ -919,7 +946,7 @@ class profileActions extends sfActions {
         if ($car->getSeguroOk() != 4) {
             echo "error:seguro4";
             die();
-        } else if ($reserve->getCar()->getUser()->getRut() == "") {
+        } else if (empty($reserve->getCar()->getUser()->getRut())) {
             echo "error:rutdueñonulo";
             die();
         }
@@ -1085,7 +1112,7 @@ class profileActions extends sfActions {
         if ($car->getSeguroOk() != 4) {
             echo "error:seguro4";
             die();
-        } else if ($reserve->getCar()->getUser()->getRut() == "") {
+        } else if (empty($reserve->getCar()->getUser()->getRut())) {
             echo "error:rutdueñonulo";
             die();
         }
@@ -1399,7 +1426,7 @@ class profileActions extends sfActions {
         }
 
         $arrendador['nombreCompleto'] = $arrendadorClass->getFirstname() . " " . $arrendadorClass->getLastname();
-        $arrendador['rut'] = $arrendadorClass->getRut();
+        $arrendador['rut'] = $arrendadorClass->getRutFormatted();
         $arrendador['direccion'] = $arrendadorClass->getAddress();
         $arrendador['telefono'] = $arrendadorClass->getTelephone();
 
@@ -1408,7 +1435,7 @@ class profileActions extends sfActions {
         $arrendador['comuna'] = ucfirst(strtolower($comunaClass['nombre']));
 
         $propietario['nombreCompleto'] = $propietarioClass->getFirstname() . " " . $propietarioClass->getLastname();
-        $propietario['rut'] = $propietarioClass->getRut();
+        $propietario['rut'] = $propietarioClass->getRutFormatted();
         $propietario['direccion'] = $propietarioClass->getAddress();
         $propietario['telefono'] = $propietarioClass->getTelephone();
 
@@ -3061,11 +3088,11 @@ class profileActions extends sfActions {
             //Reemplazo variables
             $utf8text = str_replace('[$fecha_arriendo]', date('d/m/Y'), $utf8text);
             $utf8text = str_replace('[$nombre_dueno]', $dueno->getFirstname() . " " . $dueno->getLastname(), $utf8text);
-            $utf8text = str_replace('[$rut_dueno]', $dueno->getRut(), $utf8text);
+            $utf8text = str_replace('[$rut_dueno]', $dueno->getRutFormatted(), $utf8text);
             $utf8text = str_replace('[$domicilio_dueno]', $dueno->getAddress(), $utf8text);
             $utf8text = str_replace('[$comuna_dueno]', $comunaDueno->getNombre(), $utf8text);
             $utf8text = str_replace('[$nombre_usuario]', $user->getFirstname() . " " . $user->getLastname(), $utf8text);
-            $utf8text = str_replace('[$rut_usuario]', $user->getRut(), $utf8text);
+            $utf8text = str_replace('[$rut_usuario]', $user->getRutFormatted(), $utf8text);
             $utf8text = str_replace('[$domicilio_usuario]', $user->getAddress(), $utf8text);
             $utf8text = str_replace('[$comuna_usuario]', $comunaUser->getNombre(), $utf8text);
             $utf8text = str_replace('[$marca_auto]', $car->getModel()->getBrand(), $utf8text);
@@ -3170,11 +3197,11 @@ class profileActions extends sfActions {
         //Reemplazo variables
         $utf8text = str_replace('[$fecha_arriendo]', date('d/m/Y'), $utf8text);
         $utf8text = str_replace('[$nombre_dueno]', $dueno->getFirstname() . " " . $dueno->getLastname(), $utf8text);
-        $utf8text = str_replace('[$rut_dueno]', $dueno->getRut(), $utf8text);
+        $utf8text = str_replace('[$rut_dueno]', $dueno->getRutFormatted(), $utf8text);
         $utf8text = str_replace('[$domicilio_dueno]', $dueno->getAddress(), $utf8text);
         $utf8text = str_replace('[$comuna_dueno]', $comunaDueno->getNombre(), $utf8text);
         $utf8text = str_replace('[$nombre_usuario]', $user->getFirstname() . " " . $user->getLastname(), $utf8text);
-        $utf8text = str_replace('[$rut_usuario]', $user->getRut(), $utf8text);
+        $utf8text = str_replace('[$rut_usuario]', $user->getRutFormatted(), $utf8text);
         $utf8text = str_replace('[$domicilio_usuario]', $user->getAddress(), $utf8text);
         $utf8text = str_replace('[$comuna_usuario]', $comunaUser->getNombre(), $utf8text);
         $utf8text = str_replace('[$marca_auto]', $car->getModel()->getBrand(), $utf8text);
@@ -3419,7 +3446,7 @@ class profileActions extends sfActions {
 
         if ($idUsuario) {
             $user = Doctrine_Core::getTable('user')->find($idUsuario);
-            if ($user->getRut() == "") {
+            if (empty($user->getRut())) {
                 $errorMessage = "error:rutnulo";
             }
 
@@ -3438,7 +3465,7 @@ class profileActions extends sfActions {
                 $_SESSION['login_back_url'] = $redirectUrl;
             }else{
                 $reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
-                if ($reserve->getUser()->getRut() == "") {
+                if (empty($reserve->getUser()->getRut())) {
                     $errorMessage = "error:rutnulo";
                 }
 
@@ -4009,7 +4036,7 @@ class profileActions extends sfActions {
 
                 $horasFaltantes = intval(($fechaReserva - strtotime('now'))/60/60);
 
-                $oportunityQueue = Doctrine_Core::getTable('OportunityQueue')->findOneByReserveId($reserva->getId());
+                $oportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findOneByReserveId($reserva->getId());
 
                 //obtiene en que estado se encuentra (pagada(3), preaprobada(2), rechazada(1) y espera(0))
                 if ($transaction[0]['impulsive'] && $transaction[0]['completed'] == 0 && !$oportunityQueue && ($transaction[0]['transaccion_original'] == 0 || $transaction[0]['transaccion_original'] == null) /*&& $horasFaltantes > 2*/) {
@@ -6408,7 +6435,7 @@ class profileActions extends sfActions {
                 error_log("executeNuevoFlujoCambiar: no se pudo realizar el cambio de reserva");
             }*/
 
-            $oq = Doctrine_Core::getTable("OportunityQueue")->findOneByReserveId($reserveId);
+            $oq = Doctrine_Core::getTable("OpportunityQueue")->findOneByReserveId($reserveId);
             $oq->setIsActive(false);
             $oq->save();
 

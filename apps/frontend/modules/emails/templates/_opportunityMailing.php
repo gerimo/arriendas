@@ -21,7 +21,7 @@
     </tr>
 </table>
 
-<p>Para postular a esta oportunidad, puedes hacerlo a través de nuestra <strong><a href='<?php echo $acceptUrl ?>'>sección de oportunidades</a></strong>.</p>
+<p>Para postular a esta oportunidad, puedes hacerlo haciendo <strong><a href='<?php echo $acceptUrl ?>'>click aquí</a></strong>.</p>
 
 <?php include_partial("emails/footer", array("userId" => $Owner->id, "mailingId" => 1)) ?>
 

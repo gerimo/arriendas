@@ -2,6 +2,23 @@
 
 class ReserveTable extends Doctrine_Table {
 
+    public function findOriginalReserve($reserveId) {
+
+        error_log($reserveId);
+
+        $Reserve = Doctrine_Core::getTable("Reserve")->find($reserveId);
+
+        if ($Reserve) { 
+            if ($Reserve->reserva_original == 0) {
+                return $Reserve->id;
+            } else {
+                return $Reserve->reserva_original;
+            }
+        }
+
+        return null;
+    }   
+
     public function findActiveReserve($reserveId) {
 
         $q = Doctrine_Core::getTable("Reserve")
@@ -11,17 +28,6 @@ class ReserveTable extends Doctrine_Table {
             ->andWhere('T.completed = 1');
 
         return $q->fetchOne();
-    }
-
-    public function isOriginalReserve($id) {
-
-        $q = Doctrine_Core::getTable("Reserve")
-            ->createQuery('R')
-            ->where('R.id = ?', $id)
-            ->andWhere('R.comentario = "null"')
-            ->andWhere('R.reserva_original = 0');
-
-            return $q->execute();
     }
 
     ///////////////////////////

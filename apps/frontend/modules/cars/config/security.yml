@@ -1,2 +1,8 @@
+availabilityEmail:
+    is_secure: false
+
+availabilityEmailOpen:
+    is_secure: false
+
 search:
     is_secure: false

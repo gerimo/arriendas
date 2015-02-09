@@ -1455,7 +1455,7 @@ class User extends BaseUser {
         }
 
 
-        if ($this->getCustomerio() <= 0) {
+        /*if ($this->getCustomerio() <= 0) {
 
             $session = curl_init();
 
@@ -1477,15 +1477,13 @@ class User extends BaseUser {
             curl_setopt($session, CURLOPT_POSTFIELDS, http_build_query($data));
 
             curl_setopt($session, CURLOPT_USERPWD, $site_id . ":" . $api_key);
-
-//if(ereg("^(https)",$request)) 
             curl_setopt($session, CURLOPT_SSL_VERIFYPEER, false);
 
             curl_exec($session);
             curl_close($session);
 
             $this->setCustomerio(true);
-        }
+        }*/
 
 
         return parent::save($conn);
@@ -1568,7 +1566,7 @@ class User extends BaseUser {
             $messageBody .= "<p> first name: " . $this->getFirstname() . "</p>";
             $messageBody .= "<p> last name: " . $this->getLastname() . "</p>";
             $messageBody .= "<p> teléfono: " . $this->getTelephone() . "</p>";
-            $messageBody .= "<p> RUT: " . $this->getRut() . "</p>";
+            $messageBody .= "<p> RUT: " . $this->getRutFormatted() . "</p>";
             if (!is_null($this->getCity())) {
                 $messageBody .= "<p> ciudad: " . $this->getCity()->getName() . "</p>";
                 if (!is_null($this->getCity()->getComuna())) {
@@ -1648,5 +1646,16 @@ class User extends BaseUser {
         }
 
         return false;
+    }
+
+    public function getRutFormatted() {
+        $rutNumber = number_format($this->rut,0,"",".");
+        $rutFormatted = (string)$rutNumber."-".$this->rut_dv;
+        return $rutFormatted;
+    }
+
+    public function getRutComplete() {
+        $rutComplete = (string)$this->rut."-".$this->rut_dv;
+        return $rutComplete;
     }
 }

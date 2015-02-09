@@ -1,3 +1,6 @@
+    .row {
+    margin: 0;
+}
 .navbar-brand img {
     margin-top: -7px;
 }
@@ -38,17 +41,28 @@
 }
 
 .loading {
-    margin: auto 43%;
+    position: absolute;
+    width: 30px;
+    margin: 0px 0px 0px -70px;
 }
 
 .find {
 
+    margin: 9px 0px 0px -25px;
     position: absolute;
-    margin: -25px 0 0 92%;
 }
 
-.found {
+.load {
 
     position: absolute;
-    margin: -47px 0 0 92%;
+    width: 33px;
+    left: 100%;
 }
+
+#filters li {
+    padding-right: 8px;
+    float: left;
+    list-style: none;
+    font: 600 15px/20px 'Open Sans',sans-serif;
+}
+

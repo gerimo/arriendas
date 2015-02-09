@@ -9,17 +9,25 @@ about_company:
     url: /nosotros
     param: { module: main, action: compania }
 
+car_availability:
+   url: /auto/vista-3
+   param: { module: cars, action: availability }
+
+car_availability_email:
+    url: /auto/disponibilidad/:id/:o/:signature
+    param: { module: cars, action: availabilityEmail }
+
+car_availability_email_open:
+    url: /auto/disponibilidad/imagen/:id
+    param: { module: cars, action: availabilityEmailOpen }
+
 car_availability_remove:
     url: /auto/disponibilidad/eliminar
-    param: { module: cars, action: carAvailabilityRemove }
-
-car_availability:
-   url: /auto/disponibilidad
-   param: { module: cars, action: availability }
+    param: { module: cars, action: availabilityRemove }
 
 car_availability_save:
     url: /auto/disponibilidad/guardar
-    param: { module: cars, action: carAvailabilitySave }
+    param: { module: cars, action: availabilitySave }
 
 car_set_active:
     url: /auto/cambiar/activo
@@ -277,14 +285,6 @@ aprobarReserve:
 aprobarOportunidad:
     url:  /profile/aprobarOportunidad/:idReserve/:idCar/:idUser
     param:  { module: profile, action: aprobarOportunidad }
-
-availability:
-    url: /availability
-    param: { module: main, action: availability }
-
-availabilityEmailOpen:
-    url: /availability/open
-    param: { module: main, action: availabilityOpen }
 
 facebook_login:
     url: /main/loginFacebook 

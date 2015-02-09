@@ -4,7 +4,7 @@
 <div class="visible-xs space-50"></div>
 
 <div class="row">
-    <div class="col-md-offset-3 col-md-6">
+    <div class="col-md-offset-2 col-md-8">
 
         <div class="row BCW">
 
@@ -70,10 +70,10 @@
 
                 <div class="form-inline clearfix">
                     <select class="form-control" name="foreign" id="foreign">
-                        <option value="0" <?php echo $User->getExtranjero() == 0 ? "selected" : ""; ?> >Chileno</option>
-                        <option value="1" <?php echo $User->getExtranjero() == 1 ? "selected" : ""; ?> >Extranjero</option>
+                        <option value="0" <?php echo $User->getExtranjero() == 0 ? "selected" : ""; ?> >Tengo RUT Chileno - I have chilean RUT number</option>
+                        <option value="1" <?php echo $User->getExtranjero() == 1 ? "selected" : ""; ?> >No tengo RUT - I don't have chilean RUT number</option>
                     </select>
-                    <input class="form-control" id="run" name="run" placeholder="RUT" value="<?php if ($User->getRut()) echo $User->getRut() ?>" type="text">
+                    <input class="form-control" id="run" name="run" placeholder="RUT" value="<?php if ($User->getRut()) echo $User->getRutFormatted() ?>" type="text">
                 </div>
 
                 <input class="form-control" name="telephone" id="telephone" placeholder="Teléfono" value="<?php if ($User->getTelephone()) echo $User->getTelephone() ?>" title="Celular" type="text">
@@ -156,6 +156,17 @@
 
         imageUpload('#formmain', '#filemain', '#previewmain','#linkmain');       
         imageUpload('#formlicense', '#filelicense', '#previewlicense','#linklicense');
+
+        //establece al campo run como disabled si la persona indica que no tiene rut
+        var foreign = $("#foreign").val();
+        if(foreign > 0){  
+            $('#run').val('');
+            $('#run').attr('disabled', true);
+            $("#run").parent("label").find("span").text('');
+        } else {
+            $('#run').attr('disabled', false);
+        }
+
     });
 
     $("#region").change(function(){
@@ -219,6 +230,19 @@
             $(formfile).click();
         });
     }
+    // establece al campo run como disabled si la persona indica que no tiene rut
+    $("#foreign").change(function(){
+        var foreign = $(this).val();
+        $('#run').val('');
+        if(foreign > 0){  
+            $('#run').val('');
+            $('#run').attr('disabled', true);
+            $("#run").parent("label").find("span").text('');
+        } else {
+            $('#run').attr('disabled', false);
+            $("#run").parent("label").find("span").text('Rut');
+        }
+    });
 
     function validateForm() {
 

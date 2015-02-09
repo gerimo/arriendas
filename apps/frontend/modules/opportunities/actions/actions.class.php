@@ -29,14 +29,11 @@ class opportunitiesActions extends sfActions {
     }
 
     public function executeApprove(sfWebRequest $request) {
-        error_log("LLEGO");
+
         $return = array("error" => false);
 
         $reserveId = $request->getPostParameter("reserveId", null);
         $carId     = $request->getPostParameter("carId", null);
-
-        error_log($reserveId);
-        error_log($carId);
 
         try {
 
@@ -152,63 +149,50 @@ class opportunitiesActions extends sfActions {
 
     private function approve($reserveId, $carId, $isMailing = false) {
 
-        try {
-
-            if (is_null($reserveId) || $reserveId == 0) {
-                throw new Exception("No se encontró la reserva");
-            }
-
-            $OriginalReserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
-
-            if (is_null($carId) || $carId == 0) {
-                throw new Exception("Falta el ID del auto para aprobar oportunidad para Reserve ".$OriginalReserve->id);
-            }
-
-            $Car = Doctrine_Core::getTable('Car')->find($carId);
-            if (!$Car) {
-                throw new Exception("No se encontró el auto para aprobar oportunidad para Reserve ".$OriginalReserve->id);
-            }            
-
-            if ($Car->hasReserve($OriginalReserve->getFechaInicio2(), $OriginalReserve->getFechaTermino2())) {
-                throw new Exception("Este Car ".$Car->id." ya posee una reserva en las fechas de la oportundiad");                
-            }
-
-            // Comentado porque cuando se aprueba por correo no necesariamente debería estar logueado
-            /*if ($Car->getUserId() != $this->getUser()->getAttribute("userid")) {
-                throw new Exception("No! No! No!", 1);
-            }*/
-            
-            $O = $OriginalReserve->copy(true);
-            $O->setCar($Car);
-            $O->setFechaReserva(date("Y-m-d H:i:s"));
-            $O->setFechaConfirmacion(date("Y-m-d H:i:s"));
-            $O->setConfirmed(true);
-            $O->setImpulsive(true);
-            $O->setReservaOriginal($OriginalReserve->getId());
-            
-            if ($isMailing) {
-                $O->setComentario('Reserva oportunidad - mailing');
-            } else {
-                $O->setComentario('Reserva oportunidad');
-            }
-            
-            $O->setUniqueToken(true);            
-            $O->save();
-            
-            $OT = $OriginalReserve->getTransaction()->copy(true);
-            $OT->setCar($Car->getModel()->getBrand()->getName() ." ". $Car->getModel()->getName());
-            $OT->setReserve($O);
-            $OT->setDate(date("Y-m-d H:i:s"));
-            $OT->setCompleted(false);
-            $OT->setImpulsive(true);
-            $OT->setTransaccionOriginal($OriginalReserve->getTransaction()->getId());
-            $OT->save();
-            
-
-        } catch (Exception $e) {
-            error_log("[ERROR] opportunities/(private)approve: ". $e->getMessage());
-            return $e->getMessage();
+        if (is_null($reserveId) || $reserveId == 0) {
+            return "No se encontró la reserva";
         }
+
+        $OriginalReserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
+
+        if (is_null($carId) || $carId == 0) {
+            return "Falta el ID del auto para aprobar oportunidad para Reserve ".$OriginalReserve->id;
+        }
+
+        $Car = Doctrine_Core::getTable('Car')->find($carId);
+        if (!$Car) {
+            return "No se encontró el auto para aprobar oportunidad para Reserve ".$OriginalReserve->id;
+        }            
+
+        if ($Car->hasReserve($OriginalReserve->getFechaInicio2(), $OriginalReserve->getFechaTermino2())) {
+            return "Este Car ".$Car->id." ya posee una reserva en las fechas de la oportundiad";
+        }
+
+        $O = $OriginalReserve->copy(true);
+        $O->setCar($Car);
+        $O->setFechaReserva(date("Y-m-d H:i:s"));
+        $O->setFechaConfirmacion(date("Y-m-d H:i:s"));
+        $O->setConfirmed(true);
+        $O->setImpulsive(true);
+        $O->setReservaOriginal($OriginalReserve->getId());
+
+        if ($isMailing) {
+            $O->setComentario('Reserva oportunidad - mailing');
+        } else {
+            $O->setComentario('Reserva oportunidad');
+        }
+        
+        $O->setUniqueToken(true);
+        $O->save();
+
+        $OT = $OriginalReserve->getTransaction()->copy(true);
+        $OT->setCar($Car->getModel()->getBrand()->getName() ." ". $Car->getModel()->getName());
+        $OT->setReserve($O);
+        $OT->setDate(date("Y-m-d H:i:s"));
+        $OT->setCompleted(false);
+        $OT->setImpulsive(true);
+        $OT->setTransaccionOriginal($OriginalReserve->getTransaction()->getId());
+        $OT->save();
 
         return null;
     }

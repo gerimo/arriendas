@@ -2,158 +2,179 @@
 
 class Car extends BaseCar {
 
-    public function getExistPatent($patent = false, $idCar = false){
+  public function getQuantityOfLatestRents($date = null ) { 
 
-        $q = Doctrine_Core::getTable("Car")
-            ->createQuery('C')
-            ->where('C.patente = ?', $patent);
-            
+      if($date == null) {
+        $date = date("Y-m-d H:i:s", strtotime("-3 month"));
+      }
 
-        if($idCar){
-              $q->andWhere('C.id != ?', $idCar);
-        }
-       
 
-        return $q->execute();
-    }
-    
-    public function getCurrentCarAvailabilityEmails() {
+      $q = Doctrine_Core::getTable("Reserve")
+          ->createQuery('R')
+          ->innerJoin('R.Transaction T')
+          ->where('R.confirmed = 1')
+          ->andWhere('T.completed = 1')
+          ->andWhere('R.car_id = ?', $this->id)
+          ->andWhere('T.date >= ?', $date)
+          ->andWhere('T.date <= Now()');
 
-        $q = Doctrine_Core::getTable("CarAvailabilityEmail")
-            ->createQuery('CAE')
-            ->where('CAE.car_id = ?', $this->getId())
-            ->andWhere("NOW() > CAE.sent_at")
-            ->andWhere("NOW() < CAE.ended_at")
-            ->andWhere("CAE.checked_at IS NOT NULL");
+      $cant = $q->execute();
 
-        return $q->execute();
-    }
+      return count($cant);
+  }   
 
-    public function getNearestMetro() {
+  public function getExistPatent($patent = false, $idCar = false){
 
-        $q = Doctrine_Core::getTable("CarProximityMetro")
-            ->createQuery('CPM')
-            ->where('CPM.car_id = ?', $this->id)
-            ->orderBy('CPM.distance ASC');
+      $q = Doctrine_Core::getTable("Car")
+          ->createQuery('C')
+          ->where('C.patente = ?', $patent);
+          
 
-        return $q->fetchOne();
-    }
+      if($idCar){
+            $q->andWhere('C.id != ?', $idCar);
+      }
+     
 
-    public function getOpportunities() {
-
-        $maxDistance = 4;
-        $maxOpportunitiesAllowed = 5;
-        $Opportunities = array();
-
-        // Obtención de reservas que cuenten con las características
-        $q = Doctrine_Core::getTable("Reserve")
-            ->createQuery('R')
-            ->innerJoin('R.Transaction T')
-            ->innerJoin('R.Car C')
-            ->innerJoin('C.Model M')
-            ->where('C.user_id != ?', $this->getUser()->id)
-            ->andWhere('C.activo = 1')
-            ->andWhere('C.seguro_ok = 4')
-            ->andWhere('R.confirmed = 0')
-            ->andWhere('R.comentario = "null"') // Es original
-            ->andWhere('NOW() < DATE_ADD(R.date, INTERVAL 2 HOUR)')
-            ->andWhere('T.completed = 1')
-            ->andWhere('C.transmission = ?', $this->transmission)
-            ->andWhere('distancia(C.lat, C.lng, ?, ?) < ?', array($this->lat, $this->lng, $maxDistance))
-            ;
-        
-        if ($this->getModel()->getIdOtroTipoVehiculo() == 2) {
-            $q->andWhere('M.id_otro_tipo_vehiculo IN (1,2)');
-        } else {
-            $q->andWhere('M.id_otro_tipo_vehiculo = ?', $this->getModel()->getIdOtroTipoVehiculo());  
-        }
-
-        $Reserves = $q->execute();
-
-        // Revisamos que las reservas no tengan ya el máximo de oportunidades permitidas y
-        // Revisamos que el auto no tenga ya una reserva confirmada en la fecha de la oportunidad
-        foreach ($Reserves as $k => $Reserve) {
-
-            $ChangeOptions = $Reserve->getChangeOptions(false);
-
-            if (count($ChangeOptions) < $maxOpportunitiesAllowed && 
-                !$this->hasReserve($Reserve->getFechaInicio2(), $Reserve->getFechaTermino2())) {
-
-                // Revisamos que el usuario no haya ya postulado a la oportunidad
-                $itsPresent = false;
-                foreach ($ChangeOptions as $l => $CO) {
-                    if ($CO->getCar()->getUser()->id == $this->getUser()->id) {
-                        $itsPresent = true;
-                        break;
-                    }
-                }
-
-                if (!$itsPresent) {
-                    $Opportunities[] = $Reserve;
-                }
-            }
-        }
-
-        return $Opportunities;
-    }
+      return $q->execute();
+  }
   
-    public function hasReserve($from, $to, $userId = false) {
+  public function getCurrentCarAvailabilityEmails() {
 
-        $q = Doctrine_Core::getTable("Reserve")
-            ->createQuery('R')
-            ->leftJoin('R.Transaction T')
-            ->where('T.completed = 1')
-            ->andWhere('R.car_id = ?', $this->id)
-            ->andWhere('(? BETWEEN R.date AND DATE_ADD(R.date, INTERVAL R.duration HOUR)) OR (? BETWEEN R.date AND DATE_ADD(R.date, INTERVAL R.duration HOUR)) OR (R.date BETWEEN ? AND ?) OR (DATE_ADD(R.date, INTERVAL R.duration HOUR) BETWEEN ? AND ?)', array($from, $to, $from, $to, $from, $to));
+      $q = Doctrine_Core::getTable("CarAvailabilityEmail")
+          ->createQuery('CAE')
+          ->where('CAE.car_id = ?', $this->getId())
+          ->andWhere("NOW() > CAE.sent_at")
+          ->andWhere("NOW() < CAE.ended_at")
+          ->andWhere("CAE.checked_at IS NOT NULL");
 
-        if ($userId) {
-          $q->andWhere('R.user_id != ?', $userId);
-        }
+      return $q->execute();
+  }
 
-        $checkAvailability = $q->execute();
+  public function getNearestMetro() {
 
-        if (count($checkAvailability) == 0) {
-            return false;
-        }
+      $q = Doctrine_Core::getTable("CarProximityMetro")
+          ->createQuery('CPM')
+          ->where('CPM.car_id = ?', $this->id)
+          ->orderBy('CPM.distance ASC');
 
-        return true;
-    }
-    
-    // Métodos estáticos
+      return $q->fetchOne();
+  }
 
-    public static function getTime($from, $to) {
+  public function getOpportunities() {
 
-        $from = date("Y-m-d H:i:s", strtotime($from));
-        $to   = date("Y-m-d H:i:s", strtotime($to));
+      $maxDistance = 4;
+      $maxOpportunitiesAllowed = 5;
+      $Opportunities = array();
 
-        $duration = Utils::calculateDuration($from, $to);
-        $hours    = $duration % 24;
-        $days     = floor($duration) - $hours;
+      // Obtención de reservas que cuenten con las características
+      $q = Doctrine_Core::getTable("Reserve")
+          ->createQuery('R')
+          ->innerJoin('R.Transaction T')
+          ->innerJoin('R.Car C')
+          ->innerJoin('C.Model M')
+          ->where('C.user_id != ?', $this->getUser()->id)
+          ->andWhere('C.activo = 1')
+          ->andWhere('C.seguro_ok = 4')
+          ->andWhere('R.confirmed = 0')
+          ->andWhere('R.comentario = "null"') // Es original
+          ->andWhere('NOW() < DATE_ADD(R.date, INTERVAL 2 HOUR)')
+          ->andWhere('T.completed = 1')
+          ->andWhere('C.transmission = ?', $this->transmission)
+          ->andWhere('distancia(C.lat, C.lng, ?, ?) < ?', array($this->lat, $this->lng, $maxDistance))
+          ;
+      
+      if ($this->getModel()->getIdOtroTipoVehiculo() == 2) {
+          $q->andWhere('M.id_otro_tipo_vehiculo IN (1,2)');
+      } else {
+          $q->andWhere('M.id_otro_tipo_vehiculo = ?', $this->getModel()->getIdOtroTipoVehiculo());  
+      }
 
-        if ($hours >= 6) {
-            $days = $days + 24;
-            $hours = 0;
-        }
-        return floor($days + $hours);
-    }
+      $Reserves = $q->execute();
 
-    public static function getReviews($id) {
+      // Revisamos que las reservas no tengan ya el máximo de oportunidades permitidas y
+      // Revisamos que el auto no tenga ya una reserva confirmada en la fecha de la oportunidad
+      foreach ($Reserves as $k => $Reserve) {
 
-        $q = Doctrine_Query::create()
-            ->select("R.opinion_about_owner AS opinion, U.picture_file AS picture")
-            ->from("Car C")
-            ->innerJoin("Rating R ON R.IdOwner = C.user_id")
-            ->innerJoin("User U ON U.id = R.IdRenter")
-            ->where("C.id = ?", $id);
+          $ChangeOptions = $Reserve->getChangeOptions(false);
 
-            /*"SELECT R.opinion_about_owner AS opinion, U.picture_file AS picture
-            FROM Car C
-            INNER JOIN Rating R ON R.IdOwner = C.user_id
-            INNER JOIN User U ON R.IdRenter = U.id
-            WHERE C.id = ".$id;*/
+          if (count($ChangeOptions) < $maxOpportunitiesAllowed && 
+              !$this->hasReserve($Reserve->getFechaInicio2(), $Reserve->getFechaTermino2())) {
 
-        return $q->execute()->toArray();
-    }
+              // Revisamos que el usuario no haya ya postulado a la oportunidad
+              $itsPresent = false;
+              foreach ($ChangeOptions as $l => $CO) {
+                  if ($CO->getCar()->getUser()->id == $this->getUser()->id) {
+                      $itsPresent = true;
+                      break;
+                  }
+              }
+
+              if (!$itsPresent) {
+                  $Opportunities[] = $Reserve;
+              }
+          }
+      }
+
+      return $Opportunities;
+  }
+
+  public function hasReserve($from, $to, $userId = false) {
+
+      $q = Doctrine_Core::getTable("Reserve")
+          ->createQuery('R')
+          ->leftJoin('R.Transaction T')
+          ->where('T.completed = 1')
+          ->andWhere('R.car_id = ?', $this->id)
+          ->andWhere('(? BETWEEN R.date AND DATE_ADD(R.date, INTERVAL R.duration HOUR)) OR (? BETWEEN R.date AND DATE_ADD(R.date, INTERVAL R.duration HOUR)) OR (R.date BETWEEN ? AND ?) OR (DATE_ADD(R.date, INTERVAL R.duration HOUR) BETWEEN ? AND ?)', array($from, $to, $from, $to, $from, $to));
+
+      if ($userId) {
+        $q->andWhere('R.user_id != ?', $userId);
+      }
+
+      $checkAvailability = $q->execute();
+
+      if (count($checkAvailability) == 0) {
+          return false;
+      }
+
+      return true;
+  }
+  
+  // Métodos estáticos
+
+  public static function getTime($from, $to) {
+
+      $from = date("Y-m-d H:i:s", strtotime($from));
+      $to   = date("Y-m-d H:i:s", strtotime($to));
+
+      $duration = Utils::calculateDuration($from, $to);
+      $hours    = $duration % 24;
+      $days     = floor($duration) - $hours;
+
+      if ($hours >= 6) {
+          $days = $days + 24;
+          $hours = 0;
+      }
+      return floor($days + $hours);
+  }
+
+  public static function getReviews($id) {
+
+      $q = Doctrine_Query::create()
+          ->select("R.opinion_about_owner AS opinion, U.picture_file AS picture")
+          ->from("Car C")
+          ->innerJoin("Rating R ON R.IdOwner = C.user_id")
+          ->innerJoin("User U ON U.id = R.IdRenter")
+          ->where("C.id = ?", $id);
+
+          /*"SELECT R.opinion_about_owner AS opinion, U.picture_file AS picture
+          FROM Car C
+          INNER JOIN Rating R ON R.IdOwner = C.user_id
+          INNER JOIN User U ON R.IdRenter = U.id
+          WHERE C.id = ".$id;*/
+
+      return $q->execute()->toArray();
+  }
 
 /////////////////////////////////////////////////////////
  
@@ -336,12 +357,8 @@ where c.id=
 
         return $rs[0]['percentile_rank'];
     }
-
-
     
-    
-    
-    public function save(Doctrine_Connection $conn = null)  {
+    /*public function save(Doctrine_Connection $conn = null)  {
     
         if (!$this->getId() || $this->getCustomerio()<=0) {
 
@@ -349,37 +366,37 @@ where c.id=
             $patente = $this->getPatente();
             $comuna = $this->getNombreComuna();
         
-      $session = curl_init();
+            $session = curl_init();
 
-      $customer_id = 'a_'.$this->getUserId(); // You'll want to set this dynamically to the unique id of the user
-      $customerio_url = 'https://track.customer.io/api/v1/customers/'.$customer_id.'/events';
-      $site_id = '3a9fdc2493ced32f26ee';
-      $api_key = '4f191ca12da03c6edca4';
+            $customer_id = 'a_'.$this->getUserId(); // You'll want to set this dynamically to the unique id of the user
+            $customerio_url = 'https://track.customer.io/api/v1/customers/'.$customer_id.'/events';
+            $site_id = '3a9fdc2493ced32f26ee';
+            $api_key = '4f191ca12da03c6edca4';
 
-      sfContext::getInstance()->getLogger()->err($customerio_url);
+            sfContext::getInstance()->getLogger()->err($customerio_url);
 
-      $data = array("name" => "subir_auto", "data[brand]" => $brand, "data[patente]" => $patente, "data[comuna]" => $comuna);
+            $data = array("name" => "subir_auto", "data[brand]" => $brand, "data[patente]" => $patente, "data[comuna]" => $comuna);
 
-      curl_setopt($session, CURLOPT_URL, $customerio_url);
-      curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-      curl_setopt($session, CURLOPT_HEADER, false);
-      curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
-      curl_setopt($session, CURLOPT_VERBOSE, 1);
-      curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
-      curl_setopt($session, CURLOPT_POSTFIELDS,http_build_query($data));
+            curl_setopt($session, CURLOPT_URL, $customerio_url);
+            curl_setopt($session, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($session, CURLOPT_HEADER, false);
+            curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($session, CURLOPT_VERBOSE, 1);
+            curl_setopt($session, CURLOPT_CUSTOMREQUEST, 'POST');
+            curl_setopt($session, CURLOPT_POSTFIELDS,http_build_query($data));
 
-      curl_setopt($session,CURLOPT_USERPWD,$site_id . ":" . $api_key);
+            curl_setopt($session,CURLOPT_USERPWD,$site_id . ":" . $api_key);
 
-      //if(ereg("^(https)",$request)) 
-      curl_setopt($session,CURLOPT_SSL_VERIFYPEER,false);
+            //if(ereg("^(https)",$request)) 
+            curl_setopt($session,CURLOPT_SSL_VERIFYPEER,false);
 
-      curl_exec($session);
-      curl_close($session);
+            curl_exec($session);
+            curl_close($session);
 
-      $this->setCustomerio(true);
-      }
+            $this->setCustomerio(true);
+        }
 
-    $ret = parent::save($conn);
+        $ret = parent::save($conn);
 
         $car = Doctrine_Core::getTable('car')->find($this->getId());
         $user = Doctrine_Core::getTable('user')->find($car->getUserId());   
@@ -391,42 +408,42 @@ where c.id=
         $q = Doctrine_Manager::getInstance()->getCurrentConnection();
         $query = "update Car set Cant_Reservas_Aprobadas='$CantReservasAprobadas', contesta_pedidos='$percTotalContestadas', velocidad_contesta_pedidos='$velocidadContestaPedidos' where user_id='$ownerUserId'";
 
-    $result = $q->execute($query);
+        $result = $q->execute($query);
 
-    /* nuevo flujo */
+        // NUEVO FLUJO
 
-    // Se genera el calculo asociado al ratio de aprobacion del propietario
-    $limit = 7;
+        // Se genera el calculo asociado al ratio de aprobacion del propietario
+        $limit = 7;
 
-    $table = Doctrine_Core::getTable('Reserve');
-    $q = $table
-        ->createQuery('r')
-        ->select('ROUND(SUM(r.confirmed)/count(r.confirmed) * 100, 2) AS ratio')
-        ->innerJoin('r.Car c')
-        ->where('c.user_id = ?', $ownerUserId)
-        ->andWhere('r.comentario = "null"')
-        ->andWhere('(day(r.date) - day(r.fecha_reserva)) > 0')
-        ->andWhere("hour(r.fecha_reserva) < 22 AND hour(r.fecha_reserva) > 5")
-        ->limit($limit)
-        ;
+        $table = Doctrine_Core::getTable('Reserve');
+        $q = $table
+            ->createQuery('r')
+            ->select('ROUND(SUM(r.confirmed)/count(r.confirmed) * 100, 2) AS ratio')
+            ->innerJoin('r.Car c')
+            ->where('c.user_id = ?', $ownerUserId)
+            ->andWhere('r.comentario = "null"')
+            ->andWhere('(day(r.date) - day(r.fecha_reserva)) > 0')
+            ->andWhere("hour(r.fecha_reserva) < 22 AND hour(r.fecha_reserva) > 5")
+            ->limit($limit)
+            ;
 
-    $results = $q->execute();
+        $results = $q->execute();
 
-    if (isset($results[0])) {
+        if (isset($results[0])) {
 
-        $ratio = (float)$results[0]->getRatio();
-    } else {
+            $ratio = (float)$results[0]->getRatio();
+        } else {
 
-        $ratio = 100;
-    }
+            $ratio = 100;
+        }
 
-    // Se setea el nuevo ratio para el auto en particular
-    $this->setRatioAprobacion($ratio);
+        // Se setea el nuevo ratio para el auto en particular
+        $this->setRatioAprobacion($ratio);
 
-    parent::save($conn);
+        parent::save($conn);
 
-    return $ret;
-  }
+        return $ret;
+    }*/
 
     // Función publica que devuelve un array con las distancias
     // del vehículo en relacion al metro mas próximo.

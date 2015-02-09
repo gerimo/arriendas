@@ -3,3 +3,12 @@
 
 all:
   is_secure: true
+
+login:
+  is_secure: false
+
+loginDo:
+  is_secure: false
+
+logout:
+  is_secure: false

@@ -34,6 +34,7 @@ EOF;
 
         /* arguments */
         $run = $options["rut"];
+        $rut = substr($rut, 0, -1)."-".substr($rut, -1);
         $userid = $options["user"];
 
         echo "verificando...\n";

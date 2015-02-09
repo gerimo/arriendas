@@ -2,18 +2,28 @@
 
 class CarTable extends Doctrine_Table {
 
-    public function isActive($id) {
+    public function findCarsActives($limit = 50, $forWeek = false, $forWeekend = false) {
 
         $q = Doctrine_Core::getTable("Car")
             ->createQuery('C')
-            ->where('C.id = ?', $id)
-            ->andWhere('C.activo = 1')
-            ->andWhere('C.seguro_ok = 4');
+            ->innerJoin('C.Model M')
+            ->where('C.seguro_ok = 4')
+            ->andWhere('C.activo = 1');
 
-            return $q->execute();
+        if ($forWeek) {
+            $q->andWhere("C.options & 1");
+        }
+
+        if ($forWeekend) {
+            $q->andWhere("C.options & 2");
+        }
+
+        if ($limit) {
+            $q->limit($limit);
+        }
+
+        return $q->execute();
     }
-
-    ///////////////////////////////////////////////////////////7
 
     public function findCars($from, $to, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway) {
 
@@ -172,7 +182,7 @@ class CarTable extends Doctrine_Table {
         return Doctrine_Core::getTable('Car');
     }
 
-    public static function getPrice($from, $to, $pricePerHour, $pricePerDay, $pricePerWeek, $pricePerMonth) {
+    public static function getPrice($from, $to, $pricePerHour, $pricePerDay, $pricePerWeek, $pricePerMonth ) {
 
         $from = date("Y-m-d H:i:s", strtotime($from));
         $to   = date("Y-m-d H:i:s", strtotime($to));

@@ -43,6 +43,7 @@ abstract class BaseOpportunityQueue extends sfDoctrineRecord {
     public function setTableDefinition() {
 
         $this->setTableName('OpportunityQueue');
+        
         $this->hasColumn('id', 'integer', 4, array(
              'type' => 'integer',
              'primary' => true,

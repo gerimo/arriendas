@@ -186,7 +186,7 @@
     <div class="space-50 hidden-xs"></div>
 
     <!-- Reviews -->  
-    <!--
+    <!-- 
     <?php if (count($reviews) > 0): ?>
         <div class="row">
             <div class="panel-group col-md-11" id="reviews">
@@ -245,8 +245,9 @@
                 </div>
             </div>
         </div>
-    <?php endif ?>
+    <?php endif ?> 
     -->
+    
     
     <div class="space-50 hidden-xs"></div>
 
