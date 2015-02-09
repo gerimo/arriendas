@@ -1,4 +1,5 @@
 <?php
+require_once sfConfig::get('sf_lib_dir') . '/vendor/fabpot/goutte.phar';
 
 class reservesActions extends sfActions {
 
@@ -453,9 +454,7 @@ class reservesActions extends sfActions {
 
     public function executePay (sfWebRequest $request) {
 
-        $userId = $this->getUser()->getAttribute('userid');
-
-        
+        $userId = $this->getUser()->getAttribute('userid');        
 
         if ($request->hasParameter('warranty','payment-group','car','from','to')) {
             $warranty = $request->getPostParameter("warranty", null);
@@ -474,6 +473,40 @@ class reservesActions extends sfActions {
         }
         
         try {
+            $User = Doctrine_Core::getTable('User')->find($userId);
+            $UnverifiedMail = false;
+            if(!$User->getChequeoJudicial()) {
+                // Chequeo judicial
+                $client = new \Goutte\Client();
+
+                $crawler = $client->request('GET', 'http://reformaprocesal.poderjudicial.cl/ConsultaCausasJsfWeb/page/panelConsultaCausas.jsf');
+
+                $viewStateId = $crawler->filter('input[name="javax.faces.ViewState"]')->attr('value');
+
+                if (strlen($viewStateId) > 0) {
+
+                    $params = array(
+                        'formConsultaCausas:idFormRut' => $User->rut,
+                        'formConsultaCausas:idFormRutDv' => strtoupper($User->rut_dv),
+                        'formConsultaCausas:idSelectedCodeTribunalRut' => "0",
+                        'formConsultaCausas:buscar1.x' => "66",
+                        'formConsultaCausas:buscar1.y' => "19",
+                        'formConsultaCausas' => "formConsultaCausas",
+                        'javax.faces.ViewState' => $viewStateId,
+                    );
+                    $crawler = $client->request('POST', 'http://reformaprocesal.poderjudicial.cl/ConsultaCausasJsfWeb/page/panelConsultaCausas.jsf', $params);
+
+                    $nodeCount = count($crawler->filter('.extdt-cell-div'));
+                    if ($nodeCount > 1) {
+                        $User->setBloqueado("Bloqueado por poseer antedecentes judiciales, verificado antes de efectuar el pago.");
+                    } else {
+                        $User->setChequeoJudicial(true);
+                        $User->save();
+                    }
+                } else {
+                    $UnverifiedMail = true;
+                }// Chequeo judicial
+            }
 
             if (is_null($warranty) || is_null($carId) || is_null($from) || is_null($to)) {
                 throw new Exception("El User ".$userId." esta intentando pagar pero uno de los campos es nulo. Garantia: ".$warranty.", Car: ".$carId.", Desde: ".$from.", Hasta: ".$to, 1);
@@ -484,7 +517,6 @@ class reservesActions extends sfActions {
                 throw new Exception($datesError, 2);
             }
             
-            $User = Doctrine_Core::getTable('User')->find($userId);
             if ($User->getBlocked()) {
                 throw new Exception("Rechazado el pago de User ".$userId." (".$User->firstname." ".$User->lastname.") debido a que se encuentra bloqueado, por lo que no esta autorizado para generar pagos", 1);            
             }
@@ -533,6 +565,26 @@ class reservesActions extends sfActions {
             $Transaction->setImpulsive(true);
             
             $Transaction->save();
+
+            if($UnverifiedMail) {
+                $mail    = new Email();
+                $mailer  = $mail->getMailer();
+                $message = $mail->getMessage();            
+
+                $subject = "¡Se ha registrado pago de un usuario sin verificacion judicial!";
+                $body    = $this->getPartial('emails/paymentDoneUnverifiedUser', array('Transaction' => $Transaction));
+                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+                $to      = array("soporte@arriendas.cl");
+
+                $message->setSubject($subject);
+                $message->setBody($body, 'text/html');
+                $message->setFrom($from);
+                $message->setTo($to);
+                $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                
+                $mailer->send($message);
+            }
+
         } catch (Exception $e) {
             error_log("[".date("Y-m-d H:i:s")."] [reserves/pay] ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
