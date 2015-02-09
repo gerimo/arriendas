@@ -568,7 +568,6 @@ class reservesActions extends sfActions {
             
             $Transaction->save();
 
-            $UnverifiedMail = true;
             if($UnverifiedMail) {
                 $mail    = new Email();
                 $mailer  = $mail->getMailer();
