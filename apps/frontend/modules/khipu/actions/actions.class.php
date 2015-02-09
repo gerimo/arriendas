@@ -318,7 +318,6 @@ class khipuActions extends sfActions {
                         $OpportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findOneByReserve($Reserve);
                         if (!$OpportunityQueue) {
                             $OpportunityQueue = new OpportunityQueue();
-                            $OpportunityQueue->setPaidAt(date("Y-m-d H:i:s"));
                             $OpportunityQueue->setReserve($Reserve);
                             $OpportunityQueue->save();
                         }
