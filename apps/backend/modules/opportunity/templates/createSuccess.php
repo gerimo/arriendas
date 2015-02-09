@@ -47,6 +47,8 @@
                     <th>Crear Oportunidad</th>
                 </tr>
             </thead>
+            <tbody>            
+            </tbody>
         </table>
     </div>
 </div>
@@ -62,8 +64,6 @@
 <div class="hidden-xs space-100"></div>    
 
 <script>
-
-    /*var urlCreate = "<?php echo url_for_frontend('opportunities_approve', array('carId' => 'carIdPattern', 'reserveId' => 'reserveIdPattern')) ?>";*/
     
 	$(document).ready(function() {
         $('#carsActivesTable').DataTable({
@@ -72,8 +72,6 @@
             responsive: true
         });
         
-
-        $('#carsActivesTable').hide();
         $('.loading').hide();  
         $(".find").hide();   
 
