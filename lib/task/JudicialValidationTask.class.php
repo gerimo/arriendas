@@ -34,7 +34,7 @@ EOF;
 
         /* arguments */
         $run = $options["rut"];
-        $rut = substr($rut, 0, -1)."-".substr($rut, -1);
+        // $rut = substr($run, 0, -1)."-".substr($run, -1);
         $userid = $options["user"];
 
         echo "verificando...\n";
@@ -58,13 +58,13 @@ EOF;
                 $message->setFrom('notificaciones@arriendas.cl', 'Notificaciones Arriendas');
                 $message->setTo('soporte@arriendas.cl');
                 $message->setBody($messageBody, "text/html");
-                $this->getMailer()->send($message);
+                $this->getMailer()->send($message); 
 
                 break;
             case 1:
                 /* se chequeo y no ha sido bloqueada */
                 $profile->setChequeoJudicial(true);
-                $profile->save();
+                $profile->save(); 
 
                 break;
             case 2:
