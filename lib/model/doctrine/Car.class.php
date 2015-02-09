@@ -358,7 +358,7 @@ where c.id=
         return $rs[0]['percentile_rank'];
     }
     
-    public function save(Doctrine_Connection $conn = null)  {
+    /*public function save(Doctrine_Connection $conn = null)  {
     
         if (!$this->getId() || $this->getCustomerio()<=0) {
 
@@ -443,7 +443,7 @@ where c.id=
         parent::save($conn);
 
         return $ret;
-    }
+    }*/
 
     // Función publica que devuelve un array con las distancias
     // del vehículo en relacion al metro mas próximo.

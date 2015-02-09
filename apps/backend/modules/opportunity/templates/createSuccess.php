@@ -5,41 +5,58 @@
 
 <div class="row">
     <div class="col-md-12">
-        	<div class="col-md-offset-4 col-md-4">
-            <input class="form-control" id="idReservaOriginal" placeholder="ID reserva original" type="text" onblur="isOriginalReserve()">
+        <div class="col-md-offset-3 col-md-3">
+            <img class="loading" src="/images/ajax-loader.gif">
             <i class="find fa fa-check" id="reserve-check"></i>
             <i class="find fa fa-remove"id="reserve-remove"></i>
-            <img class="loading" src="/images/ajax-loader.gif">
+            <input class="form-control" id="idReservaOriginal" placeholder="ID reserva original" type="text">
             <div class="space-70"></div>
         </div>
 
-        <div>
-            <table class="display responsive no-wrap" id="carsActivesTable" cellspacing="0" width="100%">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Comuna</th>
-                        <th>Marca</th>
-                        <th>Modelo</th>
-                        <th>Año</th>
-                        <th>Transmisión</th>
-                        <th>Precio</th>
-                        <th>Tipo Vehículo</th>
-                        <th>Metro Cercano</th>
-                        <th>Cant. reserva ult. 3 meses</th>
-                        <th>Nombre usuario</th>
-                        <th>Telefono usuario</th>
-                        <th>Crear Oportunidad</th>
-                    </tr>
-                </thead>
-            </table>
+        <div class="col-md-3">
+                <button class="buscar btn btn-block btn-primary" onclick="isOriginalReserve()">Buscar</button>
         </div>
+    </div>
+
+
+    <div class="col-sm-6 col-md-6" id ="filters">
+        <ul>
+            <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
+            <li><input type="checkbox" name="filter" class="isLowConsumption"> Petrolero</li>
+            <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
+        </ul>
+        <div class="space-50"></div>
+    </div>
+
+    <div class="col-md-12">
+        <table class="display responsive no-wrap" id="carsActivesTable" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Comuna</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Año</th>
+                    <th>Transmisión</th>
+                    <th>Precio</th>
+                    <th>Tipo Vehículo</th>
+                    <th>Metro Cercano</th>
+                    <th>Cant. reserva ult. 3 meses</th>
+                    <th>Nombre usuario</th>
+                    <th>Telefono usuario</th>
+                    <th>Crear Oportunidad</th>
+                </tr>
+            </thead>
+            <tbody>            
+            </tbody>
+        </table>
     </div>
 </div>
 <div style="display:none">
     <div id="dialog-alert" title="">
         <p></p>
     </div>
+    <input name="reserveFilter" id="reserveFilter">
 </div>
 
 </div>
@@ -47,22 +64,18 @@
 <div class="hidden-xs space-100"></div>    
 
 <script>
-
-    /*var urlCreate = "<?php echo url_for_frontend('opportunities_approve', array('carId' => 'carIdPattern', 'reserveId' => 'reserveIdPattern')) ?>";*/
     
 	$(document).ready(function() {
- 
-        
-
-        $('#carsActivesTable').hide();
-        $('.loading').hide();  
-        $(".find").hide();   
-
-        /*$('#carsActivesTable').DataTable({
+        $('#carsActivesTable').DataTable({
             info: false,
             paging: true,
             responsive: true
-        });*/
+        });
+        
+        $('.loading').hide();  
+        $(".find").hide();   
+
+        
     });
 
     $(document).on("click", ".opp-approve", function(){
@@ -81,6 +94,18 @@
             if (r.error) {
                 console.log(r.errorMessage);
             } else {
+
+                 $("#dialog-alert p").html("Rerserva creada exitosamente");
+                $("#dialog-alert").attr('title','Reserva Creada!');
+                $("#dialog-alert").dialog({
+                    buttons: [{
+                    text: "Aceptar",
+                    click: function() {
+                        $( this ).dialog( "close" );
+                    }
+                    }]
+                });
+
                 $(this).prop("disabled", false);
             }
 
@@ -89,6 +114,11 @@
             console.log("FAIL");
             console.log(r);
         });
+    });
+
+    $("input[type='checkbox']").change(function(){
+        getActivesCars($("#reserveFilter").val());
+        console.log("asdasd");
     });
 
     function isOriginalReserve() {
@@ -105,9 +135,9 @@
             } else {
             	if (r.original != null) {
 	            	if (r.original) {
-
-                        getActivesCars(idReservaOriginal);
+                        getActivesCars(r.original);
 	            		$("#reserve-check").show();
+                        $("#reserveFilter").val(r.original); 
 
             			if ($("#car-check").is(":visible")) {
             				$("#create").prop("disabled", false);
@@ -124,9 +154,39 @@
 
     function getActivesCars(reserveId) {
 
+
         $(".loading").show();
 
-        $.post("<?php echo url_for('car_get_actives_cars') ?>", {"reserveId": reserveId} , function(r){
+        var isAutomatic = false;
+        $(".isAutomatic").each(function(){
+            if ($(this).is(':checked')) {
+                isAutomatic = true;
+            }
+        });
+        
+        var isLowConsumption = false;
+        $(".isLowConsumption").each(function(){
+            if ($(this).is(':checked')) {
+                isLowConsumption = true;
+            }
+        });
+
+        var isMorePassengers = false;
+        $(".isMorePassengers").each(function(){
+            if ($(this).is(':checked')) {
+                isMorePassengers = true;
+            }
+        });
+
+        var parameters = {
+            "reserveId": reserveId,
+            "isAutomatic" : isAutomatic,
+            "isLowConsumption": isLowConsumption,
+            "isMorePassengers": isMorePassengers
+
+        }
+
+        $.post("<?php echo url_for('car_get_actives_cars') ?>", parameters, function(r){
 
             if (r.error) {
                 console.log(r.errorMessage);

@@ -164,19 +164,15 @@ class carsActions extends sfActions {
             }
 
             if (strtotime($to) < strtotime($from)) {
-                throw new Exception("Error en las horas", 2);
+                throw new Exception("La hora de término debe ser al menos una hora superior a la hora de inicio", 2);
             }
+
+            $Car = Doctrine_Core::getTable("Car")->find($carId);
+            $this->forward404If(!$Car);
 
             $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $carId, false);
             if (!$CarAvailability) {
-
                 $CarAvailability = new CarAvailability();
-
-                $Car = Doctrine_Core::getTable("Car")->find($carId);
-                if (!$Car) {
-                    throw new Exception("No se encuentra el auto. ¿Trampa?", 1);
-                }
-
                 $CarAvailability->setCar($Car);
                 $CarAvailability->setDay($day);
             }
@@ -188,7 +184,10 @@ class carsActions extends sfActions {
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
-            error_log("[".date("Y-m-d H:i:s")."] [cars/availabilitySave] ERROR: ".$e->getMessage());
+            if ($e->getCode() < 2) {
+                $return["errorMessage"] = "Estamos teniendo problemas, pero el equipo técnico ha sido notificado. Por favor, inténtalo nuevamente más adelante";
+            }            
+            error_log("[cars/availabilitySave] ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
                 Utils::reportError($e->getMessage(), "cars/availabilitySave");
             }

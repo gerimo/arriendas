@@ -645,6 +645,93 @@ class reservesActions extends sfActions {
         return sfView::NONE;
     }
 
+    public function executeSuccess (sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+        $customer_in_session = $this->getUser()->getAttribute('userid');
+
+        if ($customer_in_session) {
+            $codigo_pago = null; // FIXME
+            
+            $conf = $this->getConfiguration();
+            $conf = $conf["betterchoice"]["puntopagos"];
+            $enviroment = $conf["enviroment"];
+            $STATE_SUCCESSFULL = $conf[$enviroment]["status_success"];
+            $STATE_ERROR = $conf[$enviroment]["status_error"];
+            $order = Doctrine_Core::getTable("Transaction")->getPendingToShowByUser($customer_in_session);
+            if($order){
+                $last_order_id = $order->getId();
+
+                $this->idReserva = $order->getReserveId();
+                $reserve = Doctrine_Core::getTable('reserve')->findOneById($this->idReserva);
+                
+                $startDate0 = $reserve->getDate();
+                $startDate = date("Y-m-d H:i:s", strtotime($startDate0));
+                $endDate = date("Y-m-d H:i:s", strtotime($startDate0) + ($reserve->getDuration() * 60 * 60));
+
+                $rangeDates = array($startDate, $endDate, $startDate, $endDate, $startDate, $endDate);
+                $carid = $reserve->getCarId();
+
+                $q = Doctrine_Query::create()
+                        ->update('reserve r')
+                        ->set('r.canceled', '?', 1)
+                        ->set('r.visible_renter', '?', 0)
+                        ->set('r.visible_owner', '?', 0)
+                        ->set('r.cancel_reason', '?', 2)
+                        ->where('r.car_id = ?', $carid)
+                        ->andwhere('r.id <> ?', $reserve->getId())
+                        ->andwhere('? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR ? BETWEEN r.date AND DATE_ADD(r.date, INTERVAL r.duration HOUR) OR r.date BETWEEN ? AND ? OR DATE_ADD(r.date, INTERVAL r.duration HOUR) BETWEEN ? AND ?', $rangeDates)
+                        ->execute();
+
+
+                $opcionLiberacion = $reserve->getLiberadoDeGarantia();
+                if ($opcionLiberacion == 0)
+                    $montoLiberacion = 0;
+                else if ($opcionLiberacion == 1)
+                    $montoLiberacion = $reserve->getMontoLiberacion();
+
+                $finalPrice = $order->getPrice() + $montoLiberacion;
+                if ($finalPrice > 0) {
+
+                    $this->_log("Pago", "Exito", "Usuario: " . $customer_in_session . ". Order ID: " . $order->getId());
+                    Doctrine_Core::getTable("Transaction")->successTransaction($last_order_id, $codigo_pago, $STATE_SUCCESSFULL, 1);
+                    
+                    $order->setShowSuccess(true);
+                    $order->save();
+
+
+                    $carId = $reserve->getCarId();
+                    $carClass = Doctrine_Core::getTable('car')->findOneById($carId);
+                    $propietarioId = $carClass->getUserId();
+                    $propietarioClass = Doctrine_Core::getTable('user')->findOneById($propietarioId);
+                    $comunaId = $propietarioClass->getComuna();
+                    $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
+                    
+                    
+                    $this->nameOwner      = $reserve->getNameOwner();
+                    $this->emailOwner     = $reserve->getEmailOwner();
+                    $this->lastnameOwner  = $reserve->getLastnameOwner();
+                    $this->telephoneOwner = $reserve->getTelephoneOwner();
+                    $this->tokenReserve   = $reserve->getToken();
+                    $this->comunaOwner    = $comunaClass->getNombre();
+                    $this->addressOwner   =$propietarioClass->getAddress();
+
+                    $this->durationFrom   = $reserve->getFechaInicio2();
+                    $this->durationTo     = $reserve->getFechaTermino2();
+
+                } else {
+                    echo "No hay compras hechas para ser pagadas (Error de monto invalido)";
+                    $this->_log("Pago", "Error", "Usuario: " . $customer_in_session . ". Order ID: " . $order->getId());
+                    Doctrine_Core::getTable("Transaction")->successTransaction($last_order_id, $token, $STATE_ERROR, 1);
+                }
+                $this->setTemplate('exito');
+            } else{
+                exit; 
+            }
+        } else {
+            $this->redirect('@homepage');
+        }       
+    }
+
     // FUNCIONES PRIVADAS
     private function makeChange ($newActiveReserveId) {
 
@@ -696,5 +783,16 @@ class reservesActions extends sfActions {
         }
 
         return null;
+    }
+
+    protected function getConfiguration() {
+        return sfYaml::load(dirname(dirname(__FILE__)) . "/config/puntopagos.yml");
+    }
+
+    protected function _log($step, $status, $msg) {
+
+        $logPath = sfConfig::get('sf_log_dir') . '/puntopagos.log';
+        $custom_logger = new sfFileLogger(new sfEventDispatcher(), array('file' => $logPath));
+        $custom_logger->info($step . " - " . $status . ". " . $msg);
     }
 }
