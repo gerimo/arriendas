@@ -207,17 +207,20 @@ class khipuActions extends sfActions {
 
                         $Functions = new Functions;
                         $Functions->generarNroFactura($Reserve, $Transaction);
+                        
+                        $Transaction->setCompleted(true);
+                        $Transaction->save();
+
+                        $Reserve->setFechaPago(date("Y-m-d H:i:s"));
+                        $Reserve->save();
+
+                        $mail   = new Email();
+                        $mailer = $mail->getMailer();
 
                         $formulario = $Functions->generarFormulario(NULL, $Reserve->token);
                         $reporte    = $Functions->generarReporte($Reserve->getCar()->id);
                         $contrato   = $Functions->generarContrato($Reserve->token);
                         $pagare     = $Functions->generarPagare($Reserve->token);
-                        
-                        $Transaction->setCompleted(true);
-                        $Transaction->save();
-
-                        $mail   = new Email();
-                        $mailer = $mail->getMailer();
 
                         // Correo dueño
                         $subject = "¡Has recibido un pago! Apruébalo ahora";
@@ -303,7 +306,6 @@ class khipuActions extends sfActions {
 
                             // Actualiza rating_id en la tabla Reserve
                             $ratingId = $Rating->id;
-                            $Reserve->setFechaPago(date("Y-m-d H:i:s"));
                             $Reserve->setRatingId($ratingId);
                             $Reserve->save();
                         }
@@ -316,7 +318,6 @@ class khipuActions extends sfActions {
                         $OpportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findOneByReserve($Reserve);
                         if (!$OpportunityQueue) {
                             $OpportunityQueue = new OpportunityQueue();
-                            $OpportunityQueue->setPaidAt(date("Y-m-d H:i:s"));
                             $OpportunityQueue->setReserve($Reserve);
                             $OpportunityQueue->save();
                         }
