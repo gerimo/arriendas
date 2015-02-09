@@ -25,7 +25,7 @@ class CarTable extends Doctrine_Table {
         return $q->execute();
     }
 
-    public function findCars($from, $to, $limit = 33, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway) {
+    public function findCars($from, $to, $limit = 50, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway) {
 
         $CarsFound = array();
         $isWeekend = false;
@@ -52,16 +52,7 @@ class CarTable extends Doctrine_Table {
                 ->innerJoin('C.Model M')
                 ->Where('C.activo = 1')
                 ->andWhere('C.seguro_ok = 4')
-                ->orderBy('C.price_per_day ASC');
-
-            $MD = new Mobile_Detect;
-            if ($MD->isMobile()) {
-                $q->limit(10);
-            } else {
-                if ($limit) {
-                    $q->limit($limit);
-                }
-            }
+                ->orderBy('C.price_per_day ASC');            
 
             $weekendDays = Utils::isWeekend(true);
             // Si es Feriado o Fin de Semana, se buscan los autos de la tabla CarAvailability
@@ -113,6 +104,10 @@ class CarTable extends Doctrine_Table {
                 $q->andWhere('CPM.distance < ?', $distanceMax);
                 $q->addOrderBy('CPM.distance ASC');
 
+            }
+
+            if ($limit) {
+                $q->limit($limit);
             }
 
             $Cars = $q->execute();
