@@ -35,7 +35,7 @@
     <?php endforeach ?>
 </ul>
 
-<p>Para indicar tu disponibilidad haz <a href='<?php echo url_for('cars') ?>'><strong>click aquí</strong></a>.</p>
+<p>Para indicar tu disponibilidad haz <a href='<?php echo $urlMisAutos ?>'><strong>click aquí</strong></a>.</p>
 
 <p>Se te informará con un mínimo de 3 horas de anticipación para que puedas gestionar la entrega. Tu auto figurará como disponible para el pago, para reservas iniciadas en esos horarios.</p>
 
