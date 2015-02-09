@@ -45,12 +45,11 @@ class mainActions extends sfActions {
 
             $this->referer = $this->getUser()->getAttribute("referer");
 
-            //$userId = $request->getParameter('userId');
-            $userId_session = $this->getUser()->getAttribute("userid");
-            $User = Doctrine_Core::getTable('user')->find($userId_session);
-            
+            $userId = $this->getUser()->getAttribute("userid");
+
+            $User = Doctrine_Core::getTable('User')->find($userId);
             if($User) {
-                if($User->getConfirmed() && !   empty($User->getRut())) {
+                if($User->getConfirmed() && !empty($User->getRut())) {
                     $this->redirect('homepage');
                 } else {
                     $this->Regions = Region::getRegionsByNaturalOrder();
@@ -66,8 +65,8 @@ class mainActions extends sfActions {
                 Utils::reportError($e->getMessage(), "main/completeRegister");
             }
         }
-        return sfView::SUCCESS;
-        
+
+        return sfView::SUCCESS;        
     }
 
     public function executeDataForPayment(sfWebRequest $request){

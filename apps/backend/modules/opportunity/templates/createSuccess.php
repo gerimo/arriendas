@@ -5,37 +5,40 @@
 
 <div class="row">
     <div class="col-md-12">
-        	<div class="col-md-offset-4 col-md-4">
+        <div class="col-md-offset-4 col-md-4">
             <input class="form-control" id="idReservaOriginal" placeholder="ID reserva original" type="text" onblur="isOriginalReserve()">
             <i class="find fa fa-check" id="reserve-check"></i>
             <i class="find fa fa-remove"id="reserve-remove"></i>
             <img class="loading" src="/images/ajax-loader.gif">
             <div class="space-70"></div>
         </div>
-
-        <div>
-            <table class="display responsive no-wrap" id="carsActivesTable" cellspacing="0" width="100%">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Comuna</th>
-                        <th>Marca</th>
-                        <th>Modelo</th>
-                        <th>Año</th>
-                        <th>Transmisión</th>
-                        <th>Precio</th>
-                        <th>Tipo Vehículo</th>
-                        <th>Metro Cercano</th>
-                        <th>Cant. reserva ult. 3 meses</th>
-                        <th>Nombre usuario</th>
-                        <th>Telefono usuario</th>
-                        <th>Crear Oportunidad</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="display responsive no-wrap" id="carsActivesTable" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Comuna</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Año</th>
+                    <th>Transmisión</th>
+                    <th>Precio</th>
+                    <th>Tipo Vehículo</th>
+                    <th>Metro Cercano</th>
+                    <th>Cant. reserva ult. 3 meses</th>
+                    <th>Nombre usuario</th>
+                    <th>Telefono usuario</th>
+                    <th>Crear Oportunidad</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
 <div style="display:none">
     <div id="dialog-alert" title="">
         <p></p>
@@ -48,21 +51,19 @@
 
 <script>
 
-    /*var urlCreate = "<?php echo url_for_frontend('opportunities_approve', array('carId' => 'carIdPattern', 'reserveId' => 'reserveIdPattern')) ?>";*/
-    
-	$(document).ready(function() {
- 
-        
+    $(document).ready(function() {
 
         $('#carsActivesTable').hide();
         $('.loading').hide();  
-        $(".find").hide();   
+        $(".find").hide();
 
-        /*$('#carsActivesTable').DataTable({
+        $('#carsActivesTable').DataTable({
             info: false,
             paging: true,
             responsive: true
-        });*/
+        });
+
+        $("#idReservaOriginal").focus();
     });
 
     $(document).on("click", ".opp-approve", function(){
@@ -95,28 +96,28 @@
 
         var idReservaOriginal = $("#idReservaOriginal").val();
 
-		$("#reserve-check").hide();
- 		$("#reserve-remove").hide();
+        $("#reserve-check").hide();
+        $("#reserve-remove").hide();
 
         $.post("<?php echo url_for('reserve_is_original_reserve') ?>", {"idReservaOriginal": idReservaOriginal}, function(r){
 
-        	if (r.error) {
-           		console.log(r.errorMessage);
+            if (r.error) {
+                console.log(r.errorMessage);
             } else {
-            	if (r.original != null) {
-	            	if (r.original) {
+                if (r.original != null) {
+                    if (r.original) {
 
                         getActivesCars(idReservaOriginal);
-	            		$("#reserve-check").show();
+                        $("#reserve-check").show();
 
-            			if ($("#car-check").is(":visible")) {
-            				$("#create").prop("disabled", false);
-            			}
+                        if ($("#car-check").is(":visible")) {
+                            $("#create").prop("disabled", false);
+                        }
 
-	            	}else {
-	            		$("#reserve-remove").show(); 
-	            	}
-            	}
+                    }else {
+                        $("#reserve-remove").show(); 
+                    }
+                }
             }
 
         }, 'json');
