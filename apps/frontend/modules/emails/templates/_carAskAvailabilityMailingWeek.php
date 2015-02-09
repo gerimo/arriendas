@@ -31,7 +31,7 @@
 
 <ul>
     <?php foreach ($days as $day): ?>
-        <li><?php echo $week[date("N", strtotime($day))]." ".date("j") ?></li>
+        <li><?php echo $week[date("N", strtotime($day))]." ".date("d", strtotime($day)) ?></li>
     <?php endforeach ?>
 </ul>
 

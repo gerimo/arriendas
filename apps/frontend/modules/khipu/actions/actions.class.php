@@ -318,7 +318,7 @@ class khipuActions extends sfActions {
                         $OpportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findOneByReserve($Reserve);
                         if (!$OpportunityQueue) {
                             $OpportunityQueue = new OpportunityQueue();
-                            $OpportunityQueue->setReserve($Reserve);
+                            $OpportunityQueue->setReserveId($Reserve->id);
                             $OpportunityQueue->save();
                         }
                     }
