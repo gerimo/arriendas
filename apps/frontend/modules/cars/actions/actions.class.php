@@ -168,7 +168,7 @@ class carsActions extends sfActions {
             }
 
             $Car = Doctrine_Core::getTable("Car")->find($carId);
-            forward404If(!$Car);
+            $this->forward404If(!$Car);
 
             $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $carId, false);
             if (!$CarAvailability) {
