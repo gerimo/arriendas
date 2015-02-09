@@ -59,7 +59,7 @@ EOF;
 
             $this->log("[".date("Y-m-d H:i:s")."] Buscando autos activos...");
             /*$oCars = Doctrine_Core::getTable("Car")->findCarsActives(false, false, true);*/
-            $oCars = Doctrine_Core::getTable("Car")->findCarsActives(3, false, false); // TODOS
+            $oCars = Doctrine_Core::getTable("Car")->findCarsActives(false, false, false); // TODOS
             $this->log("[".date("Y-m-d H:i:s")."] Autos encontrados: ".count($oCars));
 
             if ($oCars) {
@@ -117,12 +117,15 @@ EOF;
                         $message->setSubject($subject);
                         $message->setBody($body, 'text/html');
                         $message->setFrom($from);
-                        /*$message->setTo($to);*/
-                        $message->setBcc(array(
-                            "cristobal@arriendas.cl" => "Cristóbal Medina Moenne",
-                            "franco.inostrozah@gmail.com" => "Franco Inostroza Hinojoza"
-                            /*"francofre@arriendas.cl" => "Francisca Cofré Ulloa"*/
-                        ));
+                        $message->setTo($to);                        
+
+                        if ($sentEmails == 0) {
+                            $message->setBcc(array(
+                                "cristobal@arriendas.cl" => "Cristóbal Medina Moenne",
+                                /*"franco.inostrozah@gmail.com" => "Franco Inostroza Hinojoza"*/
+                                /*"francofre@arriendas.cl" => "Francisca Cofré Ulloa"*/
+                            ));
+                        }
                         
                         $this->getMailer()->send($message);
 
