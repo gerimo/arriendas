@@ -27,6 +27,7 @@ class CarTable extends Doctrine_Table {
 
     public function findCars($from, $to, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway) {
 
+
         $CarsFound = array();
         $isWeekend = false;
 
@@ -113,9 +114,13 @@ class CarTable extends Doctrine_Table {
 
             }
 
+
             $Cars = $q->execute();
 
+
+
             foreach ($Cars as $i => $Car) {
+
                 if (!$Car->hasReserve(date("Y-m-d H:i:s", strtotime($from)), date("Y-m-d H:i:s", strtotime($to)))) {
 
                     $count = 1;
@@ -141,7 +146,13 @@ class CarTable extends Doctrine_Table {
                         'count' => $count,
                         'nearestMetroDistance' => round($CarProximityMetro->distance, 1),
                         'nearestMetroName' => $CarProximityMetro->getMetro()->name,
-                        'fecha_subida' =>$Car->fecha_subida
+                        'fecha_subida' =>$Car->fecha_subida,
+                        'type' => $Car->getModel()->getCarType()->name,
+                        'comunne' =>$Car->getCommune()->name,
+                        'QuantityOfLatestRents' =>$Car->getQuantityOfLatestRents(),
+                        'user_name' =>$Car->getUser()->firstname." ".$Car->getUser()->lastname,
+                        'user_telephone' => $Car->getUser()->telephone
+
                     );
 
                     $count++;
