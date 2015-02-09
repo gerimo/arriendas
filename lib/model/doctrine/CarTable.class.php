@@ -25,8 +25,7 @@ class CarTable extends Doctrine_Table {
         return $q->execute();
     }
 
-    public function findCars($from, $to, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway) {
-
+    public function findCars($from, $to, $limit = 33, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway) {
 
         $CarsFound = array();
         $isWeekend = false;
@@ -59,7 +58,9 @@ class CarTable extends Doctrine_Table {
             if ($MD->isMobile()) {
                 $q->limit(10);
             } else {
-                $q->limit(33);
+                if ($limit) {
+                    $q->limit($limit);
+                }
             }
 
             $weekendDays = Utils::isWeekend(true);
@@ -114,10 +115,7 @@ class CarTable extends Doctrine_Table {
 
             }
 
-
             $Cars = $q->execute();
-
-
 
             foreach ($Cars as $i => $Car) {
 
@@ -130,7 +128,7 @@ class CarTable extends Doctrine_Table {
                     $CarsFound[] = array(
                         'id' => $Car->id,
                         'latitude' => $Car->lat,
-                        'longitude' => $Car->lng,                        
+                        'longitude' => $Car->lng,
                         /*'commune' => $Car->getCommune()->name,*/
                         'brand' => $Car->getModel()->getBrand()->name,
                         'model' => $Car->getModel()->name,
@@ -152,7 +150,6 @@ class CarTable extends Doctrine_Table {
                         'QuantityOfLatestRents' =>$Car->getQuantityOfLatestRents(),
                         'user_name' =>$Car->getUser()->firstname." ".$Car->getUser()->lastname,
                         'user_telephone' => $Car->getUser()->telephone
-
                     );
 
                     $count++;

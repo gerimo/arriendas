@@ -18,15 +18,13 @@ class carActions extends sfActions {
             $isLowConsumption   = $request->getPostParameter('isLowConsumption', false) === 'true' ? true : false;
             $isMorePassengers   = $request->getPostParameter('isMorePassengers', false) === 'true' ? true : false;
 
-
 	        $Reserve    = Doctrine_Core::getTable('Reserve')->find($reserveId);
-	        $Cars       = Doctrine_Core::getTable('Car')->findCars($Reserve->getFechaInicio2(), $Reserve->getFechaTermino2(), false, false, false, false, false, 13, false, $isAutomatic, $isLowConsumption, $isMorePassengers, false);
+	        $Cars       = Doctrine_Core::getTable('Car')->findCars($Reserve->getFechaInicio2(), $Reserve->getFechaTermino2(), 50, false, false, false, false, false, 13, false, $isAutomatic, $isLowConsumption, $isMorePassengers, false);
 
 	        $return["data"] = array();
 	        
 	        foreach ($Cars as $i => $Car) {
 	            $return["data"][$i] = array(
-
 	                "car_id"       		   => $Car['id'],
 	                "car_commune"   	   => $Car['comunne'],
 	                "car_brand"  		   => $Car['brand'],

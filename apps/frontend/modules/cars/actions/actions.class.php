@@ -218,7 +218,6 @@ class carsActions extends sfActions {
         $isMorePassengers   = $request->getPostParameter('isMorePassengers', false) === 'true' ? true : false;
         $nearToSubway       = $request->getPostParameter('nearToSubway', false) === 'true' ? true : false;
 
-
         try {
 
             $this->getUser()->setAttribute('from', date("Y-m-d H:i:s", strtotime($from)));
@@ -226,7 +225,7 @@ class carsActions extends sfActions {
             $this->getUser()->setAttribute("mapCenterLat", $mapCenterLat);
             $this->getUser()->setAttribute("mapCenterLng", $mapCenterLng);
 
-            $return["cars"] = CarTable::findCars($from, $to, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway);
+            $return["cars"] = CarTable::findCars($from, $to, 33, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway);
             /*error_log("Autos encontrados: ".count($return["cars"]));*/
 
         } catch (Exception $e) {
