@@ -498,7 +498,9 @@ class reservesActions extends sfActions {
 
                     $nodeCount = count($crawler->filter('.extdt-cell-div'));
                     if ($nodeCount > 1) {
-                        $User->setBloqueado("Bloqueado por poseer antedecentes judiciales, verificado antes de efectuar el pago.");
+                        $User->setChequeoJudicial(true);
+                        $User->setBlocked(true);
+                        $User->setBloqueado("Se ha bloqueado al usuario antes de efectuar la reseerva, por poseer antecedentes judiciales.");
                     } else {
                         $User->setChequeoJudicial(true);
                         $User->save();
@@ -566,6 +568,7 @@ class reservesActions extends sfActions {
             
             $Transaction->save();
 
+            $UnverifiedMail = true;
             if($UnverifiedMail) {
                 $mail    = new Email();
                 $mailer  = $mail->getMailer();
