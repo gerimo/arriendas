@@ -108,7 +108,7 @@ EOF;
                             'urlAllAva' => $urlAllAva,
                             'urlOneAva' => $urlOneAva,
                             'urlCusAva' => $urlCusAva,
-                            'urlMisAutos' => $routing->generate('cars');
+                            'urlMisAutos' => $routing->generate('cars')
                         ));
                         $from  = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
                         $to    = array($oCar->getUser()->email => $oCar->getUser()->firstname." ".$oCar->getUser()->lastname);
