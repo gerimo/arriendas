@@ -181,7 +181,7 @@
                 $(".alert").addClass("alert-a-danger");
                 $(".alert").html(r.errorMessage);
             } else {
-                if(referer != "http://local.arriendas.cl/") {
+                if(referer != "http://www.arriendas.cl/" && referer != "https://www.arriendas.cl/" ) {
                     console.error(referer);
                     window.location.href = referer;
                 } else {
