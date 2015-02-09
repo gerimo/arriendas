@@ -226,7 +226,11 @@
             "isActive": isActive
         }
 
-        $.post("<?php echo url_for('car_set_active') ?>", parameters);
+        $.post("<?php echo url_for('car_set_active') ?>", parameters, function(r){
+            if (!r.error) {
+                location.reload();
+            }
+        });
     });
 
     $(".disabled-until").change(function() {
