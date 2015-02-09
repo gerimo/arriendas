@@ -202,6 +202,8 @@ class carsActions extends sfActions {
 
         $return = array("error" => false);
 
+        $limit = 33;
+
         $isMap              = $request->getPostParameter('isMap', true) === 'true' ? true : false;
         $mapCenterLat       = (float) $request->getPostParameter('mapCenterLat', null);
         $mapCenterLng       = (float) $request->getPostParameter('mapCenterLng', null);
@@ -218,7 +220,6 @@ class carsActions extends sfActions {
         $isMorePassengers   = $request->getPostParameter('isMorePassengers', false) === 'true' ? true : false;
         $nearToSubway       = $request->getPostParameter('nearToSubway', false) === 'true' ? true : false;
 
-
         try {
 
             $this->getUser()->setAttribute('from', date("Y-m-d H:i:s", strtotime($from)));
@@ -226,7 +227,12 @@ class carsActions extends sfActions {
             $this->getUser()->setAttribute("mapCenterLat", $mapCenterLat);
             $this->getUser()->setAttribute("mapCenterLng", $mapCenterLng);
 
-            $return["cars"] = CarTable::findCars($from, $to, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway);
+            $MD = new Mobile_Detect;
+            if ($MD->isMobile()) {
+                $limit = 5;
+            }
+
+            $return["cars"] = CarTable::findCars($from, $to, $limit, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway);
             /*error_log("Autos encontrados: ".count($return["cars"]));*/
 
         } catch (Exception $e) {
