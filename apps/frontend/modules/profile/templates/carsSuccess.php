@@ -211,7 +211,12 @@
             "day": day
         };
 
-        $.post("<?php echo url_for('car_availability_remove') ?>", parameters);
+        $.post("<?php echo url_for('car_availability_remove') ?>", parameters, function(r){
+            if (!r.error) {
+                from.val("");
+                to.val("");
+            }
+        });
     });
 
     $(".selectorActivo").change(function() {
