@@ -33,7 +33,7 @@
     <li>Si puedes recibir clientes en horarios específicos, has <a href='<?php echo $urlCusAva ?>'>click aquí</a>.</li>
 </ul>
 
-<!-- <p>Se te informará con un mínimo de 3 horas de anticipación para que puedas gestionar la entrega. Tu auto figurará como disponible para el pago, para reservas iniciadas en esos horarios.</p> -->
+<p>Se te informará con un mínimo de 3 horas de anticipación para que puedas gestionar la entrega. Tu auto figurará como disponible para el pago, para reservas iniciadas en esos horarios.</p>
 
 <?php include_partial("emails/footer", array("userId" => $Owner->id, "mailingId" => 2)) ?>
 
