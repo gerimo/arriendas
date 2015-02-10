@@ -166,6 +166,7 @@ EOF;
                     }
 
                     $OpportunityQueue->setIteration($OpportunityQueue->getIteration() + 1);
+                    $OpportunityQueue->setLastIterationAt(date("Y-m-d H:i:s"));
                     $OpportunityQueue->save();
                 }
             }
