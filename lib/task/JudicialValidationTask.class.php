@@ -37,11 +37,7 @@ EOF;
         // $rut = substr($run, 0, -1)."-".substr($run, -1);
         $userid = $options["user"];
 
-        echo "verificando...\n";
-
-        $mail    = new Email();
-        $mailer  = $mail->getMailer();
-        $message = $mail->getMessage();            
+        echo "verificando...\n";       
 
         $profile = Doctrine_Core::getTable('User')->find($userid);
         $scraperSrv = new ScraperService();
@@ -63,6 +59,10 @@ EOF;
                 $message->setTo('soporte@arriendas.cl');
                 $message->setBody($messageBody, "text/html");
                 $this->getMailer()->send($message); */
+                
+                $mail    = new Email();
+                $mailer  = $mail->getMailer();
+                $message = $mail->getMessage();     
 
                 $subject = "¡No se pudo verificar si contaba con causas judiciales!";
                 $body    = $this->getPartial('emails/notificationOfJudicialVerification', array('User' => $profile));
@@ -101,6 +101,10 @@ EOF;
                 $message->setTo('soporte@arriendas.cl');
                 $message->setBody($messageBody, "text/html");
                 $this->getMailer()->send($message);*/
+
+                $mail    = new Email();
+                $mailer  = $mail->getMailer();
+                $message = $mail->getMessage(); 
 
                 $subject = "¡El usuario fué bloqueado por poseer causas judiciales!";
                 $body    = $this->getPartial('emails/notificationOfJudicialVerification', array('User' => $profile));
