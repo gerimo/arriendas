@@ -172,7 +172,7 @@ class opportunitiesActions extends sfActions {
         }
 
         $O = $OriginalReserve->copy(true);
-        $O->setCarId($carId);
+        $O->setCar($Car);
         $O->setFechaReserva(date("Y-m-d H:i:s"));
         $O->setFechaConfirmacion(date("Y-m-d H:i:s"));
         $O->setConfirmed(true);
