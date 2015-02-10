@@ -80,7 +80,7 @@ class carsActions extends sfActions {
 
             $CarAvailabilityEmail = Doctrine_Core::getTable('CarAvailabilityEmail')->find($request->getParameter('id'));
 
-            if (is_null($CarAvailabilityEmail->getOpenedAt())) {
+            if ($CarAvailabilityEmail && is_null($CarAvailabilityEmail->getOpenedAt())) {
                 $CarAvailabilityEmail->setOpenedAt(date("Y-m-d H:i:s"));
                 $CarAvailabilityEmail->save();
             }
