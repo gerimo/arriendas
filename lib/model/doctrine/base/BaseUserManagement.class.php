@@ -10,18 +10,21 @@
  * @property Management $management
  * @property string $commnet
  * @property timestamp $created_at
+ * @property boolean $is_deleted
  * 
  * @method integer              getId()                Returns the current record's "id" value
  * @method User                 getUser()              Returns the current record's "User" value
  * @method Management           getManagement()        Returns the current record's "Management" value
  * @method string               getComment()           Returns the current record's "comment" value
  * @method timestamp            getCreatedAt()         Returns the current record's "created_at" value 
+ * @method bolean               getIsDeleted()         Returns the current record's "is_deleted" value 
  *
  * @method UserManagement       setId()                Sets the current record's "id" value
  * @method UserManagement       setUser()              Sets the current record's "User" value
  * @method UserManagement       setManagement()        Sets the current record's "Management" value
  * @method UserManagement       setComment()           Sets the current record's "comment" value
  * @method UserManagement       setCreatedAt()         Sets the current record's "created_at" value
+ * @method UserManagement       setIsDeleted()         Sets the current record's "is_deleted" value
  * 
  * @package    UserManagementSharing
  * @subpackage model
@@ -57,6 +60,10 @@ abstract class BaseUserManagement extends sfDoctrineRecord {
 
         $this->hasColumn('created_at', 'timestamp', null, array(
              'type' => 'timestamp',
+        ));
+
+        $this->hasColumn('is_deleted', 'boolean', null, array(
+            "default" => false
         ));
 
         $this->index('id_UNIQUE', array(
