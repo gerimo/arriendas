@@ -47,15 +47,20 @@
     </tr>
     <tr>
         <th style='text-align: left'>Fecha de término</th>
-        <td><?php echo $Reserve->getFechaTermino() ?></td>
+        <td><?php echo $Reserve->getFechaTermino2() ?></td>
     </tr>
     <tr>
         <th style='text-align: left'>Duración</th>
         <td><?php echo $Reserve->duration?></td>
     </tr>
     <tr>
-        <th style='text-align: left'>Garantía</th>
-        <td><?php echo $Reserve->getMontoLiberacion() ?></td>
+        <?php if ($Reserve->getLiberadoDeGarantia()): ?>
+            <th style='text-align: left'>Liberación garantía</th>
+            <td>$<?php echo number_format($Reserve->getMontoLiberacion(), 0, ',', '.') ?></td>
+        <?php else: ?>
+            <th style='text-align: left'>Depósito garantía</th>
+            <td>$<?php echo number_format(180000, 0, ',', '.') ?></td>
+        <?php endif ?>
     </tr>
     
 </table>
@@ -72,7 +77,7 @@
     </tr>
     <tr>
         <th style='text-align: left'>Precio</th>
-        <td><?php echo $Transaction->price ?></td>
+        <td>$<?php echo number_format($Transaction->price, 0, ',', '.') ?></td>
     </tr>
     
 </table>
