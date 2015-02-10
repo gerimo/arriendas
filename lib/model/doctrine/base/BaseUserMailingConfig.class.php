@@ -63,7 +63,7 @@ abstract class BaseUserMailingConfig extends sfDoctrineRecord {
         ));
 
         $this->index('fk_UserMailingConfig_Mailing', array(
-            'fields' => array(0 => 'user_id'),
+            'fields' => array(0 => 'mailing_id'),
         ));
 
         $this->option('charset', 'utf8');
