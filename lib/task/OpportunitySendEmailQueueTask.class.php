@@ -6,7 +6,7 @@ class OpportunitySendEmailQueueTask extends sfBaseTask {
 
         $this->addOptions(array(
             new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name', 'frontend'),
-            new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
+            new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'local'),
             new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine')
         ));
 
@@ -36,9 +36,10 @@ EOF;
 
         try {
 
+            $host = 'http://local.arriendas.cl';
             if ($options['env'] == 'dev') {
-                $host = 'http://local.arriendas.cl';
-            } else {
+                $host = 'http://dev.arriendas.cl';
+            } elseif ($options['env'] == 'prod') {
                 $host = 'http://www.arriendas.cl';
             }
 
