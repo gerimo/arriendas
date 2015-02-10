@@ -54,8 +54,10 @@ class emailsActions extends sfActions {
 
             $UserMailingConfig->setIsSubscribed(false);
             $UserMailingConfig->save();
-            error_log("suscripcion cancelada");
+            
             $this->message = "Suscripción cancelada";
+
+            error_log("[emails/unsubscribe] Suscripcion cancelada para User ".$User->id);
 
         } catch (Exception $e) {
             $this->isError = true;

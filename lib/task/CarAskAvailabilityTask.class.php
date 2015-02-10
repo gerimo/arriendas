@@ -87,7 +87,7 @@ EOF;
 
                     $oOwner = $oCar->getUser();
 
-                    $oUserMailingConfig = Doctrine_Core::getTable('UserMailingConfig')->findOneByUserIdAndMailingIdAndIsASubscribed($oOwner->id, $oMailing->id, false);
+                    $oUserMailingConfig = Doctrine_Core::getTable('UserMailingConfig')->findOneByUserIdAndMailingIdAndIsSubscribed($oOwner->id, $oMailing->id, false);
                     if ($oUserMailingConfig) {
                         $this->log("[".date("Y-m-d H:i:s")."] User ".$oOwner->id." ya no esta suscrito. Omitiendo...");
                         $unsubscribeUser++;
