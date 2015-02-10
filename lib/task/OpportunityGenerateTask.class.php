@@ -48,7 +48,7 @@ EOF;
 
             $OpportunitiesQueue = $q->execute();
 
-            if (in_array($options["env"], array("local", "dev")) {
+            if (in_array($options["env"], array("local", "dev"))) {
                 error_log("Max I: ".$maxIterations);
                 error_log("KM per I: ".$kmPerIteration);
                 error_log("Ex. time: ".$exclusivityTime);
