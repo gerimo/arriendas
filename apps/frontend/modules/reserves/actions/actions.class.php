@@ -516,6 +516,7 @@ class reservesActions extends sfActions {
             }
         } catch(Exception $e) {
             error_log("[".date("Y-m-d H:i:s")."] [reserves/pay] Verificacion judicial".$e->getMessage());
+            $UnverifiedMail = true;
         }// Chequeo judicial
 
 
