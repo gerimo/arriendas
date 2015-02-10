@@ -60,7 +60,7 @@ EOF;
 
             $this->log("[".date("Y-m-d H:i:s")."] Buscando autos activos...");
             /*$oCars = Doctrine_Core::getTable("Car")->findCarsActives(false, false, true);*/
-            $oCars = Doctrine_Core::getTable("Car")->findCarsActives(1, false, false); // TODOS
+            $oCars = Doctrine_Core::getTable("Car")->findCarsActives(false, false, false); // TODOS
             $this->log("[".date("Y-m-d H:i:s")."] Autos encontrados: ".count($oCars));
 
             if ($oCars) {
@@ -87,7 +87,7 @@ EOF;
 
                     $oOwner = $oCar->getUser();
 
-                    $oUserMailingConfig = Doctrine_Core::getTable("UserMailingConfig")->findOneByUserIdAndMailingIdAndIsASubscribed($oOwner->id, $oMailing->id, false);
+                    $oUserMailingConfig = Doctrine_Core::getTable('UserMailingConfig')->findOneByUserIdAndMailingIdAndIsSubscribed($oOwner->id, $oMailing->id, false);
                     if ($oUserMailingConfig) {
                         $this->log("[".date("Y-m-d H:i:s")."] User ".$oOwner->id." ya no esta suscrito. Omitiendo...");
                         $unsubscribeUser++;
