@@ -75,7 +75,7 @@ EOF;
                 $from    = array("soporte@arriendas.cl" => "Oportunidades Arriendas.cl");
                 $to      = array($Owner->email => $Owner->firstname." ".$Owner->lastname);
 
-                $this->log("[".date("Y-m-d H:i:s")."] Enviando a ".$Owner->firstname." ".$Owner->lastname);
+                /*$this->log("[".date("Y-m-d H:i:s")."] Enviando a ".$Owner->firstname." ".$Owner->lastname);*/
                 /*$this->log("[".date("Y-m-d H:i:s")."] URL Apertura".$imageUrl);*/
                 /*$this->log("[".date("Y-m-d H:i:s")."] URL Aprobacion".$acceptUrl);*/
 
