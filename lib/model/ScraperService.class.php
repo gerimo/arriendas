@@ -126,6 +126,7 @@ class ScraperService {
             return $status;
 
         } catch(Exception $e) {
+            error_log("[".date("Y-m-d H:i:s")."] [ScraperService/getCausasJudicialesStatus] ".$e->getMessage());
             return 0;
         }
     }
