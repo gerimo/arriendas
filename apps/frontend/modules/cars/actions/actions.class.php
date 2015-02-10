@@ -407,8 +407,8 @@ class carsActions extends sfActions {
     public function executeCreate(sfWebRequest $request){
 
         $referer = $this->getContext()->getActionStack()->getSize() > 1 ? $request->getUri() : $request->getReferer();
-
-        if($referer == "http://local.arriendas.cl/registro/completar") {
+        $action = $this->context->getActionName();
+        if($action == 'create') {
             $User = Doctrine_Core::getTable("user")->find($this->getUser()->getAttribute("userid"));
                 if($User) {
                     $User->setPropietario(true);

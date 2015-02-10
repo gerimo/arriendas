@@ -83,7 +83,7 @@
 </div>
 
 <!-- Div mensaje desplegable -->
-<div class="row">
+<!-- <div class="row">
     <div class="col-md-offset-1 col-md-10">
         <div class="BCW" id="message" style="display: none">
                 <p class="text-center final-ask"></p>
@@ -93,7 +93,7 @@
                 </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <div class="hidden-xs space-100"></div>
 
@@ -181,15 +181,18 @@
                 $(".alert").addClass("alert-a-danger");
                 $(".alert").html(r.errorMessage);
             } else {
-                if(referer != "http://local.arriendas.cl/") {
+
+                location.href="<?php echo url_for('message_register_success') ?>"
+                /*if(referer != "http://local.arriendas.cl/") {
                     console.error(referer);
                     window.location.href = referer;
                 } else {
+
                     $("#message p:first-child").html(r.message);
                     $("#message").removeAttr("style");
                     $("#frm").css("display", "none");
                     window.scrollTo(0, 0);
-                }
+                }*/
             }
 
         }, 'json');

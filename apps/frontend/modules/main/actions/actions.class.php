@@ -135,6 +135,11 @@ class mainActions extends sfActions {
         return sfView::NONE;
     }
 
+     public function executeMessageRegister(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+        
+    }
+
     public function executeDoCompleteRegister(sfWebRequest $request) {
         
         $return = array("error" => false);

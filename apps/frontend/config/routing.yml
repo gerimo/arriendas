@@ -122,6 +122,10 @@ messages_inbox:
     url: /mis-mensajes
     param: { module: messages, action: inbox }
 
+message_register_success:
+    url: /registro/exitoso
+    param: { module: main , action: messageRegister }
+    
 news:
     url: /arrienda-en-las-noticias
     param: { module: main , action: news }

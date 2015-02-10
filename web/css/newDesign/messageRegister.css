@@ -1,0 +1,17 @@
+body {
+    background-image: url('/images/newDesign/background.jpg');
+}
+
+.contenido h2{
+	color:#EC008C;
+	font-size:300 16px;
+}
+.hacer{
+	font-size: 16px;
+	/*color:#ba135f*/
+}
+.BCW h1 {
+   color: #ba135f;
+   text-align: center;
+   font-weight: 500;
+}
