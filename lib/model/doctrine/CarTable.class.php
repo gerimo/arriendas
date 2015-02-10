@@ -25,10 +25,8 @@ class CarTable extends Doctrine_Table {
         return $q->execute();
     }
 
-    public function findCars($from, $to, $limit = 50, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway) {
-
+    public function findCars($from, $to, $limit = 50, $withAvailability,$isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway) {
         $CarsFound = array();
-        $isWeekend = false;
 
         /*error_log("FROM: ".$from);
         error_log("TO: ".$to);
@@ -54,14 +52,15 @@ class CarTable extends Doctrine_Table {
                 ->andWhere('C.seguro_ok = 4')
                 ->orderBy('C.price_per_day ASC');            
 
-            $weekendDays = Utils::isWeekend(true);
             // Si es Feriado o Fin de Semana, se buscan los autos de la tabla CarAvailability
-            if ($weekendDays) {
+            if ($withAvailability) {
+                $weekendDays = Utils::isWeekend($withAvailability);
                 if (in_array(date("Y-m-d", strtotime($from)), $weekendDays)) {
                     $q->innerJoin("C.CarAvailabilities CA");
                     $q->andWhere("CA.is_deleted IS FALSE");
                     $q->andWhere("CA.day = ?", date("Y-m-d", strtotime($from)));
                     $q->andWhere('? BETWEEN CA.started_at AND CA.ended_at', date("H:i:s", strtotime($from)));
+
                 }
             }
 
