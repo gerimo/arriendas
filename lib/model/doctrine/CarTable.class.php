@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 class CarTable extends Doctrine_Table {
 
@@ -55,6 +55,8 @@ class CarTable extends Doctrine_Table {
             // Si es Feriado o Fin de Semana, se buscan los autos de la tabla CarAvailability
             if ($withAvailability) {
                 $weekendDays = Utils::isWeekend(true);
+                error_log("Dias ".count($weekendDays));
+                error_log("from ".date("Y-m-d", strtotime($from)));
                 if (in_array(date("Y-m-d", strtotime($from)), $weekendDays)) {
                     $q->innerJoin("C.CarAvailabilities CA");
                     $q->andWhere("CA.is_deleted IS FALSE");
