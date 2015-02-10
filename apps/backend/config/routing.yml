@@ -17,6 +17,10 @@ comment:
     url: /comentario/:userId/:managementId
     param: { module: main, action: comment }
 
+commentDelete:
+    url: /comentario/eliminar
+    param: { module: main, action: commentDelete }
+
 commentDo:
     url: /comentario/hacer
     param: { module: main, action: commentDo }
