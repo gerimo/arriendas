@@ -85,7 +85,7 @@ EOF;
                 $message->setFrom($from);
                 /*$message->setTo($to);*/
                 $message->setBcc(array(
-                    "cristobal@arriendas.cl" => "Cristóbal Medina Moenne"
+                    "cristobal@arriendas.cl" => "Cristóbal Medina Moenne",
                     "francoinostrozah@gmail.com" => "Franco Inostroza Hinojosa"
                 ));
                 
