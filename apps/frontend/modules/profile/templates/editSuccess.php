@@ -68,13 +68,23 @@
                     <input class="form-control" id="emailAgain" name="emailAgain" placeholder="Repetir correo electrónico" value="<?php if($User->getEmail()) echo $User->getEmail() ?>" type="hidden">
                 <?php endif ?>
 
-                <div class="form-inline clearfix">
-                    <select class="form-control" name="foreign" id="foreign">
-                        <option value="0" <?php echo $User->getExtranjero() == 0 ? "selected" : ""; ?> >Tengo RUT Chileno - I have chilean RUT number</option>
-                        <option value="1" <?php echo $User->getExtranjero() == 1 ? "selected" : ""; ?> >No tengo RUT - I don't have chilean RUT number</option>
-                    </select>
-                    <input class="form-control" id="run" name="run" placeholder="RUT" value="<?php if ($User->getRut()) echo $User->getRutFormatted() ?>" type="text">
-                </div>
+                <?php if ($User->getExtranjero()): ?>
+                    <div class="form-inline clearfix">
+                        <select class="form-control" name="foreign" id="foreign">
+                            <option value="0" <?php echo $User->getExtranjero() == 0 ? "selected" : ""; ?> >Tengo RUT Chileno - I have chilean RUT number</option>
+                            <option value="1" <?php echo $User->getExtranjero() == 1 ? "selected" : ""; ?> >No tengo RUT - I don't have chilean RUT number</option>
+                        </select>
+                        <input class="form-control" id="run" name="run" placeholder="RUT" value="<?php if ($User->getRut()) echo $User->getRutFormatted() ?>" type="text">
+                    </div>
+                <?php else: ?>
+                    <div class="form-inline clearfix">
+                        <select class="form-control" disabled name="foreign" id="foreign">
+                            <option value="0" <?php echo $User->getExtranjero() == 0 ? "selected" : ""; ?> >Tengo RUT Chileno - I have chilean RUT number</option>
+                            <option value="1" <?php echo $User->getExtranjero() == 1 ? "selected" : ""; ?> >No tengo RUT - I don't have chilean RUT number</option>
+                        </select>
+                        <input class="form-control" id="run" disabled name="run" value="<?php if ($User->getRut()) echo $User->getRutFormatted() ?>" type="text">
+                    </div>
+                <?php endif ?>
 
                 <input class="form-control" name="telephone" id="telephone" placeholder="Teléfono" value="<?php if ($User->getTelephone()) echo $User->getTelephone() ?>" title="Celular" type="text">
 
@@ -147,6 +157,11 @@
         <p></p>
     </div>
 </div>
+<div style="display:none">
+    <div id="dialog-alert" title="">
+        <p></p>
+    </div>
+</div>
 
 <div class="hidden-xs space-100"></div>
 
@@ -157,14 +172,12 @@
         imageUpload('#formmain', '#filemain', '#previewmain','#linkmain');       
         imageUpload('#formlicense', '#filelicense', '#previewlicense','#linklicense');
 
-        //establece al campo run como disabled si la persona indica que no tiene rut
+        // establece al campo run como disabled si la persona indica que no tiene rut
         var foreign = $("#foreign").val();
         if(foreign > 0){  
             $('#run').val('');
             $('#run').attr('disabled', true);
             $("#run").parent("label").find("span").text('');
-        } else {
-            $('#run').attr('disabled', false);
         }
 
     });
@@ -233,7 +246,6 @@
     // establece al campo run como disabled si la persona indica que no tiene rut
     $("#foreign").change(function(){
         var foreign = $(this).val();
-        $('#run').val('');
         if(foreign > 0){  
             $('#run').val('');
             $('#run').attr('disabled', true);
@@ -272,20 +284,46 @@
             "commune": commune
         }
 
-        $.post("<?php echo url_for('profile/doEdit') ?>", parameters, function(r){
+        $("#dialog-alert").html("Si defines un rut, ya no podrás volver a modificarlo. <br>¿Estas seguro que quieres continuar?");
 
-            $(".alert").removeClass("alert-a-danger");
-            $(".alert").removeClass("alert-a-success");
+        $("#dialog-alert").dialog({
+            closeOnText: true,
+            modal: true,
+            resizable: true,
+            title: "Editar perfil",
+            width: "30%",
+            buttons: [
+                {
+                    text: "Cancelar",
+                    click: function() {
+                        $( this ).dialog( "close" );
+                    }
+                },
+                {
+                    text: "Aceptar",
+                    click: function() {
+                        $.post("<?php echo url_for('profile/doEdit') ?>", parameters, function(r){
 
-            if (r.error) {
-                $(".alert").addClass("alert-a-danger");
-                $(".alert").html(r.errorMessage);
-            } else {
-                $(".alert").addClass("alert-a-success");
-                $(".alert").html("Cambios guardados satisfactoriamente");
-            }
+                            $(".alert").removeClass("alert-a-danger");
+                            $(".alert").removeClass("alert-a-success");
 
-        }, 'json');
+                            if (r.error) {
+                                $(".alert").addClass("alert-a-danger");
+                                $(".alert").html(r.errorMessage);
+                            } else {
+                                if(foreign==0){
+                                    $('#foreign').attr('disabled', true);
+                                }
+                                $('#run').attr('disabled', true);
+                                $(".alert").addClass("alert-a-success");
+                                $(".alert").html("Cambios guardados satisfactoriamente");
+                            }
+                        }, 'json');     
+                        $( this ).dialog( "close" );               
+                    }
+                }
+            ]
+        });
     }
 
     $('.datetimepicker').datetimepicker({

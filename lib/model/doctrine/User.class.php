@@ -1627,13 +1627,16 @@ class User extends BaseUser {
 
     public static function rutExist($rut) {
 
-        $m = Doctrine_Core::getTable("user")->findOneByRut($rut);
+        $Users = Doctrine_Core::getTable("user")->findByRut($rut);
+
+        return count($Users);
+        /*$m = Doctrine_Core::getTable("user")->findOneByRut($rut);
         
         if($m){
             return true;
         }
 
-        return false;
+        return false;*/
     }
 
     public static function userExist($id) {

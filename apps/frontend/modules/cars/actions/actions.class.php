@@ -199,7 +199,6 @@ class carsActions extends sfActions {
     }
 
     public function executeSearch(sfWebRequest $request) {
-
         $return = array("error" => false);
 
         $limit = 33;
@@ -232,7 +231,12 @@ class carsActions extends sfActions {
                 $limit = 5;
             }
 
-            $return["cars"] = CarTable::findCars($from, $to, $limit, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway);
+            $withAvailability = false;
+            if (Utils::isWeekend()) {
+                $withAvailability = true;
+            }
+
+            $return["cars"] = CarTable::findCars($from, $to, $limit, $withAvailability, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway);
             /*error_log("Autos encontrados: ".count($return["cars"]));*/
 
         } catch (Exception $e) {
@@ -328,7 +332,7 @@ class carsActions extends sfActions {
         return sfView::NONE;
     }
 
-    public function executeSetOption(sfWebRequest $request){
+    public function executeSetOption(sfWebRequest $request) {
 
         $return = array("error" => false);
 
@@ -374,7 +378,7 @@ class carsActions extends sfActions {
     ///////////////////////
 
     /*editar auto*/   
-    public function executeEdit(sfWebRequest $request){
+    public function executeEdit(sfWebRequest $request) {
         $this->setLayout("newIndexLayout");
 
         $carId          = $request->getParameter("id", null);
@@ -402,18 +406,16 @@ class carsActions extends sfActions {
         $this->day   = round($priceDay,-2);
         $this->week  = round((($priceDay * 7)*0.9),-2);
         $this->hour  = round(($priceDay/6),-2);
-        $this->month = round((($priceDay * 30) * 0.7),-2);
-
-        
+        $this->month = round((($priceDay * 30) * 0.7),-2); 
     }
 
     /*Crear auto vista 1*/    
     
-    public function executeCreate(sfWebRequest $request){
+    public function executeCreate(sfWebRequest $request) {
 
         $referer = $this->getContext()->getActionStack()->getSize() > 1 ? $request->getUri() : $request->getReferer();
-
-        if($referer == "http://www.arriendas.cl/registro/completar" || $referer == "https://www.arriendas.cl/registro/completar") {
+        $action = $this->context->getActionName();
+        if($action == 'create') {
             $User = Doctrine_Core::getTable("user")->find($this->getUser()->getAttribute("userid"));
                 if($User) {
                     $User->setPropietario(true);
@@ -603,8 +605,6 @@ class carsActions extends sfActions {
 
             $this->getUser()->setAttribute("carId", $Car->getId());
 
-            
-
             $url = $this->generateUrl('car_price');
             $return["url_complete"] = $url;
 
@@ -618,7 +618,7 @@ class carsActions extends sfActions {
         return sfView::NONE;
     }
 
-    public function executeGetValidatePatent(sfWebRequest $request){
+    public function executeGetValidatePatent(sfWebRequest $request) {
 
         $return = array("error" => false);
 
@@ -655,17 +655,17 @@ class carsActions extends sfActions {
 
     /*Crear auto vista 2*/
 
-    public function executePrice(sfWebRequest $request){
-            $this->setLayout("newIndexLayout");
-            $carId= sfContext::getInstance()->getUser()->getAttribute('carId');
-            $this->Car = Doctrine_Core::getTable('car')->find($carId);
+    public function executePrice(sfWebRequest $request) { 
+        $this->setLayout("newIndexLayout");
+        $carId= sfContext::getInstance()->getUser()->getAttribute('carId');
+        $this->Car = Doctrine_Core::getTable('car')->find($carId);
 
-            $price = $this->Car->getModel()->getPrice();
-            $priceDay = $price/300;
-            $this->day   = round($priceDay,-2);
-            $this->week  = round((($priceDay * 7)*0.9),-2);
-            $this->hour  = round(($priceDay/6),-2);
-            $this->month = round((($priceDay * 30) * 0.7),-2);
+        $price = $this->Car->getModel()->getPrice();
+        $priceDay = $price/300;
+        $this->day   = round($priceDay,-2);
+        $this->week  = round((($priceDay * 7)*0.9),-2);
+        $this->hour  = round(($priceDay/6),-2);
+        $this->month = round((($priceDay * 30) * 0.7),-2);
     }
 
     public function executeGetValidatePrice(sfWebRequest $request) {
@@ -716,14 +716,14 @@ class carsActions extends sfActions {
     }
 
     /*Crear auto vista 3*/
-    public function executeAvailability(sfWebRequest $request){
-            $this->setLayout("newIndexLayout");
-            $carId= sfContext::getInstance()->getUser()->getAttribute('carId');
-            $this->Car = Doctrine_Core::getTable('car')->find($carId);
+    public function executeAvailability(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+        $carId= sfContext::getInstance()->getUser()->getAttribute('carId');
+        $this->Car = Doctrine_Core::getTable('car')->find($carId);
 
-            /*$year = $this->Car->getYear();
-            $model = $this->Car->getModelId();
-            $this->Datos = Car::getSameCar($model, $year);*/
+        /*$year = $this->Car->getYear();
+        $model = $this->Car->getModelId();
+        $this->Datos = Car::getSameCar($model, $year);*/
     }
 
     public function executeGetValidateAvailability(sfWebRequest $request) {
@@ -776,14 +776,14 @@ class carsActions extends sfActions {
     }
 
     /*Crear auto vista 4*/
-    public function executePhoto(sfWebRequest $request){
-            $this->setLayout("newIndexLayout");
-            $carId= sfContext::getInstance()->getUser()->getAttribute('carId');
-            $this->Car = Doctrine_Core::getTable('car')->find($carId);
+    public function executePhoto(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+        $carId= sfContext::getInstance()->getUser()->getAttribute('carId');
+        $this->Car = Doctrine_Core::getTable('car')->find($carId);
 
-            /*$year = $this->Car->getYear();
-            $model = $this->Car->getModelId();
-            $this->Datos = Car::getSameCar($model, $year);*/
+        /*$year = $this->Car->getYear();
+        $model = $this->Car->getModelId();
+        $this->Datos = Car::getSameCar($model, $year);*/
     }
     /*fotos auto*/
     public function executeUploadPhoto(sfWebRequest $request) {
@@ -1306,15 +1306,6 @@ class carsActions extends sfActions {
     }
 
 
-
-   
-
-
-
-
-
-
-
     ////////////////////////////////////////
 
     public function executeIndex(sfWebRequest $request) {
@@ -1336,7 +1327,7 @@ class carsActions extends sfActions {
         $this->cars = $q->execute();
     }
 
-    public function recortar_texto($texto, $limite=100){   
+    public function recortar_texto($texto, $limite=100)     {   
         $texto = trim($texto);
         $texto = strip_tags($texto);
         $tamano = strlen($texto);
