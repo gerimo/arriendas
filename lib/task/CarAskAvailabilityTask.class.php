@@ -87,7 +87,7 @@ EOF;
 
                     $oOwner = $oCar->getUser();
 
-                    $oUserMailingConfig = Doctrine_Core::getTable("UserMailingConfig")->findOneByUserAndMailingAndIsASubscribed($oOwner, $oMailing, false);
+                    $oUserMailingConfig = Doctrine_Core::getTable("UserMailingConfig")->findOneByUserIdAndMailingIdAndIsASubscribed($oOwner->id, $oMailing->id, false);
                     if ($oUserMailingConfig) {
                         $this->log("[".date("Y-m-d H:i:s")."] User ".$oOwner->id." ya no esta suscrito. Omitiendo...");
                         $unsubscribeUser++;
@@ -170,7 +170,9 @@ EOF;
 
         } catch (Exception $e) {
             $this->log("[".date("Y-m-d H:i:s")."] ERROR: ".$e->getMessage());
-            Utils::reportError($e->getMessage(), "CarAskAvailabilityTask");
+            if ($options['env'] == "prod") {
+                Utils::reportError($e->getMessage(), "CarAskAvailabilityTask");
+            }
         }
     }
 }
