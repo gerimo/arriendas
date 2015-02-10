@@ -232,7 +232,7 @@ class mainActions extends sfActions {
             $number         = substr($rut, 0, -1);
 
             $User->setRut($number ? $number : null );
-            $User->setRutDv($dv ? strtoupper($dv) : null );
+            $User->setRutDv($dv != null ? strtoupper($dv) : null );
             $User->setExtranjero($foreign);
             $User->setTelephone($telephone);
             $User->setBirthdate($birth);
@@ -246,7 +246,6 @@ class mainActions extends sfActions {
                 $basePath = sfConfig::get('sf_root_dir');
                 $userid = $User->getId();
                 $rut = $User->getRutFormatted();
-                error_log(strtoupper($rut));
                 $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.strtoupper($rut).'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
                 exec($comando);
             }

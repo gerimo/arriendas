@@ -185,7 +185,8 @@ class profileActions extends sfActions {
                 throw new Exception("Debes indicar tu nacionalidad", 1);
             }
 
-            if(!$foreign) {
+            // si el usuario es extranjero y selecciona "soy chileno", se hace la verificacion del rut y se setea
+            if($User->getExtranjero() && !$foreign) {
                 if (is_null($rut) || $rut == "") {
                     throw new Exception("Debes indicar tu RUT", 1);
                 } else {
@@ -201,7 +202,9 @@ class profileActions extends sfActions {
                             throw new Exception("el rut ingresado ya se encuentra registrado", 1);
                         }
                     }
-                    
+
+                    $User->setRut($number);
+                    $User->setRutDv(strtoupper($dv));                    
                 }
             }
 
@@ -242,8 +245,6 @@ class profileActions extends sfActions {
             $User->setApellidoMaterno($motherLastname ? $motherLastname : "");
             $User->setFirstname($firstname);
             $User->setEmail($email);
-            $User->setRut($number ? $number : null);
-            $User->setRutDv($dv ? strtoupper($dv) : null);
             $User->setExtranjero($foreign);
             $User->setTelephone($telephone);
             $User->setBirthdate($birth);
@@ -251,6 +252,20 @@ class profileActions extends sfActions {
 
             $Commune = Doctrine_Core::getTable('Commune')->find($commune);
             $User->setCommune($Commune);
+
+            // Chequeo Judicial
+            if(!$foreign){
+                if(!$User->getChequeoJudicial()){
+
+                    $basePath = sfConfig::get('sf_root_dir');
+                    $userid = $User->getId();
+                    $rut = $User->getRutFormatted();
+                    $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.strtoupper($rut).'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
+                    exec($comando);
+                }
+            } else {
+                $User->setChequeoJudicial(false);
+            }
 
             $User->save();
     
@@ -272,6 +287,17 @@ class profileActions extends sfActions {
         $userId = $this->getUser()->getAttribute("userid");
 
         $this->User = Doctrine_Core::getTable('User')->find($userId);
+
+        // Si el usuario posee "extranjero" = false y "rut" = null entonces se setea "extranjero" a true
+        // en el caso contrario ("extranjero" = true y "rut" != null) se setea a "extranjero" a false
+        // esto valida en caso que el usuario se haya registrado en la version antigua de arriendas.
+        if(!$this->User->getExtranjero() && is_null($this->User->rut)){
+            $this->User->setExtranjero(true);
+            $this->User->save();
+        } elseif($this->User->getExtranjero() && !is_null($this->User->rut)) {
+            $this->User->setExtranjero(false);
+            $this->User->save();
+        }
 
         $this->Regions = Doctrine_Core::getTable('Region')->findAll();
     }
