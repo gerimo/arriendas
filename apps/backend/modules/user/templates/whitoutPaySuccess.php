@@ -30,7 +30,9 @@
                     <th>Teléfono</th>
                     <th>email</th>
                     <th>dirección</th>
+                    <th>Fecha inicio</th>
                     <th>Comentario</th>
+
                 </tr>
             </thead>
 
@@ -105,7 +107,7 @@
 
                 $.each(r.data, function(k, v) {
                     var button = "<a class='btn btn-block btn-primary comment' href='"+urlComment.replace("userIdPattern", v.user_id)+"'>Comentarios</a>";
-                    $('#userWhitoutPayTable').DataTable().row.add([ v.user_id, v.user_fullname, v.user_telephone, v.user_email, v.user_address, button ]).draw();
+                    $('#userWhitoutPayTable').DataTable().row.add([ v.user_id, v.user_fullname, v.user_telephone, v.user_email, v.user_address, v.reserva_fecha_inicio, button ]).draw();
                 });
 
                 $(".load").hide();
