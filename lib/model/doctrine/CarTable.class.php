@@ -179,6 +179,17 @@ class CarTable extends Doctrine_Table {
 
         return $oCars;
     }
+
+    public function findCarsWithAvailability($day) {
+
+        $q = Doctrine_Core::getTable("CarAvailability")
+            ->createQuery('CA')
+            ->distinct()
+            ->where('CA.is_deleted = 0')
+            ->andWhere('CA.day >= ?', $day);
+
+        return $q->execute();
+    }
     
     public static function getInstance() {
 
