@@ -13,9 +13,16 @@
               <b>¿Qué quieres hacer ahora?</b>
 	    	</p>
 	    	<br>
-	    	<div class="row" >
+	    	<div class="row hidden-xs" >
 		    	<button class="col-md-5 btn btn-a-action" onclick="location.href='<?php echo url_for('homepage') ?>'">Quiero Arrendar un Auto</button>
 		        <button class="col-md-offset-3 col-md-4 btn btn-a-action" onclick="location.href='<?php echo url_for('car_create') ?>'">Quero Subir mi Auto</button>
+      		</div>
+      		<div class="row visible-xs">
+      			<button class="col-md-5 btn btn-block btn-a-action" onclick="location.href='<?php echo url_for('homepage') ?>'">Quiero Arrendar un Auto</button>
+      		</div>
+      		<br>
+      		<div class="row visible-xs">
+      			<button class="col-md-offset-3 col-md-4 btn-block btn btn-a-action" onclick="location.href='<?php echo url_for('car_create') ?>'">Quero Subir mi Auto</button>
       		</div>
       	</div>
     </div>
