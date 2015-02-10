@@ -6,7 +6,7 @@ class OpportunityGenerateTask extends sfBaseTask {
 
         $this->addOptions(array(
             new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name'),
-            new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
+            new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'local'),
             new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine'),
         ));
 
@@ -48,6 +48,13 @@ EOF;
 
             $OpportunitiesQueue = $q->execute();
 
+            if (in_array($options["env"], array("local", "dev"))) {
+                error_log("Max I: ".$maxIterations);
+                error_log("KM per I: ".$kmPerIteration);
+                error_log("Ex. time: ".$exclusivityTime);
+                error_log("Encontrados: ".count($OpportunitiesQueue));
+            }
+
             if (count($OpportunitiesQueue) == 0) {
                 $this->log("[".date("Y-m-d H:i:s")."] No se encontraron oportunidades");
             } else {
@@ -84,6 +91,7 @@ EOF;
                         $lastShipment = $Reserve->getFechaPago();
                     }
                     if (strtotime("+".$minutesPerIteration." minutes", $lastShipment) > strtotime("now")) {
+                        $this->log("[".date("Y-m-d H:i:s")."] Falta para la siguiente iteracion de OpportunityQueue {$OpportunityQueue->id}");
                         continue;
                     }
 
@@ -158,6 +166,7 @@ EOF;
                     }
 
                     $OpportunityQueue->setIteration($OpportunityQueue->getIteration() + 1);
+                    $OpportunityQueue->setLastIterationAt(date("Y-m-d H:i:s"));
                     $OpportunityQueue->save();
                 }
             }
