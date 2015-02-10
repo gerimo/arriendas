@@ -75,6 +75,11 @@
                             <option value="1" <?php echo $User->getExtranjero() == 1 ? "selected" : ""; ?> >No tengo RUT - I don't have chilean RUT number</option>
                         </select>
                         <input class="form-control" id="run" name="run" placeholder="RUT" value="<?php if ($User->getRut()) echo $User->getRutFormatted() ?>" type="text">
+
+                        <div class="row">
+                            <i class="fa fa-exclamation-triangle"></i><span class="note"> Si defines tu RUT, este no podrá volver a ser modificado.</span>
+                        </div>
+
                     </div>
                 <?php else: ?>
                     <div class="form-inline clearfix">
@@ -158,7 +163,7 @@
     </div>
 </div>
 <div style="display:none">
-    <div id="dialog-alert" title="">
+    <div id="dialog-alert" class="text-center" title="">
         <p></p>
     </div>
 </div>
@@ -173,8 +178,8 @@
         imageUpload('#formlicense', '#filelicense', '#previewlicense','#linklicense');
 
         // establece al campo run como disabled si la persona indica que no tiene rut
-        var foreign = $("#foreign").val();
-        if(foreign > 0){  
+        var foreignOriginal = $("#foreign").val();
+        if(foreignOriginal > 0){  
             $('#run').val('');
             $('#run').attr('disabled', true);
             $("#run").parent("label").find("span").text('');
@@ -284,14 +289,12 @@
             "commune": commune
         }
 
-        $("#dialog-alert").html("Si defines un rut, ya no podrás volver a modificarlo. <br>¿Estas seguro que quieres continuar?");
-
-        $("#dialog-alert").dialog({
+            $("#dialog-alert").html("!Advertencia¡ <br> Estás modificando tus datos personales. <br> <b>¿Estas seguro que quieres continuar? </b").addClass("text-center");
+            $("#dialog-alert").dialog({
             closeOnText: true,
             modal: true,
             resizable: true,
             title: "Editar perfil",
-            width: "30%",
             buttons: [
                 {
                     text: "Cancelar",
