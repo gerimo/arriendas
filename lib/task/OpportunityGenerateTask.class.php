@@ -48,10 +48,12 @@ EOF;
 
             $OpportunitiesQueue = $q->execute();
 
-            error_log("Max I: ".$maxIterations);
-            error_log("KM per I: ".$kmPerIteration);
-            error_log("Ex. time: ".$exclusivityTime);
-            error_log("Encontrados: ".count($OpportunitiesQueue));
+            if (in_array($options["env"], array("local", "dev")) {
+                error_log("Max I: ".$maxIterations);
+                error_log("KM per I: ".$kmPerIteration);
+                error_log("Ex. time: ".$exclusivityTime);
+                error_log("Encontrados: ".count($OpportunitiesQueue));
+            }
 
             if (count($OpportunitiesQueue) == 0) {
                 $this->log("[".date("Y-m-d H:i:s")."] No se encontraron oportunidades");
