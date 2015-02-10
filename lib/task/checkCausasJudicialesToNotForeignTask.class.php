@@ -82,7 +82,7 @@ EOF;
                             $countProblemasConexion++;
                             $causa = 0;
                         }
-                        $this->log("ID: ".$User->getId()." RUT: ".$User->getRutComplete()." causa:".$causa);
+                        $this->log("ID: ".$User->getId()." RUT: ".$User->getRutComplete()." causa:".$causa." numero de causas:".$nodeCount);
                     }
                 }
                 

@@ -284,7 +284,6 @@ class profileActions extends sfActions {
             // Chequeo Judicial
             if(!$foreign){
                 if(!$User->getChequeoJudicial()){
-
                     $basePath = sfConfig::get('sf_root_dir');
                     $userid = $User->getId();
                     $rut = $User->getRutFormatted();

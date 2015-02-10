@@ -471,12 +471,17 @@ class reservesActions extends sfActions {
             $from     = $this->getUser()->getAttribute("from");
             $to       = $this->getUser()->getAttribute("to");
         }
+
+        $User = Doctrine_Core::getTable('User')->find($userId);
+        $this->forward404If(!$User);
         
+        // Chequeo judicial
         try {
-            $User = Doctrine_Core::getTable('User')->find($userId);
+
             $UnverifiedMail = false;
+
             if(!$User->getChequeoJudicial()) {
-                // Chequeo judicial
+                
                 $client = new \Goutte\Client();
 
                 $crawler = $client->request('GET', 'http://reformaprocesal.poderjudicial.cl/ConsultaCausasJsfWeb/page/panelConsultaCausas.jsf');
@@ -500,15 +505,21 @@ class reservesActions extends sfActions {
                     if ($nodeCount > 1) {
                         $User->setChequeoJudicial(true);
                         $User->setBlocked(true);
-                        $User->setBloqueado("Se ha bloqueado al usuario antes de efectuar la reseerva, por poseer antecedentes judiciales.");
+                        $User->setBloqueado("Se ha bloqueado al usuario antes de efectuar la reserva, por poseer antecedentes judiciales.");
                     } else {
                         $User->setChequeoJudicial(true);
                         $User->save();
                     }
                 } else {
                     $UnverifiedMail = true;
-                }// Chequeo judicial
+                }
             }
+        } catch(Exception $e) {
+            error_log("[".date("Y-m-d H:i:s")."] [reserves/pay] Verificacion judicial".$e->getMessage());
+        }// Chequeo judicial
+
+
+        try {
 
             if (is_null($warranty) || is_null($carId) || is_null($from) || is_null($to)) {
                 throw new Exception("El User ".$userId." esta intentando pagar pero uno de los campos es nulo. Garantia: ".$warranty.", Car: ".$carId.", Desde: ".$from.", Hasta: ".$to, 1);
