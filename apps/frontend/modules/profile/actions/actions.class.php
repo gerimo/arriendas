@@ -284,10 +284,9 @@ class profileActions extends sfActions {
             // Chequeo Judicial
             if(!$foreign){
                 if(!$User->getChequeoJudicial()){
-
                     $basePath = sfConfig::get('sf_root_dir');
                     $userid = $User->getId();
-                    $rut = $User->getRutFormatted();
+                    $rut = $User->getRutComplete();
                     $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.strtoupper($rut).'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
                     exec($comando);
                 }

@@ -37,7 +37,7 @@ EOF;
         // $rut = substr($run, 0, -1)."-".substr($run, -1);
         $userid = $options["user"];
 
-        echo "verificando...\n";
+        echo "verificando...\n";       
 
         $profile = Doctrine_Core::getTable('User')->find($userid);
         $scraperSrv = new ScraperService();
@@ -49,7 +49,7 @@ EOF;
                 $profile->save();
 
                 /* notificaciones */
-                $messageBody = "<p>Usuario: " . $profile->getFirstname() . ":</p>";
+                /*$messageBody = "<p>Usuario: " . $profile->getFirstname() . ":</p>";
                 $messageBody .= "<p>mail: " . $profile->getEmail() . ":</p>";
                 $messageBody .= "<p>licencia: " . $run . ":</p>";
                 $messageBody .= "<p>No se pudo verificar si contaba con causas judiciales por problemas de conexion con la web.</p>";
@@ -58,7 +58,24 @@ EOF;
                 $message->setFrom('notificaciones@arriendas.cl', 'Notificaciones Arriendas');
                 $message->setTo('soporte@arriendas.cl');
                 $message->setBody($messageBody, "text/html");
-                $this->getMailer()->send($message); 
+                $this->getMailer()->send($message); */
+                
+                $mail    = new Email();
+                $mailer  = $mail->getMailer();
+                $message = $mail->getMessage();     
+
+                $subject = "¡No se pudo verificar si contaba con causas judiciales!";
+                $body    = $this->getPartial('emails/notificationOfJudicialVerification', array('User' => $profile));
+                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+                $to      = array("soporte@arriendas.cl");
+
+                $message->setSubject($subject);
+                $message->setBody($body, 'text/html');
+                $message->setFrom($from);
+                $message->setTo($to);
+                //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                
+                $mailer->send($message);
 
                 break;
             case 1:
@@ -74,7 +91,7 @@ EOF;
                 $profile->save();
 
                 /* notificaciones */
-                $messageBody = "<p>Usuario: " . $profile->getFirstname() . ":</p>";
+                /*$messageBody = "<p>Usuario: " . $profile->getFirstname() . ":</p>";
                 $messageBody .= "<p>mail: " . $profile->getEmail() . ":</p>";
                 $messageBody .= "<p>licencia: " . $run . ":</p>";
                 $messageBody .= "<p>Tiene causas judiciales y  por eso fue blockeado en el sistema.</p>";
@@ -83,7 +100,25 @@ EOF;
                 $message->setFrom('notificaciones@arriendas.cl', 'Notificaciones Arriendas');
                 $message->setTo('soporte@arriendas.cl');
                 $message->setBody($messageBody, "text/html");
-                $this->getMailer()->send($message);
+                $this->getMailer()->send($message);*/
+
+                $mail    = new Email();
+                $mailer  = $mail->getMailer();
+                $message = $mail->getMessage(); 
+
+                $subject = "¡El usuario fué bloqueado por poseer causas judiciales!";
+                $body    = $this->getPartial('emails/notificationOfJudicialVerification', array('User' => $profile));
+                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+                $to      = array("soporte@arriendas.cl");
+
+                $message->setSubject($subject);
+                $message->setBody($body, 'text/html');
+                $message->setFrom($from);
+                $message->setTo($to);
+                //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                
+                $mailer->send($message);
+
                 break;
         }
 
