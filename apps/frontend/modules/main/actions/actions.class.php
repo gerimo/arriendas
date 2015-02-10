@@ -250,7 +250,8 @@ class mainActions extends sfActions {
             if(!$foreign){
                 $basePath = sfConfig::get('sf_root_dir');
                 $userid = $User->getId();
-                $rut = $User->getRutFormatted();
+                $rut = $User->getRutComplete();
+                error_log($rut);
                 $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.strtoupper($rut).'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
                 exec($comando);
             }
