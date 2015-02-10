@@ -170,23 +170,33 @@ class opportunitiesActions extends sfActions {
         if ($Car->hasReserve($OriginalReserve->getFechaInicio2(), $OriginalReserve->getFechaTermino2())) {
             return "Este Car ".$Car->id." ya posee una reserva en las fechas de la oportundiad";
         }
-
+        error_log($Car->getId());
         $O = $OriginalReserve->copy(true);
-        $O->setCarId($carId);
+        error_log("1");
+        $O->setCarId($Car->getId());
+        error_log("2");
         $O->setFechaReserva(date("Y-m-d H:i:s"));
+        error_log("3");
         $O->setFechaConfirmacion(date("Y-m-d H:i:s"));
+        error_log("4");
         $O->setConfirmed(true);
+        error_log("5");
         $O->setImpulsive(true);
+        error_log("6");
         $O->setReservaOriginal($OriginalReserve->getId());
 
         if ($isMailing) {
+            error_log("7.1");
             $O->setComentario('Reserva oportunidad - mailing');
         } else {
+            error_log("7.2");
             $O->setComentario('Reserva oportunidad');
         }
-        
+        error_log("8");
         $O->setUniqueToken(true);
+        error_log("9");
         $O->save();
+        error_log("10");
 
         $OT = $OriginalReserve->getTransaction()->copy(true);
         $OT->setCar($Car->getModel()->getBrand()->getName() ." ". $Car->getModel()->getName());
