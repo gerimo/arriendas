@@ -89,6 +89,7 @@ EOF;
                         $lastShipment = $Reserve->getFechaPago();
                     }
                     if (strtotime("+".$minutesPerIteration." minutes", $lastShipment) > strtotime("now")) {
+                        $this->log("[".date("Y-m-d H:i:s")."] Falta para la siguiente iteracion de OpportunityQueue {$OpportunityQueue->id}");
                         continue;
                     }
 
