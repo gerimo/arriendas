@@ -42,16 +42,6 @@ EOF;
 
         $sentEmails = 0;
 
-        $week = array(
-            1 => "Lunes",
-            2 => "Martes",
-            3 => "Miércoles",
-            4 => "Jueves",
-            5 => "Viernes",
-            6 => "Sábado",
-            7 => "Domingo"
-        );
-
         try {
 
             $tomorrow = strtotime("+1 day");
@@ -69,7 +59,7 @@ EOF;
 
             $this->log("[".date("Y-m-d H:i:s")."] Buscando autos activos...");
             /*$oCars = Doctrine_Core::getTable("Car")->findCarsActives(false, false, true);*/
-            $oCars = Doctrine_Core::getTable("Car")->findCarsActives(1, false, false); // TODOS
+            $oCars = Doctrine_Core::getTable("Car")->findCarsActives(false, false, false); // TODOS
             $this->log("[".date("Y-m-d H:i:s")."] Autos encontrados: ".count($oCars));
 
             if ($oCars) {
@@ -117,7 +107,8 @@ EOF;
                             'imageUrl' => $imageUrl,
                             'urlAllAva' => $urlAllAva,
                             'urlOneAva' => $urlOneAva,
-                            'urlCusAva' => $urlCusAva
+                            'urlCusAva' => $urlCusAva,
+                            'urlMisAutos' => $host . $routing->generate('cars')
                         ));
                         $from  = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
                         $to    = array($oCar->getUser()->email => $oCar->getUser()->firstname." ".$oCar->getUser()->lastname);
@@ -126,11 +117,15 @@ EOF;
                         $message->setSubject($subject);
                         $message->setBody($body, 'text/html');
                         $message->setFrom($from);
-                        /*$message->setTo($to);*/
-                        $message->setBcc(array(
-                            "cristobal@arriendas.cl" => "Cristóbal Medina Moenne",
-                            "francofre@arriendas.cl" => "Francisca Cofré Ulloa"
-                        ));
+                        $message->setTo($to);                        
+
+                        if ($sentEmails == 0) {
+                            $message->setBcc(array(
+                                "cristobal@arriendas.cl" => "Cristóbal Medina Moenne",
+                                /*"franco.inostrozah@gmail.com" => "Franco Inostroza Hinojoza"*/
+                                /*"francofre@arriendas.cl" => "Francisca Cofré Ulloa"*/
+                            ));
+                        }
                         
                         $this->getMailer()->send($message);
 

@@ -4,8 +4,6 @@ class ReserveTable extends Doctrine_Table {
 
     public function findOriginalReserve($reserveId) {
 
-        error_log($reserveId);
-
         $Reserve = Doctrine_Core::getTable("Reserve")->find($reserveId);
 
         if ($Reserve) { 

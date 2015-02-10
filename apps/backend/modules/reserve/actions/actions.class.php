@@ -16,9 +16,7 @@ class reserveActions extends sfActions {
 	        if ($idReservaOriginal != "") {
 
 	            $reserveId = Doctrine_Core::getTable('Reserve')->findOriginalReserve($idReservaOriginal);
-	            
-	            error_log($reserveId);
-
+	          
 	            if ($reserveId == nul) {
 	            	throw new Exception("Reserva no encontrada", 1);
 	            	

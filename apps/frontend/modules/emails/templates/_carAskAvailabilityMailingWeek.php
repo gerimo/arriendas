@@ -31,11 +31,11 @@
 
 <ul>
     <?php foreach ($days as $day): ?>
-        <li><?php echo $week[date("N", strtotime($day))]." ".date("j") ?></li>
+        <li><?php echo $week[date("N", strtotime($day))]." ".date("d", strtotime($day)) ?></li>
     <?php endforeach ?>
 </ul>
 
-<p>Para indicar tu disponibilidad haz <a href='<?php echo $urlCusAva ?>'><strong>click aquí</strong></a>.</p>
+<p>Para indicar tu disponibilidad haz <a href='<?php echo $urlMisAutos ?>'><strong>click aquí</strong></a>.</p>
 
 <p>Se te informará con un mínimo de 3 horas de anticipación para que puedas gestionar la entrega. Tu auto figurará como disponible para el pago, para reservas iniciadas en esos horarios.</p>
 

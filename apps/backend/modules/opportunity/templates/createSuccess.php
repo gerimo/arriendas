@@ -47,6 +47,8 @@
                     <th>Crear Oportunidad</th>
                 </tr>
             </thead>
+            <tbody>            
+            </tbody>
         </table>
     </div>
 </div>
@@ -62,22 +64,18 @@
 <div class="hidden-xs space-100"></div>    
 
 <script>
-
-    /*var urlCreate = "<?php echo url_for_frontend('opportunities_approve', array('carId' => 'carIdPattern', 'reserveId' => 'reserveIdPattern')) ?>";*/
     
 	$(document).ready(function() {
- 
-        
-
-        $('#carsActivesTable').hide();
-        $('.loading').hide();  
-        $(".find").hide();   
-
-        /*$('#carsActivesTable').DataTable({
+        $('#carsActivesTable').DataTable({
             info: false,
             paging: true,
             responsive: true
-        });*/
+        });
+        
+        $('.loading').hide();  
+        $(".find").hide();   
+
+        
     });
 
     $(document).on("click", ".opp-approve", function(){
@@ -96,6 +94,18 @@
             if (r.error) {
                 console.log(r.errorMessage);
             } else {
+
+                 $("#dialog-alert p").html("Rerserva creada exitosamente");
+                $("#dialog-alert").attr('title','Reserva Creada!');
+                $("#dialog-alert").dialog({
+                    buttons: [{
+                    text: "Aceptar",
+                    click: function() {
+                        $( this ).dialog( "close" );
+                    }
+                    }]
+                });
+
                 $(this).prop("disabled", false);
             }
 
@@ -125,7 +135,6 @@
             } else {
             	if (r.original != null) {
 	            	if (r.original) {
-                        console.log(r.original);
                         getActivesCars(r.original);
 	            		$("#reserve-check").show();
                         $("#reserveFilter").val(r.original); 

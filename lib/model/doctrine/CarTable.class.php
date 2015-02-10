@@ -25,7 +25,7 @@ class CarTable extends Doctrine_Table {
         return $q->execute();
     }
 
-    public function findCars($from, $to, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway) {
+    public function findCars($from, $to, $limit = 50, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway) {
 
         $CarsFound = array();
         $isWeekend = false;
@@ -52,14 +52,7 @@ class CarTable extends Doctrine_Table {
                 ->innerJoin('C.Model M')
                 ->Where('C.activo = 1')
                 ->andWhere('C.seguro_ok = 4')
-                ->orderBy('C.price_per_day ASC');
-
-            $MD = new Mobile_Detect;
-            if ($MD->isMobile()) {
-                $q->limit(10);
-            } else {
-                $q->limit(33);
-            }
+                ->orderBy('C.price_per_day ASC');            
 
             $weekendDays = Utils::isWeekend(true);
             // Si es Feriado o Fin de Semana, se buscan los autos de la tabla CarAvailability
@@ -113,9 +106,14 @@ class CarTable extends Doctrine_Table {
 
             }
 
+            if ($limit) {
+                $q->limit($limit);
+            }
+
             $Cars = $q->execute();
 
             foreach ($Cars as $i => $Car) {
+
                 if (!$Car->hasReserve(date("Y-m-d H:i:s", strtotime($from)), date("Y-m-d H:i:s", strtotime($to)))) {
 
                     $count = 1;
@@ -125,7 +123,7 @@ class CarTable extends Doctrine_Table {
                     $CarsFound[] = array(
                         'id' => $Car->id,
                         'latitude' => $Car->lat,
-                        'longitude' => $Car->lng,                        
+                        'longitude' => $Car->lng,
                         /*'commune' => $Car->getCommune()->name,*/
                         'brand' => $Car->getModel()->getBrand()->name,
                         'model' => $Car->getModel()->name,
@@ -141,7 +139,12 @@ class CarTable extends Doctrine_Table {
                         'count' => $count,
                         'nearestMetroDistance' => round($CarProximityMetro->distance, 1),
                         'nearestMetroName' => $CarProximityMetro->getMetro()->name,
-                        'fecha_subida' =>$Car->fecha_subida
+                        'fecha_subida' =>$Car->fecha_subida,
+                        'type' => $Car->getModel()->getCarType()->name,
+                        'comunne' =>$Car->getCommune()->name,
+                        'QuantityOfLatestRents' =>$Car->getQuantityOfLatestRents(),
+                        'user_name' =>$Car->getUser()->firstname." ".$Car->getUser()->lastname,
+                        'user_telephone' => $Car->getUser()->telephone
                     );
 
                     $count++;
