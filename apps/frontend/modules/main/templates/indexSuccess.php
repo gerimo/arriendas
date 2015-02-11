@@ -108,7 +108,7 @@
         google.maps.event.addListener(map, 'idle', function() {
 
             google.maps.event.clearListeners(map, 'idle');
-            searchCars();
+            searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
         });
 
         google.maps.event.addListener(map, 'dragend', function() {
@@ -118,7 +118,7 @@
             } else {
                 map.panTo(lastValidCenter);
             }
-            searchCars();
+            searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
         });
 
         google.maps.event.addListener(map, 'zoom_changed', function() {
@@ -128,7 +128,7 @@
             } else {
                 map.panTo(lastValidCenter);
             }
-            searchCars();
+            searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
         });
 
         //Autocomplete
@@ -186,7 +186,7 @@
 
             infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
             infowindow.open(map, marker);
-            searchCars();
+            searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
         });
     }
 
@@ -222,7 +222,12 @@
         return (mes+dia+ano);
     }
 
-    function searchCars() {
+    function searchCars(offset, limit) {
+
+        if (offset == 0) {
+            $('#map-list-container, #list-container').hide();
+        }
+        $(".loading").show();
 
         if (validateTime()) {
 
@@ -238,9 +243,6 @@
             });
             return false;
         }
-
-        $('#map-list-container, #list-container').hide();
-        $(".loading").show();
 
         // First, determine the map bounds
         var bounds = map.getBounds();
@@ -310,12 +312,14 @@
 
             $("#map-list-container, #list-container").html(errorMessage);
             $('.loading').hide();
-            $("#map-list-container, #list-container").show();
+            /*$("#map-list-container, #list-container").show();*/
 
             return false;
         }
 
         var parameters = {
+            offset: offset,
+            limit: limit,
             isMap: isMap,//$('div[data-target="#tab-map"]').hasClass("activo"),
             SWLat: swLat,
             SWLng: swLng,
@@ -330,7 +334,7 @@
             isAutomatic: isAutomatic,
             isLowConsumption: isLowConsumption,
             isMorePassengers: isMorePassengers            
-        }
+        };
 
         $.post("<?php echo url_for('car_search') ?>", parameters, function(r){
 
@@ -481,21 +485,31 @@
                     listContent += "</article>";*/
                 }
             } else {
-                mapListContent += "<h2 style='text-align: center'>No hemos encontrado vehículos</h2>";
-                listContent += "<h2 style='text-align: center'>No hemos encontrado vehículos</h2>";
+                if (parseInt(offset) > 0) {
+                    mapListContent += "<p class='msg-search'>Ya se están mostrando todos los autos disponibles para las fechas indicadas</p>";
+                    listContent += "<p class='msg-search'>Ya se están mostrando todos los autos disponibles para las fechas indicadas</p>";
+                } else {
+                    mapListContent += "<p class='msg-search'>No hemos encontrado autos</p>";
+                    listContent += "<p class='msg-search'>No hemos encontrado autos</p>";
+                }
+                $("button.see-more").attr("disabled", true);
             }
 
-            $("#map-list-container").html(mapListContent);
-            $("#list-container").html(listContent);
+            $("#map-list-container").append(mapListContent);
+            $("#list-container").append(listContent);
 
             $('.loading').hide();
-            $("#map-list-container, #list-container").show();
+            if (!$("#map-list-container, #list-container").is(":visible")) {
+                $("#map-list-container, #list-container").show();
+            }
 
             var mcOptions = {
                 maxZoom: 10
             };
 
             markerCluster = new MarkerClusterer(map, markers, mcOptions);
+
+            $("button.see-more").data("offset", parseInt(offset)+parseInt(limit));
         }, "json");
     }
 </script>
@@ -631,8 +645,15 @@
 
         <div class="tab-container" id="tab-list">
             <div class="row" id="list">
-                <div id="list-loading" class="loading" style="text-align: center; margin: 4% 0 4% 0"><?php echo image_tag('ajax-loader.gif', array("width" => "80px", "height" => "80px")) ?></div>
                 <div class="row" id="list-container"></div>
+                <div id="list-loading" class="loading" style="text-align: center; margin: 4% 0 4% 0">
+                    <?php if ($isMobile): ?>
+                        <?php echo image_tag('ajax-loader.gif', array("width" => "40px", "height" => "40px")) ?>
+                    <?php else: ?>
+                        <?php echo image_tag('ajax-loader.gif', array("width" => "80px", "height" => "80px")) ?>
+                    <?php endif ?>
+                </div>
+                <button class="see-more btn-block" data-offset="0" data-limit="<?php echo $limit ?>" type="button">Ver más</button>
             </div>
         </div>
     </div>
@@ -847,8 +868,7 @@
         <?php endif ?>
     });
 
-    if ($(window).width() > 768) {
-
+    <?php if (!$isMobile): ?>
         $('#section-home').css({
             'height': $(window).height()
         });
@@ -856,19 +876,19 @@
         $("#map, #map-list").css({
             height: $(window).height() - $("#section-map-form-search").outerHeight() - $("#section-map-filters").outerHeight()
         });
-    }
+    <?php endif ?>
 
     $("input[type='checkbox']").change(function(){
-        searchCars();
+        searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
     });
 
     $("#search").click(function(e){
         e.preventDefault();
-        searchCars();
+        searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
     });
 
     $("#commune").change(function(){
-        searchCars(); 
+        searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit")); 
     });
 
     $(".tab").click(function(){
@@ -927,6 +947,10 @@
 
         $(".tab-container").hide();
         $(target).show();
+    });
+
+    $(document).on("click", ".see-more", function(){
+        searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
     });
 
     $('#from').datetimepicker({
