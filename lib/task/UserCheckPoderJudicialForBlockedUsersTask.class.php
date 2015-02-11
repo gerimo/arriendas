@@ -1,24 +1,24 @@
 <?php
 require_once sfConfig::get('sf_lib_dir') . '/vendor/fabpot/goutte.phar';
 
-class CheckPoderJudicialForBlockedUsersTask extends sfBaseTask {
+class UserCheckPoderJudicialForBlockedUsersTask extends sfBaseTask {
 
     protected function configure() {
 
         $this->addOptions(array(
             new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name', 'frontend'),
-            new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
+            new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'local'),
             new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine')
         ));
 
         $this->namespace = 'user';
-        $this->name = 'checkPoderJudicialForBlockedUsersTask';
+        $this->name = 'checkPoderJudicialForBlockedUsers';
         $this->briefDescription = 'Verifica a todos los usuarios bloqueados, desbloqueando a los que no posean causas judiciales';
         $this->detailedDescription = <<<EOF
-The [CheckUsersPoderJudicial|INFO] task does things.
+The [UserCheckPoderJudicialForBlockedUsers|INFO] task does things.
 Call it with:
 
-  [php symfony arriendas:CheckUsersPoderJudicial|INFO]
+  [php symfony user:checkPoderJudicialForBlockedUsers|INFO]
 EOF;
     }
 
