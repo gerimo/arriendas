@@ -1,24 +1,24 @@
 <?php
 require_once sfConfig::get('sf_lib_dir') . '/vendor/fabpot/goutte.phar';
 
-class CheckUsersPoderJudicialTask extends sfBaseTask {
+class UserCheckPoderJudicialForBlockedUsersTask extends sfBaseTask {
 
     protected function configure() {
 
         $this->addOptions(array(
             new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name', 'frontend'),
-            new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
+            new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'local'),
             new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine')
         ));
 
-        $this->namespace = 'arriendas';
-        $this->name = 'CheckUsersPoderJudicialTask';
+        $this->namespace = 'user';
+        $this->name = 'checkPoderJudicialForBlockedUsers';
         $this->briefDescription = 'Verifica a todos los usuarios bloqueados, desbloqueando a los que no posean causas judiciales';
         $this->detailedDescription = <<<EOF
-The [CheckUsersPoderJudicial|INFO] task does things.
+The [UserCheckPoderJudicialForBlockedUsers|INFO] task does things.
 Call it with:
 
-  [php symfony arriendas:CheckUsersPoderJudicial|INFO]
+  [php symfony user:checkPoderJudicialForBlockedUsers|INFO]
 EOF;
     }
 
@@ -47,6 +47,7 @@ EOF;
             $startTime = microtime(true);
             
             foreach ($Users as $User) {
+                $nodeCount = 0;
                 $causa = "connection fail";
                 
                 if($User->getRut()) {
@@ -83,13 +84,19 @@ EOF;
                         $countProblemasConexion++;
                     }
                     $User->save();
-                    $this->log("ID: ".$User->getId()." RUT: ".$User->getRutComplete()." causa:  ".$causa."    numero de causas:".($nodeCount/6));
 
                 } else {
+                    $User->setChequeoJudicial(false);
                     $countSinRut++;
                 }
-                
                 $countTotal++;
+
+                $usuario = str_pad(("ID: ".$User->getId()." (".$User->getFirstname()." ".$User->getLastname().")"), 50);
+                $rut     = str_pad((" RUT: ".$User->getRutComplete()), 18);
+                $causas   = str_pad((" Causas: ".($nodeCount/6)), 10);
+                $this->log($usuario."".$rut."".$causas);
+                //$this->log("ID: ".$User->getId()."(".$User->getFirstname()." ".$User->getLastname().") RUT: ".$User->getRutComplete()."  causas: ".($nodeCount/6));
+
             }
 
             $endTime = microtime(true);
