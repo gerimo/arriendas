@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 class CarTable extends Doctrine_Table {
 
@@ -25,10 +25,8 @@ class CarTable extends Doctrine_Table {
         return $q->execute();
     }
 
-    public function findCars($from, $to, $limit = 50, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway) {
-
+    public function findCars($from, $to, $limit = 50, $withAvailability,$isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway) {
         $CarsFound = array();
-        $isWeekend = false;
 
         /*error_log("FROM: ".$from);
         error_log("TO: ".$to);
@@ -54,9 +52,9 @@ class CarTable extends Doctrine_Table {
                 ->andWhere('C.seguro_ok = 4')
                 ->orderBy('C.price_per_day ASC');            
 
-            $weekendDays = Utils::isWeekend(true);
             // Si es Feriado o Fin de Semana, se buscan los autos de la tabla CarAvailability
-            if ($weekendDays) {
+            if ($withAvailability) {
+                $weekendDays = Utils::isWeekend(true);
                 if (in_array(date("Y-m-d", strtotime($from)), $weekendDays)) {
                     $q->innerJoin("C.CarAvailabilities CA");
                     $q->andWhere("CA.is_deleted IS FALSE");
@@ -144,6 +142,7 @@ class CarTable extends Doctrine_Table {
                         'comunne' =>$Car->getCommune()->name,
                         'QuantityOfLatestRents' =>$Car->getQuantityOfLatestRents(),
                         'user_name' =>$Car->getUser()->firstname." ".$Car->getUser()->lastname,
+                        'carId' => $Car->id,
                         'user_telephone' => $Car->getUser()->telephone
                     );
 
@@ -178,6 +177,17 @@ class CarTable extends Doctrine_Table {
         }
 
         return $oCars;
+    }
+
+    public function findCarsWithAvailability($day) {
+
+        $q = Doctrine_Core::getTable("CarAvailability")
+            ->createQuery('CA')
+            ->distinct()
+            ->where('CA.is_deleted = 0')
+            ->andWhere('CA.day >= ?', $day);
+
+        return $q->execute();
     }
     
     public static function getInstance() {

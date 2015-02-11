@@ -13,12 +13,12 @@
  * @method integer              getId()                Returns the current record's "id" value
  * @method User                 getUser()              Returns the current record's "User" value
  * @method Mailing              getMailing()           Returns the current record's "Mailing" value
- * @method boolean              getIsASubscribed()          Returns the current record's "is_subscribed" value
+ * @method boolean              getIsASubscribed()     Returns the current record's "is_subscribed" value
  *
  * @method UserMailingConfig    setId()                Sets the current record's "id" value
  * @method UserMailingConfig    setUser()              Sets the current record's "User" value
  * @method UserMailingConfig    setMailing()           Sets the current record's "Mailing" value
- * @method UserMailingConfig    setIsASubscribed()          Sets the current record's "is_subscribed" value
+ * @method UserMailingConfig    setIsASubscribed()     Sets the current record's "is_subscribed" value
  * 
  * @package    UserMailingConfigSharing
  * @subpackage model
@@ -63,7 +63,7 @@ abstract class BaseUserMailingConfig extends sfDoctrineRecord {
         ));
 
         $this->index('fk_UserMailingConfig_Mailing', array(
-            'fields' => array(0 => 'user_id'),
+            'fields' => array(0 => 'mailing_id'),
         ));
 
         $this->option('charset', 'utf8');

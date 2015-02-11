@@ -40,16 +40,8 @@
     height: 100px;
 }
 
-.loading {
-    position: absolute;
-    width: 30px;
-    margin: 0px 0px 0px -70px;
-}
-
-.find {
-
-    margin: 9px 0px 0px -25px;
-    position: absolute;
+.loading {  
+    width: 60px;
 }
 
 .load {
@@ -60,9 +52,13 @@
 }
 
 #filters li {
+
     padding-right: 8px;
-    float: left;
     list-style: none;
     font: 600 15px/20px 'Open Sans',sans-serif;
+}
+
+.fa-remove { 
+    color: red;
 }
 

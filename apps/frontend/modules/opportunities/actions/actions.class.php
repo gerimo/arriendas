@@ -105,6 +105,7 @@ class opportunitiesActions extends sfActions {
             $this->message = "Ha habido un problema aprobando la Oportunidad. El equipo ha sido notificado";
 
             error_log("[".date("Y-m-d H:i:s")."] [opportunities/mailingApprove] ERROR: ".$e->getMessage());
+            /*error_log($e);*/
 
             if ($request->getHost() == "www.arriendas.cl") {
                 Utils::reportError($e->getMessage(), "opportunities/mailingApprove");

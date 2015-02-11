@@ -29,7 +29,7 @@ class Utils {
                 $days[] = date("Y-m-d", strtotime("+".$i." day"));
                 $i++;
 
-                $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("N", strtotime("+".$i." day")));
+                $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+".$i." day")));
             }
         }
 

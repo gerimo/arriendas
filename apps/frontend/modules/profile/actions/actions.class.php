@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 class profileActions extends sfActions {
 
@@ -32,7 +32,37 @@ class profileActions extends sfActions {
 
             if ($Car->getActivo()) {
 
-                $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+1 day")));
+                $days = null;                
+
+                if (Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"))) {
+                    $days = Utils::isWeekend(true, false);
+                } elseif (Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+1 day")))) {
+                    $days = Utils::isWeekend(true, true);
+                }
+
+                if ($days) {
+                    foreach ($days as $day) {
+
+                        $data = array();
+                        $data["day"] = $day;
+                        $data["dayName"] = $week[date("N", strtotime($day))];
+
+                        //$Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime($day)));
+                        //if ($Holiday) {
+                        //    $data["dayName"] .= " (Feriado)";
+                        //}
+
+                        $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
+                        if ($CarAvailability) {
+                            $data["from"] = $CarAvailability->getStartedAt();
+                            $data["to"] = $CarAvailability->getEndedAt();
+                        }
+
+                        $this->availabilityOfCars[$Car->getId()][] = $data;
+                    }
+                }
+
+                /*$Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+1 day")));
                 if (date("N", strtotime("+1 day")) == 7 || date("N", strtotime("+1 day")) == 6 || $Holiday) {
                     
                     $this->availabilityOfCars[$Car->getId()] = array();
@@ -48,21 +78,21 @@ class profileActions extends sfActions {
                             "dayName" => $week[date("N", strtotime($day))]
                         );
 
-                        /*$this->availabilityOfCars[$Car->getId()][$i] = array();
+                        //$this->availabilityOfCars[$Car->getId()][$i] = array();
 
-                        $this->availabilityOfCars[$Car->getId()][$i]["day"]     = $day;
-                        $this->availabilityOfCars[$Car->getId()][$i]["dayName"] = $week[date("N", strtotime($day))];*/
+                        //$this->availabilityOfCars[$Car->getId()][$i]["day"]     = $day;
+                        //$this->availabilityOfCars[$Car->getId()][$i]["dayName"] = $week[date("N", strtotime($day))];
                         
                         $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime($day)));
                         if ($Holiday) {
-                            /*$this->availabilityOfCars[$Car->getId()][$i]["dayName"] .= " (Feriado)";*/
+                            //$this->availabilityOfCars[$Car->getId()][$i]["dayName"] .= " (Feriado)";
                             $data["dayName"] .= " (Feriado)";
                         }
 
                         $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
                         if ($CarAvailability) {
-                            /*$this->availabilityOfCars[$Car->getId()][$i]["from"] = $CarAvailability->getStartedAt();
-                            $this->availabilityOfCars[$Car->getId()][$i]["to"] = $CarAvailability->getEndedAt();*/
+                            //$this->availabilityOfCars[$Car->getId()][$i]["from"] = $CarAvailability->getStartedAt();
+                            //$this->availabilityOfCars[$Car->getId()][$i]["to"] = $CarAvailability->getEndedAt();
                             $data["from"] = $CarAvailability->getStartedAt();
                             $data["to"] = $CarAvailability->getEndedAt();
                         }
@@ -75,9 +105,7 @@ class profileActions extends sfActions {
                         $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime($day)));                         
                         
                     } while(date("N", strtotime($day)) == 6 || date("N", strtotime($day)) == 7 || $Holiday);
-                    //} while($i < 5);
-                    /*error_log(print_r($this->availabilityOfCars, true));*/
-                }
+                }*/
             }
         }
     }
@@ -185,7 +213,8 @@ class profileActions extends sfActions {
                 throw new Exception("Debes indicar tu nacionalidad", 1);
             }
 
-            if(!$foreign) {
+            // si el usuario es extranjero y selecciona "soy chileno", se hace la verificacion del rut y se setea
+            if($User->getExtranjero() && !$foreign) {
                 if (is_null($rut) || $rut == "") {
                     throw new Exception("Debes indicar tu RUT", 1);
                 } else {
@@ -201,7 +230,9 @@ class profileActions extends sfActions {
                             throw new Exception("el rut ingresado ya se encuentra registrado", 1);
                         }
                     }
-                    
+
+                    $User->setRut($number);
+                    $User->setRutDv(strtoupper($dv));                    
                 }
             }
 
@@ -242,8 +273,6 @@ class profileActions extends sfActions {
             $User->setApellidoMaterno($motherLastname ? $motherLastname : "");
             $User->setFirstname($firstname);
             $User->setEmail($email);
-            $User->setRut($number ? $number : null);
-            $User->setRutDv($dv ? strtoupper($dv) : null);
             $User->setExtranjero($foreign);
             $User->setTelephone($telephone);
             $User->setBirthdate($birth);
@@ -251,6 +280,19 @@ class profileActions extends sfActions {
 
             $Commune = Doctrine_Core::getTable('Commune')->find($commune);
             $User->setCommune($Commune);
+
+            // Chequeo Judicial
+            if(!$foreign){
+                if(!$User->getChequeoJudicial()){
+                    $basePath = sfConfig::get('sf_root_dir');
+                    $userid = $User->getId();
+                    $rut = $User->getRutComplete();
+                    $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.strtoupper($rut).'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
+                    exec($comando);
+                }
+            } else {
+                $User->setChequeoJudicial(false);
+            }
 
             $User->save();
     
@@ -272,6 +314,17 @@ class profileActions extends sfActions {
         $userId = $this->getUser()->getAttribute("userid");
 
         $this->User = Doctrine_Core::getTable('User')->find($userId);
+
+        // Si el usuario posee "extranjero" = false y "rut" = null entonces se setea "extranjero" a true
+        // en el caso contrario ("extranjero" = true y "rut" != null) se setea a "extranjero" a false
+        // esto valida en caso que el usuario se haya registrado en la version antigua de arriendas.
+        if(!$this->User->getExtranjero() && is_null($this->User->rut)){
+            $this->User->setExtranjero(true);
+            $this->User->save();
+        } elseif($this->User->getExtranjero() && !is_null($this->User->rut)) {
+            $this->User->setExtranjero(false);
+            $this->User->save();
+        }
 
         $this->Regions = Doctrine_Core::getTable('Region')->findAll();
     }
