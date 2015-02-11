@@ -263,7 +263,7 @@
                             <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
                             <li><input type="checkbox" name="filter" class="isLowConsumption"> Petrolero</li>
                             <li><input type="checkbox" name="filter" class="isMorePassengers"> Más de 5 pasajeros</li>
-                            <li><input type="checkbox" name="filter" class="nearToSubway"> Cercano al metro (máximo 15 minutos)</li>
+                            <li><input type="checkbox" name="filter" class="nearToSubway"> Cercano al metro</li>
                         </ul>
                     </div>
                 </div>
