@@ -127,6 +127,8 @@
                                         </div>
                                         <?php if ($i < count($ChangeOptions[$Reserve->getId()])-1): ?>
                                             <hr>
+                                        <?php elseif (count($CarsWithAvailability[$Reserve->getId()]) > 0): ?>
+                                            <hr>
                                         <?php endif ?>
                                     <?php endforeach ?>
 
