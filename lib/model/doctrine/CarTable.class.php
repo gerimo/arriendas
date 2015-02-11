@@ -148,8 +148,6 @@ class CarTable extends Doctrine_Table {
                     );
 
                     $count++;
-                } else {
-                    error_log("[carTable/findCars] Auto ya posee reserva");
                 }
             }
 
