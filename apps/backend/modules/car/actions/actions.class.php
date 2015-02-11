@@ -53,7 +53,7 @@ class carActions extends sfActions {
             $withAvailability   = $request->getPostParameter('withAvailability', false) === 'true' ? true : false;
 
 	        $Reserve    = Doctrine_Core::getTable('Reserve')->find($reserveId);
-	        $Cars       = Doctrine_Core::getTable('Car')->findCars($Reserve->getFechaInicio2(), $Reserve->getFechaTermino2(), $limit, $withAvailability, false, false, false, false, false, 13, false, $isAutomatic, $isLowConsumption, $isMorePassengers, false);
+	        $Cars       = Doctrine_Core::getTable('Car')->findCars(0, $limit, $Reserve->getFechaInicio2(), $Reserve->getFechaTermino2(), $withAvailability, false, false, false, false, false, 13, false, $isAutomatic, $isLowConsumption, $isMorePassengers, false);
 
 	        $return["data"] = $Cars;
 
