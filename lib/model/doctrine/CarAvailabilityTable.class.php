@@ -3,7 +3,7 @@
 class CarAvailabilityTable extends Doctrine_Table {
 
     public function findByDay($datetime, $form = false, $to = false, $ownerId = false) {
-        
+
         $q = Doctrine_Core::getTable("Car")
             ->createQuery('C')
             ->innerJoin('C.CarAvailabilities CA')
@@ -23,6 +23,7 @@ class CarAvailabilityTable extends Doctrine_Table {
                 }
             }
 
+            error_log("Autos con disponibilidad: ".count($ReturnCars));
             return $ReturnCars;
         }
 
