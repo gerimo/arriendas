@@ -1,4 +1,4 @@
-<link href="/css/newDesign/indexMap.css" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/index.css" rel="stylesheet" type="text/css">
 
 <!-- Google Maps -->
 <script src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;sensor=false" type="text/javascript"></script>
@@ -239,7 +239,7 @@
             return false;
         }
 
-        $('#list-container').hide();
+        $('#map-list-container, #list-container').hide();
         $(".loading").show();
 
         // First, determine the map bounds
@@ -290,13 +290,6 @@
             isMap = true;
         }
 
-        var nearToSubway = false;
-        $(".nearToSubway").each(function(){
-            if ($(this).is(':checked')) {
-                nearToSubway = true;
-            }
-        });
-
         // Validación de la búsqueda
         var error = false;
         var errorMessage = "<p style='padding: 5% 5% 0 5%'>Para buscar, debes:<ul>";
@@ -315,9 +308,9 @@
 
         if (error) {
 
-            $("#list-container").html(errorMessage);
+            $("#map-list-container, #list-container").html(errorMessage);
             $('.loading').hide();
-            $("#list-container").show();
+            $("#map-list-container, #list-container").show();
 
             return false;
         }
@@ -336,8 +329,7 @@
             communeId: communeId,
             isAutomatic: isAutomatic,
             isLowConsumption: isLowConsumption,
-            isMorePassengers: isMorePassengers,
-            nearToSubway: nearToSubway            
+            isMorePassengers: isMorePassengers            
         }
 
         $.post("<?php echo url_for('car_search') ?>", parameters, function(r){
@@ -436,6 +428,15 @@
 
                         infowindow.setContent(this.contentString);
                         infowindow.open(map, this);
+
+                        /*$('a.thickbox').click(function() {
+                            var t = this.title || this.name || null;
+                            var a = this.href || this.alt;
+                            var g = this.rel || false;
+                            tb_show(t, a, g);
+                            this.blur();
+                            return false;
+                        });*/
                     });
 
                     markers.push(marker);
@@ -468,17 +469,27 @@
                     
                     mapListContent += article;
 
+                    /*listContent += "<article class='box'>";
+                    listContent += "<div class='img-holder'><img src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_134,h_99,c_fill,g_center/" + urlFotoThumbTipo + "' height='99' width='134' alt=''></div>";
+                    listContent += "<div class='text-area'>";
+                    listContent += "<h2><a href='<?php echo url_for("arriendo-de-autos/rent-a-car") ?>/" + Car.brand + Car.model + "/" + Car.comuna + "/" + Car.id + "'>"+ Car.brand +" "+ Car.model +"<span>, "+Car.year+"</span></a></h2>";
+                    listContent += "<span class='sub'>Providencia </span>";
+                    listContent += "<span class='sub-heading'>A 2 km Metro <strong>Tobalaba</strong></span>";
+                    listContent += "<span class='price'>$"+ Car.price_per_day +"</span>";
+                    listContent += "<a href='<?php echo url_for("profile/reserve?id=") ?>"+ Car.id + "' class='reserve'>RESERVAR</a>";
+                    listContent += "</div>";
+                    listContent += "</article>";*/
                 }
             } else {
                 mapListContent += "<h2 style='text-align: center'>No hemos encontrado vehículos</h2>";
                 listContent += "<h2 style='text-align: center'>No hemos encontrado vehículos</h2>";
             }
 
-            //map-list-container").html(mapListContent);
+            $("#map-list-container").html(mapListContent);
             $("#list-container").html(listContent);
 
             $('.loading').hide();
-            $("#list-container").show();
+            $("#map-list-container, #list-container").show();
 
             var mcOptions = {
                 maxZoom: 10
@@ -487,7 +498,6 @@
             markerCluster = new MarkerClusterer(map, markers, mcOptions);
         }, "json");
     }
-
 </script>
 
 <section id="section-home">
@@ -522,16 +532,20 @@
         <span class="ico-search hidden-xs" data-target="#section-map-form-search"><img src="/images/newDesign/ico-search.svg"></span>
 
         <!-- List -->
-        <div class="visible-xs col-xs-6 col-sm-3 col-md-3" id="region-container">
+        <div class="col-xs-6 col-sm-3 col-md-3" id="region-container">
             <select class="region form-control" id="region">
                 <option disabled selected value="<?php echo $Region->id ?>"><?php echo $Region->name ?></option>
             </select>
         </div>
-        <div class="visible-xs col-xs-6 col-sm-3 col-md-3" id="commune-container">
+        <div class="col-xs-6 col-sm-3 col-md-3" id="commune-container">
             <select class="commune form-control" id="commune">
                 <option value="0">Todas Las Comunas</option>
                 <?php foreach ($Region->getCommunes() as $Commune): ?>
-                    <option value="<?php echo $Commune->id ?>"><?php echo ucwords(strtolower($Commune->name)) ?></option>
+                    <?php if ($hasCommune && $Commune->id == $hasCommune): ?>
+                        <option selected value="<?php echo $Commune->id ?>"><?php echo ucwords(strtolower($Commune->name)) ?></option> 
+                    <?php else: ?>
+                        <option value="<?php echo $Commune->id ?>"><?php echo ucwords(strtolower($Commune->name)) ?></option>
+                    <?php endif ?>
                 <?php endforeach ?>
             </select>
         </div>
@@ -552,7 +566,6 @@
             <a class="btn btn-a-action btn-block" href id="search">Buscar</a>
         </div>
     </div>
-
 </section>
 
 <section id="section-map">
@@ -561,13 +574,16 @@
         <div class=" col-sm-2 col-md-2 text-center">
             <strong class="heading">Filtros</strong>
         </div>
-        <div class="col-sm-6 col-md-8">
+        <div class="col-sm-6 col-md-6">
             <ul>
                 <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
                 <li><input type="checkbox" name="filter" class="isLowConsumption"> Petrolero</li>
                 <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
-                <li><input type="checkbox" name="filrer" class="nearToSubway"> Cercano al metro(máximo 15 minutos)</li>
             </ul>
+        </div>
+        <div class="col-sm-4 col-md-4 hidden-xs tabset">
+            <div class="map col-sm-6 col-md-6 text-center tab activo" data-target="#tab-map"><strong><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Mapa</strong></div>
+            <div class="list col-sm-6 col-md-6 text-center tab" data-target="#tab-list"><strong><span class="glyphicon glyphicon-list" aria-hidden="true"></span> Lista</strong></div>
         </div>
     </div>
 
@@ -592,7 +608,6 @@
                         <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
                         <li><input type="checkbox" name="filter" class="isLowConsumption"> Petrolero</li>
                         <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
-                        <li><input type="checkbox" name="filrer" class="nearToSubway"> Cercano al metro(máximo 15 minutos)</li>
                     </ul>
                 </div>
             </div>
@@ -603,8 +618,13 @@
 
         <div class="tab-container hidden-xs" id="tab-map">
             <div class="row">
-                <div class="col-sm-8 col-md-12" id="map">
+                <div class="col-sm-8 col-md-8" id="map">
                     <div id="map-container"></div>
+                </div>
+
+                <div class="col-sm-4 col-md-4" id="map-list">
+                    <div id="map-list-loading" class="loading" style="text-align: center; margin-top: 30%"><?php echo image_tag('ajax-loader.gif', array("width" => "80px", "height" => "80px")) ?></div>
+                    <div id="map-list-container"></div>
                 </div>
             </div>
         </div>
@@ -616,18 +636,15 @@
             </div>
         </div>
     </div>
-
 </section>
 
 <section id="section-how-works">
-
     <div class="row">
         <div class="col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10">
             <h2 class="title"><span>¿Cómo Funciona?</span></h2>
             <iframe class="iframe" src="//player.vimeo.com/video/45668172?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff"  frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>    
         </div>
     </div>
-
 </section>
 
 <section id="section-compare-prices">
@@ -638,8 +655,7 @@
        </div>
     </div>
    
-    <div class="visible-xs space-20">
-    </div>
+    <div class="visible-xs space-20"></div>
 
     <div class="row">
         <div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 table-responsive text-center">
@@ -686,7 +702,6 @@
             <p class="hidden-xs text-center">Precios con IVA, aplicando descuento por reservas en internet, con seguro de daños, robo y accidentes personales. Muestra tomada 1/1/2015 en sus páginas de internet</p>
        </div>
     </div>
-
 </section>
 
 <section class="visible-xs hidden-sm hidden-md" id="section-condition">
@@ -699,9 +714,7 @@
             <p>Debes pagar con una cuenta bancaria a tu nombre (no puede ser de un tercero).</p>
         </div>
     </div>
-    <div class="visible-xs hidden-sm hidden-md space-40">
-    </div>
-
+    <div class="visible-xs hidden-sm hidden-md space-40"></div>
 </section>
 
 <section class="hidden-xs" id="section-on-news">
@@ -727,13 +740,11 @@
             </div>
         </div>
     </div>
-
 </section>
 
 <section class="hidden-xs" id="section-testimonials">
 
-    <div class="hidden-xs space-40">
-    </div>
+    <div class="hidden-xs space-40"></div>
 
     <div id="testimonials-container">
         <h1>Testimonios</h1>
@@ -751,8 +762,7 @@
         </div>
     </div>
 
-    <div class="hidden-xs space-100">
-    </div>
+    <div class="hidden-xs space-100"></div>
 </section>
 
 <div style="display:none">
@@ -823,16 +833,18 @@
         });
 
         // Cuando es fin de semana
-        /* 
-       <?php if ($isWeekend): ?>
+        <?php if ($isWeekend): ?>
             $('div[data-target="#tab-list"]').click();
             $('.map').html("");
             $('.map').removeClass("tab");
             $('.tabset').css("cursor", "default");
             $('.tabset').css("background-color", "#00aced");
         <?php endif ?>
-        */
 
+        // Cuando se carga desde un rent-a-car-especifico (footer)
+        <?php if ($hasCommune): ?>
+            $('div[data-target="#tab-list"]').click();
+        <?php endif ?>
     });
 
     if ($(window).width() > 768) {
@@ -1024,6 +1036,7 @@
                     format:'d-m-Y H:i'
                 });
         }
+
     }
 
     function get_date(input) {
@@ -1034,5 +1047,4 @@
             return parts[2]+'/'+parts[1]+'/'+parts[0];
         } 
     }
-    
 </script>
