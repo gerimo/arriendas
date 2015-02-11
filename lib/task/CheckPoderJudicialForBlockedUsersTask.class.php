@@ -47,6 +47,7 @@ EOF;
             $startTime = microtime(true);
             
             foreach ($Users as $User) {
+                $nodeCount = 0;
                 $causa = "connection fail";
                 
                 if($User->getRut()) {
@@ -85,10 +86,16 @@ EOF;
                     $User->save();
 
                 } else {
+                    $User->setChequeoJudicial(false);
                     $countSinRut++;
                 }
                 $countTotal++;
-                $this->log("ID: ".$User->getId()." RUT: ".$User->getRutComplete()." causa:  ".$causa."    numero de causas:".($nodeCount/6));
+
+                $usuario = str_pad(("ID: ".$User->getId()." (".$User->getFirstname()." ".$User->getLastname().")"), 50);
+                $rut     = str_pad((" RUT: ".$User->getRutComplete()), 18);
+                $causas   = str_pad((" Causas: ".($nodeCount/6)), 10);
+                $this->log($usuario."".$rut."".$causas);
+                //$this->log("ID: ".$User->getId()."(".$User->getFirstname()." ".$User->getLastname().") RUT: ".$User->getRutComplete()."  causas: ".($nodeCount/6));
 
             }
 
