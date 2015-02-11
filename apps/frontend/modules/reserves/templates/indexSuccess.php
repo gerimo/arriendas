@@ -129,6 +129,32 @@
                                             <hr>
                                         <?php endif ?>
                                     <?php endforeach ?>
+
+                                    <?php foreach ($CarsWithAvailability[$Reserve->getId()] as $i => $C): ?>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="col-md-3 text-center">
+                                                    <img src="/uploads/cars/thumbs/<?php echo $C->getFotoPerfil() ?>" width="80%">
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <br class="visible-xs">
+                                                    <p><b>Auto: </b><?php echo $C->getModel()->getBrand()->getName() ." ". $C->getModel()->getName() ?>, <?php if ($C->getTransmission()) echo "Automático"; else echo "Mecánico"; ?></p>
+                                                    <p><b>Dirección: </b><?php echo $C->getAddress() .", ". $C->getCommune()->name ?></p>
+                                                    <p><b>Dueño: </b><?php echo $C->getUser()->firstname ." ". substr($C->getUser()->lastname, 0, 1) ?></p>
+                                                    <p><img class="metro" src='/images/newDesign/ico.png' alt='metro'> A <b><?php echo round($C->getNearestMetro()->distance, 1) ?> km</b> del Metro <?php echo $C->getNearestMetro()->getMetro()->name ?></p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button class="change btn btn-a-action btn-block" data-reserve-id="<?php echo $CO->getId() ?>">Cambiar</button>
+                                            </div>
+                                            <div class="col-md-1 text-center">
+                                                <img class="loading" src="/images/ajax-loader.gif">
+                                            </div>
+                                        </div>
+                                        <?php if ($i < count($CarsWithAvailability[$Reserve->getId()])-1): ?>
+                                            <hr>
+                                        <?php endif ?>
+                                    <?php endforeach ?>
                                 </div>
                             </div>
                         </div>
