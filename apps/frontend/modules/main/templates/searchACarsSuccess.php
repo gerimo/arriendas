@@ -614,7 +614,7 @@
         return (mes+dia+ano+hora+min);
     }
 
-    //valida que los no existan lapsus de media hora en los arriendos
+    //valida que los no existan lapsus menores a 1 hora  en los arriendos
     function validateMin(){
         if($("#from").val() && $("#to").val()){
             var minF = $("#from").val();
