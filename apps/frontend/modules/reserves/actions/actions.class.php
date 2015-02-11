@@ -23,7 +23,7 @@ class reservesActions extends sfActions {
             }
 
             if (Utils::isWeekend()) {
-                $this->CarsWithAvailability[$Reserve->getId()][] = Doctrine_Core::getTable('CarAvailability')->findByDay($Reserve->getDate(), $Reserve->getFechaInicio2(), $Reserve->getFechaTermino2(), $Reserve->getUser()->id);
+                $this->CarsWithAvailability[$Reserve->getId()][] = Doctrine_Core::getTable('CarAvailability')->findASD($Reserve->getDate(), $Reserve->getFechaInicio2(), $Reserve->getFechaTermino2(), $Reserve->getUser()->id);
             }
         }
     }
