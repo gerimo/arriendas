@@ -37,7 +37,7 @@ EOF;
 
             $this->log("[".date("Y-m-d H:i:s")."] Procesando...");
 
-            $Users = Doctrine_Core::getTable("User")->findAll();
+            $Users = Doctrine_Core::getTable("User")->findByBlocked(1);
 
             $countTotal= 0;
             $countProblemasConexion=0;
@@ -47,62 +47,59 @@ EOF;
             $startTime = microtime(true);
             
             foreach ($Users as $User) {
-                $causa = 0;
+                $causa = "connection fail";
                 
                 if($User->getRut()) {
-                    if($User->getBlocked()) {
-                        if (strlen($viewStateId) > 0) {
+                    if (strlen($viewStateId) > 0) {
 
-                            /* verification call */
-                            $params = array(
-                                'formConsultaCausas:idFormRut' => $User->rut,
-                                'formConsultaCausas:idFormRutDv' => strtoupper($User->rut_dv),
-                                'formConsultaCausas:idSelectedCodeTribunalRut' => "0",
-                                'formConsultaCausas:buscar1.x' => "66",
-                                'formConsultaCausas:buscar1.y' => "19",
-                                'formConsultaCausas' => "formConsultaCausas",
-                                'javax.faces.ViewState' => $viewStateId,
-                            );
+                        /* verification call */
+                        $params = array(
+                            'formConsultaCausas:idFormRut' => $User->rut,
+                            'formConsultaCausas:idFormRutDv' => strtoupper($User->rut_dv),
+                            'formConsultaCausas:idSelectedCodeTribunalRut' => "0",
+                            'formConsultaCausas:buscar1.x' => "66",
+                            'formConsultaCausas:buscar1.y' => "19",
+                            'formConsultaCausas' => "formConsultaCausas",
+                            'javax.faces.ViewState' => $viewStateId,
+                        );
 
-                            $crawler = $client->request('POST', 'http://reformaprocesal.poderjudicial.cl/ConsultaCausasJsfWeb/page/panelConsultaCausas.jsf', $params);
-                            $nodeCount = count($crawler->filter('.extdt-cell-div'));
+                        $crawler = $client->request('POST', 'http://reformaprocesal.poderjudicial.cl/ConsultaCausasJsfWeb/page/panelConsultaCausas.jsf', $params);
+                        $nodeCount = count($crawler->filter('.extdt-cell-div'));
 
-                            if ($nodeCount > 1) {
-                                $User->setBlocked(true);
-                                $User->setChequeoJudicial(true);
-                                $countTieneCausas++;
-                                $causa = 2;
-                            } else {
-                                $User->setBlocked(false);
-                                $User->setChequeoJudicial(true);
-                                $countSinCusas++;
-                                $causa = 1;
-                            }
-                                            
+                        if ($nodeCount > 1) {
+                            $User->setBlocked(true);
+                            $User->setChequeoJudicial(true);
+                            $countTieneCausas++;
+                            $causa = "blocked by criminal records";
                         } else {
-                            $User->setChequeoJudicial(false);
-                            $countProblemasConexion++;
-                            $causa = 0;
+                            $User->setBlocked(false);
+                            $User->setChequeoJudicial(true);
+                            $countSinCusas++;
+                            $causa = "free of criminal records";
                         }
-                        $this->log("ID: ".$User->getId()." RUT: ".$User->getRutComplete()." causa:".$causa." numero de causas:".($nodeCount/6));
-
+                                        
+                    } else {
+                        $User->setChequeoJudicial(false);
+                        $countProblemasConexion++;
                     }
+                    $User->save();
+                    $this->log("ID: ".$User->getId()." RUT: ".$User->getRutComplete()." causa:  ".$causa."    numero de causas:".($nodeCount/6));
+
                 } else {
                     $countSinRut++;
                 }
                 
                 $countTotal++;
-                $User->save();
             }
 
             $endTime = microtime(true);
 
-            $this->log("[".date("Y-m-d H:i:s")."] Total usuarios:               ".$countSinRut);
-            $this->log("[".date("Y-m-d H:i:s")."] Total usuarios sin rut:       ".$countTotal);
-            $this->log("[".date("Y-m-d H:i:s")."] Usuarios con causas:          ".$countTieneCausas);
-            $this->log("[".date("Y-m-d H:i:s")."] Usuarios sin Causas:          ".$countSinCusas);
-            $this->log("[".date("Y-m-d H:i:s")."] Problemas de Conexión:        ".$countProblemasConexion);
-            $this->log("[".date("Y-m-d H:i:s")."] Tiempo total de procesamiento ".round($endTime-$startTime, 2)." segundos");
+            $this->log("[".date("Y-m-d H:i:s")."] Total usuarios:                   ".$countSinRut);
+            $this->log("[".date("Y-m-d H:i:s")."] Total usuarios sin rut:           ".$countTotal);
+            $this->log("[".date("Y-m-d H:i:s")."] Usuarios bloqueados con causas:   ".$countTieneCausas);
+            $this->log("[".date("Y-m-d H:i:s")."] Usuarios bloqueados sin Causas:   ".$countSinCusas);
+            $this->log("[".date("Y-m-d H:i:s")."] Problemas de Conexión:            ".$countProblemasConexion);
+            $this->log("[".date("Y-m-d H:i:s")."] Tiempo total de procesamiento     ".round($endTime-$startTime, 2)." segundos");
 
         } catch (Exeception $e) {
             error_log("[".date("Y-m-d H:i:s")."] ERROR: ".$e->getMessage());
