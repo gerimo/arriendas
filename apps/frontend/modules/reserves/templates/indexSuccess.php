@@ -8,7 +8,7 @@
 
         <div class="BCW">
 
-            <pre><?php var_dump(CarsWithAvailability) ?></pre>
+            <pre><?php var_dump($CarsWithAvailability) ?></pre>
 
             <?php if (count($PaidReserves) > 0): ?>
 
