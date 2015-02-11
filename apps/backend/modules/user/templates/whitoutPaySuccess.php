@@ -58,8 +58,8 @@
 
     $(document).ready(function() {
 
-/*        getUserWhitoutPay();
-*/     
+        getUserWhitoutPay();
+     
         $('#userWhitoutPayTable').DataTable({
             info: false,
             paging: true,
@@ -84,9 +84,8 @@
         $(".load").show();
 
         $.post("<?php echo url_for('user_whitout_pay_get') ?>", {"from": from, "to": to}, function(r){
-            console.log(r);
-
             if (r.error) {
+                console.log(r);
                 $('#userWhitoutPayTable').DataTable().rows().remove().draw();
                 $(".load").hide();
             } else {
