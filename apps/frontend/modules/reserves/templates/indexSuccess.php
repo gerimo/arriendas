@@ -8,8 +8,6 @@
 
         <div class="BCW">
 
-            <pre><?php var_dump($CarsWithAvailability) ?></pre>
-
             <?php if (count($PaidReserves) > 0): ?>
 
                 <h1>Reservas recibidas</h1>
