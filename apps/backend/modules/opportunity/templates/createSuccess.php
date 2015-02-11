@@ -26,6 +26,7 @@
                 <?php
                     endfor;
                 ?>
+              	<option value="false">Todos</option>
             </select>
         </div>
 

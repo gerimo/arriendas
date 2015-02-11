@@ -41,6 +41,7 @@ body {
     float: left;
     list-style: none;   
     font: 600 18px/20px 'Open Sans', sans-serif;
+    margin-left: 15px;
 }
 
 #section-map-filters .col-md-7 input[type=checkbox] { 
