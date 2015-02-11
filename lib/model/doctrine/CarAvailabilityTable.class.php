@@ -2,7 +2,12 @@
 
 class CarAvailabilityTable extends Doctrine_Table {
 
-    public function findASD($datetime, $form = false, $to = false, $ownerId = false) {
+    public function findASD($datetime, $from = false, $to = false, $ownerId = false) {
+
+        error_log("DATETIME: ".$datetime);
+        error_log("FROM: ".$from);
+        error_log("TO: ".$to);
+        error_log("OWNER ID: ".$ownerId);
 
         $q = Doctrine_Core::getTable("Car")
             ->createQuery('C')
