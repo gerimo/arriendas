@@ -17,6 +17,7 @@ class mainActions extends sfActions {
 
         $this->hasCommune = false;
         $this->isWeekend  = false;
+        $this->isMobile   = false;
 
         if ($request->hasParameter('region','commune')){
             $communeSlug = $request->getParameter('commune');
@@ -30,6 +31,13 @@ class mainActions extends sfActions {
             $this->getUser()->setAttribute('geolocalizacion', true);
         } elseif ($this->getUser()->getAttribute('geolocalizacion') == true) {
             $this->getUser()->setAttribute('geolocalizacion', false);
+        }
+
+        $this->limit = 33;
+        $MD = new Mobile_Detect;
+        if ($MD->isMobile()) {
+            $this->limit = 5;
+            $this->isMobile = true;
         }
 
         if (Utils::isWeekend()) {

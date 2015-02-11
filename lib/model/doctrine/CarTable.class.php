@@ -25,21 +25,24 @@ class CarTable extends Doctrine_Table {
         return $q->execute();
     }
 
-    public function findCars($from, $to, $limit = 50, $withAvailability,$isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway) {
+    public function findCars($offset, $limit, $from, $to, $withAvailability, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway) {
+
         $CarsFound = array();
 
-        /*error_log("FROM: ".$from);
-        error_log("TO: ".$to);
-        error_log("ISMAP: ".$isMap);
-        error_log("NELAT: ".$NELat);
-        error_log("NELNG: ".$NELng);
-        error_log("SWLAT: ".$SWLat);
-        error_log("SWLNG: ".$SWLng);
-        error_log("REGIONID: ".$regionId);
-        error_log("COMMUNEID: ".$communeId);
-        error_log("ISAUTOMATIC: ".$isAutomatic);
-        error_log("ISLOWCONSUMPTION: ".$isLowConsumption);
-        error_log("ISMOREPASSENGERS: ".$isMorePassengers);*/
+        //error_log("OFFSET: ".$offset);
+        //error_log("LIMIT: ".$limit);
+        //error_log("FROM: ".$from);
+        //error_log("TO: ".$to);
+        //error_log("ISMAP: ".$isMap);
+        //error_log("NELAT: ".$NELat);
+        //error_log("NELNG: ".$NELng);
+        //error_log("SWLAT: ".$SWLat);
+        //error_log("SWLNG: ".$SWLng);
+        //error_log("REGIONID: ".$regionId);
+        //error_log("COMMUNEID: ".$communeId);
+        //error_log("ISAUTOMATIC: ".$isAutomatic);
+        //error_log("ISLOWCONSUMPTION: ".$isLowConsumption);
+        //error_log("ISMOREPASSENGERS: ".$isMorePassengers);
         
         try {
 
@@ -50,7 +53,9 @@ class CarTable extends Doctrine_Table {
                 ->innerJoin('C.Model M')
                 ->Where('C.activo = 1')
                 ->andWhere('C.seguro_ok = 4')
-                ->orderBy('C.price_per_day ASC');            
+                ->orderBy('C.price_per_day ASC')
+                ->offset($offset)
+                ->limit($limit);
 
             // Si es Feriado o Fin de Semana, se buscan los autos de la tabla CarAvailability
             if ($withAvailability) {
@@ -104,10 +109,6 @@ class CarTable extends Doctrine_Table {
 
             }
 
-            if ($limit) {
-                $q->limit($limit);
-            }
-
             $Cars = $q->execute();
 
             foreach ($Cars as $i => $Car) {
@@ -147,6 +148,8 @@ class CarTable extends Doctrine_Table {
                     );
 
                     $count++;
+                } else {
+                    error_log("[carTable/findCars] Auto ya posee reserva");
                 }
             }
 
