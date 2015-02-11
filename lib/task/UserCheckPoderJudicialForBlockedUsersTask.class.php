@@ -44,6 +44,7 @@ EOF;
             $countSinCusas=0;
             $countTieneCausas=0;
             $countSinRut=0;
+            $countConRut=0;
             $startTime = microtime(true);
             
             foreach ($Users as $User) {
@@ -51,6 +52,7 @@ EOF;
                 $causa = "connection fail";
                 
                 if($User->getRut()) {
+                    $countConRut++;
                     if (strlen($viewStateId) > 0) {
 
                         /* verification call */
@@ -101,8 +103,8 @@ EOF;
 
             $endTime = microtime(true);
 
-            $this->log("[".date("Y-m-d H:i:s")."] Total usuarios:                   ".$countSinRut);
-            $this->log("[".date("Y-m-d H:i:s")."] Total usuarios sin rut:           ".$countTotal);
+            $this->log("[".date("Y-m-d H:i:s")."] Total usuarios:                   ".$countTotal);
+            $this->log("[".date("Y-m-d H:i:s")."] Total usuarios sin rut:           ".$countSinRut);
             $this->log("[".date("Y-m-d H:i:s")."] Usuarios bloqueados con causas:   ".$countTieneCausas);
             $this->log("[".date("Y-m-d H:i:s")."] Usuarios bloqueados sin Causas:   ".$countSinCusas);
             $this->log("[".date("Y-m-d H:i:s")."] Problemas de Conexión:            ".$countProblemasConexion);
