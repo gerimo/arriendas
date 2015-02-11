@@ -26,8 +26,7 @@ class CarAvailabilityTable extends Doctrine_Table {
                     $ReturnCars[] = $Car;
                 }
             }
-
-            error_log("Autos con disponibilidad: ".count($ReturnCars));
+            
             return $ReturnCars;
         }
 
