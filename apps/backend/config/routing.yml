@@ -5,13 +5,21 @@ homepage:
   url:   /
   param: { module: main, action: index }
 
-car_is_active_car:
-    url: /vehiculo/es-vehiculo-activo
-    param: { module: car, action: isActiveCar }
+car_find_car:
+    url: /vehiculo/buscar
+    param: { module: car, action: findCar }
 
 car_get_actives_cars:
     url: /vehiculo/vehiculos-activos
     param: { module: car, action: getActivesCars }
+
+car_is_active_car:
+    url: /vehiculo/es-vehiculo-activo
+    param: { module: car, action: isActiveCar }
+
+car_verify_car:
+    url: /vehiculo/verificar
+    param: { module: car, action: VerifyCar }
 
 comment:
     url: /comentario/:userId/:managementId

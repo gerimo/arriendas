@@ -8,14 +8,14 @@ class UserTable extends Doctrine_Table {
             ->createQuery('R')
             ->Where('R.user_id = ?', $userId)
             ->andWhere('R.fecha_pago IS NOT NULL')
-            ->andWhere('R.fecha_pago BETWEEN ? AND ?', array($from, $to));
+            ->andWhere('DATE(R.fecha_pago) BETWEEN ? AND ?', array($from, $to));
+
 
         $User= $q->fetchOne();
 
         if ($User) {
             return true;
         }
-
         return false;
     }
 

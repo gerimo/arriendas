@@ -54,20 +54,15 @@ class Reserve extends BaseReserve {
 
             $q = Doctrine_Core::getTable("Car")
                 ->createQuery('C')
-                ->innerJoin('C.CarAvailability CA')
+                ->innerJoin('C.CarAvailabilities CA')
                 ->andWhere("CA.is_deleted IS FALSE")
                 ->andWhere("CA.day = ?", date("Y-m-d", strtotime($this->date)))
                 ->andWhere('? BETWEEN CA.started_at AND CA.ended_at', date("H:i:s", strtotime($this->date)));
 
-            $Reserves = $q->execute();
+            $Cars = $q->execute();
 
-            foreach ($Reserves as $Reserve) {
-
-                if ($Reserve->getReservaOriginal() == 0) {
-                    if ($withOriginalReserve) {
-                        $ChangeOptions[] = $Reserve;
-                    }
-                } elseif (!$Reserve->getCar()->hasReserve($this->getFechaInicio2(), $this->getFechaTermino2(), $this->getUserId())) {
+            foreach ($Cars as $Car) {
+                if (!$Car->hasReserve($this->getFechaInicio2(), $this->getFechaTermino2(), $this->getUserId())) {
                     $ChangeOptions[] = $Reserve;
                 }
             }
