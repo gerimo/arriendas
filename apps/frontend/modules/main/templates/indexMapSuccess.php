@@ -285,6 +285,13 @@
             }
         });
 
+        var nearToSubway = false;
+        $(".nearToSubway").each(function(){
+            if ($(this).is(':checked')) {
+                nearToSubway = true;
+            }
+        });
+
         var isMap = false;
         if ($("#tab-map").is(":visible")) {
             isMap = true;
@@ -329,7 +336,8 @@
             communeId: communeId,
             isAutomatic: isAutomatic,
             isLowConsumption: isLowConsumption,
-            isMorePassengers: isMorePassengers            
+            isMorePassengers: isMorePassengers,
+            nearToSubway: nearToSubway            
         }
 
         $.post("<?php echo url_for('car_search') ?>", parameters, function(r){
@@ -579,6 +587,7 @@
                 <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
                 <li><input type="checkbox" name="filter" class="isLowConsumption"> Petrolero</li>
                 <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
+                <li><input type="checkbox" name="filter" class="nearToSubway"> Cercano al metro</li>
             </ul>
         </div>
         <div class="col-sm-4 col-md-4 hidden-xs tabset">
@@ -608,6 +617,7 @@
                         <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
                         <li><input type="checkbox" name="filter" class="isLowConsumption"> Petrolero</li>
                         <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
+                        <li><input type="checkbox" name="filter" class="nearToSubway"> Cercano al metro</li>
                     </ul>
                 </div>
             </div>
