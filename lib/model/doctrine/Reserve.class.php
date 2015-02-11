@@ -54,7 +54,7 @@ class Reserve extends BaseReserve {
 
             $q = Doctrine_Core::getTable("Car")
                 ->createQuery('C')
-                ->innerJoin('C.CarAvailability CA')
+                ->innerJoin('C.CarAvailabilities CA')
                 ->andWhere("CA.is_deleted IS FALSE")
                 ->andWhere("CA.day = ?", date("Y-m-d", strtotime($this->date)))
                 ->andWhere('? BETWEEN CA.started_at AND CA.ended_at', date("H:i:s", strtotime($this->date)));
