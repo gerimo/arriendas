@@ -148,18 +148,13 @@
 
 		var idReservaOriginal = $("#idReservaOriginal").val();
 
-		$("#reserve-check").hide();
-		$("#reserve-remove").hide();
-
 		$.post("<?php echo url_for('reserve_is_original_reserve') ?>", {"idReservaOriginal": idReservaOriginal}, function(r){
-
 			if (r.error) {
 				console.log(r.errorMessage);
 			} else {
 				if (r.original != null) {
 					if (r.original) {
 						getActivesCars(r.original);
-						$("#reserve-check").show();
 						$("#reserveFilter").val(r.original); 
 
 						if ($("#car-check").is(":visible")) {
@@ -167,7 +162,6 @@
 						}
 
 					}else {
-						$("#reserve-remove").show(); 
 					}
 				}
 			}
@@ -176,6 +170,10 @@
 	}
 
 	function getActivesCars(reserveId) {
+
+		if (!	reserveId) {
+			return false;
+		}
 
 		$(".loading").show();
 

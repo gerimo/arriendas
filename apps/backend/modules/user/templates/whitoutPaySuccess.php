@@ -58,8 +58,8 @@
 
     $(document).ready(function() {
 
-        getUserWhitoutPay();
-     
+/*        getUserWhitoutPay();
+*/     
         $('#userWhitoutPayTable').DataTable({
             info: false,
             paging: true,
@@ -84,25 +84,12 @@
         $(".load").show();
 
         $.post("<?php echo url_for('user_whitout_pay_get') ?>", {"from": from, "to": to}, function(r){
+            console.log(r);
 
             if (r.error) {
-                /*$("#dialog-alert p").html("No se encontraron usuarios");
-                $("#dialog-alert").attr('title','Error!');
-                $("#dialog-alert").dialog({
-                    buttons: [{
-                    text: "Aceptar",
-                    click: function() {
-                        $('#userWhitoutPayTable').DataTable().rows().remove().draw();
-                        $( this ).dialog( "close" );
-
-                    }
-                    }]
-                });*/
-                
                 $('#userWhitoutPayTable').DataTable().rows().remove().draw();
                 $(".load").hide();
             } else {
-                
                 $('#userWhitoutPayTable').DataTable().rows().remove().draw();
 
                 $.each(r.data, function(k, v) {
