@@ -12,8 +12,8 @@ class CarAvailabilityTable extends Doctrine_Table {
             ->createQuery('C')
             ->innerJoin('C.CarAvailabilities CA')
             ->andWhere("CA.is_deleted IS FALSE")
-            ->andWhere("CA.day = ?", date("Y-m-d", strtotime($from))
-            ->andWhere('? BETWEEN CA.started_at AND CA.ended_at', date("H:i:s", strtotime($from));
+            ->andWhere("CA.day = ?", date("Y-m-d", strtotime($from)))
+            ->andWhere('? BETWEEN CA.started_at AND CA.ended_at', date("H:i:s", strtotime($from)));
 
         $Cars = $q->execute();
 
