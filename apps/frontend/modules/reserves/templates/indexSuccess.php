@@ -145,7 +145,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
-                                                <button class="change btn btn-a-action btn-block" data-reserve-id="<?php echo $CO->getId() ?>">Cambiar</button>
+                                                <button class="change btn btn-a-action btn-block" data-car-id="<?php echo $C->getId() ?>">Cambiar</button>
                                             </div>
                                             <div class="col-md-1 text-center">
                                                 <img class="loading" src="/images/ajax-loader.gif">
