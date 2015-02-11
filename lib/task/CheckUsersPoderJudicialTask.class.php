@@ -32,9 +32,8 @@ EOF;
             $client = new \Goutte\Client();
             // Objtiene la key
             $crawler = $client->request('GET', 'http://reformaprocesal.poderjudicial.cl/ConsultaCausasJsfWeb/page/panelConsultaCausas.jsf');
+
             $viewStateId = $crawler->filter('input[name="javax.faces.ViewState"]')->attr('value');
-
-
 
             $this->log("[".date("Y-m-d H:i:s")."] Procesando...");
 
@@ -64,6 +63,7 @@ EOF;
                                 'formConsultaCausas' => "formConsultaCausas",
                                 'javax.faces.ViewState' => $viewStateId,
                             );
+
                             $crawler = $client->request('POST', 'http://reformaprocesal.poderjudicial.cl/ConsultaCausasJsfWeb/page/panelConsultaCausas.jsf', $params);
                             $nodeCount = count($crawler->filter('.extdt-cell-div'));
 
@@ -78,13 +78,14 @@ EOF;
                                 $countSinCusas++;
                                 $causa = 1;
                             }
-
+                                            
                         } else {
                             $User->setChequeoJudicial(false);
                             $countProblemasConexion++;
                             $causa = 0;
                         }
-                        $this->log($User->getRutComplete()." causa:".$causa);
+                        $this->log("ID: ".$User->getId()." RUT: ".$User->getRutComplete()." causa:".$causa." numero de causas:".($nodeCount/6));
+
                     }
                 } else {
                     $countSinRut++;
