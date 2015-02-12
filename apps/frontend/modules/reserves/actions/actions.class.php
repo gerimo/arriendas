@@ -12,12 +12,18 @@ class reservesActions extends sfActions {
         $this->PaidReserves = Reserve::getPaidReserves($userId);
 
         $this->Reserves = Reserve::getReservesByUser($userId);
+
         $this->ChangeOptions = array();
+        $this->CarsWithAvailability = array();
 
         foreach ($this->Reserves as $Reserve) {
 
             foreach ($Reserve->getChangeOptions() as $ChangeOption) {
                 $this->ChangeOptions[$Reserve->getId()][] = $ChangeOption;
+            }
+
+            if (Utils::isWeekend()) {
+                $this->CarsWithAvailability[$Reserve->getId()] = Doctrine_Core::getTable('CarAvailability')->findChangeOptions($Reserve->id);
             }
         }
     }
