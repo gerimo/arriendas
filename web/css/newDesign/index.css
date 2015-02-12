@@ -218,7 +218,8 @@ header .navbar-nav .navbar-right ul {
 
 #list-container {
     background-color: white;
-    min-height: 250px;
+    /*min-height: 250px;*/
+    padding: 3% 0;
 }
 
 #list-container h2 {

@@ -147,7 +147,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
-                                                <button class="change btn btn-a-action btn-block" data-car-id="<?php echo $C->getId() ?>">Cambiar</button>
+                                                <button class="change-with-availability btn btn-a-action btn-block" data-car-id="<?php echo $C->getId() ?>">Cambiar</button>
                                             </div>
                                             <div class="col-md-1 text-center">
                                                 <img class="loading" src="/images/ajax-loader.gif">
@@ -274,6 +274,39 @@
         grandpa.find(".loading").show();
 
         $.post("<?php echo url_for('reserve_change') ?>", {"newReserveId": newReserveId}, function(r){
+
+            if (r.error) {
+
+                $("#dialog-alert p").html(r.errorMessage);
+                $("#dialog-alert").attr("title", "Problemas al cambiar de auto");
+                $("#dialog-alert").dialog({
+                    buttons: [{
+                        text: "Aceptar",
+                        click: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }]
+                });
+
+                button.removeAttr("disabled");
+                grandpa.find(".loading").hide();
+            } else {
+
+                location.reload();
+            }            
+        }, "json");
+    });
+
+    $(document).on("click", ".change-with-availability", function(){
+
+        var button = $(this);
+        var grandpa = $(this).parent().parent();
+        var carId = $(this).data("car-id");
+
+        button.attr("disabled", true);
+        grandpa.find(".loading").show();
+
+        $.post("<?php echo url_for('reserve_change_with_availability') ?>", {"carId": carId}, function(r){
 
             if (r.error) {
 
