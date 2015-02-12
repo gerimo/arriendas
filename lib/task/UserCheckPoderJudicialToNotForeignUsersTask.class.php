@@ -1,7 +1,7 @@
 <?php
 require_once sfConfig::get('sf_lib_dir') . '/vendor/fabpot/goutte.phar';
 
-class UserCheckPoderJudicialForBlockedUsersTask extends sfBaseTask {
+class UserCheckPoderJudicialToNotForeignTask extends sfBaseTask {
 
     protected function configure() {
 
@@ -12,13 +12,13 @@ class UserCheckPoderJudicialForBlockedUsersTask extends sfBaseTask {
         ));
 
         $this->namespace = 'user';
-        $this->name = 'checkPoderJudicialForBlockedUsers';
-        $this->briefDescription = 'Verifica a todos los usuarios bloqueados, desbloqueando a los que no posean causas judiciales';
+        $this->name = 'checkPoderJudicialForNotForeignUsers';
+        $this->briefDescription = 'Analiza los rut de los usuarios que no han sido chequeados';
         $this->detailedDescription = <<<EOF
-The [UserCheckPoderJudicialForBlockedUsers|INFO] task does things.
+The [checkCausasJudicialesToNotForeign|INFO] task does things.
 Call it with:
 
-  [php symfony user:checkPoderJudicialForBlockedUsers|INFO]
+  [php symfony user:userCheckPoderJudicialToNotForeign|INFO]
 EOF;
     }
 
@@ -32,27 +32,29 @@ EOF;
             $client = new \Goutte\Client();
             // Objtiene la key
             $crawler = $client->request('GET', 'http://reformaprocesal.poderjudicial.cl/ConsultaCausasJsfWeb/page/panelConsultaCausas.jsf');
-
             $viewStateId = $crawler->filter('input[name="javax.faces.ViewState"]')->attr('value');
+
+
 
             $this->log("[".date("Y-m-d H:i:s")."] Procesando...");
 
-            $Users = Doctrine_Core::getTable("User")->findByBlocked(1);
+            $Users = Doctrine_Core::getTable("User")->findByChequeoJudicial(0);
 
-            $countTotal= 0;
+            $countTotalUsuariosAlPrincipio = count($Users);
             $countProblemasConexion=0;
-            $countSinCusas=0;
-            $countTieneCausas=0;
-            $countSinRut=0;
-            $countConRut=0;
-            $startTime = microtime(true);
+            $countSinCausas=0;
+            $countConCausas=0;
+            $countRutInvalido=0;
+            $countTotalUsuariosChequeados=0;
             
+            $startTime = microtime(true);
             foreach ($Users as $User) {
+
                 $nodeCount = 0;
-                $connection = "";
+                $problems = "";
                 
-                if($User->getRut()) {
-                    $countConRut++;
+                if(Utils::isValidRUT($User->getRutComplete())) {
+
                     if (strlen($viewStateId) > 0) {
 
                         /* verification call */
@@ -72,12 +74,14 @@ EOF;
                         if ($nodeCount > 1) {
                             $User->setBlocked(true);
                             $User->setChequeoJudicial(true);
-                            $countTieneCausas++;
+                            $countTotalUsuariosChequeados++;
+                            $countConCausas++;
                             $causa = "blocked by criminal records";
                         } else {
                             $User->setBlocked(false);
                             $User->setChequeoJudicial(true);
-                            $countSinCusas++;
+                            $countTotalUsuariosChequeados++;
+                            $countSinCausas++;
                             $causa = "free of criminal records";
                         }
                                         
@@ -85,33 +89,41 @@ EOF;
                         $User->setChequeoJudicial(false);
                         $countProblemasConexion++;
                         $causa = "connection fail";
-                        $connection = "Connection lost";
+                        $problems = "Connection lost";
                     }
                     $User->save();
 
                 } else {
                     $User->setChequeoJudicial(false);
-                    $countSinRut++;
+                    $problems = "Invalid RUT";
+                    $countRutInvalido++;
                 }
                 $countTotal++;
 
                 $usuario = str_pad(("ID: ".$User->getId()." (".$User->getFirstname()." ".$User->getLastname().")"), 50);
-                $rut     = str_pad((" RUT: ".$User->getRutComplete()), 18);
+                $rut     = str_pad(("RUT: ".$User->getRutComplete()), 18);
                 $causas   = str_pad(("Causas: ".($nodeCount/6)), 13);
-                $this->log($usuario."".$rut."".$causas."".$connection);
+                $this->log($usuario."".$rut."".$causas."".$problems);
                 //$this->log("ID: ".$User->getId()."(".$User->getFirstname()." ".$User->getLastname().") RUT: ".$User->getRutComplete()."  causas: ".($nodeCount/6));
 
             }
 
             $endTime = microtime(true);
 
-            $this->log("[".date("Y-m-d H:i:s")."] Total usuarios:                   ".$countTotal);
-            $this->log("[".date("Y-m-d H:i:s")."] Total usuarios con rut:           ".$countConRut);
-            $this->log("[".date("Y-m-d H:i:s")."] Total usuarios sin rut:           ".$countSinRut);
-            $this->log("[".date("Y-m-d H:i:s")."] Usuarios bloqueados con causas:   ".$countTieneCausas);
-            $this->log("[".date("Y-m-d H:i:s")."] Usuarios bloqueados sin Causas:   ".$countSinCusas);
-            $this->log("[".date("Y-m-d H:i:s")."] Problemas de Conexión:            ".$countProblemasConexion);
-            $this->log("[".date("Y-m-d H:i:s")."] Tiempo total de procesamiento     ".round($endTime-$startTime, 2)." segundos");
+            $this->log("[".date("Y-m-d H:i:s")."] Total usuarios obtenidos sin chequeo: ".$countTotalUsuariosAlPrincipio);
+            $this->log("[".date("Y-m-d H:i:s")."] ");
+            $this->log("[".date("Y-m-d H:i:s")."] ");
+            $this->log("[".date("Y-m-d H:i:s")."] Total usuarios Chequeados:            ".$countTotalUsuariosChequeados);
+            $this->log("[".date("Y-m-d H:i:s")."] Usuarios con causas:      ".$countConCausas);
+            $this->log("[".date("Y-m-d H:i:s")."] Usuarios sin Causas:      ".$countSinCausas);
+            $this->log("[".date("Y-m-d H:i:s")."] ");
+            $this->log("[".date("Y-m-d H:i:s")."] ");
+            $this->log("[".date("Y-m-d H:i:s")."] Total no chequeados por rut invalido: ".$countRutInvalido);
+            $this->log("[".date("Y-m-d H:i:s")."] ");
+            $this->log("[".date("Y-m-d H:i:s")."] ");
+            $this->log("[".date("Y-m-d H:i:s")."] Problemas de Conexión:                ".$countProblemasConexion);
+            $this->log("[".date("Y-m-d H:i:s")."] ");
+            $this->log("[".date("Y-m-d H:i:s")."] Tiempo total de procesamiento         ".round($endTime-$startTime, 2)." segundos");
 
         } catch (Exeception $e) {
             error_log("[".date("Y-m-d H:i:s")."] ERROR: ".$e->getMessage());
