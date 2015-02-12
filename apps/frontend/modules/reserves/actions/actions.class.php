@@ -471,7 +471,7 @@ class reservesActions extends sfActions {
             $to    = $request->getPostParameter("to", null);        
         } else {            
             $warranty = $this->getUser()->getAttribute("warranty");
-            $payment  = $this->getUser()->getAttribute("payment",null);
+            $payment  = $this->getUser()->getAttribute("payment", null);
 
             $carId    = $this->getUser()->getAttribute("carId");
             $from     = $this->getUser()->getAttribute("from");
@@ -521,10 +521,9 @@ class reservesActions extends sfActions {
                 }
             }
         } catch(Exception $e) {
-            error_log("[".date("Y-m-d H:i:s")."] [reserves/pay] Verificacion judicial".$e->getMessage());
+            error_log("[reserves/pay] Verificacion judicial: ".$e->getMessage());
             $UnverifiedMail = true;
-        }// Chequeo judicial
-
+        }
 
         try {
 
@@ -538,6 +537,8 @@ class reservesActions extends sfActions {
             }
             
             if ($User->getBlocked()) {
+                error_log("BLOCKEADO: ".$User->getBlocked());
+                error_log("TIPO: ".gettype($User->getBlocked()));
                 throw new Exception("Rechazado el pago de User ".$userId." (".$User->firstname." ".$User->lastname.") debido a que se encuentra bloqueado, por lo que no esta autorizado para generar pagos", 1);            
             }
             
@@ -606,7 +607,7 @@ class reservesActions extends sfActions {
             }
 
         } catch (Exception $e) {
-            error_log("[".date("Y-m-d H:i:s")."] [reserves/pay] ".$e->getMessage());
+            error_log("[reserves/pay] ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
                 Utils::reportError($e->getMessage(), "reserves/pay");
             }
