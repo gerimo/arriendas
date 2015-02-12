@@ -616,6 +616,22 @@ header .navbar-nav .navbar-right ul {
     width: 50%;
 }
 
+.msg-search {
+    font-size: 20px;
+    font-weight: 400;
+    text-align: center;
+}
+
+button.see-more {
+    background-color: #5d5d5d;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+    padding: 15px 5px;
+    text-align: center;
+}
 
 @media only screen and (min-width:768px) {
 
@@ -705,6 +721,24 @@ header .navbar-nav .navbar-right ul {
 
     #section-map-body div {
         padding: 0px;
+    }
+
+    .msg-search {
+        font-size: 12px;
+        font-weight: 300;
+        padding: 0 5%;
+        text-align: center;
+    }
+
+    button.see-more {
+        background-color: #5d5d5d;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0;
+        padding: 15px 5px;
+        text-align: center;
     }
 }
 

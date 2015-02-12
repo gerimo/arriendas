@@ -55,7 +55,7 @@ EOF;
                     $countConRut++;
                     if (strlen($viewStateId) > 0) {
 
-                        /* verification call */
+                        // verification call
                         $params = array(
                             'formConsultaCausas:idFormRut' => $User->rut,
                             'formConsultaCausas:idFormRutDv' => strtoupper($User->rut_dv),
@@ -91,14 +91,13 @@ EOF;
                     $User->setChequeoJudicial(false);
                     $countSinRut++;
                 }
+                
                 $countTotal++;
 
-                $usuario = str_pad(("ID: ".$User->getId()." (".$User->getFirstname()." ".$User->getLastname().")"), 50);
-                $rut     = str_pad((" RUT: ".$User->getRutComplete()), 18);
-                $causas   = str_pad((" Causas: ".($nodeCount/6)), 10);
-                $this->log($usuario."".$rut."".$causas);
-                //$this->log("ID: ".$User->getId()."(".$User->getFirstname()." ".$User->getLastname().") RUT: ".$User->getRutComplete()."  causas: ".($nodeCount/6));
-
+                $usuario  = str_pad("ID: ".$User->getId()." (".$User->getFirstname()." ".$User->getLastname().")", 50);
+                $rut      = str_pad("RUT: ".$User->getRutComplete(), 18);
+                $causas   = str_pad("Causas: ".($nodeCount/6), 10);
+                $this->log("[".date("Y-m-d H:i:s")."] ".$usuario."".$rut."".$causas);
             }
 
             $endTime = microtime(true);
