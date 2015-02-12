@@ -108,7 +108,7 @@
         google.maps.event.addListener(map, 'idle', function() {
 
             google.maps.event.clearListeners(map, 'idle');
-            searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
+            searchCars(0, $("button.see-more").data("limit"));
         });
 
         google.maps.event.addListener(map, 'dragend', function() {
@@ -118,7 +118,7 @@
             } else {
                 map.panTo(lastValidCenter);
             }
-            searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
+            searchCars(0, $("button.see-more").data("limit"));
         });
 
         google.maps.event.addListener(map, 'zoom_changed', function() {
@@ -128,7 +128,7 @@
             } else {
                 map.panTo(lastValidCenter);
             }
-            searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
+            searchCars(0, $("button.see-more").data("limit"));
         });
 
         //Autocomplete
@@ -186,7 +186,7 @@
 
             infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
             infowindow.open(map, marker);
-            searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
+            searchCars(0, $("button.see-more").data("limit"));
         });
     }
 
@@ -838,7 +838,7 @@
     <?php endif ?>
 
     $("input[type='checkbox']").change(function(){
-        searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
+        searchCars(0, $("button.see-more").data("limit"));
     });
 
     $("#search").click(function(e){
@@ -846,7 +846,7 @@
     });
 
     $("#commune").change(function(){
-        searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit")); 
+        searchCars(0, $("button.see-more").data("limit")); 
     });
 
     $(".tab").click(function(){
