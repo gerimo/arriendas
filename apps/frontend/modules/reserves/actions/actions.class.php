@@ -23,7 +23,7 @@ class reservesActions extends sfActions {
             }
 
             if (Utils::isWeekend()) {
-                $this->CarsWithAvailability[$Reserve->getId()] = Doctrine_Core::getTable('CarAvailability')->findChangeOptions($Reserve->id);
+                //$this->CarsWithAvailability[$Reserve->getId()] = Doctrine_Core::getTable('CarAvailability')->findChangeOptions($Reserve->id);
             }
         }
     }
