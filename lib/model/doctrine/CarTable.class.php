@@ -219,9 +219,6 @@ class CarTable extends Doctrine_Table {
 
         } catch (Exception $e) {
             error_log("[".date("Y-m-d H:i:s")."][CarTable::getPrice()] ERROR: ".$e->getMessage());
-            /*if ($request->getHost() == "www.arriendas.cl") {
-                Utils::reportError($e->getMessage(), "CarTable::getPrice()");
-            }*/
         }
         
         return floor($pricePerDay * $days + $pricePerHour * $hours);

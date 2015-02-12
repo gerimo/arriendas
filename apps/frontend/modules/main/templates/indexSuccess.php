@@ -1,4 +1,4 @@
-<link href="/css/newDesign/index.css" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/index.css?v=3" rel="stylesheet" type="text/css">
 
 <!-- Google Maps -->
 <script src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;sensor=false" type="text/javascript"></script>
@@ -191,11 +191,13 @@
     }
 
     function localizame() {
-        if (navigator.geolocation) { // Si el navegador tiene geolocalizacion
-            navigator.geolocation.getCurrentPosition(coordenadas, errores);
-        } else {
-            alert('¡Oops! Tu navegador no soporta geolocalización. Bájate Chrome, que es gratis!');
-        }
+        <?php if (!$isMobile): ?>
+            if (navigator.geolocation) { // Si el navegador tiene geolocalizacion
+                navigator.geolocation.getCurrentPosition(coordenadas, errores);
+            } else {
+                alert('¡Oops! Tu navegador no soporta geolocalización. Bájate Chrome, que es gratis!');
+            }
+        <?php endif ?>
     }
 
     function validateTime(){
