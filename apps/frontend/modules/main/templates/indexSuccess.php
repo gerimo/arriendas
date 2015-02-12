@@ -21,10 +21,10 @@
     var markers = []; // searchCars
     var strictBounds = null; // initialize
 
-    var swLat; // searchCars
-    var swLng; // searchCars
-    var neLat; // searchCars
-    var neLng; // searchCars
+    var swLat;
+    var swLng;
+    var neLat;
+    var neLng;
 
     function coordenadas(position) {
 
