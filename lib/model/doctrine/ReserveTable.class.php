@@ -1,4 +1,4 @@
-2<?php
+<?php
 
 class ReserveTable extends Doctrine_Table {
 
