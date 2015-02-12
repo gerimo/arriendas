@@ -84,3 +84,6 @@ terminos:
 
 valueYourCar:
     is_secure: false
+
+PriceJson:
+    is_secure: false
