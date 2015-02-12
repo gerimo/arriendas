@@ -57,8 +57,8 @@ class Reserve extends BaseReserve {
         $Car = $this->getCar();
 
         return CarTable::getPrice(
-                $this->getFechaInicio2,
-                $this->getFechaTermino2,
+                $this->getFechaInicio2(),
+                $this->getFechaTermino2(),
                 $Car->getPricePerHour(),
                 $Car->getPricePerDay(),
                 $Car->getPricePerWeek(),

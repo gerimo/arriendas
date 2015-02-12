@@ -101,7 +101,7 @@
                                                 </div>
                                                 <div class="col-md-9">
                                                     <br class="visible-xs">
-                                                    <p><b>Auto: </b><?php echo $CO->getCar()->getModel()->getBrand()->getName() ." ". $CO->getCar()->getModel()->getName() ?>, <?php if ($CO->getCar()->getTransmission()) echo "Automático"; else echo "Mecánico"; ?></p>
+                                                    <p><b>Auto: </b><?php echo $CO->getCar()->getModel()->getBrand()->getName() ." ". $CO->getCar()->getModel()->getName() ?>, <i class="fa fa-cog"></i> <?php if ($CO->getCar()->getTransmission()) echo "Automático"; else echo "Mecánico"; ?></p>
                                                     <p><b>Dirección: </b><?php echo $CO->getCar()->getAddress() .", ". $CO->getCar()->getCommune()->name ?></p>
                                                     <p><b>Dueño: </b><?php echo $CO->getCar()->getUser()->firstname ." ". substr($CO->getCar()->getUser()->lastname, 0, 1) ?></p>
                                                     <?php if ($CO->getTransaction()->completed): ?>
@@ -140,7 +140,7 @@
                                                 </div>
                                                 <div class="col-md-9">
                                                     <br class="visible-xs">
-                                                    <p><b>Auto: </b><?php echo $C->getModel()->getBrand()->getName() ." ". $C->getModel()->getName() ?>, <?php if ($C->getTransmission()) echo "Automático"; else echo "Mecánico"; ?></p>
+                                                    <p><b>Auto: </b><?php echo $C->getModel()->getBrand()->getName() ." ". $C->getModel()->getName() ?>, <i class="fa fa-cog"></i> <?php if ($C->getTransmission()) echo "Automático"; else echo "Mecánico"; ?></p>
                                                     <p><b>Dirección: </b><?php echo $C->getAddress() .", ". $C->getCommune()->name ?></p>
                                                     <p><b>Dueño: </b><?php echo $C->getUser()->firstname ." ". substr($C->getUser()->lastname, 0, 1) ?></p>
                                                     <p><img class="metro" src='/images/newDesign/ico.png' alt='metro'> A <b><?php echo round($C->getNearestMetro()->distance, 1) ?> km</b> del Metro <?php echo $C->getNearestMetro()->getMetro()->name ?></p>
