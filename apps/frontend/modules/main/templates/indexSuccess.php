@@ -457,8 +457,13 @@
             }
 
             if (r.cars.length) {
-                $("button.see-more").show();
                 $("button.see-more").data("offset", parseInt(offset)+parseInt(limit));
+                console.log(r.cars.length+" < "+limit);
+                if (r.cars.length < limit) {
+                    /*$("button.see-more").hide();*/ // Al arreglar la query de búsqueda se descomenta esto
+                } else {
+                    $("button.see-more").show();
+                }
             } else {
                 $("button.see-more").hide();
             }

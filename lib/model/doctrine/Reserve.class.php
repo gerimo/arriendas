@@ -37,9 +37,8 @@ class Reserve extends BaseReserve {
             ->addOrderBy('R.fecha_reserva ASC');
 
         $Reserves = $q->execute();
-
+        
         foreach ($Reserves as $Reserve) {
-
             if ($Reserve->getReservaOriginal() == 0) {
                 if ($withOriginalReserve) {
                     $ChangeOptions[] = $Reserve;
@@ -48,7 +47,7 @@ class Reserve extends BaseReserve {
                 $ChangeOptions[] = $Reserve;
             }
         }
-
+        
         return $ChangeOptions;
     }
 
@@ -57,13 +56,13 @@ class Reserve extends BaseReserve {
         $Car = $this->getCar();
 
         return CarTable::getPrice(
-                $this->getFechaInicio2(),
-                $this->getFechaTermino2(),
-                $Car->getPricePerHour(),
-                $Car->getPricePerDay(),
-                $Car->getPricePerWeek(),
-                $Car->getPricePerMonth()
-            );
+            $this->getFechaInicio2(),
+            $this->getFechaTermino2(),
+            $Car->getPricePerHour(),
+            $Car->getPricePerDay(),
+            $Car->getPricePerWeek(),
+            $Car->getPricePerMonth()
+        );
     }
 
     public function getSelectedCar() {

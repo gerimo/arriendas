@@ -147,7 +147,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
-                                                <button class="change-with-availability btn btn-a-action btn-block" data-car-id="<?php echo $C->getId() ?>">Cambiar</button>
+                                                <button class="change-with-availability btn btn-a-action btn-block" data-car-id="<?php echo $C->getId() ?>" data-reserve-id="<?php echo $CO->getId() ?>">Cambiar</button>
                                             </div>
                                             <div class="col-md-1 text-center">
                                                 <img class="loading" src="/images/ajax-loader.gif">
@@ -297,16 +297,22 @@
         }, "json");
     });
 
-    $(document).on("click", ".change-with-availability", function(){
+    $(document).on("click", ".change-with-availability", function(){        
 
-        var button = $(this);
-        var grandpa = $(this).parent().parent();
-        var carId = $(this).data("car-id");
+        var button    = $(this);
+        var grandpa   = $(this).parent().parent();
+        var carId     = $(this).data("car-id");
+        var reserveId = $(this).data("reserve-id");        
 
         button.attr("disabled", true);
         grandpa.find(".loading").show();
 
-        $.post("<?php echo url_for('reserve_change_with_availability') ?>", {"carId": carId}, function(r){
+        var parameters = {
+            "carId": carId,
+            "reserveId": reserveId
+        };
+
+        $.post("<?php echo url_for('reserve_change_with_availability') ?>", parameters, function(r){
 
             if (r.error) {
 
@@ -324,7 +330,6 @@
                 button.removeAttr("disabled");
                 grandpa.find(".loading").hide();
             } else {
-
                 location.reload();
             }            
         }, "json");
