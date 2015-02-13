@@ -740,8 +740,54 @@
                 <p class="user-type">Usuario Arriendas</p>
             </div>
             <div>
-                <p class="testimonial"><i class="fa fa-quote-left"></i> Puedo arrendar desde mi casa, en cualquier horario, sin tarjeta de crédito. Es el mismo auto que en un rent a car pero 30% más barato. <i class="fa fa-quote-right"></i></p>
-                <p class="user">Javiera Cruzar,</p>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> La experiencia con el arrendador fue excelente. <i class="fa fa-quote-right"></i></p>
+                <p class="user">Juan Diaz Medel,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i>  Lo mejor de todo es que no piden tarjetas de credito, para los que no las usamos … ¡Sigan así!.  <i class="fa fa-quote-right"></i></p>
+                <p class="user">Anitha Cordova Cifuentes,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> La disposicion del dueño fue muy buena y no hubo ningun problema. Absolutamente recomendable. Ahora estoy a la espera de mi segundo arriendo para este fin de semana. Ojala se expandan a todas las regiones . <i class="fa fa-quote-right"></i></p>
+                <p class="user">Francisco Riquelme,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Gracias por toda su ayuda y felicitarles por este emprendimiento que ayudas a tantos a contar, no solo con un auto, sino con un servicio responsable, personalizado y de gran calidad. <i class="fa fa-quote-right"></i></p>
+                <p class="user">Eduardo Cortes,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Mi experiencia ha sido muy buena. La persona que me arrendó el auto fue atento. Soy brasileño y estuve en Chile solo para estudiar, y mismo así yo pude arrendar un auto con toda la seguridad que solo Arriendas puede dar a sus clientes.<i class="fa fa-quote-right"></i></p>
+                <p class="user">Samir,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Mi testimonio es un 90% positivo, el sistema es bastante fácil de utilizar y la gestión para realizar el arriendo es también buena, salvo que falta incluir mas datos del vehículo. <i class="fa fa-quote-right"></i></p>
+                <p class="user">Manuel Nuñez Casanga,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Arriendas me permitió resevar un auto sin tarjeta de crédito y sin depósito en garantía. Lo recomiendo! <i class="fa fa-quote-right"></i></p>
+                <p class="user">Rosa Velásquez Rojas,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Su personal fue muy atento y eso genero la confianza suficiente para inscribirme en su página y concretar el arriendo. <i class="fa fa-quote-right"></i></p>
+                <p class="user">Felipe Salinas,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Mi experiencia con Arriendas fue excelente ademas de una excelente experiencia en la atencion del dueño del vehículo: amable, puntual y el auto, excelente. 100% confiable. <i class="fa fa-quote-right"></i></p>
+                <p class="user">Sergio Quezada,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+             <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Algunos pequeños ripios en la coordinación inicial, pero el auto arrendado estaba en perfecto estado y la persona que lo arrendó fue muy agradable. En general, una buena experiencia, la repetiré cuando lo necesite. <i class="fa fa-quote-right"></i></p>
+                <p class="user">Gustavo Villagran,</p>
                 <p class="user-type">Usuario Arriendas</p>
             </div>
         </div>
