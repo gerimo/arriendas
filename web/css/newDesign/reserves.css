@@ -41,7 +41,7 @@ p {
     margin-top: 6px;
 }
 
-.reserved, .change {
+.reserved, .change, .change-with-availability {
     margin-top: 30px;
 }
 
