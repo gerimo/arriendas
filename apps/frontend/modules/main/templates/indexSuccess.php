@@ -786,9 +786,8 @@
         });
 
         // Cuando es fin de semana
-
-        console.log("FINDE: <?php echo $isWeekend ?>");
         <?php if ($isWeekend): ?>
+            console.log("FINDE: <?php echo $isWeekend ?>");
             $('div[data-target="#tab-list"]').click();
             $('.map').html("");
             $('.map').removeClass("tab");
