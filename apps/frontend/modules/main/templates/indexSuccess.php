@@ -1,4 +1,4 @@
-<link href="/css/newDesign/index.css?v=6" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/index.css?v=4" rel="stylesheet" type="text/css">
 
 <!-- Google Maps -->
 <script src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;sensor=false" type="text/javascript"></script>
@@ -313,6 +313,8 @@
             isMorePassengers: isMorePassengers            
         };
 
+        console.log(parameters);
+
         $.post("<?php echo url_for('car_search') ?>", parameters, function(r){
 
             var listContent = "";
@@ -456,7 +458,7 @@
 
             if (r.cars.length) {
                 $("button.see-more").data("offset", parseInt(offset)+parseInt(limit));
-                
+                console.log(r.cars.length+" < "+limit);
                 if (r.cars.length < limit) {
                     /*$("button.see-more").hide();*/ // Al arreglar la query de búsqueda se descomenta esto
                 } else {
@@ -558,8 +560,8 @@
             </ul>
         </div>
         <div class="col-sm-4 col-md-4 hidden-xs tabset">
-            <div class="map col-sm-6 col-md-6 text-center tab" data-target="#tab-map"><strong><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Mapa</strong></div>
-            <div class="list col-sm-6 col-md-6 text-center tab activo" data-target="#tab-list"><strong><span class="glyphicon glyphicon-list" aria-hidden="true"></span> Lista</strong></div>
+            <div class="map col-sm-6 col-md-6 text-center tab activo" data-target="#tab-map"><strong><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Mapa</strong></div>
+            <div class="list col-sm-6 col-md-6 text-center tab" data-target="#tab-list"><strong><span class="glyphicon glyphicon-list" aria-hidden="true"></span> Lista</strong></div>
         </div>
     </div>
 
@@ -757,9 +759,39 @@
 <script>
 
     $(document).ready(function(){
+        
+        /*$('#from').datetimepicker({
+            allowTimes:[
+            "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
+            "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
+            "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
+            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+            "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+            "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
+            "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
+            "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
+            ],
+            format:'d-m-Y H:i',
+            minDate : "<?php echo date('d-m-Y') ?>",
+            dayOfWeekStart: 1,
+            lang:'es',
+            onSelectTime: function() {
+                    var x = $("#from").val();
+                    times(x);
+            },
+            onSelectDate: function() {
+                var x = $("#from").val();
+                times(x);
+            }
+        });*/
 
         $("#from").val(roundTime($("#from").val()));
         $("#to").val(roundTime($("#to").val()));
+
+        /*// Si comuna es visible, se preselecciona comuna más hot
+        if ($("#commune").is(':visible')) {            
+            $("#commune option[value=93]").attr("selected", true);
+        }*/
 
         localizame();
         initialize();
@@ -787,7 +819,6 @@
 
         // Cuando es fin de semana
         <?php if ($isWeekend): ?>
-            console.log("FINDE: <?php echo $isWeekend ?>");
             $('div[data-target="#tab-list"]').click();
             $('.map').html("");
             $('.map').removeClass("tab");
