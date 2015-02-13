@@ -641,7 +641,11 @@ button.see-more {
         padding-top: 8px;
     }
 
-    #region-container, #commune-container, #tab-list {
+    /*#region-container, #commune-container, #tab-list {
+        display: none;
+    }*/
+
+    #direction-container, #tab-map {
         display: none;
     }
 }
