@@ -610,9 +610,7 @@ class mainActions extends sfActions {
             $to = $this->getUser()->getAttribute("to");
         } else {
             $to = date("Y-m-d H:i:s", strtotime("+1 day", strtotime($from)));
-        }
-        //fechas no cambian, debido a que el usuario no esta logueado 
-        
+        }        
 
         /*$userId = $this->getUser()->getAttribute("userid");*/
 
@@ -2784,15 +2782,21 @@ class mainActions extends sfActions {
         $this->hasCommune = false;
         $this->hasRegion = false;
 
-        if ($request->hasParameter('region','commune')){
+        if ($request->hasParameter('region','commune', 'carType')){
             $regionSlug = $request->getParameter('region');
             $this->hasRegion = Doctrine_Core::getTable('Region')->findOneBySlug($regionSlug)->id;
 
             $communeSlug = $request->getParameter('commune');
+            
             if(isset($communeSlug)){
+                               
                 $this->hasCommune = Doctrine_Core::getTable('Commune')->findOneBySlug($communeSlug)->id;
+                $nameComune = Doctrine_Core::getTable('Commune')->findOneBySlug($communeSlug)->name;
+                //esto es para el titulo
+                $this->getResponse()->setTitle(sprintf('Arriendo de Autos entre persona. Rent a car en %s, Region Metropolitana, Chile ', $nameComune));
             }
         }
+
     }
 
     //////////////////Enlasnoticias//////////////////////////////
