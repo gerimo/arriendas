@@ -55,6 +55,12 @@ class mainActions extends sfActions {
         if (Utils::isWeekend()) {
             $this->isWeekend = true;
         }
+        $this->limit = 33;
+        $MD = new Mobile_Detect;
+        if ($MD->isMobile()) {
+            $this->limit = 5;
+            $this->isMobile = true;
+        }
 
     }
 
@@ -74,6 +80,12 @@ class mainActions extends sfActions {
 
         if (Utils::isWeekend()) {
             $this->isWeekend = true;
+        }
+        $this->limit = 33;
+        $MD = new Mobile_Detect;
+        if ($MD->isMobile()) {
+            $this->limit = 5;
+            $this->isMobile = true;
         }
 
     }
@@ -2751,6 +2763,22 @@ class mainActions extends sfActions {
     public function executeSearchACars(sfWebRequest $request) {
         
         $this->setLayout("newIndexLayout");
+
+        $this->isWeekend  = false;
+        $this->isMobile   = false;
+
+        if (is_null($this->getUser()->getAttribute('geolocalizacion'))) {
+            $this->getUser()->setAttribute('geolocalizacion', true);
+        } elseif ($this->getUser()->getAttribute('geolocalizacion') == true) {
+            $this->getUser()->setAttribute('geolocalizacion', false);
+        }
+
+        $this->limit = 33;
+        $MD = new Mobile_Detect;
+        if ($MD->isMobile()) {
+            $this->limit = 5;
+            $this->isMobile = true;
+        }
 
         $this->Region = Doctrine_Core::getTable("Region")->find(13);
         $this->hasCommune = false;
