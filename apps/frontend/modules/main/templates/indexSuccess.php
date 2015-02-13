@@ -558,8 +558,8 @@
             </ul>
         </div>
         <div class="col-sm-4 col-md-4 hidden-xs tabset">
-            <div class="map col-sm-6 col-md-6 text-center tab activo" data-target="#tab-map"><strong><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Mapa</strong></div>
-            <div class="list col-sm-6 col-md-6 text-center tab" data-target="#tab-list"><strong><span class="glyphicon glyphicon-list" aria-hidden="true"></span> Lista</strong></div>
+            <div class="map col-sm-6 col-md-6 text-center tab" data-target="#tab-map"><strong><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Mapa</strong></div>
+            <div class="list col-sm-6 col-md-6 text-center tab activo" data-target="#tab-list"><strong><span class="glyphicon glyphicon-list" aria-hidden="true"></span> Lista</strong></div>
         </div>
     </div>
 
@@ -793,7 +793,6 @@
             $('.map').removeClass("tab");
             $('.tabset').css("cursor", "default");
             $('.tabset').css("background-color", "#00aced");
-            $('div[data-target="#tab-list"]').click();
         <?php endif ?>
 
         // Cuando se carga desde un rent-a-car-especifico (footer)
