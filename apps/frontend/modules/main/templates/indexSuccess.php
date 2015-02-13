@@ -793,6 +793,7 @@
             $('.map').removeClass("tab");
             $('.tabset').css("cursor", "default");
             $('.tabset').css("background-color", "#00aced");
+            $('div[data-target="#tab-list"]').click();
         <?php endif ?>
 
         // Cuando se carga desde un rent-a-car-especifico (footer)
