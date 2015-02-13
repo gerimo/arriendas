@@ -42,7 +42,7 @@ p {
 }
 
 .reserved, .change, .change-with-availability {
-    margin-top: 30px;
+    margin-top: 10%;
 }
 
 .fa-check {
