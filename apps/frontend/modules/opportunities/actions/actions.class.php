@@ -174,6 +174,7 @@ class opportunitiesActions extends sfActions {
         $O->setFechaReserva(date("Y-m-d H:i:s"));
         $O->setFechaConfirmacion(date("Y-m-d H:i:s"));
         $O->setConfirmed(true);
+        $O->setCanceled(false);
         $O->setImpulsive(true);
         $O->setReservaOriginal($OriginalReserve->getId());
 
