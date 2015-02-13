@@ -125,7 +125,7 @@ messages_inbox:
 message_register_success:
     url: /registro/exitoso
     param: { module: main , action: messageRegister }
-    
+
 news:
     url: /arrienda-en-las-noticias
     param: { module: main , action: news }
@@ -181,6 +181,10 @@ reserve_calculate_price:
 reserve_change:
     url: /reserva/cambiar
     param: { module: reserves, action: change }
+
+reserve_change_with_availability:
+    url: /reserva/cambiar-con-disponibilidad
+    param: { module: reserves, action: changeWithAvailability }
 
 reserve_extend:
     url: /reserva/extender

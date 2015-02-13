@@ -1,4 +1,5 @@
 <?php
+
 require_once sfConfig::get('sf_lib_dir') . '/vendor/fabpot/goutte.phar';
 
 class reservesActions extends sfActions {
@@ -208,116 +209,88 @@ class reservesActions extends sfActions {
         $return = array("error" => false);
     
         $newReserveId = $request->getPostParameter("newReserveId", null);
-        $userId = $this->getUser()->getAttribute("userid");
+        $userId       = $this->getUser()->getAttribute("userid");
+
+        $NewActiveReserve = Doctrine_Core::getTable('Reserve')->find($newReserveId);
+        $this->forward404If(!$NewActiveReserve);
+
+        if (!$this->makeChange($NewActiveReserve)) {
+            $return["error"] = true;
+            $return["errorMessage"] = "No se pudo realizar el cambio. Por favor, intentalo nuevamente más tarde";
+        }
+    
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
+    public function executeChangeWithAvailability (sfWebRequest $request) {
+
+        $return = array("error" => false);
+    
+        $carId      = $request->getPostParameter("carId", null);
+        $reserveId  = $request->getPostParameter("reserveId", null);
+        $userId     = $this->getUser()->getAttribute("userid");
+
+        $Car = Doctrine_Core::getTable('Car')->find($carId);
+        $this->forward404If(!$Car);
+
+        $originalReserveId = Doctrine_Core::getTable('Reserve')->findOriginalReserve($reserveId);
+
+        $OriginalReserve = Doctrine_Core::getTable('Reserve')->find($originalReserveId);
+        $this->forward404If(!$OriginalReserve);
 
         try {
-    
-            if (is_null($newReserveId) || $newReserveId == "") {
-                throw new Exception("User ".$userId." intenta realizar un cambio de auto, pero falta el ID de la nueva Reserve", 1);
-            }
-
-            $NewReserve = Doctrine_Core::getTable('Reserve')->find($newReserveId);
-            if (!$NewReserve) {
-                throw new Exception("User ".$userId." está intentado realizar un cambio pero no se ha podido encontrar la Reserve ".$newReserveId, 1);
-            }
-
-            if (!$this->makeChange($NewReserve)) {
-                throw new Exception("User ".$userId." está intentado realizar un cambio a Car ".$NewReserve->getCar()->id." pero este no se ha podido concretar", 2);
-            }
-
-            $Renter = $NewReserve->getUser();
-            $Owner  = $NewReserve->getCar()->getUser();
-
-            $mail    = new Email();
-            $mailer  = $mail->getMailer();
             
-            $functions  = new Functions;
-            $formulario = $functions->generarFormulario(NULL, $NewReserve->token);
-            $reporte    = $functions->generarReporte($NewReserve->getCar()->id);
-            $contrato   = $functions->generarContrato($NewReserve->token);
-            $pagare     = $functions->generarPagare($NewReserve->token);
+            $this->forward404If(!$Car->hasAvailability($OriginalReserve->getFechaInicio2()));
 
-            // CORREO DUEÑO
-            $subject = "¡Has ganado la oportunidad!";
-            $body    = $this->getPartial('emails/opportunityWonOwner', array('Reserve' => $NewReserve));
-            $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
-            $to      = array($Owner->email => $Owner->firstname." ".$Owner->lastname);
+            $carPrice = CarTable::getPrice($OriginalReserve->getFechaInicio2(), $OriginalReserve->getFechaTermino2(), $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth());
+            $originalCarPrice = $OriginalReserve->getRentalPrice();
 
-            $message = $mail->getMessage();
-            $message->setSubject($subject);
-            $message->setBody($body, 'text/html');
-            $message->setFrom($from);
-            $message->setTo($to);
-            // $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
-
-            $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
-            $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
-            $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
-            
-            if (!is_null($Renter->getDriverLicenseFile())) {
-                $filepath = $Renter->getDriverLicenseFile();
-                if (is_file($filepath)) {
-                    $message->attach(Swift_Attachment::fromPath($Renter->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$Renter->getLicenceFileName()));
-                }
-            }
-            
-            $mailer->send($message);
-
-            // CORREO ARRENDATARIO
-            $subject = "Has cambiado el auto de tu reserva";
-            $body    = $this->getPartial('emails/opportunityWonRenter', array('Reserve' => $NewReserve));
-            $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
-            $to      = array($Renter->email => $Renter->firstname." ".$Renter->lastname);
-
-            $message = $mail->getMessage();
-            $message->setSubject($subject);
-            $message->setBody($body, 'text/html');
-            $message->setFrom($from);
-            $message->setTo($to);
-            // $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
-
-            $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
-            $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
-            $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
-            $message->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
-                
-            $mailer->send($message);
-
-            // CORREO SOPORTE
-            if ($NewReserve->reserva_original) {
-                $originalReserveId = $NewReserve->reserva_original;
-            } else {
-                $originalReserveId = $NewReserve->id;
+            if ($carPrice > $originalCarPrice * 1.15) {
+                error_log("[reserves/changeWithAvailability] El User ".$userId." esta intentando cambiar por el Car ".$carId." con mas de un 15% de diferencia en el precio con Reserve ".$reserveId);
+                $this->forward404();
             }
 
-            $subject = "Ha habido un cambio de auto en la Reserva ".$originalReserveId;
-            $body    = $this->getPartial('emails/opportunityWonSupport', array('Reserve' => $NewReserve));
-            $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-            $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+            $O = $OriginalReserve->copy(true);
+            $O->setCar($Car);
+            $O->setFechaReserva(date("Y-m-d H:i:s"));
+            $O->setFechaConfirmacion(date("Y-m-d H:i:s"));
+            $O->setConfirmed(true);
+            $O->setImpulsive(true);
+            $O->setReservaOriginal($OriginalReserve->getId());
+            $O->setComentario('Reserva oportunidad - auto con disponibilidad');            
+            $O->setUniqueToken(true);
+            $O->save();
 
-            $message = $mail->getMessage();
-            $message->setSubject($subject);
-            $message->setBody($body, 'text/html');
-            $message->setFrom($from);
-            $message->setTo($to);
-            $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+            $OT = $OriginalReserve->getTransaction()->copy(true);
+            $OT->setCar($Car->getModel()->getBrand()->getName() ." ". $Car->getModel()->getName());
+            $OT->setReserve($O);
+            $OT->setDate(date("Y-m-d H:i:s"));
+            $OT->setCompleted(false);
+            $OT->setImpulsive(true);
+            $OT->setTransaccionOriginal($OriginalReserve->getTransaction()->getId());
 
-            $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
-            $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
-            $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
-            
-            if (!is_null($Renter->getDriverLicenseFile())) {
-                $filepath = $Renter->getDriverLicenseFile();
-                if (is_file($filepath)) {
-                    $message->attach(Swift_Attachment::fromPath($Renter->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$Renter->getLicenceFileName()));
-                }
+            if ($carPrice > $originalCarPrice) {
+                $OT->setPrice($carPrice);
+                $OT->setDiscountAmount($carPrice - $originalCarPrice);
+                $O->setPrice($carPrice);
+                $O->save();
+            } elseif ($carPrice < $originalCarPrice) {
+                $OT->setReverseDiscount($originalCarPrice - $carPrice);
             }
 
-            $mailer->send($message);
+            $OT->save();
+
+            if (!$this->makeChange($O)) {
+                $return["error"] = true;
+                $return["errorMessage"] = "No se pudo realizar el cambio. Por favor, intentalo nuevamente más tarde";
+            }
+
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = "No se pudo realizar el cambio. Por favor, intentalo nuevamente más tarde";
-            error_log("[".date("Y-m-d H:i:s")."] [reserves/change] ERROR: ".$e->getMessage());
+            error_log("[reserves/changeWithAvailability] ERROR: ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl") {
                 Utils::reportError($e->getMessage(), "reserves/change");
             }
@@ -471,7 +444,7 @@ class reservesActions extends sfActions {
             $to    = $request->getPostParameter("to", null);        
         } else {            
             $warranty = $this->getUser()->getAttribute("warranty");
-            $payment  = $this->getUser()->getAttribute("payment",null);
+            $payment  = $this->getUser()->getAttribute("payment", null);
 
             $carId    = $this->getUser()->getAttribute("carId");
             $from     = $this->getUser()->getAttribute("from");
@@ -521,10 +494,9 @@ class reservesActions extends sfActions {
                 }
             }
         } catch(Exception $e) {
-            error_log("[".date("Y-m-d H:i:s")."] [reserves/pay] Verificacion judicial".$e->getMessage());
+            error_log("[reserves/pay] Verificacion judicial: ".$e->getMessage());
             $UnverifiedMail = true;
-        }// Chequeo judicial
-
+        }
 
         try {
 
@@ -538,6 +510,8 @@ class reservesActions extends sfActions {
             }
             
             if ($User->getBlocked()) {
+                error_log("BLOCKEADO: ".$User->getBlocked());
+                error_log("TIPO: ".gettype($User->getBlocked()));
                 throw new Exception("Rechazado el pago de User ".$userId." (".$User->firstname." ".$User->lastname.") debido a que se encuentra bloqueado, por lo que no esta autorizado para generar pagos", 1);            
             }
             
@@ -606,7 +580,7 @@ class reservesActions extends sfActions {
             }
 
         } catch (Exception $e) {
-            error_log("[".date("Y-m-d H:i:s")."] [reserves/pay] ".$e->getMessage());
+            error_log("[reserves/pay] ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
                 Utils::reportError($e->getMessage(), "reserves/pay");
             }
@@ -753,40 +727,126 @@ class reservesActions extends sfActions {
     }
 
     // FUNCIONES PRIVADAS
-    private function makeChange ($newActiveReserveId) {
-
-        $numero_factura = 0;
+    private function makeChange ($NewActiveReserve) {
 
         try {
 
-            $NewActiveReserve = Doctrine_Core::getTable('Reserve')->find($newActiveReserveId);
-
-            $originalReserveId = $NewActiveReserve->id;
-            if ($NewActiveReserve->reserva_original > 0) {
-                $originalReserveId = $NewActiveReserve->reserva_original;
-            }
-
-            $ActiveReserve = Doctrine_Core::getTable('Reserve')->findActiveReserve($originalReserveId);
+            $ActiveReserve = Doctrine_Core::getTable('Reserve')->findActiveReserve($NewActiveReserve->id);
 
             $NewActiveReserve->setNumeroFactura($ActiveReserve->getNumeroFactura());
+            $NewActiveReserve->save();
+
             $NewActiveTransaction = $NewActiveReserve->getTransaction();
             $NewActiveTransaction->setNumeroFactura($ActiveReserve->getTransaction()->getNumeroFactura());
             $NewActiveTransaction->setCompleted(true);
-            $NewActiveTransaction->save();
-            $NewActiveReserve->save();
+            $NewActiveTransaction->save();            
 
             $Rating = $NewActiveReserve->getRating();
             $Rating->setIdOwner($NewActiveReserve->getCar()->getUser()->id);
             $Rating->save();
 
             $ActiveReserve->setNumeroFactura(0);
+            $ActiveReserve->save();
+
             $ActiveTransaction = $ActiveReserve->getTransaction();
             $ActiveTransaction->setNumeroFactura(0);
             $ActiveTransaction->setCompleted(false);
             $ActiveTransaction->save();
-            $ActiveReserve->save();
+
+            $Renter = $NewActiveReserve->getUser();
+            $Owner  = $NewActiveReserve->getCar()->getUser();
+
+            $mail    = new Email();
+            $mailer  = $mail->getMailer();
+            
+            $functions  = new Functions;
+            $formulario = $functions->generarFormulario(NULL, $NewActiveReserve->token);
+            $reporte    = $functions->generarReporte($NewActiveReserve->getCar()->id);
+            $contrato   = $functions->generarContrato($NewActiveReserve->token);
+            $pagare     = $functions->generarPagare($NewActiveReserve->token);
+
+            // CORREO DUEÑO
+            $subject = "¡Has ganado la oportunidad!";
+            $body    = $this->getPartial('emails/opportunityWonOwner', array('Reserve' => $NewActiveReserve));
+            $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+            $to      = array($Owner->email => $Owner->firstname." ".$Owner->lastname);
+
+            $message = $mail->getMessage();
+            $message->setSubject($subject);
+            $message->setBody($body, 'text/html');
+            $message->setFrom($from);
+            $message->setTo($to);
+            // $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+
+            $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+            $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
+            $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+            
+            if (!is_null($Renter->getDriverLicenseFile())) {
+                $filepath = $Renter->getDriverLicenseFile();
+                if (is_file($filepath)) {
+                    $message->attach(Swift_Attachment::fromPath($Renter->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$Renter->getLicenceFileName()));
+                }
+            }
+            
+            $mailer->send($message);
+
+            // CORREO ARRENDATARIO
+            $subject = "Has cambiado el auto de tu reserva";
+            $body    = $this->getPartial('emails/opportunityWonRenter', array('Reserve' => $NewActiveReserve));
+            $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+            $to      = array($Renter->email => $Renter->firstname." ".$Renter->lastname);
+
+            $message = $mail->getMessage();
+            $message->setSubject($subject);
+            $message->setBody($body, 'text/html');
+            $message->setFrom($from);
+            $message->setTo($to);
+            // $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+
+            $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+            $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
+            $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+            $message->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
+                
+            $mailer->send($message);
+
+            // CORREO SOPORTE
+            if ($NewActiveReserve->reserva_original) {
+                $originalReserveId = $NewActiveReserve->reserva_original;
+            } else {
+                $originalReserveId = $NewActiveReserve->id;
+            }
+
+            $subject = "Ha habido un cambio de auto en la Reserva ".$originalReserveId;
+            $body    = $this->getPartial('emails/opportunityWonSupport', array('Reserve' => $NewActiveReserve));
+            $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+            $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+
+            $message = $mail->getMessage();
+            $message->setSubject($subject);
+            $message->setBody($body, 'text/html');
+            $message->setFrom($from);
+            $message->setTo($to);
+            $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+
+            $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
+            $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
+            $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+            
+            if (!is_null($Renter->getDriverLicenseFile())) {
+                $filepath = $Renter->getDriverLicenseFile();
+                if (is_file($filepath)) {
+                    $message->attach(Swift_Attachment::fromPath($Renter->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$Renter->getLicenceFileName()));
+                }
+            }
+
+            $mailer->send($message);
         } catch (Exception $e) {
-            error_log("[".date("Y-m-d H:i:s")."] [reserves/makeChange] ERROR: ".$e->getMessage());
+            error_log("[reserves/makeChange] User ".$userId." está intentado realizar un cambio a Car ".$NewActiveReserve->getCar()->id." pero este no se ha podido concretar. ERROR: ".$e->getMessage());
+            if ($_SERVER['SERVER_NAME'] == "www.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "reserves/makeChange");
+            }
             return false;
         }
 
