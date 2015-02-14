@@ -42,6 +42,7 @@ class CarAvailabilityTable extends Doctrine_Table {
         }
 
         $Cars = $q->execute();
+        error_log("Autos encontrados: ".count($Cars));
 
         $ReturnCars   = array();
         $reservePrice = $Reserve->getRentalPrice();
@@ -51,6 +52,7 @@ class CarAvailabilityTable extends Doctrine_Table {
             $carPriceForReserve = CarTable::getPrice($Reserve->getFechaInicio2(), $Reserve->getFechaTermino2(), $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth());
 
             if ($carPriceForReserve <= ($Reserve->getRentalPrice() * 1.15)) {
+                error_log("Car ".$Car->id);
                 if (!$Car->hasReserve($Reserve->getFechaInicio2(), $Reserve->getFechaTermino2())) {
                     $ReturnCars[] = $Car;
                 }
