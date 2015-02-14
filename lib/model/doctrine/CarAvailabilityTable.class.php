@@ -51,6 +51,7 @@ class CarAvailabilityTable extends Doctrine_Table {
 
             $carPriceForReserve = CarTable::getPrice($Reserve->getFechaInicio2(), $Reserve->getFechaTermino2(), $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth());
 
+            error_log("Car ".$Car->id.": ".$carPriceForReserve." <= ".($Reserve->getRentalPrice() * 1.15));
             if ($carPriceForReserve <= ($Reserve->getRentalPrice() * 1.15)) {
                 error_log("Car ".$Car->id);
                 if (!$Car->hasReserve($Reserve->getFechaInicio2(), $Reserve->getFechaTermino2())) {
