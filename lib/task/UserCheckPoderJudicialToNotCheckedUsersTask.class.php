@@ -1,7 +1,7 @@
 <?php
 require_once sfConfig::get('sf_lib_dir') . '/vendor/fabpot/goutte.phar';
 
-class UserCheckPoderJudicialToNotForeignTask extends sfBaseTask {
+class UserCheckPoderJudicialToNotCheckedUsersTask extends sfBaseTask {
 
     protected function configure() {
 
@@ -12,13 +12,13 @@ class UserCheckPoderJudicialToNotForeignTask extends sfBaseTask {
         ));
 
         $this->namespace = 'user';
-        $this->name = 'checkPoderJudicialForNotForeignUsers';
+        $this->name = 'checkPoderJudicialToNotCheckedUsers';
         $this->briefDescription = 'Analiza los rut de los usuarios que no han sido chequeados';
         $this->detailedDescription = <<<EOF
-The [checkCausasJudicialesToNotForeign|INFO] task does things.
+The [checkPoderJudicialToNotCheckedUsers|INFO] task does things.
 Call it with:
 
-  [php symfony user:userCheckPoderJudicialToNotForeign|INFO]
+  [php symfony user:checkPoderJudicialToNotCheckedUsers|INFO]
 EOF;
     }
 
