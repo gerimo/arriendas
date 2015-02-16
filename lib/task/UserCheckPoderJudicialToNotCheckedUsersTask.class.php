@@ -1,7 +1,7 @@
 <?php
 require_once sfConfig::get('sf_lib_dir') . '/vendor/fabpot/goutte.phar';
 
-class UserCheckPoderJudicialToNotForeignTask extends sfBaseTask {
+class UserCheckPoderJudicialToNotCheckedUsersTask extends sfBaseTask {
 
     protected function configure() {
 
@@ -12,13 +12,13 @@ class UserCheckPoderJudicialToNotForeignTask extends sfBaseTask {
         ));
 
         $this->namespace = 'user';
-        $this->name = 'checkPoderJudicialForNotForeignUsers';
+        $this->name = 'checkPoderJudicialToNotCheckedUsers';
         $this->briefDescription = 'Analiza los rut de los usuarios que no han sido chequeados';
         $this->detailedDescription = <<<EOF
-The [checkCausasJudicialesToNotForeign|INFO] task does things.
+The [checkPoderJudicialToNotCheckedUsers|INFO] task does things.
 Call it with:
 
-  [php symfony user:userCheckPoderJudicialToNotForeign|INFO]
+  [php symfony user:checkPoderJudicialToNotCheckedUsers|INFO]
 EOF;
     }
 
@@ -30,12 +30,10 @@ EOF;
         try {
 
             $client = new \Goutte\Client();
-            // Objtiene la key
+            // Obj tiene la key
             $crawler = $client->request('GET', 'http://reformaprocesal.poderjudicial.cl/ConsultaCausasJsfWeb/page/panelConsultaCausas.jsf');
             $viewStateId = $crawler->filter('input[name="javax.faces.ViewState"]')->attr('value');
-
-
-
+            
             $this->log("[".date("Y-m-d H:i:s")."] Procesando...");
 
             $Users = Doctrine_Core::getTable("User")->findByChequeoJudicial(0);
@@ -53,59 +51,61 @@ EOF;
                 $nodeCount = 0;
                 $problems = "";
                 
-                if(Utils::isValidRUT($User->getRutComplete())) {
+                if(!$User->getExtranjero()) {
+                    if(Utils::isValidRUT($User->getRutComplete())) {
 
-                    if (strlen($viewStateId) > 0) {
+                        if (strlen($viewStateId) > 0) {
+                            /* verification call */
+                            $params = array(
+                                'formConsultaCausas:idFormRut' => $User->rut,
+                                'formConsultaCausas:idFormRutDv' => strtoupper($User->rut_dv),
+                                'formConsultaCausas:idSelectedCodeTribunalRut' => "0",
+                                'formConsultaCausas:buscar1.x' => "66",
+                                'formConsultaCausas:buscar1.y' => "19",
+                                'formConsultaCausas' => "formConsultaCausas",
+                                'javax.faces.ViewState' => $viewStateId,
+                            );
 
-                        /* verification call */
-                        $params = array(
-                            'formConsultaCausas:idFormRut' => $User->rut,
-                            'formConsultaCausas:idFormRutDv' => strtoupper($User->rut_dv),
-                            'formConsultaCausas:idSelectedCodeTribunalRut' => "0",
-                            'formConsultaCausas:buscar1.x' => "66",
-                            'formConsultaCausas:buscar1.y' => "19",
-                            'formConsultaCausas' => "formConsultaCausas",
-                            'javax.faces.ViewState' => $viewStateId,
-                        );
+                            $crawler = $client->request('POST', 'http://reformaprocesal.poderjudicial.cl/ConsultaCausasJsfWeb/page/panelConsultaCausas.jsf', $params);
+                            $nodeCount = count($crawler->filter('.extdt-cell-div'));
 
-                        $crawler = $client->request('POST', 'http://reformaprocesal.poderjudicial.cl/ConsultaCausasJsfWeb/page/panelConsultaCausas.jsf', $params);
-                        $nodeCount = count($crawler->filter('.extdt-cell-div'));
+                            if ($nodeCount > 1) {
+                                $User->setBlocked(true);                            
+                                $countTotalUsuariosChequeados++;
+                                $countConCausas++;
+                                $causa = "blocked by criminal records";
+                            } else {
+                                $User->setBlocked(false);
+                                $countTotalUsuariosChequeados++;
+                                $countSinCausas++;
+                                $causa = "free of criminal records";
+                            }
 
-                        if ($nodeCount > 1) {
-                            $User->setBlocked(true);
                             $User->setChequeoJudicial(true);
-                            $countTotalUsuariosChequeados++;
-                            $countConCausas++;
-                            $causa = "blocked by criminal records";
+                                            
                         } else {
-                            $User->setBlocked(false);
-                            $User->setChequeoJudicial(true);
-                            $countTotalUsuariosChequeados++;
-                            $countSinCausas++;
-                            $causa = "free of criminal records";
+                            $User->setChequeoJudicial(false);
+                            $countProblemasConexion++;
+                            $causa = "connection fail";
+                            $problems = "Connection lost";
                         }
-                                        
                     } else {
-                        $User->setChequeoJudicial(false);
-                        $countProblemasConexion++;
-                        $causa = "connection fail";
-                        $problems = "Connection lost";
+                        $User->setBlocked(true);
+                        $User->setChequeoJudicial(true);
+                        $problems = "Invalid RUT";
+                        $countRutInvalido++;
                     }
-                    $User->save();
 
-                } else {
-                    $User->setChequeoJudicial(false);
-                    $problems = "Invalid RUT";
-                    $countRutInvalido++;
+                    $User->save();
                 }
+
                 $countTotal++;
 
-                $usuario = str_pad(("ID: ".$User->getId()." (".$User->getFirstname()." ".$User->getLastname().")"), 50);
-                $rut     = str_pad(("RUT: ".$User->getRutComplete()), 18);
+                $usuario  = str_pad(("ID: ".$User->getId()." (".$User->getFirstname()." ".$User->getLastname().")"), 50);
+                $rut      = str_pad(("RUT: ".$User->getRutComplete()), 18);
                 $causas   = str_pad(("Causas: ".($nodeCount/6)), 13);
-                $this->log($usuario."".$rut."".$causas."".$problems);
-                //$this->log("ID: ".$User->getId()."(".$User->getFirstname()." ".$User->getLastname().") RUT: ".$User->getRutComplete()."  causas: ".($nodeCount/6));
 
+                $this->log($usuario."".$rut."".$causas."".$problems);
             }
 
             $endTime = microtime(true);

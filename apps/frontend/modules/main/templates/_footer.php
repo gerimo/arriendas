@@ -42,6 +42,7 @@
                 <li><a href="<?php echo url_for('terms_and_conditions') ?>" target="_blank" title="Términos y Condiciones">Términos y Condiciones</a></li>
                 <li><a href="https://arriendascl.zendesk.com/anonymous_requests/new" target="_blank" title="Contacto">Contacto</a></li>
                 <li><a href="https://arriendascl.zendesk.com/forums" target="_blank" title="Foro">Foro</a></li>
+                <li><a href="http://www.nuevotransporte.cl" target="_blank" title="Blog">Nuestro Blog</a></li>
             </ul>
         </div>
 
