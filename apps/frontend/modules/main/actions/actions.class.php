@@ -40,9 +40,9 @@ class mainActions extends sfActions {
             $this->isMobile = true;
         }
 
-        if (Utils::isWeekend()) {
+        /*if (Utils::isWeekend()) {
             $this->isWeekend = true;
-        }
+        }*/
     }
 
     public function executeIndexList (sfWebRequest $request) {
