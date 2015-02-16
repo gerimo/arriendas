@@ -697,8 +697,8 @@ class reservesActions extends sfActions {
                     $carClass = Doctrine_Core::getTable('car')->findOneById($carId);
                     $propietarioId = $carClass->getUserId();
                     $propietarioClass = Doctrine_Core::getTable('user')->findOneById($propietarioId);
-                    $comunaId = $propietarioClass->getComuna();
-                    $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
+                    $communeId = $propietarioClass->getCommune();
+                    $comunaClass = Doctrine_Core::getTable('Commune')->find($communeId);
                     
                     
                     $this->nameOwner      = $reserve->getNameOwner();
@@ -706,7 +706,7 @@ class reservesActions extends sfActions {
                     $this->lastnameOwner  = $reserve->getLastnameOwner();
                     $this->telephoneOwner = $reserve->getTelephoneOwner();
                     $this->tokenReserve   = $reserve->getToken();
-                    $this->comunaOwner    = $comunaClass->getNombre();
+                    $this->comunaOwner    = $comunaClass->getName();
                     $this->addressOwner   =$propietarioClass->getAddress();
 
                     $this->durationFrom   = $reserve->getFechaInicio2();
