@@ -33,9 +33,7 @@ EOF;
             // Objtiene la key
             $crawler = $client->request('GET', 'http://reformaprocesal.poderjudicial.cl/ConsultaCausasJsfWeb/page/panelConsultaCausas.jsf');
             $viewStateId = $crawler->filter('input[name="javax.faces.ViewState"]')->attr('value');
-
-
-
+            
             $this->log("[".date("Y-m-d H:i:s")."] Procesando...");
 
             $Users = Doctrine_Core::getTable("User")->findByChequeoJudicial(0);
