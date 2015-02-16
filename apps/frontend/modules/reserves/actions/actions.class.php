@@ -455,7 +455,7 @@ class reservesActions extends sfActions {
         $this->forward404If(!$User);
         
         // Chequeo judicial
-        /*try {
+        try {
 
             $UnverifiedMail = false;
 
@@ -481,14 +481,14 @@ class reservesActions extends sfActions {
                     $crawler = $client->request('POST', 'http://reformaprocesal.poderjudicial.cl/ConsultaCausasJsfWeb/page/panelConsultaCausas.jsf', $params);
 
                     $nodeCount = count($crawler->filter('.extdt-cell-div'));
+
                     if ($nodeCount > 1) {
-                        $User->setChequeoJudicial(true);
                         $User->setBlocked(true);
-                        $User->setBloqueado("Se ha bloqueado al usuario antes de efectuar la reserva, por poseer antecedentes judiciales.");
-                    } else {
-                        $User->setChequeoJudicial(true);
-                        $User->save();
+                        //$User->setBloqueado("Se ha bloqueado al usuario antes de efectuar la reserva, por poseer antecedentes judiciales.");
                     }
+
+                    $User->setChequeoJudicial(true);
+                    $User->save();
                 } else {
                     $UnverifiedMail = true;
                 }
@@ -496,7 +496,7 @@ class reservesActions extends sfActions {
         } catch(Exception $e) {
             error_log("[reserves/pay] Verificacion judicial: ".$e->getMessage());
             $UnverifiedMail = true;
-        }*/
+        }
 
         try {
 
