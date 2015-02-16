@@ -266,13 +266,20 @@ class mainActions extends sfActions {
             $User->setRegion($Region);
             $User->setConfirmed(true);
             
-            // Chequeo Judicial
             if(!$foreign){
                 $basePath = sfConfig::get('sf_root_dir');
+
                 $userid = $User->getId();
                 $rut = $User->getRutComplete();
-                $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.strtoupper($rut).'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
-                exec($comando);
+
+                $comandJudicial = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.strtoupper($rut).'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
+                $comandLicense = "nohup " . 'php '.$basePath.'/symfony  user:CheckDriversLicense --rut="'.strtoupper($rut).'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
+                
+                // Chequeo Judicial
+                exec($comandJudicial);
+
+                // chequeo Licencia
+                exec($comandLicense);
             }
 
             $finish_message = "Felicitaciones!<br><br>Tu cuenta a sido activada, ahora puedes ingresar con tu nombre de usuario y contrase&ntilde;a. <br><br><b>¿Qué quieres hacer ahora?</b>";

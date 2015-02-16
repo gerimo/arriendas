@@ -7,7 +7,7 @@ input, select, button, .alert {
     margin-top: 15px;
 }
 
-h1 {
+h1.title-register {
 	text-align: center;;
     color: rgb(70, 70, 70);
     font-weight: 300;

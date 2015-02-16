@@ -281,15 +281,24 @@ class profileActions extends sfActions {
             $Commune = Doctrine_Core::getTable('Commune')->find($commune);
             $User->setCommune($Commune);
 
-            // Chequeo Judicial
+            
             if(!$foreign){
+    
+                $rut = $User->getRutComplete();
+                $basePath = sfConfig::get('sf_root_dir');
+
+                // check Judicial
                 if(!$User->getChequeoJudicial()){
-                    $basePath = sfConfig::get('sf_root_dir');
-                    $userid = $User->getId();
-                    $rut = $User->getRutComplete();
-                    $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.strtoupper($rut).'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
+                    $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.strtoupper($rut).'" --user="'.$userId.'"' . " > /dev/null 2>&1 &";
                     exec($comando);
                 }
+
+                // check License
+                if(!$User->getChequeoLicencia()) {
+                    $comando = "nohup " . 'php '.$basePath.'/symfony  user:CheckDriversLicense --rut="'.strtoupper($rut).'" --user="'.$userId.'"' . " > /dev/null 2>&1 &";
+                    exec($comando);
+                }
+
             } else {
                 $User->setChequeoJudicial(false);
             }

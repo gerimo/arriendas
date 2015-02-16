@@ -6,7 +6,7 @@
     <div class="col-md-offset-4 col-md-4">
 
         <div class="BCW" id="frm">
-            <h1>Registro</h1>
+            <h1 class="title-register">Registro</h1>
 
             <input class="form-control" id="firstname" name="firstname" type="text" placeholder="Nombre">
             <input class="form-control" id="lastname" name="lastname" type="text" placeholder="Apellido paterno">
