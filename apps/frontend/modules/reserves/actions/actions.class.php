@@ -455,7 +455,7 @@ class reservesActions extends sfActions {
         $this->forward404If(!$User);
         
         // Chequeo judicial
-        try {
+        /*try {
 
             $UnverifiedMail = false;
 
@@ -496,7 +496,7 @@ class reservesActions extends sfActions {
         } catch(Exception $e) {
             error_log("[reserves/pay] Verificacion judicial: ".$e->getMessage());
             $UnverifiedMail = true;
-        }
+        }*/
 
         try {
 
