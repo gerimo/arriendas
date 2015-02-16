@@ -1,16 +1,16 @@
 header .navbar-default {
-    background-color: rgba(0, 0, 0, 0.8);
-    border-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0,0,0,0.6);
+    border-color: rgba(0,0,0,0.6);
 }
 
 header .navbar-right .dropdown-menu{
-    background-color: rgba(0, 0, 0, 0.8);
-    border-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0,0,0,0.6);
+    border-color: rgba(0,0,0,0.6);
 }
 
 header .navbar-nav .navbar-right ul {
-    background-color: rgba(0, 0, 0, 0.8);
-    border-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0,0,0,0.6);
+    border-color: rgba(0,0,0,0.6);
 }
 
 .metro .km-area{
