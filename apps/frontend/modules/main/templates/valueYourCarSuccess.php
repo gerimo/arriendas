@@ -7,7 +7,7 @@
 	    <div class="col-md-offset-1 col-xs-12 col-md-10">
 	        <div class="BCW">
 	        	<!--<?php echo form_tag('main/doRegister', array('method'=>'post', 'id'=>'frm1'));?> -->
-				<h1>Monetiza tu auto</h1>
+				<h1 class="valueYourCarTitle">Monetiza tu auto</h1>
 
 		   		<div class="row">
 			   		<div class="col-md-offset-1 col-md-3">
