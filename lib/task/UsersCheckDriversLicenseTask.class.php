@@ -14,7 +14,7 @@ class UsersCheckDriversLicenseTask extends sfBaseTask {
 
         $this->namespace = 'user';
         $this->name = 'CheckDriversLicense';
-        $this->briefDescription = 'Verifica el estado de la licencia de conducir de los usuarios que no han sido chequeados';
+        $this->briefDescription = 'Verifica el estado de la licencia de conducir del usuario especificado';
         $this->detailedDescription = <<<EOF
 The [CheckDriversLicense|INFO] task does things.
 Call it with:

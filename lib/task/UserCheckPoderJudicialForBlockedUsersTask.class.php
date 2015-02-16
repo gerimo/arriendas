@@ -12,7 +12,7 @@ class UserCheckPoderJudicialForBlockedUsersTask extends sfBaseTask {
         ));
 
         $this->namespace = 'user';
-        $this->name = 'checkPoderJudicialForBlockedUsers';
+        $this->name = 'CheckPoderJudicialForBlockedUsers';
         $this->briefDescription = 'Verifica a todos los usuarios bloqueados, desbloqueando a los que no posean causas judiciales';
         $this->detailedDescription = <<<EOF
 The [UserCheckPoderJudicialForBlockedUsers|INFO] task does things.
