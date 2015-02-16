@@ -30,7 +30,7 @@ EOF;
         try {
 
             $client = new \Goutte\Client();
-            // Objtiene la key
+            // Obj tiene la key
             $crawler = $client->request('GET', 'http://reformaprocesal.poderjudicial.cl/ConsultaCausasJsfWeb/page/panelConsultaCausas.jsf');
             $viewStateId = $crawler->filter('input[name="javax.faces.ViewState"]')->attr('value');
             
@@ -54,7 +54,6 @@ EOF;
                 if(Utils::isValidRUT($User->getRutComplete())) {
 
                     if (strlen($viewStateId) > 0) {
-
                         /* verification call */
                         $params = array(
                             'formConsultaCausas:idFormRut' => $User->rut,
@@ -70,18 +69,18 @@ EOF;
                         $nodeCount = count($crawler->filter('.extdt-cell-div'));
 
                         if ($nodeCount > 1) {
-                            $User->setBlocked(true);
-                            $User->setChequeoJudicial(true);
+                            $User->setBlocked(true);                            
                             $countTotalUsuariosChequeados++;
                             $countConCausas++;
                             $causa = "blocked by criminal records";
                         } else {
                             $User->setBlocked(false);
-                            $User->setChequeoJudicial(true);
                             $countTotalUsuariosChequeados++;
                             $countSinCausas++;
                             $causa = "free of criminal records";
                         }
+
+                        $User->setChequeoJudicial(true);
                                         
                     } else {
                         $User->setChequeoJudicial(false);
@@ -96,14 +95,14 @@ EOF;
                     $problems = "Invalid RUT";
                     $countRutInvalido++;
                 }
+
                 $countTotal++;
 
-                $usuario = str_pad(("ID: ".$User->getId()." (".$User->getFirstname()." ".$User->getLastname().")"), 50);
-                $rut     = str_pad(("RUT: ".$User->getRutComplete()), 18);
+                $usuario  = str_pad(("ID: ".$User->getId()." (".$User->getFirstname()." ".$User->getLastname().")"), 50);
+                $rut      = str_pad(("RUT: ".$User->getRutComplete()), 18);
                 $causas   = str_pad(("Causas: ".($nodeCount/6)), 13);
-                $this->log($usuario."".$rut."".$causas."".$problems);
-                //$this->log("ID: ".$User->getId()."(".$User->getFirstname()." ".$User->getLastname().") RUT: ".$User->getRutComplete()."  causas: ".($nodeCount/6));
 
+                $this->log($usuario."".$rut."".$causas."".$problems);
             }
 
             $endTime = microtime(true);
