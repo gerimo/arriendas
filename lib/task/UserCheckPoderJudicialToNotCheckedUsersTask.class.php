@@ -88,13 +88,14 @@ EOF;
                         $causa = "connection fail";
                         $problems = "Connection lost";
                     }
-                    $User->save();
-
                 } else {
-                    $User->setChequeoJudicial(false);
+                    $User->setBlocked(true);
+                    $User->setChequeoJudicial(true);
                     $problems = "Invalid RUT";
                     $countRutInvalido++;
                 }
+
+                $User->save();
 
                 $countTotal++;
 
