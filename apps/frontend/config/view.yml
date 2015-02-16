@@ -6,9 +6,9 @@ default:
         content-type: text/html
 
     metas:
-        title:        Rent a car vecino. Arriendo de autos en Chile | Arriendas.cl
-        description:  Arriendo de autos vecinos con seguro premium, asistencia de viaje y TAGs incluídos. Busca un auto por ubicación o por precio. Rent a car Vecino.
-        keywords:     arriendo, autos, santiago
+        title:        Rent a car entre personas. Arriendo de autos en Santiago de Chile 
+        description:  Arriendo de autos entre vecinos con seguro, asistencia de viaje y TAGs incluídos. Busca un auto por ubicación o por precio. Rent a car Vecino.
+        keywords:     arriendo de autos, rent a car, renta vehiculos, sin tarjeta, seguro, chile, santiago
         language:     es
         robots:       index, follow
 
@@ -22,3 +22,50 @@ default:
 
     has_layout:     true
     layout:         layout
+
+howWorksSuccess:
+    metas:
+        title:        Como arrendar un auto.
+        description:  Poner mi auto en arriendo. Como arrendar mi auto y ganar dinero. Arrendar un auto económico en Santiago.
+
+pricesCompareSuccess:
+    metas:
+        title:        Comparacion de precios entre Hertz, Avis y Europcar
+        description:  Comparación de precios de arriendo de autos entre rent a car de Santiago Hertz, Avis y Europcar. Precios incluyen asistencia en ruta,seguro y TAGS.
+
+newsSuccess:
+    metas:
+        title:        Arriendas en las noticias
+        description:  Arriendo de autos entre personas. Rent a car por horas. Gana dinero alquilando mi vehiculo. Arriendas reclamos.
+
+questionsSuccess:
+    metas:
+        title:        Centro de ayuda  | Como arrendar un auto en Arriendas 
+        description:  Como rentar un vehículo en arriendas.cl. Ganar dinero arrendando mi auto.
+
+companiaSuccess:
+    metas:
+        title:        Sobre Arriendas.| Arriendo de autos entre personas. 
+        description:  Sistema de arriendo de autos ente personas en Santiago de Chile. Arrendar un auto por horas es ecológico y ayuda al medio ambiente.
+
+terminosSuccess:
+    metas:
+        title:        Terminos y condiciones Arriendas.cl
+        description:  Seguro para arrendar mi propio auto y seguro rent a car. Contratos de arriendas.cl
+
+registerSuccess:
+    metas:
+        title:        Registrate en Arriendas.cl
+        description:  Suscripcion al sistema de arriendo de vehículos por horas o dias sin tarjeta de credito.Suscribete para armar tu propio rent a car en Santiago de Chile.
+
+valueYourCarSuccess:
+     metas:
+        title:        Cuanto puedo ganar con mi auto. | Arrienda tu auto.
+        description:  Gana dinero arrendando tu auto. Arrendar mi auto por horas o días con seguro incluído en Santiago de Chile. Monetizar mi propio vehículo. 
+
+searchACarsSuccess:
+    metas:
+        title:        Arriendo de Autos entre persona. Rent a car en Region Metropolitana, Chile 
+        description:  Arrienda autos económicos por hora y/o días
+
+

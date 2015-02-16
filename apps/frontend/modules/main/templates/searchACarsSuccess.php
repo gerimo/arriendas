@@ -8,8 +8,40 @@
     var usuarioLogeado = "<?php echo $usuarioLog; ?>";
 
     var map; // initialize, searchCars
+    var geolocalizacion; // coordenadas
+    var latitud; // coordenadas
+    var lastValidCenter; // initialize
+    var longitud; // coordenadas
+    var map; // initialize, searchCars
     var markerCluster; // searchCars
     var markers = []; // searchCars
+    var strictBounds = null; // initialize
+
+    var swLat; // searchCars
+    var swLng; // searchCars
+    var neLat; // searchCars
+    var neLng; // searchCars
+
+    function coordenadas(position) {
+
+        latitud  = position.coords.latitude; // Guardamos nuestra latitud
+        longitud = position.coords.longitude; // Guardamos nuestra longitud
+        
+        <?php if ($sf_user->getAttribute('geolocalizacion') == true): ?>
+            geolocalizacion = true;
+        <?php else: ?>
+            geolocalizacion = false;
+        <?php endif ?>
+    }
+    function localizame() {
+        <?php if (!$isMobile): ?>
+            if (navigator.geolocation) { // Si el navegador tiene geolocalizacion
+                navigator.geolocation.getCurrentPosition(coordenadas, errores);
+            } else {
+                alert('¡Oops! Tu navegador no soporta geolocalización. Bájate Chrome, que es gratis!');
+            }
+        <?php endif ?>
+    }
 
     function errores(err) {
 
@@ -439,8 +471,11 @@
         $("#from").val(roundTime($("#from").val()));
         $("#to").val(roundTime($("#to").val()));
 
+        localizame();
+
         <?php if (!($hasCommune)): ?>
             $("#commune").focus();
+
         <?php endif ?>
 
         $("#search").click();
@@ -614,7 +649,7 @@
         return (mes+dia+ano+hora+min);
     }
 
-    //valida que los no existan lapsus de media hora en los arriendos
+    //valida que los no existan lapsus menores a 1 hora  en los arriendos
     function validateMin(){
         if($("#from").val() && $("#to").val()){
             var minF = $("#from").val();
