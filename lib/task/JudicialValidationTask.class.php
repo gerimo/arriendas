@@ -5,7 +5,7 @@ class JudicialValidationTask extends sfBaseTask {
     protected function configure() {
 
         $this->addOptions(array(
-            new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name'),
+            new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name', 'frontend'),
             new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'local'),
             new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine'),
             new sfCommandOption('user', null, sfCommandOption::PARAMETER_REQUIRED, 'The user id', ''),
@@ -27,6 +27,8 @@ EOF;
 
         $config = ProjectConfiguration::getApplicationConfiguration("frontend", "prod", TRUE);
         sfContext::createInstance($config);
+        $context = sfContext::createInstance($this->configuration);
+        $context->getConfiguration()->loadHelpers('Partial');
         
         // initialize the database connection
         $databaseManager = new sfDatabaseManager($this->configuration);
@@ -65,7 +67,7 @@ EOF;
                 $message = $mail->getMessage();     
 
                 $subject = "¡No se pudo verificar si contaba con causas judiciales!";
-                $body    = $this->getPartial('emails/notificationOfJudicialVerification', array('User' => $profile));
+                $body    = get_partial('emails/notificationOfJudicialVerification', array('User' => $profile));
                 $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                 $to      = array("soporte@arriendas.cl");
 
@@ -76,12 +78,13 @@ EOF;
                 //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
                 
                 $mailer->send($message);
-
+                $causa = 'connection lost';
                 break;
             case 1:
                 /* se chequeo y no ha sido bloqueada */
                 $profile->setChequeoJudicial(true);
                 $profile->save(); 
+                $causa = 'pass';
 
                 break;
             case 2:
@@ -107,7 +110,7 @@ EOF;
                 $message = $mail->getMessage(); 
 
                 $subject = "¡El usuario fué bloqueado por poseer causas judiciales!";
-                $body    = $this->getPartial('emails/notificationOfJudicialVerification', array('User' => $profile));
+                $body    = get_partial('emails/notificationOfJudicialVerification', array('User' => $profile));
                 $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                 $to      = array("soporte@arriendas.cl");
 
@@ -118,12 +121,13 @@ EOF;
                 //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
                 
                 $mailer->send($message);
+                $causa = 'blocked';
 
                 break;
         }
 
         echo " \n";
-        $this->log('done.');
+        $this->log('done. '.$causa);
     }
 
 }
