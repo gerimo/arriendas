@@ -39,6 +39,8 @@
  * @property integer $options
  * @property date disabled_until
  * @property Doctrine_Collection $CarProximityMetros
+ * @property CarAudioAccesories $CarAudioAccesories
+ * @property CarPhotosInsure $CarPhotosInsure
  * 
  * @method integer             getId()                Returns the current record's "id" value
  * @method integer             getUserId()            Returns the current record's "User_id" value
@@ -76,6 +78,8 @@
  * @method Doctrine_Collection getPhotoes()        Returns the current record's "Photoes" collection
  * @method Doctrine_Collection getReserves()       Returns the current record's "Reserves" collection
  * @method timestamp           getDisabledUntil()  Returns the current record's "disable_until" value
+ * @method CarPhotosInsure     getCarPhotosInsure()   Returns the current record's "CarPhotosInsure" value
+ * @method CarAudioAccessories getCarAudioAccessories()   Returns the current record's "CarAudioAccessories" value
  *
  * @method Car                 setId()             Sets the current record's "id" value
  * @method Car                 setUserId()         Sets the current record's "User_id" value
@@ -113,6 +117,8 @@
  * @method Car                 setCommune()        Sets the current record's "commune" value
  * @method Car                 setOptions()        Sets the current record's "options" value
  * @method Car                 setCarProximityMetros()   Sets the current record's "CarProximityMetros" collection
+ * @method Car                 setCarPhotosInsure()   sets the current record's "CarPhotosInsure" value
+ * @method Car                 setCarAudioAccessories()   sets the current record's "CarAudioAccessories" value
  *
  * @package    CarSharing
  * @subpackage model
@@ -466,9 +472,9 @@ abstract class BaseCar extends sfDoctrineRecord
             'type' => 'float'
             ));
 
-      $this->hasColumn('commune_id', 'integer', 11, array(
+        $this->hasColumn('commune_id', 'integer', 11, array(
             'notnull' => true
-      ));
+        ));
 
         $this->hasColumn('options', 'integer', 4, array(
             'type' => 'integer',
@@ -480,6 +486,14 @@ abstract class BaseCar extends sfDoctrineRecord
             'type' => 'integer',
             'notnull' => true,
             'length' => 4,
+        ));
+
+        $this->hasColumn('audio_accessories_id', 'integer', 11, array(
+            'notnull' => true
+        ));
+
+        $this->hasColumn('photos_insure_id', 'integer', 11, array(
+            'notnull' => true
         ));
       
         // Indices
@@ -576,5 +590,21 @@ abstract class BaseCar extends sfDoctrineRecord
             'local' => 'id',
             'foreign' => 'car_id'
         ));
+
+        $this->hasOne('CarAudioAccessories', array(
+             'local' => 'audio_accessories_id',
+             'foreign' => 'id',
+             'onDelete' => 'no action',
+             'onUpdate' => 'no action'
+        ));
+
+        $this->hasOne('CarPhotosInsure', array(
+             'local' => 'photos_insure_id',
+             'foreign' => 'id',
+             'onDelete' => 'no action',
+             'onUpdate' => 'no action'
+        ));
+
+
     }
 }

@@ -1,25 +1,45 @@
-# You can find more information about this file on the symfony website:
+    # You can find more information about this file on the symfony website:
 # http://www.symfony-project.org/reference/1_4/en/10-Routing
 
 homepage:
   url:   /
   param: { module: main, action: index }
 
+car_delete_damage:
+    url: /auto/eliminar-dano
+    param: { module: car, action: deleteDamage }
+
 car_find_car:
-    url: /vehiculo/buscar
+    url: /auto/buscar
     param: { module: car, action: findCar }
 
+car_find_damage:
+    url: /auto/buscar-dano
+    param: { module: car, action: findDamage }
+
 car_get_actives_cars:
-    url: /vehiculo/vehiculos-activos
+    url: /auto/autos-activos
     param: { module: car, action: getActivesCars }
 
 car_is_active_car:
-    url: /vehiculo/es-vehiculo-activo
+    url: /auto/es-auto-activo
     param: { module: car, action: isActiveCar }
 
+car_save_accessories:
+    url: /auto/guardar-accesorios
+    param: { module: car, action: saveAccessories }
+
+car_save_audio_accessories:
+    url: /auto/guardar-accesorios-audio
+    param: { module: car, action: saveAudioAccessories }
+
+car_save_damage:
+    url: /auto/guardar-dano
+    param: { module: car, action: saveDamage }
+
 car_verify_car:
-    url: /vehiculo/verificar
-    param: { module: car, action: VerifyCar }
+    url: /auto/verificar
+    param: { module: car, action: verifyCar }
 
 comment:
     url: /comentario/:userId/:managementId
@@ -61,12 +81,16 @@ reserve_is_original_reserve:
     url: /reserva/es-reserva-original
     param: { module: reserve, action: isOriginalReserve }
 
+user_change_call:
+    url: /usuarios/cambiar-llamado
+    param: { module: user, action: changeCall }
+
 user_whitout_car:
-    url: /usuarios/sin-vehiculo
+    url: /usuarios/sin-auto
     param: { module: user, action: whitoutCar }
 
 user_whitout_car_get:
-    url: /usuarios/sin-vehiculo/obtener
+    url: /usuarios/sin-auto/obtener
     param: { module: user, action: whitoutCarGet }
 
 user_whitout_pay:
@@ -76,6 +100,10 @@ user_whitout_pay:
 user_whitout_pay_get:
     url: /usuarios/sin-pago/obtener
     param: { module: user, action: whitoutPayGet }
+
+upload_photo:
+    url: /subir-foto
+    param: { module: main, action: uploadPhoto }
 
 
 

@@ -53,7 +53,8 @@ class UserTable extends Doctrine_Table {
         $q = Doctrine_Core::getTable("User")
             ->createQuery('U')
             ->leftJoin('U.Cars C')
-            ->Where('U.propietario = 0')
+            ->Where('U.propietario = 1')
+            ->andWhere('C.id is null')
             ->groupBy('U.id');
 
         if ($from && $to) {

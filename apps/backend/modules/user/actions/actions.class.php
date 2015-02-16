@@ -5,6 +5,31 @@ class userActions extends sfActions {
     public function executeIndex(sfWebRequest $request) {
     }
 
+    public function executeChangeCall(sfWebRequest $request) {
+
+        $return = array("error" => false);
+
+        try {
+
+            $userId   = $request->getPostParameter("userId", null);
+            $option   = $request->getPostParameter("option", null);
+
+            $User = Doctrine_Core::getTable('User')->find($userId);
+
+            $User->setLlamadoRegistro($option);
+            $User->save();
+
+        } catch (Exception $e) {
+            $return["error"]        = true;
+            $return["errorCode"]    = $e->getCode();
+            $return["errorMessage"] = $e->getMessage();
+        }
+
+        $this->renderText(json_encode($return));
+        
+        return sfView::NONE;
+    }
+
     public function executeWhitoutCar(sfWebRequest $request) {
     }
 
@@ -36,6 +61,7 @@ class userActions extends sfActions {
                     "user_telephone" => $User->telephone,
                     "user_address"   => $User->address,
                     "user_email"     => $User->email,
+                    "user_call"      => $User->llamado_registro,
                     "user_comment"   => $User->getUserManagements()   
                 );
             }
@@ -82,6 +108,7 @@ class userActions extends sfActions {
                     "user_telephone"        => $User->telephone,
                     "user_address"          => $User->address,
                     "user_email"            => $User->email,
+                    "user_call"             => $User->llamado_registro,
                     "user_comment"          => $User->getUserManagements(),
                     "reserva_fecha_inicio"  => $Reserve->fecha_inicio   
                 );
