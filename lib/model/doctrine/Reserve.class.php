@@ -452,12 +452,12 @@ class Reserve extends BaseReserve {
         return $isReady;
     }
 
-   /* public function save(Doctrine_Connection $conn = null) {
+    public function save(Doctrine_Connection $conn = null) {
 
         $this->setUniqueToken();
 
         return parent::save($conn);
-    }*/
+    }
     
     public function setUniqueToken($replace = false){
         
