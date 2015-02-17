@@ -710,7 +710,8 @@ class reservesActions extends sfActions {
                     $model = $carClass->getModel();
                     $brand = $carClass->getModel()->getBrand();
                     $telephoneUser = sfContext::getInstance()->getUser()->getAttribute('telephone');
-                    $codigo = "z1".mb_substr($model,-3)."g0".mb_substr($model,1,2); 
+                    error_log("El telefono del arrendatario es:".$telephoneUser);
+                    $codigo = "z1".mb_substr($model,-2).mb_substr($model,0,1); 
                     /*-------------------------------------*/
 
                     $propietarioId = $carClass->getUserId();
