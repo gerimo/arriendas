@@ -419,8 +419,8 @@ class mainActions extends sfActions {
         }
         
         $referer = $this->getContext()->getActionStack()->getSize() > 1 ? $request->getUri() : $request->getReferer();
-        error_log("REF: ".$referer);
         $this->getUser()->setAttribute("referer", $referer);
+        error_log("[main/login] REF: ".$referer);
     }
 
     public function executeLoginDo (sfWebRequest $request) {
@@ -478,8 +478,8 @@ class mainActions extends sfActions {
                     }
 
                     $this->getUser()->setAttribute('geolocalizacion', true);
-error_log($this->getUser()->getAttribute("referer"));
-                    $this->redirect($this->getUser()->getAttribute("referer"));
+
+                    /*$this->redirect($this->getUser()->getAttribute("referer"));*/
                     $this->calificacionesPendientes();
                 } else {
                     $this->getUser()->setFlash('msg', 'Su cuenta no ha sido activada. Puede hacerlo siguiendo este <a href="activate">link</a>');
