@@ -490,7 +490,6 @@
     $('#damageModal').on('hidden.bs.modal', function (e) {
         
         var marker = $("#marker").data("marker");
-        console.log(marker.getZIndex());
 
         if (marker.getZIndex() == 0) {
             marker.setMap(null);
