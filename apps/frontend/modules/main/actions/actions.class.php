@@ -403,9 +403,10 @@ class mainActions extends sfActions {
 
         // Si si usuario está logueado se redirecciona
         if ($this->getUser()->isAuthenticated()) {
+            error_log(1);
             $this->redirect('homepage');
+            error_log(2);
         }
-
         
         $referer = $this->getContext()->getActionStack()->getSize() > 1 ? $request->getUri() : $request->getReferer();
         $this->getUser()->setAttribute("referer", $referer);
