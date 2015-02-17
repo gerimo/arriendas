@@ -477,13 +477,10 @@ class mainActions extends sfActions {
                     }
 
                     $this->getUser()->setAttribute('geolocalizacion', true);
-
-                    error_log("hola mundo");
-
+error_log($this->getUser()->getAttribute("referer"));
                     $this->redirect($this->getUser()->getAttribute("referer"));
                     $this->calificacionesPendientes();
                 } else {
-                    error_log("ELSE");
                     $this->getUser()->setFlash('msg', 'Su cuenta no ha sido activada. Puede hacerlo siguiendo este <a href="activate">link</a>');
                     $this->getUser()->setFlash('show', true);
 
