@@ -126,6 +126,10 @@ message_register_success:
     url: /registro/exitoso
     param: { module: main , action: messageRegister }
 
+message_send_mobile:
+    url: /message_send_mobile
+    param: { module: reserves , action: messageMobile }
+
 news:
     url: /arrienda-en-las-noticias
     param: { module: main , action: news }

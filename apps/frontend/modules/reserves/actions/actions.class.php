@@ -714,7 +714,7 @@ class reservesActions extends sfActions {
                     $user =  Doctrine_Core::getTable("User")->find($userId);
                     $telephoneUser = $user->getTelephone();  
                     error_log("El telefono del arrendatario es:".$telephoneUser);
-                    $codigo = rand(1000,9999);
+                    
                     /*-------------------------------------*/
 
                     $propietarioId = $carClass->getUserId();
@@ -732,18 +732,7 @@ class reservesActions extends sfActions {
 
                     $this->durationFrom   = $reserve->getFechaInicio2();
                     $this->durationTo     = $reserve->getFechaTermino2();
-
-                    //send SMS
-                    $SMS = new SMS("Arriendas.cl");
-                    $message_data_cars = "Has reservado un ".$brand." ".$model.","." ubicado en ".$this->addressOwner.", ".$this->comunaOwner.".";
-                    $message_open_cars = "Puedes abrir el auto haciendo click en el siguiente link: www.arriend.as.";
-                    $message_diesel = "Puedes cargar bencina en tu COPEC más cercana con la tarjeta guardada en la guantera usando el código ".$codigo.".";
-                    
-                    $SMS->send($message_data_cars, $telephoneUser);
-                    sleep(20);
-                    $SMS->send($message_open_cars, $telephoneUser);
-                    sleep(120);
-                    $SMS->send($message_diesel, $telephoneUser);
+                  
                     /*-------------------------------------------------*/
 
                 } else {
@@ -752,12 +741,49 @@ class reservesActions extends sfActions {
                     Doctrine_Core::getTable("Transaction")->successTransaction($last_order_id, $token, $STATE_ERROR, 1);
                 }
                 $this->setTemplate('exito');
+
             } else{
                 exit; 
             }
         } else {
             $this->redirect('@homepage');
         }       
+    }
+
+    public function executeMessageMobile(sfWebRequest $request) {
+        $return = array("error" => false);
+
+        try {
+           //send SMS
+            $model = $request->getPostParameter("model");
+            $brand = $request->getPostParameter("brand");
+            $telephoneUser = $request->getPostParameter("telephoneUser");
+
+            $codigo = rand(1000,9999);
+            $message_data_cars = "Has reservado un ".$brand." ".$model.","." ubicado en ".$this->addressOwner.", ".$this->comunaOwner.".";
+            $message_open_cars = "Puedes abrir el auto haciendo click en el siguiente link: www.arriend.as.";
+            $message_diesel = "Puedes cargar bencina en tu COPEC más cercana con la tarjeta guardada en la guantera usando el código ".$codigo.".";
+
+            if (!$model || !$brand || !$telephoneUser) {
+                throw new Exception("Falta un dato para enviar el sms", 1);
+            }
+
+            $SMS = new SMS("Arriendas.cl");
+            
+            $SMS->send($message_data_cars, $telephoneUser);
+            sleep(20);
+            $SMS->send($message_open_cars, $telephoneUser);
+            sleep(120);
+            $SMS->send($message_diesel, $telephoneUser); 
+        
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+        }
+        
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
     }
 
     // FUNCIONES PRIVADAS

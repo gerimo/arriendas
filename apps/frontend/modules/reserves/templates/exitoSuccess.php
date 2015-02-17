@@ -124,3 +124,20 @@ var google_remarketing_only = false;
 <noscript>
   <img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=6016225594554&amp;cd[value]=0.01&amp;cd[currency]=USD&amp;noscript=1" />
 </noscript>
+
+<script >
+
+  $(document).ready(function(){
+
+    var model = "<?php echo $model?>"
+    var brand = "<?php echo $brand?>"
+    var tfn   = "<?php echo $telephoneUse?>"
+    $.post("<?php echo url_for('message_send_mobile')?>", function(r){
+        if (r.error) {
+
+        }
+    });
+  
+  });
+
+</script>
