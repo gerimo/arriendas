@@ -736,11 +736,11 @@ class reservesActions extends sfActions {
                     //send SMS
                     $SMS = new SMS("Arriendas.cl");
                     $message_data_cars = "Has reservado un ".$brand." ".$model.","." ubicado en ".$this->addressOwner.", ".$this->comunaOwner.".";
-                    $message_open_cars = "Puedes abrir el auto haciendo click en el siguiente link: www.arriendas.cl.";
+                    $message_open_cars = "Puedes abrir el auto haciendo click en el siguiente link: www.arriend.as.";
                     $message_diesel = "Puedes cargar bencina en tu COPEC más cercana con la tarjeta guardada en la guantera usando el código ".$codigo.".";
                     
                     $SMS->send($message_data_cars, $telephoneUser);
-                    sleep(60);
+                    sleep(20);
                     $SMS->send($message_open_cars, $telephoneUser);
                     sleep(120);
                     $SMS->send($message_diesel, $telephoneUser);
