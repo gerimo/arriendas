@@ -7,6 +7,7 @@
  * 
  * @property integer $id
  * @property integer $rut
+ * @property int $llamado_registro
  * @property string $rut_dv
  * @property string $rut_old
  * @property string $username
@@ -55,8 +56,10 @@
  * @property Commune $commune
  * @property Doctrine_Collection $UserManagements
  * @property boolean $is_employee
+ *
  * 
  * @method integer             getId()                    Returns the current record's "id" value
+ * @method integer             getLlamadoRegistro()       Returns the current record's "llamado_registro" value
  * @method string              getUsername()              Returns the current record's "username" value
  * @method string              getComentariosRecordar()   Returns the current record's "comentarios_recordar" value
  * @method string              getPassword()              Returns the current record's "password" value
@@ -109,6 +112,7 @@
  * @method boolean             getIsEmployee()            Returns the current record's "is_employee" collection
  *
  * @method User                setId()                    Sets the current record's "id" value
+ * @method User                setLlamadoRegistro()       Sets the current record's "llamado_registro" collection
  * @method User                setUsername()              Sets the current record's "username" value
  * @method User                setComentariosRecordar()   Sets the current record's "comentarios_recordar" value
  * @method User                setPassword()              Sets the current record's "password" value
@@ -369,6 +373,9 @@ abstract class BaseUser extends sfDoctrineRecord {
              'type' => 'timestamp',
              ));
         $this->hasColumn('credito', 'integer', null, array(
+            'type' => 'integer'
+        ));
+        $this->hasColumn('llamado_registro', 'integer', null, array(
             'type' => 'integer'
         ));
         $this->hasColumn('propietario', 'boolean', null, array(
