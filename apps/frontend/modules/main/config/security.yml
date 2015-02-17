@@ -82,5 +82,11 @@ searchACars:
 terminos:
     is_secure: false
 
+testSMS:
+    is_secure: false
+
 valueYourCar:
+    is_secure: false
+
+PriceJson:
     is_secure: false

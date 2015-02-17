@@ -26,6 +26,7 @@
                 <?php
                     endfor;
                 ?>
+              	<option value="false">Todos</option>
             </select>
         </div>
 
@@ -37,7 +38,7 @@
                 <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
                 <li><input type="checkbox" name="filter" class="isLowConsumption"> Petrolero</li>
                 <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
-                <li><input type="checkbox" name="filrer" class="withAvailability" <?php if (Utils::isWeekend()): ?> checked<?php endif; ?>> no sé</li>
+                <li><input type="checkbox" name="filrer" class="withAvailability" <?php if (Utils::isWeekend()): ?> checked<?php endif; ?>> autos con disponibilidad</li>
             </ul>
         </div>
         <div class="col-md-1 text-center">
@@ -107,8 +108,9 @@
 			"carId" : carId
 		};
 
+		console.log(parameters);
+
 		$.post("<?php echo url_for_frontend('opportunities_approve') ?>", parameters, function(r){
-			console.log("SUCCESS");
 			if (r.error) {
 				console.log(r.errorMessage);
 			} else {
@@ -146,18 +148,13 @@
 
 		var idReservaOriginal = $("#idReservaOriginal").val();
 
-		$("#reserve-check").hide();
-		$("#reserve-remove").hide();
-
 		$.post("<?php echo url_for('reserve_is_original_reserve') ?>", {"idReservaOriginal": idReservaOriginal}, function(r){
-
 			if (r.error) {
 				console.log(r.errorMessage);
 			} else {
 				if (r.original != null) {
 					if (r.original) {
 						getActivesCars(r.original);
-						$("#reserve-check").show();
 						$("#reserveFilter").val(r.original); 
 
 						if ($("#car-check").is(":visible")) {
@@ -165,7 +162,6 @@
 						}
 
 					}else {
-						$("#reserve-remove").show(); 
 					}
 				}
 			}
@@ -174,6 +170,10 @@
 	}
 
 	function getActivesCars(reserveId) {
+
+		if (!reserveId) {
+			return false;
+		}
 
 		$(".loading").show();
 
@@ -229,7 +229,7 @@
 				$('#carsActivesTable').DataTable().rows().remove().draw();
 				
 				$.each(r.data, function(k, v){
-					var button = "<button class='btn btn-block btn-primary opp-approve' data-reserve-id='"+reserveId+"' data-car-id='"+v.car_id+"'>Crear</button>";
+					var button = "<button class='btn btn-block btn-primary opp-approve' data-reserve-id='"+reserveId+"' data-car-id='"+v.id+"'>Crear</button>";
 					$('#carsActivesTable').DataTable().row.add([ v.id, v.comunne, v.brand, v.model, v.year, v.transmission, v.price, v.type, v.nearestMetroName, v.QuantityOfLatestRents, v.user_name , v.user_telephone, button ]).draw();
 				});
 				

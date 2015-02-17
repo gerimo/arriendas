@@ -30,7 +30,9 @@
                     <th>Teléfono</th>
                     <th>email</th>
                     <th>dirección</th>
+                    <th>Fecha inicio</th>
                     <th>Comentario</th>
+
                 </tr>
             </thead>
 
@@ -82,30 +84,16 @@
         $(".load").show();
 
         $.post("<?php echo url_for('user_whitout_pay_get') ?>", {"from": from, "to": to}, function(r){
-
             if (r.error) {
-                /*$("#dialog-alert p").html("No se encontraron usuarios");
-                $("#dialog-alert").attr('title','Error!');
-                $("#dialog-alert").dialog({
-                    buttons: [{
-                    text: "Aceptar",
-                    click: function() {
-                        $('#userWhitoutPayTable').DataTable().rows().remove().draw();
-                        $( this ).dialog( "close" );
-
-                    }
-                    }]
-                });*/
-                
+                console.log(r);
                 $('#userWhitoutPayTable').DataTable().rows().remove().draw();
                 $(".load").hide();
             } else {
-                
                 $('#userWhitoutPayTable').DataTable().rows().remove().draw();
 
                 $.each(r.data, function(k, v) {
                     var button = "<a class='btn btn-block btn-primary comment' href='"+urlComment.replace("userIdPattern", v.user_id)+"'>Comentarios</a>";
-                    $('#userWhitoutPayTable').DataTable().row.add([ v.user_id, v.user_fullname, v.user_telephone, v.user_email, v.user_address, button ]).draw();
+                    $('#userWhitoutPayTable').DataTable().row.add([ v.user_id, v.user_fullname, v.user_telephone, v.user_email, v.user_address, v.reserva_fecha_inicio, button ]).draw();
                 });
 
                 $(".load").hide();

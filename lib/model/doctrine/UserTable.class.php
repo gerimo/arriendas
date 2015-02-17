@@ -2,7 +2,27 @@
 
 class UserTable extends Doctrine_Table {
 
+    
+    public function findUsersWithPay($from = false, $to = false, $userId) {
+        $q = Doctrine_Core::getTable("Reserve")
+            ->createQuery('R')
+            ->Where('R.user_id = ?', $userId)
+            ->andWhere('R.fecha_pago IS NOT NULL')
+            ->andWhere('DATE(R.fecha_pago) BETWEEN ? AND ?', array($from, $to));
+
+
+        $User= $q->fetchOne();
+
+        if ($User) {
+            return true;
+        }
+        return false;
+    }
+
     public function findUsersWithoutPay($from = false, $to = false) {
+
+        $Users = array();
+
         $q = Doctrine_Core::getTable("Reserve")
             ->createQuery('R')
             ->where('R.fecha_pago IS NULL')
@@ -15,7 +35,17 @@ class UserTable extends Doctrine_Table {
             $q->andWhere('DATE(R.fecha_reserva) <= ?', $to);
         }
 
-        return $q->execute();
+        $Reserves = $q->execute();
+
+        foreach ($Reserves as $Reserve) {
+            
+            if (!$this->findUsersWithPay($from, $to, $Reserve->getUserId())) {
+
+                $Users[]  = $Reserve;
+            }
+        }
+
+        return $Users;
     }
 
     public function findUsersWithoutCar($from = false, $to = false) {
@@ -23,6 +53,7 @@ class UserTable extends Doctrine_Table {
         $q = Doctrine_Core::getTable("User")
             ->createQuery('U')
             ->leftJoin('U.Cars C')
+            ->Where('U.propietario = 0')
             ->groupBy('U.id');
 
         if ($from && $to) {

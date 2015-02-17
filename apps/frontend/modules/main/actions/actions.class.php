@@ -4,6 +4,18 @@ require_once sfConfig::get('sf_lib_dir') . '/vendor/mobile-detect/Mobile_Detect.
 
 class mainActions extends sfActions {
 
+    public function executeTestSMS (sfWebRequest $request) {
+        $this->setLayout(false);
+
+        $message     = $request->getParameter("message");
+        $phoneNumber = $request->getParameter("phoneNumber");
+
+        $SMS = new SMS();
+        $SMS->send($message, $phoneNumber);
+
+        return sfView::NONE;
+    }
+
     public function executeTestKhipu (sfWebRequest $request) {
         $this->setLayout(false);
 
@@ -17,6 +29,7 @@ class mainActions extends sfActions {
 
         $this->hasCommune = false;
         $this->isWeekend  = false;
+        $this->isMobile   = false;
 
         if ($request->hasParameter('region','commune')){
             $communeSlug = $request->getParameter('commune');
@@ -30,6 +43,13 @@ class mainActions extends sfActions {
             $this->getUser()->setAttribute('geolocalizacion', true);
         } elseif ($this->getUser()->getAttribute('geolocalizacion') == true) {
             $this->getUser()->setAttribute('geolocalizacion', false);
+        }
+
+        $this->limit = 33;
+        $MD = new Mobile_Detect;
+        if ($MD->isMobile()) {
+            $this->limit = 5;
+            $this->isMobile = true;
         }
 
         if (Utils::isWeekend()) {
@@ -237,7 +257,7 @@ class mainActions extends sfActions {
             $number         = substr($rut, 0, -1);
 
             $User->setRut($number ? $number : null );
-            $User->setRutDv($dv ? strtoupper($dv) : null );
+            $User->setRutDv($dv != null ? strtoupper($dv) : null );
             $User->setExtranjero($foreign);
             $User->setTelephone($telephone);
             $User->setBirthdate($birth);
@@ -250,8 +270,7 @@ class mainActions extends sfActions {
             if(!$foreign){
                 $basePath = sfConfig::get('sf_root_dir');
                 $userid = $User->getId();
-                $rut = $User->getRutFormatted();
-                error_log(strtoupper($rut));
+                $rut = $User->getRutComplete();
                 $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.strtoupper($rut).'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
                 exec($comando);
             }

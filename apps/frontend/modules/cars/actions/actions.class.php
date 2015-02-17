@@ -199,10 +199,11 @@ class carsActions extends sfActions {
     }
 
     public function executeSearch(sfWebRequest $request) {
+
         $return = array("error" => false);
 
-        $limit = 33;
-
+        $offset             = (int) $request->getPostParameter('offset', 0);
+        $limit              = (int) $request->getPostParameter('limit', 10);
         $isMap              = $request->getPostParameter('isMap', true) === 'true' ? true : false;
         $mapCenterLat       = (float) $request->getPostParameter('mapCenterLat', null);
         $mapCenterLng       = (float) $request->getPostParameter('mapCenterLng', null);
@@ -226,17 +227,13 @@ class carsActions extends sfActions {
             $this->getUser()->setAttribute("mapCenterLat", $mapCenterLat);
             $this->getUser()->setAttribute("mapCenterLng", $mapCenterLng);
 
-            $MD = new Mobile_Detect;
-            if ($MD->isMobile()) {
-                $limit = 5;
-            }
-
             $withAvailability = false;
-            if (Utils::isWeekend()) {
+            $days = Utils::isWeekend(true);
+            if (in_array(date("Y-m-d", strtotime($from)), $days)) {
                 $withAvailability = true;
             }
 
-            $return["cars"] = CarTable::findCars($from, $to, $limit, $withAvailability, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway);
+            $return["cars"] = CarTable::findCars($offset, $limit, $from, $to, $withAvailability, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway);
             /*error_log("Autos encontrados: ".count($return["cars"]));*/
 
         } catch (Exception $e) {
@@ -545,6 +542,9 @@ class carsActions extends sfActions {
                 $send = 1;
             }else{
                 $Car = Doctrine_Core::getTable('car')->find($carId);
+                if($Car->getLat() != $lat && $Car->getLng() != $lng) {
+                    $changeDistance = 1;
+                }
             }
             
             $Commune = Doctrine_Core::getTable('Commune')->find($commune);
@@ -600,8 +600,13 @@ class carsActions extends sfActions {
                 $mailer->send($message);
 
             }
-
-            CarProximityMetro::setNewCarProximityMetro($Car);
+            if ($carId) {
+                if($changeDistance) {
+                    CarProximityMetro::setCarProximityMetro($Car);
+                }
+            } else {
+                CarProximityMetro::setNewCarProximityMetro($Car);
+            }
 
             $this->getUser()->setAttribute("carId", $Car->getId());
 

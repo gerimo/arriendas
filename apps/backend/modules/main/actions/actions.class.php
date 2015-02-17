@@ -12,6 +12,38 @@ class mainActions extends sfActions {
         $this->UserManagements = Doctrine_Core::getTable('UserManagement')->findCommentsUser($userId, $managementId);
     }
 
+    public function executeCommentDelete(sfWebRequest $request) {
+
+        $return = array("error" => false);
+
+        try {   
+
+            $commentId    = $request->getPostParameter("commentId", null);
+
+            $UserManagement = Doctrine_Core::getTable('UserManagement')->find($commentId);
+
+            if (!$UserManagement) {
+                throw new Exception("Comentario no encontrado", 1);
+            }
+
+            
+            $UserManagement->setIsDeleted(1);
+            $UserManagement->save();
+
+            $return["comentId"] = $UserManagement->id;
+
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorCode"] = $e->getCode();
+            $return["errorMessage"] = $e->getMessage();
+        }
+
+        $this->renderText(json_encode($return));
+        
+        return sfView::NONE;
+
+    }
+
     public function executeCommentDo(sfWebRequest $request) {
 
         $return = array("error" => false);
@@ -43,7 +75,8 @@ class mainActions extends sfActions {
             $UserManagement -> setComment($comment);
             $UserManagement -> setCreatedAt(date("Y-m-d H:i"));
             $UserManagement -> save();
-    
+            
+            $return["comentId"] = $UserManagement->id;
 
         } catch (Exception $e) {
             $return["error"] = true;

@@ -7,6 +7,38 @@ class carActions extends sfActions {
 	public function executeIndex(sfWebRequest $request) {
 	}
 
+	public function executeFindCar(sfWebRequest $request) {
+		$return = array("error" => false);
+
+        $carId   = $request->getPostParameter("carId", null);
+
+        try {
+
+            if (is_null($carId) || $carId == "") {
+                throw new Exception("Debe ingresar una id correcta", 1);                
+            }
+
+            $Car = Doctrine_Core::getTable('Car')->findOneById($carId);
+
+            if (!$Car) {
+                 throw new Exception("Auto no encontrado", 1);                
+            }
+
+            $DataCar = array();
+            $DataCar = $Car->getFotoPerfil();
+
+            $return["data"] = $DataCar;
+
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+        }
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+	}	
+
 	public function executeGetActivesCars(sfWebRequest $request) {
 
 	    $return = array("error" => false);
@@ -21,7 +53,7 @@ class carActions extends sfActions {
             $withAvailability   = $request->getPostParameter('withAvailability', false) === 'true' ? true : false;
 
 	        $Reserve    = Doctrine_Core::getTable('Reserve')->find($reserveId);
-	        $Cars       = Doctrine_Core::getTable('Car')->findCars($Reserve->getFechaInicio2(), $Reserve->getFechaTermino2(), $limit, $withAvailability, false, false, false, false, false, 13, false, $isAutomatic, $isLowConsumption, $isMorePassengers, false);
+	        $Cars       = Doctrine_Core::getTable('Car')->findCars(0, $limit, $Reserve->getFechaInicio2(), $Reserve->getFechaTermino2(), $withAvailability, false, false, false, false, false, 13, false, $isAutomatic, $isLowConsumption, $isMorePassengers, false);
 
 	        $return["data"] = $Cars;
 
@@ -64,4 +96,9 @@ class carActions extends sfActions {
 	    
 	    return sfView::NONE;
 	}
+
+	public function executeVerifyCar(sfWebRequest $request) {
+	}
+
+
 }

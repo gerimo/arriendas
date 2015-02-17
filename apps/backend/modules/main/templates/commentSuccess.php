@@ -18,9 +18,11 @@
 
         <div id="comments">
             <?php foreach($UserManagements as $UserManagement): ?>
-               	<label><?php echo date("Y-m-d H:i", strtotime($UserManagement->created_at)) ?></label>
-               	<p style="text-align:justify; margin: 0 0 30px 0"><?php echo $UserManagement->comment ?></p>
-                <hr>
+                <div id="<?php echo $UserManagement->id?>">
+                   	<label><?php echo date("Y-m-d H:i", strtotime($UserManagement->created_at))?> <i class="fa fa-remove" data-comment-id="<?php echo $UserManagement->id?>"></i></label>
+                   	<p style="text-align:justify; margin: 0 0 30px 0"><?php echo $UserManagement->comment ?></p>
+                    <hr>
+                </div>
             <?php endforeach ?>
     	</div>
 	</div>
@@ -52,14 +54,12 @@
             "comment": comment
         };
 
-        console.log (parameters);
-
         $.post("<?php echo url_for('commentDo') ?>", parameters , function(r){
 
             if (r.error) {
                 alert(r.errorMessage);
             } else {
-                html = "<label><?php echo date('Y-m-d H:i') ?></label>"+
+                html = "<label><?php echo date('Y-m-d H:i') ?> <i class='fa fa-remove' data-comment-id='<?php echo $UserManagement->id?>'></i></label>"+
                         "<p style='text-align:justify; margin: 0 0 30px 0'>"+comment+"</p>";
 
                 $( "#comments" ).prepend(html);
@@ -69,5 +69,24 @@
 
         }, 'json');
     }
+
+    $(document).on("click", ".fa-remove", function() {
+
+        var commentId = $(this).data("comment-id");
+        console.log(commentId);
+        var parameters = {
+            "commentId" : commentId
+        };
+
+        $.post("<?php echo url_for('commentDelete') ?>", parameters, function(r){
+            if (r.error) {
+                console.log(r.errorMessage);
+            } else {
+
+                $("#"+r.comentId).remove();
+            }
+
+        }, 'json')
+    });
 
 </script>

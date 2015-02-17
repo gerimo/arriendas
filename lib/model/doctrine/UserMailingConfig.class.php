@@ -1,5 +1,3 @@
 <?php
 
-class UserMailingConfig extends BaseUserMailingConfig {
-
-}
+class UserMailingConfig extends BaseUserMailingConfig {}

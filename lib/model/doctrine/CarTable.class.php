@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 class CarTable extends Doctrine_Table {
 
@@ -7,8 +7,11 @@ class CarTable extends Doctrine_Table {
         $q = Doctrine_Core::getTable("Car")
             ->createQuery('C')
             ->innerJoin('C.Model M')
+            ->innerJoin('C.Commune Co')
+            ->innerJoin('Co.Region R')
             ->where('C.seguro_ok = 4')
-            ->andWhere('C.activo = 1');
+            ->andWhere('C.activo = 1')
+            ->andWhere('R.id = 13');
 
         if ($forWeek) {
             $q->andWhere("C.options & 1");
@@ -25,21 +28,24 @@ class CarTable extends Doctrine_Table {
         return $q->execute();
     }
 
-    public function findCars($from, $to, $limit = 50, $withAvailability,$isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway) {
+    public function findCars($offset, $limit, $from, $to, $withAvailability, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway) {
+
         $CarsFound = array();
 
-        /*error_log("FROM: ".$from);
-        error_log("TO: ".$to);
-        error_log("ISMAP: ".$isMap);
-        error_log("NELAT: ".$NELat);
-        error_log("NELNG: ".$NELng);
-        error_log("SWLAT: ".$SWLat);
-        error_log("SWLNG: ".$SWLng);
-        error_log("REGIONID: ".$regionId);
-        error_log("COMMUNEID: ".$communeId);
-        error_log("ISAUTOMATIC: ".$isAutomatic);
-        error_log("ISLOWCONSUMPTION: ".$isLowConsumption);
-        error_log("ISMOREPASSENGERS: ".$isMorePassengers);*/
+        //error_log("OFFSET: ".$offset);
+        //error_log("LIMIT: ".$limit);
+        //error_log("FROM: ".$from);
+        //error_log("TO: ".$to);
+        //error_log("ISMAP: ".$isMap);
+        //error_log("NELAT: ".$NELat);
+        //error_log("NELNG: ".$NELng);
+        //error_log("SWLAT: ".$SWLat);
+        //error_log("SWLNG: ".$SWLng);
+        //error_log("REGIONID: ".$regionId);
+        //error_log("COMMUNEID: ".$communeId);
+        //error_log("ISAUTOMATIC: ".$isAutomatic);
+        //error_log("ISLOWCONSUMPTION: ".$isLowConsumption);
+        //error_log("ISMOREPASSENGERS: ".$isMorePassengers);
         
         try {
 
@@ -50,18 +56,16 @@ class CarTable extends Doctrine_Table {
                 ->innerJoin('C.Model M')
                 ->Where('C.activo = 1')
                 ->andWhere('C.seguro_ok = 4')
-                ->orderBy('C.price_per_day ASC');            
+                ->orderBy('C.price_per_day ASC')
+                ->offset($offset)
+                ->limit($limit);
 
-            // Si es Feriado o Fin de Semana, se buscan los autos de la tabla CarAvailability
+            // Si se pide disponibilidad, se buscan los autos de la tabla CarAvailability
             if ($withAvailability) {
-                $weekendDays = Utils::isWeekend($withAvailability);
-                if (in_array(date("Y-m-d", strtotime($from)), $weekendDays)) {
-                    $q->innerJoin("C.CarAvailabilities CA");
-                    $q->andWhere("CA.is_deleted IS FALSE");
-                    $q->andWhere("CA.day = ?", date("Y-m-d", strtotime($from)));
-                    $q->andWhere('? BETWEEN CA.started_at AND CA.ended_at', date("H:i:s", strtotime($from)));
-
-                }
+                $q->innerJoin("C.CarAvailabilities CA");
+                $q->andWhere("CA.is_deleted IS FALSE");
+                $q->andWhere("CA.day = ?", date("Y-m-d", strtotime($from)));
+                $q->andWhere('? BETWEEN CA.started_at AND CA.ended_at', date("H:i:s", strtotime($from)));
             }
 
             if ($isMap) {
@@ -105,10 +109,6 @@ class CarTable extends Doctrine_Table {
 
             }
 
-            if ($limit) {
-                $q->limit($limit);
-            }
-
             $Cars = $q->execute();
 
             foreach ($Cars as $i => $Car) {
@@ -143,6 +143,7 @@ class CarTable extends Doctrine_Table {
                         'comunne' =>$Car->getCommune()->name,
                         'QuantityOfLatestRents' =>$Car->getQuantityOfLatestRents(),
                         'user_name' =>$Car->getUser()->firstname." ".$Car->getUser()->lastname,
+                        'carId' => $Car->id,
                         'user_telephone' => $Car->getUser()->telephone
                     );
 
@@ -178,6 +179,17 @@ class CarTable extends Doctrine_Table {
 
         return $oCars;
     }
+
+    public function findCarsWithAvailability($day) {
+
+        $q = Doctrine_Core::getTable("CarAvailability")
+            ->createQuery('CA')
+            ->distinct()
+            ->where('CA.is_deleted = 0')
+            ->andWhere('CA.day >= ?', $day);
+
+        return $q->execute();
+    }
     
     public static function getInstance() {
 
@@ -210,9 +222,6 @@ class CarTable extends Doctrine_Table {
 
         } catch (Exception $e) {
             error_log("[".date("Y-m-d H:i:s")."][CarTable::getPrice()] ERROR: ".$e->getMessage());
-            /*if ($request->getHost() == "www.arriendas.cl") {
-                Utils::reportError($e->getMessage(), "CarTable::getPrice()");
-            }*/
         }
         
         return floor($pricePerDay * $days + $pricePerHour * $hours);

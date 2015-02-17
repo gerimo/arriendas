@@ -67,6 +67,8 @@ class userActions extends sfActions {
 
             $Reserves = Doctrine_Core::getTable('User')->findUsersWithoutPay($from, $to);
 
+
+
             if(count($Reserves) == 0){
                 throw new Exception("No se encuentran usuarios", 1);
             }
@@ -74,14 +76,14 @@ class userActions extends sfActions {
             foreach($Reserves as $i => $Reserve){
 
                 $User = $Reserve->getUser();
-
                 $return["data"][$i] = array(
-                    "user_id"        => $User->id,
-                    "user_fullname"  => ucfirst(strtolower($User->firstname." ".$User->lastname)),
-                    "user_telephone" => $User->telephone,
-                    "user_address"   => $User->address,
-                    "user_email"     => $User->email,
-                    "user_comment"   => $User->getUserManagements()   
+                    "user_id"               => $User->id,
+                    "user_fullname"         => ucfirst(strtolower($User->firstname." ".$User->lastname)),
+                    "user_telephone"        => $User->telephone,
+                    "user_address"          => $User->address,
+                    "user_email"            => $User->email,
+                    "user_comment"          => $User->getUserManagements(),
+                    "reserva_fecha_inicio"  => $Reserve->fecha_inicio   
                 );
                   
             }
