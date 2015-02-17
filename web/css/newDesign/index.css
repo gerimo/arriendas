@@ -652,6 +652,15 @@ button.see-more {
         height: 200px;
     }
 
+    .infowindow img {
+        width: 0%;
+    }
+
+    .infowindow {
+        height: 150px;
+        width: 200px;
+    }
+
     .form-control {
         font-size: 11px;
     }
@@ -720,11 +729,11 @@ button.see-more {
         padding: 11px 13px;
     }
 
-    #section-map-body div {
+    /*#section-map-body div {
         padding: 0px;
-    }
+    }*/
 
-    .msg-search {
+    /*.msg-search {
         font-size: 12px;
         font-weight: 300;
         padding: 0 5%;
@@ -740,7 +749,7 @@ button.see-more {
         margin: 0;
         padding: 15px 5px;
         text-align: center;
-    }
+    }*/
 }
 
 @media only screen and (max-width:864px) {

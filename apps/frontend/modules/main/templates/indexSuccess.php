@@ -144,8 +144,6 @@
             isMorePassengers: isMorePassengers            
         };
 
-        console.log(parameters);
-
         $.post("<?php echo url_for('car_search') ?>", parameters, function(r){
 
             var listContent = "";
@@ -194,11 +192,13 @@
                     var windowMarker = "";
                     windowMarker += "<div class='infowindow row' id='" + Car.id + "'>";
                     windowMarker += "<div class='col-md-4 text-center'>";
+                    <?php if (!$isMobile): ?>
                     if(str > 0) {
                         windowMarker += "<img class='img-responsive' src='http://www.arriendas.cl" + urlFotoThumbTipo + "'/>";
                     } else {
                         windowMarker += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "'/>";
                     }
+                    <?php endif ?>
                     windowMarker += "</div>";
                     windowMarker += "<div class='col-md-8' style='padding-left: 15px'>";
                     windowMarker += "<h2>" + Car.brand + " " + Car.model + "</a></h2>";
@@ -268,117 +268,19 @@
             </div>
         </div>
     </div>
-    <!-- <div class="row" id="section-map-form-search">
-
-        <span class="ico-search hidden-xs" data-target="#section-map-form-search"><img src="/images/newDesign/ico-search.svg"></span>
-
-        <div class="col-xs-6 col-sm-3 col-md-3" id="region-container">
-            <select class="region form-control" id="region">
-                <option disabled selected value="<?php echo $Region->id ?>"><?php echo $Region->name ?></option>
-            </select>
-        </div>
-        <div class="col-xs-6 col-sm-3 col-md-3" id="commune-container">
-            <select class="commune form-control" id="commune">
-                <option value="0">Todas Las Comunas</option>
-                <?php foreach ($Region->getCommunes() as $Commune): ?>
-                    <?php if ($hasCommune && $Commune->id == $hasCommune): ?>
-                        <option selected value="<?php echo $Commune->id ?>"><?php echo ucwords(strtolower($Commune->name)) ?></option> 
-                    <?php else: ?>
-                        <option value="<?php echo $Commune->id ?>"><?php echo ucwords(strtolower($Commune->name)) ?></option>
-                    <?php endif ?>
-                <?php endforeach ?>
-            </select>
-        </div>
-
-        <div class="hidden-xs col-sm-6 col-md-6" id="direction-container">
-            <input class="direction form-control" id="direction" placeholder="Dirección" type="text">
-        </div>
-        <div class="col-xs-6 col-sm-2 col-md-2" id="from-container">
-            <input class="from daepicker form-control" id="from" placeholder="Desde" type="text" value="<?php if(date("H:i") >= "20:00" || date("H:i") <= "08:00"):echo date("d-m-Y 08:00",(strtotime ("+12 Hours"))); else:echo date("d-m-Y H:i", (strtotime ("+4 Hours"))); endif; ?>" >
-        </div>
-        <div class="col-xs-6 col-sm-2 col-md-2" id="to-container">
-            <input class="to datetimepicker form-control" id="to" placeholder="Hasta" type="text" value="<?php if(date("H:i") >= "20:00" || date("H:i") <= "08:00"):echo date("d-m-Y 08:00",(strtotime ("+32 Hours"))); else:echo date("d-m-Y H:i", (strtotime ("+24 Hours"))); endif; ?>" >
-        </div>
-
-        <div class="col-xs-12 col-sm-2 col-md-2 text-center">
-            <button class="btn btn-a-action btn-block" id="search" type="button">Buscar</button>
-        </div>
-    </div> -->
 </section>
 
 <section id="section-map">
 
-    <!-- <div class="hidden-xs row" id="section-map-filters">
-        <div class=" col-sm-2 col-md-2 text-center">
-            <strong class="heading">Filtros</strong>
-        </div>
-        <div class="col-sm-6 col-md-6">
-            <ul>
-                <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
-                <li><input type="checkbox" name="filter" class="isLowConsumption"> Petrolero</li>
-                <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
-            </ul>
-        </div>
-        <div class="col-sm-4 col-md-4 hidden-xs tabset">
-            <div class="map col-sm-6 col-md-6 text-center tab activo" data-target="#tab-map"><strong><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Mapa</strong></div>
-            <div class="list col-sm-6 col-md-6 text-center tab" data-target="#tab-list"><strong><span class="glyphicon glyphicon-list" aria-hidden="true"></span> Lista</strong></div>
-        </div>
-    </div>
-
-    <nav class="visible-xs navbar navbar-default" id="filters-navbar" role="navigation">
-        <div class="container">
-
-            Brand and toggle get grouped for better mobile display
-            <div class="navbar-filters">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#filters">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <h3 style="margin-top: 5px; padding-top: 12px">Filtros</h3>
-            </div>
-
-            <div class="collapse navbar-collapse" id="filters">
-                <div class="container">
-                    <ul class="nav navbar-nav">
-                        <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
-                        <li><input type="checkbox" name="filter" class="isLowConsumption"> Petrolero</li>
-                        <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </nav> -->
-
     <div id="section-map-body">
 
-        <div class="tab-container hidden-xs" id="tab-map">
+        <div class="tab-container" id="tab-map">
             <div class="row">
                 <div class="col-sm-12 col-md-12" id="map">
                     <div id="map-container"></div>
                 </div>
-
-                <!-- <div class="col-sm-4 col-md-4" id="map-list">
-                    <div id="map-list-loading" class="loading" style="text-align: center; margin-top: 30%"><?php echo image_tag('ajax-loader.gif', array("width" => "80px", "height" => "80px")) ?></div>
-                    <div id="map-list-container"></div>
-                </div> -->
             </div>
         </div>
-
-        <!-- <div class="tab-container" id="tab-list">
-            <div class="row" id="list">
-                <div class="row" id="list-container"></div>
-                <div id="list-loading" class="loading" style="text-align: center; margin: 4% 0 4% 0">
-                    <?php if ($isMobile): ?>
-                        <?php echo image_tag('ajax-loader.gif', array("width" => "40px", "height" => "40px")) ?>
-                    <?php else: ?>
-                        <?php echo image_tag('ajax-loader.gif', array("width" => "80px", "height" => "80px")) ?>
-                    <?php endif ?>
-                </div>
-                <button class="see-more btn-block" data-offset="0" data-limit="<?php echo $limit ?>" type="button">Ver más</button>
-            </div>
-        </div> -->
     </div>
 </section>
 
@@ -499,8 +401,54 @@
                 <p class="user-type">Usuario Arriendas</p>
             </div>
             <div>
-                <p class="testimonial"><i class="fa fa-quote-left"></i> Puedo arrendar desde mi casa, en cualquier horario, sin tarjeta de crédito. Es el mismo auto que en un rent a car pero 30% más barato. <i class="fa fa-quote-right"></i></p>
-                <p class="user">Javiera Cruzar,</p>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> La experiencia con el arrendador fue excelente. <i class="fa fa-quote-right"></i></p>
+                <p class="user">Juan Diaz Medel,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i>  Lo mejor de todo es que no piden tarjetas de credito, para los que no las usamos … ¡Sigan así!.  <i class="fa fa-quote-right"></i></p>
+                <p class="user">Anitha Cordova Cifuentes,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> La disposicion del dueño fue muy buena y no hubo ningun problema. Absolutamente recomendable. Ahora estoy a la espera de mi segundo arriendo para este fin de semana. Ojala se expandan a todas las regiones . <i class="fa fa-quote-right"></i></p>
+                <p class="user">Francisco Riquelme,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Gracias por toda su ayuda y felicitarles por este emprendimiento que ayudas a tantos a contar, no solo con un auto, sino con un servicio responsable, personalizado y de gran calidad. <i class="fa fa-quote-right"></i></p>
+                <p class="user">Eduardo Cortes,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Mi experiencia ha sido muy buena. La persona que me arrendó el auto fue atento. Soy brasileño y estuve en Chile solo para estudiar, y mismo así yo pude arrendar un auto con toda la seguridad que solo Arriendas puede dar a sus clientes.<i class="fa fa-quote-right"></i></p>
+                <p class="user">Samir,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Mi testimonio es un 90% positivo, el sistema es bastante fácil de utilizar y la gestión para realizar el arriendo es también buena, salvo que falta incluir mas datos del vehículo. <i class="fa fa-quote-right"></i></p>
+                <p class="user">Manuel Nuñez Casanga,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Arriendas me permitió resevar un auto sin tarjeta de crédito y sin depósito en garantía. Lo recomiendo! <i class="fa fa-quote-right"></i></p>
+                <p class="user">Rosa Velásquez Rojas,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Su personal fue muy atento y eso genero la confianza suficiente para inscribirme en su página y concretar el arriendo. <i class="fa fa-quote-right"></i></p>
+                <p class="user">Felipe Salinas,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Mi experiencia con Arriendas fue excelente ademas de una excelente experiencia en la atencion del dueño del vehículo: amable, puntual y el auto, excelente. 100% confiable. <i class="fa fa-quote-right"></i></p>
+                <p class="user">Sergio Quezada,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+             <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Algunos pequeños ripios en la coordinación inicial, pero el auto arrendado estaba en perfecto estado y la persona que lo arrendó fue muy agradable. En general, una buena experiencia, la repetiré cuando lo necesite. <i class="fa fa-quote-right"></i></p>
+                <p class="user">Gustavo Villagran,</p>
                 <p class="user-type">Usuario Arriendas</p>
             </div>
         </div>
@@ -542,138 +490,16 @@
             arrows: false,
             speed: 450
         });
-
-        // Cuando es fin de semana
-        <?php if ($isWeekend): ?>
-            $('div[data-target="#tab-list"]').click();
-            $('.map').html("");
-            $('.map').removeClass("tab");
-            $('.tabset').css("cursor", "default");
-            $('.tabset').css("background-color", "#00aced");
-        <?php endif ?>
-
-        // Cuando se carga desde un rent-a-car-especifico (footer)
-        <?php if ($hasCommune): ?>
-            $('div[data-target="#tab-list"]').click();
-        <?php endif ?>
     });
 
     <?php if (!$isMobile): ?>
         $('#section-home').css({
             'height': $(window).height()
         });
-
-        $("#map, #map-list").css({
-            height: $(window).height() - $("#section-map-form-search").outerHeight() - $("#section-map-filters").outerHeight()
-        });
     <?php endif ?>
 
-    $("input[type='checkbox']").change(function(){
-        searchCars(0, $("button.see-more").data("limit"));
-    });
-
-    $("#search").click(function(e){
-        searchCars(0, $("button.see-more").data("limit"));
-    });
-
-    $("#commune").change(function(){
-        searchCars(0, $("button.see-more").data("limit")); 
-    });
-
-    $(".tab").click(function(){
-
-        var target = $(this).data("target");
-
-        if (target == "#tab-map") {
-            $("#region-container").hide();
-            $("#commune-container").hide();
-            $("#direction-container").show();
-            $(".list").removeClass('activo');
-            $(".map").addClass('activo');
-        }
-
-        if (target == "#tab-list") {
-            $("#direction-container").hide();
-            $("#region-container").show();
-            $("#commune-container").show();
-            $(".map").removeClass('activo');
-            $(".list").addClass('activo');
-        }
-    });
-
-    $('#header .animate').each(function(){
-
-        var target  = $(this).data('target');
-
-        $(this).on('click', function(e) {
-
-            e.preventDefault();
-            var position = $(target).offset().top - 50;
-            $('html, body').animate({
-                scrollTop: position
-            }, 1250);
-        });
-    });
-
-    $(".ico-search").on('click', function(e) {
-        
-        e.preventDefault();
-
-        var target  = $(this).data('target');
-        var position = $(target).offset().top - 50;
-
-        $('html, body').animate({
-            scrollTop: position
-        }, 1250);
-    });
-
-    $(".tab").on('click', function(){
-
-        var target = $(this).data("target");
-
-        $(".tab").removeClass("active");
-        $(this).addClass("active");
-
-        $(".tab-container").hide();
-        $(target).show();
-    });
-
-    $(document).on("click", ".see-more", function(){
-        searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
-    });
-
-    $('#from').datetimepicker({
-        allowTimes:[
-            "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
-            "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
-            "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
-            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-            "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-            "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-            "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-            "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
-        ],
-        dayOfWeekStart: 1,
-        format:'d-m-Y H:i',
-        lang:'es',
-        minDate: 0
-    });
-
-    $('#to').datetimepicker({
-        allowTimes:[
-            "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
-            "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
-            "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
-            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-            "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-            "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-            "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-            "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
-        ],
-        dayOfWeekStart: 1,
-        format:'d-m-Y H:i',
-        lang:'es',
-        minDate : 0
+   $("#map").css({
+        height: $(window).height()
     });
 
     /*function roundTime(valor){
@@ -702,61 +528,4 @@
         return fecha;
     }*/
 
-    function times(valor){
-
-        var fechaF = valor
-
-        var split = fechaF.split(" ");
-        var f = split[0];
-        var h = split[1];
-
-        var split3 = h.split(":");
-        var hora = split3[0];
-        var min = split3[1];
-
-        if(min=="30"){
-            $('#to').datetimepicker({
-                allowTimes:[
-                "00:30", "01:30", "02:30",
-                "03:30", "04:30", "05:30",
-                "06:30", "07:30", "08:30",
-                "09:30", "10:30", "11:30",
-                "12:30", "13:30", "14:30",
-                "15:30", "16:30", "17:30",
-                "18:30", "19:30", "20:30",
-                "21:30", "22:30", "23:30",
-                ],
-                lang:'es',
-                dayOfWeekStart: 1,
-                /*minDate:get_date($('#from').val())?get_date($('#from').val()):false,*/
-                format:'d-m-Y H:i'
-            });
-        }else{
-            $('#to').datetimepicker({
-                allowTimes:[
-                "00:00", "01:00", "02:00",
-                "03:00", "04:00", "05:00",
-                "06:00", "07:00", "08:00",
-                "09:00", "10:00", "11:00",
-                "12:00", "13:00", "14:00",
-                "15:00", "16:00", "17:00",
-                "18:00", "19:00", "20:00",
-                "21:00", "22:00", "23:00",
-                ],
-                lang:'es',
-                dayOfWeekStart: 1,
-                /*minDate:get_date($('#from').val())?get_date($('#from').val()):false,*/
-                format:'d-m-Y H:i'
-            });
-        }
-    }
-
-    function get_date(input) {
-        if(input == '') {
-            return false;
-        }else{
-            var parts = input.match(/(\d+)/g);
-            return parts[2]+'/'+parts[1]+'/'+parts[0];
-        } 
-    }
 </script>

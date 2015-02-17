@@ -590,7 +590,17 @@ class reservesActions extends sfActions {
         $this->getRequest()->setParameter("reserveId", $Reserve->getId());
         $this->getRequest()->setParameter("transactionId", $Transaction->getId());
 
+        //solo para el prototipo
+        $transaction =  Doctrine_Core::getTable('Transaction')->findOneByReserveId($Reserve->getId());
+        $transaction->setCompleted(true);
+        $Reserve->setFechaPago(date("Y-m-d H:i"));
+        $transaction->save();
+        $Reserve->save();
+        $this->forward("reserves","success");
+        
+        /* flujo Normal
         $this->forward("khipu", "generatePayment");
+        */
     }
 
     public function executeReject (sfWebRequest $request) {
@@ -640,6 +650,7 @@ class reservesActions extends sfActions {
     }
 
     public function executeSuccess (sfWebRequest $request) {
+
         $this->setLayout("newIndexLayout");
         $customer_in_session = $this->getUser()->getAttribute('userid');
 
@@ -694,9 +705,17 @@ class reservesActions extends sfActions {
 
                     $carId = $reserve->getCarId();
                     $carClass = Doctrine_Core::getTable('car')->findOneById($carId);
+
+                    //datos para los mensajes
+                    $model = $carClass->getModel();
+                    $brand = $carClass->getModel()->getBrand();
+                    $telephoneUser = sfContext::getInstance()->getUser()->getAttribute('telephone');
+                    $codigo = "z1".mb_substr($model,-3)."g0".mb_substr($model,1,2); 
+                    /*-------------------------------------*/
+
                     $propietarioId = $carClass->getUserId();
                     $propietarioClass = Doctrine_Core::getTable('user')->findOneById($propietarioId);
-                    $communeId = $propietarioClass->getCommune();
+                    $communeId = $propietarioClass->getCommune()->id;
                     $comunaClass = Doctrine_Core::getTable('Commune')->find($communeId);                    
                     
                     $this->nameOwner      = $reserve->getNameOwner();
@@ -709,6 +728,17 @@ class reservesActions extends sfActions {
 
                     $this->durationFrom   = $reserve->getFechaInicio2();
                     $this->durationTo     = $reserve->getFechaTermino2();
+
+                    //send SMS
+                    $SMS = new SMS("Arriendas.cl");
+                    $message_data_cars = "Has reservado un ".$brand." ".$model.","." ubicado en ".$this->addressOwner.", ".$this->comunaOwner.".";
+                    $message_open_cars = "Puedes abrir el auto haciendo click aquí.";
+                    $message_diesel = "Puedes cargar bencina en tu COPEC más cercana con la tarjeta guardada en la guantera usando el código ".$codigo.".";
+                    
+                    $SMS->send($message_data_cars, $telephoneUser);
+                    $SMS->send($message_open_cars, $telephoneUser);
+                    $SMS->send($message_diesel, $telephoneUser);
+                    /*-------------------------------------------------*/
 
                 } else {
                     echo "No hay compras hechas para ser pagadas (Error de monto invalido)";
