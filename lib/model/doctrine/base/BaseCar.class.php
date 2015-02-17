@@ -487,14 +487,6 @@ abstract class BaseCar extends sfDoctrineRecord
             'notnull' => true,
             'length' => 4,
         ));
-
-        $this->hasColumn('audio_accessories_id', 'integer', 11, array(
-            'notnull' => true
-        ));
-
-        $this->hasColumn('car_photo_id', 'integer', 11, array(
-            'notnull' => true
-        ));
       
         // Indices
         $this->index('fk_Car_Commune', array(
