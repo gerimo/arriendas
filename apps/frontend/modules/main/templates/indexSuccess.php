@@ -1,4 +1,4 @@
-<link href="/css/newDesign/index.css" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/index.css?v=4" rel="stylesheet" type="text/css">
 
 <!-- Google Maps -->
 <script src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;sensor=false" type="text/javascript"></script>
@@ -21,10 +21,10 @@
     var markers = []; // searchCars
     var strictBounds = null; // initialize
 
-    var swLat; // searchCars
-    var swLng; // searchCars
-    var neLat; // searchCars
-    var neLng; // searchCars
+    var swLat;
+    var swLng;
+    var neLat;
+    var neLng;
 
     function coordenadas(position) {
 
@@ -108,7 +108,7 @@
         google.maps.event.addListener(map, 'idle', function() {
 
             google.maps.event.clearListeners(map, 'idle');
-            searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
+            searchCars(0, $("button.see-more").data("limit"));
         });
 
         google.maps.event.addListener(map, 'dragend', function() {
@@ -118,7 +118,7 @@
             } else {
                 map.panTo(lastValidCenter);
             }
-            searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
+            searchCars(0, $("button.see-more").data("limit"));
         });
 
         google.maps.event.addListener(map, 'zoom_changed', function() {
@@ -128,7 +128,7 @@
             } else {
                 map.panTo(lastValidCenter);
             }
-            searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
+            searchCars(0, $("button.see-more").data("limit"));
         });
 
         //Autocomplete
@@ -186,16 +186,18 @@
 
             infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
             infowindow.open(map, marker);
-            searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
+            searchCars(0, $("button.see-more").data("limit"));
         });
     }
 
     function localizame() {
-        if (navigator.geolocation) { // Si el navegador tiene geolocalizacion
-            navigator.geolocation.getCurrentPosition(coordenadas, errores);
-        } else {
-            alert('¡Oops! Tu navegador no soporta geolocalización. Bájate Chrome, que es gratis!');
-        }
+        <?php if (!$isMobile): ?>
+            if (navigator.geolocation) { // Si el navegador tiene geolocalizacion
+                navigator.geolocation.getCurrentPosition(coordenadas, errores);
+            } else {
+                alert('¡Oops! Tu navegador no soporta geolocalización. Bájate Chrome, que es gratis!');
+            }
+        <?php endif ?>
     }
 
     function validateTime(){
@@ -292,31 +294,6 @@
             isMap = true;
         }
 
-        // Validación de la búsqueda
-        var error = false;
-        var errorMessage = "<p style='padding: 5% 5% 0 5%'>Para buscar, debes:<ul>";
-
-        if (from == "") {
-            errorMessage += "<li>Seleccionar una fecha de inicio</li>";
-            error = true;
-        }
-
-        if (to == "") {
-            errorMessage += "<li>Seleccionar una fecha de término</li>";
-            error = true;
-        }
-
-        errorMessage += "</ul></p>";
-
-        if (error) {
-
-            $("#map-list-container, #list-container").html(errorMessage);
-            $('.loading').hide();
-            /*$("#map-list-container, #list-container").show();*/
-
-            return false;
-        }
-
         var parameters = {
             offset: offset,
             limit: limit,
@@ -335,6 +312,8 @@
             isLowConsumption: isLowConsumption,
             isMorePassengers: isMorePassengers            
         };
+
+        console.log(parameters);
 
         $.post("<?php echo url_for('car_search') ?>", parameters, function(r){
 
@@ -359,15 +338,13 @@
 
             if (r.cars.length > 0) {
                 for (var i = 0 ; i < r.cars.length ; i++) {
-                    //console.log(r.cars[i].photo);
 
                     var Car = r.cars[i];
                     
                     var latLng = new google.maps.LatLng(Car.latitude, Car.longitude);
 
                     var urlFotoTipo      = "<?php echo image_path('../uploads/cars/" + Car.photo + "'); ?>";
-                    var urlFotoThumbTipo = "<?php echo image_path('../uploads/cars/" + Car.photo + "'); ?>";
-                    
+                    var urlFotoThumbTipo = "<?php echo image_path('../uploads/cars/" + Car.photo + "'); ?>";                    
 
                     if (Car.photoType == 1) {
                         urlFotoTipo = Car.photo;
@@ -389,13 +366,11 @@
                     windowMarker += "<div class='infowindow row' id='" + Car.id + "'>";
 
                     windowMarker += "<div class='col-md-4 text-center'>";
-                    /*windowMarker += "<a href='" + urlFotoTipo + "' class='thickbox'>";*/
                     if(str > 0) {
                         windowMarker += "<img class='img-responsive' src='http://www.arriendas.cl" + urlFotoThumbTipo + "'/>";
                     } else {
                         windowMarker += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "'/>";
                     }
-                    /*windowMarker += "</a>";*/
                     windowMarker += "</div>";
 
                     windowMarker += "<div class='col-md-8' style='padding-left: 15px'>";
@@ -429,18 +404,8 @@
                     });
 
                     google.maps.event.addListener(marker, 'click', function() {
-
                         infowindow.setContent(this.contentString);
                         infowindow.open(map, this);
-
-                        /*$('a.thickbox').click(function() {
-                            var t = this.title || this.name || null;
-                            var a = this.href || this.alt;
-                            var g = this.rel || false;
-                            tb_show(t, a, g);
-                            this.blur();
-                            return false;
-                        });*/
                     });
 
                     markers.push(marker);
@@ -472,44 +437,43 @@
                     listContent += "</div>";
                     
                     mapListContent += article;
-
-                    /*listContent += "<article class='box'>";
-                    listContent += "<div class='img-holder'><img src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_134,h_99,c_fill,g_center/" + urlFotoThumbTipo + "' height='99' width='134' alt=''></div>";
-                    listContent += "<div class='text-area'>";
-                    listContent += "<h2><a href='<?php echo url_for("arriendo-de-autos/rent-a-car") ?>/" + Car.brand + Car.model + "/" + Car.comuna + "/" + Car.id + "'>"+ Car.brand +" "+ Car.model +"<span>, "+Car.year+"</span></a></h2>";
-                    listContent += "<span class='sub'>Providencia </span>";
-                    listContent += "<span class='sub-heading'>A 2 km Metro <strong>Tobalaba</strong></span>";
-                    listContent += "<span class='price'>$"+ Car.price_per_day +"</span>";
-                    listContent += "<a href='<?php echo url_for("profile/reserve?id=") ?>"+ Car.id + "' class='reserve'>RESERVAR</a>";
-                    listContent += "</div>";
-                    listContent += "</article>";*/
                 }
             } else {
-                if (parseInt(offset) > 0) {
-                    mapListContent += "<p class='msg-search'>Ya se están mostrando todos los autos disponibles para las fechas indicadas</p>";
-                    listContent += "<p class='msg-search'>Ya se están mostrando todos los autos disponibles para las fechas indicadas</p>";
+                if (offset) {
+                    mapListContent += "<div class='col-md-12'><p class='msg-search' style='padding-top: 3%'>Ya se están mostrando todos los autos disponibles para las fechas indicadas</p></div>";
+                    listContent += "<div class='col-md-12'><p class='msg-search' style='padding-top: 3%'>Ya se están mostrando todos los autos disponibles para las fechas indicadas</p></div>";
                 } else {
-                    mapListContent += "<p class='msg-search'>No hemos encontrado autos</p>";
-                    listContent += "<p class='msg-search'>No hemos encontrado autos</p>";
+                    mapListContent += "<div class='col-md-12'><p class='msg-search'>No hemos encontrado autos</p></div>";
+                    listContent += "<div class='col-md-12'><p class='msg-search'>No hemos encontrado autos</p></div>";
                 }
-                $("button.see-more").attr("disabled", true);
             }
 
-            $("#map-list-container").append(mapListContent);
-            $("#list-container").append(listContent);
+            if (offset) {
+                $("#map-list-container").append(mapListContent);
+                $("#list-container").append(listContent);
+            } else {
+                $("#map-list-container").html(mapListContent);
+                $("#list-container").html(listContent);
+            }
+
+            if (r.cars.length) {
+                $("button.see-more").data("offset", parseInt(offset)+parseInt(limit));
+                console.log(r.cars.length+" < "+limit);
+                if (r.cars.length < limit) {
+                    /*$("button.see-more").hide();*/ // Al arreglar la query de búsqueda se descomenta esto
+                } else {
+                    $("button.see-more").show();
+                }
+            } else {
+                $("button.see-more").hide();
+            }
 
             $('.loading').hide();
             if (!$("#map-list-container, #list-container").is(":visible")) {
                 $("#map-list-container, #list-container").show();
             }
 
-            var mcOptions = {
-                maxZoom: 10
-            };
-
-            markerCluster = new MarkerClusterer(map, markers, mcOptions);
-
-            $("button.see-more").data("offset", parseInt(offset)+parseInt(limit));
+            markerCluster = new MarkerClusterer(map, markers, {maxZoom: 10});            
         }, "json");
     }
 </script>
@@ -577,7 +541,7 @@
 
         <!-- Search -->
         <div class="col-xs-12 col-sm-2 col-md-2 text-center">
-            <a class="btn btn-a-action btn-block" href id="search">Buscar</a>
+            <button class="btn btn-a-action btn-block" id="search" type="button">Buscar</button>
         </div>
     </div>
 </section>
@@ -879,16 +843,15 @@
     <?php endif ?>
 
     $("input[type='checkbox']").change(function(){
-        searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
+        searchCars(0, $("button.see-more").data("limit"));
     });
 
     $("#search").click(function(e){
-        e.preventDefault();
-        searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
+        searchCars(0, $("button.see-more").data("limit"));
     });
 
     $("#commune").change(function(){
-        searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit")); 
+        searchCars(0, $("button.see-more").data("limit")); 
     });
 
     $(".tab").click(function(){
@@ -1014,8 +977,8 @@
     }
 
     function times(valor){
-        var fechaF = valor
 
+        var fechaF = valor
 
         var split = fechaF.split(" ");
         var f = split[0];
@@ -1043,24 +1006,23 @@
                 format:'d-m-Y H:i'
             });
         }else{
-                $('#to').datetimepicker({
-                    allowTimes:[
-                    "00:00", "01:00", "02:00",
-                    "03:00", "04:00", "05:00",
-                    "06:00", "07:00", "08:00",
-                    "09:00", "10:00", "11:00",
-                    "12:00", "13:00", "14:00",
-                    "15:00", "16:00", "17:00",
-                    "18:00", "19:00", "20:00",
-                    "21:00", "22:00", "23:00",
-                    ],
-                    lang:'es',
-                    dayOfWeekStart: 1,
-                    /*minDate:get_date($('#from').val())?get_date($('#from').val()):false,*/
-                    format:'d-m-Y H:i'
-                });
+            $('#to').datetimepicker({
+                allowTimes:[
+                "00:00", "01:00", "02:00",
+                "03:00", "04:00", "05:00",
+                "06:00", "07:00", "08:00",
+                "09:00", "10:00", "11:00",
+                "12:00", "13:00", "14:00",
+                "15:00", "16:00", "17:00",
+                "18:00", "19:00", "20:00",
+                "21:00", "22:00", "23:00",
+                ],
+                lang:'es',
+                dayOfWeekStart: 1,
+                /*minDate:get_date($('#from').val())?get_date($('#from').val()):false,*/
+                format:'d-m-Y H:i'
+            });
         }
-
     }
 
     function get_date(input) {

@@ -1,4 +1,4 @@
-<link href="/css/newDesign/reserves.css" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/reserves.css?v=2" rel="stylesheet" type="text/css">
 
 <div class="hidden-xs space-100"></div>
 <div class="visible-xs space-50"></div>
@@ -101,7 +101,7 @@
                                                 </div>
                                                 <div class="col-md-9">
                                                     <br class="visible-xs">
-                                                    <p><b>Auto: </b><?php echo $CO->getCar()->getModel()->getBrand()->getName() ." ". $CO->getCar()->getModel()->getName() ?>, <?php if ($CO->getCar()->getTransmission()) echo "Automático"; else echo "Mecánico"; ?></p>
+                                                    <p><b>Auto: </b><?php echo $CO->getCar()->getModel()->getBrand()->getName() ." ". $CO->getCar()->getModel()->getName() ?>, <i class="fa fa-cog"></i> <?php if ($CO->getCar()->getTransmission()) echo "Automático"; else echo "Mecánico"; ?></p>
                                                     <p><b>Dirección: </b><?php echo $CO->getCar()->getAddress() .", ". $CO->getCar()->getCommune()->name ?></p>
                                                     <p><b>Dueño: </b><?php echo $CO->getCar()->getUser()->firstname ." ". substr($CO->getCar()->getUser()->lastname, 0, 1) ?></p>
                                                     <?php if ($CO->getTransaction()->completed): ?>
@@ -126,6 +126,34 @@
                                             </div>
                                         </div>
                                         <?php if ($i < count($ChangeOptions[$Reserve->getId()])-1): ?>
+                                            <hr>
+                                        <?php elseif (count($CarsWithAvailability[$Reserve->getId()]) > 0): ?>
+                                            <hr>
+                                        <?php endif ?>
+                                    <?php endforeach ?>
+
+                                    <?php foreach ($CarsWithAvailability[$Reserve->getId()] as $i => $C): ?>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="col-md-3 text-center">
+                                                    <img src="/uploads/cars/thumbs/<?php echo $C->getFotoPerfil() ?>" width="80%">
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <br class="visible-xs">
+                                                    <p><b>Auto: </b><?php echo $C->getModel()->getBrand()->getName() ." ". $C->getModel()->getName() ?>, <i class="fa fa-cog"></i> <?php if ($C->getTransmission()) echo "Automático"; else echo "Mecánico"; ?></p>
+                                                    <p><b>Dirección: </b><?php echo $C->getAddress() .", ". $C->getCommune()->name ?></p>
+                                                    <p><b>Dueño: </b><?php echo $C->getUser()->firstname ." ". substr($C->getUser()->lastname, 0, 1) ?></p>
+                                                    <p><img class="metro" src='/images/newDesign/ico.png' alt='metro'> A <b><?php echo round($C->getNearestMetro()->distance, 1) ?> km</b> del Metro <?php echo $C->getNearestMetro()->getMetro()->name ?></p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button class="change-with-availability btn btn-a-action btn-block" data-car-id="<?php echo $C->getId() ?>" data-reserve-id="<?php echo $CO->getId() ?>">Cambiar</button>
+                                            </div>
+                                            <div class="col-md-1 text-center">
+                                                <img class="loading" src="/images/ajax-loader.gif">
+                                            </div>
+                                        </div>
+                                        <?php if ($i < count($CarsWithAvailability[$Reserve->getId()])-1): ?>
                                             <hr>
                                         <?php endif ?>
                                     <?php endforeach ?>
@@ -264,6 +292,44 @@
                 grandpa.find(".loading").hide();
             } else {
 
+                location.reload();
+            }            
+        }, "json");
+    });
+
+    $(document).on("click", ".change-with-availability", function(){        
+
+        var button    = $(this);
+        var grandpa   = $(this).parent().parent();
+        var carId     = $(this).data("car-id");
+        var reserveId = $(this).data("reserve-id");        
+
+        button.attr("disabled", true);
+        grandpa.find(".loading").show();
+
+        var parameters = {
+            "carId": carId,
+            "reserveId": reserveId
+        };
+
+        $.post("<?php echo url_for('reserve_change_with_availability') ?>", parameters, function(r){
+
+            if (r.error) {
+
+                $("#dialog-alert p").html(r.errorMessage);
+                $("#dialog-alert").attr("title", "Problemas al cambiar de auto");
+                $("#dialog-alert").dialog({
+                    buttons: [{
+                        text: "Aceptar",
+                        click: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }]
+                });
+
+                button.removeAttr("disabled");
+                grandpa.find(".loading").hide();
+            } else {
                 location.reload();
             }            
         }, "json");

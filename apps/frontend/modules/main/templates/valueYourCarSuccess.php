@@ -6,11 +6,10 @@
 	<div class="row">
 	    <div class="col-md-offset-1 col-xs-12 col-md-10">
 	        <div class="BCW">
-				<?php echo form_tag('main/doRegister', array('method'=>'post', 'id'=>'frm1'));?>
+	        	<!--<?php echo form_tag('main/doRegister', array('method'=>'post', 'id'=>'frm1'));?> -->
 				<h1>Monetiza tu auto</h1>
 
 		   		<div class="row">
-
 			   		<div class="col-md-offset-1 col-md-3">
 		        		<h4>Marca del auto:</h4>
 						<select name="brand" class="form-control" id="brand">
@@ -22,8 +21,7 @@
 
 			   		<div class="col-md-3">
 		        		<h4>Modelo del auto:</h4>
-						<select name="model" class="form-control" id="model">
-						</select>
+						<select name="model" class="form-control" id="model"></select>
 			   		</div>
 
 			   		<div class="col-md-2">
@@ -41,21 +39,27 @@
 			   			<div class="space-30"></div>
 			    		<input class="btn btn-a-primary" id="botonCalcular" type="button" value="Calcular"/>
 			   	 	</div>
-
 				</div>
 
 				<div class="resultados" style="display: none;">
 			   	 	<div class="row text-center">
 						<div class="col-md-offset-4 col-md-4 col-xs-12">
+
 							<div class="visible-xs space-40"></div>
 							<div class="hidden-xs space-50"></div>
+
 							<h2>Precios Sugeridos:</h2>
+
 							<div class="visible-xs space-10"></div>
 							<div class="hidden-xs space-30"></div>
+
 							<p class="text-info">Por hora: <span class="precioPorHora"></span></p>
+
 							<div class="visible-xs space-10"></div>
 							<div class="hidden-xs space-30"></div>
+
 							<p class="text-info">Por día: <span class="precioPorDia"></span></p>
+
 				    	</div>	
 			    	</div>
 					<div class="hidden-xs space-10"></div>
@@ -75,55 +79,88 @@
 <div class="hidden-xs space-100"></div>
 <script>
 
-	function formatNumber(precio){
-	        var precioMillones = Math.floor(precio/1000000);
-	        var precioMiles = parseInt(precio) - (precioMillones*1000000);
-	        precioMiles = Math.floor(precioMiles/1000);
-	        var precioCientos = parseInt(precio) - (precioMiles*1000);
-	        var precioResultado = "";
-	        if(precioMillones == 0){
-	            if(precioMiles == 0){
-	                precioResultado = precioCientos;
-	            }else{
-	                if(precioCientos == 0){
-	                    precioResultado = precioMiles + ".000";
-	                }else{
-	                    cantidadDeCientos = ((precioCientos).toString()).length;
-	                    if(cantidadDeCientos == 1) precioResultado = precioMiles + ".00" + precioCientos;
-	                    else if(cantidadDeCientos == 2) precioResultado = precioMiles + ".0" + precioCientos;
-	                    else precioResultado = precioMiles + "." + precioCientos;
-	                }
-	            }
-	        }else{
-	            if(precioMiles == 0){
-	                if(precioCientos == 0){
-	                    precioResultado = precioMillones + ".000.000";
-	                }else{
-	                    cantidadDeCientos = ((precioCientos).toString()).length;
-	                    if(cantidadDeCientos == 1) precioResultado = precioMillones + ".000.00" + precioCientos;
-	                    else if(cantidadDeCientos == 2) precioResultado = precioMillones + ".000.0" + precioCientos;
-	                    else precioResultado = precioMillones + ".000." + precioCientos;
-	                }
-	            }else{
-	                cantidadDeMiles = ((precioMiles).toString()).length;
-	                cantidadDeCientos = ((precioCientos).toString()).length;
-	                if(cantidadDeMiles == 1){
-	                    if(cantidadDeCientos == 1) precioResultado = precioMillones + ".00" + precioMiles + ".00" + precioCientos;
-	                    else if(cantidadDeCientos == 2) precioResultado = precioMillones + ".00" + precioMiles + ".0" + precioCientos;
-	                    else precioResultado = precioMillones + ".00" + precioMiles + "." + precioCientos;
-	                }else if(cantidadDeCientos == 2){
-	                    if(cantidadDeCientos == 1) precioResultado = precioMillones + ".0" + precioMiles + ".00" + precioCientos;
-	                    else if(cantidadDeCientos == 2) precioResultado = precioMillones + ".0" + precioMiles + ".0" + precioCientos;
-	                    else precioResultado = precioMillones + ".0" + precioMiles + "." + precioCientos;
-	                }else{
-	                    if(cantidadDeCientos == 1) precioResultado = precioMillones + "." + precioMiles + ".00" + precioCientos;
-	                    else if(cantidadDeCientos == 2) precioResultado = precioMillones + "." + precioMiles + ".0" + precioCientos;
-	                    else precioResultado = precioMillones + "." + precioMiles + "." + precioCientos;
-	                }
-	            }
-	        }
-	        return precioResultado;
-	    }
+function formatNumber(precio){
+    var precioMillones = Math.floor(precio/1000000);
+    var precioMiles = parseInt(precio) - (precioMillones*1000000);
+    precioMiles = Math.floor(precioMiles/1000);
+    var precioCientos = parseInt(precio) - (precioMiles*1000);
+    var precioResultado = "";
+    if(precioMillones == 0) {
+        if(precioMiles == 0) {
+            precioResultado = precioCientos;
+        } else {
+            if(precioCientos == 0) {
+                precioResultado = precioMiles + ".000";
+            } else { 
+                cantidadDeCientos = ((precioCientos).toString()).length;
+                if(cantidadDeCientos == 1) {
+                	precioResultado = precioMiles + ".00" + precioCientos;
+                } else {
+                	if(cantidadDeCientos == 2) {
+                		precioResultado = precioMiles + ".0" + precioCientos;
+                	} else {
+                		precioResultado = precioMiles + "." + precioCientos;
+                	}
+                }
+            }
+        }
+    } else {
+        if(precioMiles == 0) {
+            if(precioCientos == 0){
+                precioResultado = precioMillones + ".000.000";
+            } else { 
+                cantidadDeCientos = ((precioCientos).toString()).length;
+                if(cantidadDeCientos == 1) {
+                	precioResultado = precioMillones + ".000.00" + precioCientos;
+                } else {
+                	if(cantidadDeCientos == 2) {
+                		precioResultado = precioMillones + ".000.0" + precioCientos;
+                	} else {
+                		precioResultado = precioMillones + ".000." + precioCientos;
+                	}
+                }
+            }
+        } else {
+            cantidadDeMiles = ((precioMiles).toString()).length;
+            cantidadDeCientos = ((precioCientos).toString()).length;
+
+            if(cantidadDeMiles == 1) {
+                if(cantidadDeCientos == 1) {
+                	precioResultado = precioMillones + ".00" + precioMiles + ".00" + precioCientos;
+                } else {
+                	if(cantidadDeCientos == 2) {
+                		precioResultado = precioMillones + ".00" + precioMiles + ".0" + precioCientos;
+                	} else {
+                		precioResultado = precioMillones + ".00" + precioMiles + "." + precioCientos;
+                	}
+                }
+            } else {
+            	if(cantidadDeCientos == 2){
+                	if(cantidadDeCientos == 1) {
+                		precioResultado = precioMillones + ".0" + precioMiles + ".00" + precioCientos;
+                	} else {
+                		if(cantidadDeCientos == 2) {
+                			precioResultado = precioMillones + ".0" + precioMiles + ".0" + precioCientos;
+                		} else {
+                			precioResultado = precioMillones + ".0" + precioMiles + "." + precioCientos;
+                		}
+                	}
+                } else {
+                    if(cantidadDeCientos == 1) { 
+                    	precioResultado = precioMillones + "." + precioMiles + ".00" + precioCientos;
+                    }else {
+                    	if(cantidadDeCientos == 2) {
+                    		precioResultado = precioMillones + "." + precioMiles + ".0" + precioCientos;
+                    	}else {
+                    		precioResultado = precioMillones + "." + precioMiles + "." + precioCientos;
+                    	}
+                    }
+                }
+            }
+        }
+	}
+    return precioResultado;
+}
 
 	function ingresaPrecios(modelo, year){
 		//var urlAbsoluta = "<?php echo url_for('main/priceJson')?>"+"?modelo=" + modelo;

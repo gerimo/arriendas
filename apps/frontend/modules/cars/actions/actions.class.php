@@ -228,7 +228,8 @@ class carsActions extends sfActions {
             $this->getUser()->setAttribute("mapCenterLng", $mapCenterLng);
 
             $withAvailability = false;
-            if (Utils::isWeekend()) {
+            $days = Utils::isWeekend(true);
+            if (in_array(date("Y-m-d", strtotime($from)), $days)) {
                 $withAvailability = true;
             }
 
@@ -541,6 +542,9 @@ class carsActions extends sfActions {
                 $send = 1;
             }else{
                 $Car = Doctrine_Core::getTable('car')->find($carId);
+                if($Car->getLat() != $lat && $Car->getLng() != $lng) {
+                    $changeDistance = 1;
+                }
             }
             
             $Commune = Doctrine_Core::getTable('Commune')->find($commune);
@@ -596,8 +600,13 @@ class carsActions extends sfActions {
                 $mailer->send($message);
 
             }
-
-            CarProximityMetro::setNewCarProximityMetro($Car);
+            if ($carId) {
+                if($changeDistance) {
+                    CarProximityMetro::setCarProximityMetro($Car);
+                }
+            } else {
+                CarProximityMetro::setNewCarProximityMetro($Car);
+            }
 
             $this->getUser()->setAttribute("carId", $Car->getId());
 

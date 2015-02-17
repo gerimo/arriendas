@@ -19,6 +19,8 @@ class ReserveTable extends Doctrine_Table {
 
     public function findActiveReserve($reserveId) {
 
+        $reserveId = $this->findOriginalReserve($reserveId);
+
         $q = Doctrine_Core::getTable("Reserve")
             ->createQuery('R')
             ->innerJoin('R.Transaction T')
