@@ -13,15 +13,17 @@
 			   		<div class="col-md-offset-1 col-md-3">
 		        		<h4>Marca del auto:</h4>
 						<select name="brand" class="form-control" id="brand">
-							<?php foreach ($marcas as $m): ?>
-								<option value="<?php echo $m->getMarca() ?>" ><?php echo $m->getMarca() ?></option> 		
+							<?php foreach ($Brands as $Brand): ?>
+								<option value="<?php echo $Brand->id ?>" ><?php echo $Brand->getName()?></option> 		
 							<?php endforeach; ?>
 						</select>
 			   		</div>	
 
 			   		<div class="col-md-3">
 		        		<h4>Modelo del auto:</h4>
-						<select name="model" class="form-control" id="model"></select>
+						<select name="model" class="form-control" id="model">
+							<option selected value="0">Selecciona tu modelo</option>
+						</select>
 			   		</div>
 
 			   		<div class="col-md-2">
@@ -45,6 +47,7 @@
 			   	 	<div class="row text-center">
 						<div class="col-md-offset-4 col-md-4 col-xs-12">
 
+							<img class="loading" src="/images/ajax-loader.gif">
 							<div class="visible-xs space-40"></div>
 							<div class="hidden-xs space-50"></div>
 
@@ -70,6 +73,13 @@
 			    			<a href="<?php echo url_for('car_create') ?>" class="btn btn-block regular-link btn-a-primary">Sube un auto</a>
 			    		</div>
 			    	</div>				    
+			    </div>
+
+			    <div class="resultadoError" style="display: none;">
+			    	<div class="hidden-xs space-20"></div>
+            		<p class="alert text-center"></p>
+            		<div class="hidden-xs space-20"></div>
+            		<div class="visible-xs space-20"></div>
 			    </div>
 
 			</div>
@@ -162,97 +172,87 @@ function formatNumber(precio){
     return precioResultado;
 }
 
-	function ingresaPrecios(modelo, year){
-		//var urlAbsoluta = "<?php echo url_for('main/priceJson')?>"+"?modelo=" + modelo;
-		var urlAbsoluta = "<?php echo url_for('main/priceJson')?>"+"?modelo=" + modelo + "&year=" + year;
+	function ingresaPrecios(model, year){
 
-		$(".img_loader").fadeIn("hide");
+		$(".loading").show();
 		$('.precioPorHora').text("");
 		$('.precioPorDia').text("");
+
 		$('.precioPorHora').text("Calculando");
 		$('.precioPorDia').text("Calculando");
-		$.ajax({
-			url: urlAbsoluta,
-			dataType:'json'
 
-		}).done(function(datos) {
-		// Se ejecuta antes de terminar, si todo esta OK
-			//$('div').html(datos.nombre);
-			var valorHora = datos.valorHora;
-			var valorDia = valorHora*6;
+		$(".alert").removeClass("alert-a-danger");
+        $(".alert").removeClass("alert-a-success");
 
-			if(valorHora<4000){
-				valorHora = 4000;
+		$.post("<?php echo url_for('value_your_car_price') ?>", {"model": model, "year": year}, function(r){
+			if(r.error){
+				$('.resultados').hide();
+				$('.resultadoError').show();
+				$(".alert").addClass("alert-a-danger");
+                $(".alert").html(r.errorMessage);
+			} else {
+				$('.resultadoError').hide();
+				$(".loading").hide();
+				var valorHora = r.precioHora;
+				var valorDia = r.precioDia;
+
+				$('.resultados').fadeIn("hide");
+				$(".precioPorHora").text(formatNumber(valorHora));
+				$(".precioPorDia").text(formatNumber(valorDia));
+
 			}
-			$('.resultados').fadeIn("hide");
-			$('.precioPorHora').text("");
-			$('.precioPorDia').text("");
-			//establece el valor de los inputs valor dia y valor hora
-			var valorHoraEdit = "<span >$"+formatNumber(valorHora)+" CLP</span>";
-			var valorDiaEdit = "<span >$"+formatNumber(valorDia)+" CLP</span>";
-			$('.precioPorHora').append(valorHoraEdit);
-			$('.precioPorDia').append(valorDiaEdit);
-
-
-			$(".img_loader").fadeOut("hide");
-		}).fail(function(jqXHR, textStatus) {
-		// Se ejecuta antes de terminar, si ocurre un error
-			$(".img_loader").fadeOut("hide");
-			alert(textStatus);
-		});
+		}, "json");
 
 	}
-	/*
-	//da error
-	(function( $ ){
-		jQuery.fn.correo=function(){
-			if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test($(this).val())){
-				return true;
-			}else{
-				$(this).focus();
-				return false;
-			}
-		};
-	})( jQuery );
-	*/
+
 	 $(document).on('ready',function() {
-			      
-			getModel($("#brand"));
-			 
-			$("#brand").change(function(){
-				getModel($(this)); 
-			});
-			
-			
+	 	getModel();
+
+		$("#brand").change(function(){
+			getModel();
+		});
 			
 		$("#botonCalcular").click(function() {
-			 var model = encodeURIComponent(document.getElementById("model").value);
-			 var year = encodeURIComponent(document.getElementById("year").value);
-			  	      
-			 ingresaPrecios(model,year);
+			 /*var model = encodeURIComponent(document.getElementById("model").value);
+			 var year = encodeURIComponent(document.getElementById("year").value);*/
+			 var model = encodeURIComponent($("#model").val());
+			 var year = encodeURIComponent($("#year").val());
+			 if(model!='0'){
+			 	ingresaPrecios(model,year);
+			 }
+			 
 
 		});
 			
 	});
 
 
-	function getModel(currentElement){
-		
-	     $("#model").html("");
-		
-	     $.getJSON("<?php echo url_for('main/getModel')?>",{ marca:currentElement.val(), ajax: 'true'}, function(j){
-	      var options = '';
-	      
-	      for (var i = 0; i < j.length; i++) {
-	      	var selected = ""; 
-	        <?php if($selectedModel->getId()!=""){ ?>
-			if(j[i].optionValue == <?php echo $selectedModel->getId()?>)
-				selected = 'selected="selected"';
-	      	<?php } ?>
-	        options += '<option value="' + j[i].optionValue + '" ' + selected + ' >' + j[i].optionDisplay + '</option>';
-	      }
-	      $("#model").html(options);
-	    })
+	function getModel(){
+			var brandId = $("#brand").val();
+
+	        $("#model").attr("disabled", true);
+
+	        if (brandId > 0) {
+	            $.post("<?php echo url_for('value_your_car_models') ?>", {"brand": brandId}, function(r){
+
+	                if (r.error) {
+	                    console.log(r.errorMessage);
+	                } else {
+
+	                    var html = "<option selected value='0'>Selecciona tu modelo</option>";
+
+	                    $.each(r.models, function(k, v){
+	                        html += "<option value='"+v.id+"'>"+v.name+"</option>";
+	                    });
+
+	                    $("#model").html(html);
+	                }
+
+	                $("#model").removeAttr("disabled");
+
+	            }, 'json');
+	        }
+	    
 	}
 
 	</script>
