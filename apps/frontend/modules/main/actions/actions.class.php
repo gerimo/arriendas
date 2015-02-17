@@ -403,9 +403,7 @@ class mainActions extends sfActions {
 
         // Si si usuario está logueado se redirecciona
         if ($this->getUser()->isAuthenticated()) {
-            error_log(1);
             $this->redirect('homepage');
-            error_log(2);
         }
         
         $referer = $this->getContext()->getActionStack()->getSize() > 1 ? $request->getUri() : $request->getReferer();
@@ -432,66 +430,6 @@ class mainActions extends sfActions {
             if ($user) {
 
                 if ($user->getConfirmed() == 1 || $user->getConfirmed() == 0) {
-
-                    /* track ip */
-                    $visitingIp = $request->getRemoteAddress();
-
-                    $user->trackIp($visitingIp);
-                    
-                    /* check moroso */
-                    $user->checkMoroso();
-        
-                    /** block users */
-                    
-                    // primero verifico si la IP existe en la tabla de IPs válidas
-                    //$validIp = Doctrine::getTable('ipsOk')->findByIP($visitingIp);                    
-                    $sql =  "SELECT *
-                        FROM Ips_ok
-                        WHERE ip = '". $visitingIp ."'";
-
-                    $query = Doctrine_Manager::getInstance()->connection();
-                    $validIp = $query->fetchOne($sql);
-
-                    if(empty($validIp)) {
-
-                        // [edit: 30/01/2015] Se califica de "sospechoso" al usuario si es que su ip corresponde a una ip que posea CUALQUIER usuario bloqueado previamente
-                        if(Doctrine::getTable('user')->isABlockedIp($visitingIp)) {
-                            $user->setIsSuspect(true);
-                            $user->save();
-                        }
-
-                        /** block propietario */
-
-                        // Update 30/09/2014 No se bloquea al usuario y se marca con un flag ip_ambiguo
-                        //  Este flag es revisado despues en una reserva paga notificando por correo para hacer una revision manual
-                        if($user->getPropietario()) {
-
-                            $noPropietarios = Doctrine::getTable('user')->getPropietarioByIp($visitingIp, false);
-                            foreach ($noPropietarios as $nopropietario) {
-                                // $nopropietario->setBloqueado("Un usuario propietario se loggeo desde la ip:".$visitingIp. ", desde la cual este usuario NO propietario se habia loggeado.");
-                                $nopropietario->setIpAmbigua(true);
-                                $nopropietario->save();
-                            }
-                            if(count($noPropietarios) > 0) {
-                                // $user->setBloqueado("Se loggeo usuario propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario NO propietario.");
-                                $user->setIpAmbigua(true);
-                                $user->save();
-                            }
-                        } else {
-
-                            $propietarios = Doctrine::getTable('user')->getPropietarioByIp($visitingIp, true);
-                            foreach ($propietarios as $propietario) {
-                                // $propietario->setBloqueado("Se loggeo usuario NO propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado este usuario propietario.");
-                                $propietario->setIpAmbigua(true);
-                                $propietario->save();
-                            }
-                            if(count($propietarios) > 0) {
-                                // $user->setBloqueado("Se loggeo este usuario NO propietario desde la ip:".$visitingIp. " desde la cual ya se habia loggeado un usuario propietario.");
-                                $user->setIpAmbigua(true);
-                                $user->save();
-                            }
-                        }
-                    }
 
                     $this->getUser()->setFlash('msg', 'Autenticado');
                     $this->getUser()->setAuthenticated(true);
@@ -528,21 +466,18 @@ class mainActions extends sfActions {
 
                     $this->getUser()->setAttribute('geolocalizacion', true);
 
-                    /*sfContext::getInstance()->getLogger()->info($_SESSION['login_back_url']);
-                    $this->redirect($_SESSION['login_back_url']);*/
+                    error_log("hola mundo");
 
                     $this->redirect($this->getUser()->getAttribute("referer"));
                     $this->calificacionesPendientes();
                 } else {
-
+                    error_log("ELSE");
                     $this->getUser()->setFlash('msg', 'Su cuenta no ha sido activada. Puede hacerlo siguiendo este <a href="activate">link</a>');
                     $this->getUser()->setFlash('show', true);
 
                     $url = $this->getUser()->getAttribute("referer", false)?:"@homepage";
                     $this->getUser()->setAttribute("referer", false);
                     $this->redirect($url);
-
-                    $this->forward('main', 'login');
                 }
             } else {
 
