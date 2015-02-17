@@ -6,12 +6,12 @@
 <div class="row">
     <div class="col-md-offset-4 col-md-4 BCW">
 
-        <div class="text-center">
+        <!-- <div class="text-center">
             <h2 class="fb-title">Regístrate o Ingresa con Facebook</h2>
             <a href="<?php echo url_for("main/loginFacebook")?>" style="margin-top: 15px"><?php echo image_tag('img_login/login_btn_fb') ?></a>
         </div>
 
-        <hr>
+        <hr> -->
         
         <h2 class="text-center">Ingresa con tu usuario Arriendas</h2>
 
