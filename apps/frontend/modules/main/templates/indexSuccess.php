@@ -499,7 +499,7 @@
     <?php endif ?>
 
    $("#map").css({
-        height: $(window).height() - $("#section-map-form-search").outerHeight()
+        height: $(window).height()
     });
 
     /*function roundTime(valor){
