@@ -590,7 +590,17 @@ class reservesActions extends sfActions {
         $this->getRequest()->setParameter("reserveId", $Reserve->getId());
         $this->getRequest()->setParameter("transactionId", $Transaction->getId());
 
+        //solo para el prototipo
+        $transaction =  Doctrine_Core::getTable('Transaction')->findOneByReserveId($Reserve->getId());
+        $transaction->setCompleted(true);
+        $Reserve->setFechaPago(date("Y-m-d H:i"));
+        $transaction->save();
+        $Reserve->save();
+        $this->forward("reserves","success");
+        
+        /* flujo Normal
         $this->forward("khipu", "generatePayment");
+        */
     }
 
     public function executeReject (sfWebRequest $request) {
@@ -696,7 +706,7 @@ class reservesActions extends sfActions {
                     $carClass = Doctrine_Core::getTable('car')->findOneById($carId);
                     $propietarioId = $carClass->getUserId();
                     $propietarioClass = Doctrine_Core::getTable('user')->findOneById($propietarioId);
-                    $communeId = $propietarioClass->getCommune();
+                    $communeId = $propietarioClass->getCommune()->id;
                     $comunaClass = Doctrine_Core::getTable('Commune')->find($communeId);                    
                     
                     $this->nameOwner      = $reserve->getNameOwner();
