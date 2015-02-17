@@ -709,9 +709,14 @@ class reservesActions extends sfActions {
                     //datos para los mensajes
                     $model = $carClass->getModel();
                     $brand = $carClass->getModel()->getBrand();
-                    $telephoneUser = sfContext::getInstance()->getUser()->getAttribute('telephone');
+
+                    $userId = $reserve->getUserId();
+                    $user =  Doctrine_Core::getTable("User")->find($userId);
+                    $telephoneUser = $user->getTelephone();                    
+                    //$telephoneUser = sfContext::getInstance()->getUser()->getAttribute('telephone');
+
                     error_log("El telefono del arrendatario es:".$telephoneUser);
-                    $codigo = "z1".mb_substr($model,-2).mb_substr($model,0,1); 
+                    $codigo = rand(1000,9999); 
                     /*-------------------------------------*/
 
                     $propietarioId = $carClass->getUserId();
