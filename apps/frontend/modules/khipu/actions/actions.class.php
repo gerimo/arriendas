@@ -630,10 +630,11 @@ class khipuActions extends sfActions {
     }
 
     public function executeProcessPaymentCanceled(sfWebRequest $request) {
+
         $customer_in_session = $this->getUser()->getAttribute('userid');
 
         if ($customer_in_session) {
-            $this->redirect("profile/pedidos");
+            $this->redirect("reserves");
         } else {
             $this->redirect('@homepage');
         }
