@@ -419,6 +419,7 @@ class mainActions extends sfActions {
         }
         
         $referer = $this->getContext()->getActionStack()->getSize() > 1 ? $request->getUri() : $request->getReferer();
+        error_log("REF: ".$referer);
         $this->getUser()->setAttribute("referer", $referer);
     }
 
