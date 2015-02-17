@@ -5,7 +5,7 @@ class UsersCheckDriversLicenseTask extends sfBaseTask {
     protected function configure() {
 
         $this->addOptions(array(
-            new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name'),
+            new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name', 'frontend'),
             new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'local'),
             new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine'),
             new sfCommandOption('user', null, sfCommandOption::PARAMETER_REQUIRED, 'The user id', ''),
@@ -27,6 +27,8 @@ EOF;
 
         $config = ProjectConfiguration::getApplicationConfiguration("frontend", "prod", TRUE);
         sfContext::createInstance($config);
+        $context = sfContext::createInstance($this->configuration);
+        $context->getConfiguration()->loadHelpers('Partial');
         
         // initialize the database connection
         $databaseManager = new sfDatabaseManager($this->configuration);
@@ -95,17 +97,70 @@ EOF;
                     $profile->setChequeoLicencia(true);
                     $profile->setBlockedLicense($dateNow);
                     $profile->save();
+
+                    $mail    = new Email();
+                    $mailer  = $mail->getMailer();
+                    $message = $mail->getMessage();     
+
+                    $subject = "¡Se há registrado un usuario que no tiene licencia de conducir!";
+                    $body    = get_partial('emails/notificationOfJudicialVerification', array('User' => $profile));
+                    $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+                    $to      = array("soporte@arriendas.cl");
+
+                    $message->setSubject($subject);
+                    $message->setBody($body, 'text/html');
+                    $message->setFrom($from);
+                    $message->setTo($to);
+                    //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                    
+                    $mailer->send($message);
+
                     break;
                 case 3:
                     $profile->setChequeoLicencia(true);
                     $profile->setBlockedLicense($date);
                     $profile->save();
+
+                    $mail    = new Email();
+                    $mailer  = $mail->getMailer();
+                    $message = $mail->getMessage();     
+
+                    $subject = "¡Se há registrado un usuario con licencia de conducir bloqueada de hace menos de 6 meses!   ";
+                    $body    = get_partial('emails/notificationOfJudicialVerification', array('User' => $profile));
+                    $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+                    $to      = array("soporte@arriendas.cl");
+
+                    $message->setSubject($subject);
+                    $message->setBody($body, 'text/html');
+                    $message->setFrom($from);
+                    $message->setTo($to);
+                    //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                    
+                    $mailer->send($message);
+
                     break;
                 
                 default:
                     $profile->setChequeoLicencia(false);
                     $profile->setBlockedLicense(null);  
                     $profile->save();
+
+                    $mail    = new Email();
+                    $mailer  = $mail->getMailer();
+                    $message = $mail->getMessage();     
+
+                    $subject = "¡No se pudo verificar si contaba licencia de conducir válida!";
+                    $body    = get_partial('emails/notificationOfJudicialVerification', array('User' => $profile));
+                    $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+                    $to      = array("soporte@arriendas.cl");
+
+                    $message->setSubject($subject);
+                    $message->setBody($body, 'text/html');
+                    $message->setFrom($from);
+                    $message->setTo($to);
+                    //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                    
+                    $mailer->send($message);
                     break;
             }
 
