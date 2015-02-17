@@ -92,51 +92,18 @@ EOF;
                 case 1:
                     $profile->setChequeoLicencia(true);
                     $profile->save();
+                    
                     break;
                 case 2:
                     $profile->setChequeoLicencia(true);
                     $profile->setBlockedLicense($dateNow);
                     $profile->save();
 
-                    $mail    = new Email();
-                    $mailer  = $mail->getMailer();
-                    $message = $mail->getMessage();     
-
-                    $subject = "¡Se há registrado un usuario que no tiene licencia de conducir!";
-                    $body    = get_partial('emails/notificationOfJudicialVerification', array('User' => $profile));
-                    $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-                    $to      = array("soporte@arriendas.cl");
-
-                    $message->setSubject($subject);
-                    $message->setBody($body, 'text/html');
-                    $message->setFrom($from);
-                    $message->setTo($to);
-                    //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
-                    
-                    $mailer->send($message);
-
                     break;
                 case 3:
                     $profile->setChequeoLicencia(true);
                     $profile->setBlockedLicense($date);
                     $profile->save();
-
-                    $mail    = new Email();
-                    $mailer  = $mail->getMailer();
-                    $message = $mail->getMessage();     
-
-                    $subject = "¡Se há registrado un usuario con licencia de conducir bloqueada de hace menos de 6 meses!   ";
-                    $body    = get_partial('emails/notificationOfJudicialVerification', array('User' => $profile));
-                    $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-                    $to      = array("soporte@arriendas.cl");
-
-                    $message->setSubject($subject);
-                    $message->setBody($body, 'text/html');
-                    $message->setFrom($from);
-                    $message->setTo($to);
-                    //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
-                    
-                    $mailer->send($message);
 
                     break;
                 
@@ -145,22 +112,6 @@ EOF;
                     $profile->setBlockedLicense(null);  
                     $profile->save();
 
-                    $mail    = new Email();
-                    $mailer  = $mail->getMailer();
-                    $message = $mail->getMessage();     
-
-                    $subject = "¡No se pudo verificar si contaba licencia de conducir válida!";
-                    $body    = get_partial('emails/notificationOfJudicialVerification', array('User' => $profile));
-                    $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-                    $to      = array("soporte@arriendas.cl");
-
-                    $message->setSubject($subject);
-                    $message->setBody($body, 'text/html');
-                    $message->setFrom($from);
-                    $message->setTo($to);
-                    //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
-                    
-                    $mailer->send($message);
                     break;
             }
 
