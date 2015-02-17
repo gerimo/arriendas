@@ -7,8 +7,11 @@ class CarTable extends Doctrine_Table {
         $q = Doctrine_Core::getTable("Car")
             ->createQuery('C')
             ->innerJoin('C.Model M')
+            ->innerJoin('C.Commune Co')
+            ->innerJoin('Co.Region R')
             ->where('C.seguro_ok = 4')
-            ->andWhere('C.activo = 1');
+            ->andWhere('C.activo = 1')
+            ->andWhere('R.id = 13');
 
         if ($forWeek) {
             $q->andWhere("C.options & 1");
