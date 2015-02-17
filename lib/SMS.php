@@ -8,6 +8,12 @@ class SMS {
 
     private $sender = "Arriendas";
 
+    public function __construct($sender = null) {
+        if ($sender) {
+            $this->sender = $sender;
+        }
+    }
+
     private function getUrl($message, $phoneNumber) {
 
         if (strlen(str_replace($phoneNumber, " ", "")) > 8) {
