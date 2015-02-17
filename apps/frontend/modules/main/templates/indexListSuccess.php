@@ -59,8 +59,12 @@
         var dia = split[0];
         var mes = split[1];
         var ano = split[2];
-
-        return (mes+dia+ano);
+        if(dia){
+            var time = h.split(":");
+            var hora = time[0];
+            var min = time[1]
+        }
+        return (mes+dia+ano+hora+min);
     }
 
     function searchCars() {
@@ -68,6 +72,20 @@
         if (validateTime()) {
 
             $("#dialog-alert p").html('Fecha "Hasta" debe ser posterior a la fecha "Desde"');
+            $("#dialog-alert").attr('title','Fecha "Hasta" mal ingresada');
+            $("#dialog-alert").dialog({
+                buttons: [{
+                    text: "Aceptar",
+                    click: function() {
+                        $( this ).dialog( "close" );
+                    }
+                }]
+            });
+            return false;
+        }
+
+        if(validateMin()){
+            $("#dialog-alert p").html('No se puede ingresar "Fechas" con lapsus menores a 1 hora .');
             $("#dialog-alert").attr('title','Fecha "Hasta" mal ingresada');
             $("#dialog-alert").dialog({
                 buttons: [{
@@ -505,7 +523,7 @@
 
     $(document).ready(function(){
         
-        /*$('#from').datetimepicker({
+        $('#from').datetimepicker({
             allowTimes:[
             "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
             "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
@@ -521,14 +539,14 @@
             dayOfWeekStart: 1,
             lang:'es',
             onSelectTime: function() {
-                    var x = $("#from").val();
-                    times(x);
+                    var to = $("#from").val();
+                    times(to);
             },
             onSelectDate: function() {
-                var x = $("#from").val();
-                times(x);
+                var to = $("#from").val();
+                times(to);
             }
-        });*/
+        });
 
          $("#search").click();
         $("#from").val(roundTime($("#from").val()));
@@ -628,40 +646,6 @@
         $(target).show();
     });
 
-    $('#from').datetimepicker({
-        allowTimes:[
-            "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
-            "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
-            "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
-            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-            "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-            "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-            "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-            "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
-        ],
-        dayOfWeekStart: 1,
-        format:'d-m-Y H:i',
-        lang:'es',
-        minDate: 0
-    });
-
-    $('#to').datetimepicker({
-        allowTimes:[
-            "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
-            "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
-            "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
-            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-            "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-            "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-            "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-            "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
-        ],
-        dayOfWeekStart: 1,
-        format:'d-m-Y H:i',
-        lang:'es',
-        minDate : 0
-    });
-
     function roundTime(valor){
 
         var fechaH = valor;
@@ -674,18 +658,69 @@
         var hora = parseInt(split3[0]);
         var min = parseInt(split3[1]);
 
-        if (min > 14 && min < 45){
+        if (min > 14 && min <= 45){
             min = "30";
+            $('#to').datetimepicker({
+                allowTimes:[
+                "00:30", "01:30", "02:30",
+                "03:30", "04:30", "05:30",
+                "06:30", "07:30", "08:30",
+                "09:30", "10:30", "11:30",
+                "12:30", "13:30", "14:30",
+                "15:30", "16:30", "17:30",
+                "18:30", "19:30", "20:30",
+                "21:30", "22:30", "23:30",
+                ],
+                lang:'es',
+                dayOfWeekStart: 1,
+                minDate:get_date($('#from').val())?get_date($('#from').val()):false,
+                format:'d-m-Y H:i'
+            });
+
         } else if (min > 45){
             min = "00";
             hora = (hora+1).toString();
+        
+            $('#to').datetimepicker({
+                allowTimes:[
+                "00:00", "01:00", "02:00",
+                "03:00", "04:00", "05:00",
+                "06:00", "07:00", "08:00",
+                "09:00", "10:00", "11:00",
+                "12:00", "13:00", "14:00",
+                "15:00", "16:00", "17:00",
+                "18:00", "19:00", "20:00",
+                "21:00", "22:00", "23:00",
+                ],
+                lang:'es',
+                dayOfWeekStart: 1,
+                minDate:get_date($('#from').val())?get_date($('#from').val()):false,
+                format:'d-m-Y H:i'
+            });
+
         } else {
             min = "00";
+            $('#to').datetimepicker({
+                allowTimes:[
+                "00:00", "01:00", "02:00",
+                "03:00", "04:00", "05:00",
+                "06:00", "07:00", "08:00",
+                "09:00", "10:00", "11:00",
+                "12:00", "13:00", "14:00",
+                "15:00", "16:00", "17:00",
+                "18:00", "19:00", "20:00",
+                "21:00", "22:00", "23:00",
+                ],
+                lang:'es',
+                dayOfWeekStart: 1,
+                minDate:get_date($('#from').val())?get_date($('#from').val()):false,
+                format:'d-m-Y H:i'
+            });
         }
 
         fecha = f+" "+hora+":"+min;
 
-        return fecha;
+        return fecha;  
     }
 
     function times(valor){
@@ -745,5 +780,34 @@
             var parts = input.match(/(\d+)/g);
             return parts[2]+'/'+parts[1]+'/'+parts[0];
         } 
+    }
+
+    function validateMin(){
+        if($("#from").val() && $("#to").val()){
+            var minF = $("#from").val();
+            var splitF = minF.split(" ");
+            //separa fecha de hora
+            var ff = splitF[0];
+            var tf = splitF[1];
+            //separa hora de min
+            var timeF = tf.split(":");
+            var hf = timeF[0]; 
+            var mf = timeF[1];
+
+            //Hasta 
+            var minT = $("#to").val();        
+            var splitT = minT.split(" ");
+            var ft = splitT[0];
+            var tt = splitT[1];
+            var timeT = tt.split(":");
+            var ht = timeT[0];
+            var mt = timeT[1];
+            
+            if (mt != mf){
+                return true;
+            }else{
+                return false;
+            }
+        }
     }
 </script>

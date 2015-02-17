@@ -7,8 +7,11 @@ class CarTable extends Doctrine_Table {
         $q = Doctrine_Core::getTable("Car")
             ->createQuery('C')
             ->innerJoin('C.Model M')
+            ->innerJoin('C.Commune Co')
+            ->innerJoin('Co.Region R')
             ->where('C.seguro_ok = 4')
-            ->andWhere('C.activo = 1');
+            ->andWhere('C.activo = 1')
+            ->andWhere('R.id = 13');
 
         if ($forWeek) {
             $q->andWhere("C.options & 1");
@@ -219,9 +222,6 @@ class CarTable extends Doctrine_Table {
 
         } catch (Exception $e) {
             error_log("[".date("Y-m-d H:i:s")."][CarTable::getPrice()] ERROR: ".$e->getMessage());
-            /*if ($request->getHost() == "www.arriendas.cl") {
-                Utils::reportError($e->getMessage(), "CarTable::getPrice()");
-            }*/
         }
         
         return floor($pricePerDay * $days + $pricePerHour * $hours);

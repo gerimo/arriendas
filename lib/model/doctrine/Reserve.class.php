@@ -37,9 +37,8 @@ class Reserve extends BaseReserve {
             ->addOrderBy('R.fecha_reserva ASC');
 
         $Reserves = $q->execute();
-
+        
         foreach ($Reserves as $Reserve) {
-
             if ($Reserve->getReservaOriginal() == 0) {
                 if ($withOriginalReserve) {
                     $ChangeOptions[] = $Reserve;
@@ -48,26 +47,7 @@ class Reserve extends BaseReserve {
                 $ChangeOptions[] = $Reserve;
             }
         }
-
-        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
-        if ($Holiday || date("N") == 6 || date("N") == 7) {
-
-            $q = Doctrine_Core::getTable("Car")
-                ->createQuery('C')
-                ->innerJoin('C.CarAvailabilities CA')
-                ->andWhere("CA.is_deleted IS FALSE")
-                ->andWhere("CA.day = ?", date("Y-m-d", strtotime($this->date)))
-                ->andWhere('? BETWEEN CA.started_at AND CA.ended_at', date("H:i:s", strtotime($this->date)));
-
-            $Cars = $q->execute();
-
-            foreach ($Cars as $Car) {
-                if (!$Car->hasReserve($this->getFechaInicio2(), $this->getFechaTermino2(), $this->getUserId())) {
-                    $ChangeOptions[] = $Reserve;
-                }
-            }
-        }
-
+        
         return $ChangeOptions;
     }
 
@@ -76,13 +56,13 @@ class Reserve extends BaseReserve {
         $Car = $this->getCar();
 
         return CarTable::getPrice(
-                $this->getFechaInicio2,
-                $this->getFechaTermino2,
-                $Car->getPricePerHour(),
-                $Car->getPricePerDay(),
-                $Car->getPricePerWeek(),
-                $Car->getPricePerMonth()
-            );
+            $this->getFechaInicio2(),
+            $this->getFechaTermino2(),
+            $Car->getPricePerHour(),
+            $Car->getPricePerDay(),
+            $Car->getPricePerWeek(),
+            $Car->getPricePerMonth()
+        );
     }
 
     public function getSelectedCar() {

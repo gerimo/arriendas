@@ -8,7 +8,6 @@ class Car extends BaseCar {
         $date = date("Y-m-d H:i:s", strtotime("-3 month"));
       }
 
-
       $q = Doctrine_Core::getTable("Reserve")
           ->createQuery('R')
           ->innerJoin('R.Transaction T')
@@ -118,14 +117,37 @@ class Car extends BaseCar {
       return $Opportunities;
   }
 
-  public function hasReserve($from, $to, $userId = false) {
+    public function hasAvailability($datetime) {
+      
+        $q = Doctrine_Core::getTable("CarAvailability")
+            ->createQuery('CA')
+            ->where('CA.car_id = ?', $this->id)
+            ->andWhere('CA.day = ?', date("Y-m-d", strtotime($datetime)))
+            ->andWhere('? BETWEEN CA.started_at AND CA.ended_at', date("H:i:s", strtotime($datetime)));
 
+        $checkAvailability = $q->execute();
+
+        if (count($checkAvailability)) {
+            return true;
+        }
+
+        return false;
+    }
+
+  public function hasReserve($from, $to, $userId = false) {
+      
       $q = Doctrine_Core::getTable("Reserve")
           ->createQuery('R')
-          ->leftJoin('R.Transaction T')
+          ->innerJoin('R.Transaction T')
           ->where('T.completed = 1')
+          ->andWhere('R.canceled = 0')
           ->andWhere('R.car_id = ?', $this->id)
-          ->andWhere('(? BETWEEN R.date AND DATE_ADD(R.date, INTERVAL R.duration HOUR)) OR (? BETWEEN R.date AND DATE_ADD(R.date, INTERVAL R.duration HOUR)) OR (R.date BETWEEN ? AND ?) OR (DATE_ADD(R.date, INTERVAL R.duration HOUR) BETWEEN ? AND ?)', array($from, $to, $from, $to, $from, $to));
+          ->andWhere('
+              ? BETWEEN R.date AND DATE_ADD(R.date, INTERVAL R.duration HOUR)
+              OR ? BETWEEN R.date AND DATE_ADD(R.date, INTERVAL R.duration HOUR)
+              OR R.date BETWEEN ? AND ?
+              OR DATE_ADD(R.date, INTERVAL R.duration HOUR) BETWEEN ? AND ?
+          ', array($from, $to, $from, $to, $from, $to));
 
       if ($userId) {
         $q->andWhere('R.user_id != ?', $userId);

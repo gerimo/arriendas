@@ -4,6 +4,18 @@ require_once sfConfig::get('sf_lib_dir') . '/vendor/mobile-detect/Mobile_Detect.
 
 class mainActions extends sfActions {
 
+    public function executeTestSMS (sfWebRequest $request) {
+        $this->setLayout(false);
+
+        $message     = $request->getParameter("message");
+        $phoneNumber = $request->getParameter("phoneNumber");
+
+        $SMS = new SMS();
+        $SMS->send($message, $phoneNumber);
+
+        return sfView::NONE;
+    }
+
     public function executeTestKhipu (sfWebRequest $request) {
         $this->setLayout(false);
 
@@ -259,7 +271,6 @@ class mainActions extends sfActions {
                 $basePath = sfConfig::get('sf_root_dir');
                 $userid = $User->getId();
                 $rut = $User->getRutComplete();
-                error_log($rut);
                 $comando = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.strtoupper($rut).'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
                 exec($comando);
             }

@@ -218,7 +218,8 @@ header .navbar-nav .navbar-right ul {
 
 #list-container {
     background-color: white;
-    min-height: 250px;
+    /*min-height: 250px;*/
+    padding: 3% 0;
 }
 
 #list-container h2 {
@@ -623,7 +624,7 @@ header .navbar-nav .navbar-right ul {
 }
 
 button.see-more {
-    background-color: rgb(70, 70, 70);
+    background-color: #5d5d5d;
     color: white;
     cursor: pointer;
     font-size: 14px;
@@ -731,7 +732,7 @@ button.see-more {
     }
 
     button.see-more {
-        background-color: rgb(70, 70, 70);
+        background-color: #5d5d5d;
         color: white;
         cursor: pointer;
         font-size: 14px;

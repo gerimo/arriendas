@@ -51,8 +51,8 @@ EOF;
 
                 $this->log("[".date("Y-m-d H:i:s")."] Mañana ".date("Y-m-d", $tomorrow)." es fin de semana o festivo.");
 
-                /*$days = Utils::isWeekend(true, true); // envio de viernes*/
-                $days = Utils::isWeekend(true, false); // envio de sabado
+                $days = Utils::isWeekend(true, true); // envio de viernes
+                /*$days = Utils::isWeekend(true, false); // envio de sabado*/
             } else {
                 $this->log("[".date("Y-m-d H:i:s")."] Mañana ".date("Y-m-d", $tomorrow)." NO es fin de semana o festivo.");
                 exit;
@@ -74,9 +74,9 @@ EOF;
 
                 foreach ($oCars as $oCar) {
 
-                    // ESTO ES PARA NO ENVIAR DENUEVO AL MISMO AUTO
+                    // ESTO ES PARA NO ENVIAR DENUEVO AL MISMO AUTO QUE YA ENTREGO DISPONIBILIDAD
                     $notSend = array();
-                    $oCarsWithAvailability = Doctrine_Core::getTable("Car")->findCarsWithAvailability("2015-02-09");
+                    $oCarsWithAvailability = Doctrine_Core::getTable("Car")->findCarsWithAvailability("2015-02-16");
                     foreach ($oCarsWithAvailability as $oCWA) {
                         $notSend[] = $oCWA->id;
                     }
