@@ -100,6 +100,7 @@
 					}
 					}]
 				});*/
+				console.log(r.errorMessage);
 				$('#userWhitoutPayTable').DataTable().rows().remove().draw();
 				$(".load").hide();
 			} else {
