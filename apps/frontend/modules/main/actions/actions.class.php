@@ -3036,7 +3036,8 @@ class mainActions extends sfActions {
         $this->setLayout("newIndexLayout");
         try {
 
-            $this->Brands = Doctrine_Core::getTable('Brand')->findAll();
+            $this->Brands = BrandTable::getBrandOrderByName();
+            //$this->Brands = Doctrine_Core::getTable('Brand')->findAll();
         
         } catch(Exception $e) { 
             error_log("[".date("Y-m-d H:i:s")."] [main/valueYourCar] ERROR: ".$e->getMessage()); 
