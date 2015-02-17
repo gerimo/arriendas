@@ -59,5 +59,10 @@ all:
   storage:
     class: sfSessionStorage
     param:
-      session_name: ArriendasP
+      session_name: ArrPrototype
       session_cookie_domain: .arriend.as
+
+  user:
+    class: myUser
+    param:
+      timeout: 900

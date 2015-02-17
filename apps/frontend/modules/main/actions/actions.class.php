@@ -420,7 +420,6 @@ class mainActions extends sfActions {
         
         $referer = $this->getContext()->getActionStack()->getSize() > 1 ? $request->getUri() : $request->getReferer();
         $this->getUser()->setAttribute("referer", $referer);
-        error_log("[main/login] REF: ".$referer);
     }
 
     public function executeLoginDo (sfWebRequest $request) {
@@ -443,8 +442,9 @@ class mainActions extends sfActions {
             if ($user) {
 
                 if ($user->getConfirmed() == 1 || $user->getConfirmed() == 0) {
-
+error_log("PRE REF: ".$this->getUser()->getAttribute("referer"));
                     $this->getUser()->setFlash('msg', 'Autenticado');
+
                     $this->getUser()->setAuthenticated(true);
 
                     $this->getUser()->setAttribute("logged", true);
@@ -456,31 +456,13 @@ class mainActions extends sfActions {
                     $this->getUser()->setAttribute("comuna", $user->getNombreComuna());
                     $this->getUser()->setAttribute("region", $user->getNombreRegion());
                     $this->getUser()->setAttribute("name", current(explode(' ', $user->getFirstName())) . " " . substr($user->getLastName(), 0, 1) . '.');
-
-                    $this->logMessage('firstname', 'err');
-                    $this->logMessage($user->getFirstName(), 'err');
-
                     $this->getUser()->setAttribute("firstname", $user->getFirstName());
 
                     if ($user->getPictureFile()) {
                         $this->getUser()->setAttribute("picture_file", $user->getPictureFile());
                     }
-
-                    //Modificacion para identificar si el usuario es propietario o no de vehiculo
-                    if ($user->getPropietario()) {
-                        $this->getUser()->setAttribute("propietario", true);
-                    } else {
-                        $this->getUser()->setAttribute("propietario", false);
-                    }
-
-                    if ($this->getUser()->getAttribute('lastview') != null) {
-                        $this->redirect($this->getUser()->getAttribute('lastview'));
-                    }
-
-                    $this->getUser()->setAttribute('geolocalizacion', true);
-
-                    /*$this->redirect($this->getUser()->getAttribute("referer"));*/
-                    $this->calificacionesPendientes();
+error_log("POST REF: ".$this->getUser()->getAttribute("referer"));
+                    $this->redirect($this->getUser()->getAttribute("referer"));
                 } else {
                     $this->getUser()->setFlash('msg', 'Su cuenta no ha sido activada. Puede hacerlo siguiendo este <a href="activate">link</a>');
                     $this->getUser()->setFlash('show', true);
@@ -498,7 +480,6 @@ class mainActions extends sfActions {
             }
         }
         
-        /*$this->forward('main', 'index');*/
         $this->redirect("homepage");
 
         return sfView::NONE;
