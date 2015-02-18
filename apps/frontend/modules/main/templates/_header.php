@@ -12,7 +12,7 @@
 ?>
 
 <header>
-    <nav class="navbar navbar-default navbar-fixed-top navbar-inverse" id="header-navbar" role="navigation">
+    <nav class="navbar navbar-default navbar-fixed-top navbar-inverse clearfix" id="header-navbar" role="navigation">
         <div class="container">
 
             <div class="navbar-header">
@@ -77,6 +77,13 @@
             </div>
         </div>
     </nav>
+
+    <div class="notbar">
+        <span class="remove glyphicon glyphicon-remove" aria-hidden="true"></span>
+        <div class="notbar-body">
+        ¡Hola Mundo!
+        </div>
+    </div>
 </header>
 
 

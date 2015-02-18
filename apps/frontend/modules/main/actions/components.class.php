@@ -28,8 +28,6 @@
             }        	
         }
 
-        public function executeFooter(){
-
-        }
+        public function executeFooter(){}
     }
 ?>
