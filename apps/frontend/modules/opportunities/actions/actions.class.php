@@ -79,7 +79,7 @@ class opportunitiesActions extends sfActions {
                 throw new Exception("Firma para aprobar Reserve ".$reserveId." no coincide");
             }
 
-            $already = false;            
+            $already = false;
 
             $ChangeOptions = $Reserve->getChangeOptions();
 
@@ -150,6 +150,9 @@ class opportunitiesActions extends sfActions {
 
     private function approve($reserveId, $carId, $isMailing = false) {
 
+        error_log("reserveId: ".$reserveId);
+        error_log("carId: ".$carId);
+
         if (is_null($reserveId) || $reserveId == 0) {
             return "No se encontró la reserva";
         }
@@ -170,7 +173,7 @@ class opportunitiesActions extends sfActions {
         }
 
         $O = $OriginalReserve->copy(true);
-        $O->setCar($Car);
+        $O->setCarId($Car->id);
         $O->setFechaReserva(date("Y-m-d H:i:s"));
         $O->setFechaConfirmacion(date("Y-m-d H:i:s"));
         $O->setConfirmed(true);

@@ -6,7 +6,7 @@ class OpportunitySendEmailQueueTask extends sfBaseTask {
 
         $this->addOptions(array(
             new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name', 'frontend'),
-            new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
+            new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'local'),
             new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine')
         ));
 
@@ -36,9 +36,10 @@ EOF;
 
         try {
 
+            $host = 'http://local.arriendas.cl';
             if ($options['env'] == 'dev') {
-                $host = 'http://local.arriendas.cl';
-            } else {
+                $host = 'http://dev.arriendas.cl';
+            } elseif ($options['env'] == 'prod') {
                 $host = 'http://www.arriendas.cl';
             }
 
@@ -74,7 +75,7 @@ EOF;
                 $from    = array("soporte@arriendas.cl" => "Oportunidades Arriendas.cl");
                 $to      = array($Owner->email => $Owner->firstname." ".$Owner->lastname);
 
-                $this->log("[".date("Y-m-d H:i:s")."] Enviando a ".$Owner->firstname." ".$Owner->lastname);
+                /*$this->log("[".date("Y-m-d H:i:s")."] Enviando a ".$Owner->firstname." ".$Owner->lastname);*/
                 /*$this->log("[".date("Y-m-d H:i:s")."] URL Apertura".$imageUrl);*/
                 /*$this->log("[".date("Y-m-d H:i:s")."] URL Aprobacion".$acceptUrl);*/
 
@@ -83,7 +84,10 @@ EOF;
                 $message->setBody($body."<br><br>USER: ".$Owner->email, "text/html");
                 $message->setFrom($from);
                 /*$message->setTo($to);*/
-                $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                $message->setBcc(array(
+                    "cristobal@arriendas.cl" => "Cristóbal Medina Moenne",
+                    "francoinostrozah@gmail.com" => "Franco Inostroza Hinojosa"
+                ));
                 
                 $this->getMailer()->send($message);
 

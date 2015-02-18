@@ -51,51 +51,53 @@ EOF;
                 $nodeCount = 0;
                 $problems = "";
                 
-                if(Utils::isValidRUT($User->getRutComplete())) {
+                if(!$User->getExtranjero()) {
+                    if(Utils::isValidRUT($User->getRutComplete())) {
 
-                    if (strlen($viewStateId) > 0) {
-                        /* verification call */
-                        $params = array(
-                            'formConsultaCausas:idFormRut' => $User->rut,
-                            'formConsultaCausas:idFormRutDv' => strtoupper($User->rut_dv),
-                            'formConsultaCausas:idSelectedCodeTribunalRut' => "0",
-                            'formConsultaCausas:buscar1.x' => "66",
-                            'formConsultaCausas:buscar1.y' => "19",
-                            'formConsultaCausas' => "formConsultaCausas",
-                            'javax.faces.ViewState' => $viewStateId,
-                        );
+                        if (strlen($viewStateId) > 0) {
+                            /* verification call */
+                            $params = array(
+                                'formConsultaCausas:idFormRut' => $User->rut,
+                                'formConsultaCausas:idFormRutDv' => strtoupper($User->rut_dv),
+                                'formConsultaCausas:idSelectedCodeTribunalRut' => "0",
+                                'formConsultaCausas:buscar1.x' => "66",
+                                'formConsultaCausas:buscar1.y' => "19",
+                                'formConsultaCausas' => "formConsultaCausas",
+                                'javax.faces.ViewState' => $viewStateId,
+                            );
 
-                        $crawler = $client->request('POST', 'http://reformaprocesal.poderjudicial.cl/ConsultaCausasJsfWeb/page/panelConsultaCausas.jsf', $params);
-                        $nodeCount = count($crawler->filter('.extdt-cell-div'));
+                            $crawler = $client->request('POST', 'http://reformaprocesal.poderjudicial.cl/ConsultaCausasJsfWeb/page/panelConsultaCausas.jsf', $params);
+                            $nodeCount = count($crawler->filter('.extdt-cell-div'));
 
-                        if ($nodeCount > 1) {
-                            $User->setBlocked(true);                            
-                            $countTotalUsuariosChequeados++;
-                            $countConCausas++;
-                            $causa = "blocked by criminal records";
+                            if ($nodeCount > 1) {
+                                $User->setBlocked(true);                            
+                                $countTotalUsuariosChequeados++;
+                                $countConCausas++;
+                                $causa = "blocked by criminal records";
+                            } else {
+                                $User->setBlocked(false);
+                                $countTotalUsuariosChequeados++;
+                                $countSinCausas++;
+                                $causa = "free of criminal records";
+                            }
+
+                            $User->setChequeoJudicial(true);
+                                            
                         } else {
-                            $User->setBlocked(false);
-                            $countTotalUsuariosChequeados++;
-                            $countSinCausas++;
-                            $causa = "free of criminal records";
+                            $User->setChequeoJudicial(false);
+                            $countProblemasConexion++;
+                            $causa = "connection fail";
+                            $problems = "Connection lost";
                         }
-
-                        $User->setChequeoJudicial(true);
-                                        
                     } else {
-                        $User->setChequeoJudicial(false);
-                        $countProblemasConexion++;
-                        $causa = "connection fail";
-                        $problems = "Connection lost";
+                        $User->setBlocked(true);
+                        $User->setChequeoJudicial(true);
+                        $problems = "Invalid RUT";
+                        $countRutInvalido++;
                     }
-                } else {
-                    $User->setBlocked(true);
-                    $User->setChequeoJudicial(true);
-                    $problems = "Invalid RUT";
-                    $countRutInvalido++;
-                }
 
-                $User->save();
+                    $User->save();
+                }
 
                 $countTotal++;
 

@@ -21,17 +21,6 @@
                             <a id="linkPhotoCar" href=""><i class="fa fa-edit"></i> subir</a>
                         </div>
 
-                        <!-- foto Seguro accesorios -->
-                        <div id="previewPhotoCarAccessory" class="photo text-center col-xs-12 col-sm-6 col-md-6" style="margin-bottom:10%">
-                            <label class="col-md-12">Foto Accesorios</label>
-                                <?php if ($Car->getAccesoriosSeguro() == null): ?>
-                                    <?php echo image_tag('img_asegura_tu_auto/accesorio2.png') ?>
-                                <?php else: ?>
-                                    <?php echo image_tag($Car->getAccesoriosSeguro()) ?>
-                                <?php endif ?>
-                            <a id="linkPhotoCarAccessory" href=""><i class="fa fa-edit"></i> subir</a>
-                        </div>
-
                         <!-- foto Seguro frente -->
                         <div id="previewPhotoCarFront" class="photo text-center col-xs-12 col-sm-6 col-md-6" style="margin-bottom:10%">
                         <label class="col-md-12">Foto Frente</label>
@@ -107,11 +96,6 @@
         <input type="submit">
     </form>
 
-    <form action="<?php echo url_for('cars/uploadPhotoAccessory?photo=cars&width=194&height=204&file=filePhotoCarAccessory') ?>" enctype="multipart/form-data" id="formPhotoCarAccessory" method="post">
-        <input id="filePhotoCarAccessory" name="filePhotoCarAccessory" type="file">
-        <input type="submit">
-    </form>
-
     <form action="<?php echo url_for('cars/uploadPhotoFront?photo=cars&width=194&height=204&file=filePhotoCarFront') ?>" enctype="multipart/form-data" id="formPhotoCarFront" method="post">
         <input id="filePhotoCarFront" name="filePhotoCarFront" type="file">
         <input type="submit">
@@ -150,7 +134,6 @@
     $(document).ready(function() {
 
         imageUpload('#formPhotoCar', '#filePhotoCar', '#previewPhotoCar','#linkPhotoCar');
-        imageUpload('#formPhotoCarAccessory', '#filePhotoCarAccessory', '#previewPhotoCarAccessory','#linkPhotoCarAccessory');
         imageUpload('#formPhotoCarFront', '#filePhotoCarFront', '#previewPhotoCarFront','#linkPhotoCarFront');
         imageUpload('#formPhotoCarSideRight', '#filePhotoCarSideRight', '#previewPhotoCarSideRight','#linkPhotoCarSideRight');
         imageUpload('#formPhotoCarSideLeft', '#filePhotoCarSideLeft', '#previewPhotoCarSideLeft','#linkPhotoCarSideLeft');

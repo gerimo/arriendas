@@ -21,15 +21,17 @@
         <img class="load" src="/images/ajax-loader.gif">
 
         <div class="space-100"></div>
-
+    </div>
+    <div class="col-md-12">
         <table  class="display responsive no-wrap " id="userWhitoutPayTable" cellspacing="0" width="100%">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Nombre</th>
                     <th>Teléfono</th>
-                    <th>email</th>
-                    <th>dirección</th>
+                    <th>Email</th>
+                    <th>Dirección</th>
+                    <th>Llamado</th>
                     <th>Fecha inicio</th>
                     <th>Comentario</th>
 
@@ -93,7 +95,8 @@
 
                 $.each(r.data, function(k, v) {
                     var button = "<a class='btn btn-block btn-primary comment' href='"+urlComment.replace("userIdPattern", v.user_id)+"'>Comentarios</a>";
-                    $('#userWhitoutPayTable').DataTable().row.add([ v.user_id, v.user_fullname, v.user_telephone, v.user_email, v.user_address, v.reserva_fecha_inicio, button ]).draw();
+                    var option = optionSelected(v.user_call,v.user_id);
+                    $('#userWhitoutPayTable').DataTable().row.add([ v.user_id, v.user_fullname, v.user_telephone, v.user_email, v.user_address, option,v.reserva_fecha_inicio, button ]).draw();
                 });
 
                 $(".load").hide();
@@ -118,6 +121,53 @@
         lang:'es',
         timepicker: false,
         maxDate: "<?php echo date('Y-m-d') ?>"
+    });
+
+    function optionSelected(option, userId) {
+
+        if (option == 0) {
+
+            var select ="<select class='form-control call' data-user-id='"+userId+"' type='text'>"+
+                            "<option value='0' selected >No llamado</option>"+
+                            "<option value='1'>LLamado</option>"+
+                            "<option value='2'>No contesto</option>"+
+                        "</select>";
+        } else if (option == 1) {
+
+            var select ="<select class='form-control call' data-user-id='"+userId+"' type='text'>"+
+                            "<option value='0'>No llamado</option>"+
+                            "<option value='1' selected >LLamado</option>"+
+                            "<option value='2'>No contesto</option>"+
+                        "</select>";
+        } else {
+
+            var select ="<select class='form-control call' data-user-id='"+userId+"' type='text'>"+
+                            "<option value='0'>No llamado</option>"+
+                            "<option value='1'>LLamado</option>"+
+                            "<option value='2' selected >No contesto</option>"+
+                        "</select>";
+        }
+
+        return select;
+    }
+
+    $(document).on("change", ".call", function(){
+
+        var userId = $(this).data("user-id");
+        var option = $(".call option:selected").val();
+
+        var parameters = {
+            "userId" : userId,
+            "option" : option
+        };
+
+        $.post("<?php echo url_for('user_change_call') ?>", parameters, function(r){
+            if (r.error) {
+                console.log(r.errorMessage);
+            } else {
+                console.log("yaa");
+            }
+        }, 'json')
     });
 
    
