@@ -168,19 +168,19 @@ class mainActions extends sfActions {
                 throw new Exception("No! No! No!", 1);
             }
 
-            $name = $_FILES['foto1']['name'];
-            $size = $_FILES['foto1']['size'];
-            $tmp  = $_FILES['foto1']['tmp_name'];
+            $carId  = $request->getPostParameter("carId", null);
+            $name = $_FILES['photo']['name'];
+            $size = $_FILES['photo']['size'];
+            $tmp  = $_FILES['photo']['tmp_name'];
             
             list($txt, $ext) = explode(".", $name);
 
             $ext = strtolower($ext);
 
-            $carId = 398454;
             $actual_image_name = time() . $carId . "." . $ext;
 
             $uploadDir = sfConfig::get("sf_web_dir");
-            $path      = $uploadDir . '/images/cars/';
+            $path      = $uploadDir . '/images/test/';
             $fileName  = $actual_image_name . "." . $ext;
 
             $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
@@ -191,10 +191,13 @@ class mainActions extends sfActions {
 
             sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
 
-            $Car = Doctrine_Core::getTable('car')->find($carId);
-            $Car->setFotoPerfil("/images/cars/".$actual_image_name);
-            $Car->save();
-
+            $CarPhoto = new CarPhoto();
+            $CarPhoto->setCarId($carId);
+            $CarPhoto->setName($actual_image_name);
+            $CarPhoto->setCreatedAt(Date("Y-m-d H:s"));
+            $CarPhoto->setType("ASDF");
+            $CarPhoto->save();
+            $return["urlPhoto"] = $actual_image_name;
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
@@ -205,7 +208,6 @@ class mainActions extends sfActions {
         }
 
         $this->renderText(json_encode($return));
-        error_log(json_encode($return));
         return sfView::NONE;
     }
 }
