@@ -511,8 +511,11 @@
                 <h1>PRIMER SISTEMA DE ARRIENDO DE AUTOS ENTRE PERSONAS</h1>
                 <h2>Hay un auto en tu comuna o en un metro cercano.</h2>
             </div>
+            <button id="btn-leese" data-target="#section-map-form-search">Arrienda ahora</button>
         </div>
+    
     </div>
+
     <div class="row" id="section-map-form-search">
 
         <span class="ico-search hidden-xs" data-target="#section-map-form-search"><img src="/images/newDesign/ico-search.svg"></span>
@@ -955,6 +958,17 @@
         var target  = $(this).data('target');
         var position = $(target).offset().top - 50;
 
+        $('html, body').animate({
+            scrollTop: position
+        }, 1250);
+    });
+
+    $("#btn-leese").on('click', function(e) {
+        
+        e.preventDefault();
+
+        var target  = $(this).data('target');
+        var position = $(target).offset().top - 50;
         $('html, body').animate({
             scrollTop: position
         }, 1250);
