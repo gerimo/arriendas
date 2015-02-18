@@ -30,8 +30,8 @@
 
         var center = null;
 
-        latitud = -33.445236;
-        longitud = -70.640137;
+        latitud = -33.440678;
+        longitud = -70.615234;
         geolocalizacion = true;
         if (geolocalizacion) {
             center = new google.maps.LatLng(latitud, longitud);
