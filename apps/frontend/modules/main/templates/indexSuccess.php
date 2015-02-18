@@ -851,6 +851,10 @@
         localizame();
         initialize();
 
+        $(".box").click(function(){
+            console.log("123");
+        });
+
         // Carousel
         $('#section-home-carousel').slick({
             autoplay: true,

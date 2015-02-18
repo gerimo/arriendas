@@ -1,4 +1,4 @@
-    <?php
+<?php
 
 class CarTable extends Doctrine_Table {
 
@@ -193,6 +193,20 @@ class CarTable extends Doctrine_Table {
             ->distinct()
             ->where('CA.is_deleted = 0')
             ->andWhere('CA.day >= ?', $day);
+
+        return $q->execute();
+    }
+
+    public function findNewCars($date = null) {
+
+        if (is_null($date)) {
+            $date = strtotime("-15 minute");
+        }
+
+        $q = Doctrine_Core::getTable("Car")
+            ->createQuery('C')
+            ->where('C.fecha_subida >= ?', $date)
+            ->orderBy('C.fecha_subida ASC');
 
         return $q->execute();
     }
