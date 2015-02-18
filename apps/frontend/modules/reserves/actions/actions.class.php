@@ -781,6 +781,7 @@ class reservesActions extends sfActions {
             $SMS = new SMS("Arriendas.cl");
             
             $SMS->send($message_data_cars, $telephoneUser);
+            sleep(5);
             $SMS->send($message_open_cars, $telephoneUser);
             sleep(60);
             $SMS->send($message_diesel, $telephoneUser); 

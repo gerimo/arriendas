@@ -134,7 +134,7 @@ var google_remarketing_only = false;
     var tfn          = "<?php echo $telephoneUser?>"
     var addressCar = "<?php echo $addressCar ?>"
     var comunaCar = "<?php echo ucfirst(strtolower($comunaCar)) ?>"
-    console.log(comunaCar+addressCar)
+    console.log(tfn);
 
     parameters = {
       
