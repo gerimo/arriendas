@@ -40,8 +40,6 @@
 
                     </div>
 
-                    <div class="linea espacio hidden-xs col-md-11"></div>
-
                     <div class="espacio col-sm-12 col-md-12">
                         <!-- marca auto -->
                         <div class="col-sm-4 col-md-4">
@@ -128,18 +126,28 @@
                         </div>
                     </div>
 
-                    <div class="espacio col-sm-12 col-md-12">
+                    <div class="espacio col-sm-12 col-md-12" >
                         <!-- Tipo de Vehículo -->
-                        <div class="col-sm-4 col-md-4">
-                            <label>Tipo de Vehículo (*)</label><br>
-                            <select class="form-control" id="typeCar" name="typeCar" placeholder="" type="text">
-                                    <option value="">--</option>
+                        <div class="col-sm-4 col-md-4" id="cilindrada">
+                            <label>Cilindrada (*)</label><br>
+                            <select class="form-control col-xs-6 col-md-6" id="capacity1" name="" placeholder="" type="text">
+                                <option value="1">1</option>
                                 <?php
-                                    foreach ($CarTypes as $CarType):
+                                for($i=2; $i<7; $i++):
                                 ?>
-                                    <option value="<?php echo $CarType['id']?>"><?php echo $CarType['name']?></option>
+                                <option value="<?php echo $i ?>"><?php echo $i ?></option>";
                                 <?php
-                                    endforeach;
+                                endfor;
+                                ?>
+                            </select>
+                            <select class="form-control col-xs-6 col-md-6" id="capacity2" name="" placeholder="" type="text">
+                                <option value="0">0</option>
+                                <?php
+                                for($i=1; $i<10; $i++):
+                                ?>
+                                <option value="<?php echo $i ?>"><?php echo $i ?></option>";
+                                <?php
+                                endfor;
                                 ?>
                             </select>
                         </div>
@@ -178,12 +186,88 @@
                           </div>
                         </div>  
                     </div>
+                    <div class="espacio col-sm-12 col-md-12" > 
+                        
+                        <div class="linea espacio hidden-xs col-md-11"></div>
+
+                        <div class="visible-xs space-50"></div>
+
+                        <div class="col-sm-12 col-md-12" id="accessories">
+                            <h1>Accesorios del vehículo</h1>
+                            <div class="checkbox col-md-4">
+                                <label>
+                                    <input type="checkbox" id="sistemaABS" value="sistemaABS">
+                                    ABS
+                                </label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label>
+                                    <input type="checkbox" id="aireAcondicionado" value="aireAcondicionado">
+                                    Aire acondicionado
+                                </label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label>
+                                    <input type="checkbox" id="airBag" value="airBag">
+                                    Air Bag
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-12" id="accessories">
+                            <div class="checkbox col-md-4">
+                                <label>
+                                    <input type="checkbox" id="controlCrucero" value="controlCrucero">
+                                    Control crucero
+                                </label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label>
+                                    <input type="checkbox" id="sensor" value="sensor">
+                                    Sensor acercamiento/retroseso
+                                </label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label>
+                                    <input type="checkbox" id="babyChair" value="babyChair">
+                                    Silla Bebé
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-12" id="accessories">
+                            <div class="checkbox col-md-4">
+                                <label>
+                                    <input type="checkbox" id="vidriosElectricos" value="vidriosElectricos">
+                                    Vidrios eléctricos
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="espacio col-md-11"></div>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="myModal">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">¿Es esta su dirección?</h4>
+                              </div>
+                              <div id="mostrarMapa"> </div>
+                              <div class="modal-footer">
+                                <button id="noAddress"type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">SI</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>  
+                    </div>
                 </fieldset>
 
                 <input id="lat" name="lat" type="hidden" value="">
                 <input id="lng" name="lng" type="hidden" value="">
             </form>
             <div class="col-md-offset-8 col-md-4">
+                <div class="hidden-xs space-60"></div>
                 <button class="btn btn-a-primary btn-block" name="save" onclick="validateForm()">Siguiente</button>
                 <p class="alert"></p> 
             </div>
@@ -250,8 +334,78 @@
         var lat            = $("#lat").val();
         var lng            = $("#lng").val();
 
+        $("#sistemaABS").each(function(){
+            if ($(this).is(':checked')) {
+                sistemaABS = $(this).val();
+            }
+        });
 
-        $.post("<?php echo url_for('cars/getValidateCar') ?>", {"address": address, "commune": commune, "brand": brand, "model": model, "ano": ano, "door": door, "transmission": transmission, "benzine": benzine, "typeCar": typeCar, "patent": patent, "color": color, "lat": lat, "lng": lng}, function(r){
+        $("#aireAcondicionado").each(function(){
+            if ($(this).is(':checked')) {
+                aireAcondicionado = $(this).val();
+            }
+        });
+
+        $("#airBag").each(function(){
+            if ($(this).is(':checked')) {
+                airBag = $(this).val();
+            }
+        });
+
+        $("#controlCrucero").each(function(){
+            if ($(this).is(':checked')) {
+                controlCrucero = $(this).val();
+            }
+        });
+
+        $("#sensor").each(function(){
+            if ($(this).is(':checked')) {
+                sensor = $(this).val();
+            }
+        });
+
+        $("#vidriosElectricos").each(function(){
+            if ($(this).is(':checked')) {
+                vidriosElectricos = $(this).val();
+            }
+        });
+
+        var babyChair = false;
+        $("#babyChair").each(function(){
+            if ($(this).is(':checked')) {
+                babyChair = true;
+            }
+        });
+
+        var capacity1 = $("#capacity1 option:selected").val();
+        var capacity2 = $("#capacity2 option:selected").val();
+        var capacity = capacity1+"."+capacity2;
+
+        var parameters = {
+            "address": address,
+            "commune": commune,
+            "brand": brand,
+            "model": model,
+            "ano": ano,
+            "door": door,
+            "transmission": transmission,
+            "benzine": benzine,
+            "typeCar": typeCar,
+            "patent": patent,
+            "color": color,
+            "lat": lat,
+            "lng": lng,
+            "sistemaABS": sistemaABS,
+            "aireAcondicionado": aireAcondicionado,
+            "airBag": airBag, 
+            "controlCrucero": controlCrucero,   
+            "sensor": sensor,
+            "babyChair": babyChair,
+            "vidriosElectricos": vidriosElectricos,
+            "capacity":  capacity
+        };
+
+        $.post("<?php echo url_for('cars/getValidateCar') ?>", parameters, function(r){
 
             
             $(".alert").removeClass("alert-a-danger");
@@ -411,6 +565,7 @@
  
         })
     }
+
 
 
 
