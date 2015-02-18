@@ -79,9 +79,12 @@ abstract class BaseUserNotification extends sfDoctrineRecord
 
         parent::setUp();
         
-        $this->hasMany('Notifications as Notification', array(
+        $this->hasOne('Notification', array(
              'local' => 'notification_id',
-             'foreign' => 'id'));
+             'foreign' => 'id',
+             'onDelete' => 'no action',
+             'onUpdate' => 'no action'
+        ));
 
         $this->hasOne('User', array(
              'local' => 'user_id',
