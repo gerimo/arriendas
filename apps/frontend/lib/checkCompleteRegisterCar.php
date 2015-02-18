@@ -35,7 +35,6 @@ class CheckCompleteRegisterCar extends sfFilter
             $Car = Doctrine_Core::getTable('Car')->findOneByUserIdAndSeguroOkAndCapacity($userId, 4, 0);
 
             if ($Car) {
-                error_log("aca");
                 $this->getContext()->getController()->redirect('cars/edit?id=' . $Car->id);
                 throw new sfStopException;
             }

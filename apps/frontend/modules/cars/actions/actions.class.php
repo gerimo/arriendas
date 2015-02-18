@@ -606,7 +606,7 @@ class carsActions extends sfActions {
             }*/
             if (is_null($carId) || $carId == "") {
                 $Car = new Car();
-                $fechaHoy = Date("Y-m-d");
+                $fechaHoy = Date("Y-m-d H:i:s");
                 $Car->setFechaSubida($fechaHoy); 
                 $send = 1;
             }else{
@@ -639,9 +639,8 @@ class carsActions extends sfActions {
 
             $Car->save();
 
-            /////////////
 
-            if($send == 1){
+             if($send == 1){
                 // Correo de notificación de un nuevo vehículo a soporte de arriendas
                 $mail    = new Email();
                 $mailer  = $mail->getMailer();
@@ -675,6 +674,7 @@ class carsActions extends sfActions {
                 $mailer->send($message);
 
             }
+            
             if ($carId) {
                 if($changeDistance) {
                     CarProximityMetro::setCarProximityMetro($Car);
@@ -685,7 +685,7 @@ class carsActions extends sfActions {
 
             $this->getUser()->setAttribute("carId", $Car->getId());
 
-            $url = $this->generateUrl('car_price');
+            $url = $this->generateUrl('cars');
             $return["url_complete"] = $url;
 
         } catch (Exception $e) {

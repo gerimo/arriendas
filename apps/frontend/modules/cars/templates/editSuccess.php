@@ -513,8 +513,6 @@
         
         var capacity1 = $("#capacity1").val();
         var capacity2 = $("#capacity2").val();
-        console.log(capacity1);
-        console.log(capacity2);
         if (!capacity1 || !capacity2) {
             var attr = $("#capacity1").attr("class");
             $("#capacity1").attr("class", attr+"alert-info");
@@ -568,6 +566,7 @@
 
     function validateForm() {
 
+        var carId          = $("#carId").val();
         var address        = $("#address").val();
         var commune        = $("#commune option:selected").val();
         var brand          = $("#brand option:selected").val();
@@ -636,6 +635,7 @@
         var capacity = capacity1+"."+capacity2;
 
         var parameters = {
+            "carId" : carId,
             "address": address,
             "commune": commune,
             "brand": brand,
@@ -658,8 +658,6 @@
             "vidriosElectricos": vidriosElectricos,
             "capacity":  capacity
         };
-
-        console.log(parameters);
 
         $.post("<?php echo url_for('cars/getValidateCar') ?>", parameters, function(r){
 
@@ -731,7 +729,6 @@
         var patente  = $("#patent").val();
         var carId    = $("#carId").val();
         $("#patent").val(x.toUpperCase());
-        console.log(carId);
 
 
         $.post("<?php echo url_for('cars/getValidatePatent') ?>", {"patente": patente, "carId": carId}, function(r){
