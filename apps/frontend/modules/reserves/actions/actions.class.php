@@ -707,13 +707,10 @@ class reservesActions extends sfActions {
                     $carClass = Doctrine_Core::getTable('car')->findOneById($carId);
 
                     //datos para los mensajes
-                    $model = $carClass->getModel();
-                    $brand = $carClass->getModel()->getBrand();
+                    
 
                     $userId = $reserve->getUserId();
                     $user =  Doctrine_Core::getTable("User")->find($userId);
-                    $telephoneUser = $user->getTelephone();  
-                    error_log("El telefono del arrendatario es:".$telephoneUser);
                     
                     /*-------------------------------------*/
 
@@ -729,6 +726,11 @@ class reservesActions extends sfActions {
                     $this->tokenReserve   = $reserve->getToken();
                     $this->comunaOwner    = $comunaClass->getName();
                     $this->addressOwner   = $propietarioClass->getAddress();
+                    
+                    $this->telephoneUser  = $user->getTelephone(); 
+                    $this->model          = $carClass->getModel();
+                    $this->brand          = $carClass->getModel()->getBrand(); 
+
 
                     $this->durationFrom   = $reserve->getFechaInicio2();
                     $this->durationTo     = $reserve->getFechaTermino2();
@@ -758,10 +760,14 @@ class reservesActions extends sfActions {
             $model = $request->getPostParameter("model");
             $brand = $request->getPostParameter("brand");
             $telephoneUser = $request->getPostParameter("telephoneUser");
+            $comunaOwner  = $request->getPostParameter("comunaOwner");
+            $addressOwner  = $request->getPostParameter("addressOwner");
+
+            error_log("El telefono del arrendatario es:".$telephoneUser);
 
             $codigo = rand(1000,9999);
-            $message_data_cars = "Has reservado un ".$brand." ".$model.","." ubicado en ".$this->addressOwner.", ".$this->comunaOwner.".";
-            $message_open_cars = "Puedes abrir el auto haciendo click en el siguiente link: www.arriend.as.";
+            $message_data_cars = "Has reservado un ".$brand." ".$model.","." ubicado en ".$addressOwner.", ".$comunaOwner.".";
+            $message_open_cars = "Puedes abrir el auto haciendo click en el siguiente link: www.arriend.as";
             $message_diesel = "Puedes cargar bencina en tu COPEC más cercana con la tarjeta guardada en la guantera usando el código ".$codigo.".";
 
             if (!$model || !$brand || !$telephoneUser) {
@@ -771,9 +777,8 @@ class reservesActions extends sfActions {
             $SMS = new SMS("Arriendas.cl");
             
             $SMS->send($message_data_cars, $telephoneUser);
-            sleep(20);
             $SMS->send($message_open_cars, $telephoneUser);
-            sleep(120);
+            sleep(60);
             $SMS->send($message_diesel, $telephoneUser); 
         
         } catch (Exception $e) {
