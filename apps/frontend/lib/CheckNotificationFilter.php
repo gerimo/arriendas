@@ -4,19 +4,20 @@ class checkNotificationFilter extends sfFilter {
 
     public function execute($filterChain) {
 
-        $request = $this->getContext()->getRequest();
-        $user  = $this->getContext()->getUser();
-        $action = $this->context->getActionName();
+        $ContextUser = $this->getContext()->getUser();
 
-        if ($this->isFirstCall() && $user) {
+        if ($this->isFirstCall() && $ContextUser->isAuthenticated()) {
 
-            $userId  = sfContext::getInstance()->getUser()->getAttribute('userid');
-            $User    = Doctrine_core::getTable("user")->find($userId);
+            $userId = $ContextUser->getAttribute('userid');
+            $User   = Doctrine_core::getTable("User")->find($userId);
             $UserNotification = Doctrine_Core::getTable('UserNotification')->findOneByUserIdAndViewedAt($userId, null);
 
+            error_log($userId);
+            error_log(gettype($UserNotification));
+
             if ($UserNotification) {
-                $this->getContext()->getUser()->setAttribute("notificationMessage", $UserNotification->getNotification()->message);
-                $this->getContext()->getUser()->setAttribute("notificationId", $UserNotification->getNotification()->id);
+                $ContextUser->setAttribute("notificationMessage", $UserNotification->getNotification()->message);
+                $ContextUser->setAttribute("notificationId", $UserNotification->getNotification()->id);
                 if (is_null($UserNotification->getViewedAt())) {
                     $UserNotification->setViewedAt(date("Y-m-d H:i:s"));
                     $UserNotification->save();
@@ -24,7 +25,6 @@ class checkNotificationFilter extends sfFilter {
             }
         }
 
-        // Ejecutar el proximo filtro
         $filterChain->execute();
     }
 }
