@@ -132,16 +132,17 @@ var google_remarketing_only = false;
     var model        = "<?php echo $model?>"
     var brand        = "<?php echo $brand?>"
     var tfn          = "<?php echo $telephoneUser?>"
-    var addressOwner = "<?php echo $addressOwner ?>"
-    var comunaOwner = "<?php echo ucfirst(strtolower($comunaOwner)) ?>"
+    var addressCar = "<?php echo $addressCar ?>"
+    var comunaCar = "<?php echo ucfirst(strtolower($comunaCar)) ?>"
+    console.log(comunaCar+addressCar)
 
     parameters = {
       
       "model":model,
       "brand" :brand,
       "telephoneUser":tfn,
-      "addressOwner" : addressOwner,
-      "comunaOwner" : comunaOwner
+      "addressCar" : addressCar,
+      "comunaCar" : comunaCar
     }
     $.post("<?php echo url_for('message_send_mobile')?>",parameters, function(r){
         if (r.error) {

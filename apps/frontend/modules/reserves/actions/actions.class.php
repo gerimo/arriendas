@@ -706,6 +706,8 @@ class reservesActions extends sfActions {
                     $carId = $reserve->getCarId();
                     $carClass = Doctrine_Core::getTable('car')->findOneById($carId);
 
+
+
                     //datos para los mensajes
                     
 
@@ -729,7 +731,9 @@ class reservesActions extends sfActions {
                     
                     $this->telephoneUser  = $user->getTelephone(); 
                     $this->model          = $carClass->getModel();
-                    $this->brand          = $carClass->getModel()->getBrand(); 
+                    $this->brand          = $carClass->getModel()->getBrand();
+                    $this->addressCar     = $carClass->getAddress();
+                    $this->comunaCar      = $reserve->getCar()->getCommune()->name;
 
 
                     $this->durationFrom   = $reserve->getFechaInicio2();
@@ -760,13 +764,13 @@ class reservesActions extends sfActions {
             $model = $request->getPostParameter("model");
             $brand = $request->getPostParameter("brand");
             $telephoneUser = $request->getPostParameter("telephoneUser");
-            $comunaOwner  = $request->getPostParameter("comunaOwner");
-            $addressOwner  = $request->getPostParameter("addressOwner");
+            $comunaCar  = $request->getPostParameter("comunaCar");
+            $addressCar  = $request->getPostParameter("addressCar");
 
-            error_log("El telefono del arrendatario es:".$telephoneUser);
+            error_log("El telefono del arrendatario es:".$telephoneUser.$addressCar.",".$comunaCar);
 
             $codigo = rand(1000,9999);
-            $message_data_cars = "Has reservado un ".$brand." ".$model.","." ubicado en ".$addressOwner.", ".$comunaOwner.".";
+            $message_data_cars = "Has reservado un ".$brand." ".$model.","." ubicado en ".$addressCar.", ".$comunaCar.".";
             $message_open_cars = "Puedes abrir el auto haciendo click en el siguiente link: www.arriend.as";
             $message_diesel = "Puedes cargar bencina en tu COPEC más cercana con la tarjeta guardada en la guantera usando el código ".$codigo.".";
 
