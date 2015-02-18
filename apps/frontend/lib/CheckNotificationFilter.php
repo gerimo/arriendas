@@ -12,22 +12,19 @@ class checkNotificationFilter extends sfFilter {
 
             $userId  = sfContext::getInstance()->getUser()->getAttribute('userid');
             $User    = Doctrine_core::getTable("user")->find($userId);
-            $UserNotification = Doctrine_Core::getTable('UserNotification')->findOneByUserId($userId);
-
-            error_log(gettype($UserNotification));
+            $UserNotification = Doctrine_Core::getTable('UserNotification')->findOneByUserIdAndViewedAt($userId, null);
 
             if ($UserNotification) {
-                error_log(2);
-                $this->getContext()->getUser()->setAttribute("notificationMessage", $UserNotification->getNofication()->message);
-                $this->getContext()->getUser()->setAttribute("notificationId", $UserNotification->getNofication()->id);
-                $UserNotification->setViewedAt(date("Y-m-d H:i:s"));
-                $UserNotification->save();
-                throw new sfStopException;
+                $this->getContext()->getUser()->setAttribute("notificationMessage", $UserNotification->getNotification()->message);
+                $this->getContext()->getUser()->setAttribute("notificationId", $UserNotification->getNotification()->id);
+                if (is_null($UserNotification->getViewedAt())) {
+                    $UserNotification->setViewedAt(date("Y-m-d H:i:s"));
+                    $UserNotification->save();
+                }                
             }
         }
 
         // Ejecutar el proximo filtro
         $filterChain->execute();
     }
-
 }

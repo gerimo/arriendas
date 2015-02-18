@@ -7,5 +7,5 @@ $(document).on("click", ".notbar .remove", function(){
 
     $(this).parent().hide(1000);
 
-    /*$.post("<?php echo ?>");*/
+    $.post("/notification/close");
 });

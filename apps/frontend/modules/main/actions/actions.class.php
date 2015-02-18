@@ -131,7 +131,7 @@ class mainActions extends sfActions {
             }
         }
 
-        return sfView::SUCCESS;        
+        return sfView::SUCCESS;
     }
 
     public function executeDataForPayment(sfWebRequest $request){
@@ -167,9 +167,34 @@ class mainActions extends sfActions {
         return sfView::NONE;
     }
 
-     public function executeMessageRegister(sfWebRequest $request) {
+    public function executeMessageRegister(sfWebRequest $request) {
+
         $this->setLayout("newIndexLayout");
-        
+    }
+
+    public function executeNotificationClose(sfWebRequest $request) {
+
+        $userNotificationId = $this->getUser()->getAttribute("notificationId");
+
+        try {            
+
+            $UN = Doctrine_Core::getTable('UserNotification')->find($userNotificationId);
+            if (!$UN) {
+                throw new Exception("No se encontro la UserNotification ".$userNotificationId, 1);
+            }
+
+            $UN->setClosedAt(date("Y-m-d H:i:s"));
+
+            $this->getUser()->setAttribute("notificationMessage", null);
+            $this->getUser()->setAttribute("notificationId", null);
+
+            $UN->save();
+
+        } catch (Exception $e) {
+            error_log("[main/notificationClose] ERROR: ".$e->getMessage());
+        }
+
+        return sfView::NONE;
     }
 
     public function executeDoCompleteRegister(sfWebRequest $request) {

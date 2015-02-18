@@ -134,6 +134,10 @@ news:
     url: /arrienda-en-las-noticias
     param: { module: main , action: news }
 
+notification_close:
+    url: /notification/close
+    param: { module: main, action: notificationClose }
+
 opportunities:
     url: /oportunidades
     param: { module: opportunities, action: index }
