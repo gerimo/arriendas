@@ -100,8 +100,10 @@
 					}
 					}]
 				});*/
-				$('#userWhitoutPayTable').DataTable().rows().remove().draw();
+				
+				$('#userWhitoutCarTable').DataTable().rows().remove().draw();
 				$(".load").hide();
+				console.log(r.errorMessage);
 			} else {
 				
 				$('#userWhitoutCarTable').DataTable().rows().remove().draw();

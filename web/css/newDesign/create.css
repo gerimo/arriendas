@@ -35,7 +35,15 @@ body{
 	height: 400px;
 	background-color: #CCC;
 }
+
+#cilindrada .form-control {
+	width: 50%;
+}
  
+.radio+.radio, .checkbox.checkbox {
+ 	margin-top: 10px;
+}
+
 #mostrarMapa img { max-width: none; }
 
 h3{

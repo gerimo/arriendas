@@ -21,55 +21,9 @@
                         <h3 class="col-md-12">Fotos del auto</h3>
                         <div class="col-md-12">
                             <div class="col-md-4">
-                                <input name="foto1" type="file" id="foto1" class="file-loading foto" accept="image/*">
+                                <input name="photo" type="file" id="photo" class="file-loading photo" accept="image/*">
                             </div>
-                            <div class="col-md-4">
-                                <input name="foto1" type="file"  class="file-loading foto" accept="image/*">
-                            </div>
-                            <div class="col-md-4">
-                                <input name="foto1" type="file"  class="file-loading foto" accept="image/*">
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="col-md-4">
-                                <input name="foto1" type="file" id="foto1" class="file-loading foto" accept="image/*">
-                            </div>
-                            <div class="col-md-4">
-                                <input name="foto1" type="file"  class="file-loading foto" accept="image/*">
-                            </div>
-                            <div class="col-md-4">
-                                <input name="foto1" type="file"  class="file-loading foto" accept="image/*">
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="col-md-4">
-                                <input name="foto1" type="file" id="foto1" class="file-loading foto" accept="image/*">
-                            </div>
-                            <div class="col-md-4">
-                                <input name="foto1" type="file"  class="file-loading foto" accept="image/*">
-                            </div>
-                            <div class="col-md-4">
-                                <input name="foto1" type="file"  class="file-loading foto" accept="image/*">
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="col-md-4">
-                                <input name="foto1" type="file" id="foto1" class="file-loading foto" accept="image/*">
-                            </div>
-                            <div class="col-md-4">
-                                <input name="foto1" type="file"  class="file-loading foto" accept="image/*">
-                            </div>
-                            <div class="col-md-4">
-                                <input name="foto1" type="file"  class="file-loading foto" accept="image/*">
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="col-md-4">
-                                <input name="foto1" type="file" id="foto1" class="file-loading foto" accept="image/*">
-                            </div>
-                            <div class="col-md-4">
-                                <input name="foto1" type="file"  class="file-loading foto" accept="image/*">
-                            </div>
+                            <img id="imagePhoto"></img>
                         </div>
                     </div>
                     <div class="space-100"></div>
@@ -336,13 +290,14 @@
         $("#audio").hide();
         $("#formulario").hide();
 
-        $(".foto").fileinput({
+        $(".photo").fileinput({
             allowedFileExtensions: ["jpg", "gif", "png", "bmp","jpeg"],
             uploadUrl: '<?php echo url_for("upload_photo")?>',
             dropZoneEnabled: false,
             showRemove: false,  
             elErrorContainer: false,
             showPreview: false,
+            uploadExtraData:function() { return {carId: $("#carId").val()}; },
             /*showCaption: false,*/
         });
 
@@ -672,4 +627,9 @@
         }, 'json')
     });
 
+    $('.photo').on('filebatchuploadsuccess', function(event, data, previewId, index) {
+        console.log(data.response.urlPhoto);
+        $("#imagePhoto").attr("src","../images/test/"+data.response.urlPhoto)
+
+    });
 </script>

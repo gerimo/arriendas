@@ -41,6 +41,8 @@
  * @property Doctrine_Collection $CarProximityMetros
  * @property CarAudioAccesories $CarAudioAccesories
  * @property CarPhoto $CarPhoto
+ * @property boolean $baby_chair
+ * @property float   $capacity
  *  
  * @method integer             getId()                Returns the current record's "id" value
  * @method integer             getUserId()            Returns the current record's "User_id" value
@@ -80,6 +82,8 @@
  * @method timestamp           getDisabledUntil()  Returns the current record's "disable_until" value
  * @method CarPhoto            getCarPhoto()        Returns the current record's "CarPhoto" value
  * @method CarAudioAccessories getCarAudioAccessories()   Returns the current record's "CarAudioAccessories" value
+ * @method float               getCapacity()               Returns the current record's "capacity" value
+ * @method boolean             getBabyChair()              Returns the current record's "baby_chair" value
  *
  * @method Car                 setId()             Sets the current record's "id" value
  * @method Car                 setUserId()         Sets the current record's "User_id" value
@@ -119,6 +123,8 @@
  * @method Car                 setCarProximityMetros()   Sets the current record's "CarProximityMetros" collection
  * @method Car                 setCarPhoto()   sets the current record's "CarPhoto" value
  * @method Car                 setCarAudioAccessories()   sets the current record's "CarAudioAccessories" value
+ * @method Car                 setCapacity()            Sets the current record's "capacity" value
+ * @method Car                 setBabyChair()            Sets the current record's "baby_chair" value
  *
  * @package    CarSharing
  * @subpackage model
@@ -159,6 +165,11 @@ abstract class BaseCar extends sfDoctrineRecord
              'length' => 45,
              ));
         $this->hasColumn('lat', 'float', 10, array(
+             'type' => 'float',
+             'length' => 10,
+             'scale' => '6',
+             ));
+        $this->hasColumn('capacity', 'float', 10, array(
              'type' => 'float',
              'length' => 10,
              'scale' => '6',
@@ -468,6 +479,9 @@ abstract class BaseCar extends sfDoctrineRecord
             'notnull' => '0',
             'default' => 1,
             ));
+        $this->hasColumn('baby_chair', 'boolean', null, array(
+            'type' => 'boolean'
+            ));
         $this->hasColumn('ratio_aprobacion', 'float', null, array(
             'type' => 'float'
             ));
@@ -486,14 +500,6 @@ abstract class BaseCar extends sfDoctrineRecord
             'type' => 'integer',
             'notnull' => true,
             'length' => 4,
-        ));
-
-        $this->hasColumn('audio_accessories_id', 'integer', 11, array(
-            'notnull' => true
-        ));
-
-        $this->hasColumn('car_photo_id', 'integer', 11, array(
-            'notnull' => true
         ));
       
         // Indices
