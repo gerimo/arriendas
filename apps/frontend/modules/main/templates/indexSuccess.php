@@ -196,7 +196,7 @@
                     if(str > 0) {
                         windowMarker += "<img class='img-responsive' src='http://www.arriend.as" + urlFotoThumbTipo + "'/>";
                     } else {
-                        windowMarker += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "'/>";
+                        windowMarker += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriend.as" + urlFotoThumbTipo + "'/>";
                     }
                     <?php endif ?>
                     windowMarker += "</div>";
