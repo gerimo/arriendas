@@ -41,7 +41,6 @@ class CarProximityMetro extends BaseCarProximityMetro {
 
 	        	$CarProximityMetroId = $CarProximityMetroArray["id"];
 
-	        	error_log($CarProximityMetroId);
 	        	$CarProximityMetro = Doctrine_core::getTable("CarProximityMetro")->findOneById($CarProximityMetroId);
 
 		        $CarProximityMetro->setMetroId($metroId);

@@ -90,3 +90,6 @@ valueYourCar:
 
 PriceJson:
     is_secure: false
+
+GetModel:
+    is_secure: false
