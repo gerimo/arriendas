@@ -1,26 +1,23 @@
 <?php
 
-/* 
- * Filtro para validación de pantalla de pago exitoso
- */
+class checkNotificationFilter extends sfFilter {
 
-class CheckNotificationFilter extends sfFilter
-{
-    public function execute($filterChain)
-    {
+    public function execute($filterChain) {
+
         $request = $this->getContext()->getRequest();
         $user  = $this->getContext()->getUser();
         $action = $this->context->getActionName();
-            
-        // Ejecutar este filtro solo una vez, y si el action
-        // no es el de login
-        if ($this->isFirstCall() && $user) 
-        {
+
+        if ($this->isFirstCall() && $user) {
+
             $userId  = sfContext::getInstance()->getUser()->getAttribute('userid');
             $User    = Doctrine_core::getTable("user")->find($userId);
-            $UserNotification = Doctrine_Core::getTable('UserNotification')->findOneByUserIdAndViewedAt($userId, null);
+            $UserNotification = Doctrine_Core::getTable('UserNotification')->findOneByUserId($userId);
+
+            error_log(gettype($UserNotification));
 
             if ($UserNotification) {
+                error_log(2);
                 $this->getContext()->getUser()->setAttribute("notificationMessage", $UserNotification->getNofication()->message);
                 $this->getContext()->getUser()->setAttribute("notificationId", $UserNotification->getNofication()->id);
                 $UserNotification->setViewedAt(date("Y-m-d H:i:s"));

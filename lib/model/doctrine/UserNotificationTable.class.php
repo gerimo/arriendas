@@ -12,9 +12,8 @@ class UserNotificationTable extends Doctrine_Table {
             ->createQuery('UN')
             ->where('UN.user_id = ?', $userId)
             ->andWhere('UN.notification_id = ?', $notificationId)
-            ->orderBy('UN.created_at DESC')
-            ->limit(1);
+            ->orderBy('UN.created_at DESC');
 
-        return $q->execute();
+        return $q->fetchOne();
     }
 }

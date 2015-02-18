@@ -36,8 +36,6 @@ EOF;
             $host = 'http://www.arriendas.cl';
         }
 
-        $yesterday = strtotime("-1 day");
-
         $oNotifications = Doctrine_Core::getTable("Notification")->findAll();
 
         foreach ($oNotifications as $oN) {
@@ -48,16 +46,21 @@ EOF;
                 $oCars = Doctrine_Core::getTable("Car")->findNewCars();
 
                 if (count($oCars) == 0) {
-                    $this->log("[".date("Y-m-d H:i:s")."] [User/AutoSubido] No se encontraron autos nuevos con fecha ".date("Y-m-d H:i:s", $yesterday));
+                    $this->log("[".date("Y-m-d H:i:s")."] [User/AutoSubido] No se encontraron autos nuevos");
                     continue;
                 }
+
+                $this->log("[".date("Y-m-d H:i:s")."] [User/AutoSubido] ".count($oCars)." autos encontrados");
 
                 foreach ($oCars as $oCar) {
 
                     $oOwner = $oCar->getUser();
 
+                    $this->log("[".date("Y-m-d H:i:s")."] [User/AutoSubido] Revisando notificaciones para User ".$oOwner->id);
+
                     $oUN = Doctrine_Core::getTable("UserNotification")->findLastNotification($oOwner->getId(), $oN->getId());
                     if (!$oUN) {
+                        $this->log("[".date("Y-m-d H:i:s")."] [User/AutoSubido] Creando notificacion para User ".$oOwner->id);
                         $oUN = new UserNotification;
                         $oUN->setCreatedAt(date("Y-m-d H:i:s"));
                         $oUN->setNotification($oN);

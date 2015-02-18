@@ -11,7 +11,6 @@
  * @property timestamp $created_at
  * @property timestamp $viewed_at
  * @property timestamp $closed_at
- * 
  *
  * @method integer          getId()                         Returns the current record's "id" value
  * @method integer          getNotificationId()             Returns the current record's "notification_id" value
@@ -37,6 +36,7 @@ abstract class BaseUserNotification extends sfDoctrineRecord
     public function setTableDefinition()
     {
         $this->setTableName('UserNotification');
+        
         $this->hasColumn('id', 'integer', 4, array(
              'type' => 'integer',
              'primary' => true,

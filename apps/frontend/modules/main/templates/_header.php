@@ -78,12 +78,12 @@
         </div>
     </nav>
 
-    <div class="notbar">
-        <span class="remove glyphicon glyphicon-remove" aria-hidden="true"></span>
-        <div class="notbar-body">
-            <?php if (isset($sf_user->getAttribute('notificationMessage'))): ?>
+    <?php if (!is_null($sf_user->getAttribute('notificationMessage'))): ?>
+        <div class="notbar">
+            <span class="remove glyphicon glyphicon-remove" aria-hidden="true"></span>
+            <div class="notbar-body">
                 <?php echo $sf_user->getAttribute('notificationMessage') ?>
-            <?php endif ?>
+            </div>
         </div>
-    </div>
+    <?php endif ?>
 </header>
