@@ -81,9 +81,9 @@
     <div class="notbar">
         <span class="remove glyphicon glyphicon-remove" aria-hidden="true"></span>
         <div class="notbar-body">
-        ¡Hola Mundo!
+            <?php if (isset($sf_user->getAttribute('notificationMessage'))): ?>
+                <?php echo $sf_user->getAttribute('notificationMessage') ?>
+            <?php endif ?>
         </div>
     </div>
 </header>
-
-
