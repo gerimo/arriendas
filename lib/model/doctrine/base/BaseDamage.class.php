@@ -12,25 +12,32 @@
  * @property float $coordX
  * @property float $coordY
  * @property string $urlFoto
+ * @property timestamp $fecha
+ * @property boolean $is_deleted
  * 
- * @method integer getId()          Returns the current record's "id" value
- * @method string  getDescription() Returns the current record's "description" value
- * @method integer getCarId()       Returns the current record's "Car_id" value
- * @method Car     getCar()         Returns the current record's "Car" value
- * @method float   getCoordX()
- * @method float   getCoordY()
- * @method string  getUrlFoto()
- * @method float   getLat()
- * @method float   getLng()
- * @method Damage  setId()          Sets the current record's "id" value
- * @method Damage  setDescription() Sets the current record's "description" value
- * @method Damage  setCarId()       Sets the current record's "Car_id" value
- * @method Damage  setCar()         Sets the current record's "Car" value
- * @method float   setCoordX()
- * @method float   setCoordY()
- * @method float   setUrlFoto()
- * @method float   setLat()
- * @method float   setLng()
+ * @method integer      getId()          Returns the current record's "id" value
+ * @method string       getDescription() Returns the current record's "description" value
+ * @method integer      getCarId()       Returns the current record's "Car_id" value
+ * @method Car          getCar()         Returns the current record's "Car" value
+ * @method float        getCoordX()
+ * @method float        getCoordY()
+ * @method string       getUrlFoto()
+ * @method float        getLat()
+ * @method float        getLng()
+ * @method timestamp    getFecha()
+ * @method bolean       getIsDeleted()         Returns the current record's "is_deleted" value 
+ *
+ * @method Damage       setId()          Sets the current record's "id" value
+ * @method Damage       setDescription() Sets the current record's "description" value
+ * @method Damage       setCarId()       Sets the current record's "Car_id" value
+ * @method Damage       setCar()         Sets the current record's "Car" value
+ * @method float        setCoordX()
+ * @method float        setCoordY()
+ * @method float        setUrlFoto()
+ * @method float        setLat()
+ * @method float        setLng()
+ * @method timestamp    setFecha()
+ * @method UserManagement       setIsDeleted()         Sets the current record's "is_deleted" value
  * 
  * @package    CarSharing
  * @subpackage model
@@ -81,6 +88,12 @@ abstract class BaseDamage extends sfDoctrineRecord
              'notnull' => true,
              'length' => null,
              ));            
+        $this->hasColumn('fecha', 'timestamp', null, array(
+             'type' => 'timestamp',
+             ));
+        $this->hasColumn('is_deleted', 'boolean', null, array(
+            "default" => false
+        ));
         $this->index('fk_Damages_Car1', array(
              'fields' => 
              array(

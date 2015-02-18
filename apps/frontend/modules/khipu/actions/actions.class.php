@@ -315,12 +315,12 @@ class khipuActions extends sfActions {
 
                         error_log("[khipu/notifyPayment] [".date("Y-m-d H:i:s")."] ---------- HABEMUS PAGO --------");
 
-                        $OpportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findOneByReserve($Reserve);
+                        /*$OpportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findOneByReserve($Reserve);
                         if (!$OpportunityQueue) {
                             $OpportunityQueue = new OpportunityQueue();
                             $OpportunityQueue->setReserve($Reserve);
                             $OpportunityQueue->save();
-                        }
+                        }*/
                     }
                 }
             } else {
@@ -630,10 +630,11 @@ class khipuActions extends sfActions {
     }
 
     public function executeProcessPaymentCanceled(sfWebRequest $request) {
+
         $customer_in_session = $this->getUser()->getAttribute('userid');
 
         if ($customer_in_session) {
-            $this->redirect("profile/pedidos");
+            $this->redirect("reserves");
         } else {
             $this->redirect('@homepage');
         }

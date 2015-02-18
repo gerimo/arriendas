@@ -1,4 +1,4 @@
-    <?php
+<?php
 
 class CarTable extends Doctrine_Table {
 
@@ -7,8 +7,11 @@ class CarTable extends Doctrine_Table {
         $q = Doctrine_Core::getTable("Car")
             ->createQuery('C')
             ->innerJoin('C.Model M')
+            ->innerJoin('C.Commune Co')
+            ->innerJoin('Co.Region R')
             ->where('C.seguro_ok = 4')
-            ->andWhere('C.activo = 1');
+            ->andWhere('C.activo = 1')
+            ->andWhere('R.id = 13');
 
         if ($forWeek) {
             $q->andWhere("C.options & 1");
@@ -25,7 +28,7 @@ class CarTable extends Doctrine_Table {
         return $q->execute();
     }
 
-    public function findCars($offset, $limit, $from, $to, $withAvailability, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway) {
+    public function findCars($offset, $limit, $from, $to, $withAvailability, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $haveChair, $nearToSubway) {
 
         $CarsFound = array();
 
@@ -87,12 +90,18 @@ class CarTable extends Doctrine_Table {
 
             if ($isLowConsumption) {
                 /*error_log("isLowConsumption");*/
-                $q->andWhere("C.tipobencina = 'Diesel'");
+                $q->andWhere("C.capacity < 1.6");
+                $q->andWhere("C.capacity != 0");
             }
 
             if ($isMorePassengers) {
                 /*error_log("isMorePassengers");*/
                 $q->andWhere("M.id_otro_tipo_vehiculo = 3");
+            }
+
+            if ($haveChair) {
+                /*error_log("$haveChair");*/
+                $q->andWhere("C.baby_chair = true");
             }
 
             if ($nearToSubway) {
@@ -184,6 +193,20 @@ class CarTable extends Doctrine_Table {
             ->distinct()
             ->where('CA.is_deleted = 0')
             ->andWhere('CA.day >= ?', $day);
+
+        return $q->execute();
+    }
+
+    public function findNewCars($date = null) {
+
+        if (is_null($date)) {
+            $date = date("Y-m-d H:i:s", strtotime("-15 minute"));
+        }
+
+        $q = Doctrine_Core::getTable("Car")
+            ->createQuery('C')
+            ->where('C.fecha_subida >= ?', $date)
+            ->orderBy('C.fecha_subida ASC');
 
         return $q->execute();
     }

@@ -289,6 +289,13 @@
             }
         });
 
+        var haveChair = false;
+        $(".haveChair").each(function(){
+            if ($(this).is(':checked')) {
+                haveChair = true;
+            }
+        });
+
         var isMap = false;
         if ($("#tab-map").is(":visible")) {
             isMap = true;
@@ -310,7 +317,8 @@
             communeId: communeId,
             isAutomatic: isAutomatic,
             isLowConsumption: isLowConsumption,
-            isMorePassengers: isMorePassengers            
+            isMorePassengers: isMorePassengers,
+            haveChair: haveChair            
         };
 
         console.log(parameters);
@@ -558,8 +566,9 @@
         <div class="col-sm-6 col-md-6">
             <ul>
                 <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
-                <li><input type="checkbox" name="filter" class="isLowConsumption"> Petrolero</li>
+                <li><input type="checkbox" name="filter" class="isLowConsumption"> Bajo Consumo</li>
                 <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
+                <li><input type="checkbox" name="filrer" class="haveChair"> Silla Bebé</li>
             </ul>
         </div>
         <div class="col-sm-4 col-md-4 hidden-xs tabset">
@@ -844,6 +853,10 @@
 
         localizame();
         initialize();
+
+        $(".box").click(function(){
+            console.log("123");
+        });
 
         // Carousel
         $('#section-home-carousel').slick({

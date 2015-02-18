@@ -10,66 +10,87 @@ require_once sfConfig::get('sf_lib_dir') . '/vendor/fabpot/goutte.phar';
 class ScraperService {
 
     /**
-     * Check if the licence is blocked.
      * return: 
-     *      0 - error conexion.
-     *      1 - not blocked.
-     *      2 - blocked.
+     *      0 - connection lost.
+     *      1 - license OK.
+     *      2 - without license.
+     *      3 - blocked license.
      * @param type $rut
      * @return integer status.
      */
-    public function getLicenceStatus($rut, $lastname) {
-        $status = 1;
+    public function getLicenceStatus($rut) {
+        /*$status = 1;
         $portions = explode("-", $rut);
         $run = $portions[0];
         $rundv = $portions[1];
-        $client = new \Goutte\Client();
+        $client = new \Goutte\Client();*/
 
-        $this->_log("getLicenceStatus", "info", "se llamo al servicio");
-        $crawler = $client->request('POST', 'http://www.srcei.cl/bloqueo/mostrarLicencia.jsp', array('accion' => "C", 'RUN' => $rut, 'RUNNUM' => $run, 'RUNDV' => $rundv));
+        $status          = 0;
+        $run             = str_replace(array('.', ',', '-', ' '), '', $rut);
+        $rundv           = substr($rut, -1);
+        $runNum          = substr($rut, 0, -1);
+        $client          = new \Goutte\Client();
 
-        $nodeCount = count($crawler->filter('td.textodatos'));
-        $chequedNodeCount = 0;
+        $data = array();
+        $title = array();
+        $result = array();
 
-        /* conditions */
-        $lastname_match = false;
-        $blocked_date_found = false;
-        $problems_found = false;
+        $countData = 0;
+        $countTitle = 0;
 
-        foreach ($crawler->filter('td.textodatos') as $node) {
-            /* si encuentra al nombre esta bloqueada */
-            if (preg_match("/" . $lastname . "/i", $node->nodeValue)) {
-                $this->_log("getLicenceStatus", "info", "encontro el nombre");
-                $lastname_match = true;
+        try {
+            $crawler = $client->request('POST', 'http://www.srcei.cl/bloqueo/mostrarLicencia.jsp', array('accion' => "C", 'RUN' => $run, 'RUNNUM' => $runNum, 'RUNDV' => $rundv));
+
+            $nodeCount = count($crawler->filter('td.textodatos'));
+
+            // se recorren las columna de la tabla en donde se encuantran los datos y se llenan en el arreglo $datas[].
+            foreach ($crawler->filter('td.textodatos') as $node) {
+
+                $todaytopicshort=str_replace('&nbsp;','',$node->nodeValue);
+                $data[$countData] = trim($todaytopicshort);
+
+                $countData++;
             }
 
-            /* problemas para procesar */
-            if (preg_match("/Problemas para procesar requerimiento/i", $node->nodeValue)) {
-                $this->_log("getLicenceStatus", "info", "encontro problemas");
-                $problems_found = true;
+            // se recorren las columna de la tabla en donde se encuantran los titulos y se llenan en el arreglo $title[].
+            foreach ($crawler->filter('td.textocuerpo') as $node) {
+
+                if ($countTitle == 0) {
+
+                    $countTitle++;
+                    continue;
+
+                }
+                $title[$countTitle-1] = trim($node->nodeValue);   
+                $countTitle++;
+
             }
-            $chequedNodeCount++;
-        }
+            // Si el crowler llena 3 elemntos en los arrays, la estructura es la siguiente:
+           /*
+            $title[0] : $data[0] => RUN : [datos]
+            $title[1] : $data[1] => NOMBRE : [datos]
+            $title[2] : $data[2] => ESTADO BLOQUEO : [datos]
+            $title[3] : $data[3] =>  :
+            $title[4] : $data[4] =>  : 
+            */
 
-        foreach ($crawler->filter('td.textocuerpo') as $node) {
-            /* bloqueado */
-            if (preg_match("/Fecha Bloqueo/i", $node->nodeValue)) {
-                $this->_log("getLicenceStatus", "info", "encontro fecha de bloqueo");
-                $blocked_date_found = true;
-            }
-        }
+            // Si el crowler llena 5 elemntos en los arrays, la estructura es la siguiente:
+           /*
+            $title[0] : $data[0] => RUN : [datos]
+            $title[1] : $data[1] => NOMBRE : [datos]
+            $title[2] : $data[2] => FECHA BLOQUEO : [datos]
+            $title[3] : $data[3] => TIPO BLOQUEO : [datos]
+            $title[4] : $data[4] => MOTIVO BLOQUEO : [datos]
+            */
+            
+            $result[0] = $title;
+            $result[1] = $data;
+            return $result;
 
-        if ($blocked_date_found) {
-            $status = 2;
+        } catch(Exception $e) {
+            error_log("[".date("Y-m-d H:i:s")."] [ScraperService/getLicenceStatus] ".$e->getMessage());
+            return 0;
         }
-        if (!$lastname_match && $chequedNodeCount >= $nodeCount) {
-            $status = 3;
-        }
-        if ($problems_found) {
-            $status = 0;
-        }
-
-        return $status;
     }
 
     /**

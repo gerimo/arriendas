@@ -29,6 +29,7 @@
         <link href="/css/newDesign/colorbox/colorbox.css" rel="stylesheet" type="text/css">
         <!-- <link href="/css/newDesign/datatablesp/jquery.dataTables_themeroller.css" rel="stylesheet" type="text/css"> -->
         <link href="/css/newDesign/datatables/dataTables.responsive.css" rel="stylesheet" type="text/css">
+        <link href="/css/newDesign/fileinput/fileinput.min.css" rel="stylesheet" type="text/css">
 
         <!-- Estilos para todo el proyecto -->
         <link href="/css/newDesign/backend.css" rel="stylesheet" type="text/css">
@@ -63,6 +64,7 @@
         <script src="/js/newDesign/formToWizard/formToWizard.js" type="text/javascript"></script>
         <script src="/js/newDesign/colorbox/jquery.colorbox-min.js" type="text/javascript"></script>
         <script src="/js/newDesign/colorbox/jquery.colorbox.js" type="text/javascript"></script>
+        <script src="/js/newDesign/fileinput/fileinput.min.js" type="text/javascript"></script>
 
         <?php include_component('main', 'header') ?>
 

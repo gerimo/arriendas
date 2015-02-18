@@ -108,7 +108,6 @@
 			"carId" : carId
 		};
 
-		console.log(parameters);
 
 		$.post("<?php echo url_for_frontend('opportunities_approve') ?>", parameters, function(r){
 			if (r.error) {
