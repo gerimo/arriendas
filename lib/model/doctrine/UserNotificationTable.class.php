@@ -1,3 +1,20 @@
 <?php
 
-class UserNotificationTable extends Doctrine_Table {}
+class UserNotificationTable extends Doctrine_Table {
+
+    public function findLastNotification($userId = null, $notificationId = null) {
+
+        if (is_null($userId) || is_null($notificationId)) {
+            return null;
+        }
+
+        $q = Doctrine_Core::getTable("UserNotification")
+            ->createQuery('UN')
+            ->where('UN.user_id = ?', $userId)
+            ->andWhere('UN.notification_id = ?', $notificationId)
+            ->orderBy('UN.created_at DESC')
+            ->limit(1);
+
+        return $q->execute();
+    }
+}
