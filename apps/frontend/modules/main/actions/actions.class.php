@@ -8,12 +8,12 @@ class mainActions extends sfActions {
 
         try {
             
-            $Reserve = Doctrine_Core::getTable('Reserve')->find(42545);
+            $Reserve = Doctrine_Core::getTable('Reserve')->find(42454);
             if (!$Reserve) {
                 throw new Exception("No se encontro la Reserve", 1);                
             }
 
-            $OpportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findOneByReserve($Reserve);
+            $OpportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findOneByReserveId($Reserve->id);
             if (!$OpportunityQueue) {
                 $OpportunityQueue = new OpportunityQueue();
                 $OpportunityQueue->setReserve($Reserve);
