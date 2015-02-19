@@ -986,7 +986,7 @@ try {
 } catch (Exception $e) {
     
         echo "<pre>".var_dump($query)."</pre>";
-        echo "<pre>".var_dump($params)."</pre>";
+        //echo "<pre>".var_dump($params)."</pre>";
 
         echo $e;
         throw $e;
