@@ -162,20 +162,28 @@ questions:
     url: /preguntas-frecuentes
     param: { module: main , action: questions }
 
+rent_a_car_a:
+    url: /rent-a-car
+    param: { module: main, action: searchACars }
+
 rent_a_car:
-    url: /arriendo-de-autos
+    url: /rent-a-car/arriendo-de-autos
     param: { module: main, action: searchACars }
 
 rent_a_car_region:
-    url: /arriendo-de-autos/:region
+    url: /rent-a-car/arriendo-de-autos/:region
     param: { module: main, action: searchACars }
 
 rent_a_car_region_commune:
-    url: /arriendo-de-autos/:region/:commune
+    url: /rent-a-car/arriendo-de-autos/:region/:commune
+    param: {module: main, action: searchACars }
+
+rent_a_car_santiago:
+    url: /rent-a-car/arriendo-de-autos-santiago
     param: {module: main, action: searchACars }
 
 reserve:
-    url: /reserva/auto/:carId
+    url: /rent-a-car/arriendo-de-autos-santiago/:carId
     param: { module: main, action: reserve }
 
 reserve_approve:
