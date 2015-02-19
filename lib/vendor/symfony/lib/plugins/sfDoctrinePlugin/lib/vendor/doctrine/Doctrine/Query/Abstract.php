@@ -975,15 +975,21 @@ abstract class Doctrine_Query_Abstract
                 $this->_conn->getAttribute(Doctrine_Core::ATTR_DRIVER_NAME) !== 'mysql') {
             $params = array_merge((array) $params, (array) $params);
         }
-/*
-        echo "<pre>".var_dump($query)."</pre>";
-        echo "<pre>".var_dump($params)."</pre>";
-        */
+
         if ($this->_type !== self::SELECT) {
             return $this->_conn->exec($query, $params);
         }
 
+try {
+    
         $stmt = $this->_conn->execute($query, $params);
+} catch (Exception $e) {
+    
+        echo "<pre>".var_dump($query)."</pre>";
+        echo "<pre>".var_dump($params)."</pre>";
+        throw $e;
+        
+}
 
         $this->_params['exec'] = array();
 
