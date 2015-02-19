@@ -189,7 +189,12 @@ class opportunitiesActions extends sfActions {
         }
         
         $O->setUniqueToken(true);
-        $O->save();
+        try {
+         
+        $O->save();   
+        } catch (Exception $e) {
+            echo $e;
+        }
 
         $OT = $OriginalReserve->getTransaction()->copy(true);
         $OT->setCar($Car->getModel()->getBrand()->getName() ." ". $Car->getModel()->getName());
