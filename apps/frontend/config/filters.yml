@@ -5,21 +5,21 @@ rendering: ~
 security:  ~
 
 # insert your own filters here
-paymentSuccessFilter:
-    class: checkPaymentSuccessFilter
+# paymentSuccessFilter:
+#     class: checkPaymentSuccessFilter
 
-completeRegisterFilter:
-    class:  checkCompleteRegisterFilter
+# completeRegisterFilter:
+#     class:  checkCompleteRegisterFilter
 
-optionsCarFilter:
-    class: checkOptionsCarFilter
-    enabled: false
+# optionsCarFilter:
+#     class: checkOptionsCarFilter
+#     enabled: false
 
-completeRegisterCar:
-    class: checkCompleteRegisterCar
+# completeRegisterCar:
+#     class: checkCompleteRegisterCar
 
-notificationFilter:
-    class: checkNotificationFilter
+# notificationFilter:
+#     class: checkNotificationFilter
 
 cache:     ~
 execution: ~
