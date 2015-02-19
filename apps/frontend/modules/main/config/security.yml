@@ -85,6 +85,9 @@ terminos:
 testSMS:
     is_secure: false
 
+testFuckingError:
+    is_secure: false
+
 valueYourCar:
     is_secure: false
 
