@@ -169,7 +169,8 @@ class opportunitiesActions extends sfActions {
             return "Este Car ".$Car->id." ya posee una reserva en las fechas de la oportundiad";
         }
 
-        $O = $OriginalReserve->copy(true);        
+        $O = $OriginalReserve->copy(true);
+        $O->setUser($OriginalReserve->getUser());
         $O->setCar($Car);
         $O->setFechaReserva(date("Y-m-d H:i:s"));
         $O->setFechaConfirmacion(date("Y-m-d H:i:s"));
@@ -184,7 +185,7 @@ class opportunitiesActions extends sfActions {
             $O->setComentario('Reserva oportunidad');
         }
         
-        $O->setUniqueToken(true);        
+        $O->setUniqueToken(true);
 
         $OT = $O->getTransaction();
         $OT->setCar($Car->getModel()->getBrand()->getName() ." ". $Car->getModel()->getName());
