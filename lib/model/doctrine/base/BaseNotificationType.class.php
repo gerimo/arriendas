@@ -58,11 +58,9 @@ abstract class BaseNotificationType extends sfDoctrineRecord
 
         parent::setUp();
         
-        $this->hasOne('Notification', array(
+        $this->hasMany('Notifications as Notification', array(
              'local' => 'id',
-             'foreign' => 'notification_id',
-             'onDelete' => 'no action',
-             'onUpdate' => 'no action'
+             'foreign' => 'notification_id'
         ));
     }
 }

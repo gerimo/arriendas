@@ -200,7 +200,7 @@ class CarTable extends Doctrine_Table {
     public function findNewCars($date = null) {
 
         if (is_null($date)) {
-            $date = strtotime("-15 minute");
+            $date = date("Y-m-d H:i:s", strtotime("-15 minute"));
         }
 
         $q = Doctrine_Core::getTable("Car")
