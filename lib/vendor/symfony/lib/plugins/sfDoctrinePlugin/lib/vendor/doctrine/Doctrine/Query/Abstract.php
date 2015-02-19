@@ -984,6 +984,7 @@ abstract class Doctrine_Query_Abstract
 
         $this->_params['exec'] = array();
 
+        echo "<pre>"; debug_print_backtrace(); echo "</pre>";
         echo "<pre>".var_dump($query)."</pre>";
         echo "<pre>".var_dump($params)."</pre>";
 
