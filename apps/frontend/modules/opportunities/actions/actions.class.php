@@ -184,17 +184,14 @@ class opportunitiesActions extends sfActions {
             $O->setComentario('Reserva oportunidad');
         }
         
-        $O->setUniqueToken(true);         
-        
+        $O->setUniqueToken(true);        
 
         $OT = $O->getTransaction();
         $OT->setCar($Car->getModel()->getBrand()->getName() ." ". $Car->getModel()->getName());
-        $OT->setReserve($O);
         $OT->setDate(date("Y-m-d H:i:s"));
         $OT->setCompleted(false);
         $OT->setImpulsive(true);
         $OT->setTransaccionOriginal($OriginalReserve->getTransaction()->getId());
-        /*$OT->save();*/
 
         $O->save();
 
