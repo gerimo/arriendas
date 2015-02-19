@@ -11,8 +11,8 @@ class Transaction extends BaseTransaction {
         return $fechaFormato;
     }
     
-    public function save(Doctrine_Connection $conn = null)  {
-var_dump($this->getReserveId());die;
+   /* public function save(Doctrine_Connection $conn = null)  {
+/*var_dump($this->getReserveId());die;
         $reserve = Doctrine_Core::getTable('reserve')->findOneById($this->getReserveId());  
         $car = Doctrine_Core::getTable('car')->findOneById($reserve->getCarId());   
         $user = Doctrine_Core::getTable('user')->findOneById($car->getUserId());    
@@ -72,5 +72,5 @@ var_dump($this->getReserveId());die;
         }     
       
         return parent::save($conn);
-    }
+    }*/
 }
