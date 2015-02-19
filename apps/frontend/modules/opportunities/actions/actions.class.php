@@ -185,16 +185,18 @@ class opportunitiesActions extends sfActions {
         }
         
         $O->setUniqueToken(true);         
-        $O->save();
+        
 
-        $OT = $OriginalReserve->getTransaction()->copy(true);
+        $OT = $O->getTransaction();
         $OT->setCar($Car->getModel()->getBrand()->getName() ." ". $Car->getModel()->getName());
         $OT->setReserve($O);
         $OT->setDate(date("Y-m-d H:i:s"));
         $OT->setCompleted(false);
         $OT->setImpulsive(true);
         $OT->setTransaccionOriginal($OriginalReserve->getTransaction()->getId());
-        $OT->save();
+        /*$OT->save();*/
+
+        $O->save();
 
         return null;
     }
