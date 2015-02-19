@@ -76,7 +76,7 @@ EOF;
 
                     // ESTO ES PARA NO ENVIAR DENUEVO AL MISMO AUTO QUE YA ENTREGO DISPONIBILIDAD
                     $notSend = array();
-                    $oCarsWithAvailability = Doctrine_Core::getTable("Car")->findCarsWithAvailability("2015-02-09");
+                    $oCarsWithAvailability = Doctrine_Core::getTable("Car")->findCarsWithAvailability("2015-02-16");
                     foreach ($oCarsWithAvailability as $oCWA) {
                         $notSend[] = $oCWA->id;
                     }
@@ -85,80 +85,78 @@ EOF;
                         continue;
                     } // FIN
 
-                    if ($oCar->price_per_day < 35000) {
-                        $oOwner = $oCar->getUser();
+                    $oOwner = $oCar->getUser();
 
-                        $oUserMailingConfig = Doctrine_Core::getTable('UserMailingConfig')->findOneByUserIdAndMailingIdAndIsSubscribed($oOwner->id, $oMailing->id, false);
-                        if ($oUserMailingConfig) {
-                            $this->log("[".date("Y-m-d H:i:s")."] User ".$oOwner->id." ya no esta suscrito. Omitiendo...");
-                            $unsubscribeUser++;
-                        } else {
-                            if (!$oCar->hasReserve($from, $to)) {
+                    $oUserMailingConfig = Doctrine_Core::getTable('UserMailingConfig')->findOneByUserIdAndMailingIdAndIsSubscribed($oOwner->id, $oMailing->id, false);
+                    if ($oUserMailingConfig) {
+                        $this->log("[".date("Y-m-d H:i:s")."] User ".$oOwner->id." ya no esta suscrito. Omitiendo...");
+                        $unsubscribeUser++;
+                    } else {
+                        if (!$oCar->hasReserve($from, $to)) {
 
-                                $CarAvailabilityEmail = new CarAvailabilityEmail();
+                            $CarAvailabilityEmail = new CarAvailabilityEmail();
 
-                                $CarAvailabilityEmail->setCar($oCar);
-                                $CarAvailabilityEmail->setSentAt(date("Y-m-d H:i:s"));
-                                $CarAvailabilityEmail->save();
+                            $CarAvailabilityEmail->setCar($oCar);
+                            $CarAvailabilityEmail->setSentAt(date("Y-m-d H:i:s"));
+                            $CarAvailabilityEmail->save();
 
-                                $imageUrl = $host . $routing->generate('car_availability_email_open', array("id" => $CarAvailabilityEmail->id));
+                            $imageUrl = $host . $routing->generate('car_availability_email_open', array("id" => $CarAvailabilityEmail->id));
 
-                                $urlAllAva  = $host . $routing->generate('car_availability_email', array(
-                                    'id' => $CarAvailabilityEmail->getId(),
-                                    'o' => 2,
-                                    'signature' => $CarAvailabilityEmail->getSignature()
-                                ));
+                            $urlAllAva  = $host . $routing->generate('car_availability_email', array(
+                                'id' => $CarAvailabilityEmail->getId(),
+                                'o' => 2,
+                                'signature' => $CarAvailabilityEmail->getSignature()
+                            ));
 
-                                $urlOneAva  = $host . $routing->generate('car_availability_email', array(
-                                    'id' => $CarAvailabilityEmail->getId(),
-                                    'o' => 1,
-                                    'signature' => $CarAvailabilityEmail->getSignature()
-                                ));
+                            $urlOneAva  = $host . $routing->generate('car_availability_email', array(
+                                'id' => $CarAvailabilityEmail->getId(),
+                                'o' => 1,
+                                'signature' => $CarAvailabilityEmail->getSignature()
+                            ));
 
-                                $urlCusAva  = $host . $routing->generate('car_availability_email', array(
-                                    'id' => $CarAvailabilityEmail->getId(),
-                                    'o' => 0,
-                                    'signature' => $CarAvailabilityEmail->getSignature()
-                                ));
+                            $urlCusAva  = $host . $routing->generate('car_availability_email', array(
+                                'id' => $CarAvailabilityEmail->getId(),
+                                'o' => 0,
+                                'signature' => $CarAvailabilityEmail->getSignature()
+                            ));
 
-                                $this->log("[".date("Y-m-d H:i:s")."] Enviando consulta a ".$oCar->getUser()->firstname." ".$oCar->getUser()->lastname." Car ".$oCar->getId());                        
+                            $this->log("[".date("Y-m-d H:i:s")."] Enviando consulta a ".$oCar->getUser()->firstname." ".$oCar->getUser()->lastname." Car ".$oCar->getId());                        
 
-                                $subject = "¿Tienes disponibilidad para recibir clientes esta semana? [E".$CarAvailabilityEmail->getId()."]";
-                                $body    = get_partial('emails/carAskAvailabilityMailingWeek', array(
-                                    'Car' => $oCar,
-                                    'days' => $days,
-                                    'imageUrl' => $imageUrl,
-                                    'urlAllAva' => $urlAllAva,
-                                    'urlOneAva' => $urlOneAva,
-                                    'urlCusAva' => $urlCusAva,
-                                    'urlMisAutos' => $host . $routing->generate('cars')
-                                ));
-                                $from  = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
-                                $to    = array($oCar->getUser()->email => $oCar->getUser()->firstname." ".$oCar->getUser()->lastname);
+                            $subject = "¿Tienes disponibilidad para recibir clientes esta semana? [E".$CarAvailabilityEmail->getId()."]";
+                            $body    = get_partial('emails/carAskAvailabilityMailingWeek', array(
+                                'Car' => $oCar,
+                                'days' => $days,
+                                'imageUrl' => $imageUrl,
+                                'urlAllAva' => $urlAllAva,
+                                'urlOneAva' => $urlOneAva,
+                                'urlCusAva' => $urlCusAva,
+                                'urlMisAutos' => $host . $routing->generate('cars')
+                            ));
+                            $from  = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+                            $to    = array($oCar->getUser()->email => $oCar->getUser()->firstname." ".$oCar->getUser()->lastname);
 
-                                $message = $this->getMailer()->compose();
-                                $message->setSubject($subject);
-                                $message->setBody($body, 'text/html');
-                                $message->setFrom($from);
+                            $message = $this->getMailer()->compose();
+                            $message->setSubject($subject);
+                            $message->setBody($body, 'text/html');
+                            $message->setFrom($from);
 
-                                if ($options['env'] == "prod") {
-                                    $message->setTo($to);
-                                }
-
-                                if ($sentEmails == 0) {
-                                    $message->setBcc(array(
-                                        "cristobal@arriendas.cl" => "Cristóbal Medina Moenne",
-                                        /*"franco.inostrozah@gmail.com" => "Franco Inostroza Hinojoza"*/
-                                        /*"francofre@arriendas.cl" => "Francisca Cofré Ulloa"*/
-                                    ));
-                                }
-                                
-                                $this->getMailer()->send($message);
-
-                                $sentEmails++;
-                            } else {
-                                $this->log("[".date("Y-m-d H:i:s")."] Car ".$oCar->getId()." ya posee una reserva para el fin de semana");
+                            if ($options['env'] == "prod") {
+                                $message->setTo($to);
                             }
+
+                            if ($sentEmails == 0) {
+                                $message->setBcc(array(
+                                    "cristobal@arriendas.cl" => "Cristóbal Medina Moenne",
+                                    /*"franco.inostrozah@gmail.com" => "Franco Inostroza Hinojoza"*/
+                                    /*"francofre@arriendas.cl" => "Francisca Cofré Ulloa"*/
+                                ));
+                            }
+                            
+                            $this->getMailer()->send($message);
+
+                            $sentEmails++;
+                        } else {
+                            $this->log("[".date("Y-m-d H:i:s")."] Car ".$oCar->getId()." ya posee una reserva para el fin de semana");
                         }
                     }
                 }
