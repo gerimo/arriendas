@@ -1,14 +1,6 @@
 # You can find more information about this file on the symfony website:
 # http://www.symfony-project.org/reference/1_4/en/10-Routing
 
-test_fucking_error:
-    url: /test/ferror
-    param: { module: main, action: testFuckingError }
-
-test_sms:
-    url: /test/sms/:message/:phoneNumber
-    param: { module: main, action: testSMS }
-
 # test_khipu:
 #     url: /test/khipu
 #     param: { module: main, action: testKhipu }

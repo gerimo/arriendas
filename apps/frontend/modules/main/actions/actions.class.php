@@ -4,46 +4,12 @@ require_once sfConfig::get('sf_lib_dir') . '/vendor/mobile-detect/Mobile_Detect.
 
 class mainActions extends sfActions {
 
-    public function executeTestFuckingError(sfWebRequest $request) {
-
-        try {
-            
-            $Reserve = Doctrine_Core::getTable('Reserve')->find(42454);
-            if (!$Reserve) {
-                throw new Exception("No se encontro la Reserve", 1);                
-            }
-
-            $OpportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findOneByReserveId($Reserve->id);
-            if (!$OpportunityQueue) {
-                $OpportunityQueue = new OpportunityQueue();
-                $OpportunityQueue->setReserve($Reserve);
-                $OpportunityQueue->save();
-            }
-        } catch (Exception $e) {
-            error_log("[main/testFuckingError] ".$e->getMessage());
-        }
-
-        return sfView::NONE;
-    }
-
-    public function executeTestSMS (sfWebRequest $request) {
+    /*public function executeTestKhipu (sfWebRequest $request) {
         $this->setLayout(false);
 
-        $message     = $request->getParameter("message");
-        $phoneNumber = $request->getParameter("phoneNumber");
-
-        $SMS = new SMS();
-        $SMS->send($message, $phoneNumber);
-
-        return sfView::NONE;
-    }
-
-    public function executeTestKhipu (sfWebRequest $request) {
-        $this->setLayout(false);
-
-        /*$this->reserveId = 41023;*/
+        $this->reserveId = 41023;
         $this->transactionId = 21097;
-    }
+    }*/
 
     public function executeIndex (sfWebRequest $request) {
 
