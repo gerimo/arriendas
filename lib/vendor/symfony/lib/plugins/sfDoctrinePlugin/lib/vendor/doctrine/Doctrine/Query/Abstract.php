@@ -976,6 +976,9 @@ abstract class Doctrine_Query_Abstract
             $params = array_merge((array) $params, (array) $params);
         }
 
+        echo "<pre>".var_dump($query)."</pre>";
+        echo "<pre>".var_dump($params)."</pre>";
+        
         if ($this->_type !== self::SELECT) {
             return $this->_conn->exec($query, $params);
         }
@@ -983,9 +986,6 @@ abstract class Doctrine_Query_Abstract
         $stmt = $this->_conn->execute($query, $params);
 
         $this->_params['exec'] = array();
-        
-        echo "<pre>".var_dump($query)."</pre>";
-        echo "<pre>".var_dump($params)."</pre>";
 
         return $stmt;
     }
