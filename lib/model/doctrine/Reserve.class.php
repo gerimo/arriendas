@@ -456,7 +456,7 @@ class Reserve extends BaseReserve {
 
         $this->setUniqueToken();
 
-        var_dump($this);
+        //var_dump($this);
 
         return parent::save($conn);
     }
