@@ -133,6 +133,7 @@
                                     <?php endforeach ?>
 
                                     <?php foreach ($CarsWithAvailability[$Reserve->getId()] as $i => $C): ?>
+                                        <?php echo "t: ".gettype($C) ?>
                                         <div class="row">
                                             <div class="col-md-8">
                                                 <div class="col-md-3 text-center">
