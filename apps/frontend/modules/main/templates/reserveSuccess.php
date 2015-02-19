@@ -39,7 +39,7 @@
                         <?php if (strpos($arrayFotos[$i], "cars")): ?>
                             <?php echo image_tag($arrayFotos[$i]) ?>
                         <?php else: ?>
-                            <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/c_fill,g_center/http://www.arriendas.cl/uploads/verificaciones/<?= $arrayFotos[$i]?>" >
+                            <img alt='rent a car "<?php echo $Car->getModel()->getBrand()->name." ".$Car->getModel()->name?>"' src="http://res.cloudinary.com/arriendas-cl/image/fetch/c_fill,g_center/http://www.arriendas.cl/uploads/verificaciones/<?= $arrayFotos[$i]?>" >
                         <?php endif ?>
                         </div>
                     <?php endfor ?>
