@@ -22,7 +22,9 @@
             <input class="form-control" id="rut" name="rut" type="text" placeholder="RUT">
             <input class="form-control" name="telephone" id="telephone" placeholder="Teléfono"  type="text">
             <input class="datetimepicker form-control" id="birth" name="birth" placeholder="Fecha de nacimiento" >
-            <span class="note">La fecha debe coincidir con la fecha de nacimiento de tu licencia.</span>
+            <div class="row">
+                <i class="fa fa-exclamation-triangle"></i><span class="note"> Debes tener minimo 24 años para utilizar arriendas.cl .</span>
+            </div>
             <input class="form-control" id="address" name="address" placeholder="Dirección #111" >
             
             <select class="form-control" id="region" name="region">
@@ -79,6 +81,11 @@
             <p class="alert pull-right"></p>
             <div class="hidden-xs space-100"></div>
         </div>
+    </div>
+</div>
+<div style="display:none">
+    <div id="dialog-alert" class="text-center" title="">
+        <p></p>
     </div>
 </div>
 
@@ -178,21 +185,25 @@
             $(".alert").removeClass("alert-a-success");
 
             if (r.error) {
-                $(".alert").addClass("alert-a-danger");
-                $(".alert").html(r.errorMessage);
+                $("#dialog-alert").html(r.errorMessage).addClass("text-center");
+                $("#dialog-alert").dialog({
+                    closeOnText: true,
+                    modal: true,
+                    resizable: true,
+                    title: "Completar registro",
+                    buttons: [
+                        {
+                            text: "Aceptar",
+                            click: function() {     
+                                $( this ).dialog( "close" );               
+                            }
+                        }
+                    ]
+                });
             } else {
 
                 location.href="<?php echo url_for('message_register_success') ?>"
-                /*if(referer != "http://local.arriendas.cl/") {
-                    console.error(referer);
-                    window.location.href = referer;
-                } else {
-
-                    $("#message p:first-child").html(r.message);
-                    $("#message").removeAttr("style");
-                    $("#frm").css("display", "none");
-                    window.scrollTo(0, 0);
-                }*/
+                
             }
 
         }, 'json');
