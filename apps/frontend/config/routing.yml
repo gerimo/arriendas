@@ -234,6 +234,10 @@ terms_and_conditions:
     url: /terminos-y-condiciones
     param: { module: main, action: terminos }
 
+site_map:
+    url: /mapa-del-sitio
+    param: { module:main, action: siteMap}
+
 transactions:
     url: /mis-transacciones
     param: { module: profile, action: transactions }

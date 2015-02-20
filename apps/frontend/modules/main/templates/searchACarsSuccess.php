@@ -262,7 +262,7 @@
             <h1>¡Arrienda un Auto!</h1>
 
             <!--Solo debe aparecer la Lista-->
-            <div class="lista grey">
+            <div class="listagrey">
                 <div class="row ">
                     <div class="col-xs-6 col-sm-3 col-md-3" id="region-container">
                         <select class="region form-control" id="region">
