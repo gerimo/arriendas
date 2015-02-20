@@ -27,7 +27,7 @@
         <link href="/css/newDesign/jquery-ui/jquery-ui.theme.min.css" rel="stylesheet" type="text/css">
         
         <!-- Bootstrap -->
-        <link href="/css/newDesign/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <!--<link href="/css/newDesign/bootstrap.min.css" rel="stylesheet" type="text/css">-->
 
         <!-- Font Awesome -->
         <link href="/css/newDesign/font-awesome/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -41,7 +41,7 @@
         <link href="/css/newDesign/datatables/dataTables.responsive.css" rel="stylesheet" type="text/css">
 
         <!-- Estilos para todo el proyecto -->
-        <link href="/css/newDesign/arriendas.css" rel="stylesheet" type="text/css">
+        <!--<link href="/css/newDesign/arriendas.css" rel="stylesheet" type="text/css">-->
 
         <!-- Fonts -->
         <link href="http://fonts.googleapis.com/css?family=Roboto:300,350,400,500,600,700,800" rel="stylesheet" type="text/css">
@@ -50,19 +50,19 @@
 
     <body>
 
-        <!-- Arriendas -->
-        <script src="/js/newDesign/arriendas.js" type="text/javascript"></script>
+        <!-- Arriendas         
+        <script src="/js/newDesign/arriendas.js" type="text/javascript"></script>-->
 
-        <!-- JQuery -->
-        <script src="/js/newDesign/jquery-2.1.3.min.js" type="text/javascript"></script>
+        <!-- JQuery 
+        <script src="/js/newDesign/jquery-2.1.3.min.js" type="text/javascript"></script>-->
 
-        <!-- JQuery UI -->
-        <script src="/js/newDesign/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+        <!-- JQuery UI 
+        <script src="/js/newDesign/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>-->
         
-        <!-- Bootstrap -->
-        <script src="/js/newDesign/bootstrap.min.js" type="text/javascript"></script>
+        <!-- Bootstrap 
+        <script src="/js/newDesign/bootstrap.min.js" type="text/javascript"></script>-->
 
-        <!-- Complementos -->
+        <!-- Complementos
         <script src="/js/newDesign/datetimepicker/jquery.datetimepicker.js" type="text/javascript"></script>
         <script src="/js/newDesign/slick/slick.min.js" type="text/javascript"></script>
         <script src="/js/newDesign/raty/jquery.raty.js" type="text/javascript"></script>
@@ -70,20 +70,73 @@
         <script src="/js/newDesign/jquery-form/jquery.form.min.js" type="text/javascript"></script>
         <script src="/js/newDesign/datatables/jquery.dataTables.min.js" type="text/javascript"></script>
         <script src="/js/newDesign/datatables/dataTables.responsive.min.js" type="text/javascript"></script>
-        <script src="/js/newDesign/formToWizard/formToWizard.js" type="text/javascript"></script>
+        <script src="/js/newDesign/formToWizard/formToWizard.js" type="text/javascript"></script> -->
 
-        <!-- Utils -->
-        <script src="/js/newDesign/utils.js" type="text/javascript"></script>
+        <!-- Utils 
+        <script src="/js/newDesign/utils.js" type="text/javascript"></script>-->
 
-        <?php include_component('main', 'header') ?>
+        <!-- Despegar -->
+        <link rel="icon" href="/images/newDesign/despegar/favicon.ico">
+        <link rel="shortcut icon" href="/images/newDesign/despegar/favicon.ico" />
+        <link rel="stylesheet" href="/css/newDesign/despegar/booking/booking.css">
+        <link rel="stylesheet" href="/css/newDesign/despegar/stuck.css">
+        <link rel="stylesheet" href="/css/newDesign/despegar/camera.css">
+        <link rel="stylesheet" href="/css/newDesign/despegar/style.css">
 
-        <?php echo $sf_content ?>
+        
+        <script src="/js/newDesign/despegar/jquery.js"></script>
+        <script src="/js/newDesign/despegar/jquery.easing.1.3.js"></script>
+        <script src="/js/newDesign/despegar/jquery-migrate-1.1.1.js"></script>
+        <script src="/js/newDesign/despegar/jquery.equalheights.js"></script>
+        <script src="/js/newDesign/despegar/superfish.js"></script>
+        <script src="/js/newDesign/despegar/script.js"></script> 
+        -<script src="/js/newDesign/despegar/jquery.mobilemenu.js"></script>
+        <script src="/js/newDesign/despegar/tmStickUp.js"></script>
+        <script src="/js/newDesign/despegar/jquery.ui.totop.js"></script>
+        <script src="/js/newDesign/despegar/camera.js"></script>
 
-        <?php if($this->context->getActionName()!="reserve"): ?>
+        <!--[if (gt IE 9)|!(IE)]><!-->
+            <!--<script src="/js/newDesign/despegar/jquery.mobile.customized.min.js"></script>-->
+        <!--<![endif]-->
+        <script src="/js/newDesign/despegar/booking/booking.js"></script>
+
+        <script src="/js/newDesign/despegar/html5shiv.js"></script>
+
+        
+        <!--[if lt IE 8]>
+           <div style=' clear: both; text-align:center; position: relative;'>
+             <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+               <img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." />
+             </a>
+          </div>
+        <![endif]-->
+        <!--[if lt IE 9]>
+          <script src="js/html5shiv.js"></script>
+          <link rel="stylesheet" media="screen" href="css/ie.css">
+
+    
+        <![endif]-->
+        <div class="main">
+        <div class="content">
+            <?php include_component('main', 'header') ?>
+
+            <?php echo $sf_content ?>
+
+            <?php /*if($this->context->getActionName()!="reserve"): */?>
 
             <?php include_component('main', 'footer') ?>
 
-        <?php endif ?>
+            <?php /*endif*/ ?>
+        </div>
+        </div>
+
+        <script>
+            $(document).ready(function(){
+                
+                $().UItoTop({ easingType: 'easeOutQuart' });
+                $('#stuck_container').tmStickUp({});
+            }); 
+        </script>
 
         <?php if ($_SERVER['HTTP_HOST'] == "www.arriendas.cl"): ?>
             

@@ -3550,4 +3550,31 @@ class mainActions extends sfActions {
         return false;
     }
 
+    ///////////////////////////////////////////////////////////////////////
+    // TEMPLATE DESPEGAR
+
+    public function executeOurFleet(sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+
+    }
+
+    public function executeReservations(sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+        
+    }
+
+    public function executeRentalPolicies(sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+        
+    }
+
+    public function executeContacts(sfWebRequest $request) {
+
+        $this->setLayout("newIndexLayout");
+        
+    }
+
 }

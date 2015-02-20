@@ -1,0 +1,218 @@
+
+.menu_block  {
+	z-index: 999;
+	position: relative;
+	float: right;
+	padding-right: 1px;
+}
+
+
+.menu_block nav {
+	position: relative;
+}
+
+
+nav>.sf-menu {
+	z-index: 990;
+	text-align: left;
+	position: relative;
+}
+nav{ position:relative;padding: 0px 0 0 0;}
+.sf-menu ul {position:absolute;top:-999px; display:none;/* left offset of submenus need to match (see below) */}
+.sf-menu li {float:left;position:relative; }
+.sf-menu>li {
+	display: block;
+	position: relative;
+	float: left;
+	font-size: 20px;
+	font-weight: bold;
+	text-transform: uppercase;
+	line-height: 20px;
+	-moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.sf-menu>li+li {
+	margin-left: -5px;
+}
+
+.sf-menu>li>ul>li {
+  float: none;
+  position: static;
+}
+
+.sf-menu>li>a{
+	text-transform: uppercase;
+	text-align: center;
+	position: relative;
+	color: #282828;
+	display: block;
+	padding: 24px 14px 26px 16px;
+}
+
+.sf-menu>li.sfHover>a, .sf-menu>li.current>a, .sf-menu>li>a:hover {
+	background-color: #fde758;
+}
+
+
+.sf-menu>li>a.sf-with-ul:after {
+	position: absolute;
+	content: '';
+	left: 50%;
+	margin-left: -3px;
+	width: 5px;
+	background: url(../../../images/newDesign/despegar/arrows.png) 0 0 no-repeat;
+	height: 4px;
+	bottom: 15px;
+	pointer-events: none;
+	z-index: 999;
+	display: block;
+}
+
+.sf-menu>li.current>a.sf-with-ul:after, 
+.sf-menu>li.sfHover>a.sf-with-ul:after {
+}
+ 
+.sf-menu>li>ul>li>a.sf-with-ul:after {
+	content: '';
+    font-family: 'FontAwesome';
+	position: absolute;
+	width: 5px;
+	font-size: 15px;
+	line-height: 13px;
+	font-weight: normal;
+	right: 20px;
+	color: #fff;
+	bottom: 13px;
+	pointer-events: none;
+	z-index: 999;
+}
+
+
+
+
+/*================================>> 2 Level <<========================================*/
+.sf-menu li ul,.sf-menu li.sfHover>ul{
+	left: 0;
+	z-index: 999; 
+	width: 195px;
+	padding-top: 0px;
+	background-color: #282828;
+	top: 70px;
+	padding-bottom: 0px;
+
+}
+
+
+
+.sf-menu li ul li {
+	position: relative;
+	text-align: left;
+	float: none !important;
+	font-size: 13px;
+	line-height: 20px;
+	text-transform: uppercase;
+	color: #fff;
+	padding: 7px 0px 10px 19px;
+}
+
+.sf-menu li ul li+li {
+	padding-top: 8px;
+	margin-top: -1px;
+	border-top: 1px solid #535353;
+}
+
+.sf-menu li ul li+li+li {
+}
+
+
+.sf-menu li ul li a{
+	text-transform: uppercase;
+	position: static;
+	z-index: 999;
+	color: #fff;	
+	font-weight: normal;
+}
+
+
+
+
+
+.sf-menu li li a:hover, 
+.sf-menu li.sfHover li.sfHover>a {  
+	color: #fde758;
+}
+
+/*================================>> 3 Level <<========================================*/
+.sf-menu li.sfHover li.sfHover ul{
+	position: absolute;
+	left: 200px;
+	top: 1px;
+}
+
+.sf-menu li ul ul li a {
+}
+
+.sf-menu li ul ul li a:hover
+{
+}
+
+
+/*==================================RESPONSIVE LAYOUTS===============================================*/
+
+
+@media only screen and (max-width: 995px) {
+
+
+	.sf-menu>li+li{
+	}
+}
+
+@media only screen and (max-width: 767px) {
+	.menu_block {
+		float: none !important;
+		padding: 20px 10px 20px !important;
+		clear: both;
+		margin: 0;
+		min-height: 0px;
+  		border: none;
+  		background-color: #FDE758;
+	}
+
+	
+
+  .menu_block  nav{
+  	border: none !important;
+		float:none !important;
+		font:12px/15px Arial, Helvetica, sans-serif;
+		text-transform:uppercase;
+		color:#927c67;
+		margin: 0 auto;
+		padding-left: 0 !important;
+		
+	
+	}
+
+	
+
+  header nav ul {
+  	border: none;
+  }
+
+	.sf-menu{display:none !important; float: none;}
+
+	.select-menu {
+		font:12px/15px Arial, Helvetica, sans-serif;
+		color:#202020;
+		width:100%;
+		margin: 0 auto;
+		float: none;
+	    outline: none;
+	    display: block !important;
+		border:2px solid #fff;
+	}
+	
+
+}

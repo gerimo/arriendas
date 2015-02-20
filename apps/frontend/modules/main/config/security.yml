@@ -93,3 +93,15 @@ priceJson:
 
 getModel:
     is_secure: false
+
+ourFleet:
+    is_secure: false
+
+contacts:
+    is_secure: false
+
+rentalPolicies:
+    is_secure: false
+
+reservations:
+    is_secure: false
