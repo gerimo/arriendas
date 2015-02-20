@@ -150,9 +150,6 @@ class opportunitiesActions extends sfActions {
 
     private function approve($reserveId, $carId, $isMailing = false) {
 
-        error_log("reserveId: ".$reserveId);
-        error_log("carId: ".$carId);
-
         if (is_null($reserveId) || $reserveId == 0) {
             return "No se encontró la reserva";
         }
@@ -173,7 +170,8 @@ class opportunitiesActions extends sfActions {
         }
 
         $O = $OriginalReserve->copy(true);
-        $O->setCarId($Car->id);
+        $O->setUser($OriginalReserve->getUser());
+        $O->setCar($Car);
         $O->setFechaReserva(date("Y-m-d H:i:s"));
         $O->setFechaConfirmacion(date("Y-m-d H:i:s"));
         $O->setConfirmed(true);
@@ -188,16 +186,15 @@ class opportunitiesActions extends sfActions {
         }
         
         $O->setUniqueToken(true);
-        $O->save();
 
-        $OT = $OriginalReserve->getTransaction()->copy(true);
+        $OT = $O->getTransaction();
         $OT->setCar($Car->getModel()->getBrand()->getName() ." ". $Car->getModel()->getName());
-        $OT->setReserve($O);
         $OT->setDate(date("Y-m-d H:i:s"));
         $OT->setCompleted(false);
         $OT->setImpulsive(true);
         $OT->setTransaccionOriginal($OriginalReserve->getTransaction()->getId());
-        $OT->save();
+
+        $O->save();
 
         return null;
     }

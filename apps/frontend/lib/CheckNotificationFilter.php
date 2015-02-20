@@ -12,9 +12,6 @@ class checkNotificationFilter extends sfFilter {
             $User   = Doctrine_core::getTable("User")->find($userId);
             $UserNotification = Doctrine_Core::getTable('UserNotification')->findOneByUserIdAndViewedAt($userId, null);
 
-            error_log($userId);
-            error_log(gettype($UserNotification));
-
             if ($UserNotification) {
                 $ContextUser->setAttribute("notificationMessage", $UserNotification->getNotification()->message);
                 $ContextUser->setAttribute("notificationId", $UserNotification->getNotification()->id);

@@ -4,24 +4,12 @@ require_once sfConfig::get('sf_lib_dir') . '/vendor/mobile-detect/Mobile_Detect.
 
 class mainActions extends sfActions {
 
-    public function executeTestSMS (sfWebRequest $request) {
+    /*public function executeTestKhipu (sfWebRequest $request) {
         $this->setLayout(false);
 
-        $message     = $request->getParameter("message");
-        $phoneNumber = $request->getParameter("phoneNumber");
-
-        $SMS = new SMS();
-        $SMS->send($message, $phoneNumber);
-
-        return sfView::NONE;
-    }
-
-    public function executeTestKhipu (sfWebRequest $request) {
-        $this->setLayout(false);
-
-        /*$this->reserveId = 41023;*/
+        $this->reserveId = 41023;
         $this->transactionId = 21097;
-    }
+    }*/
 
     public function executeIndex (sfWebRequest $request) {
 
