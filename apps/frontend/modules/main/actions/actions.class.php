@@ -57,9 +57,6 @@ class mainActions extends sfActions {
         } else {
             $this->to = date("Y-m-d H:i", strtotime("+24 Hours"));
         }
-
-        error_log($this->from);
-        error_log($this->to);
     }
 
     public function executeIndexList (sfWebRequest $request) {

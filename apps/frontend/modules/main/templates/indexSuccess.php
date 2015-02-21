@@ -321,7 +321,7 @@
             haveChair: haveChair            
         };
 
-        console.log(parameters);
+        /*console.log(parameters);*/
 
         $.post("<?php echo url_for('car_search') ?>", parameters, function(r){
 
@@ -466,7 +466,7 @@
 
             if (r.cars.length) {
                 $("button.see-more").data("offset", parseInt(offset)+parseInt(limit));
-                console.log(r.cars.length+" < "+limit);
+                
                 if (r.cars.length < limit) {
                     /*$("button.see-more").hide();*/ // Al arreglar la query de búsqueda se descomenta esto
                 } else {

@@ -126,7 +126,7 @@ class reservesActions extends sfActions {
     }
 
     public function executeCalculateAmountWarrantyFree (sfWebRequest $request) {
-        error_log("hola mundo");
+        
         $return = array("error" => false);
 
         $from  = $request->getPostParameter("from", null);
