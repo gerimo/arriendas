@@ -178,6 +178,10 @@ reserve_approve:
     url: /reserva/aprobar
     param: { module: reserves, action: approve }
 
+reserve_calculate_amount_warranty_free:
+    url: /reserva/calcular/libreacion-garantia
+    param: { module: reserves, action: calculateAmountWarrantyFree }
+
 reserve_calculate_price:
     url: /reserva/calcular-precio
     param: { module: reserves, action: calculatePrice }

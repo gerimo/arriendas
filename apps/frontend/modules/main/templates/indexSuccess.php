@@ -200,7 +200,7 @@
         <?php endif ?>
     }
 
-    function validateTime(){
+    /*function validateTime(){
 
         var fechaF = splitTime($("#from").val());
         var fechaT = splitTime($("#to").val());
@@ -209,9 +209,9 @@
             return true;
         }
         return false;
-    }
+    }*/
 
-    function splitTime(time){
+    /*function splitTime(time){
         var split = time.split(" ");
         var f = split[0];
         var h = split[1];
@@ -222,7 +222,7 @@
         var ano = split[2];
 
         return (mes+dia+ano);
-    }
+    }*/
 
     function searchCars(offset, limit) {
 
@@ -231,7 +231,7 @@
         }
         $(".loading").show();
 
-        if (validateTime()) {
+        /*if (validateTime()) {
 
             $("#dialog-alert p").html('Fecha "Hasta" debe ser posterior a la fecha "Desde"');
             $("#dialog-alert").attr('title','Fecha "Hasta" mal ingresada');
@@ -244,7 +244,7 @@
                 }]
             });
             return false;
-        }
+        }*/
 
         // First, determine the map bounds
         var bounds = map.getBounds();
@@ -544,10 +544,10 @@
             <input class="direction form-control" id="direction" placeholder="Dirección" type="text">
         </div>
         <div class="col-xs-6 col-sm-2 col-md-2" id="from-container">
-            <input class="from daepicker form-control" id="from" placeholder="Desde" type="text" value="<?php if(date("H:i") >= "20:00" || date("H:i") <= "08:00"):echo date("d-m-Y 08:00",(strtotime ("+12 Hours"))); else:echo date("d-m-Y H:i", (strtotime ("+4 Hours"))); endif; ?>" >
+            <input class="datetimepicker form-control" id="fromH" placeholder="Desde" type="text">
         </div>
         <div class="col-xs-6 col-sm-2 col-md-2" id="to-container">
-            <input class="to datetimepicker form-control" id="to" placeholder="Hasta" type="text" value="<?php if(date("H:i") >= "20:00" || date("H:i") <= "08:00"):echo date("d-m-Y 08:00",(strtotime ("+32 Hours"))); else:echo date("d-m-Y H:i", (strtotime ("+24 Hours"))); endif; ?>" >
+            <input class="datetimepicker form-control" id="toH" placeholder="Hasta" type="text">
         </div>
 
         <!-- Search -->
@@ -814,37 +814,12 @@
     </div>
 </div>
 
+<input id="from" type="hidden">
+<input id="to" type="hidden">
+
 <script>
 
     $(document).ready(function(){
-        
-        /*$('#from').datetimepicker({
-            allowTimes:[
-            "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
-            "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
-            "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
-            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-            "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-            "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-            "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-            "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
-            ],
-            format:'d-m-Y H:i',
-            minDate : "<?php echo date('d-m-Y') ?>",
-            dayOfWeekStart: 1,
-            lang:'es',
-            onSelectTime: function() {
-                    var x = $("#from").val();
-                    times(x);
-            },
-            onSelectDate: function() {
-                var x = $("#from").val();
-                times(x);
-            }
-        });*/
-
-        $("#from").val(roundTime($("#from").val()));
-        $("#to").val(roundTime($("#to").val()));
 
         /*// Si comuna es visible, se preselecciona comuna más hot
         if ($("#commune").is(':visible')) {            
@@ -878,6 +853,9 @@
             arrows: false,
             speed: 450
         });
+
+        initializeDate("from", new Date(<?php echo strtotime($from) * 1000 ?>), true, false);
+        initializeDate("to", new Date(<?php echo strtotime($to) * 1000 ?>), true, false);
 
         // Cuando es fin de semana
         <?php if ($isWeekend): ?>
@@ -989,67 +967,7 @@
         searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
     });
 
-    $('#from').datetimepicker({
-        allowTimes:[
-            "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
-            "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
-            "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
-            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-            "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-            "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-            "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-            "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
-        ],
-        dayOfWeekStart: 1,
-        format:'d-m-Y H:i',
-        lang:'es',
-        minDate: 0
-    });
-
-    $('#to').datetimepicker({
-        allowTimes:[
-            "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
-            "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
-            "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
-            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-            "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-            "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-            "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-            "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
-        ],
-        dayOfWeekStart: 1,
-        format:'d-m-Y H:i',
-        lang:'es',
-        minDate : 0
-    });
-
-    function roundTime(valor){
-
-        var fechaH = valor;
-
-        var split = fechaH.split(" ");
-        var f = split[0];
-        var h = split[1];
-
-        var split3 = h.split(":");
-        var hora = parseInt(split3[0]);
-        var min = parseInt(split3[1]);
-
-        if (min > 14 && min < 45){
-            min = "30";
-        } else if (min > 45){
-            min = "00";
-            hora = (hora+1).toString();
-        } else {
-            min = "00";
-        }
-
-        fecha = f+" "+hora+":"+min;
-
-        return fecha;
-    }
-
-    function times(valor){
+    /*function times(valor){
 
         var fechaF = valor
 
@@ -1075,7 +993,7 @@
                 ],
                 lang:'es',
                 dayOfWeekStart: 1,
-                /*minDate:get_date($('#from').val())?get_date($('#from').val()):false,*/
+                // minDate:get_date($('#from').val())?get_date($('#from').val()):false,
                 format:'d-m-Y H:i'
             });
         }else{
@@ -1092,7 +1010,7 @@
                 ],
                 lang:'es',
                 dayOfWeekStart: 1,
-                /*minDate:get_date($('#from').val())?get_date($('#from').val()):false,*/
+                //minDate:get_date($('#from').val())?get_date($('#from').val()):false,
                 format:'d-m-Y H:i'
             });
         }
@@ -1105,5 +1023,10 @@
             var parts = input.match(/(\d+)/g);
             return parts[2]+'/'+parts[1]+'/'+parts[0];
         } 
+    }*/
+
+    function afterDateRefresh() {
+        searchCars(0, $("button.see-more").data("limit"));
     }
 </script>
+<script src="/js/newDesign/dates.js" type="text/javascript"></script>
