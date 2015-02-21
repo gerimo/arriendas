@@ -43,6 +43,20 @@ class mainActions extends sfActions {
         if (Utils::isWeekend()) {
             $this->isWeekend = true;
         }
+
+        // Se define la fecha DESDE
+        if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
+            $this->from = date("Y-m-d 08:00", strtotime("+12 Hours"));
+        } else {
+            $this->from = date("Y-m-d H:i", strtotime("+4 Hours"));
+        }
+
+        // Se define la fecha HASTA
+        if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
+            $this->to = date("Y-m-d 08:00", strtotime("+32 Hours"));
+        } else {
+            $this->to = date("Y-m-d H:i", strtotime("+24 Hours"));
+        }
     }
 
     public function executeIndexList (sfWebRequest $request) {
