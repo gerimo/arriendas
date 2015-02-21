@@ -2768,6 +2768,10 @@ class mainActions extends sfActions {
         $this->setLayout("newIndexLayout");
     }
 
+    public function executeSiteMap(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+    }
+
     public function executeForgotSend(sfWebRequest $request) {
         $this->setLayout("newIndexLayout");
 

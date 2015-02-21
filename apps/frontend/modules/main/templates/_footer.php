@@ -50,8 +50,9 @@
             <h1>Herramientas</h1>
             <ul>
                 <li><a href="<?php echo url_for('car_create') ?>" title="Sube tu auto">Sube tu auto</a></li>
-                <li><a href="<?php echo url_for("rent_a_car")?>">Busca un auto</a></li>
-                <li><a class="item_thm fancybox" href="<?php echo url_for('value_your_car') ?>">¿Cuánto puedo ganar con mi auto?</a></li>
+                <li><a title="Busca un auto para arrendar" href="<?php echo url_for("rent_a_car")?>">Busca un auto</a></li>
+                <li><a title="Monetiza tu auto" class="item_thm fancybox" href="<?php echo url_for('value_your_car') ?>">¿Cuánto puedo ganar con mi auto?</a></li>
+                <li><a title="Mapa del sitio" class="item_thm fancybox"href="<?php echo url_for('site_map')?>">Mapa del Sitio</a></li>
             </ul>
         </div>
     </div>

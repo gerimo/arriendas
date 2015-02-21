@@ -29,5 +29,9 @@
         }
 
         public function executeFooter(){}
+
+        public function executeMapSite(){
+            $this->Region = Doctrine_Core::getTable("Region")->find(13);
+        }
     }
 ?>
