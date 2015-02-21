@@ -79,6 +79,9 @@ reserve:
 searchACars:
     is_secure: false
 
+siteMap:
+    is_secure: false
+
 terminos:
     is_secure: false
 

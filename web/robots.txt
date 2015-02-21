@@ -1,2 +1,24 @@
 #User-agent: *
-#Disallow:
+Disallow: /auto/crear
+Disallow: /auto/editar/:id
+Disallow: /auto/foto
+Disallow: /auto/vista-3
+Disallow: /auto/precios
+Disallow: /contrasena/recuperar
+Disallow: /informe-de-devolucion/:tokenReserve
+Disallow: /login/do
+Disallow: /mensajes/:id
+Disallow: /mis-autos
+Disallow: /mis-mensajes
+Disallow: /mis-transacciones
+Disallow: /oportunidades
+Disallow: /profile/changePassword
+Disallow: /profile/edit
+Disallow: /recuperar-contrasena
+Disallow: /registro/completar
+Disallow: /registro/exitoso
+Disallow: /reservas
+Disallow: /reserva/aprobar
+Disallow: /reserva/cambiar
+Disallow: /reserva/exitosa
+Disallow: /reserva/extender
