@@ -7,6 +7,7 @@
  * 
  * @property integer $id
  * @property integer $rut
+ * @property int $llamado_registro
  * @property string $rut_dv
  * @property string $rut_old
  * @property string $username
@@ -38,14 +39,12 @@
  * @property boolean $blocked
  * @property boolean $moroso
  * @property boolean $extranjero
- * @property boolean $licencia_falsa
- * @property boolean $chequeo_licencia
  * @property boolean $chequeo_judicial
  * @property boolean $confirmed_fb
  * @property boolean $confirmed_sms
  * @property boolean $friend_invite
  * @property boolean $is_suspect
- * @property timestamp $blocked_license
+ * @property boolean $is_valid_license
  * @property Doctrine_Collection $Cars
  * @property Doctrine_Collection $Conversation
  * @property Doctrine_Collection $Message
@@ -56,8 +55,10 @@
  * @property Commune $commune
  * @property Doctrine_Collection $UserManagements
  * @property boolean $is_employee
+ *
  * 
  * @method integer             getId()                    Returns the current record's "id" value
+ * @method integer             getLlamadoRegistro()       Returns the current record's "llamado_registro" value
  * @method string              getUsername()              Returns the current record's "username" value
  * @method string              getComentariosRecordar()   Returns the current record's "comentarios_recordar" value
  * @method string              getPassword()              Returns the current record's "password" value
@@ -95,11 +96,9 @@
  * @method boolean             getConfirmedSms()          Returns the current record's "confirmed_sms" value
  * @method boolean             getFriendInvite()          Returns the current record's "friend_invite" value
  * @method boolean             getExtranjero()            Returns the current record's "extranjero" value
- * @method boolean             getLicenciaFalsa()         Returns the current record's "licencia_falsa" value
- * @method boolean             getChequeoLicencia()       Returns the current record's "chequeo_licencia" value
  * @method boolean             getChequeoJudicial()       Returns the current record's "chequeo_judicial" value
+ * @method boolean             getIsValidLicense()        Returns the current record's "is_valid_license" value
  * @method boolean             getIsSuspect()             Returns the current record's "is_suspect" value
- * @method timestamp           getBlockedLicense()        Returns the current record's "blocked_license" value
  * @method Doctrine_Collection getCars()                  Returns the current record's "Cars" collection
  * @method Doctrine_Collection getConversation()          Returns the current record's "Conversation" collection
  * @method Doctrine_Collection getMessage()               Returns the current record's "Message" collection
@@ -109,8 +108,10 @@
  * @method Commune             getCommune()               Returns the current record's "commune" value
  * @method Doctrine_Collection getUserManagements()       Returns the current record's "UserManagements" collection
  * @method boolean             getIsEmployee()            Returns the current record's "is_employee" collection
+ * @method boolean             getUsuarioValidado()       Returns the current record's "usuario_validado" collection
  *
  * @method User                setId()                    Sets the current record's "id" value
+ * @method User                setLlamadoRegistro()       Sets the current record's "llamado_registro" collection
  * @method User                setUsername()              Sets the current record's "username" value
  * @method User                setComentariosRecordar()   Sets the current record's "comentarios_recordar" value
  * @method User                setPassword()              Sets the current record's "password" value
@@ -148,11 +149,8 @@
  * @method User                setConfirmedSms()          Sets the current record's "confirmed_sms" value
  * @method User                setFriendInvite()          Sets the current record's "friend_invite" value
  * @method User                setExtranjero()            Sets the current record's "extranjero" value
- * @method User                setLicenciaFalsa()         Sets the current record's "licencia_falsa" value
- * @method User                setChequeoLicencia()       Sets the current record's "chequeo_licencia" value
  * @method User                setChequeoJudicial()       Sets the current record's "chequeo_judicial" value
  * @method User                setIsSuspect()             Sets the current record's "is_suspect" value
- * @method User                setBlockedLicense()        Sets the current record's "blocked_license" value
  * @method User                setCars()                  Sets the current record's "Cars" collection
  * @method User                setConversation()          Sets the current record's "Conversation" collection
  * @method User                setMessage()               Sets the current record's "Message" collection
@@ -161,6 +159,8 @@
  * @method User                setCommune()               Sets the current record's "commune" value
  * @method User                setUserManagements()       Sets the current record's "UserManagements" collection
  * @method User                setIsEmployee()            Sets the current record's "is_employee" collection
+ * @method User                setUsuarioValidado()       Sets the current record's "usuario_validado" collection
+ * @method User                setIsValidLicense()        Sets the current record's "is_valid_license" collection
  * 
  * @package    CarSharing
  * @subpackage model
@@ -266,6 +266,16 @@ abstract class BaseUser extends sfDoctrineRecord {
             'notnull' => true,
             'default' => false,
         ));
+        $this->hasColumn('usuario_validado', 'boolean', null, array(
+            'type' => 'boolean',
+            'notnull' => true,
+            'default' => false,
+        ));
+        $this->hasColumn('is_valid_license', 'boolean', null, array(
+            'type' => 'boolean',
+            'notnull' => true,
+            'default' => false,
+        ));
         $this->hasColumn('country', 'string', 45, array(
             'type' => 'string',
             'length' => 45,
@@ -335,17 +345,7 @@ abstract class BaseUser extends sfDoctrineRecord {
             'type' => 'boolean',
             'notnull' => true,
             'default' => false,
-        ));
-        $this->hasColumn('licencia_falsa', 'boolean', null, array(
-            'type' => 'boolean',
-            'notnull' => true,
-            'default' => false,
-        ));
-        $this->hasColumn('chequeo_licencia', 'boolean', null, array(
-            'type' => 'boolean',
-            'notnull' => true,
-            'default' => false,
-        ));
+        )); 
         $this->hasColumn('chequeo_judicial', 'boolean', null, array(
             'type' => 'boolean',
             'notnull' => true,
@@ -355,9 +355,6 @@ abstract class BaseUser extends sfDoctrineRecord {
             'type' => 'boolean',
             'notnull' => true,
             'default' => false,
-        ));
-        $this->hasColumn('blocked_license', 'timestamp', null, array(
-            'type' => 'timestamp',
         ));
         $this->hasColumn('address', 'string', 255, array(
             'type' => 'string',
@@ -375,6 +372,9 @@ abstract class BaseUser extends sfDoctrineRecord {
              'type' => 'timestamp',
              ));
         $this->hasColumn('credito', 'integer', null, array(
+            'type' => 'integer'
+        ));
+        $this->hasColumn('llamado_registro', 'integer', null, array(
             'type' => 'integer'
         ));
         $this->hasColumn('propietario', 'boolean', null, array(

@@ -1,2 +1,5 @@
+calculateAmountWarrantyFree:
+    is_secure: false
+
 calculatePrice:
     is_secure: false

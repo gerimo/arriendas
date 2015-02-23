@@ -12,7 +12,26 @@
  */
 class Reserve extends BaseReserve {
 
-    
+    public function getFortnightlyPayment() {
+
+        $date   =  date("Y-m-d H:i:s", strtotime("+".$this->getDuration()." hour", strtotime($this->getDate())));
+        $day    = date("d", strtotime($date));
+        $month  = date("m", strtotime($date));
+        $year   = date("Y", strtotime($date));
+
+        if ($day > 0 && $day < 16) {
+            $datePay = date("Y-m-d",strtotime("16-".$month."-".$year));
+        } else {
+            if ($month == 12) {
+                $datePay = date("Y-m-d",strtotime("1-"."1-".($year+1)));
+            } else {
+                $datePay = date("Y-m-d",strtotime("1-".($month+1)."-".$year));
+            }
+        } 
+
+        return $datePay;
+    }
+
     public function getFechaInicio2() {
 
         return date("Y-m-d H:i:s", strtotime($this->getDate()));
@@ -37,6 +56,8 @@ class Reserve extends BaseReserve {
             ->addOrderBy('R.fecha_reserva ASC');
 
         $Reserves = $q->execute();
+
+        error_log("OPP: ".count($Reserves));
         
         foreach ($Reserves as $Reserve) {
             if ($Reserve->getReservaOriginal() == 0) {
@@ -455,6 +476,8 @@ class Reserve extends BaseReserve {
     public function save(Doctrine_Connection $conn = null) {
 
         $this->setUniqueToken();
+
+        //var_dump($this);
 
         return parent::save($conn);
     }

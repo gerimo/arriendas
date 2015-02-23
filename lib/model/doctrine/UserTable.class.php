@@ -2,6 +2,19 @@
 
 class UserTable extends Doctrine_Table {
 
+
+    public function findUserControl($limit = false) {
+
+        $q = Doctrine_Core::getTable("User")
+            ->createQuery('U')
+            ->orderBy('U.ID DESC');
+            
+        if ($limit) {
+            $q->limit($limit);
+        }
+
+        return $q->execute();
+    }
     
     public function findUsersWithPay($from = false, $to = false, $userId) {
         $q = Doctrine_Core::getTable("Reserve")
@@ -53,7 +66,8 @@ class UserTable extends Doctrine_Table {
         $q = Doctrine_Core::getTable("User")
             ->createQuery('U')
             ->leftJoin('U.Cars C')
-            ->Where('U.propietario = 0')
+            ->Where('U.propietario = 1')
+            ->andWhere('C.id is null')
             ->groupBy('U.id');
 
         if ($from && $to) {
@@ -62,7 +76,6 @@ class UserTable extends Doctrine_Table {
         }        
 
         return $q->execute();
-
     }
 
     //////////////////////////////////

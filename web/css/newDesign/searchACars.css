@@ -223,4 +223,7 @@ h3 .filter{
         margin-top: 5px;
         padding-top: 8px;
     }
+    .listagrey input {
+        margin-top: 5px;
+    }
 }

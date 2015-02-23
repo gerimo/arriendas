@@ -218,6 +218,7 @@ class carsActions extends sfActions {
         $isAutomatic        = $request->getPostParameter('isAutomatic', false) === 'true' ? true : false;
         $isLowConsumption   = $request->getPostParameter('isLowConsumption', false) === 'true' ? true : false;
         $isMorePassengers   = $request->getPostParameter('isMorePassengers', false) === 'true' ? true : false;
+        $haveChair          = $request->getPostParameter('haveChair', false) === 'true' ? true : false;
         $nearToSubway       = $request->getPostParameter('nearToSubway', false) === 'true' ? true : false;
 
         try {
@@ -233,7 +234,7 @@ class carsActions extends sfActions {
                 $withAvailability = true;
             }
 
-            $return["cars"] = CarTable::findCars($offset, $limit, $from, $to, $withAvailability, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $nearToSubway);
+            $return["cars"] = CarTable::findCars($offset, $limit, $from, $to, $withAvailability, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $haveChair, $nearToSubway);
             /*error_log("Autos encontrados: ".count($return["cars"]));*/
 
         } catch (Exception $e) {
@@ -375,7 +376,7 @@ class carsActions extends sfActions {
     ///////////////////////
 
     /*editar auto*/   
-    public function executeEdit(sfWebRequest $request) {
+    public function executeEdit(sfWebRequest $request) { 
         $this->setLayout("newIndexLayout");
 
         $carId          = $request->getParameter("id", null);
@@ -386,6 +387,15 @@ class carsActions extends sfActions {
         if (!$this->Car) {
                 throw new Exception("Vehículo ".$carId." no encontrado", 1);
             }
+
+        $capacity = $this->Car->capacity;
+        if ($capacity != 0) {
+            $this->capacity1 = $capacity[0];
+            $this->capacity2 = $capacity[2];
+        } else {
+            $this->capacity1 = -1;
+            $this->capacity2 = -1;
+        }
 
         $this->CarTypes = CarType::getCarType();
 
@@ -453,31 +463,36 @@ class carsActions extends sfActions {
         return sfView::NONE;
     }
 
-    public function executeGetValidateCar(sfWebRequest $request) {
-        
+    public function executeGetValidateCar(sfWebRequest $request) {      
         $return = array("error" => false);
 
         try {
 
-            $address        = $request->getPostParameter("address", null);
-            $commune        = $request->getPostParameter("commune", null);
-            $brand          = $request->getPostParameter("brand", null);
-            $model          = $request->getPostParameter("model", null);
-            $ano            = $request->getPostParameter("ano", null);
-            $door           = $request->getPostParameter("door", null);
-            $transmission   = $request->getPostParameter("transmission", null);
-            $benzine        = $request->getPostParameter("benzine", null);
-            $typeCar        = $request->getPostParameter("typeCar", null);
-            $patent         = $request->getPostParameter("patent", null);
-            $color          = $request->getPostParameter("color", null);
-            $lat            = $request->getPostParameter("lat", null);
-            $lng            = $request->getPostParameter("lng", null);
-            $carId          = $request->getPostParameter("carId", null);
-
+            $address             = $request->getPostParameter("address", null);
+            $commune             = $request->getPostParameter("commune", null);
+            $brand               = $request->getPostParameter("brand", null);
+            $model               = $request->getPostParameter("model", null);
+            $ano                 = $request->getPostParameter("ano", null);
+            $door                = $request->getPostParameter("door", null);
+            $transmission        = $request->getPostParameter("transmission", null);
+            $benzine             = $request->getPostParameter("benzine", null);
+            $patent              = $request->getPostParameter("patent", null);
+            $color               = $request->getPostParameter("color", null);
+            $lat                 = $request->getPostParameter("lat", null);
+            $lng                 = $request->getPostParameter("lng", null);
+            $carId               = $request->getPostParameter("carId", null);
+            $sistemaABS          = $request->getPostParameter("sistemaABS", null);
+            $aireAcondicionado   = $request->getPostParameter("aireAcondicionado", null);
+            $airBag              = $request->getPostParameter("airBag", null);
+            $controlCrucero      = $request->getPostParameter("controlCrucero", null);
+            $sensor              = $request->getPostParameter("sensor", null);
+            $babyChair           = $request->getPostParameter("babyChair", null);
+            $vidriosElectricos   = $request->getPostParameter("vidriosElectricos", null);
+            $capacity            = $request->getPostParameter("capacity", null);
+            $string = "";
 
             /*$userId_session = $this->getUser()->getAttribute("userid");
              error_log($userId_session);*/
-
             $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
 
             if (is_null($address) || $address == "") {
@@ -512,10 +527,6 @@ class carsActions extends sfActions {
                 throw new Exception("Debes indicar el tipo de bencina", 8);
             }
 
-            if (is_null($typeCar) || $typeCar == "") {
-                throw new Exception("Debes indicar el tipo de vehículo", 9);
-            }
-
             if (is_null($patent) || $patent == "") {
                 throw new Exception("Debes indicar la patente", 10);
             }
@@ -532,12 +543,70 @@ class carsActions extends sfActions {
                 throw new Exception("Debes indicar una dirección", 1);
             }
 
+            if (is_null($capacity) || $capacity == "") {
+                throw new Exception("Debes indicar cilindrada", 1);
+            }
+
+            if ($sistemaABS) {
+                if ($string == "") {
+                    $string = $sistemaABS;
+                } else {
+                    $string = $string."_".$sistemaABS;
+                }
+            }
+
+            if ($aireAcondicionado) {
+                if ($string == "") {
+                    $string = $aireAcondicionado;
+                } else {
+                    $string = $string."_".$aireAcondicionado;
+                }
+            }
+
+            if ($airBag) {
+                if ($string == "") {
+                    $string = $airBag;
+                } else {
+                    $string = $string."_".$airBag;
+                }
+            }
+
+            if ($controlCrucero) {
+                if ($string == "") {
+                    $string = $controlCrucero;
+                } else {
+                    $string = $string."_".$controlCrucero;
+                }
+            }
+
+            if ($sensor) {
+                if ($string == "") {
+                    $string = $sensor;
+                } else {
+                    $string = $string."_".$sensor;
+                }
+            }
+
+            if ($vidriosElectricos) {
+                if ($string == "") {
+                    $string = $vidriosElectricos;
+                } else {
+                    $string = $string."_".$vidriosElectricos;
+                }
+            }
+
+            if ($babyChair) {
+                $bool = true;
+            } else {
+                $bool = false;
+            }
+
             /*if ((is_null($User) && $User->getConfirmed()) || !$User->getConfirmedFb()) {
                 $this->redirect('main/index');
             }*/
             if (is_null($carId) || $carId == "") {
                 $Car = new Car();
-                $fechaHoy = Date("Y-m-d");
+                $fechaHoy = Date("Y-m-d H:i:s");
                 $Car->setFechaSubida($fechaHoy); 
                 $send = 1;
             }else{
@@ -563,10 +632,15 @@ class carsActions extends sfActions {
             $Car->setLat($lat);
             $Car->setLng($lng);
             $Car->setCityId(27);
+            $Car->setBabyChair($bool);
+            $Car->setCapacity($capacity);
+            $Car->setAccesoriosSeguro($string);
+            $Car->setCityId(27);
 
             $Car->save();
 
-            if($send == 1){
+
+             if($send == 1){
                 // Correo de notificación de un nuevo vehículo a soporte de arriendas
                 $mail    = new Email();
                 $mailer  = $mail->getMailer();
@@ -600,6 +674,7 @@ class carsActions extends sfActions {
                 $mailer->send($message);
 
             }
+            
             if ($carId) {
                 if($changeDistance) {
                     CarProximityMetro::setCarProximityMetro($Car);
@@ -610,7 +685,7 @@ class carsActions extends sfActions {
 
             $this->getUser()->setAttribute("carId", $Car->getId());
 
-            $url = $this->generateUrl('car_price');
+            $url = $this->generateUrl('cars');
             $return["url_complete"] = $url;
 
         } catch (Exception $e) {
@@ -849,81 +924,6 @@ class carsActions extends sfActions {
             $Car = Doctrine_Core::getTable('car')->find($carId);
             $Car->setFotoPerfil("/images/cars/".$actual_image_name);
             $Car->save();
-        } catch (Exception $e) {
-            $return["error"] = true;
-            $return["errorMessage"] = $e->getMessage();
-            if ($e->getCode() == 1) {
-                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
-            }
-            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
-                Utils::reportError($e->getMessage(), "main/uploadPhoto");
-            }
-        }
-
-        $this->renderText(json_encode($return));
-
-        return sfView::NONE;
-    }
-
-    public function executeUploadPhotoAccessory(sfWebRequest $request) {
-
-        $return = array("error" => false);
-        $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
-
-        try {
-
-            if (!isset($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
-                throw new Exception("No! No! No!", 1);
-            }
-
-            $name = $_FILES[$request->getParameter('file')]['name'];
-            $size = $_FILES[$request->getParameter('file')]['size'];
-            $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
-            if (!strlen($name)) {
-                throw new Exception("Por favor, seleccione una imagen", 2);
-            }
-
-            list($txt, $ext) = explode(".", $name);
-
-            $ext = strtolower($ext);
-
-            if (!in_array($ext, $valid_formats)) {
-                throw new Exception("Formato de la imagen inválido", 2);
-            }
-
-            if ($size > (5 * 1024 * 1024)) {
-                throw new Exception("La imagen excede el tamaño máximo permitido (1 MB)", 2);                
-            }
-            
-            /*$sizewh = getimagesize($tmp);
-
-            if($sizewh[0] > 194 || $sizewh[1] > 204) {
-                echo '<script>alert(\'La imagen no cumple con las dimensiones especificadas. Puede continuar si lo desea\')</script>';
-            }*/
-            $carId= sfContext::getInstance()->getUser()->getAttribute('carId');
-            $actual_image_name = time() . $carId . "." . $ext;
-
-            $uploadDir = sfConfig::get("sf_web_dir");
-            $path      = $uploadDir . '/images/cars/';
-            $fileName  = $actual_image_name . "." . $ext;
-
-            $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
-
-            $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
-
-            if (!$uploaded) {
-                throw new Exception("No se pudo subir la imagen de perfil", 1);
-            }
-
-            sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
-
-            /*echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
-            echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";*/
-
-            $Car = Doctrine_Core::getTable('car')->find($carId);
-            $Car->setAccesoriosSeguro("/images/cars/".$actual_image_name);
-            $Car->save();
-
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
@@ -1309,7 +1309,6 @@ class carsActions extends sfActions {
 
         return sfView::NONE;
     }
-
 
     ////////////////////////////////////////
 

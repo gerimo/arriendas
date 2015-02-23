@@ -11,13 +11,12 @@ class Transaction extends BaseTransaction {
         return $fechaFormato;
     }
     
-    public function save(Doctrine_Connection $conn = null)  {
+    /*public function save(Doctrine_Connection $conn = null)  {
 
         $reserve = Doctrine_Core::getTable('reserve')->findOneById($this->getReserveId());  
         $car = Doctrine_Core::getTable('car')->findOneById($reserve->getCarId());   
         $user = Doctrine_Core::getTable('user')->findOneById($car->getUserId());    
-        $ownerUserId=$user->getId();
-            
+        $ownerUserId=$user->getId();            
 
         if ($this->getCompleted() && $this->getCustomerio() <= 0) {
 
@@ -72,5 +71,5 @@ class Transaction extends BaseTransaction {
         }     
       
         return parent::save($conn);
-    }
+    }*/
 }

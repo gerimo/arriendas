@@ -14,11 +14,12 @@
         <link href="http://arriendas.assets.s3.amazonaws.com/images/favicon.ico" rel="shortcut icon" type="image/x-icon">
 
         <!-- Metas -->
-        <meta property="og:description" content="Arriendo de autos vecinos con seguro premium, asistencia de viaje y TAGs incluídos. Busca un auto por ubicación o por precio. Rent a car Vecino.">
+        <!-- Al publicar en una red social un link de la página el link se publicara de la siguiente forma -->
+        <meta property="og:description" content="Arriendo de autos por hora con seguro, asistencia de viaje y TAGs incluídos. Busca un auto por ubicación o por precio. Rent a car Vecino.">
         <meta property="og:title" content="Rent a car vecino. Arriendo de autos, cerca de ti - Arriendas.cl">
         <meta property="og:type" content="website">
         <meta property="og:image" content="<?php echo image_path('newDesign/logo.jpg', 'absolute=true') ?>">
-        <meta property="og:url" content="http://arriendas.cl<?php echo sfContext::getInstance()->getController()->genUrl(sfContext::getInstance()->getRouting()->getCurrentInternalUri());?>">
+        <meta property="og:url" content="http://www.arriendas.cl<?php echo sfContext::getInstance()->getController()->genUrl(sfContext::getInstance()->getRouting()->getCurrentInternalUri());?>">
         <meta property="og:site_name" content="Rent a car vecino. Arriendo de autos, cerca de ti - Arriendas.cl">
 
         <!-- JQuery UI -->
@@ -50,9 +51,6 @@
 
     <body>
 
-        <!-- Arriendas -->
-        <script src="/js/newDesign/arriendas.js" type="text/javascript"></script>
-
         <!-- JQuery -->
         <script src="/js/newDesign/jquery-2.1.3.min.js" type="text/javascript"></script>
 
@@ -74,6 +72,9 @@
 
         <!-- Utils -->
         <script src="/js/newDesign/utils.js" type="text/javascript"></script>
+
+        <!-- Arriendas -->
+        <script src="/js/newDesign/arriendas.js" type="text/javascript"></script>
 
         <?php include_component('main', 'header') ?>
 

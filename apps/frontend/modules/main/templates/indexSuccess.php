@@ -1,4 +1,4 @@
-<link href="/css/newDesign/index.css?v=4" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/index.css?v=6" rel="stylesheet" type="text/css">
 
 <!-- Google Maps -->
 <script src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;sensor=false" type="text/javascript"></script>
@@ -200,7 +200,7 @@
         <?php endif ?>
     }
 
-    function validateTime(){
+    /*function validateTime(){
 
         var fechaF = splitTime($("#from").val());
         var fechaT = splitTime($("#to").val());
@@ -209,9 +209,9 @@
             return true;
         }
         return false;
-    }
+    }*/
 
-    function splitTime(time){
+    /*function splitTime(time){
         var split = time.split(" ");
         var f = split[0];
         var h = split[1];
@@ -222,7 +222,7 @@
         var ano = split[2];
 
         return (mes+dia+ano);
-    }
+    }*/
 
     function searchCars(offset, limit) {
 
@@ -231,7 +231,7 @@
         }
         $(".loading").show();
 
-        if (validateTime()) {
+        /*if (validateTime()) {
 
             $("#dialog-alert p").html('Fecha "Hasta" debe ser posterior a la fecha "Desde"');
             $("#dialog-alert").attr('title','Fecha "Hasta" mal ingresada');
@@ -244,7 +244,7 @@
                 }]
             });
             return false;
-        }
+        }*/
 
         // First, determine the map bounds
         var bounds = map.getBounds();
@@ -289,6 +289,13 @@
             }
         });
 
+        var haveChair = false;
+        $(".haveChair").each(function(){
+            if ($(this).is(':checked')) {
+                haveChair = true;
+            }
+        });
+
         var isMap = false;
         if ($("#tab-map").is(":visible")) {
             isMap = true;
@@ -310,10 +317,11 @@
             communeId: communeId,
             isAutomatic: isAutomatic,
             isLowConsumption: isLowConsumption,
-            isMorePassengers: isMorePassengers            
+            isMorePassengers: isMorePassengers,
+            haveChair: haveChair            
         };
 
-        console.log(parameters);
+        /*console.log(parameters);*/
 
         $.post("<?php echo url_for('car_search') ?>", parameters, function(r){
 
@@ -367,9 +375,9 @@
 
                     windowMarker += "<div class='col-md-4 text-center'>";
                     if(str > 0) {
-                        windowMarker += "<img class='img-responsive' src='http://www.arriendas.cl" + urlFotoThumbTipo + "'/>";
+                        windowMarker += "<img class='img-responsive' src='http://www.arriendas.cl" + urlFotoThumbTipo + "' alt='rent a car  "+ Car.brand +" "+ Car.model +"'/>";
                     } else {
-                        windowMarker += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "'/>";
+                        windowMarker += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "' alt='rent a car "+ Car.brand +" "+ Car.model +"'/>";
                     }
                     windowMarker += "</div>";
 
@@ -414,9 +422,9 @@
                     article += "<div class='row'>";
                     article += "<div class='col-xs-4 col-md-4 image'>";
                     if(str > 0) {
-                        article += "<img class='img-responsive' src='http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='"+ Car.brand +" "+ Car.model +"'/>";
+                        article += "<img class='img-responsive' src='http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='rent a car "+ Car.brand +" "+ Car.model +"'/>";
                     }else   {
-                        article += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='"+ Car.brand +" "+ Car.model +"'/>";
+                        article += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='rent a car " + Car.brand +" "+ Car.model +"'/>";
                     }
                     /*article += "<img class='car img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_134,h_99,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='"+ Car.brand +" "+ Car.model +"'>";*/
                     article += "<img class='marker' src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + (i+1) + "|05a4e7|ffffff'>";
@@ -458,7 +466,7 @@
 
             if (r.cars.length) {
                 $("button.see-more").data("offset", parseInt(offset)+parseInt(limit));
-                console.log(r.cars.length+" < "+limit);
+                
                 if (r.cars.length < limit) {
                     /*$("button.see-more").hide();*/ // Al arreglar la query de búsqueda se descomenta esto
                 } else {
@@ -487,12 +495,12 @@
         </video> 
     </div>
 
-    <div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
+    <div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 text-center">
 
         <!-- Carousel -->
         <div id="section-home-carousel">
             <div>
-            <h1>ARRIENDA EL AUTO DE UN VECINO CON SEGURO, ASISTENCIA EN RUTA Y TAG</h1>
+                <h1>ARRIENDA EL AUTO DE UN VECINO CON SEGURO, ASISTENCIA EN RUTA Y TAG</h1>
                 <h2>Precios finales, sin letra chica.</h2>
             </div>
             <div>
@@ -502,9 +510,11 @@
             <div>
                 <h1>PRIMER SISTEMA DE ARRIENDO DE AUTOS ENTRE PERSONAS</h1>
                 <h2>Hay un auto en tu comuna o en un metro cercano.</h2>
-            </div>
+            </div>            
         </div>
+        <button id="btn-leese" data-target="#section-map-form-search">Arrienda ahora</button>
     </div>
+
     <div class="row" id="section-map-form-search">
 
         <span class="ico-search hidden-xs" data-target="#section-map-form-search"><img src="/images/newDesign/ico-search.svg"></span>
@@ -533,10 +543,10 @@
             <input class="direction form-control" id="direction" placeholder="Dirección" type="text">
         </div>
         <div class="col-xs-6 col-sm-2 col-md-2" id="from-container">
-            <input class="from daepicker form-control" id="from" placeholder="Desde" type="text" value="<?php if(date("H:i") >= "20:00" || date("H:i") <= "08:00"):echo date("d-m-Y 08:00",(strtotime ("+12 Hours"))); else:echo date("d-m-Y H:i", (strtotime ("+4 Hours"))); endif; ?>" >
+            <input class="datetimepicker form-control text-left" id="fromH" placeholder="Desde" type="button">
         </div>
         <div class="col-xs-6 col-sm-2 col-md-2" id="to-container">
-            <input class="to datetimepicker form-control" id="to" placeholder="Hasta" type="text" value="<?php if(date("H:i") >= "20:00" || date("H:i") <= "08:00"):echo date("d-m-Y 08:00",(strtotime ("+32 Hours"))); else:echo date("d-m-Y H:i", (strtotime ("+24 Hours"))); endif; ?>" >
+            <input class="datetimepicker form-control text-left" id="toH" placeholder="Hasta" type="button">
         </div>
 
         <!-- Search -->
@@ -555,8 +565,9 @@
         <div class="col-sm-6 col-md-6">
             <ul>
                 <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
-                <li><input type="checkbox" name="filter" class="isLowConsumption"> Petrolero</li>
+                <!-- <li><input type="checkbox" name="filter" class="isLowConsumption"> Bajo Consumo</li> -->
                 <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
+                <!-- <li><input type="checkbox" name="filrer" class="haveChair"> Silla Bebé</li> -->
             </ul>
         </div>
         <div class="col-sm-4 col-md-4 hidden-xs tabset">
@@ -802,37 +813,12 @@
     </div>
 </div>
 
+<input id="from" type="hidden">
+<input id="to" type="hidden">
+
 <script>
 
     $(document).ready(function(){
-        
-        /*$('#from').datetimepicker({
-            allowTimes:[
-            "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
-            "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
-            "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
-            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-            "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-            "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-            "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-            "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
-            ],
-            format:'d-m-Y H:i',
-            minDate : "<?php echo date('d-m-Y') ?>",
-            dayOfWeekStart: 1,
-            lang:'es',
-            onSelectTime: function() {
-                    var x = $("#from").val();
-                    times(x);
-            },
-            onSelectDate: function() {
-                var x = $("#from").val();
-                times(x);
-            }
-        });*/
-
-        $("#from").val(roundTime($("#from").val()));
-        $("#to").val(roundTime($("#to").val()));
 
         /*// Si comuna es visible, se preselecciona comuna más hot
         if ($("#commune").is(':visible')) {            
@@ -841,6 +827,10 @@
 
         localizame();
         initialize();
+
+        $(".box").click(function(){
+            console.log("123");
+        });
 
         // Carousel
         $('#section-home-carousel').slick({
@@ -862,6 +852,9 @@
             arrows: false,
             speed: 450
         });
+
+        initializeDate("from", new Date(<?php echo strtotime($from) * 1000 ?>), true, false);
+        initializeDate("to", new Date(<?php echo strtotime($to) * 1000 ?>), true, false);
 
         // Cuando es fin de semana
         <?php if ($isWeekend): ?>
@@ -947,6 +940,17 @@
         }, 1250);
     });
 
+    $("#btn-leese").on('click', function(e) {
+        
+        e.preventDefault();
+
+        var target  = $(this).data('target');
+        var position = $(target).offset().top - 50;
+        $('html, body').animate({
+            scrollTop: position
+        }, 1250);
+    });
+
     $(".tab").on('click', function(){
 
         var target = $(this).data("target");
@@ -962,67 +966,7 @@
         searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
     });
 
-    $('#from').datetimepicker({
-        allowTimes:[
-            "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
-            "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
-            "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
-            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-            "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-            "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-            "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-            "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
-        ],
-        dayOfWeekStart: 1,
-        format:'d-m-Y H:i',
-        lang:'es',
-        minDate: 0
-    });
-
-    $('#to').datetimepicker({
-        allowTimes:[
-            "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
-            "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
-            "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
-            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-            "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-            "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-            "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-            "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
-        ],
-        dayOfWeekStart: 1,
-        format:'d-m-Y H:i',
-        lang:'es',
-        minDate : 0
-    });
-
-    function roundTime(valor){
-
-        var fechaH = valor;
-
-        var split = fechaH.split(" ");
-        var f = split[0];
-        var h = split[1];
-
-        var split3 = h.split(":");
-        var hora = parseInt(split3[0]);
-        var min = parseInt(split3[1]);
-
-        if (min > 14 && min < 45){
-            min = "30";
-        } else if (min > 45){
-            min = "00";
-            hora = (hora+1).toString();
-        } else {
-            min = "00";
-        }
-
-        fecha = f+" "+hora+":"+min;
-
-        return fecha;
-    }
-
-    function times(valor){
+    /*function times(valor){
 
         var fechaF = valor
 
@@ -1048,7 +992,7 @@
                 ],
                 lang:'es',
                 dayOfWeekStart: 1,
-                /*minDate:get_date($('#from').val())?get_date($('#from').val()):false,*/
+                // minDate:get_date($('#from').val())?get_date($('#from').val()):false,
                 format:'d-m-Y H:i'
             });
         }else{
@@ -1065,7 +1009,7 @@
                 ],
                 lang:'es',
                 dayOfWeekStart: 1,
-                /*minDate:get_date($('#from').val())?get_date($('#from').val()):false,*/
+                //minDate:get_date($('#from').val())?get_date($('#from').val()):false,
                 format:'d-m-Y H:i'
             });
         }
@@ -1078,5 +1022,10 @@
             var parts = input.match(/(\d+)/g);
             return parts[2]+'/'+parts[1]+'/'+parts[0];
         } 
+    }*/
+
+    function afterDateRefresh() {
+        searchCars(0, $("button.see-more").data("limit"));
     }
 </script>
+<script src="/js/newDesign/dates.js" type="text/javascript"></script>

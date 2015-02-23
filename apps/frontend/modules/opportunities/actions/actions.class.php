@@ -79,7 +79,7 @@ class opportunitiesActions extends sfActions {
                 throw new Exception("Firma para aprobar Reserve ".$reserveId." no coincide");
             }
 
-            $already = false;            
+            $already = false;
 
             $ChangeOptions = $Reserve->getChangeOptions();
 
@@ -170,6 +170,7 @@ class opportunitiesActions extends sfActions {
         }
 
         $O = $OriginalReserve->copy(true);
+        $O->setUser($OriginalReserve->getUser());
         $O->setCar($Car);
         $O->setFechaReserva(date("Y-m-d H:i:s"));
         $O->setFechaConfirmacion(date("Y-m-d H:i:s"));
@@ -185,16 +186,15 @@ class opportunitiesActions extends sfActions {
         }
         
         $O->setUniqueToken(true);
-        $O->save();
 
-        $OT = $OriginalReserve->getTransaction()->copy(true);
+        $OT = $O->getTransaction();
         $OT->setCar($Car->getModel()->getBrand()->getName() ." ". $Car->getModel()->getName());
-        $OT->setReserve($O);
         $OT->setDate(date("Y-m-d H:i:s"));
         $OT->setCompleted(false);
         $OT->setImpulsive(true);
         $OT->setTransaccionOriginal($OriginalReserve->getTransaction()->getId());
-        $OT->save();
+
+        $O->save();
 
         return null;
     }

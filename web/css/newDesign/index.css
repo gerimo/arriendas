@@ -344,6 +344,20 @@ header .navbar-nav .navbar-right ul {
     text-decoration: none;
 }
 
+#btn-leese {
+    background-color: rgba(255, 255, 255, 0.5);
+    border: solid 0px rgba(255, 255, 255, 0.5);
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    padding: 10px 15px 10px 15px;
+    font-weight: 600;
+    text-align: center;
+    text-shadow: rgb(0, 0, 0) 1px 0px 5px;
+    text-transform: uppercase;
+    border-radius: 11px;
+}
+
 #link-holder {
     background: #ba135f;
     padding: 16px 15px 13px;
@@ -778,6 +792,12 @@ button.see-more {
         font-size: 19px;
         margin: 0 0 170px 0;
     }
+    #btn-leese {
+        position: absolute;
+        top: 75%;
+        margin: -20px 0px 0px 115px;
+        font-size: 20px;
+    }
 }
 
 @media only screen and (max-width:992px) {
@@ -786,4 +806,12 @@ button.see-more {
         background-image: url("/images/newDesign/background-home.jpg");
         background-size: 100% 100%;
     }
+
+    #btn-leese {
+        position: absolute;
+        top: 75%;
+        margin: -9px 0px 0px 55px;
+        font-size: 20px;
+    }
 }
+

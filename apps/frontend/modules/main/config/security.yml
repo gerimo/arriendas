@@ -79,7 +79,16 @@ reserve:
 searchACars:
     is_secure: false
 
+siteMap:
+    is_secure: false
+
 terminos:
+    is_secure: false
+
+testSMS:
+    is_secure: false
+
+testFuckingError:
     is_secure: false
 
 valueYourCar:

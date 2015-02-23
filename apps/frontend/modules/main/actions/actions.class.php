@@ -4,12 +4,12 @@ require_once sfConfig::get('sf_lib_dir') . '/vendor/mobile-detect/Mobile_Detect.
 
 class mainActions extends sfActions {
 
-    public function executeTestKhipu (sfWebRequest $request) {
+    /*public function executeTestKhipu (sfWebRequest $request) {
         $this->setLayout(false);
 
-        /*$this->reserveId = 41023;*/
+        $this->reserveId = 41023;
         $this->transactionId = 21097;
-    }
+    }*/
 
     public function executeIndex (sfWebRequest $request) {
 
@@ -42,6 +42,20 @@ class mainActions extends sfActions {
 
         if (Utils::isWeekend()) {
             $this->isWeekend = true;
+        }
+
+        // Se define la fecha DESDE
+        if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
+            $this->from = date("Y-m-d 08:00", strtotime("+12 Hours"));
+        } else {
+            $this->from = date("Y-m-d H:i", strtotime("+4 Hours"));
+        }
+
+        // Se define la fecha HASTA
+        if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
+            $this->to = date("Y-m-d 08:00", strtotime("+32 Hours"));
+        } else {
+            $this->to = date("Y-m-d H:i", strtotime("+24 Hours"));
         }
     }
 
@@ -119,7 +133,7 @@ class mainActions extends sfActions {
             }
         }
 
-        return sfView::SUCCESS;        
+        return sfView::SUCCESS;
     }
 
     public function executeDataForPayment(sfWebRequest $request){
@@ -155,9 +169,34 @@ class mainActions extends sfActions {
         return sfView::NONE;
     }
 
-     public function executeMessageRegister(sfWebRequest $request) {
+    public function executeMessageRegister(sfWebRequest $request) {
+
         $this->setLayout("newIndexLayout");
-        
+    }
+
+    public function executeNotificationClose(sfWebRequest $request) {
+
+        $userNotificationId = $this->getUser()->getAttribute("notificationId");
+
+        try {            
+
+            $UN = Doctrine_Core::getTable('UserNotification')->find($userNotificationId);
+            if (!$UN) {
+                throw new Exception("No se encontro la UserNotification ".$userNotificationId, 1);
+            }
+
+            $UN->setClosedAt(date("Y-m-d H:i:s"));
+
+            $this->getUser()->setAttribute("notificationMessage", null);
+            $this->getUser()->setAttribute("notificationId", null);
+
+            $UN->save();
+
+        } catch (Exception $e) {
+            error_log("[main/notificationClose] ERROR: ".$e->getMessage());
+        }
+
+        return sfView::NONE;
     }
 
     public function executeDoCompleteRegister(sfWebRequest $request) {
@@ -210,25 +249,34 @@ class mainActions extends sfActions {
                 throw new Exception("Debes indicar un teléfono", 1);
             }
 
-            if (is_null($birth) || $birth == "") {
+            if (!is_null($birth) || $birth != "") {
+                $dateNow = date('Y-m-d H:i:s');
+                $diff = (strtotime($dateNow) - strtotime($birth));
+                if($diff > 0) {
+                    $years = floor($diff / (365*60*60*24));
+                }
+                if($years < 24) {
+                    throw new Exception("Debes tener 24 años", 1);
+                }
+            } else {
                 throw new Exception("Debes indicar tu fecha de nacimiento", 1);
             }
 
             if (is_null($address) || $address == "") {
                 throw new Exception("Debes indicar tu dirección", 1);
             }
+            
+            if (is_null($region) || $region == "0") {
+                throw new Exception("Debes indicar tu región", 1);
+            }
 
-            if (is_null($commune) || $commune == "") {
+            if (is_null($commune) || $commune == "0") {
                 throw new Exception("Debes indicar tu comuna", 1);
             }
 
             $Commune = Doctrine_Core::getTable("Commune")->find($commune);
             if (!$Commune) {
                 throw new Exception("No se encontró la comuna", 1);                
-            }
-
-            if (is_null($region) || $region == "") {
-                throw new Exception("Debes indicar tu región", 1);
             }
 
             if(!$foreign) {
@@ -2743,6 +2791,10 @@ class mainActions extends sfActions {
         $this->setLayout("newIndexLayout");
     }
 
+    public function executeSiteMap(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+    }
+
     public function executeForgotSend(sfWebRequest $request) {
         $this->setLayout("newIndexLayout");
 
@@ -3036,7 +3088,8 @@ class mainActions extends sfActions {
         $this->setLayout("newIndexLayout");
         try {
 
-            $this->Brands = Doctrine_Core::getTable('Brand')->findAll();
+            $this->Brands = BrandTable::getBrandOrderByName();
+            //$this->Brands = Doctrine_Core::getTable('Brand')->findAll();
         
         } catch(Exception $e) { 
             error_log("[".date("Y-m-d H:i:s")."] [main/valueYourCar] ERROR: ".$e->getMessage()); 
