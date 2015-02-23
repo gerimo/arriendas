@@ -5,9 +5,17 @@ homepage:
   url:   /
   param: { module: main, action: index }
 
+car_control:
+    url: /auto/control-auto
+    param: { module: car, action: carControl}
+
 car_delete_damage:
     url: /auto/eliminar-dano
     param: { module: car, action: deleteDamage }
+
+car_find_all:
+    url: /auto/buscar-todos
+    param: { module: car, action: findAll }
 
 car_find_car:
     url: /auto/buscar
@@ -77,13 +85,53 @@ opportunity_mailing_config_save:
     url: /oportunidades/mailing/guardar
     param: { module: opportunity, action: mailingConfigSave }
 
+reserve_edit:
+    url: /reserva/editar-reserva
+    param: { module: reserve, action: editReserve}
+
+reserve_expired_reserves:
+    url: /reserva/reserveas-vencidad
+    param: { module: reserve, action: expiredReserves}
+
+reserve_find_expired_reserves:
+    url: /reserva/buscar-reserveas-vencidad
+    param: { module: reserve, action: findExpiredReserves}
+
+reserve_find_problematic_reserves:
+    url: /reserva/buscar-reservas-problematicas 
+    param: { module: reserve, action: findProblematicReserves}
+
+reserve_fortnightly_Payments:
+    url: /reserva/pagos-quincenales
+    param: { module: reserve, action: fortnightlyPayments}
+
 reserve_is_original_reserve:
     url: /reserva/es-reserva-original
     param: { module: reserve, action: isOriginalReserve }
 
+reserve_problematic_reservations:
+    url: /reserva/reservas-problematicas 
+    param: { module: reserve, action: problematicReservations }
+
+transaction_edit:
+    url: /transaction/editar-transaccion
+    param: { module: transaction, action: editTransaction }
+
 user_change_call:
     url: /usuarios/cambiar-llamado
     param: { module: user, action: changeCall }
+
+user_control:
+    url: /usuarios/control-usuario
+    param: { module: user, action: userControl }
+
+user_edit:
+    url: /usuarios/editar-usuario
+    param: { module: user, action: editUser }
+
+user_find_all:
+    url: /usuarios/buscar-todos
+    param: { module: user, action: userFindAll }
 
 user_whitout_car:
     url: /usuarios/sin-auto

@@ -44,7 +44,7 @@ EOF;
         switch ($status) {
             case 0:
                 /* problemas de conexion */
-                $profile->setChequeoLicencia(false);
+                $profile->setIsValidLicense(false);
                 /* notificaciones */
                 $messageBody = "<p>Usuario: " . $profile->getFirstname() . ":</p>";
                 $messageBody .= "<p>mail: " . $profile->getEmail() . ":</p>";
@@ -60,13 +60,13 @@ EOF;
                 break;
             case 1:
                 /* se chequeo y no ha sido bloqueada */
-                $profile->setChequeoLicencia(true);
+                $profile->setIsValidLicense(true);
 
                 break;
             case 2:
                 /* bloqueado */
                 $profile->setBlocked(true);
-                $profile->setChequeoLicencia(true);
+                $profile->setIsValidLicense(false);
 
                 /* notificaciones */
                 $messageBody = "<p>Usuario: " . $profile->getFirstname() . ":</p>";
@@ -83,8 +83,7 @@ EOF;
             case 3:
                 /* licencia falsa */
                 $profile->setBlocked(true);
-                $profile->setLicenciaFalsa(true);
-                $profile->setChequeoLicencia(true);
+                $profile->setIsValidLicense(false);
 
                 /* notificaciones */
                 $messageBody = "<p>Usuario: " . $profile->getFirstname() . ":</p>";
