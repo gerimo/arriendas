@@ -23,7 +23,7 @@
             <input class="form-control" name="telephone" id="telephone" placeholder="Teléfono"  type="text">
             <input class="datetimepicker form-control" id="birth" name="birth" placeholder="Fecha de nacimiento" >
             <div class="row">
-                <i class="fa fa-exclamation-triangle"></i><span class="note"> Debes tener minimo 24 años para utilizar arriendas.cl .</span>
+                <i class="fa fa-exclamation-triangle"></i><span class="note"> Debes tener desde 24 años para utilizar arriendas.cl .</span>
             </div>
             <input class="form-control" id="address" name="address" placeholder="Dirección #111" >
             
