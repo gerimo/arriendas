@@ -604,6 +604,11 @@ abstract class BaseCar extends sfDoctrineRecord
             'foreign' => 'car_id'
         ));
 
+        $this->hasMany('CarProximityMetro as CarProximityMetros', array(
+            'local' => 'id',
+            'foreign' => 'car_id'
+        ));
+
 
     }
 }

@@ -8,11 +8,9 @@ p{
 	font-family: 'roboto';
 }
 
-h1{
+h1.valueYourCarTitle{
 	text-align: center;
 	font-family: 'roboto';
-	font-size: 90%;
-	text-decoration: none;
 }
 
 .text-info{

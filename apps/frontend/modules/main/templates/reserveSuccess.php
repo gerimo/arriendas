@@ -1,25 +1,23 @@
 <link href="/css/newDesign/reserve.css" rel="stylesheet" type="text/css">
 
-<head>
-    <script>(function() {
-        var _fbq = window._fbq || (window._fbq = []);
-        if (!_fbq.loaded) {
-        var fbds = document.createElement('script');
-        fbds.async = true;
-        fbds.src = '//connect.facebook.net/en_US/fbds.js';
-        var s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(fbds, s);
-        _fbq.loaded = true;
-        }
-        _fbq.push(['addPixelId', '1519934024954094']);
-        })();
-        window._fbq = window._fbq || [];
-        window._fbq.push(['track', 'PixelInitialized', {}]);
-    </script>
-    <noscript>
-        <img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=1519934024954094&amp;ev=PixelInitialized" />
-    </noscript>
-</head>
+<script>(function() {
+    var _fbq = window._fbq || (window._fbq = []);
+    if (!_fbq.loaded) {
+    var fbds = document.createElement('script');
+    fbds.async = true;
+    fbds.src = '//connect.facebook.net/en_US/fbds.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(fbds, s);
+    _fbq.loaded = true;
+    }
+    _fbq.push(['addPixelId', '1519934024954094']);
+    })();
+    window._fbq = window._fbq || [];
+    window._fbq.push(['track', 'PixelInitialized', {}]);
+</script>
+<noscript>
+    <img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=1519934024954094&amp;ev=PixelInitialized" />
+</noscript>
 
 <div class="space-90 hidden-xs"></div>
 <div class="space-50 visible-xs"></div>
@@ -39,7 +37,7 @@
                         <?php if (strpos($arrayFotos[$i], "cars")): ?>
                             <?php echo image_tag($arrayFotos[$i]) ?>
                         <?php else: ?>
-                            <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/c_fill,g_center/http://www.arriendas.cl/uploads/verificaciones/<?= $arrayFotos[$i]?>" >
+                            <img alt='rent a car "<?php echo $Car->getModel()->getBrand()->name." ".$Car->getModel()->name?>"' src="http://res.cloudinary.com/arriendas-cl/image/fetch/c_fill,g_center/http://www.arriendas.cl/uploads/verificaciones/<?= $arrayFotos[$i]?>" >
                         <?php endif ?>
                         </div>
                     <?php endfor ?>
@@ -48,9 +46,7 @@
             <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev"></a>
             <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next"></a>
         </div>
-    </div> 
-
-    
+    </div>
 
     <div class="hidden-xs hidden-sm row">
         <div class="col-md-3 car-sep">
@@ -248,7 +244,6 @@
     <?php endif ?> 
     -->
     
-    
     <div class="space-50 hidden-xs"></div>
 
     <form action="<?php echo url_for('reserve_pay') ?>" id="reserve-form" method="post">
@@ -260,8 +255,10 @@
 
                 <!-- Duración -->
                 <h2><span class="num">1</span> DURACIÓN</h2>
-                <input class="datetimepicker btn-block" id="fromH" type="button" value="Desde: <?php echo $fromHuman ?>"></input>
-                <input class="datetimepicker btn-block" id="toH" type="button" value="Hasta: <?php echo $toHuman ?>"></input>
+                <h3>DESDE:</h3>
+                <input class="datetimepicker btn-block" id="fromH" type="button"></input>
+                <h3>HASTA:</h3>
+                <input class="datetimepicker btn-block" id="toH" type="button"></input>
 
                 <div class="space-50 hidden-xs"></div>
 
@@ -347,7 +344,7 @@
         <!-- FORMULARIO -->
         <input id="car" name="car" type="hidden" value="<?php echo $Car->getId() ?>">
         <input id="from" name="from" type="hidden" value="<?php echo $from ?>">
-        <input id="to" name="to" type="hidden" value="<?php echo $to ?>">        
+        <input id="to" name="to" type="hidden" value="<?php echo $to ?>">
     </form>
     <input id="price" type="hidden" value="<?php echo $price ?>">
     <input id="total-price" type="hidden" value="<?php echo $price ?>">
@@ -372,8 +369,6 @@
 
     $(document).ready(function(){
 
-        imageUpload('#formlicence', '#filelicence', '#previewlicence','#linklicence');       
-
         // Carousel
         $('#car-images-carousel').slick({
             dots: false,
@@ -388,9 +383,8 @@
             }
         });
 
-        refreshDate(true, true);
-        refreshDate(false, true);
-
+        initializeDate("from", new Date(<?php echo strtotime($from) * 1000 ?>), true, true);
+        initializeDate("to", new Date(<?php echo strtotime($to) * 1000 ?>), true, true);
     });
 
     $('#reviews').on('shown.bs.collapse', function () {
@@ -468,78 +462,6 @@
         }
     });    
 
-    $("#fromH").datetimepicker({ 
-        dayOfWeekStart: 1,
-        lang:'es',
-        format:'D d/m/Y H:i',
-        minDate: "<?php echo date('Y-m-d') ?>",
-        timepicker: true,
-        validateOnBlur: false,
-        value: "<?php echo date('D d/m/Y H:i', strtotime($from)) ?>",
-        allowTimes:[
-            "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
-            "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
-            "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
-            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-            "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-            "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-            "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-            "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
-        ],
-        i18n:{
-            es:{
-                months:[
-                'Enero','Febrero','Marzo','Abril','Mayo',
-                'Junio','Julio','Agosto','Septiembre',
-                'Octubre','Noviembre','Diciembre'
-                ],
-                dayOfWeek:["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"]
-            }
-        },
-        onSelectDate: function() {
-            refreshDate(true, false);
-        },
-        onSelectTime: function() {
-            refreshDate(true, false);
-        }
-    });
-
-    $("#toH").datetimepicker({ 
-        dayOfWeekStart: 1,
-        lang:'es',
-        format:'D d/m/Y H:i',
-        minDate: "<?php echo date('Y-m-d') ?>",
-        timepicker: true,
-        validateOnBlur: false,
-        value: "<?php echo date('D d/m/Y H:i', strtotime($to)) ?>",
-        allowTimes:[
-            "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
-            "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
-            "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
-            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-            "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-            "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-            "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-            "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
-        ],
-        i18n:{
-            es:{
-                months:[
-                'Enero','Febrero','Marzo','Abril',
-                'Mayo','Junio','Julio','Agosto',
-                'Septiembre','Octubre','Noviembre','Diciembre'
-                ],
-                dayOfWeek:["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"]
-            }
-        },
-        onSelectDate: function() {
-            refreshDate(false, false);
-        },
-        onSelectTime: function() {
-            refreshDate(false, false);
-        }
-    });
-
     $("input[type=radio][name=warranty]").on('change', function(e) {
         refreshTotalPrice();
     });
@@ -559,25 +481,7 @@
         $('html, body').animate({
             scrollTop: position
         }, 1250);
-    });
-
-    function dateFormat(fecha){
-
-        var split = fecha.split(" ");
-        var f = split[1];
-        var h = split[2];
-
-        var split2 = f.split("/");
-        var dia = split2[0];
-        var mes = split2[1];
-        var ano = split2[2];
-
-        var split3 = h.split(":");
-        var hora = split3[0];
-        var min  = split3[1];
-
-        return ano+"-"+mes+"-"+dia+" "+hora+":"+min;
-    }
+    });    
 
     function explodeDate(date) {
 
@@ -718,37 +622,57 @@
         return true;
     }
 
-    function refreshDate(isFrom, isDocumentReady) {
-
-        if (isFrom) {
-
-            var fromH = $("#fromH").val();
-            s = fromH.split(" ");
-            $("#fromH").val("Desde: "+translateDay(s[0])+" "+s[1]+" a las "+s[2]);
-            $("#from").val(dateFormat(fromH));
-
-            if (!isDocumentReady) {
-
-                var toDate = explodeDate($("#from").val());
-                var to = new Date(toDate['year'], toDate['month']-1, toDate['day']+1, toDate['hours'], toDate['minutes'], 0, 0);
-
-                $("#toH").val("Hasta: "+translateDay(to.format('D'))+" "+to.format('d/m/Y')+" a las "+pad(to.format('H'), 2)+":"+to.format('i'));
-                $("#to").val(to.format("Y-m-d "+pad(to.format('H'), 2)+":i"));
-            }
-        } else {            
-            var toH = $("#toH").val();
-            s = toH.split(" ");
-            $("#toH").val("Hasta: "+translateDay(s[0])+" "+s[1]+" a las "+s[2]);
-            $("#to").val(dateFormat(toH));
-        }
-
-        getRentalPrice();
-        /*getCarTime();*/
-    }
-
     function refreshTotalPrice() {
 
         var warrantyType  = $('input[type=radio][name=warranty]:checked').val();
+        var warrantyPrice = parseInt($('input[type=radio][name=warranty]:checked').data("value"));
+
+        var price       = parseInt($("#price").val());
+        var totalPrice  = 0;
+
+        if (warrantyType === undefined) {
+            totalPrice = price;
+            $("#total-price").val(totalPrice);
+            $(".total-price").html($.number(totalPrice, 0, ',', '.'));
+        } else {
+
+            if (warrantyType == 1) {
+                totalPrice = price + warrantyPrice;
+                $("#total-price").val(totalPrice);
+                $(".total-price").html($.number(totalPrice, 0, ',', '.'));
+            } else {
+
+                var from  = $("#from").val();
+                var to    = $("#to").val();
+
+                var parameters = {
+                    "from": from,
+                    "to": to
+                };
+
+                $.post("<?php echo url_for('reserve_calculate_amount_warranty_free') ?>", parameters, function(r){
+                    console.log(r);
+                    if (r.error) {
+                        $("#dialog-alert p").html(r.errorMessage);
+                        $("#dialog-alert").attr("title", "Error al calcular el precio");
+                        $("#dialog-alert").dialog({
+                            buttons: [{
+                                text: "Aceptar",
+                                click: function() {
+                                    $(this).dialog( "close" );
+                                }
+                            }]
+                        });
+                    } else {
+                        totalPrice = price + r.amountWarrantyFree;
+                        $("#total-price").val(totalPrice);
+                        $(".total-price").html($.number(totalPrice, 0, ',', '.'));
+                    }
+                }, 'json');
+            }
+        }
+
+        /*var warrantyType  = $('input[type=radio][name=warranty]:checked').val();
         var warrantyPrice = parseInt($('input[type=radio][name=warranty]:checked').data("value"));
 
         fromDate = explodeDate($("#from").val());
@@ -786,22 +710,11 @@
         }
 
         $("#total-price").val(totalPrice);
-        $(".total-price").html($.number(totalPrice, 0, ',', '.'));
+        $(".total-price").html($.number(totalPrice, 0, ',', '.'));*/
     }
 
-
-    function translateDay(day) {
-
-        switch (day) {
-            case "Mon": return "Lun";
-            case "Tue": return "Mar";
-            case "Wed": return "Mié";
-            case "Thu": return "Jue";
-            case "Thur": return "Jue";
-            case "Fri": return "Vie";
-            case "Sat": return "Sáb";
-            case "Sun": return "Dom";
-            default: return false;
-        }
+    function afterDateRefresh() {
+        getRentalPrice();
     }
 </script>
+<script src="/js/newDesign/dates.js" type="text/javascript"></script>

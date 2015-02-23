@@ -125,6 +125,44 @@ class reservesActions extends sfActions {
         return sfView::NONE;
     }
 
+    public function executeCalculateAmountWarrantyFree (sfWebRequest $request) {
+        
+        $return = array("error" => false);
+
+        $from  = $request->getPostParameter("from", null);
+        $to    = $request->getPostParameter("to", null);
+
+        try {
+
+            $datesError = $this->validateDates($from, $to);
+            if ($datesError) {
+                throw new Exception($datesError, 2);
+            }
+
+            $return["amountWarrantyFree"] = Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to);
+
+        } catch (Exception $e) {
+
+            $return["error"] = true;
+
+            if ($e->getCode() >= 2) {
+                $return["errorMessage"] = $e->getMessage();
+            } else {
+                $return["errorMessage"] = "Problemas a calcular el monto de liberación de garantía. Por favor, intentalo más tarde";
+            }
+            
+            error_log("[".date("Y-m-d H:i:s")."] [reserves/calculateAmountWarrantyFree] ERROR: ".$e->getMessage());
+            
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "reserves/calculateAmountWarrantyFree");
+            }
+        }
+    
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
     public function executeCalculatePrice (sfWebRequest $request) {
 
         $return = array("error" => false);
@@ -510,8 +548,6 @@ class reservesActions extends sfActions {
             }
             
             if ($User->getBlocked()) {
-                error_log("BLOCKEADO: ".$User->getBlocked());
-                error_log("TIPO: ".gettype($User->getBlocked()));
                 throw new Exception("Rechazado el pago de User ".$userId." (".$User->firstname." ".$User->lastname.") debido a que se encuentra bloqueado, por lo que no esta autorizado para generar pagos", 1);            
             }
             
@@ -692,22 +728,18 @@ class reservesActions extends sfActions {
                     $order->setShowSuccess(true);
                     $order->save();
 
-
                     $carId = $reserve->getCarId();
                     $carClass = Doctrine_Core::getTable('car')->findOneById($carId);
                     $propietarioId = $carClass->getUserId();
-                    $propietarioClass = Doctrine_Core::getTable('user')->findOneById($propietarioId);
-                    $communeId = $propietarioClass->getCommune();
-                    $comunaClass = Doctrine_Core::getTable('Commune')->find($communeId);
-                    
+                    $propietarioClass = Doctrine_Core::getTable('user')->findOneById($propietarioId);                    
                     
                     $this->nameOwner      = $reserve->getNameOwner();
                     $this->emailOwner     = $reserve->getEmailOwner();
                     $this->lastnameOwner  = $reserve->getLastnameOwner();
                     $this->telephoneOwner = $reserve->getTelephoneOwner();
                     $this->tokenReserve   = $reserve->getToken();
-                    $this->comunaOwner    = $comunaClass->getName();
-                    $this->addressOwner   =$propietarioClass->getAddress();
+                    $this->comunaOwner    = $propietarioClass->getCommune()->getName();
+                    $this->addressOwner   = $propietarioClass->getAddress();
 
                     $this->durationFrom   = $reserve->getFechaInicio2();
                     $this->durationTo     = $reserve->getFechaTermino2();

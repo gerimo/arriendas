@@ -12,7 +12,7 @@ class UserCheckPoderJudicialForBlockedUsersTask extends sfBaseTask {
         ));
 
         $this->namespace = 'user';
-        $this->name = 'checkPoderJudicialForBlockedUsers';
+        $this->name = 'CheckPoderJudicialForBlockedUsers';
         $this->briefDescription = 'Verifica a todos los usuarios bloqueados, desbloqueando a los que no posean causas judiciales';
         $this->detailedDescription = <<<EOF
 The [UserCheckPoderJudicialForBlockedUsers|INFO] task does things.
@@ -49,13 +49,13 @@ EOF;
             
             foreach ($Users as $User) {
                 $nodeCount = 0;
-                $causa = "connection fail";
+                $connection = "";
                 
                 if($User->getRut()) {
                     $countConRut++;
                     if (strlen($viewStateId) > 0) {
 
-                        // verification call
+                        /* verification call */
                         $params = array(
                             'formConsultaCausas:idFormRut' => $User->rut,
                             'formConsultaCausas:idFormRutDv' => strtoupper($User->rut_dv),
@@ -84,6 +84,8 @@ EOF;
                     } else {
                         $User->setChequeoJudicial(false);
                         $countProblemasConexion++;
+                        $causa = "connection fail";
+                        $connection = "Connection lost";
                     }
                     $User->save();
 
@@ -91,18 +93,20 @@ EOF;
                     $User->setChequeoJudicial(false);
                     $countSinRut++;
                 }
-                
                 $countTotal++;
 
-                $usuario  = str_pad("ID: ".$User->getId()." (".$User->getFirstname()." ".$User->getLastname().")", 50);
-                $rut      = str_pad("RUT: ".$User->getRutComplete(), 18);
-                $causas   = str_pad("Causas: ".($nodeCount/6), 10);
-                $this->log("[".date("Y-m-d H:i:s")."] ".$usuario."".$rut."".$causas);
+                $usuario = str_pad(("ID: ".$User->getId()." (".$User->getFirstname()." ".$User->getLastname().")"), 50);
+                $rut     = str_pad((" RUT: ".$User->getRutComplete()), 18);
+                $causas   = str_pad(("Causas: ".($nodeCount/6)), 13);
+                $this->log($usuario."".$rut."".$causas."".$connection);
+                //$this->log("ID: ".$User->getId()."(".$User->getFirstname()." ".$User->getLastname().") RUT: ".$User->getRutComplete()."  causas: ".($nodeCount/6));
+
             }
 
             $endTime = microtime(true);
 
             $this->log("[".date("Y-m-d H:i:s")."] Total usuarios:                   ".$countTotal);
+            $this->log("[".date("Y-m-d H:i:s")."] Total usuarios con rut:           ".$countConRut);
             $this->log("[".date("Y-m-d H:i:s")."] Total usuarios sin rut:           ".$countSinRut);
             $this->log("[".date("Y-m-d H:i:s")."] Usuarios bloqueados con causas:   ".$countTieneCausas);
             $this->log("[".date("Y-m-d H:i:s")."] Usuarios bloqueados sin Causas:   ".$countSinCusas);

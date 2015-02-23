@@ -56,6 +56,8 @@ class Reserve extends BaseReserve {
             ->addOrderBy('R.fecha_reserva ASC');
 
         $Reserves = $q->execute();
+
+        error_log("OPP: ".count($Reserves));
         
         foreach ($Reserves as $Reserve) {
             if ($Reserve->getReservaOriginal() == 0) {
@@ -474,6 +476,8 @@ class Reserve extends BaseReserve {
     public function save(Doctrine_Connection $conn = null) {
 
         $this->setUniqueToken();
+
+        //var_dump($this);
 
         return parent::save($conn);
     }

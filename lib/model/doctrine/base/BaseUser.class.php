@@ -55,7 +55,6 @@
  * @property Commune $commune
  * @property Doctrine_Collection $UserManagements
  * @property boolean $is_employee
- * @property boolean $usuario_validado
  *
  * 
  * @method integer             getId()                    Returns the current record's "id" value

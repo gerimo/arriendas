@@ -8,8 +8,40 @@
     var usuarioLogeado = "<?php echo $usuarioLog; ?>";
 
     var map; // initialize, searchCars
+    var geolocalizacion; // coordenadas
+    var latitud; // coordenadas
+    var lastValidCenter; // initialize
+    var longitud; // coordenadas
+    var map; // initialize, searchCars
     var markerCluster; // searchCars
     var markers = []; // searchCars
+    var strictBounds = null; // initialize
+
+    var swLat; // searchCars
+    var swLng; // searchCars
+    var neLat; // searchCars
+    var neLng; // searchCars
+
+    function coordenadas(position) {
+
+        latitud  = position.coords.latitude; // Guardamos nuestra latitud
+        longitud = position.coords.longitude; // Guardamos nuestra longitud
+        
+        <?php if ($sf_user->getAttribute('geolocalizacion') == true): ?>
+            geolocalizacion = true;
+        <?php else: ?>
+            geolocalizacion = false;
+        <?php endif ?>
+    }
+    function localizame() {
+        <?php if (!$isMobile): ?>
+            if (navigator.geolocation) { // Si el navegador tiene geolocalizacion
+                navigator.geolocation.getCurrentPosition(coordenadas, errores);
+            } else {
+                alert('¡Oops! Tu navegador no soporta geolocalización. Bájate Chrome, que es gratis!');
+            }
+        <?php endif ?>
+    }
 
     function errores(err) {
 
@@ -153,12 +185,25 @@
                         urlFotoTipo = Car.photo;
                         urlFotoThumbTipo = Car.photo;
                     }
+
+                    var str = 0;
+                    if (Car.photo) {
+                        str = Car.photo.indexOf("cars");
+                    }
+
+                    if(str > 0) {
+                        urlFotoTipo = Car.photo;
+                        urlFotoThumbTipo = Car.photo;
+                    }
     
                     article = "<article class='box'>";
                     article += "<div class='row'>";
                     article += "<div class='col-xs-4 col-md-4 image'>";
-                    article += "<img class='car' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_134,h_99,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='"+ Car.brand +" "+ Car.model +"'>";
-                    //article += "<img class='marker' src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + (i+1) + "|05a4e7|ffffff'>";
+                   if(str > 0) {
+                        article += "<img class='img-responsive' src='http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='rent a car "+ Car.brand +" "+ Car.model +"'/>";
+                    }else   {
+                        article += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='rent a car " + Car.brand +" "+ Car.model +"'/>";
+                    }
                     article += "</div>";
                     article += "<div class='col-xs-8 col-md-8 text'>";
                     article += "<h2>"+ Car.brand +" "+ Car.model +"<small>, "+Car.year+"</small></h2>";
@@ -217,7 +262,7 @@
             <h1>¡Arrienda un Auto!</h1>
 
             <!--Solo debe aparecer la Lista-->
-            <div class="lista grey">
+            <div class="listagrey">
                 <div class="row ">
                     <div class="col-xs-6 col-sm-3 col-md-3" id="region-container">
                         <select class="region form-control" id="region">
@@ -439,8 +484,11 @@
         $("#from").val(roundTime($("#from").val()));
         $("#to").val(roundTime($("#to").val()));
 
+        localizame();
+
         <?php if (!($hasCommune)): ?>
             $("#commune").focus();
+
         <?php endif ?>
 
         $("#search").click();

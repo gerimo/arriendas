@@ -200,7 +200,7 @@
         <?php endif ?>
     }
 
-    function validateTime(){
+    /*function validateTime(){
 
         var fechaF = splitTime($("#from").val());
         var fechaT = splitTime($("#to").val());
@@ -209,9 +209,9 @@
             return true;
         }
         return false;
-    }
+    }*/
 
-    function splitTime(time){
+    /*function splitTime(time){
         var split = time.split(" ");
         var f = split[0];
         var h = split[1];
@@ -222,7 +222,7 @@
         var ano = split[2];
 
         return (mes+dia+ano);
-    }
+    }*/
 
     function searchCars(offset, limit) {
 
@@ -231,7 +231,7 @@
         }
         $(".loading").show();
 
-        if (validateTime()) {
+        /*if (validateTime()) {
 
             $("#dialog-alert p").html('Fecha "Hasta" debe ser posterior a la fecha "Desde"');
             $("#dialog-alert").attr('title','Fecha "Hasta" mal ingresada');
@@ -244,7 +244,7 @@
                 }]
             });
             return false;
-        }
+        }*/
 
         // First, determine the map bounds
         var bounds = map.getBounds();
@@ -321,7 +321,7 @@
             haveChair: haveChair            
         };
 
-        console.log(parameters);
+        /*console.log(parameters);*/
 
         $.post("<?php echo url_for('car_search') ?>", parameters, function(r){
 
@@ -375,9 +375,9 @@
 
                     windowMarker += "<div class='col-md-4 text-center'>";
                     if(str > 0) {
-                        windowMarker += "<img class='img-responsive' src='http://www.arriendas.cl" + urlFotoThumbTipo + "'/>";
+                        windowMarker += "<img class='img-responsive' src='http://www.arriendas.cl" + urlFotoThumbTipo + "' alt='rent a car  "+ Car.brand +" "+ Car.model +"'/>";
                     } else {
-                        windowMarker += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "'/>";
+                        windowMarker += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "' alt='rent a car "+ Car.brand +" "+ Car.model +"'/>";
                     }
                     windowMarker += "</div>";
 
@@ -422,9 +422,9 @@
                     article += "<div class='row'>";
                     article += "<div class='col-xs-4 col-md-4 image'>";
                     if(str > 0) {
-                        article += "<img class='img-responsive' src='http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='"+ Car.brand +" "+ Car.model +"'/>";
+                        article += "<img class='img-responsive' src='http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='rent a car "+ Car.brand +" "+ Car.model +"'/>";
                     }else   {
-                        article += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='"+ Car.brand +" "+ Car.model +"'/>";
+                        article += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='rent a car " + Car.brand +" "+ Car.model +"'/>";
                     }
                     /*article += "<img class='car img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_134,h_99,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='"+ Car.brand +" "+ Car.model +"'>";*/
                     article += "<img class='marker' src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + (i+1) + "|05a4e7|ffffff'>";
@@ -466,7 +466,7 @@
 
             if (r.cars.length) {
                 $("button.see-more").data("offset", parseInt(offset)+parseInt(limit));
-                console.log(r.cars.length+" < "+limit);
+                
                 if (r.cars.length < limit) {
                     /*$("button.see-more").hide();*/ // Al arreglar la query de búsqueda se descomenta esto
                 } else {
@@ -511,8 +511,11 @@
                 <h1>PRIMER SISTEMA DE ARRIENDO DE AUTOS ENTRE PERSONAS</h1>
                 <h2>Hay un auto en tu comuna o en un metro cercano.</h2>
             </div>
+            <button id="btn-leese" data-target="#section-map-form-search">Arrienda ahora</button>
         </div>
+    
     </div>
+
     <div class="row" id="section-map-form-search">
 
         <span class="ico-search hidden-xs" data-target="#section-map-form-search"><img src="/images/newDesign/ico-search.svg"></span>
@@ -541,10 +544,10 @@
             <input class="direction form-control" id="direction" placeholder="Dirección" type="text">
         </div>
         <div class="col-xs-6 col-sm-2 col-md-2" id="from-container">
-            <input class="from daepicker form-control" id="from" placeholder="Desde" type="text" value="<?php if(date("H:i") >= "20:00" || date("H:i") <= "08:00"):echo date("d-m-Y 08:00",(strtotime ("+12 Hours"))); else:echo date("d-m-Y H:i", (strtotime ("+4 Hours"))); endif; ?>" >
+            <input class="datetimepicker form-control text-left" id="fromH" placeholder="Desde" type="button">
         </div>
         <div class="col-xs-6 col-sm-2 col-md-2" id="to-container">
-            <input class="to datetimepicker form-control" id="to" placeholder="Hasta" type="text" value="<?php if(date("H:i") >= "20:00" || date("H:i") <= "08:00"):echo date("d-m-Y 08:00",(strtotime ("+32 Hours"))); else:echo date("d-m-Y H:i", (strtotime ("+24 Hours"))); endif; ?>" >
+            <input class="datetimepicker form-control text-left" id="toH" placeholder="Hasta" type="button">
         </div>
 
         <!-- Search -->
@@ -749,8 +752,54 @@
                 <p class="user-type">Usuario Arriendas</p>
             </div>
             <div>
-                <p class="testimonial"><i class="fa fa-quote-left"></i> Puedo arrendar desde mi casa, en cualquier horario, sin tarjeta de crédito. Es el mismo auto que en un rent a car pero 30% más barato. <i class="fa fa-quote-right"></i></p>
-                <p class="user">Javiera Cruzar,</p>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> La experiencia con el arrendador fue excelente. <i class="fa fa-quote-right"></i></p>
+                <p class="user">Juan Diaz Medel,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i>  Lo mejor de todo es que no piden tarjetas de credito, para los que no las usamos … ¡Sigan así!.  <i class="fa fa-quote-right"></i></p>
+                <p class="user">Anitha Cordova Cifuentes,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> La disposicion del dueño fue muy buena y no hubo ningun problema. Absolutamente recomendable. Ahora estoy a la espera de mi segundo arriendo para este fin de semana. Ojala se expandan a todas las regiones . <i class="fa fa-quote-right"></i></p>
+                <p class="user">Francisco Riquelme,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Gracias por toda su ayuda y felicitarles por este emprendimiento que ayudas a tantos a contar, no solo con un auto, sino con un servicio responsable, personalizado y de gran calidad. <i class="fa fa-quote-right"></i></p>
+                <p class="user">Eduardo Cortes,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Mi experiencia ha sido muy buena. La persona que me arrendó el auto fue atento. Soy brasileño y estuve en Chile solo para estudiar, y mismo así yo pude arrendar un auto con toda la seguridad que solo Arriendas puede dar a sus clientes.<i class="fa fa-quote-right"></i></p>
+                <p class="user">Samir,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Mi testimonio es un 90% positivo, el sistema es bastante fácil de utilizar y la gestión para realizar el arriendo es también buena, salvo que falta incluir mas datos del vehículo. <i class="fa fa-quote-right"></i></p>
+                <p class="user">Manuel Nuñez Casanga,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Arriendas me permitió resevar un auto sin tarjeta de crédito y sin depósito en garantía. Lo recomiendo! <i class="fa fa-quote-right"></i></p>
+                <p class="user">Rosa Velásquez Rojas,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Su personal fue muy atento y eso genero la confianza suficiente para inscribirme en su página y concretar el arriendo. <i class="fa fa-quote-right"></i></p>
+                <p class="user">Felipe Salinas,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+            <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Mi experiencia con Arriendas fue excelente ademas de una excelente experiencia en la atencion del dueño del vehículo: amable, puntual y el auto, excelente. 100% confiable. <i class="fa fa-quote-right"></i></p>
+                <p class="user">Sergio Quezada,</p>
+                <p class="user-type">Usuario Arriendas</p>
+            </div>
+             <div>
+                <p class="testimonial"><i class="fa fa-quote-left"></i> Algunos pequeños ripios en la coordinación inicial, pero el auto arrendado estaba en perfecto estado y la persona que lo arrendó fue muy agradable. En general, una buena experiencia, la repetiré cuando lo necesite. <i class="fa fa-quote-right"></i></p>
+                <p class="user">Gustavo Villagran,</p>
                 <p class="user-type">Usuario Arriendas</p>
             </div>
         </div>
@@ -765,37 +814,12 @@
     </div>
 </div>
 
+<input id="from" type="hidden">
+<input id="to" type="hidden">
+
 <script>
 
     $(document).ready(function(){
-        
-        /*$('#from').datetimepicker({
-            allowTimes:[
-            "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
-            "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
-            "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
-            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-            "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-            "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-            "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-            "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
-            ],
-            format:'d-m-Y H:i',
-            minDate : "<?php echo date('d-m-Y') ?>",
-            dayOfWeekStart: 1,
-            lang:'es',
-            onSelectTime: function() {
-                    var x = $("#from").val();
-                    times(x);
-            },
-            onSelectDate: function() {
-                var x = $("#from").val();
-                times(x);
-            }
-        });*/
-
-        $("#from").val(roundTime($("#from").val()));
-        $("#to").val(roundTime($("#to").val()));
 
         /*// Si comuna es visible, se preselecciona comuna más hot
         if ($("#commune").is(':visible')) {            
@@ -804,6 +828,10 @@
 
         localizame();
         initialize();
+
+        $(".box").click(function(){
+            console.log("123");
+        });
 
         // Carousel
         $('#section-home-carousel').slick({
@@ -825,6 +853,9 @@
             arrows: false,
             speed: 450
         });
+
+        initializeDate("from", new Date(<?php echo strtotime($from) * 1000 ?>), true, false);
+        initializeDate("to", new Date(<?php echo strtotime($to) * 1000 ?>), true, false);
 
         // Cuando es fin de semana
         <?php if ($isWeekend): ?>
@@ -910,6 +941,17 @@
         }, 1250);
     });
 
+    $("#btn-leese").on('click', function(e) {
+        
+        e.preventDefault();
+
+        var target  = $(this).data('target');
+        var position = $(target).offset().top - 50;
+        $('html, body').animate({
+            scrollTop: position
+        }, 1250);
+    });
+
     $(".tab").on('click', function(){
 
         var target = $(this).data("target");
@@ -925,67 +967,7 @@
         searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
     });
 
-    $('#from').datetimepicker({
-        allowTimes:[
-            "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
-            "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
-            "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
-            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-            "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-            "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-            "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-            "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
-        ],
-        dayOfWeekStart: 1,
-        format:'d-m-Y H:i',
-        lang:'es',
-        minDate: 0
-    });
-
-    $('#to').datetimepicker({
-        allowTimes:[
-            "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
-            "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
-            "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
-            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-            "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-            "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-            "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-            "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
-        ],
-        dayOfWeekStart: 1,
-        format:'d-m-Y H:i',
-        lang:'es',
-        minDate : 0
-    });
-
-    function roundTime(valor){
-
-        var fechaH = valor;
-
-        var split = fechaH.split(" ");
-        var f = split[0];
-        var h = split[1];
-
-        var split3 = h.split(":");
-        var hora = parseInt(split3[0]);
-        var min = parseInt(split3[1]);
-
-        if (min > 14 && min < 45){
-            min = "30";
-        } else if (min > 45){
-            min = "00";
-            hora = (hora+1).toString();
-        } else {
-            min = "00";
-        }
-
-        fecha = f+" "+hora+":"+min;
-
-        return fecha;
-    }
-
-    function times(valor){
+    /*function times(valor){
 
         var fechaF = valor
 
@@ -1011,7 +993,7 @@
                 ],
                 lang:'es',
                 dayOfWeekStart: 1,
-                /*minDate:get_date($('#from').val())?get_date($('#from').val()):false,*/
+                // minDate:get_date($('#from').val())?get_date($('#from').val()):false,
                 format:'d-m-Y H:i'
             });
         }else{
@@ -1028,7 +1010,7 @@
                 ],
                 lang:'es',
                 dayOfWeekStart: 1,
-                /*minDate:get_date($('#from').val())?get_date($('#from').val()):false,*/
+                //minDate:get_date($('#from').val())?get_date($('#from').val()):false,
                 format:'d-m-Y H:i'
             });
         }
@@ -1041,5 +1023,10 @@
             var parts = input.match(/(\d+)/g);
             return parts[2]+'/'+parts[1]+'/'+parts[0];
         } 
+    }*/
+
+    function afterDateRefresh() {
+        searchCars(0, $("button.see-more").data("limit"));
     }
 </script>
+<script src="/js/newDesign/dates.js" type="text/javascript"></script>
