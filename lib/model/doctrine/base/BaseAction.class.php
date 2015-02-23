@@ -1,10 +1,10 @@
 <?php
 
-abstract class BaseNotificationType extends sfDoctrineRecord {
+abstract class BaseAction extends sfDoctrineRecord {
 
     public function setTableDefinition() {
 
-        $this->setTableName('NotificationType');
+        $this->setTableName('Action');
         
         $this->hasColumn('id', array(
             'type' => 'integer',
@@ -43,7 +43,7 @@ abstract class BaseNotificationType extends sfDoctrineRecord {
         
         $this->hasMany('Notifications as Notification', array(
              'local' => 'id',
-             'foreign' => 'notification_id'
+             'foreign' => 'action_id'
         ));
     }
 }
