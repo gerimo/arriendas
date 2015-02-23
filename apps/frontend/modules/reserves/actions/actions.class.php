@@ -565,6 +565,10 @@ class reservesActions extends sfActions {
             $Reserve->setDate(date("Y-m-d H:i:s", strtotime($from)));
             $Reserve->setUser($User);
             $Reserve->setCar($Car);
+
+            if ($User->moroso) {
+                $warranty = true;
+            }
             
             if ($warranty) {
                 $amountWarranty = sfConfig::get("app_monto_garantia");
