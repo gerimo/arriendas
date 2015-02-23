@@ -94,8 +94,8 @@ testFuckingError:
 valueYourCar:
     is_secure: false
 
-PriceJson:
+priceJson:
     is_secure: false
 
-GetModel:
+getModel:
     is_secure: false

@@ -256,7 +256,16 @@ class profileActions extends sfActions {
                 throw new Exception("Debes indicar un teléfono", 1);
             }
 
-            if (is_null($birth) || $birth == "") {
+            if (!is_null($birth) || $birth != "") {
+                $dateNow = date('Y-m-d H:i:s');
+                $diff = (strtotime($dateNow) - strtotime($birth));
+                if($diff > 0) {
+                    $years = floor($diff / (365*60*60*24));
+                }
+                if($years < 24) {
+                    throw new Exception("Debes tener 24 años", 1);
+                }
+            } else {
                 throw new Exception("Debes indicar tu fecha de nacimiento", 1);
             }
 
@@ -264,7 +273,7 @@ class profileActions extends sfActions {
                 throw new Exception("Debes indicar tu dirección", 1);
             }
 
-            if (is_null($commune) || $commune == "") {
+            if (is_null($commune) || $commune == "0") {
                 throw new Exception("Debes indicar tu comuna", 1);
             }
 
@@ -294,14 +303,21 @@ class profileActions extends sfActions {
                 }
 
                 // check License
-                if(!$User->getChequeoLicencia()) {
+                /*if(!$User->getChequeoLicencia()) {
                     $comando = "nohup " . 'php '.$basePath.'/symfony  user:CheckDriversLicense --rut="'.strtoupper($rut).'" --user="'.$userId.'"' . " > /dev/null 2>&1 &";
                     exec($comando);
-                }
+                }*/
 
             } else {
                 $User->setChequeoJudicial(false);
             }
+
+            // si no estaba confirmado, lo confirma.
+            if(!$User->getConfirmed()) {
+                $User->setConfirmed(true);
+            }
+
+
 
             $User->save();
     
