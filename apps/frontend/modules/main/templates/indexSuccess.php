@@ -566,9 +566,9 @@
         <div class="col-sm-6 col-md-6">
             <ul>
                 <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
-                <li><input type="checkbox" name="filter" class="isLowConsumption"> Bajo Consumo</li>
+                <!-- <li><input type="checkbox" name="filter" class="isLowConsumption"> Bajo Consumo</li> -->
                 <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
-                <li><input type="checkbox" name="filrer" class="haveChair"> Silla Bebé</li>
+                <!-- <li><input type="checkbox" name="filrer" class="haveChair"> Silla Bebé</li> -->
             </ul>
         </div>
         <div class="col-sm-4 col-md-4 hidden-xs tabset">
