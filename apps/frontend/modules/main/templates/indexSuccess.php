@@ -495,12 +495,12 @@
         </video> 
     </div>
 
-    <div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
+    <div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 text-center">
 
         <!-- Carousel -->
         <div id="section-home-carousel">
             <div>
-            <h1>ARRIENDA EL AUTO DE UN VECINO CON SEGURO, ASISTENCIA EN RUTA Y TAG</h1>
+                <h1>ARRIENDA EL AUTO DE UN VECINO CON SEGURO, ASISTENCIA EN RUTA Y TAG</h1>
                 <h2>Precios finales, sin letra chica.</h2>
             </div>
             <div>
@@ -510,10 +510,9 @@
             <div>
                 <h1>PRIMER SISTEMA DE ARRIENDO DE AUTOS ENTRE PERSONAS</h1>
                 <h2>Hay un auto en tu comuna o en un metro cercano.</h2>
-            </div>
-            <button id="btn-leese" data-target="#section-map-form-search">Arrienda ahora</button>
+            </div>            
         </div>
-    
+        <button id="btn-leese" data-target="#section-map-form-search">Arrienda ahora</button>
     </div>
 
     <div class="row" id="section-map-form-search">
