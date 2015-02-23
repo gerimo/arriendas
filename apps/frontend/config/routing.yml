@@ -254,6 +254,14 @@ value_your_car:
     url: /monetiza-tu-auto
     param: { module: main, action: valueYourCar }
 
+value_your_car_models:
+    url: /monetiza-tu-auto/modelos
+    param: { module: main, action: getModel }
+
+value_your_car_price:
+    url: /monetiza-tu-auto/precio
+    param: { module: main, action: priceJson }
+
 
 
 # old Design
