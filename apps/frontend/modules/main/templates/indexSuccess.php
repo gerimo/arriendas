@@ -1,4 +1,4 @@
-<link href="/css/newDesign/index.css?v=4" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/index.css?v=6" rel="stylesheet" type="text/css">
 
 <!-- Google Maps -->
 <script src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;sensor=false" type="text/javascript"></script>
@@ -495,12 +495,12 @@
         </video> 
     </div>
 
-    <div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
+    <div class="col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 text-center">
 
         <!-- Carousel -->
         <div id="section-home-carousel">
             <div>
-            <h1>ARRIENDA EL AUTO DE UN VECINO CON SEGURO, ASISTENCIA EN RUTA Y TAG</h1>
+                <h1>ARRIENDA EL AUTO DE UN VECINO CON SEGURO, ASISTENCIA EN RUTA Y TAG</h1>
                 <h2>Precios finales, sin letra chica.</h2>
             </div>
             <div>
@@ -510,10 +510,9 @@
             <div>
                 <h1>PRIMER SISTEMA DE ARRIENDO DE AUTOS ENTRE PERSONAS</h1>
                 <h2>Hay un auto en tu comuna o en un metro cercano.</h2>
-            </div>
-            <button id="btn-leese" data-target="#section-map-form-search">Arrienda ahora</button>
+            </div>            
         </div>
-    
+        <button id="btn-leese" data-target="#section-map-form-search">Arrienda ahora</button>
     </div>
 
     <div class="row" id="section-map-form-search">
@@ -566,9 +565,9 @@
         <div class="col-sm-6 col-md-6">
             <ul>
                 <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
-                <li><input type="checkbox" name="filter" class="isLowConsumption"> Bajo Consumo</li>
+                <!-- <li><input type="checkbox" name="filter" class="isLowConsumption"> Bajo Consumo</li> -->
                 <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
-                <li><input type="checkbox" name="filrer" class="haveChair"> Silla Bebé</li>
+                <!-- <li><input type="checkbox" name="filrer" class="haveChair"> Silla Bebé</li> -->
             </ul>
         </div>
         <div class="col-sm-4 col-md-4 hidden-xs tabset">
