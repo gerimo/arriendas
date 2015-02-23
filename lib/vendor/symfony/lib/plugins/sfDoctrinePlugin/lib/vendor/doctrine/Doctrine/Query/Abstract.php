@@ -980,12 +980,16 @@ abstract class Doctrine_Query_Abstract
             return $this->_conn->exec($query, $params);
         }
 
-        $stmt = $this->_conn->execute($query, $params);
+        try {
+            $stmt = $this->_conn->execute($query, $params);
+        } catch (Exception $e) {
+            //echo "<pre>".var_dump($query)."</pre>";
+            //echo "<pre>".var_dump($params)."</pre>";
+            //echo $e;
+            //throw $e;
+        }
 
         $this->_params['exec'] = array();
-
-        //error_log($query);
-        //echo "<pre>".var_dump($params)."</pre>";
 
         return $stmt;
     }

@@ -66,268 +66,273 @@
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
-  <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos</loc>
+    <url>
+    <loc>http://www.arriendas.cl/rent-a-car</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/providencia</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/la-florida</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/providencia</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/nunoa</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/la-florida</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/santiago-centro</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/nunoa</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/alhue</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/santiago-centro</loc>
+    <lastmod>2015-02-12T21:28:06+00:00</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/alhue</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/buin</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/buin</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/calera-de-tango</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/calera-de-tango</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/cerrillos</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/cerrillos</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/cerro-navia</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/cerro-navia</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/colina</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/colina</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/conchali</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/conchali</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/curacavi</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/curacavi</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/el-bosque</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/el-bosque</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/el-monte</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/el-monte</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/estacion-central</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/estacion-central</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/huechuraba</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/huechuraba</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/independencia</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/independencia</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/isla-de-maipo</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/isla-de-maipo</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/la-cisterna</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/la-cisterna</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/la-granja</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/la-granja</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/la-pintana</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/la-pintana</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/las-condes</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/las-condes</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/lampa</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/lampa</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/lo-espejo</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/lo-espejo</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/lo-barnechea</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/lo-barnechea</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/macul</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/macul</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/lo-prado</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/lo-prado</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/maipu</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/maipu</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/maria-pinto</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/maria-pinto</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/melipilla</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/melipilla</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/nunoa</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/nunoa</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/padre-hurtado</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/padre-hurtado</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/paine</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/paine</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/pedro-aguirre-cerda</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/pedro-aguirre-cerda</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/penaflor</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/penaflor</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/penalolen</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/penalolen</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/pirque</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/pirque</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/pudahuel</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/pudahuel</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/puente-alto</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/puente-alto</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/quilicura</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/quilicura</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/quinta-normal</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/quinta-normal</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/recoleta</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/recoleta</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/renca</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/renca</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/san-bernardo</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/san-bernardo</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/san-joaquin</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/san-joaquin</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/san-jose-de-maipo</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/san-jose-de-maipo</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/san-miguel</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/san-miguel</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/san-pedro</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/san-pedro</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/san-ramon</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/san-ramon</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/til-til</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/til-til</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>
   <url>
-    <loc>http://www.arriendas.cl/arriendo-de-autos/region-metropolitana/vitacura</loc>
+    <loc>http://www.arriendas.cl/rent-a-car/arriendo-de-autos/region-metropolitana/vitacura</loc>
     <lastmod>2015-02-12T21:28:06+00:00</lastmod>
     <priority>0.64</priority>
   </url>

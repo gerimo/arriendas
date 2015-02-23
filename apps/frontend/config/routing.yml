@@ -1,10 +1,6 @@
 # You can find more information about this file on the symfony website:
 # http://www.symfony-project.org/reference/1_4/en/10-Routing
 
-test_sms:
-    url: /test/sms/:message/:phoneNumber
-    param: { module: main, action: testSMS }
-
 # test_khipu:
 #     url: /test/khipu
 #     param: { module: main, action: testKhipu }
@@ -134,6 +130,10 @@ news:
     url: /arrienda-en-las-noticias
     param: { module: main , action: news }
 
+notification_close:
+    url: /notification/close
+    param: { module: main, action: notificationClose }
+
 opportunities:
     url: /oportunidades
     param: { module: opportunities, action: index }
@@ -158,25 +158,37 @@ questions:
     url: /preguntas-frecuentes
     param: { module: main , action: questions }
 
+rent_a_car_a:
+    url: /rent-a-car
+    param: { module: main, action: searchACars }
+
 rent_a_car:
-    url: /arriendo-de-autos
+    url: /rent-a-car/arriendo-de-autos
     param: { module: main, action: searchACars }
 
 rent_a_car_region:
-    url: /arriendo-de-autos/:region
+    url: /rent-a-car/arriendo-de-autos/:region
     param: { module: main, action: searchACars }
 
 rent_a_car_region_commune:
-    url: /arriendo-de-autos/:region/:commune
+    url: /rent-a-car/arriendo-de-autos/:region/:commune
+    param: {module: main, action: searchACars }
+
+rent_a_car_santiago:
+    url: /rent-a-car/arriendo-de-autos-santiago
     param: {module: main, action: searchACars }
 
 reserve:
-    url: /reserva/auto/:carId
+    url: /rent-a-car/arriendo-de-autos-santiago/:carId
     param: { module: main, action: reserve }
 
 reserve_approve:
     url: /reserva/aprobar
     param: { module: reserves, action: approve }
+
+reserve_calculate_amount_warranty_free:
+    url: /reserva/calcular/libreacion-garantia
+    param: { module: reserves, action: calculateAmountWarrantyFree }
 
 reserve_calculate_price:
     url: /reserva/calcular-precio
@@ -221,6 +233,10 @@ return_form:
 terms_and_conditions:
     url: /terminos-y-condiciones
     param: { module: main, action: terminos }
+
+site_map:
+    url: /mapa-del-sitio
+    param: { module:main, action: siteMap}
 
 transactions:
     url: /mis-transacciones

@@ -125,6 +125,44 @@ class reservesActions extends sfActions {
         return sfView::NONE;
     }
 
+    public function executeCalculateAmountWarrantyFree (sfWebRequest $request) {
+        
+        $return = array("error" => false);
+
+        $from  = $request->getPostParameter("from", null);
+        $to    = $request->getPostParameter("to", null);
+
+        try {
+
+            $datesError = $this->validateDates($from, $to);
+            if ($datesError) {
+                throw new Exception($datesError, 2);
+            }
+
+            $return["amountWarrantyFree"] = Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to);
+
+        } catch (Exception $e) {
+
+            $return["error"] = true;
+
+            if ($e->getCode() >= 2) {
+                $return["errorMessage"] = $e->getMessage();
+            } else {
+                $return["errorMessage"] = "Problemas a calcular el monto de liberación de garantía. Por favor, intentalo más tarde";
+            }
+            
+            error_log("[".date("Y-m-d H:i:s")."] [reserves/calculateAmountWarrantyFree] ERROR: ".$e->getMessage());
+            
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "reserves/calculateAmountWarrantyFree");
+            }
+        }
+    
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
     public function executeCalculatePrice (sfWebRequest $request) {
 
         $return = array("error" => false);
@@ -510,8 +548,6 @@ class reservesActions extends sfActions {
             }
             
             if ($User->getBlocked()) {
-                error_log("BLOCKEADO: ".$User->getBlocked());
-                error_log("TIPO: ".gettype($User->getBlocked()));
                 throw new Exception("Rechazado el pago de User ".$userId." (".$User->firstname." ".$User->lastname.") debido a que se encuentra bloqueado, por lo que no esta autorizado para generar pagos", 1);            
             }
             

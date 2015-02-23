@@ -42,7 +42,6 @@
 
                     </div>
 
-                    <div class="linea espacio hidden-xs col-md-11"></div>
 
                     <div class="espacio col-sm-12 col-md-12">
                         <!-- marca auto -->
@@ -132,16 +131,26 @@
 
                     <div class="espacio col-sm-12 col-md-12">
                         <!-- Tipo de Vehículo -->
-                        <div class="col-sm-4 col-md-4">
-                            <label>Tipo de Vehículo (*)</label><br>
-                            <select class="form-control" id="typeCar" name="typeCar" placeholder="" type="text">
-                                    <option value="<?php if($Car->getModel()->getCarType()->getId()) echo $Car->getModel()->getCarType()->getId() ?>"><?php if($Car->getModel()->getCarType()->getName()): echo $Car->getModel()->getCarType()->getName(); else: echo "---"; endif; ?></option>
+                        <div class="col-sm-4 col-md-4" id="cilindrada">
+                            <label>Cilindrada (*)</label><br>
+                            <select class="form-control col-xs-6 col-md-6 " id="capacity1" name="" placeholder="" type="text">
+                                <option value="">---</option>
                                 <?php
-                                    foreach ($CarTypes as $CarType):
+                                for($i=1; $i<7; $i++):
                                 ?>
-                                    <option value="<?php echo $CarType['id']?>"><?php echo $CarType['name']?></option>
+                                <option value="<?php echo $i ?>" <?php if ($capacity1 == $i) echo "selected" ?> ><?php echo $i ?></option>";
                                 <?php
-                                    endforeach;
+                                endfor;
+                                ?>
+                            </select>
+                            <select class="form-control col-xs-6 col-md-6" id="capacity2" name="" placeholder="" type="text">
+                                <option value="">---</option>
+                                <?php
+                                for($i=0; $i<10; $i++):
+                                ?>
+                                <option value="<?php echo $i ?> "<?php if ($capacity2    == $i) echo "selected" ?>><?php echo $i ?></option>";
+                                <?php
+                                endfor;
                                 ?>
                             </select>
                         </div>
@@ -160,6 +169,60 @@
                         <div class="col-sm-4 col-md-4">
                             <label>Color (*)</label>
                             <input class="form-control" id="color" value="<?php if($Car->color) echo $Car->color ?>" name="color" placeholder="color" type="text">
+                        </div>
+                        
+                        <div class="linea espacio hidden-xs col-md-11"></div>
+
+                        <div class="visible-xs space-50"></div>
+
+                        <div class="col-sm-12 col-md-12" id="accessories">
+                            <h1>Accesorios del vehículo</h1>
+                            <div class="checkbox col-md-4">
+                                <label>
+                                    <input type="checkbox" id="sistemaABS" value="sistemaABS" <?php if (strstr($Car->accesoriosSeguro, "sistemaABS" )) echo 'checked'?>>
+                                    ABS 
+                                </label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label>
+                                    <input type="checkbox" id="aireAcondicionado" value="aireAcondicionado" <?php if (strstr($Car->accesoriosSeguro, "aireAcondicionado" )) echo 'checked'?>>
+                                    Aire acondicionado
+                                </label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label>
+                                    <input type="checkbox" id="airBag" value="airBag"<?php if (strstr($Car->accesoriosSeguro, "airBag" )) echo 'checked'?>>
+                                    Air Bag
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-12" id="accessories" >
+                            <div class="checkbox col-md-4">
+                                <label>
+                                    <input type="checkbox" id="controlCrucero" value="controlCrucero" <?php if (strstr($Car->accesoriosSeguro, "controlCrucero" )) echo 'checked'?>>
+                                    Control crucero
+                                </label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label>
+                                    <input type="checkbox" id="sensor" value="sensor"<?php if (strstr($Car->accesoriosSeguro, "sensor" )) echo 'checked'?>>
+                                    Sensor acercamiento/retroseso
+                                </label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label>
+                                    <input type="checkbox" id="babyChair" value="babyChair" <?php if ($Car->baby_chair) echo 'checked'?>>
+                                    Silla Bebé
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-12" id="accessories">
+                            <div class="checkbox col-md-4">
+                                <label>
+                                    <input type="checkbox" id="vidriosElectricos" value="vidriosElectricos"<?php if (strstr($Car->accesoriosSeguro, "vidriosElectricos" )) echo 'checked'?>>
+                                    Vidrios eléctricos
+                                </label>
+                            </div>
                         </div>
 
                         <div class="espacio col-md-11"></div>
@@ -187,7 +250,7 @@
                 <input id="carId" name="carId" type="hidden" value="<?php if($Car->id) echo $Car->id ?>">
             </form>
             <div class="col-md-offset-8 col-md-4">
-                <button class="btn-a-primary btn-block" name="save" onclick="validateFormCreate()">Guardar</button>
+                <button class="btn-a-primary btn-block" name="save" onclick="validateForm()">Guardar</button>
                 <p class="alert"></p> 
             </div>
 
@@ -327,17 +390,6 @@
                                 <a id="linkPhotoCar" href=""><i class="fa fa-edit"></i> subir</a>
                             </div>
 
-                            <!-- foto Seguro accesorios -->
-                            <div id="previewPhotoCarAccessory" class="photo text-center col-xs-12 col-sm-6 col-md-6" style="margin-bottom:10%">
-                                <label class="col-md-12">Foto Accesorios</label>
-                                    <?php if ($Car->getAccesoriosSeguro() == null): ?>
-                                        <?php echo image_tag('img_asegura_tu_auto/accesorio2.png') ?>
-                                    <?php else: ?>
-                                        <?php echo image_tag($Car->getAccesoriosSeguro()) ?>
-                                    <?php endif ?>
-                                <a id="linkPhotoCarAccessory" href=""><i class="fa fa-edit"></i> subir</a>
-                            </div>
-
                             <!-- foto Seguro frente -->
                             <div id="previewPhotoCarFront" class="photo text-center col-xs-12 col-sm-6 col-md-6" style="margin-bottom:10%">
                             <label class="col-md-12">Foto Frente</label>
@@ -410,11 +462,6 @@
                     <input type="submit">
                 </form>
 
-                <form action="<?php echo url_for('cars/uploadPhotoAccessory?photo=cars&width=194&height=204&file=filePhotoCarAccessory') ?>" enctype="multipart/form-data" id="formPhotoCarAccessory" method="post">
-                    <input id="filePhotoCarAccessory" name="filePhotoCarAccessory" type="file">
-                    <input type="submit">
-                </form>
-
                 <form action="<?php echo url_for('cars/uploadPhotoFront?photo=cars&width=194&height=204&file=filePhotoCarFront') ?>" enctype="multipart/form-data" id="formPhotoCarFront" method="post">
                     <input id="filePhotoCarFront" name="filePhotoCarFront" type="file">
                     <input type="submit">
@@ -458,13 +505,30 @@
     $(document).ready(function() {
 
         imageUpload('#formPhotoCar', '#filePhotoCar', '#previewPhotoCar','#linkPhotoCar');
-        imageUpload('#formPhotoCarAccessory', '#filePhotoCarAccessory', '#previewPhotoCarAccessory','#linkPhotoCarAccessory');
         imageUpload('#formPhotoCarFront', '#filePhotoCarFront', '#previewPhotoCarFront','#linkPhotoCarFront');
         imageUpload('#formPhotoCarSideRight', '#filePhotoCarSideRight', '#previewPhotoCarSideRight','#linkPhotoCarSideRight');
         imageUpload('#formPhotoCarSideLeft', '#filePhotoCarSideLeft', '#previewPhotoCarSideLeft','#linkPhotoCarSideLeft');
         imageUpload('#formPhotoCarBackRight', '#filePhotoCarBackRight', '#previewPhotoCarBackRight','#linkPhotoCarBackRight');
         imageUpload('#formPhotoCarBackLeft', '#filePhotoCarBackLeft', '#previewPhotoCarBackLeft','#linkPhotoCarBackLeft');
-   
+        
+        var capacity1 = $("#capacity1").val();
+        var capacity2 = $("#capacity2").val();
+        if (!capacity1 || !capacity2) {
+            var attr = $("#capacity1").attr("class");
+            $("#capacity1").attr("class", attr+"alert-info");
+            $("#capacity2").attr("class", attr+"alert-info");
+            $("#dialog-alert p").html("Debes completar datos faltantes de tu vehículo");
+            $("#dialog-alert").attr("title", "Datos Faltante!");
+            $("#dialog-alert").dialog({
+                buttons: [{
+                    text: "Aceptar",
+                    click: function() {
+                        $( this ).dialog( "close" );
+                    }
+                }]
+            });
+        }
+
     });
 
 
@@ -500,8 +564,9 @@
         }, 'json');
     });
 
-    function validateFormCreate() {
+    function validateForm() {
 
+        var carId          = $("#carId").val();
         var address        = $("#address").val();
         var commune        = $("#commune option:selected").val();
         var brand          = $("#brand option:selected").val();
@@ -515,9 +580,86 @@
         var color          = $("#color").val();
         var lat            = $("#lat").val();
         var lng            = $("#lng").val();
-        var carId          = $("#carId").val();
 
-        $.post("<?php echo url_for('cars/getValidateCar') ?>", {"address": address, "commune": commune, "brand": brand, "model": model, "ano": ano, "door": door, "transmission": transmission, "benzine": benzine, "typeCar": typeCar, "patent": patent, "color": color, "lat": lat, "lng": lng, "carId": carId}, function(r){
+        var sistemaABS = "";
+        $("#sistemaABS").each(function(){
+            if ($(this).is(':checked')) {
+                sistemaABS = $(this).val();
+            }
+        });
+
+        var aireAcondicionado = "";
+        $("#aireAcondicionado").each(function(){
+            if ($(this).is(':checked')) {
+                aireAcondicionado = $(this).val();
+            }
+        });
+
+        var airBag  = "";
+        $("#airBag").each(function(){
+            if ($(this).is(':checked')) {
+                airBag = $(this).val();
+            }
+        });
+
+        var controlCrucero = "";
+        $("#controlCrucero").each(function(){
+            if ($(this).is(':checked')) {
+                controlCrucero = $(this).val();
+            }
+        });
+
+        var sensor = "";
+        $("#sensor").each(function(){
+            if ($(this).is(':checked')) {
+                sensor = $(this).val();
+            }
+        });
+
+        var vidriosElectricos = "";
+        $("#vidriosElectricos").each(function(){
+            if ($(this).is(':checked')) {
+                vidriosElectricos = $(this).val();
+            }
+        });
+
+        var babyChair = false;
+        $("#babyChair").each(function(){
+            if ($(this).is(':checked')) {
+                babyChair = true;
+            }
+        });
+
+        var capacity1 = $("#capacity1 option:selected").val();
+        var capacity2 = $("#capacity2 option:selected").val();
+        var capacity = capacity1+"."+capacity2;
+
+        var parameters = {
+            "carId" : carId,
+            "address": address,
+            "commune": commune,
+            "brand": brand,
+            "model": model,
+            "ano": ano,
+            "door": door,
+            "transmission": transmission,
+            "benzine": benzine,
+            "typeCar": typeCar,
+            "patent": patent,
+            "color": color,
+            "lat": lat,
+            "lng": lng,
+            "sistemaABS": sistemaABS,
+            "aireAcondicionado": aireAcondicionado,
+            "airBag": airBag, 
+            "controlCrucero": controlCrucero,   
+            "sensor": sensor,
+            "babyChair": babyChair,
+            "vidriosElectricos": vidriosElectricos,
+            "capacity":  capacity
+        };
+
+        $.post("<?php echo url_for('cars/getValidateCar') ?>", parameters, function(r){
 
             
             $(".alert").removeClass("alert-a-danger");
@@ -574,8 +716,7 @@
 
 
             } else {
-                $(".alert").addClass("alert-a-danger");
-                $(".alert").html("Datos del vehículo editado con exito");
+                window.location.href = r.url_complete;
             }
 
         }, 'json');
@@ -588,7 +729,6 @@
         var patente  = $("#patent").val();
         var carId    = $("#carId").val();
         $("#patent").val(x.toUpperCase());
-        console.log(carId);
 
 
         $.post("<?php echo url_for('cars/getValidatePatent') ?>", {"patente": patente, "carId": carId}, function(r){

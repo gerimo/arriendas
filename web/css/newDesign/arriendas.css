@@ -72,6 +72,27 @@ header .navbar-right .dropdown-menu {
     border-color: rgba(70, 70, 70, 1);
 }
 
+/* notification bar */
+header .notbar {
+    background-color: rgb(255, 255, 0);
+    color: rgb(70, 70, 70);
+    font-size: 12px;
+    font-weight: 400;
+    padding: 5px 20px;
+    position: absolute;
+    text-align: right;
+    text-transform: uppercase;
+    top: 50px;
+    width: 100%;
+    z-index: 10;
+}
+
+header .notbar .remove {
+    cursor: pointer;
+    float: right;
+    margin: 0 0 0 20px;
+}
+
 header .glyphicon{
     right: 5px;
 }

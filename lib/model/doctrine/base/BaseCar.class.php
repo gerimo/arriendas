@@ -39,7 +39,11 @@
  * @property integer $options
  * @property date disabled_until
  * @property Doctrine_Collection $CarProximityMetros
- * 
+ * @property CarAudioAccesories $CarAudioAccesories
+ * @property CarPhoto $CarPhoto
+ * @property boolean $baby_chair
+ * @property float   $capacity
+ *  
  * @method integer             getId()                Returns the current record's "id" value
  * @method integer             getUserId()            Returns the current record's "User_id" value
  * @method string              getKm()                Returns the current record's "km" value
@@ -76,6 +80,10 @@
  * @method Doctrine_Collection getPhotoes()        Returns the current record's "Photoes" collection
  * @method Doctrine_Collection getReserves()       Returns the current record's "Reserves" collection
  * @method timestamp           getDisabledUntil()  Returns the current record's "disable_until" value
+ * @method CarPhoto            getCarPhoto()        Returns the current record's "CarPhoto" value
+ * @method CarAudioAccessories getCarAudioAccessories()   Returns the current record's "CarAudioAccessories" value
+ * @method float               getCapacity()               Returns the current record's "capacity" value
+ * @method boolean             getBabyChair()              Returns the current record's "baby_chair" value
  *
  * @method Car                 setId()             Sets the current record's "id" value
  * @method Car                 setUserId()         Sets the current record's "User_id" value
@@ -113,6 +121,10 @@
  * @method Car                 setCommune()        Sets the current record's "commune" value
  * @method Car                 setOptions()        Sets the current record's "options" value
  * @method Car                 setCarProximityMetros()   Sets the current record's "CarProximityMetros" collection
+ * @method Car                 setCarPhoto()   sets the current record's "CarPhoto" value
+ * @method Car                 setCarAudioAccessories()   sets the current record's "CarAudioAccessories" value
+ * @method Car                 setCapacity()            Sets the current record's "capacity" value
+ * @method Car                 setBabyChair()            Sets the current record's "baby_chair" value
  *
  * @package    CarSharing
  * @subpackage model
@@ -153,6 +165,11 @@ abstract class BaseCar extends sfDoctrineRecord
              'length' => 45,
              ));
         $this->hasColumn('lat', 'float', 10, array(
+             'type' => 'float',
+             'length' => 10,
+             'scale' => '6',
+             ));
+        $this->hasColumn('capacity', 'float', 10, array(
              'type' => 'float',
              'length' => 10,
              'scale' => '6',
@@ -462,13 +479,16 @@ abstract class BaseCar extends sfDoctrineRecord
             'notnull' => '0',
             'default' => 1,
             ));
+        $this->hasColumn('baby_chair', 'boolean', null, array(
+            'type' => 'boolean'
+            ));
         $this->hasColumn('ratio_aprobacion', 'float', null, array(
             'type' => 'float'
             ));
 
-      $this->hasColumn('commune_id', 'integer', 11, array(
+        $this->hasColumn('commune_id', 'integer', 11, array(
             'notnull' => true
-      ));
+        ));
 
         $this->hasColumn('options', 'integer', 4, array(
             'type' => 'integer',
@@ -572,9 +592,23 @@ abstract class BaseCar extends sfDoctrineRecord
             'onUpdate' => 'no action'
         ));
 
+        $this->hasOne('CarAudioAccessories', array(
+             'local' => 'id',
+             'foreign' => 'car_id',
+             'onDelete' => 'no action',
+             'onUpdate' => 'no action'
+        ));
+
+        $this->hasMany('CarPhoto as CarPhotos', array(
+            'local' => 'id',
+            'foreign' => 'car_id'
+        ));
+
         $this->hasMany('CarProximityMetro as CarProximityMetros', array(
             'local' => 'id',
             'foreign' => 'car_id'
         ));
+
+
     }
 }

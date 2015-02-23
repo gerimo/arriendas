@@ -15,5 +15,11 @@ optionsCarFilter:
     class: checkOptionsCarFilter
     enabled: false
 
+completeRegisterCar:
+    class: checkCompleteRegisterCar
+
+notificationFilter:
+    class: checkNotificationFilter
+
 cache:     ~
 execution: ~

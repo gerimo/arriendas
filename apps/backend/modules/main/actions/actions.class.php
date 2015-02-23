@@ -41,7 +41,6 @@ class mainActions extends sfActions {
         $this->renderText(json_encode($return));
         
         return sfView::NONE;
-
     }
 
     public function executeCommentDo(sfWebRequest $request) {
@@ -157,5 +156,58 @@ class mainActions extends sfActions {
         }
 
         return $this->redirect('homepage');
+    }
+
+    public function executeUploadPhoto(sfWebRequest $request) {
+
+        $return = array();
+
+        try {
+
+            if (!isset($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
+                throw new Exception("No! No! No!", 1);
+            }
+
+            $carId  = $request->getPostParameter("carId", null);
+            $name = $_FILES['photo']['name'];
+            $size = $_FILES['photo']['size'];
+            $tmp  = $_FILES['photo']['tmp_name'];
+            
+            list($txt, $ext) = explode(".", $name);
+
+            $ext = strtolower($ext);
+
+            $actual_image_name = time() . $carId . "." . $ext;
+
+            $uploadDir = sfConfig::get("sf_web_dir");
+            $path      = $uploadDir . '/images/test/';
+            $fileName  = $actual_image_name . "." . $ext;
+
+            $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
+
+            if (!$uploaded) {
+                throw new Exception("No se pudo subir la imagen de perfil", 1);
+            }
+
+            sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
+
+            $CarPhoto = new CarPhoto();
+            $CarPhoto->setCarId($carId);
+            $CarPhoto->setName($actual_image_name);
+            $CarPhoto->setCreatedAt(Date("Y-m-d H:s"));
+            $CarPhoto->setType("ASDF");
+            $CarPhoto->save();
+            $return["urlPhoto"] = $actual_image_name;
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+            error_log($e->getMessage());
+            if ($e->getCode() == 1) {
+                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
+            }
+        }
+
+        $this->renderText(json_encode($return));
+        return sfView::NONE;
     }
 }
