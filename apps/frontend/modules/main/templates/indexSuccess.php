@@ -544,10 +544,10 @@
             <input class="direction form-control" id="direction" placeholder="Dirección" type="text">
         </div>
         <div class="col-xs-6 col-sm-2 col-md-2" id="from-container">
-            <input class="datetimepicker form-control" id="fromH" placeholder="Desde" type="text">
+            <input class="datetimepicker form-control text-left" id="fromH" placeholder="Desde" type="button">
         </div>
         <div class="col-xs-6 col-sm-2 col-md-2" id="to-container">
-            <input class="datetimepicker form-control" id="toH" placeholder="Hasta" type="text">
+            <input class="datetimepicker form-control text-left" id="toH" placeholder="Hasta" type="button">
         </div>
 
         <!-- Search -->

@@ -60,6 +60,7 @@ function getHumanFormat(date) {
         month = "0"+month;
     }
 
+    return date.getFullYear()+"-"+month+"-"+day+" "+roundTime(date.getHours()+":"+date.getMinutes());
     return day+"-"+month+"-"+date.getFullYear()+" "+roundTime(date.getHours()+":"+date.getMinutes());
 }
 
