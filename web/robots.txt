@@ -1,4 +1,4 @@
-#User-agent: *
+User-agent: *
 Disallow: /auto/crear
 Disallow: /auto/editar/:id
 Disallow: /auto/foto
