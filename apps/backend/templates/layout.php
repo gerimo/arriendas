@@ -41,9 +41,6 @@
 
     <body>
 
-        <!-- Arriendas -->
-        <script src="/js/newDesign/arriendas.js" type="text/javascript"></script>
-
         <!-- JQuery -->
         <script src="/js/newDesign/jquery-2.1.3.min.js" type="text/javascript"></script>
 
