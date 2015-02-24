@@ -174,5 +174,4 @@ class notificationActions extends sfActions {
         
         return sfView::NONE;
     }
-
 }
