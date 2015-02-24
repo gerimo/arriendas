@@ -25,6 +25,8 @@ EOF;
 
         $config = ProjectConfiguration::getApplicationConfiguration("frontend", "prod", TRUE);
         sfContext::createInstance($config);
+        $context = sfContext::createInstance($this->configuration);
+        $context->getConfiguration()->loadHelpers('Partial');
 
         try {
 
