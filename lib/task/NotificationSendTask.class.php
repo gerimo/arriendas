@@ -27,25 +27,28 @@ EOF;
         sfContext::createInstance($config);
 
         try {
-            $UsersNotifiactions = Doctrine_core::getTable("userNotification")->findBySentAt(null);
+
+            $UsersNotifications = Doctrine_core::getTable("UserNotification")->findBySentAtAsNull();
+
             $alreadySent = true;
-            $dateNow = date('Y-m-d H:i:s');
-            foreach ($UsersNotifiactions as $UserNotification) {
+
+            foreach ($UsersNotifications as $UserNotification) {
 
                 $User = $UserNotification->getUser();
-                $Notification = $UserNotification->getNotificacion();
-                $Action = $UserNotification->getAction();
-                $Type = $Notification->getType();
-                
-                if(!$Notification->is_active || !$Action->is_active || !$Type->is_active) {
-                    switch (strtoupper($Type->id)) {
+                $Notification = $UserNotification->getNotification();   
+                $Action = $Notification->getAction();
+                $Type = $Notification->getNotificationType();
+
+                if($Notification->is_active && $Action->is_active && $Type->is_active) {
+
+                    switch ($Type->id) {
                         case 1:
                             // se ejecuta a traves de un filtro
                             break;
 
                         case 2:
                             $sms = new SMS("Arriendas.cl");
-                            $sms->send($Notification->message_title.chr(12).$Notification->message, $User->telephone);
+                            $sms->send($Notification->message_title.chr(0x0D).chr(0x0A).$Notification->message, $User->telephone);
                             break;
 
                         case 3:
@@ -90,12 +93,12 @@ EOF;
                             $alreadySent=false;
                             break;
                     }  
-                }      
-
-                if($alreadySent){
-                    $UserNotification->setSentAt($dateNow);
-                }      
+                    if($alreadySent){
+                        $UserNotification->setSentAt(date("Y-m-d H:i:s"));
+                        $UserNotification->save();
+                    }      
                 
+                }      
             }
 
         } catch (Exeception $e) {
