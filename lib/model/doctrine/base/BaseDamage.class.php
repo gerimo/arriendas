@@ -48,7 +48,8 @@ abstract class BaseDamage extends sfDoctrineRecord
 {
     public function setTableDefinition()
     {
-        $this->setTableName('Damages');
+        $this->setTableName('Damage');
+
         $this->hasColumn('id', 'integer', 4, array(
              'type' => 'integer',
              'primary' => true,
