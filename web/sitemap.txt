@@ -7,9 +7,7 @@ http://www.arriendas.cl/login
 http://www.arriendas.cl/registro
 http://www.arriendas.cl/nosotros
 http://www.arriendas.cl/terminos-y-condiciones
-http://www.arriendas.cl/auto/crear
 http://www.arriendas.cl/monetiza-tu-auto
-http://www.arriendas.cl/contrasena/recuperar
 http://www.arriendas.cl/mapa-del-sitio
 http://www.arriendas.cl/rent-a-car
 http://www.arriendas.cl/rent-a-car/arriendo-de-autos
