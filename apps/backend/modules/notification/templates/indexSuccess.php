@@ -12,7 +12,7 @@
             <?php endforeach; ?>
         </select> 
     </div> 
-	<div class="col-md-12">
+	<div class="col-md-12" >
         <div class="space-100"></div>
 		<table  class="display responsive no-wrap" id="notificationTable" cellspacing="0" width="100%">
 			<thead>
@@ -70,11 +70,9 @@
 
 	$(document).ready(function() {
 	 
-		$('#notificationTable').DataTable({
-			info: false,
-			paging: true,
-			responsive: true
-		});
+
+
+        $('#notificationTable').hide();
 
         $("#message").summernote({
             height: 200,
@@ -94,7 +92,9 @@
             if (r.error) {
                 $('#notificationTable').DataTable().rows().remove().draw();
                 console.log(r.errorMessage);
-            } else {    
+            } else { 
+
+                $('#notificationTable').show();
                 $('#notificationTable').DataTable().rows().remove().draw();
                 $('#notificationTable').DataTable().column(0).order( 'desc' );
                 $.each(r.data, function(k, v){
@@ -157,8 +157,8 @@
     $('body').on("click", ".radio", function(e){
 
         var notificationId   = $(this).data("notification-id");
-        $("#message").val("");
-
+        $("#message").code("");
+        $("#description").val("");
         var option     = $("input[name='radio"+notificationId+"']:checked").val();
 
         editNotification(notificationId, option);
@@ -171,7 +171,6 @@
         
         $('#notificationModal').modal('show');
         var ntId = $(this).data("nt-id");
-        console.log(ntId);
         if( ntId != 2) {
             $("#message").summernote({
                 height: 200,
