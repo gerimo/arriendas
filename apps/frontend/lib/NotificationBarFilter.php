@@ -6,16 +6,12 @@ class NotificationBarFilter extends sfFilter {
 
         $ContextUser = $this->getContext()->getUser();
 
-        error_log("hola mundo");
         if ($this->isFirstCall() && $ContextUser->isAuthenticated()) {
 
             $userId = $ContextUser->getAttribute('userid');
             $User   = Doctrine_core::getTable("User")->find($userId);
 
-            $UserNotification = Doctrine_Core::getTable('UserNotification')->findOneByUserIdAndViewedAt($userId, null);
-
-            error_log(count($UserNotification));
-            error_log(gettype($UserNotification));
+            $UserNotification = Doctrine_Core::getTable('UserNotification')->findOneByUserIdAndViewedAtAsNull($userId);
 
             if ($UserNotification) {
                 $ContextUser->setAttribute("notificationMessage", $UserNotification->getNotification()->message);
