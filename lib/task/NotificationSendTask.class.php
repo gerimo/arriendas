@@ -52,7 +52,7 @@ EOF;
                             break;
 
                         case 2:
-                            $SMS = new SMS("Arriendas.cl");
+                            $SMS = new SMS("Arriendas");
 
                             // si el titulo es diferente de null o vacío, le añade un salto de linea.
                             if ($title) {
