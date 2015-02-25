@@ -33,7 +33,7 @@ class khipuActions extends sfActions {
 
             $url = $khipuService->createPaymentURL($data)->url;
         } catch (Execption $e) {
-            error_log("[".date("Y-m-d H:i:s")."] [khipu/generatePayment] ".$e->getMessage());
+            error_log("[khipu/generatePayment] ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl") {
                 Utils::reportError($e->getMessage(), "khipu/generatePayment");
             }
@@ -150,8 +150,6 @@ class khipuActions extends sfActions {
 
     public function executeNotifyPayment(sfWebRequest $request) {
 
-        error_log("[khipu/notifyPayment] [".date("Y-m-d H:i:s")."] Request recibido");
-
         $this->_log("NotifyPayment", "INFO", "Start validation");
 
         $userId = $this->getUser()->getAttribute("userid");
@@ -170,8 +168,6 @@ class khipuActions extends sfActions {
             "payer_email" => $_POST['payer_email'],
             "notification_signature" => $_POST['notification_signature']
         );
-
-        error_log("[khipu/notifyPayment] [".date("Y-m-d H:i:s")."] Comenzando. Receiver ".$data["receiver_id"].". Transaction ".$data["transaction_id"]);
 
         try {
 
@@ -200,7 +196,7 @@ class khipuActions extends sfActions {
 
                     if (!$Transaction->getCompleted()) {
                         
-                        error_log("[khipu/notifyPayment] [".date("Y-m-d H:i:s")."] Nuevo pago recibido");
+                        error_log("[khipu/notifyPayment] Nuevo pago recibido");
 
                         $Renter = $Reserve->getUser();
                         $Owner  = $Reserve->getCar()->getUser();
@@ -245,7 +241,7 @@ class khipuActions extends sfActions {
                             }
                         }
                         
-                        error_log("[khipu/notifyPayment] [".date("Y-m-d H:i:s")."] Enviando email al propietario");
+                        error_log("[khipu/notifyPayment] Enviando email al propietario");
                         $mailer->send($message);
 
                         // Correo arrendatario
@@ -265,7 +261,7 @@ class khipuActions extends sfActions {
                         $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));                        
                         $message->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
 
-                        error_log("[khipu/notifyPayment] [".date("Y-m-d H:i:s")."] Enviando email al arrendatario");
+                        error_log("[khipu/notifyPayment] Enviando email al arrendatario");
                         $mailer->send($message);
 
                         // Correo soporte
@@ -292,7 +288,7 @@ class khipuActions extends sfActions {
                             }
                         }
                         
-                        error_log("[khipu/notifyPayment] [".date("Y-m-d H:i:s")."] Enviando email a soporte");
+                        error_log("[khipu/notifyPayment] Enviando email a soporte");
                         $mailer->send($message);
 
                         // Crea la fila calificaciones habilitada para la fecha de término de reserva + 2 horas (solo si no es una extension de otra reserva)
@@ -313,23 +309,23 @@ class khipuActions extends sfActions {
                         // Almacena reserveId en la tabla mail calificaciones
                         $Reserve->encolarMailCalificaciones();
 
-                        error_log("[khipu/notifyPayment] [".date("Y-m-d H:i:s")."] ---------- HABEMUS PAGO --------");
+                        error_log("[khipu/notifyPayment] ---------- HABEMUS PAGO --------");
 
-                        $OpportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findOneByReserve($Reserve);
+                        $OpportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findOneByReserveId($Transaction->getReserveId());
                         if (!$OpportunityQueue) {
                             $OpportunityQueue = new OpportunityQueue;
-                            $OpportunityQueue->setReserve($Reserve);
+                            $OpportunityQueue->setReserveId($Transaction->getReserveId());
                             $OpportunityQueue->setPaidAt($Reserve->getFechaPago());
                             $OpportunityQueue->save();
                         }
                     }
                 }
             } else {
-                error_log("[khipu/notifyPayment] [".date("Y-m-d H:i:s")."] Error en el proceso de verificacion: Response: ".$response.", Receiver local: ".$settings["receiver_id"].", Receiver request: ".$data["receiver_id"]);
+                error_log("[khipu/notifyPayment] Error en el proceso de verificacion: Response: ".$response.", Receiver local: ".$settings["receiver_id"].", Receiver request: ".$data["receiver_id"]);
                 $this->_log("NotifyPayment", "ERROR", "Hubo un error en el proceso de verificacion.");
             }
         } catch (Exception $e) {
-            error_log("[khipu/notifyPayment] [".date("Y-m-d H:i:s")."] ERROR: ".$e->getMessage());
+            error_log("[khipu/notifyPayment] ERROR: ".$e->getMessage());
             Utils::reportError($e->getMessage(), "khipu/notifyPayment");
         }
 

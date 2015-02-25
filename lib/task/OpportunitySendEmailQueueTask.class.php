@@ -77,7 +77,7 @@ EOF;
 
                 $message = $this->getMailer()->compose();
                 $message->setSubject($subject);
-                $message->setBody($body."<br><br>USER: ".$Owner->email, "text/html");
+                $message->setBody($body, "text/html");
                 $message->setFrom($from);
                 /*$message->setTo($to);*/
                 $message->setBcc(array(

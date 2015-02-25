@@ -28,83 +28,148 @@ EOF;
         $context = sfContext::createInstance($this->configuration);
         $context->getConfiguration()->loadHelpers('Partial');
 
+        // contadores 
+        $countAction2               = 0;
+        $countAction3               = 0;
+        $countAction4               = 0;
+        $countDefaults              = 0;
+        $countoTotalNotification    = 0;
+        $countSents                 = 0;
+        $countNotActive             = 0;
+
         try {
+            $this->log("[".date("Y-m-d H:i:s")."] Buscando notificaciones por enviar");
+            $startTime = microtime(true);
 
             $UsersNotifications = Doctrine_core::getTable("UserNotification")->findBySentAtAsNull();
 
-            $alreadySent = true;
+            $countoTotalNotification = count($UsersNotifications);
+            $this->log("[".date("Y-m-d H:i:s")."] ".count($UsersNotifications). " notificaciones encontradas");
 
-            foreach ($UsersNotifications as $UserNotification) {
+            if (count($UsersNotifications) > 0) {
+                foreach ($UsersNotifications as $UserNotification) {
 
-                $User = $UserNotification->getUser();
-                $Notification = $UserNotification->getNotification();   
-                $Action = $Notification->getAction();
-                $Type = $Notification->getNotificationType();
+                    $alreadySent = true;
 
-                if($Notification->is_active && $Action->is_active && $Type->is_active) {
+                    $User         = $UserNotification->getUser();
+                    $Reserve      = $UserNotification->getReserve();
+                    $Notification = $UserNotification->getNotification();   
+                    $Action       = $Notification->getAction();
+                    $Type         = $Notification->getNotificationType();
 
-                    switch ($Type->id) {
-                        case 1:
-                            // se ejecuta a traves de un filtro
-                            break;
+                    $title   = Notification::translator($User->id, $Notification->message_title, $Reserve ? $Reserve->id : null );
+                    $message = Notification::translator($User->id, $Notification->message, $Reserve ? $Reserve->id : null );
 
-                        case 2:
-                            $sms = new SMS("Arriendas.cl");
-                            $sms->send($Notification->message_title.chr(0x0D).chr(0x0A).$Notification->message, $User->telephone);
-                            break;
+                    if($Notification->is_active && $Action->is_active && $Type->is_active) {
+                        switch ($Type->id) {
+                            case 1:
+                                // se ejecuta a traves de un filtro
+                                break;
 
-                        case 3:
-                            $mail    = new Email();
-                            $mailer  = $mail->getMailer();
-                            $message = $mail->getMessage();     
+                            case 2:
+                                $SMS = new SMS("Arriendas");
 
-                            $subject = $Notification->message_title;
-                            $body    = $Notification->message;
-                            $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-                            $to      = array($User->email);
+                                // si el titulo es diferente de null o vacío, le añade un salto de linea.
+                                if ($title) {
+                                    $title = $title.chr(0x0D).chr(0x0A);
+                                } else {
+                                    $title = "";
+                                }
 
-                            $message->setSubject($subject);
-                            $message->setBody($body, 'text/html');
-                            $message->setFrom($from);
-                            $message->setTo($to);
-                            //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
-                            
-                            $mailer->send($message);
-                            break;
+                                $SMS->send($title.$message, $User->telephone);
 
-                        case 4:
-                            $mail    = new Email();
-                            $mailer  = $mail->getMailer();
-                            $message = $mail->getMessage();     
+                                $countAction2 ++;
+                                break;
 
-                            $subject = $Notification->message_title;
-                            $body    = $Notification->message;
-                            $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-                            $to      = array("soporte@arriendas.cl");
+                            case 3:
+                                $mail    = new Email();
+                                $mailer  = $mail->getMailer();
+                                $message = $mail->getMessage();     
 
-                            $message->setSubject($subject);
-                            $message->setBody($body, 'text/html');
-                            $message->setFrom($from);
-                            $message->setTo($to);
-                            //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
-                            
-                            $mailer->send($message);
-                            break;
-                          
-                        default:
-                            $alreadySent=false;
-                            break;
-                    }  
-                    if($alreadySent){
-                        $UserNotification->setSentAt(date("Y-m-d H:i:s"));
-                        $UserNotification->save();
-                    }      
-                
-                }      
+                                $subject = $title;
+                                $body    = $message;
+                                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+                                $to      = array($User->email => $User->firstname." ".$User->lastname);
+
+                                $message->setSubject($subject);
+                                $message->setBody($body, 'text/html');
+                                $message->setFrom($from);
+                                $message->setTo($to);
+                                $message->setReplyTo(array("ayuda@arriendas.cl" => "Ayuda Arriendas.cl"));
+                                //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                                
+                                $mailer->send($message);
+
+                                $countAction3 ++;
+                                break;
+
+                            case 4:
+                                $mail    = new Email();
+                                $mailer  = $mail->getMailer();
+                                $message = $mail->getMessage();     
+
+                                $subject = $title;
+                                $body    = $message;
+                                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+                                $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+
+                                $message->setSubject($subject);
+                                $message->setBody($body, 'text/html');
+                                $message->setFrom($from);
+                                $message->setTo($to);
+                                //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                                
+                                $mailer->send($message);
+                                $countAction4++;
+                                break;
+                              
+                            default:
+                                $alreadySent = false;
+                                $countDefaults++;
+                                break;
+                        }
+
+                        if ($alreadySent) {
+                            $UserNotification->setSentAt(date("Y-m-d H:i:s"));
+                            $UserNotification->save();
+                            $countSents++;
+                        }
+                    } else {
+                        $countNotActive++;
+                    }
+                     // Mensaje Log
+                    $txtNotificationId  = str_pad("Notificacion ID: ".$Notification->id, 20);
+                    $txtAction          = str_pad("Accion: ".$Action->name, 15);
+                    $txtType            = str_pad("Tipo: ".$Type->name, 15);
+                    $txtUser            = str_pad("Usuario ID: ".$User->id. "(".$User->firstname." ".$User->lastname.")",10);
+                    $this->log($txtNotificationId.$txtAction.$txtType.$txtUser);      
+                }
+            } else {
+                $this->log("[".date("Y-m-d H:i:s")."] No hay notificaciones por enviar");
             }
 
         } catch (Exeception $e) {
-            error_log("[".date("Y-m-d H:i:s")."] [NotificationSendTask] ERROR: ".$e->getMessage());
+            $this->log("[".date("Y-m-d H:i:s")."] [NotificationSendTask] ERROR: ".$e->getMessage());
         }
+
+        $endTime = microtime(true);
+
+        $this->log("[".date("Y-m-d H:i:s")."] ---------------------------------------------------");
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones pendientes:          ".$countoTotalNotification);
+        $this->log("[".date("Y-m-d H:i:s")."] ---------------------------------------------------");
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones de tipo desconocido: ".$countDefaults);
+        $this->log("[".date("Y-m-d H:i:s")."] ");
+        $this->log("[".date("Y-m-d H:i:s")."] ");
+        $this->log("[".date("Y-m-d H:i:s")."] ---------------------------------------------------");
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones enviadas:            ".$countSents);
+        $this->log("[".date("Y-m-d H:i:s")."] ---------------------------------------------------");
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo SMS:            ".$countAction2);
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo Email:          ".$countAction3);
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo Soporte:        ".$countAction4);
+        $this->log("[".date("Y-m-d H:i:s")."] ");
+        $this->log("[".date("Y-m-d H:i:s")."] ");
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones no activadas:        ".$countNotActive);
+
+        $this->log("[".date("Y-m-d H:i:s")."] Tiempo total de procesamiento     ".round($endTime-$startTime, 2)." segundos");
     }
 }

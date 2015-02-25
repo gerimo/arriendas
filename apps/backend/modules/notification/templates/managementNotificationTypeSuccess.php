@@ -42,7 +42,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Acción de notificación</h4>
+                    <h4 class="modal-title" id="myModalLabel">Nuevo tipo de notificación</h4>
                 </div>
                 <div class="modal-body">
                     <div id="carDamages">
@@ -102,7 +102,9 @@
             if (r.error) {
                 console.log(r.errorMessage);
             } else {    
-                location.reload();
+                if (!r.radio) {
+                    location.reload();
+                }
             }
         }, 'json');
     }
@@ -116,7 +118,11 @@
     });
 
     $('body').on("click", ".NT", function(e){
-
+        if (!$(this).data("name")) {
+            $("#myModalLabel").html("Nuevo Tipo de Notificación");
+        } else {
+            $("#myModalLabel").html($(this).data("name"));
+        }
         $("#NTId").val($(this).data("nt-id"));
         $("#name").val($(this).data("name"));
         $("#description").val($(this).data("description"));

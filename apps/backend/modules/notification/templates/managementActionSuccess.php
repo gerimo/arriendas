@@ -42,7 +42,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Acción de notificación</h4>
+                    <h4 class="modal-title" id="myModalLabel">Nueva notificación</h4>
                 </div>
                 <div class="modal-body">
                     <div id="carDamages">
@@ -98,13 +98,13 @@
             "option"        : option
         }
 
-        console.log(parameters);
-
 		$.post("<?php echo url_for('notification_management_action_crud') ?>", parameters, function(r){
             if (r.error) {
                 console.log(r.errorMessage);
             } else {    
-                location.reload();
+                if (!r.radio) {
+                    location.reload();
+                }
             }
         }, 'json');
 	}
@@ -112,7 +112,6 @@
     $('body').on("click", ".radio", function(e){
 
         var actionId   = $(this).data("action-id");
-
         var option     = $("input[name='radio"+actionId+"']:checked").val();
 
         findNotificacionAction(actionId, option);
@@ -120,6 +119,11 @@
 
     $('body').on("click", ".action", function(e){
 
+        if (!$(this).data("name")) {
+            $("#myModalLabel").html("Nueva Acción");
+        } else {
+            $("#myModalLabel").html($(this).data("name"));
+        }
         $("#actionId").val($(this).data("action-id"));
         $("#name").val($(this).data("name"));
         $("#description").val($(this).data("description"));
