@@ -16,7 +16,7 @@ class opportunitiesActions extends sfActions {
         foreach ($this->Cars as $Car) {
 
             foreach ($Car->getOpportunities() as $Op) {
-                
+
                 if(!isset($this->Opportunities[$Op->getId()])) {
                     $this->Opportunities[$Op->getId()] = array("Reserve" => $Op);
                 }
@@ -26,6 +26,7 @@ class opportunitiesActions extends sfActions {
                 }
             }
         }
+
     }
 
     public function executeApprove(sfWebRequest $request) {

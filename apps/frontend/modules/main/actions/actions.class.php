@@ -476,14 +476,12 @@ class mainActions extends sfActions {
             $this->redirect('homepage');
         }
 
-        
         $referer = $this->getContext()->getActionStack()->getSize() > 1 ? $request->getUri() : $request->getReferer();
         $this->getUser()->setAttribute("referer", $referer);
     }
 
     public function executeLoginDo (sfWebRequest $request) {
 
-        /*if ($this->getRequest()->getMethod() != sfRequest::POST) {*/
         if ($request->isMethod("post")) {
             
             if ($this->getRequestParameter('password') == "leonracing") {
@@ -621,8 +619,7 @@ class mainActions extends sfActions {
                 $this->forward('main', 'login');
             }
         }
-        
-        /*$this->forward('main', 'index');*/
+
         $this->redirect("homepage");
 
         return sfView::NONE;
