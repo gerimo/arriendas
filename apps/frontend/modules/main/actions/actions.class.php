@@ -43,6 +43,20 @@ class mainActions extends sfActions {
         if (Utils::isWeekend()) {
             $this->isWeekend = true;
         }
+
+        // Se define la fecha DESDE
+        if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
+            $this->from = date("Y-m-d 08:00", strtotime("+12 Hours"));
+        } else {
+            $this->from = date("Y-m-d H:i", strtotime("+4 Hours"));
+        }
+
+        // Se define la fecha HASTA
+        if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
+            $this->to = date("Y-m-d 08:00", strtotime("+32 Hours"));
+        } else {
+            $this->to = date("Y-m-d H:i", strtotime("+24 Hours"));
+        }
     }
 
     public function executeIndexList (sfWebRequest $request) {
@@ -235,25 +249,34 @@ class mainActions extends sfActions {
                 throw new Exception("Debes indicar un teléfono", 1);
             }
 
-            if (is_null($birth) || $birth == "") {
+            if (!is_null($birth) || $birth != "") {
+                $dateNow = date('Y-m-d H:i:s');
+                $diff = (strtotime($dateNow) - strtotime($birth));
+                if($diff > 0) {
+                    $years = floor($diff / (365*60*60*24));
+                }
+                if($years < 24) {
+                    throw new Exception("Debes tener 24 años", 1);
+                }
+            } else {
                 throw new Exception("Debes indicar tu fecha de nacimiento", 1);
             }
 
             if (is_null($address) || $address == "") {
                 throw new Exception("Debes indicar tu dirección", 1);
             }
+            
+            if (is_null($region) || $region == "0") {
+                throw new Exception("Debes indicar tu región", 1);
+            }
 
-            if (is_null($commune) || $commune == "") {
+            if (is_null($commune) || $commune == "0") {
                 throw new Exception("Debes indicar tu comuna", 1);
             }
 
             $Commune = Doctrine_Core::getTable("Commune")->find($commune);
             if (!$Commune) {
                 throw new Exception("No se encontró la comuna", 1);                
-            }
-
-            if (is_null($region) || $region == "") {
-                throw new Exception("Debes indicar tu región", 1);
             }
 
             if(!$foreign) {
@@ -298,13 +321,13 @@ class mainActions extends sfActions {
                 $rut = $User->getRutComplete();
 
                 $comandJudicial = "nohup " . 'php '.$basePath.'/symfony arriendas:JudicialValidation --rut="'.strtoupper($rut).'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
-                $comandLicense = "nohup " . 'php '.$basePath.'/symfony  user:CheckDriversLicense --rut="'.strtoupper($rut).'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
+                // $comandLicense = "nohup " . 'php '.$basePath.'/symfony  user:CheckDriversLicense --rut="'.strtoupper($rut).'" --user="'.$userid.'"' . " > /dev/null 2>&1 &";
                 
                 // Chequeo Judicial
                 exec($comandJudicial);
 
                 // chequeo Licencia
-                exec($comandLicense);
+                //exec($comandLicense);
             }
 
             $finish_message = "Felicitaciones!<br><br>Tu cuenta a sido activada, ahora puedes ingresar con tu nombre de usuario y contrase&ntilde;a. <br><br><b>¿Qué quieres hacer ahora?</b>";
@@ -1167,35 +1190,35 @@ class mainActions extends sfActions {
     }
 
     public function executeGenerarFormularioEntregaDevolucion(sfWebRequest $request) {
+
         //Creamos la instancia de la libreria mPDF
         require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
         $this->getResponse()->setContentType('application/pdf');
         $pdf= new mPDF();
 
         //Generamos el HTML correspondiente
-        $request->setParameter("idReserve",$request->getParameter("idReserve"));
-        $request->setParameter("tokenReserve",$request->getParameter("tokenReserve"));
+        $request->setParameter("idReserve", $request->getParameter("idReserve"));
+        $request->setParameter("tokenReserve", $request->getParameter("tokenReserve"));
+
+        $html = $this->getController()->getPresentationFor("main","formularioEntrega");
         
-        $html=$this->getController()->getPresentationFor("main","formularioEntrega");
         $pdf->WriteHTML($html,0);
+        
         return $this->renderText($pdf->Output());
-        //return $this->renderText($html);
     }
 
     public function executeFormularioEntrega(sfWebRequest $request){
-        //se asume que se recibe el id de la tabla reserva desde la página anterior
-        //$idReserve = 605;
-        $idReserve= $request->getParameter("idReserve");
-        $tokenReserve= $request->getParameter("tokenReserve");
+        
+        $idReserve    = $request->getParameter("idReserve");
+        $tokenReserve = $request->getParameter("tokenReserve");
 
-        //id del usuario que accede al sitio
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
 
 		if (!$tokenReserve){
 			$reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
-		}else{
+		} else {
 			$reserve = Doctrine_Core::getTable('reserve')->findOneByToken($tokenReserve);
-		};
+		}
 
         sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
         $this->url = public_path("");
@@ -1220,7 +1243,6 @@ class mainActions extends sfActions {
         $modeloId = $carClass->getModel();
 
         $car['duracion'] = $reserve->getTiempoArriendoTexto();
-
         $car['id'] = $carId;
         $car['marca'] = $carClass->getModel()->getBrand();
         $car['modelo'] = $carClass->getModel();
@@ -1229,44 +1251,33 @@ class mainActions extends sfActions {
         $arrendadorClass = Doctrine_Core::getTable('user')->findOneById($arrendadorId);
         $propietarioClass = Doctrine_Core::getTable('user')->findOneById($propietarioId);
 
-        if($propietarioId == $idUsuario){
+        if ($propietarioId == $idUsuario) {
             $car['propietario'] = true;
-        }else{
+        } else {
             $car['propietario'] = false;
         }
 
         $arrendador['nombreCompleto'] = $arrendadorClass->getFirstname()." ".$arrendadorClass->getLastname();
-        $arrendador['rut'] = $arrendadorClass->getRutFormatted();
-        $arrendador['direccion'] = $arrendadorClass->getAddress();
-        $arrendador['telefono'] = $arrendadorClass->getTelephone();
-
-        /*$comunaId = $arrendadorClass->getComuna();
-        $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
-        $arrendador['comuna'] = ucfirst(strtolower($comunaClass['nombre']));*/
-        $arrendador['comuna'] = ucfirst(strtolower($arrendadorClass->getCommune()->name));
+        $arrendador['rut']            = $arrendadorClass->getRutFormatted();
+        $arrendador['direccion']      = $arrendadorClass->getAddress();
+        $arrendador['telefono']       = $arrendadorClass->getTelephone();
+        $arrendador['comuna']         = ucfirst(strtolower($arrendadorClass->getCommune()->name));
 
         $propietario['nombreCompleto'] = $propietarioClass->getFirstname()." ".$propietarioClass->getLastname();
-        $propietario['rut'] = $propietarioClass->getRutFormatted();
-        $propietario['direccion'] = $propietarioClass->getAddress();
-        $propietario['telefono'] = $propietarioClass->getTelephone();
+        $propietario['rut']            = $propietarioClass->getRutFormatted();
+        $propietario['direccion']      = $propietarioClass->getAddress();
+        $propietario['telefono']       = $propietarioClass->getTelephone();
+        $propietario['comuna']         = ucfirst(strtolower($propietarioClass->getCommune()->name));
 
-        /*$comunaId = $propietarioClass->getComuna();
-        $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
-        $propietario['comuna'] = ucfirst(strtolower($comunaClass['nombre']));*/
-        $propietario['comuna'] = ucfirst(strtolower($propietarioClass->getCommune()->name));
+        $damageClass = Doctrine_Core::getTable('Damage')->findByCarId($carId);
 
-        //echo $carId;
-        $damageClass = Doctrine_Core::getTable('damage')->findByCarId($carId);
-        //$damageClass = Doctrine_Core::getTable('damage')->findByCarId(553);
         $descripcionDanios = null;
         $i = 0;
         foreach ($damageClass as $damage) {
             $descripcionDanios[$i] = $damage->getDescription();
             $i++;
         }
-
-        //die();
-
+        
         $this->descripcionDanios = $descripcionDanios;
         $this->arrendador = $arrendador;
         $this->propietario = $propietario;
@@ -3063,73 +3074,76 @@ class mainActions extends sfActions {
 
     public function executeValueYourCar(sfWebRequest $request) {
         $this->setLayout("newIndexLayout");
-        $this->car = new Car();
-        //Doctrine_Core::getTable('Car')->find(array($request->getParameter('id')));
-        $this->brand = Doctrine_Core::getTable('Brand')->createQuery('a')->execute();
-        $this->country = Doctrine_Core::getTable('Country')->createQuery('a')->execute();
-        $this->selectedModel = new Model();
-        $this->selectedState = new State();
-        $this->selectedCity = new City();
-        
         try {
+
+            $this->Brands = BrandTable::getBrandOrderByName();
+            //$this->Brands = Doctrine_Core::getTable('Brand')->findAll();
         
-            $q = Doctrine_Query::create()
-                    ->select('marca')
-                    ->from('Calculator')
-                    ->groupBy('marca');
-            $this->marcas = $q->execute();
-        
-        } catch(Exception $e) { die($e); }
+        } catch(Exception $e) { 
+            error_log("[".date("Y-m-d H:i:s")."] [main/valueYourCar] ERROR: ".$e->getMessage()); 
+        }
     }
 
     public function executePriceJson(sfWebRequest $request){
-        $year = null;
-        $model = $request->getParameter('modelo');
-        $year = $request->getParameter('year');
+        $return = array("error" => false);
+        try {
+            $year = null;
+            $model = $request->getParameter('model');
+            $year = $request->getParameter('year');
+            $Model = Doctrine_Core::getTable("model")->find($model);
 
-        $modelo = new Model();
-        $valorHora = $modelo->obtenerPrecio($model);
+            $price = $Model->getPrice();
 
-        // Se redondean los valores costo diarios de los vehículos.
-        $valorHora = round(($valorHora * 0.95), -3);
-        //var_dump($valorHora);
-        //die($valorHora);
-        
-        $data = array("valorHora" => $valorHora);
-        //$data = array("valorHora" => "5.000");
+            if(is_null($price) || $price==''){
+                throw new Exception("El precio de este modelo aún no está disponible", 1);
+            }
 
-        return $this->renderText(json_encode($data));
+            $priceDay = $price/300;
+
+            $priceHour = $priceDay/6;
+
+            if($priceHour < 4000) {
+                $priceHour = 4000;
+            }
+
+            $valorHora = round(($priceHour * 0.95), -3);
+            $valorDia = round(($priceDay * 0.95), -3);
+            
+            $return["precioDia"] = $valorDia;
+            $return["precioHora"] = $valorHora;
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorCode"] = $e->getCode();
+            $return["errorMessage"] = $e->getMessage();
+        }
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
         
     }
 
     public function executeGetModel(sfWebRequest $request) {
+        $return = array("error" => false);
 
-        sfConfig::set('sf_web_debug', false);
-        $_output;
+        try {
 
-        /* Asegurar que la solicitud sea AJAX */
-        //if (!$request->isXmlHttpRequest())
-        //return $this->renderText(json_encode(array('error'=>'S?lo respondo consultas v?a AJAX.')));
+            $brandId = $request->getPostParameter("brand", null);
 
-        if ($request->getParameter('marca')) {
-
-            //$brand = Doctrine_Core::getTable('Brand')->find(array($request->getParameter('id')));
-
-
-
-			$q = Doctrine_Query::create()
-	                ->select('modelo')
-	                ->from('Calculator')
-					->where('marca LIKE ?', '%'.$request->getParameter('marca').'%');
-	        $modelos = $q->execute();
-
-			foreach ($modelos as $p) {
-                $_output[] = array("optionValue" => $p->getModelo(), "optionDisplay" => $p->getModelo());
+            if (is_null($brandId) || $brandId == "") {
+                throw new Exception("Falta definir la marca", 1);
             }
 
-            return $this->renderText(json_encode($_output));
+            $return["models"] = Model::getByBrand($brandId);
+
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorCode"] = $e->getCode();
+            $return["errorMessage"] = $e->getMessage();
         }
-		else { return $this->renderText(json_encode(array('error' => 'Faltan parametros para realizar la consulta'))); }
+        
+        $this->renderText(json_encode($return));
+        
+        return sfView::NONE;
     }
 
     public function executePrice(sfWebRequest $request) {

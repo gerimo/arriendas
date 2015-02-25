@@ -7,6 +7,9 @@ class carActions extends sfActions {
 	public function executeIndex(sfWebRequest $request) {
 	}
 
+    public function executeCarControl(sfWebRequest $request) {
+    }
+
     public function executeDeleteDamage(sfWebRequest $request) {
 
         $return = array("error" => false);
@@ -38,11 +41,58 @@ class carActions extends sfActions {
         return sfView::NONE;
     }
 
-	public function executeFindCar(sfWebRequest $request) {
+    public function executeFindAll(sfWebRequest $request) {
+
         $return = array("error" => false);
 
-        $carId   = $request->getPostParameter("carId", null);
+        try {
 
+            $limit = $request->getPostParameter("limit", null);
+
+            $return["data"] = array();
+
+            $Cars = Doctrine_Core::getTable('Car')->findAllCar($limit);
+
+            if(count($Cars) == 0){
+                throw new Exception("No se encuentran autos", 1);
+            }
+
+            foreach($Cars as $i => $Car){
+
+                $CarProximityMetro = $Car->getNearestMetro();
+
+                $return["data"][$i] = array(
+                    'id' => $Car->id,
+                    'brand' => $Car->getModel()->getBrand()->name,
+                    'model' => $Car->getModel()->name,
+                    'year' => $Car->year,
+                    'transmission' => $Car->transmission == 1 ? 'Automática' : 'Manual',
+                    'nearestMetroName' => $CarProximityMetro->getMetro()->name,
+                    'type' => $Car->getModel()->getCarType()->name,
+                    'comunne' =>$Car->getCommune()->name,
+                    'QuantityOfLatestRents' =>$Car->getQuantityOfLatestRents(),
+                    'user_name' =>$Car->getUser()->firstname." ".$Car->getUser()->lastname,
+                    'user_telephone' => $Car->getUser()->telephone
+                );
+                  
+            }
+
+        } catch (Exception $e) {
+            $return["error"]        = true;
+            $return["errorCode"]    = $e->getCode();
+            $return["errorMessage"] = $e->getMessage();
+        }
+
+        $this->renderText(json_encode($return));
+        
+        return sfView::NONE;
+    }
+
+	public function executeFindCar(sfWebRequest $request) {
+        $return = array("error" => false);
+        $return["accessory"] = false;
+
+        $carId   = $request->getPostParameter("carId", null);
         try {
 
             if (is_null($carId) || $carId == "") {
@@ -54,6 +104,46 @@ class carActions extends sfActions {
             if (!$Car) {
                  throw new Exception("Auto no encontrado", 1);                
             }
+
+            $CarAudioAccessories = Doctrine_Core::getTable('CarAudioAccessories')->findOneByCarId($Car->id);
+
+            if (count($CarAudioAccessories) != 1 ) {
+                $return["accessory"] = array(
+                        'radioMarca'          => $CarAudioAccessories->radio_marca, 
+                        'radioModelo'         => $CarAudioAccessories->radio_modelo,  
+                        'radioTipo'           => $CarAudioAccessories->radio_tipo,
+                        'parlantesMarca'      => $CarAudioAccessories->parlantes_marca,
+                        'parlantesModelo'     => $CarAudioAccessories->parlantes_modelo,
+                        'tweetersMarca'       => $CarAudioAccessories->tweeters_marca,
+                        'tweetersModelo'      => $CarAudioAccessories->tweeters_modelo,
+                        'ecualizadorMarca'    => $CarAudioAccessories->ecualizador_marca,
+                        'ecualizadorModelo'   => $CarAudioAccessories->ecualizador_modelo,
+                        'amplificadorMarca'   => $CarAudioAccessories->amplificador_marca, 
+                        'amplificadorModelo'  => $CarAudioAccessories->ecualizador_modelo,  
+                        'compactCdMarca'      => $CarAudioAccessories->compact_cd_marca,
+                        'compactCdModelo'     => $CarAudioAccessories->compact_cd_modelo,
+                        'subwooferMarca'      => $CarAudioAccessories->subwoofer_marca,  
+                        'subwooferModelo'     => $CarAudioAccessories->subwoofer_modelo,
+                        'sistemaDvdMarca'     => $CarAudioAccessories->sistema_dvd_marca,
+                        'sistemaDvdModelo'    => $CarAudioAccessories->sistema_dvd_modelo,
+                        'otrosAccesorios'     => $CarAudioAccessories->otros
+                );
+
+            }
+
+            $return["data"] = array(
+                "frente"      => $Car->seguroFotoFrente,
+                "costadoD"    => $Car->seguroFotoCostadoDerecho,
+                "costadoI"    => $Car->seguroFotoCostadoIzquierdo,
+                "traseroD"    => $Car->seguroFotoTraseroDerecho,
+                "traseroI"    => $Car->seguroFotoTraseroIzquierdo,
+                "panel"       => $Car->tablero,
+                "padron"      => $Car->padron,
+                "accesorio1"  => $Car->accesorio1,
+                "accesorio2"  => $Car->accesorio2,
+                "accesoriosSeguro" => $Car->accesoriosSeguro
+            );
+
 
         } catch (Exception $e) {
             $return["error"] = true;
@@ -232,6 +322,7 @@ class carActions extends sfActions {
         $sistemaDvdMarca       = $request->getPostParameter("sistemaDvdMarca", null);
         $sistemaDvdModelo      = $request->getPostParameter("sistemaDvdModelo", null);
         $otrosAccesorios       = $request->getPostParameter("otrosAccesorios", null);
+        $option                = $request->getPostParameter("option", null);
 
         try {
 
@@ -240,8 +331,18 @@ class carActions extends sfActions {
                 throw new Exception("Auto no encontrado", 1);
             }
 
-            $CarAudioAccessories  = new CarAudioAccessories();
+            if ($option == 4) {
+                $Car->setSeguroOk(4);
+                $Car->save();
+                $return["option"] = 4; 
+            }
 
+            $CarAudioAccessories = Doctrine_Core::getTable('CarAudioAccessories')->findOneByCarId($Car->id);
+
+            if (!$CarAudioAccessories) {
+                $CarAudioAccessories  = new CarAudioAccessories();
+            }
+            
             $CarAudioAccessories->setRadioMarca($radioMarca);
             $CarAudioAccessories->setRadioModelo($radioModelo);
             $CarAudioAccessories->setRadioTipo($radioTipo);
@@ -315,49 +416,39 @@ class carActions extends sfActions {
         return sfView::NONE;
     }
 
-	public function executeUploadPhoto(sfWebRequest $request) {
+    public function executeUploadPhoto(sfWebRequest $request) {
 
-        $return = array("error" => false);
-        $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
+        $return = array();
 
         try {
 
-            if (!isget($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
+            if (!isset($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
                 throw new Exception("No! No! No!", 1);
             }
 
-            $name = $_FILES[$request->getParameter('file')]['name'];
-            $size = $_FILES[$request->getParameter('file')]['size'];
-            $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
-            if (!strlen($name)) {
-                throw new Exception("Por favor, seleccione una imagen", 2);
+            $carId  = $request->getPostParameter("carId", null);
+            $op     = $request->getPostParameter("op", null);
+            $damageId     = $request->getPostParameter("damageId", null);
+
+            $Car = Doctrine_Core::getTable('Car')->find($carId);
+
+            if (!$Car) {
+                throw new Exception("No se encontro el auto", 1);
             }
 
+            $name = $_FILES['photo']['name'];
+            $size = $_FILES['photo']['size'];
+            $tmp  = $_FILES['photo']['tmp_name'];
+            
             list($txt, $ext) = explode(".", $name);
 
             $ext = strtolower($ext);
 
-            if (!in_array($ext, $valid_formats)) {
-                throw new Exception("Formato de la imagen inválido", 2);
-            }
-
-            if ($size > (5 * 1024 * 1024)) {
-                throw new Exception("La imagen excede el tamaño máximo permitido (1 MB)", 2);                
-            }
-            
-            /*$sizewh = getimagesize($tmp);
-
-            if($sizewh[0] > 194 || $sizewh[1] > 204) {
-                echo '<script>alert(\'La imagen no cumple con las dimensiones especificadas. Puede continuar si lo desea\')</script>';
-            }*/
-            $carId= sfContext::getInstance()->getUser()->getAttribute('carId');
             $actual_image_name = time() . $carId . "." . $ext;
 
             $uploadDir = sfConfig::get("sf_web_dir");
             $path      = $uploadDir . '/images/cars/';
             $fileName  = $actual_image_name . "." . $ext;
-
-            $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
 
             $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
 
@@ -367,25 +458,42 @@ class carActions extends sfActions {
 
             sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
 
-            /*echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
-            echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";*/
-
-            $Car = Doctrine_Core::getTable('car')->find($carId);
-            $Car->setFotoPerfil("/images/cars/".$actual_image_name);
+            if ($op == 1) {
+                $Car->setSeguroFotoFrente($actual_image_name);
+            } elseif ($op == 2) {
+                $Car->setSeguroFotoCostadoDerecho($actual_image_name);
+            } elseif ($op == 3) {
+                $Car->setSeguroFotoCostadoIzquierdo($actual_image_name);
+            } elseif ($op == 4) {
+                $Car->setSeguroFotoTraseroDerecho($actual_image_name);
+            } elseif ($op == 5) {
+                $Car->setSeguroFotoTraseroIzquierdo($actual_image_name);
+            } elseif ($op == 6) {
+                $Car->setTablero($actual_image_name);
+            } elseif ($op == 7) {
+                $Car->setPadron($actual_image_name);
+            } elseif ($op == 8) {
+                $Car->setAccesorio1($actual_image_name);
+            } elseif ($op == 9) {
+                $Car->setAccesorio2($actual_image_name);
+            } elseif ($op == 10) {
+                $Damage = Doctrine_Core::getTable('Damage')->find($damageId);
+                $Damage->setUrlFoto($actual_image_name);
+                $Damage->save();
+            }  
             $Car->save();
+            $return["urlPhoto"] = $actual_image_name;
+
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
+            error_log($e->getMessage());
             if ($e->getCode() == 1) {
                 $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
-            }
-            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
-                Utils::reportError($e->getMessage(), "main/uploadPhoto");
             }
         }
 
         $this->renderText(json_encode($return));
-
         return sfView::NONE;
     }
 

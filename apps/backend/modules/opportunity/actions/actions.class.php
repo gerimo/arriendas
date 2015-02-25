@@ -3,15 +3,35 @@
 class opportunityActions extends sfActions {
 
     public function executeIndex(sfWebRequest $request) {
-    }
-
-    public function executeCreate(sfWebRequest $request) {
-	}
-
-    public function executeMailing (sfWebRequest $request) {
 
         $this->oOC = Doctrine_Core::getTable("OpportunityConfig")
             ->createQuery('OC')->fetchOne();
+    }
+
+    public function executeCreate(sfWebRequest $request) {
+    }
+
+    public function executeKpiRefresh (sfWebRequest $request) {
+        
+        $return = array("error" => false);
+
+        $from = $request->getPostParameter("from", null);
+        $to   = $request->getPostParameter("to", null);
+
+        try {
+
+            $return["kpi1"] = 12;
+            $return["kpi2"] = 44;
+            $return["kpi3"] = 67;
+
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorMessage"] = $e->getMessage();
+        }
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
     }
 
     public function executeMailingConfigSave (sfWebRequest $request) {

@@ -5,7 +5,7 @@ class UsersCheckDriversLicenseTask extends sfBaseTask {
     protected function configure() {
 
         $this->addOptions(array(
-            new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name'),
+            new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name', 'frontend'),
             new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'local'),
             new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine'),
             new sfCommandOption('user', null, sfCommandOption::PARAMETER_REQUIRED, 'The user id', ''),
@@ -27,6 +27,8 @@ EOF;
 
         $config = ProjectConfiguration::getApplicationConfiguration("frontend", "prod", TRUE);
         sfContext::createInstance($config);
+        $context = sfContext::createInstance($this->configuration);
+        $context->getConfiguration()->loadHelpers('Partial');
         
         // initialize the database connection
         $databaseManager = new sfDatabaseManager($this->configuration);
@@ -90,22 +92,26 @@ EOF;
                 case 1:
                     $profile->setChequeoLicencia(true);
                     $profile->save();
+                    
                     break;
                 case 2:
                     $profile->setChequeoLicencia(true);
                     $profile->setBlockedLicense($dateNow);
                     $profile->save();
+
                     break;
                 case 3:
                     $profile->setChequeoLicencia(true);
                     $profile->setBlockedLicense($date);
                     $profile->save();
+
                     break;
                 
                 default:
                     $profile->setChequeoLicencia(false);
                     $profile->setBlockedLicense(null);  
                     $profile->save();
+
                     break;
             }
 

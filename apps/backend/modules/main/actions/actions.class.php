@@ -169,6 +169,10 @@ class mainActions extends sfActions {
             }
 
             $carId  = $request->getPostParameter("carId", null);
+            $op     = $request->getPostParameter("op", null);
+
+            error_log($op);
+            
             $name = $_FILES['photo']['name'];
             $size = $_FILES['photo']['size'];
             $tmp  = $_FILES['photo']['tmp_name'];

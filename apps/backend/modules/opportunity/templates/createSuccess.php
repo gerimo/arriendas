@@ -26,7 +26,7 @@
                 <?php
                     endfor;
                 ?>
-              	<option value="false">Todos</option>
+                <option value="false">Todos</option>
             </select>
         </div>
 
@@ -47,38 +47,38 @@
     </div>
 
 
-	<div class="col-md-12">
+    <div class="col-md-12">
 
         <div class="hidden-xs space-100"></div>
         <div class="visible-xs space-50"></div>
-		<table class="display responsive no-wrap" id="carsActivesTable" cellspacing="0" width="100%">
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Comuna</th>
-					<th>Marca</th>
-					<th>Modelo</th>
-					<th>Año</th>
-					<th>Transmisión</th>
-					<th>Precio</th>
-					<th>Tipo Vehículo</th>
-					<th>Metro Cercano</th>
-					<th>Cant. reserva ult. 3 meses</th>
-					<th>Nombre usuario</th>
-					<th>Telefono usuario</th>
-					<th>Crear Oportunidad</th>
-				</tr>
-			</thead>
-			<tbody>            
-			</tbody>
-		</table>
-	</div>
+        <table class="display responsive no-wrap" id="carsActivesTable" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Comuna</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Año</th>
+                    <th>Transmisión</th>
+                    <th>Precio</th>
+                    <th>Tipo Vehículo</th>
+                    <th>Metro Cercano</th>
+                    <th>Cant. reserva ult. 3 meses</th>
+                    <th>Nombre usuario</th>
+                    <th>Telefono usuario</th>
+                    <th>Crear Oportunidad</th>
+                </tr>
+            </thead>
+            <tbody>            
+            </tbody>
+        </table>
+    </div>
 </div>
 <div style="display:none">
-	<div id="dialog-alert" title="">
-		<p></p>
-	</div>
-	<input name="reserveFilter" id="reserveFilter">
+    <div id="dialog-alert" title="">
+        <p></p>
+    </div>
+    <input name="reserveFilter" id="reserveFilter">
 </div>
 
 </div>
@@ -86,156 +86,155 @@
 <div class="hidden-xs space-100"></div>    
 
 <script>
-	
-	$(document).ready(function() {
-		$('#carsActivesTable').DataTable({
-			info: false,
-			paging: true,
-			responsive: true
-		});
-		
-		$('.loading').hide(); 
-	});
+    
+    $(document).ready(function() {
+        $('#carsActivesTable').DataTable({
+            info: false,
+            paging: true,
+            responsive: true
+        });
+        
+        $('.loading').hide(); 
+    });
 
-	$(document).on("click", ".opp-approve", function(){
+    $(document).on("click", ".opp-approve", function(){
 
-		var reserveId = $(this).data("reserve-id");
-		var carId = $(this).data("car-id");
-		$(this).prop("disabled", true);
-		
-		var parameters = {
-			"reserveId" : reserveId,
-			"carId" : carId
-		};
+        var button = $(this);
+        button.attr("disabled", true);
 
+        var reserveId = $(this).data("reserve-id");
+        var carId = $(this).data("car-id");
 
-		$.post("<?php echo url_for_frontend('opportunities_approve') ?>", parameters, function(r){
-			if (r.error) {
-				console.log(r.errorMessage);
-			} else {
+        var parameters = {
+            "reserveId" : reserveId,
+            "carId" : carId
+        };
 
-				$("#dialog-alert p").html("Rerserva creada exitosamente");
-				$("#dialog-alert").attr('title','Reserva Creada!');
-				$("#dialog-alert").dialog({
-					buttons: [{
-					text: "Aceptar",
-					click: function() {
-						$( this ).dialog( "close" );
-					}
-					}]
-				});
+        $.post("<?php echo url_for_frontend('opportunities_approve') ?>", parameters, function(r){
+            if (r.error) {
+                console.log(r.errorMessage);
+            } else {
 
-				$(this).prop("disabled", false);
-			}
+                $("#dialog-alert p").html("Oportunidad creada exitosamente");
+                $("#dialog-alert").attr('title','Oportunidades');
+                $("#dialog-alert").dialog({
+                    buttons: [{
+                        text: "Aceptar",
+                        click: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }],
+                    minHeight: 200,
+                    minWidth: 400
+                });
 
-		}, 'json')
-		.fail(function(r) {
-			console.log("FAIL");
-			console.log(r);
-		});
-	});
+                button.removeAttr("disabled");
+            }
 
-	$("input[type='checkbox']").change(function(){
-		getActivesCars($("#reserveFilter").val());
-	});
+        }, 'json');
+    });
 
-	$("#limit").change(function(){
-		getActivesCars($("#reserveFilter").val());
-	});
+    $("input[type='checkbox']").change(function(){
+        getActivesCars($("#reserveFilter").val());
+    });
 
-	function isOriginalReserve() {
+    $("#limit").change(function(){
+        getActivesCars($("#reserveFilter").val());
+    });
 
-		var idReservaOriginal = $("#idReservaOriginal").val();
+    function isOriginalReserve() {
 
-		$.post("<?php echo url_for('reserve_is_original_reserve') ?>", {"idReservaOriginal": idReservaOriginal}, function(r){
-			if (r.error) {
-				console.log(r.errorMessage);
-			} else {
-				if (r.original != null) {
-					if (r.original) {
-						getActivesCars(r.original);
-						$("#reserveFilter").val(r.original); 
+        var idReservaOriginal = $("#idReservaOriginal").val();
 
-						if ($("#car-check").is(":visible")) {
-							$("#create").prop("disabled", false);
-						}
+        $.post("<?php echo url_for('reserve_is_original_reserve') ?>", {"idReservaOriginal": idReservaOriginal}, function(r){
+            if (r.error) {
+                console.log(r.errorMessage);
+            } else {
+                if (r.original != null) {
+                    if (r.original) {
+                        getActivesCars(r.original);
+                        $("#reserveFilter").val(r.original); 
 
-					}else {
-					}
-				}
-			}
+                        if ($("#car-check").is(":visible")) {
+                            $("#create").prop("disabled", false);
+                        }
 
-		}, 'json');
-	}
+                    }else {
+                    }
+                }
+            }
 
-	function getActivesCars(reserveId) {
+        }, 'json');
+    }
 
-		if (!reserveId) {
-			return false;
-		}
+    function getActivesCars(reserveId) {
 
-		$(".loading").show();
+        if (!reserveId) {
+            return false;
+        }
 
-		var limit     = $("#limit option:selected").val();
+        $(".loading").show();
 
-		var isAutomatic = false;
-		$(".isAutomatic").each(function(){
-			if ($(this).is(':checked')) {
-				isAutomatic = true;
-			}
-		});
-		
-		var isLowConsumption = false;
-		$(".isLowConsumption").each(function(){
-			if ($(this).is(':checked')) {
-				isLowConsumption = true;
-			}
-		});
+        var limit     = $("#limit option:selected").val();
 
-		var isMorePassengers = false;
-		$(".isMorePassengers").each(function(){
-			if ($(this).is(':checked')) {
-				isMorePassengers = true;
-			}
-		});
+        var isAutomatic = false;
+        $(".isAutomatic").each(function(){
+            if ($(this).is(':checked')) {
+                isAutomatic = true;
+            }
+        });
+        
+        var isLowConsumption = false;
+        $(".isLowConsumption").each(function(){
+            if ($(this).is(':checked')) {
+                isLowConsumption = true;
+            }
+        });
 
-		var withAvailability = false;
-		$(".withAvailability").each(function(){
-			if ($(this).is(':checked')) {
-				withAvailability = true;
-			}
-		});
+        var isMorePassengers = false;
+        $(".isMorePassengers").each(function(){
+            if ($(this).is(':checked')) {
+                isMorePassengers = true;
+            }
+        });
 
-		var parameters = {
-			"reserveId": reserveId,
-			"isAutomatic" : isAutomatic,
-			"isLowConsumption": isLowConsumption,
-			"isMorePassengers": isMorePassengers,
-			"withAvailability" : withAvailability,
-			"limit": limit
+        var withAvailability = false;
+        $(".withAvailability").each(function(){
+            if ($(this).is(':checked')) {
+                withAvailability = true;
+            }
+        });
 
-		}
+        var parameters = {
+            "reserveId": reserveId,
+            "isAutomatic" : isAutomatic,
+            "isLowConsumption": isLowConsumption,
+            "isMorePassengers": isMorePassengers,
+            "withAvailability" : withAvailability,
+            "limit": limit
 
-		$.post("<?php echo url_for('car_get_actives_cars') ?>", parameters, function(r){
+        }
 
-			if (r.error) {
-				console.log(r.errorMessage);
-			} else {
+        $.post("<?php echo url_for('car_get_actives_cars') ?>", parameters, function(r){
 
-				$('#carsActivesTable').DataTable().column(9).order( 'desc' );
+            if (r.error) {
+                console.log(r.errorMessage);
+            } else {
 
-				$('#carsActivesTable').show();
-				$('#carsActivesTable').DataTable().rows().remove().draw();
-				
-				$.each(r.data, function(k, v){
-					var button = "<button class='btn btn-block btn-primary opp-approve' data-reserve-id='"+reserveId+"' data-car-id='"+v.id+"'>Crear</button>";
-					$('#carsActivesTable').DataTable().row.add([ v.id, v.comunne, v.brand, v.model, v.year, v.transmission, v.price, v.type, v.nearestMetroName, v.QuantityOfLatestRents, v.user_name , v.user_telephone, button ]).draw();
-				});
-				
-				$(".loading").hide();
-			}
+                $('#carsActivesTable').DataTable().column(9).order( 'desc' );
 
-		}, 'json');
-	}
-	
+                $('#carsActivesTable').show();
+                $('#carsActivesTable').DataTable().rows().remove().draw();
+                
+                $.each(r.data, function(k, v){
+                    var button = "<button class='btn btn-block btn-primary opp-approve' data-reserve-id='"+reserveId+"' data-car-id='"+v.id+"'>Crear</button>";
+                    $('#carsActivesTable').DataTable().row.add([ v.id, v.comunne, v.brand, v.model, v.year, v.transmission, v.price, v.type, v.nearestMetroName, v.QuantityOfLatestRents, v.user_name , v.user_telephone, button ]).draw();
+                });
+                
+                $(".loading").hide();
+            }
+
+        }, 'json');
+    }
+    
 </script>

@@ -2,6 +2,20 @@
 
 class CarTable extends Doctrine_Table {
 
+    public function findAllCar($limit = false) {
+
+        $q = Doctrine_Core::getTable("Car")
+            ->createQuery('C')
+            ->Where('C.seguro_ok = 4')
+            ->orderBy('C.fecha_subida DESC');
+            
+        if ($limit) {
+            $q->limit($limit);
+        }
+
+        return $q->execute();
+    }
+
     public function findCarsActives($limit = 50, $forWeek = false, $forWeekend = false) {
 
         $q = Doctrine_Core::getTable("Car")

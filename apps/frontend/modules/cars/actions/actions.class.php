@@ -595,7 +595,7 @@ class carsActions extends sfActions {
                 }
             }
 
-            if ($babyChair) {
+            if ($babyChair != "false") {
                 $bool = true;
             } else {
                 $bool = false;

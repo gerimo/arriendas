@@ -125,6 +125,44 @@ class reservesActions extends sfActions {
         return sfView::NONE;
     }
 
+    public function executeCalculateAmountWarrantyFree (sfWebRequest $request) {
+        
+        $return = array("error" => false);
+
+        $from  = $request->getPostParameter("from", null);
+        $to    = $request->getPostParameter("to", null);
+
+        try {
+
+            $datesError = $this->validateDates($from, $to);
+            if ($datesError) {
+                throw new Exception($datesError, 2);
+            }
+
+            $return["amountWarrantyFree"] = Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to);
+
+        } catch (Exception $e) {
+
+            $return["error"] = true;
+
+            if ($e->getCode() >= 2) {
+                $return["errorMessage"] = $e->getMessage();
+            } else {
+                $return["errorMessage"] = "Problemas a calcular el monto de liberación de garantía. Por favor, intentalo más tarde";
+            }
+            
+            error_log("[".date("Y-m-d H:i:s")."] [reserves/calculateAmountWarrantyFree] ERROR: ".$e->getMessage());
+            
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "reserves/calculateAmountWarrantyFree");
+            }
+        }
+    
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
     public function executeCalculatePrice (sfWebRequest $request) {
 
         $return = array("error" => false);
@@ -510,8 +548,6 @@ class reservesActions extends sfActions {
             }
             
             if ($User->getBlocked()) {
-                error_log("BLOCKEADO: ".$User->getBlocked());
-                error_log("TIPO: ".gettype($User->getBlocked()));
                 throw new Exception("Rechazado el pago de User ".$userId." (".$User->firstname." ".$User->lastname.") debido a que se encuentra bloqueado, por lo que no esta autorizado para generar pagos", 1);            
             }
             
@@ -529,6 +565,10 @@ class reservesActions extends sfActions {
             $Reserve->setDate(date("Y-m-d H:i:s", strtotime($from)));
             $Reserve->setUser($User);
             $Reserve->setCar($Car);
+
+            if ($User->moroso) {
+                $warranty = true;
+            }
             
             if ($warranty) {
                 $amountWarranty = sfConfig::get("app_monto_garantia");
@@ -565,7 +605,7 @@ class reservesActions extends sfActions {
                 $mailer  = $mail->getMailer();
                 $message = $mail->getMessage();            
 
-                $subject = "¡Se ha registrado pago de un usuario sin verificacion judicial!";
+                $subject = "¡Se ha registrado un pago de un usuario sin verificacion judicial!";
                 $body    = $this->getPartial('emails/paymentDoneUnverifiedUser', array('Transaction' => $Transaction));
                 $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                 $to      = array("soporte@arriendas.cl");
@@ -578,6 +618,42 @@ class reservesActions extends sfActions {
                 
                 $mailer->send($message);
             }
+
+            if(!$User->getDriverLicenseFile()){
+                $mail    = new Email();
+                $mailer  = $mail->getMailer();
+                $message = $mail->getMessage();            
+
+                $subject = "¡Se ha registrado un pago de un usuario sin verificacion de licencia de conducir!";
+                $body    = $this->getPartial('emails/paymentDoneUnverifiedUser', array('Transaction' => $Transaction));
+                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+                $to      = array("soporte@arriendas.cl");
+
+                $message->setSubject($subject);
+                $message->setBody($body, 'text/html');
+                $message->setFrom($from);
+                $message->setTo($to);
+                $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                
+                $mailer->send($message);
+            }/* elseif($User->getBlockedLicense()){
+                $mail    = new Email();
+                $mailer  = $mail->getMailer();
+                $message = $mail->getMessage();            
+
+                $subject = "¡Se ha registrado un pago de un usuario sin licencia de conducir o bloqueada!";
+                $body    = $this->getPartial('emails/paymentDoneUnverifiedUser', array('Transaction' => $Transaction));
+                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+                $to      = array("soporte@arriendas.cl");
+
+                $message->setSubject($subject);
+                $message->setBody($body, 'text/html');
+                $message->setFrom($from);
+                $message->setTo($to);
+                $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                
+                $mailer->send($message);
+            }*/
 
         } catch (Exception $e) {
             error_log("[reserves/pay] ".$e->getMessage());

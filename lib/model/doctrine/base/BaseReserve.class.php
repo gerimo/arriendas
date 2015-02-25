@@ -32,6 +32,8 @@
  * @property OpportunityQueue $OpportunityQueue
  * @property boolean $liberadoDeGarantia
  * @property timestamp $fecha_pago
+ * @property boolean $is_warranty_back
+ * @property boolean $is_sinister
  * 
  * @method integer             getId()          Returns the current record's "id" value
  * @method timestamp           getDate()        Returns the current record's "date" value
@@ -62,6 +64,8 @@
  * @method OpportunityQueue    getOpportunityQueue()      Returns the current record's "OpportunityQueue" value
  * @method boolean             getLiberadoDeGarantia()   Return the current record's "liberadoDeGarantia" value
  * @method boolean             getFechaPago()   Return the current record's "fecha_pago" value
+ * @method boolean             getIsWarrantyBack()  Return the current record's "is_warranty_back" value
+ * @method boolean             getIsSinister()      Return the current record's "is_sinister" value
  *
  * @method Reserve             setId()          Sets the current record's "id" value
  * @method Reserve             setDate()        Sets the current record's "date" value
@@ -94,6 +98,8 @@
  * @method Reserve             setOpportunityQueue() Sets the current record's "OpportunityQueue" value
  * @method Reserve             setLiberadoDeGarantia() Sets the current record's "liberadoDeGarantia" value
  * @method Reserve             setFechaPago() Sets the current record's "fecha_pago" value
+ * @method Reserve             setIsWarrantyBack()  Sets the current record's "is_warranty_back" value
+ * @method Reserve             setIsSinister()      Sets the current record's "is_sinister" value
  * 
  * @package    CarSharing
  * @subpackage model
@@ -319,6 +325,16 @@ abstract class BaseReserve extends sfDoctrineRecord
         $this->hasColumn('numero_factura', 'integer', 7, array(
             'type' => 'integer',
             'length' => 7,
+            ));
+        $this->hasColumn('is_warranty_back', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
+             'default' => 0,
+            ));
+        $this->hasColumn('is_sinister', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
+             'default' => 0,
             ));
         $this->index('fk_Reserve_User1', array(
              'fields' => 

@@ -16,4 +16,12 @@ class BrandTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('Brand');
     }
+
+    public static function getBrandOrderByName(){
+    	$q = Doctrine_Core::getTable("Brand")
+            ->createQuery('B')
+            ->orderBy('B.name ASC');
+
+        return $q->execute();
+    }
 }
