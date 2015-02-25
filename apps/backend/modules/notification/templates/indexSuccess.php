@@ -114,7 +114,7 @@
         }
 
         var title        = $("#title").val();
-        var message      = $("#message").val();
+        var message      = $("#message").code();
 
         var parameters = {
             "notificationId"    : notificationId,
