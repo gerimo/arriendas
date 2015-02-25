@@ -289,7 +289,7 @@
             "commune": commune
         }
 
-        $("#dialog-alert").html("!Advertencia¡ <br> Estás modificando tus datos personales. <br> <b>¿Estas seguro que quieres continuar? </b").addClass("text-center");
+        $("#dialog-alert").html("¡Advertencia! <br> Estás modificando tus datos personales. <br> <b>¿Estas seguro que quieres continuar? </b").addClass("text-center");
         $("#dialog-alert").dialog({
             closeOnText: true,
             modal: true,
