@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-md-offset-4 col-md-4">
         <div class="BCW" id="frm">
-            <h1>Completa tus datos</h1>
+            <h1 class="completeRegister">Completa tus datos</h1>
 
             <?php if ($sf_user->getFlash('show')): ?>
                 <div style="border:1px solid #FF0000; background: #fcdfff;  width:360px; display:table;margin-bottom:20px; padding:20px;font-size:14px;">
@@ -40,7 +40,7 @@
 
             <div class="col-md-12 btn-group">
                 <label class="form-control">¿Como nos conociste?</label>
-                <div class="col-md-offset-1">
+                <div class="col-md-offset-1 como-radio">
                     <label class="radio">
                         <input type="radio" name="como" value="noticias" />En las noticias
                     </label>

@@ -245,7 +245,7 @@ class khipuActions extends sfActions {
                             }
                         }
                         
-                        error_log("[khipu/notifyPayment] [".date("Y-m-d H:i:s")."] Enviado email al propietario");
+                        error_log("[khipu/notifyPayment] [".date("Y-m-d H:i:s")."] Enviando email al propietario");
                         $mailer->send($message);
 
                         // Correo arrendatario
@@ -319,6 +319,7 @@ class khipuActions extends sfActions {
                         if (!$OpportunityQueue) {
                             $OpportunityQueue = new OpportunityQueue;
                             $OpportunityQueue->setReserve($Reserve);
+                            $OpportunityQueue->setPaidAt($Reserve->getFechaPago());
                             $OpportunityQueue->save();
                         }
                     }

@@ -105,9 +105,13 @@ opportunity_create:
     url: /oportunidades/crear
     param: { module: opportunity, action: create }
 
-opportunity_mailing:
-    url: /oportunidades/mailing
-    param: { module: opportunity, action: mailing }
+opportunity_dashboard:
+    url: /oportunidades
+    param: { module: opportunity, action: index }
+
+opportunity_kpi_refresh:
+    url: /oportunidades/kpi/refrescar
+    param: { module: opportunity, action: kpiRefresh }
 
 opportunity_mailing_config_save:
     url: /oportunidades/mailing/guardar
