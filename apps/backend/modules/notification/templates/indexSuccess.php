@@ -69,15 +69,8 @@
 <script>
 
 	$(document).ready(function() {
-	 
-
 
         $('#notificationTable').hide();
-
-        $("#message").summernote({
-            height: 200,
-            minHeight: 100
-        });
 	}); 
 
 	function findNotificacion() {

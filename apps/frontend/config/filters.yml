@@ -9,7 +9,7 @@ paymentSuccessFilter:
     class: checkPaymentSuccessFilter
 
 completeRegisterFilter:
-    class:  checkCompleteRegisterFilter
+    class: checkCompleteRegisterFilter
 
 optionsCarFilter:
     class: checkOptionsCarFilter
@@ -18,8 +18,8 @@ optionsCarFilter:
 completeRegisterCar:
     class: checkCompleteRegisterCar
 
-notificationFilter:
-    class: checkNotificationFilter
+notificationBarFilter:
+    class: NotificationBarFilter
 
 cache:     ~
 execution: ~
