@@ -4,6 +4,18 @@ require_once sfConfig::get('sf_lib_dir') . '/vendor/mobile-detect/Mobile_Detect.
 
 class mainActions extends sfActions {
 
+    public function executeTestSMS (sfWebRequest $request) {
+        $this->setLayout(false);
+
+        $message     = $request->getParameter("message");
+        $phoneNumber = $request->getParameter("phoneNumber");
+
+        $SMS = new SMS();
+        $SMS->send($message, $phoneNumber);
+
+        return sfView::NONE;
+    }
+
     public function executeTestKhipu (sfWebRequest $request) {
         $this->setLayout(false);
 
@@ -210,25 +222,34 @@ class mainActions extends sfActions {
                 throw new Exception("Debes indicar un teléfono", 1);
             }
 
-            if (is_null($birth) || $birth == "") {
+            if (!is_null($birth) || $birth != "") {
+                $dateNow = date('Y-m-d H:i:s');
+                $diff = (strtotime($dateNow) - strtotime($birth));
+                if($diff > 0) {
+                    $years = floor($diff / (365*60*60*24));
+                }
+                if($years < 24) {
+                    throw new Exception("Debes tener 24 años", 1);
+                }
+            } else {
                 throw new Exception("Debes indicar tu fecha de nacimiento", 1);
             }
 
             if (is_null($address) || $address == "") {
                 throw new Exception("Debes indicar tu dirección", 1);
             }
+            
+            if (is_null($region) || $region == "0") {
+                throw new Exception("Debes indicar tu región", 1);
+            }
 
-            if (is_null($commune) || $commune == "") {
+            if (is_null($commune) || $commune == "0") {
                 throw new Exception("Debes indicar tu comuna", 1);
             }
 
             $Commune = Doctrine_Core::getTable("Commune")->find($commune);
             if (!$Commune) {
                 throw new Exception("No se encontró la comuna", 1);                
-            }
-
-            if (is_null($region) || $region == "") {
-                throw new Exception("Debes indicar tu región", 1);
             }
 
             if(!$foreign) {
@@ -3036,7 +3057,8 @@ class mainActions extends sfActions {
         $this->setLayout("newIndexLayout");
         try {
 
-            $this->Brands = Doctrine_Core::getTable('Brand')->findAll();
+            $this->Brands = BrandTable::getBrandOrderByName();
+            //$this->Brands = Doctrine_Core::getTable('Brand')->findAll();
         
         } catch(Exception $e) { 
             error_log("[".date("Y-m-d H:i:s")."] [main/valueYourCar] ERROR: ".$e->getMessage()); 

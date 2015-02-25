@@ -481,14 +481,14 @@ class reservesActions extends sfActions {
                     $crawler = $client->request('POST', 'http://reformaprocesal.poderjudicial.cl/ConsultaCausasJsfWeb/page/panelConsultaCausas.jsf', $params);
 
                     $nodeCount = count($crawler->filter('.extdt-cell-div'));
+
                     if ($nodeCount > 1) {
-                        $User->setChequeoJudicial(true);
                         $User->setBlocked(true);
-                        $User->setBloqueado("Se ha bloqueado al usuario antes de efectuar la reserva, por poseer antecedentes judiciales.");
-                    } else {
-                        $User->setChequeoJudicial(true);
-                        $User->save();
+                        //$User->setBloqueado("Se ha bloqueado al usuario antes de efectuar la reserva, por poseer antecedentes judiciales.");
                     }
+
+                    $User->setChequeoJudicial(true);
+                    $User->save();
                 } else {
                     $UnverifiedMail = true;
                 }
@@ -728,22 +728,18 @@ class reservesActions extends sfActions {
                     $order->setShowSuccess(true);
                     $order->save();
 
-
                     $carId = $reserve->getCarId();
                     $carClass = Doctrine_Core::getTable('car')->findOneById($carId);
                     $propietarioId = $carClass->getUserId();
-                    $propietarioClass = Doctrine_Core::getTable('user')->findOneById($propietarioId);
-                    $comunaId = $propietarioClass->getComuna();
-                    $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
-                    
+                    $propietarioClass = Doctrine_Core::getTable('user')->findOneById($propietarioId);                    
                     
                     $this->nameOwner      = $reserve->getNameOwner();
                     $this->emailOwner     = $reserve->getEmailOwner();
                     $this->lastnameOwner  = $reserve->getLastnameOwner();
                     $this->telephoneOwner = $reserve->getTelephoneOwner();
                     $this->tokenReserve   = $reserve->getToken();
-                    $this->comunaOwner    = $comunaClass->getNombre();
-                    $this->addressOwner   =$propietarioClass->getAddress();
+                    $this->comunaOwner    = $propietarioClass->getCommune()->getName();
+                    $this->addressOwner   = $propietarioClass->getAddress();
 
                     $this->durationFrom   = $reserve->getFechaInicio2();
                     $this->durationTo     = $reserve->getFechaTermino2();
