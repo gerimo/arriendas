@@ -20,11 +20,12 @@ class notificationActions extends sfActions {
             $Notification = Doctrine_Core::getTable('Notification')->find($notificationId);
 
             if ($Notification) {
-                if ($title && $message) {
+                if ($message) {
                     $Notification->setMessageTitle($title);
                     $Notification->setMessage($message);
                 } else {
                     $Notification->setIsActive($option);
+                    $return["radio"] = true;
                 } 
             }
 
@@ -97,11 +98,12 @@ class notificationActions extends sfActions {
             $Action = Doctrine_Core::getTable('Action')->find($actionId);
 
             if ($Action) {
-                if ($name && $description) {
+                if ($description) {
                 	$Action->setName($name);
                 	$Action->setDescription($description);
                 } else {
                 	$Action->setIsActive($option);
+                    $return["radio"] = true;
                 } 
                 $Action->save();
 
@@ -152,11 +154,12 @@ class notificationActions extends sfActions {
             $NT = Doctrine_Core::getTable('NotificationType')->find($NTId);
 
             if ($NT) {
-                if ($name && $description) {
+                if ($description) {
                     $NT->setName($name);
                     $NT->setDescription($description);
                 } else {
                     $NT->setIsActive($option);
+                    $return["radio"] = true;
                 } 
                 $NT->save();
             } elseif ($name && $description) {

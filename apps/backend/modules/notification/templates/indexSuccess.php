@@ -37,7 +37,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Acción de notificación</h4>
+                    <h4 class="modal-title" id="myModalLabel">Nueva notificación</h4>
                 </div>
                 <div class="modal-body">
                     <div id="carDamages">
@@ -58,6 +58,7 @@
 
 	<div style="display:none">
         <input id="notificationId">
+        <input id="optionSelected">
 		<div id="dialog-alert" title="">
 			<p></p>
 		</div>
@@ -73,13 +74,13 @@
 			info: false,
 			paging: true,
 			responsive: true
-		});    
+		}); 
 	}); 
 
-	function findNotificacion(actionId, option) {
+	function findNotificacion() {
 
         var actionId        = $("#action option:selected").val();
-
+        $("#optionSelected").val(actionId);
         var parameters = {
             "actionId"      : actionId
         }
@@ -121,14 +122,11 @@
         $.post("<?php echo url_for('notification_edit_notification') ?>", parameters, function(r){
             if (r.error) {
                 console.log(r.errorMessage);
-            } else {    
-                location.reload();
+            } else {
+                findNotificacion($("#optionSelected").val());
             }
         }, 'json');
     }
-
-
-
 
     function optionSelected(option, notificationId) {
 
@@ -146,6 +144,7 @@
     $('body').on("click", ".radio", function(e){
 
         var notificationId   = $(this).data("notification-id");
+        $("#message").val("");
 
         var option     = $("input[name='radio"+notificationId+"']:checked").val();
 
@@ -153,7 +152,10 @@
     });
 
     $('body').on("click", ".editar", function(e){
-
+        if (!$(this).data("title")) {
+            $("#myModalLabel").html("Nueva notificación");
+        }
+        $("#myModalLabel").html($(this).data("title"));
         $("#notificationId").val($(this).data("notification-id"));
         $("#title").val($(this).data("title"));
         $("#message").val($(this).data("message"));
