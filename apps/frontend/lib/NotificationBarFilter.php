@@ -21,7 +21,7 @@ class NotificationBarFilter extends sfFilter {
                     $reserveId = null;
                 }
 
-                $message = Notification::translator($User->id, $UserNotification->getNotification()->message->renderRow(), $reserveId);
+                $message = Notification::translator($User->id, $UserNotification->getNotification()->getRawValue()->message, $reserveId);
 
                 $ContextUser->setAttribute("notificationMessage", $message);
                 $ContextUser->setAttribute("notificationId", $UserNotification->getNotification()->id);
