@@ -6,7 +6,7 @@
     <div class="space-40"></div>
     <div class="col-md-offset-4 col-md-4">   
         <select class="form-control" id="action" name="action" type="text">
-                <option selected value="">Selecciona una opción</option>
+                <option selected value="">Selecciona una acción</option>
             <?php foreach ($Actions as $Action): ?>
                 <option value="<?php echo $Action->id?>"><?php echo $Action->name?></option>
             <?php endforeach; ?>
@@ -168,7 +168,7 @@
         $("#myModalLabel").html($(this).data("name"));
         $("#notificationId").val($(this).data("notification-id"));
         $("#title").val($(this).data("title"));
-        $("#message").code($(this).data("message"));
+        
         $('#notificationModal').modal('show');
         var ntId = $(this).data("nt-id");
         console.log(ntId);
@@ -178,9 +178,11 @@
                 minHeight: 100
             });
             $("#description").hide();
+            $("#message").code($(this).data("message"));
         }else {
             $("#message").destroy();
             $("#description").show();
+            $("#description").val($(this).data("message"));
         }
 
     });
