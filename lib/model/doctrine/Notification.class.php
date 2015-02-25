@@ -12,7 +12,7 @@ class Notification extends BaseNotification {
         	$Action = $Notification->getAction();
             $Type = $Notification->getNotificationType();
 
-        	if($Notification->is_valid && $Action->is_active && $Type->is_active) {
+        	if($Notification->is_active && $Action->is_active && $Type->is_active) {
 
                 $UserNotification = new UserNotification();
                 $UserNotification->setCreatedAt(date("Y-m-d H:i:s"));
