@@ -43,7 +43,7 @@ EOF;
 
             $UsersNotifications = Doctrine_core::getTable("UserNotification")->findBySentAtAsNull();
 
-            $this->log("[".date("Y-m-d H:i:s")."] ".count($UsersNotifications). "notificaciones encontradas");
+            $this->log("[".date("Y-m-d H:i:s")."] ".count($UsersNotifications). " notificaciones encontradas");
 
             if (count($UsersNotifications) > 0) {
                 foreach ($UsersNotifications as $UserNotification) {
@@ -56,10 +56,9 @@ EOF;
                     $Type         = $Notification->getNotificationType();
 
                     $title   = $Notification->message_title;
-                    $message = $Notification->message;                
+                    $message = $Notification->message;
 
                     if($Notification->is_active && $Action->is_active && $Type->is_active) {
-
                         switch ($Type->id) {
                             case 1:
                                 // se ejecuta a traves de un filtro
@@ -88,7 +87,7 @@ EOF;
                                 $subject = $Notification->message_title;
                                 $body    = $Notification->message;
                                 $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-                                $to      = array($User->email);
+                                $to      = array($User->email => $User->firstname." ".$User->lastname);
 
                                 $message->setSubject($subject);
                                 $message->setBody($body, 'text/html');
@@ -110,7 +109,7 @@ EOF;
                                 $subject = $Notification->message_title;
                                 $body    = $Notification->message;
                                 $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-                                $to      = array("soporte@arriendas.cl");
+                                $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
 
                                 $message->setSubject($subject);
                                 $message->setBody($body, 'text/html');
@@ -135,7 +134,13 @@ EOF;
                         }
                     } else {
                         $countNotActive++;
-                    }      
+                    }
+                     // Mensaje Log
+                    $txtNotificationId  = str_pad("Notificacion ID: ".$Notification->id, 20);
+                    $txtAction          = str_pad("Accion: ".$Action->name, 15);
+                    $txtType            = str_pad("Tipo: ".$Type->name, 15);
+                    $txtUser            = str_pad("Usuario ID: ".$User->id. "(".$User->firstname." ".$User->lastname.")",10);
+                    $this->log($txtNotificationId.$txtAction.$txtType.$txtUser);      
                 }
             } else {
                 $this->log("[".date("Y-m-d H:i:s")."] No hay notificaciones por enviar");
