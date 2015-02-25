@@ -41,7 +41,7 @@ EOF;
         $actionId = $arguments["actionId"];
 
         try {
-            notification::make($userId, $actionId);
+            Notification::make($userId, $actionId);
             $this->log('Accion notificada');
         } catch (Exception $e) {
             $this->log('Hubo un problema: '.$e->getMessage());
