@@ -160,7 +160,7 @@
         $("#myModalLabel").html($(this).data("name"));
         $("#notificationId").val($(this).data("notification-id"));
         $("#title").val($(this).data("title"));
-        $("#message").val($(this).data("message"));
+        $("#message").code($(this).data("message"));
         $('#notificationModal').modal('show') 
     }); 
 </script>
