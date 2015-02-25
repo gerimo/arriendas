@@ -95,7 +95,7 @@
                 $.each(r.data, function(k, v){
 
                     var isActive    = optionSelected(v.n_is_active, v.n_id, 1);
-                    var button = "<a class='btn btn-block btn-primary editar' data-notification-id='"+v.n_id+"' data-title='"+v.n_title+"' data-message='"+v.n_message+"' >Editar</a>";
+                    var button = "<a class='btn btn-block btn-primary editar' data-notification-id='"+v.n_id+"' data-title='"+v.n_title+"' data-message='"+v.n_message+"' data-name='"+v.nt_name+"' >Editar</a>";
                     $('#notificationTable').DataTable().row.add([ v.n_id, v.n_title, v.n_message, v.nt_name, isActive, button]).draw();
                 });
             }
@@ -152,10 +152,7 @@
     });
 
     $('body').on("click", ".editar", function(e){
-        if (!$(this).data("title")) {
-            $("#myModalLabel").html("Nueva notificación");
-        }
-        $("#myModalLabel").html($(this).data("title"));
+        $("#myModalLabel").html($(this).data("name"));
         $("#notificationId").val($(this).data("notification-id"));
         $("#title").val($(this).data("title"));
         $("#message").val($(this).data("message"));
