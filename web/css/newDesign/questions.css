@@ -16,3 +16,10 @@ body {
 .collapsed{
 	font-weight: 300;
 }
+
+@media only screen and (max-width:767px) {
+	.panel-title {
+		font-size: 15px;
+	}
+}
+

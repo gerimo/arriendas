@@ -1,0 +1,1 @@
+<a class="item_thm fancybox" href="#">Tu saldo es de $<?php echo number_format($credito,0,",","."); ?></a>
