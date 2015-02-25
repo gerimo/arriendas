@@ -33,7 +33,7 @@ class UserNotificationTable extends Doctrine_Table {
             ->where('UN.sent_at is null')
             ->andWhere('UN.user_id = ?', $userId);
 
-        return $q->execute();
+        return $q->fetchOne();
     }
 
 }
