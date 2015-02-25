@@ -11,7 +11,7 @@ class NotificationBarFilter extends sfFilter {
             $userId = $ContextUser->getAttribute('userid');
             $User   = Doctrine_core::getTable("User")->find($userId);
 
-            $UserNotification = Doctrine_Core::getTable('UserNotification')->findOneByUserIdAndViewedAt($userId, null);
+            $UserNotification = Doctrine_Core::getTable('UserNotification')->findOneByUserIdAndViewedAtAsNull($userId);
 
             if ($UserNotification) {
                 $ContextUser->setAttribute("notificationMessage", $UserNotification->getNotification()->message);
