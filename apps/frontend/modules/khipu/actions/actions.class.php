@@ -315,11 +315,11 @@ class khipuActions extends sfActions {
 
                         error_log("[khipu/notifyPayment] ---------- HABEMUS PAGO --------");
 
-                        $OpportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findOneByReserve($Reserve);
+                        $OpportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findOneByReserveId($Transaction->getReserveId());
                         if (!$OpportunityQueue) {
                             error_log("[khipu/notifyPayment] Generando oportunidad");
                             $OpportunityQueue = new OpportunityQueue;
-                            $OpportunityQueue->setReserve($Reserve);
+                            $OpportunityQueue->setReserveId($Transaction->getReserveId());
                             $OpportunityQueue->setPaidAt($Reserve->getFechaPago());
                             $OpportunityQueue->save();
                             error_log("[khipu/notifyPayment] Oportunidad generada");
