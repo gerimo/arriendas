@@ -37,6 +37,11 @@ abstract class BaseUserNotification extends sfDoctrineRecord {
             'notnull' => true,
             'length' => 4
         ));
+
+        $this->hasColumn('reserve_id', array(
+            'type' => 'integer',
+            'length' => 4
+        ));
         
         $this->hasColumn('viewed_at', array(
             'type' => 'datetime',
@@ -49,6 +54,10 @@ abstract class BaseUserNotification extends sfDoctrineRecord {
 
         $this->index('fk_UserNotification_User', array(
             'fields' => array(0 => 'user_id')
+        ));
+
+        $this->index('fk_UserNotification_Reserve', array(
+            'fields' => array(0 => 'reserve_id')
         ));
 
         $this->option('charset', 'utf8');
@@ -68,6 +77,13 @@ abstract class BaseUserNotification extends sfDoctrineRecord {
 
         $this->hasOne('User', array(
              'local' => 'user_id',
+             'foreign' => 'id',
+             'onDelete' => 'no action',
+             'onUpdate' => 'no action'
+        ));
+
+        $this->hasOne('Reserve', array(
+             'local' => 'reserve_id',
              'foreign' => 'id',
              'onDelete' => 'no action',
              'onUpdate' => 'no action'
