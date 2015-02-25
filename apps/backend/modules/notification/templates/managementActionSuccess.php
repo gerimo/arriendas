@@ -14,7 +14,7 @@
                     <th>Nombre</th>
                     <th>Descripción</th>
                     <th>Editar</th>
-    				<th>Desactivar</th>
+    				<th>¿Activo?</th>
 				</tr>
 			</thead>   
             <tbody>

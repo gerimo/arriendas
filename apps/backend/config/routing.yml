@@ -1,4 +1,4 @@
-    # You can find more information about this file on the symfony website:
+# You can find more information about this file on the symfony website:
 # http://www.symfony-project.org/reference/1_4/en/10-Routing
 
 homepage:
@@ -105,9 +105,13 @@ opportunity_create:
     url: /oportunidades/crear
     param: { module: opportunity, action: create }
 
-opportunity_mailing:
-    url: /oportunidades/mailing
-    param: { module: opportunity, action: mailing }
+opportunity_dashboard:
+    url: /oportunidades
+    param: { module: opportunity, action: index }
+
+opportunity_kpi_refresh:
+    url: /oportunidades/kpi/refrescar
+    param: { module: opportunity, action: kpiRefresh }
 
 opportunity_mailing_config_save:
     url: /oportunidades/mailing/guardar
@@ -179,7 +183,7 @@ user_whitout_pay_get:
 
 upload_photo:
     url: /subir-foto
-    param: { module: main, action: uploadPhoto }
+    param: { module: car, action: uploadPhoto }
 
 
 

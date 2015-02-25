@@ -541,7 +541,6 @@
 
     function initialize(address) {
 
-        console.log(address);
         var geoCoder = new google.maps.Geocoder(address)
         var request = {address:address};
         geoCoder.geocode(request, function(result, status){

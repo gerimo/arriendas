@@ -33,8 +33,8 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Oportunidades<span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="<?php echo url_for('opportunity_create') ?>">Generar</a></li>
-                            <li><a href="<?php echo url_for('opportunity_mailing') ?>">Mailing</a></li>
+                            <li><a href="<?php echo url_for('opportunity_dashboard') ?>">Dashboard</a></li>
+                            <li><a href="<?php echo url_for('opportunity_create') ?>">Generar</a></li>                            
                         </ul>
                     </li>
                     <li class="dropdown">
