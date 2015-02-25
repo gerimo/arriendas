@@ -419,6 +419,9 @@ class mainActions extends sfActions {
 
             $url = $this->generateUrl('user_register_complete');
 
+            // Notificaciones
+            Notification::make($User->id, 1);
+
             // Login
             $this->getUser()->setAuthenticated(true);
             $this->getUser()->setAttribute("logged", true);
@@ -3306,6 +3309,11 @@ class mainActions extends sfActions {
                     $myUser->setPictureFile($photo_indexurl);
                     $myUser->setConfirmedFb(true);
                     $myUser->save();
+
+
+                    // Notificaciones
+                    Notification::make($User->id, 1);
+                    
                 } else {
 					$newUser=false;
                     $myUser->setFacebookId($user["id"]);
