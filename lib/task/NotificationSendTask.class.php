@@ -41,6 +41,9 @@ EOF;
                 $Action = $Notification->getAction();
                 $Type = $Notification->getNotificationType();
 
+                $message = $Notification->message;
+                $title = $Notification->message_title;
+
                 if($Notification->is_active && $Action->is_active && $Type->is_active) {
 
                     switch ($Type->id) {
@@ -50,7 +53,15 @@ EOF;
 
                         case 2:
                             $sms = new SMS("Arriendas.cl");
-                            $sms->send($Notification->message_title.chr(0x0D).chr(0x0A).$Notification->message, $User->telephone);
+
+                            // si el titulo es diferente de null o vacío, le añade un salto de linea.
+                            if($title){
+                                $title = $title.chr(0x0D).chr(0x0A);
+                            } else {
+                                $title = "";
+                            }
+
+                            $sms->send($title.$message, $User->telephone);
                             break;
 
                         case 3:

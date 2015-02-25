@@ -10,11 +10,17 @@ class Notification extends BaseNotification {
         try {
 
             foreach ($Notifications as $Notification) {
-                $UserNotification = new UserNotification();
-                $UserNotification->setCreatedAt(date("Y-m-d H:i:s"));
-                $UserNotification->setNotificationId($Notification->id);
-                $UserNotification->setUserId($userId);
-                $UserNotification->save();
+
+            	$Action = $Notification->getAction();
+                $Type = $Notification->getNotificationType();
+                
+            	if($Notification->is_valid && $Action->is_active && $Type->is_active) {
+	                $UserNotification = new UserNotification();
+	                $UserNotification->setCreatedAt(date("Y-m-d H:i:s"));
+	                $UserNotification->setNotificationId($Notification->id);
+	                $UserNotification->setUserId($userId);
+	                $UserNotification->save();
+	            }
             }
 
         } catch (Exception $e) {
