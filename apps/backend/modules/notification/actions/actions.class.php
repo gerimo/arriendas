@@ -1,4 +1,4 @@
-<?php
+    <?php
 class notificationActions extends sfActions {
 
 	public function executeIndex(sfWebRequest $request) {
@@ -20,7 +20,7 @@ class notificationActions extends sfActions {
             $Notification = Doctrine_Core::getTable('Notification')->find($notificationId);
 
             if ($Notification) {
-                if ($message) {
+                if ($option == "") {
                     $Notification->setMessageTitle($title);
                     $Notification->setMessage($message);
                 } else {
@@ -99,7 +99,7 @@ class notificationActions extends sfActions {
             $Action = Doctrine_Core::getTable('Action')->find($actionId);
 
             if ($Action) {
-                if ($description) {
+                if ($option == "" ){
                 	$Action->setName($name);
                 	$Action->setDescription($description);
                 } else {
@@ -155,7 +155,7 @@ class notificationActions extends sfActions {
             $NT = Doctrine_Core::getTable('NotificationType')->find($NTId);
 
             if ($NT) {
-                if ($description) {
+                if ($option == "") {
                     $NT->setName($name);
                     $NT->setDescription($description);
                 } else {

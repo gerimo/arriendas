@@ -2,7 +2,7 @@
 <div class="visible-xs space-50"></div>
 
 <div class="row">
-    <h1 class="text-center">Administrador    de notificaciones</h1> 
+    <h1 class="text-center">Administrador de notificaciones</h1> 
     <div class="space-40"></div>
     <div class="col-md-offset-4 col-md-4">   
         <select class="form-control" id="action" name="action" type="text">
@@ -165,16 +165,19 @@
         $('#notificationModal').modal('show');
         var ntId = $(this).data("nt-id");
         if( ntId != 2) {
+            $("#message").destroy();
             $("#message").summernote({
                 height: 200,
                 minHeight: 100
             });
             $("#description").hide();
             $("#message").code($(this).data("message"));
+            $("#description").val("");
         }else {
             $("#message").destroy();
             $("#description").show();
             $("#description").val($(this).data("message"));
+            $("#message").hide();
         }
 
     });
