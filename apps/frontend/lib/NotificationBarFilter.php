@@ -15,9 +15,15 @@ class NotificationBarFilter extends sfFilter {
 
             if ($UserNotification) {
 
-                
+                $reserveId = $ContextUser->getAttribute('reserveId');
 
-                $ContextUser->setAttribute("notificationMessage", $UserNotification->getNotification()->message->renderRow());
+                if(!$reserveId){
+                    $reserveId = null;
+                }
+
+                $message = Notification::translator($User->id, $UserNotification->getNotification()->message->renderRow(), $reserveId);
+
+                $ContextUser->setAttribute("notificationMessage", $message);
                 $ContextUser->setAttribute("notificationId", $UserNotification->getNotification()->id);
                 if (is_null($UserNotification->getViewedAt())) {
                     $UserNotification->setViewedAt(date("Y-m-d H:i:s"));
