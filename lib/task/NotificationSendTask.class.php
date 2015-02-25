@@ -38,101 +38,107 @@ EOF;
         $countNotActive             = 0;
 
         try {
-            $this->log("[".date("Y-m-d H:i:s")."] Procesando...");
+            $this->log("[".date("Y-m-d H:i:s")."] Buscando notificaciones por enviar");
             $startTime = microtime(true);
 
             $UsersNotifications = Doctrine_core::getTable("UserNotification")->findBySentAtAsNull();
 
-            foreach ($UsersNotifications as $UserNotification) {
+            $this->log("[".date("Y-m-d H:i:s")."] ".count($UsersNotifications). "notificaciones encontradas");
 
-                $alreadySent = true;
+            if (count($UsersNotifications) > 0) {
+                foreach ($UsersNotifications as $UserNotification) {
 
-                $User         = $UserNotification->getUser();
-                $Notification = $UserNotification->getNotification();   
-                $Action       = $Notification->getAction();
-                $Type         = $Notification->getNotificationType();
+                    $alreadySent = true;
 
-                $title   = $Notification->message_title;
-                $message = $Notification->message;                
+                    $User         = $UserNotification->getUser();
+                    $Notification = $UserNotification->getNotification();   
+                    $Action       = $Notification->getAction();
+                    $Type         = $Notification->getNotificationType();
 
-                if($Notification->is_active && $Action->is_active && $Type->is_active) {
+                    $title   = $Notification->message_title;
+                    $message = $Notification->message;                
 
-                    switch ($Type->id) {
-                        case 1:
-                            // se ejecuta a traves de un filtro
-                            break;
+                    if($Notification->is_active && $Action->is_active && $Type->is_active) {
 
-                        case 2:
-                            $SMS = new SMS("Arriendas");
+                        switch ($Type->id) {
+                            case 1:
+                                // se ejecuta a traves de un filtro
+                                break;
 
-                            // si el titulo es diferente de null o vacío, le añade un salto de linea.
-                            if ($title) {
-                                $title = $title.chr(0x0D).chr(0x0A);
-                            } else {
-                                $title = "";
-                            }
+                            case 2:
+                                $SMS = new SMS("Arriendas");
 
-                            $SMS->send($title.$message, $User->telephone);
+                                // si el titulo es diferente de null o vacío, le añade un salto de linea.
+                                if ($title) {
+                                    $title = $title.chr(0x0D).chr(0x0A);
+                                } else {
+                                    $title = "";
+                                }
 
-                            $countAction2 ++;
-                            break;
+                                $SMS->send($title.$message, $User->telephone);
 
-                        case 3:
-                            $mail    = new Email();
-                            $mailer  = $mail->getMailer();
-                            $message = $mail->getMessage();     
+                                $countAction2 ++;
+                                break;
 
-                            $subject = $Notification->message_title;
-                            $body    = $Notification->message;
-                            $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-                            $to      = array($User->email);
+                            case 3:
+                                $mail    = new Email();
+                                $mailer  = $mail->getMailer();
+                                $message = $mail->getMessage();     
 
-                            $message->setSubject($subject);
-                            $message->setBody($body, 'text/html');
-                            $message->setFrom($from);
-                            $message->setTo($to);
-                            $message->setReplyTo(array("ayuda@arriendas.cl" => "Ayuda Arriendas.cl"));
-                            //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
-                            
-                            $mailer->send($message);
+                                $subject = $Notification->message_title;
+                                $body    = $Notification->message;
+                                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+                                $to      = array($User->email);
 
-                            $countAction3 ++;
-                            break;
+                                $message->setSubject($subject);
+                                $message->setBody($body, 'text/html');
+                                $message->setFrom($from);
+                                $message->setTo($to);
+                                $message->setReplyTo(array("ayuda@arriendas.cl" => "Ayuda Arriendas.cl"));
+                                //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                                
+                                $mailer->send($message);
 
-                        case 4:
-                            $mail    = new Email();
-                            $mailer  = $mail->getMailer();
-                            $message = $mail->getMessage();     
+                                $countAction3 ++;
+                                break;
 
-                            $subject = $Notification->message_title;
-                            $body    = $Notification->message;
-                            $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-                            $to      = array("soporte@arriendas.cl");
+                            case 4:
+                                $mail    = new Email();
+                                $mailer  = $mail->getMailer();
+                                $message = $mail->getMessage();     
 
-                            $message->setSubject($subject);
-                            $message->setBody($body, 'text/html');
-                            $message->setFrom($from);
-                            $message->setTo($to);
-                            //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
-                            
-                            $mailer->send($message);
-                            $countAction4++;
-                            break;
-                          
-                        default:
-                            $alreadySent = false;
-                            $countDefaults++;
-                            break;
-                    }
+                                $subject = $Notification->message_title;
+                                $body    = $Notification->message;
+                                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+                                $to      = array("soporte@arriendas.cl");
 
-                    if ($alreadySent) {
-                        $UserNotification->setSentAt(date("Y-m-d H:i:s"));
-                        $UserNotification->save();
-                        $countSents++;
-                    }
-                } else {
-                    $countNotActive++;
-                }      
+                                $message->setSubject($subject);
+                                $message->setBody($body, 'text/html');
+                                $message->setFrom($from);
+                                $message->setTo($to);
+                                //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                                
+                                $mailer->send($message);
+                                $countAction4++;
+                                break;
+                              
+                            default:
+                                $alreadySent = false;
+                                $countDefaults++;
+                                break;
+                        }
+
+                        if ($alreadySent) {
+                            $UserNotification->setSentAt(date("Y-m-d H:i:s"));
+                            $UserNotification->save();
+                            $countSents++;
+                        }
+                    } else {
+                        $countNotActive++;
+                    }      
+                }
+            } else {
+                $this->log("[".date("Y-m-d H:i:s")."] No hay notificaciones por enviar");
             }
 
         } catch (Exeception $e) {
