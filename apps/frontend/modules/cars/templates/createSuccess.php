@@ -268,7 +268,8 @@
             </form>
             <div class="col-md-offset-8 col-md-4">
                 <div class="hidden-xs space-60"></div>
-                <button class="btn btn-a-primary btn-block" name="save" onclick="validateForm()">Siguiente</button>
+                <button class="btn btn-a-primary btn-block" id="next" name="save" onclick="validateForm()">Siguiente</button>
+                <img class="load" src="/images/ajax-loader.gif">    
                 <p class="alert"></p> 
             </div>
             
@@ -286,7 +287,11 @@
 
 
 <script>
+    
+    $(document).ready(function() {  
 
+        $(".load").hide();  
+    }); 
 
     $("#brand").change(function(){
 
@@ -391,8 +396,6 @@
             "capacity":  capacity
         };
 
-        console.log(parameters);
-
         $.post("<?php echo url_for('cars/getValidateCar') ?>", parameters, function(r){
 
             
@@ -410,6 +413,8 @@
             $("#typeCar").removeClass("alert-danger");
             $("#patent").removeClass("alert-danger");
             $("#benzine").removeClass("alert-danger");
+            $(".load").show();
+            $("#next").attr("disabled", true);
 
 
             if (r.error) {
@@ -447,7 +452,6 @@
                     $("#color").addClass("alert-danger"); 
                     $('#color').focus();
                 }
-
 
             } else {
                 window.location.href = r.url_complete;

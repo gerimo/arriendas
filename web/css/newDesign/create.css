@@ -44,6 +44,12 @@ body{
  	margin-top: 10px;
 }
 
+.load{ 
+	position: absolute;
+	width: 43px;
+	margin: -39px 0px 0px -48px;
+}
+
 #mostrarMapa img { max-width: none; }
 
 h3{

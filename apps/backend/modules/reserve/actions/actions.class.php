@@ -97,6 +97,7 @@ class reserveActions extends sfActions {
             foreach($Reserves as $i => $Reserve){
 
                 $User = $Reserve->getUser();
+                $UserCar = $Reserve->getCar()->getUser();
                 $Transaction = $Reserve->getTransaction();
 
                 $return["data"][$i] = array(
@@ -104,6 +105,10 @@ class reserveActions extends sfActions {
                     'u_fullname'      => ucfirst(strtolower($User->firstname.' '.$User->lastname)),
                     'u_telephone'     => $User->telephone,
                     'u_email'         => $User->email,
+                    'uc_id'           => $UserCar->id,
+                    'uc_fullname'     => ucfirst(strtolower($UserCar->firstname.' '.$UserCar->lastname)),
+                    'uc_telephone'    => $UserCar->telephone,
+                    'uc_email'        => $UserCar->email,
                     'r_id'            => $Reserve->id,
                     'r_date'          => $Reserve->date,
                     'r_duration'      => $Reserve->getFechaTermino2(),
