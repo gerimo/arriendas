@@ -14,8 +14,10 @@ class NotificationBarFilter extends sfFilter {
             $UserNotification = Doctrine_Core::getTable('UserNotification')->findOneByUserIdAndViewedAtAsNull($userId);
 
             if ($UserNotification) {
-                error_log(gettype($UserNotification));
-                $ContextUser->setAttribute("notificationMessage", $UserNotification->getNotification()->message);
+
+                
+
+                $ContextUser->setAttribute("notificationMessage", $UserNotification->getNotification()->message->renderRow());
                 $ContextUser->setAttribute("notificationId", $UserNotification->getNotification()->id);
                 if (is_null($UserNotification->getViewedAt())) {
                     $UserNotification->setViewedAt(date("Y-m-d H:i:s"));
