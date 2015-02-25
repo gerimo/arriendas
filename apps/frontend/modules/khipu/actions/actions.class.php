@@ -319,6 +319,7 @@ class khipuActions extends sfActions {
                         if (!$OpportunityQueue) {
                             $OpportunityQueue = new OpportunityQueue;
                             $OpportunityQueue->setReserve($Reserve);
+                            $OpportunityQueue->setPaidAt($Reserve->getFechaPago());
                             $OpportunityQueue->save();
                         }
                     }
