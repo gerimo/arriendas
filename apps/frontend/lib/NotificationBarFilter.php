@@ -1,6 +1,6 @@
 <?php
 
-class checkNotificationFilter extends sfFilter {
+class NotificationBarFilter extends sfFilter {
 
     public function execute($filterChain) {
 
