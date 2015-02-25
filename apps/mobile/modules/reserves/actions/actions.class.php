@@ -865,7 +865,7 @@ class reservesActions extends sfActions {
         return sfYaml::load(dirname(dirname(__FILE__)) . "/config/puntopagos.yml");
     }
 
-    protected function _log($step, $status, $msg) {
+    protected function _log ($step, $status, $msg) {
 
         $logPath = sfConfig::get('sf_log_dir') . '/puntopagos.log';
         $custom_logger = new sfFileLogger(new sfEventDispatcher(), array('file' => $logPath));

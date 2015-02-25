@@ -20,6 +20,9 @@ class mainActions extends sfActions {
         $this->setLayout("newIndexLayout");
     }
 
+    public function executeCompania(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+    }
 	public function executeCompleteRegister(sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");

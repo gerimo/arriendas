@@ -16,7 +16,11 @@
                 <fieldset id="paso1">
                     <h1>Datos del vehículo</h1>
                     <div class="espacio col-xs-12 col-sm-12 col-md-12">
-                    <!-- comuna -->
+                    </div>
+
+
+                    <div class="espacio col-sm-12 col-md-12">
+                        <!-- comuna -->
                     <div class="col-sm-4 col-md-4">   
                         <label>Comuna (*)</label>
                         <select class="form-control" id="commune" name="commune" placeholder="" type="text">
@@ -38,12 +42,6 @@
                         <label>Ubicación del vehículo  (*)</label>
                         <input class="form-control" id="address" name="address" value="<?php if($Car->address) echo $Car->address ?>" placeholder="Dirección #111" type="text"> 
                     </div>
-
-
-                    </div>
-
-
-                    <div class="espacio col-sm-12 col-md-12">
                         <!-- marca auto -->
                         <div class="col-sm-4 col-md-4">
                             <label>Marca (*)</label><br>

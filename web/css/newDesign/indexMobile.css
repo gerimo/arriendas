@@ -59,8 +59,7 @@ header .navbar-nav .navbar-right ul {
 }
 
 #section-home-carousel {
-    padding-top: 250px;
-
+    padding-top: 180px;
 }
 
 #section-home-carousel h1 {
@@ -283,8 +282,8 @@ header .navbar-nav .navbar-right ul {
     font-size: 14px;
     padding: 10px 15px 10px 15px;
     font-weight: 600;
-    margin-top: 50px;
-    margin-left: 375px;
+   /* margin-top: 50px;
+    margin-left: 375px;*/
     text-align: center;
     text-shadow: rgb(0, 0, 0) 1px 0px 5px;
     text-transform: uppercase;
@@ -525,7 +524,7 @@ button.see-more {
         position: absolute;
         top: 75%;
         margin: -20px 0px 0px 115px;
-        font-size: 20px;
+        font-size: 14px;
     }
 }
 
@@ -537,7 +536,7 @@ button.see-more {
         position: absolute;
         top: 75%;
         margin: -9px 0px 0px 55px;
-        font-size: 20px;
+        font-size: 14px;
     }
 }
 
@@ -556,7 +555,7 @@ button.see-more {
 
     #section-map-form-search {
         background: white;
-        padding: 5px 0 0 0;
+        padding: 20px 0 0 0;
     }
     #section-map-form-search select, #section-map-form-search input {
         margin-top: 5px;
@@ -634,5 +633,14 @@ button.see-more {
         margin: 0;
         padding: 15px 5px;
         text-align: center;
+    }
+}
+
+@media only screen and (width:480px) and (height: 854px){
+    #btn-leese {
+        position: absolute;
+        top: 67%;
+        font-size: 14px;
+        padding: 15px 5px;
     }
 }

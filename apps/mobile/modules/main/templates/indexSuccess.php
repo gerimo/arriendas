@@ -172,7 +172,6 @@
             haveChair: haveChair,
             nearToSubway: nearToSubway
         };
-        console.log(parameters);
 
         $.post("<?php echo url_for('car_search') ?>", parameters, function(r){
 
@@ -218,8 +217,9 @@
                     article += "<div class='col-xs-8 col-md-8 text'>";
                     article += "<h2>"+ Car.brand +" "+ Car.model +"<small>, "+Car.year+"</small></h2>";
                     /*article += "<span class='sub-heading'>A 2 km Metro <strong>Tobalaba</strong></span>";*/
-                    article += "<p class='price'>$"+ Car.price +" <small style='color: black; font-weight: 300; font-size: 9px;'>TOTAL</small></p>";
+                    article += "<p class='price'>$"+ Car.price +" <small style='color: black; font-weight: 300; font-size: 9px;'>TOTAL FINAL</small></p>";
                     article += "<div class='metro'><p><img class='km-area' src='/images/newDesign/ico.png' alt='metro'> A <b><em>"+Car.nearestMetroDistance+"</em> km</b> del Metro "+Car.nearestMetroName+"</p></div>";
+                    article += "<div class='space-20'></div>";
                     article += "<p class='text-right'><a class='btn btn-a-action btn-sm' href='"+reserveUrl.replace("carId", Car.id)+"' class='reserve' target='_blank'>RESERVAR</a></p>";
                     /*article += "<img src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + contador + "|05a4e7|ffffff' />";*/
                     article += "</div>";
@@ -246,7 +246,6 @@
 
             if (r.cars.length) {
                 $("button.see-more").data("offset", parseInt(offset)+parseInt(limit));
-                console.log(r.cars.length+" < "+limit);
                 if (r.cars.length < limit) {
                     /*$("button.see-more").hide();*/ // Al arreglar la query de búsqueda se descomenta esto
                 } else {
@@ -281,7 +280,7 @@
                 <h1>PRIMER SISTEMA DE ARRIENDO DE AUTOS ENTRE PERSONAS</h1>
                 <h2>Hay un auto en tu comuna o en un metro cercano.</h2>
             </div>
-            <!-- <button id="btn-leese" data-target="#section-map-form-search">¡ARRIENDA AHORA!</button> -->
+            
         </div>
     </div>
 
@@ -484,7 +483,6 @@
 	})
     
     if(($(window).height())<"700"){
-        console.log("hola");
         $('#section-home').css({
             'height': $(window).height() + $("#from-container").outerHeight()+ $("#from-container").outerHeight()
         });
@@ -511,17 +509,6 @@
     $(document).on("click", ".see-more", function(){
         searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
     });
-
-	/*$("#btn-leese").on('click', function(e) {
-        
-        e.preventDefault();
-
-        var target  = $(this).data('target');
-        var position = $(target).offset().top - 50;
-        $('html, body').animate({
-            scrollTop: position
-        }, 1250);
-    });*/
 
     function roundTime(valor){
 

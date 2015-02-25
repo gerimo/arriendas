@@ -94,6 +94,27 @@
             <p><a href=<?php echo $telefono?>><?php echo $telefonoText?></a></p>
             <p>Manuel Montt 1404</p>
             <p>Providencia, Santiago/Chile </p>
+            <div class="row">
+                <div class="collapse navbar-collapse " id="see-more">
+                    <ul class="nav navbar-nav">
+                        <li><p><a href="<?php echo url_for('about_company') ?>" title="La compañía Arriendas.cl">La Compañía</a></p></li>
+                        <li><p><a href="<?php echo url_for('terms_and_conditions') ?>" target="_blank" title="Términos y Condiciones">Términos y Condiciones</a></p></li>
+                        <li><p><a href="https://arriendascl.zendesk.com/anonymous_requests/new" target="_blank" title="Contacto">Contacto</a></p></li>
+                        <li><p><a href="https://arriendascl.zendesk.com/forums" target="_blank" title="Foro">Foro</a></p></li> 
+                        <li><p><a title="Mapa del sitio" class="item_thm fancybox"href="<?php echo url_for('site_map')?>">Mapa del Sitio</a></p></li>
+                    </ul>
+                </div>
+                <div class="navbar-footer pull-left">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#see-more">
+                        <p style="text-decoration: underline; margin: -11px 0 0 -10px;">Más opciones</p>
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                
+            </div>
             <a class="fa fa-facebook fa-3x" href="https://www.facebook.com/arriendaschile?fref=ts" target="_blank">facebook</a>
             <a class="fa fa-twitter fa-3x" href="https://twitter.com/arriendas" target="_blank">twitter</a>
         </div>
