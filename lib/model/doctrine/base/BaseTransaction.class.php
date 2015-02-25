@@ -26,6 +26,7 @@
  * @property string $codpagocompra
  * @property integer $metodo_id
  * @property decimal $reverse_discount
+ * @property boolean $is_paid_user
  * 
  * @method integer         getId()                 Returns the current record's "id" value
  * @method string          getCar()                Returns the current record's "car" value
@@ -48,6 +49,7 @@
  * @method integer         getTransaccionOriginal()      Returns the current record's "transaccion_original" value
  * @method integer         getNumeroFactura()      Returns the current record's "numero_factura" value
  * @method decimal         getReverseDiscount()    Returns the current record's "reverse_discount" value
+ * @method boolean         getIsPaidUser()         Returns the current record's "is_paid_user" value
  * 
  * @method Transaction     setId()                 Sets the current record's "id" value
  * @method Transaction     setCar()                Sets the current record's "car" value
@@ -70,6 +72,7 @@
  * @method integer         setTransaccionOriginal()      Sets the current record's "transaccion_original" value
  * @method integer         setNumeroFactura()      Sets the current record's "numero_factura" value
  * @method Transaction     setReverseDiscount()    Sets the current record's "reverse_discount" value
+ * @method Transaction     getIsPaidUser()         Sets the current record's "is_paid_user" value
  * 
  * @package    CarSharing
  * @subpackage model
@@ -140,7 +143,9 @@ abstract class BaseTransaction extends sfDoctrineRecord
              'length' => 10,
              'scale' => '2',
              ));
-
+        $this->hasColumn('is_paid_user', 'boolean', null, array(
+             'type' => 'boolean',
+             ));
         $this->index('fk_Transaction_User1', array(
              'fields' => 
              array(

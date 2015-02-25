@@ -289,8 +289,8 @@
             "commune": commune
         }
 
-            $("#dialog-alert").html("!Advertencia¡ <br> Estás modificando tus datos personales. <br> <b>¿Estas seguro que quieres continuar? </b").addClass("text-center");
-            $("#dialog-alert").dialog({
+        $("#dialog-alert").html("!Advertencia¡ <br> Estás modificando tus datos personales. <br> <b>¿Estas seguro que quieres continuar? </b").addClass("text-center");
+        $("#dialog-alert").dialog({
             closeOnText: true,
             modal: true,
             resizable: true,
@@ -307,12 +307,26 @@
                     click: function() {
                         $.post("<?php echo url_for('profile/doEdit') ?>", parameters, function(r){
 
-                            $(".alert").removeClass("alert-a-danger");
-                            $(".alert").removeClass("alert-a-success");
-
                             if (r.error) {
-                                $(".alert").addClass("alert-a-danger");
-                                $(".alert").html(r.errorMessage);
+
+                                // se despliega un mensaje en caso de error
+                                $("#dialog-alert").html(r.errorMessage).addClass("text-center");
+                                $("#dialog-alert").dialog({
+                                    closeOnText: true,
+                                    modal: true,
+                                    resizable: true,
+                                    title: "Editar perfil",
+                                    buttons: [
+                                        {
+                                            text: "Aceptar",
+                                            click: function() {
+                                                $( this ).dialog( "close" );               
+                                            }
+                                        }
+                                    ]
+                                });
+                                //se cierran ambos mensajes
+                                $( this ).dialog( "close" );
                             } else {
                                 if(foreign==0){
                                     $('#foreign').attr('disabled', true);
@@ -327,6 +341,7 @@
                 }
             ]
         });
+                   
     }
 
     $('.datetimepicker').datetimepicker({

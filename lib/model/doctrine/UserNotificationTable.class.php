@@ -16,4 +16,13 @@ class UserNotificationTable extends Doctrine_Table {
 
         return $q->fetchOne();
     }
+
+    public function findBySentAtAsNull() {
+
+        $q = Doctrine_Core::getTable("UserNotification")
+            ->createQuery('UN')
+            ->where('UN.sent_at is null');
+
+        return $q->execute();
+    }
 }
