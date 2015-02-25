@@ -4,12 +4,15 @@ class notificationTestTask extends sfBaseTask {
 
     protected function configure() {
 
+        $this->addArguments(array(
+            new sfCommandArgument('userId', sfCommandArgument::REQUIRED, 'ID del usuario'),
+            new sfCommandArgument('actionId', sfCommandArgument::REQUIRED, 'ID de la acción a notificar')
+        ));
+
         $this->addOptions(array(
             new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name', 'frontend'),
             new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'local'),
-            new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine'),
-            new sfCommandOption('userId', null, sfCommandOption::PARAMETER_REQUIRED, 'The user id', ''),
-            new sfCommandOption('actionId', null, sfCommandOption::PARAMETER_REQUIRED, 'The user rut', ''),
+            new sfCommandOption('connection', null, sfCommandOption::PARAMETER_REQUIRED, 'The connection name', 'doctrine')
         ));
 
         $this->namespace = 'notification';
@@ -19,7 +22,7 @@ class notificationTestTask extends sfBaseTask {
 The [test|INFO] task does things.
 Call it with:
 
-  [php symfony notification:test|INFO]
+  [php symfony notification:test userId actionId|INFO]
 EOF;
     }
 
@@ -34,14 +37,14 @@ EOF;
         $databaseManager = new sfDatabaseManager($this->configuration);
         $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
 
-        /* arguments */
-        $userId = $options["userId"];
-        $actionId = $options["actionId"];
+        $userId = $arguments["userId"];
+        $actionId = $arguments["actionId"];
 
-        notification::make($userId, $actionId);
-
-        echo " \n";
-        $this->log('done. '.$causa);
+        try {
+            Notification::make($userId, $actionId);
+            $this->log('Accion notificada');
+        } catch (Exception $e) {
+            $this->log('Hubo un problema: '.$e->getMessage());
+        }
     }
-
 }
