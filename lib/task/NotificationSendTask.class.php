@@ -32,17 +32,17 @@ EOF;
 
             $UsersNotifications = Doctrine_core::getTable("UserNotification")->findBySentAtAsNull();
 
-            $alreadySent = true;
-
             foreach ($UsersNotifications as $UserNotification) {
 
-                $User = $UserNotification->getUser();
-                $Notification = $UserNotification->getNotification();   
-                $Action = $Notification->getAction();
-                $Type = $Notification->getNotificationType();
+                $alreadySent = true;
 
-                $message = $Notification->message;
-                $title = $Notification->message_title;
+                $User         = $UserNotification->getUser();
+                $Notification = $UserNotification->getNotification();   
+                $Action       = $Notification->getAction();
+                $Type         = $Notification->getNotificationType();
+
+                $title   = $Notification->message_title;
+                $message = $Notification->message;                
 
                 if($Notification->is_active && $Action->is_active && $Type->is_active) {
 
@@ -52,16 +52,16 @@ EOF;
                             break;
 
                         case 2:
-                            $sms = new SMS("Arriendas.cl");
+                            $SMS = new SMS("Arriendas.cl");
 
                             // si el titulo es diferente de null o vacío, le añade un salto de linea.
-                            if($title){
+                            if ($title) {
                                 $title = $title.chr(0x0D).chr(0x0A);
                             } else {
                                 $title = "";
                             }
 
-                            $sms->send($title.$message, $User->telephone);
+                            $SMS->send($title.$message, $User->telephone);
                             break;
 
                         case 3:
@@ -78,6 +78,7 @@ EOF;
                             $message->setBody($body, 'text/html');
                             $message->setFrom($from);
                             $message->setTo($to);
+                            $message->setReplyTo(array("ayuda@arriendas.cl" => "Ayuda Arriendas.cl"));
                             //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
                             
                             $mailer->send($message);
@@ -103,14 +104,14 @@ EOF;
                             break;
                           
                         default:
-                            $alreadySent=false;
+                            $alreadySent = false;
                             break;
-                    }  
-                    if($alreadySent){
+                    }
+
+                    if ($alreadySent) {
                         $UserNotification->setSentAt(date("Y-m-d H:i:s"));
                         $UserNotification->save();
-                    }      
-                
+                    }
                 }      
             }
 
