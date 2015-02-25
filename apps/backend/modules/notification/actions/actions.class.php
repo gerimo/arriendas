@@ -64,7 +64,8 @@ class notificationActions extends sfActions {
                     "n_title"     => $Notification->message_title,
                     "n_message"   => $Notification->message,
                     "nt_name"     => $NT->name,
-                    "n_is_active" => $Notification->is_active
+                    "n_is_active" => $Notification->is_active,
+                    "nt_id"       => $NT->id
                 );
             } 
 
