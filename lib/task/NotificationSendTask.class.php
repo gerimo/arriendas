@@ -43,6 +43,7 @@ EOF;
 
             $UsersNotifications = Doctrine_core::getTable("UserNotification")->findBySentAtAsNull();
 
+            $countoTotalNotification = count($UsersNotifications);
             $this->log("[".date("Y-m-d H:i:s")."] ".count($UsersNotifications). " notificaciones encontradas");
 
             if (count($UsersNotifications) > 0) {
@@ -51,12 +52,13 @@ EOF;
                     $alreadySent = true;
 
                     $User         = $UserNotification->getUser();
+                    $Reserve      = $UserNotification->getReserve();
                     $Notification = $UserNotification->getNotification();   
                     $Action       = $Notification->getAction();
                     $Type         = $Notification->getNotificationType();
 
-                    $title   = $Notification->message_title;
-                    $message = $Notification->message;
+                    $title   = Notification::translator($User->id, $Notification->message_title, $Reserve ? $Reserve->id : null );
+                    $message = Notification::translator($User->id, $Notification->message, $Reserve ? $Reserve->id : null );
 
                     if($Notification->is_active && $Action->is_active && $Type->is_active) {
                         switch ($Type->id) {
@@ -84,8 +86,8 @@ EOF;
                                 $mailer  = $mail->getMailer();
                                 $message = $mail->getMessage();     
 
-                                $subject = $Notification->message_title;
-                                $body    = $Notification->message;
+                                $subject = $title;
+                                $body    = $message;
                                 $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                                 $to      = array($User->email => $User->firstname." ".$User->lastname);
 
@@ -106,8 +108,8 @@ EOF;
                                 $mailer  = $mail->getMailer();
                                 $message = $mail->getMessage();     
 
-                                $subject = $Notification->message_title;
-                                $body    = $Notification->message;
+                                $subject = $title;
+                                $body    = $message;
                                 $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                                 $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
 
