@@ -172,7 +172,7 @@
         $('#notificationModal').modal('show');
         var ntId = $(this).data("nt-id");
         console.log(ntId);
-        if( ntId == "2" || ntId == "3" || ntId == "5") {
+        if( ntId != 2) {
             $("#message").summernote({
                 height: 200,
                 minHeight: 100
