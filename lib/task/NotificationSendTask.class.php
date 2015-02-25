@@ -28,7 +28,18 @@ EOF;
         $context = sfContext::createInstance($this->configuration);
         $context->getConfiguration()->loadHelpers('Partial');
 
+        // contadores 
+        $countAction2               = 0;
+        $countAction3               = 0;
+        $countAction4               = 0;
+        $countDefaults              = 0;
+        $countoTotalNotification    = 0;
+        $countSents                 = 0;
+        $countNotActive             = 0;
+
         try {
+            $this->log("[".date("Y-m-d H:i:s")."] Procesando...");
+            $startTime = microtime(true);
 
             $UsersNotifications = Doctrine_core::getTable("UserNotification")->findBySentAtAsNull();
 
@@ -62,6 +73,8 @@ EOF;
                             }
 
                             $SMS->send($title.$message, $User->telephone);
+
+                            $countAction2 ++;
                             break;
 
                         case 3:
@@ -82,6 +95,8 @@ EOF;
                             //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
                             
                             $mailer->send($message);
+
+                            $countAction3 ++;
                             break;
 
                         case 4:
@@ -101,22 +116,47 @@ EOF;
                             //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
                             
                             $mailer->send($message);
+                            $countAction4++;
                             break;
                           
                         default:
                             $alreadySent = false;
+                            $countDefaults++;
                             break;
                     }
 
                     if ($alreadySent) {
                         $UserNotification->setSentAt(date("Y-m-d H:i:s"));
                         $UserNotification->save();
+                        $countSents++;
                     }
+                } else {
+                    $countNotActive++;
                 }      
             }
 
         } catch (Exeception $e) {
-            error_log("[".date("Y-m-d H:i:s")."] [NotificationSendTask] ERROR: ".$e->getMessage());
+            $this->log("[".date("Y-m-d H:i:s")."] [NotificationSendTask] ERROR: ".$e->getMessage());
         }
+
+        $endTime = microtime(true);
+
+        $this->log("[".date("Y-m-d H:i:s")."] ---------------------------------------------------");
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones pendientes:          ".$countoTotalNotification);
+        $this->log("[".date("Y-m-d H:i:s")."] ---------------------------------------------------");
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones de tipo desconocido: ".$countDefaults);
+        $this->log("[".date("Y-m-d H:i:s")."] ");
+        $this->log("[".date("Y-m-d H:i:s")."] ");
+        $this->log("[".date("Y-m-d H:i:s")."] ---------------------------------------------------");
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones enviadas:            ".$countSents);
+        $this->log("[".date("Y-m-d H:i:s")."] ---------------------------------------------------");
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo SMS:            ".$countAction2);
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo Email:          ".$countAction3);
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo Soporte:        ".$countAction4);
+        $this->log("[".date("Y-m-d H:i:s")."] ");
+        $this->log("[".date("Y-m-d H:i:s")."] ");
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones no activadas:        ".$countNotActive);
+
+        $this->log("[".date("Y-m-d H:i:s")."] Tiempo total de procesamiento     ".round($endTime-$startTime, 2)." segundos");
     }
 }
