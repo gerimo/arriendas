@@ -10,6 +10,9 @@
 
         <a style="color:black" href="" rel="shortcut icon" type="image/x-icon">Arriendas</a>
 
+        <!-- Prettify (Wysiwyg) -->
+        <link href="/css/newDesign/wysiwyg/prettify.css" rel="stylesheet" type="text/css">
+
         <!-- JQuery UI -->
         <link href="/css/newDesign/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css">
         <link href="/css/newDesign/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" type="text/css">
@@ -62,8 +65,10 @@
         <script src="/js/newDesign/colorbox/jquery.colorbox-min.js" type="text/javascript"></script>
         <script src="/js/newDesign/colorbox/jquery.colorbox.js" type="text/javascript"></script>
         <script src="/js/newDesign/fileinput/fileinput.min.js" type="text/javascript"></script>
-        <script src="/js/newDesign/wysiwyg/bootstrap-wysiwyg.js" type="text/javascript"></script>
+        
         <script src="/js/newDesign/wysiwyg/jquery.hotkeys.js" type="text/javascript"></script>
+        <script src="/js/newDesign/wysiwyg/google-code-prettify/prettify.js" type="text/javascript"></script>
+        <script src="/js/newDesign/wysiwyg/bootstrap-wysiwyg.js" type="text/javascript"></script>        
 
         <?php include_component('main', 'header') ?>
 
