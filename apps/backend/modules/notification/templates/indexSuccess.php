@@ -2,17 +2,16 @@
 <div class="visible-xs space-50"></div>
 
 <div class="row">
-    <h1 class="text-center">Manejadora de notificaciones</h1> 
+    <h1 class="text-center">Administrador    de notificaciones</h1> 
     <div class="space-40"></div>
-    <div class="col-md-offset-3 col-md-3">   
+    <div class="col-md-offset-4 col-md-4">   
         <select class="form-control" id="action" name="action" type="text">
-                <option selected value="">---</option>
+                <option selected value="">Selecciona una opción</option>
             <?php foreach ($Actions as $Action): ?>
                 <option value="<?php echo $Action->id?>"><?php echo $Action->name?></option>
             <?php endforeach; ?>
         </select> 
     </div> 
-    <div class="col-md-3"><a class='btn btn-block btn-primary' onclick="findNotificacion()">Buscar</a></div> 
 	<div class="col-md-12">
         <div class="space-100"></div>
 		<table  class="display responsive no-wrap" id="notificationTable" cellspacing="0" width="100%">
@@ -46,6 +45,7 @@
                          <div class="space-30"></div>
                         <label for="recipient-name" class="control-label">Descripción:</label>
                         <div id="message" placeholder="Escriba Descripicion aquí.."></div>
+                        <textarea type="text" class="form-control" id="description" placeholder="Escriba Descripicion aquí.." rows="5"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -100,7 +100,7 @@
                 $.each(r.data, function(k, v){
 
                     var isActive    = optionSelected(v.n_is_active, v.n_id, 1);
-                    var button = "<a class='btn btn-block btn-primary editar' data-notification-id='"+v.n_id+"' data-title='"+v.n_title+"' data-message='"+v.n_message+"' data-name='"+v.nt_name+"' >Editar</a>";
+                    var button = "<a class='btn btn-block btn-primary editar' data-notification-id='"+v.n_id+"' data-title='"+v.n_title+"' data-message='"+v.n_message+"' data-name='"+v.nt_name+"' data-nt-id='"+v.nt_id+"' >Editar</a>";
                     $('#notificationTable').DataTable().row.add([ v.n_id, v.n_title, v.n_message, v.nt_name, isActive, button]).draw();
                 });
             }
@@ -113,8 +113,16 @@
             var notificationId = $("#notificationId").val();
         }
 
-        var title        = $("#title").val();
-        var message      = $("#message").code();
+        var title            = $("#title").val();
+        var description      = $("#description").val();
+        var description2     = $("#message").code();
+        var message;
+
+        if (description) {
+            message = description;
+        } else if(description2) {
+            message = description2;
+        }
 
         var parameters = {
             "notificationId"    : notificationId,
@@ -161,6 +169,23 @@
         $("#notificationId").val($(this).data("notification-id"));
         $("#title").val($(this).data("title"));
         $("#message").code($(this).data("message"));
-        $('#notificationModal').modal('show') 
-    }); 
+        $('#notificationModal').modal('show');
+        var ntId = $(this).data("nt-id");
+        console.log(ntId);
+        if( ntId == "2" || ntId == "3" || ntId == "5") {
+            $("#message").summernote({
+                height: 200,
+                minHeight: 100
+            });
+            $("#description").hide();
+        }else {
+            $("#message").destroy();
+            $("#description").show();
+        }
+
+    });
+
+    $('#action').change(function(e){
+        findNotificacion();
+    });  
 </script>
