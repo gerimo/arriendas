@@ -85,7 +85,6 @@ class notificationActions extends sfActions {
 	}
 
 	public function executeManagementActionCrud(sfWebRequest $request) {
-
 		$return = array("error" => false);
 
         try {
@@ -104,17 +103,25 @@ class notificationActions extends sfActions {
                 } else {
                 	$Action->setIsActive($option);
                 } 
+                $Action->save();
 
             } elseif ($name && $description) {
             	$Action = new Action();
-                $fechaHoy = Date("Y-m-d H:i:s");
-                $Action->setCreatedAt($fechaHoy); 
+                $Action->setCreatedAt(Date("Y-m-d H:i:s")); 
                 $Action->setName($name); 
                 $Action->setDescription($description); 
-                $Action->setIsActive(true); 
-            }
+                $Action->setIsActive(false); 
+                $Action->save();
+                $NTS = Doctrine_Core::getTable('NotificationType')->findAll();
 
-            $Action->save();
+                foreach ($NTS as $NT) {
+                    $Notification = new Notification();
+                    $Notification->setActionId($Action->id);
+                    $Notification->setCreatedAt(Date("Y-m-d H:i:s"));
+                    $Notification->setNotificationTypeId($NT->id);
+                    $Notification->save();
+                }
+            }
 
         } catch (Exception $e) {
             $return["error"]        = true;
@@ -133,7 +140,6 @@ class notificationActions extends sfActions {
 	}
 
     public function executeManagementNotificationTypeCrud(sfWebRequest $request) {
-
         $return = array("error" => false);
 
         try {
@@ -152,17 +158,27 @@ class notificationActions extends sfActions {
                 } else {
                     $NT->setIsActive($option);
                 } 
-
+                $NT->save();
             } elseif ($name && $description) {
                 $NT = new NotificationType();
                 $fechaHoy = Date("Y-m-d H:i:s");
                 $NT->setCreatedAt($fechaHoy); 
                 $NT->setName($name); 
                 $NT->setDescription($description); 
-                $NT->setIsActive(true); 
+                $NT->setIsActive(false); 
+                $NT->save();
+
+                $Actions = Doctrine_Core::getTable('Action')->findAll();
+
+                foreach ($Actions as $Action) {
+                    $Notification = new Notification();
+                    $Notification->setActionId($Action->id);
+                    $Notification->setCreatedAt(Date("Y-m-d H:i:s"));
+                    $Notification->setNotificationTypeId($NT->id);
+                    $Notification->save();
+                }
             }
 
-            $NT->save();
 
         } catch (Exception $e) {
             $return["error"]        = true;
