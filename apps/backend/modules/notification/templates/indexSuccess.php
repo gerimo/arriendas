@@ -45,7 +45,7 @@
                         <input type="text" class="form-control" id="title" placeholder="Titulo">
                          <div class="space-30"></div>
                         <label for="recipient-name" class="control-label">Descripción:</label>
-                        <textarea type="text" class="form-control" id="message" placeholder="Escriba Descripicion aquí.." rows="5"></textarea>
+                        <div id="message" placeholder="Escriba Descripicion aquí.."></div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -74,7 +74,12 @@
 			info: false,
 			paging: true,
 			responsive: true
-		}); 
+		});
+
+        $("#message").summernote({
+            height: 200,
+            minHeight: 100
+        });
 	}); 
 
 	function findNotificacion() {
@@ -95,7 +100,7 @@
                 $.each(r.data, function(k, v){
 
                     var isActive    = optionSelected(v.n_is_active, v.n_id, 1);
-                    var button = "<a class='btn btn-block btn-primary editar' data-notification-id='"+v.n_id+"' data-title='"+v.n_title+"' data-message='"+v.n_message+"' >Editar</a>";
+                    var button = "<a class='btn btn-block btn-primary editar' data-notification-id='"+v.n_id+"' data-title='"+v.n_title+"' data-message='"+v.n_message+"' data-name='"+v.nt_name+"' >Editar</a>";
                     $('#notificationTable').DataTable().row.add([ v.n_id, v.n_title, v.n_message, v.nt_name, isActive, button]).draw();
                 });
             }
@@ -109,7 +114,7 @@
         }
 
         var title        = $("#title").val();
-        var message      = $("#message").val();
+        var message      = $("#message").code();
 
         var parameters = {
             "notificationId"    : notificationId,
@@ -152,13 +157,10 @@
     });
 
     $('body').on("click", ".editar", function(e){
-        if (!$(this).data("title")) {
-            $("#myModalLabel").html("Nueva notificación");
-        }
-        $("#myModalLabel").html($(this).data("title"));
+        $("#myModalLabel").html($(this).data("name"));
         $("#notificationId").val($(this).data("notification-id"));
         $("#title").val($(this).data("title"));
-        $("#message").val($(this).data("message"));
+        $("#message").code($(this).data("message"));
         $('#notificationModal').modal('show') 
     }); 
 </script>

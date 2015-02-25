@@ -25,9 +25,10 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Notificaciones<span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="<?php echo url_for('notification') ?>">Manejadora de notificaciones</a></li>
-                            <li><a href="<?php echo url_for('notification_management_action') ?>">Manejadora de acciones</a></li>
-                            <li><a href="<?php echo url_for('notification_management_notification_type') ?>">Manejadora de tipo de notificaciones</a></li>
+                            <li><a href="<?php echo url_for('notification') ?>">Notificaciones</a></li>
+                            <li role="presentation" class="divider"></li>
+                            <li><a href="<?php echo url_for('notification_management_action') ?>">Acciones</a></li>
+                            <li><a href="<?php echo url_for('notification_management_notification_type') ?>">Tipos de notificaciones</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">

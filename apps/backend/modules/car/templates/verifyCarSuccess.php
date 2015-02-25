@@ -23,51 +23,51 @@
 							<div class="col-md-4">
 								<label>Foto frente</label>
 								<input name="photo" type="file" class="file-loading photo" accept="image/*" data-id="1">
-								<img id="imagePhoto1" class="photoImg" src="../images/img_asegura_tu_auto/AutoFrente.png"></img>
+								<img id="imagePhoto1" class="photoImg" src="http://www.arriendas.cl/images/img_asegura_tu_auto/AutoFrente.png"></img>
 							</div>
 							<div class="col-md-4">
 								<label>Foto Costado derecho</label>
 								<input name="photo" type="file" class="file-loading photo" accept="image/*" data-id="2">
-								<img id="imagePhoto2" class="photoImg" src="../images/img_asegura_tu_auto/AutoCostadoDerch.png" ></img>
+								<img id="imagePhoto2" class="photoImg" src="http://www.arriendas.cl/images/img_asegura_tu_auto/AutoCostadoDerch.png" ></img>
 							</div>
 							<div class="col-md-4">
 								<label>Foto Costado izquierdo</label>   
 								<input name="photo" type="file" class="file-loading photo" accept="image/*" data-id="3">
-								<img id="imagePhoto3" class="photoImg" src="../images/img_asegura_tu_auto/AutoCostadoIzq.png" ></img>
+								<img id="imagePhoto3" class="photoImg" src="http://www.arriendas.cl/images/img_asegura_tu_auto/AutoCostadoIzq.png" ></img>
 							</div>
 						</div>
 						<div class="col-md-12">
 							<div class="col-md-4">
 								<label>Foto trasera Derecho</label>
 								<input name="photo" type="file" class="file-loading photo" accept="image/*" data-id="4">
-								<img id="imagePhoto4" class="photoImg" src="../images/img_asegura_tu_auto/AutoDerechTra.png" ></img>
+								<img id="imagePhoto4" class="photoImg" src="http://www.arriendas.cl/images/img_asegura_tu_auto/AutoDerechTra.png" ></img>
 							</div>
 							<div class="col-md-4">
 								<label>Foto trasera Izquierdo</label>
 								<input name="photo" type="file" class="file-loading photo" accept="image/*" data-id="5">
-								<img id="imagePhoto5" class="photoImg" src="../images/img_asegura_tu_auto/AutoIzqTra.png" ></img>
+								<img id="imagePhoto5" class="photoImg" src="http://www.arriendas.cl/images/img_asegura_tu_auto/AutoIzqTra.png" ></img>
 							</div>
 							<div class="col-md-4">
 								<label>Foto Panel</label>
 								<input name="photo" type="file" class="file-loading photo" accept="image/*" data-id="6">
-								<img id="imagePhoto6" class="photoImg" src="../images/img_asegura_tu_auto/tablero.png" ></img>
+								<img id="imagePhoto6" class="photoImg" src="http://www.arriendas.cl/images/img_asegura_tu_auto/tablero.png" ></img>
 							</div>
 						</div>
 						<div class="col-md-12">
 							<div class="col-md-4">
 								<label>Foto Padron</label>
 								<input name="photo" type="file" class="file-loading photo" accept="image/*" data-id="7">
-								<img id="imagePhoto7" class="photoImg" src="../images/img_asegura_tu_auto/padron.png" ></img>
+								<img id="imagePhoto7" class="photoImg" src="http://www.arriendas.cl/images/img_asegura_tu_auto/padron.png" ></img>
 							</div>
 							<div class="col-md-4">
 								<label>Foto Accesorio 1</label>
 								<input name="photo" type="file" class="file-loading photo" accept="image/*" data-id="8">
-								<img id="imagePhoto8" class="photoImg" src="../images/img_asegura_tu_auto/accesorio1.png" ></img>
+								<img id="imagePhoto8" class="photoImg" src="http://www.arriendas.cl/images/img_asegura_tu_auto/accesorio1.png" ></img>
 							</div>
 							<div class="col-md-4">
 								<label>Foto Accesorio 2</label>
 								<input name="photo" type="file" class="file-loading photo" accept="image/*" data-id="9">
-								<img id="imagePhoto9" class="photoImg" src="../images/img_asegura_tu_auto/accesorio2.png" ></img>
+								<img id="imagePhoto9" class="photoImg" src="http://www.arriendas.cl/images/img_asegura_tu_auto/accesorio2.png" ></img>
 							</div>
 						</div>
 					</div>
@@ -294,7 +294,7 @@
 						<div id="photoDamage">
 							<label>Foto Daño</label>
 							<input name="photo" type="file" class="file-loading photo" accept="image/*" data-id="10">
-							<img id="imagePhoto10" class="photoImg" src="../images/img_asegura_tu_auto/AutoFrente.png"></img>
+							<img id="imagePhoto10" class="photoImg" src="http://www.arriendas.cl/images/img_asegura_tu_auto/AutoFrente.png"></img>
 						</div>
 						<div id="descriptionDiv">  
 							<label for="recipient-name" class="control-label">Descripcion:</label>
@@ -439,62 +439,64 @@
         if (object.frente) {
         	var photo = object.frente.split("/");
         	var url = photo[photo.length-1];
-            $("#imagePhoto1").attr("src","../images/cars/"+url);
+            $("#imagePhoto1").attr("src","http://www.arriendas.cl/images/cars/"+url);
         }
         if (object.costadoD) {
         	var photo = object.costadoD.split("/");
         	var url = photo[photo.length-1];
-            $("#imagePhoto2").attr("src","../images/cars/"+url);
+            $("#imagePhoto2").attr("src","http://www.arriendas.cl/images/cars/"+url);
         }
         if (object.costadoI) {
         	var photo = object.costadoI.split("/");
         	var url = photo[photo.length-1];
-            $("#imagePhoto3").attr("src","../images/cars/"+url);
+            $("#imagePhoto3").attr("src","http://www.arriendas.cl/images/cars/"+url);
         }
         if (object.traseroD) {
         	var photo = object.traseroD.split("/");
         	var url = photo[photo.length-1];
-            $("#imagePhoto4").attr("src","../images/cars/"+url);
+            $("#imagePhoto4").attr("src","http://www.arriendas.cl/images/cars/"+url);
         }
         if (object.traseroI) {
         	var photo = object.traseroI.split("/");
         	var url = photo[photo.length-1];
-            $("#imagePhoto5").attr("src","../images/cars/"+url);
+            $("#imagePhoto5").attr("src","http://www.arriendas.cl/images/cars/"+url);
         }
         if (object.panel) {
         	var photo = object.panel.split("/");
         	var url = photo[photo.length-1];
-            $("#imagePhoto6").attr("src","../images/cars/"+url);
+            $("#imagePhoto6").attr("src","http://www.arriendas.cl/images/cars/"+url);
         }
         if (object.padron) {
         	var photo = object.padron.split("/");
         	var url = photo[photo.length-1];
-            $("#imagePhoto7").attr("src","../images/cars/"+url);
+            $("#imagePhoto7").attr("src","http://www.arriendas.cl/images/cars/"+url);
         }
         if (object.accesorio1) {
         	var photo = object.accesorio1.split("/");
         	var url = photo[photo.length-1];
-            $("#imagePhoto8").attr("src","../images/cars/"+url);
+            $("#imagePhoto8").attr("src","http://www.arriendas.cl/images/cars/"+url);
         }
         if (object.accesorio2) {
         	var photo = object.accesorio2.split("/");
         	var url = photo[photo.length-1];
-            $("#imagePhoto9").attr("src","../images/cars/"+url);
+            $("#imagePhoto9").attr("src","http://www.arriendas.cl/images/cars/"+url);
         }
         if (object.accesoriosSeguro) {
-
-            var res = object.accesoriosSeguro.split("_");
-            for (i = 0; i < res.length; i++) { 
-                var name = "#"+res[i];
-                $(name).prop( "checked", true );
-            }
+        	var photo = object.accesoriosSeguro.split("/");
+        	if (photo.length == 0) {
+        		var res = object.accesoriosSeguro.split("_");
+            	for (i = 0; i < res.length; i++) { 
+	                var name = "#"+res[i];
+	                $(name).prop( "checked", true );
+            	}
+        	}
         }
     }
 
     //paso 1 fotos de auto
     $('.photo').on('filebatchuploadsuccess', function(event, data, previewId, index) {
         var name = "#imagePhoto"+data.extra.op;
-        $(name).attr("src","../images/cars/"+data.response.urlPhoto)
+        $(name).attr("src","http://www.arriendas.cl/images/cars/"+data.response.urlPhoto)
     });
 
 	//Paso 2 descripción de daños
@@ -625,7 +627,7 @@
 			marker.setMap(null);
 		} else {
 			marker.setIcon('http://maps.google.com/mapfiles/marker_grey.png');
-			$("#imagePhoto10").attr("src","../images/img_asegura_tu_auto/AutoFrente.png");
+			$("#imagePhoto10").attr("src","http://www.arriendas.cl/images/img_asegura_tu_auto/AutoFrente.png");
 
 		}
 
@@ -714,9 +716,9 @@
 				if (r.opcion) {
 					$("#description").val(r.description);
 					if (r.urlFoto) {
-						$("#imagePhoto10").attr("src","../images/cars/"+r.urlFoto);
+						$("#imagePhoto10").attr("src","http://www.arriendas.cl/images/cars/"+r.urlFoto);
 					} else {
-						$("#imagePhoto10").attr("src","../images/img_asegura_tu_auto/AutoFrente.png");
+						$("#imagePhoto10").attr("src","http://www.arriendas.cl/images/img_asegura_tu_auto/AutoFrente.png");
 					}
 				} else {
 					$.each(r.data, function(k, v){

@@ -120,8 +120,9 @@
     $('body').on("click", ".NT", function(e){
         if (!$(this).data("name")) {
             $("#myModalLabel").html("Nuevo Tipo de Notificación");
+        } else {
+            $("#myModalLabel").html($(this).data("name"));
         }
-        $("#myModalLabel").html($(this).data("name"));
         $("#NTId").val($(this).data("nt-id"));
         $("#name").val($(this).data("name"));
         $("#description").val($(this).data("description"));

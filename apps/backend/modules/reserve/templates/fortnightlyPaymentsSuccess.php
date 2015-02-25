@@ -3,7 +3,7 @@
 
 <div class="row">
     <div class="col-md-offset-2 col-md-8">
-        <h1>Devolución Pago Garantía</h1> 
+        <h1>Pagos Quincenales</h1> 
         <div class="space-30"> </div>
         <div class="col-md-12">
             <div class="col-md-4">
@@ -112,7 +112,7 @@
 				$.each(r.data, function(k, v){  
                     console.log(v.t_is_paid_user);
                     var paidUser  = optionSelected(v.t_is_paid_user, v.t_id, 1);
-					$('#expiredReservesTable').DataTable().row.add([v.u_id, v.u_fullname, v.u_telephone, v.u_email, v.r_id, v.r_date, v.r_duration, v.r_price, v.r_fortnightly ,v.t_number, paidUser]).draw();
+					$('#expiredReservesTable').DataTable().row.add([v.uc_id, v.uc_fullname, v.uc_telephone, v.uc_email, v.r_id, v.r_date, v.r_duration, v.r_price, v.r_fortnightly ,v.t_number, paidUser]).draw();
 				});
 				$(".load").hide();
 			}

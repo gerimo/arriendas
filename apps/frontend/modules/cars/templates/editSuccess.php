@@ -581,54 +581,34 @@
         var lat            = $("#lat").val();
         var lng            = $("#lng").val();
 
-        var sistemaABS = "";
-        $("#sistemaABS").each(function(){
-            if ($(this).is(':checked')) {
-                sistemaABS = $(this).val();
-            }
-        });
+        if ($("#sistemaABS").is(':checked')) {
+            var sistemaABS = $("#sistemaABS").val();
+        }
 
-        var aireAcondicionado = "";
-        $("#aireAcondicionado").each(function(){
-            if ($(this).is(':checked')) {
-                aireAcondicionado = $(this).val();
-            }
-        });
+        if ($("#aireAcondicionado").is(':checked')) {
+            var aireAcondicionado = $("#aireAcondicionado").val();
+        }
 
-        var airBag  = "";
-        $("#airBag").each(function(){
-            if ($(this).is(':checked')) {
-                airBag = $(this).val();
-            }
-        });
+        if ($("#airBag").is(':checked')) {
+            var airBag = $("#airBag").val();
+        }
 
-        var controlCrucero = "";
-        $("#controlCrucero").each(function(){
-            if ($(this).is(':checked')) {
-                controlCrucero = $(this).val();
-            }
-        });
+        if ($("#controlCrucero").is(':checked')) {
+            var controlCrucero = $("#controlCrucero").val();
+        }
 
-        var sensor = "";
-        $("#sensor").each(function(){
-            if ($(this).is(':checked')) {
-                sensor = $(this).val();
-            }
-        });
+        if ($("#sensor").is(':checked')) {
+            var sensor = $("#sensor").val();
+        }
 
-        var vidriosElectricos = "";
-        $("#vidriosElectricos").each(function(){
-            if ($(this).is(':checked')) {
-                vidriosElectricos = $(this).val();
-            }
-        });
+        if ($("#vidriosElectricos").is(':checked')) {
+            var vidriosElectricos = $("#vidriosElectricos").val();
+        }
 
         var babyChair = false;
-        $("#babyChair").each(function(){
-            if ($(this).is(':checked')) {
-                babyChair = true;
-            }
-        });
+        if ($("#babyChair").is(':checked')) {
+            babyChair = true;
+        }
 
         var capacity1 = $("#capacity1 option:selected").val();
         var capacity2 = $("#capacity2 option:selected").val();

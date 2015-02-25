@@ -121,8 +121,9 @@
 
         if (!$(this).data("name")) {
             $("#myModalLabel").html("Nueva Acción");
+        } else {
+            $("#myModalLabel").html($(this).data("name"));
         }
-        $("#myModalLabel").html($(this).data("name"));
         $("#actionId").val($(this).data("action-id"));
         $("#name").val($(this).data("name"));
         $("#description").val($(this).data("description"));
