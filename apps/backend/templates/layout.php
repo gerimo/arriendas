@@ -10,9 +10,6 @@
 
         <a style="color:black" href="" rel="shortcut icon" type="image/x-icon">Arriendas</a>
 
-        <!-- Prettify (Wysiwyg) -->
-        <link href="/css/newDesign/wysiwyg/prettify.css" rel="stylesheet" type="text/css">
-
         <!-- JQuery UI -->
         <link href="/css/newDesign/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css">
         <link href="/css/newDesign/jquery-ui/jquery-ui.structure.min.css" rel="stylesheet" type="text/css">
@@ -33,6 +30,9 @@
         <!-- <link href="/css/newDesign/datatablesp/jquery.dataTables_themeroller.css" rel="stylesheet" type="text/css"> -->
         <link href="/css/newDesign/datatables/dataTables.responsive.css" rel="stylesheet" type="text/css">
         <link href="/css/newDesign/fileinput/fileinput.min.css" rel="stylesheet" type="text/css">
+
+        <!-- Summernote -->
+        <link href="/css/newDesign/summernote/summernote.css" rel="stylesheet" type="text/css">
 
         <!-- Estilos para todo el proyecto -->
         <link href="/css/newDesign/backend.css" rel="stylesheet" type="text/css">
@@ -66,9 +66,7 @@
         <script src="/js/newDesign/colorbox/jquery.colorbox.js" type="text/javascript"></script>
         <script src="/js/newDesign/fileinput/fileinput.min.js" type="text/javascript"></script>
         
-        <script src="/js/newDesign/wysiwyg/jquery.hotkeys.js" type="text/javascript"></script>
-        <script src="/js/newDesign/wysiwyg/google-code-prettify/prettify.js" type="text/javascript"></script>
-        <script src="/js/newDesign/wysiwyg/bootstrap-wysiwyg.js" type="text/javascript"></script>        
+        <script src="/js/newDesign/summernote/summernote.js" type="text/javascript"></script>    
 
         <?php include_component('main', 'header') ?>
 

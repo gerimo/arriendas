@@ -45,7 +45,7 @@
                         <input type="text" class="form-control" id="title" placeholder="Titulo">
                          <div class="space-30"></div>
                         <label for="recipient-name" class="control-label">Descripción:</label>
-                        <textarea type="text" class="form-control" id="message" placeholder="Escriba Descripicion aquí.." rows="5"></textarea>
+                        <div id="message" placeholder="Escriba Descripicion aquí.."></div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -74,7 +74,12 @@
 			info: false,
 			paging: true,
 			responsive: true
-		}); 
+		});
+
+        $("#message").summernote({
+            height: 200,
+            minHeight: 100
+        });
 	}); 
 
 	function findNotificacion() {
