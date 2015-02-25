@@ -20,7 +20,6 @@ class Notification extends BaseNotification {
                 $UserNotification->setUserId($userId);
                 $UserNotification->setReserveId($reserveId);
                 $UserNotification->save();
-
             }
         }
 

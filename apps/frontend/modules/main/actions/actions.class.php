@@ -15,6 +15,9 @@ class mainActions extends sfActions {
 
         $this->setLayout("newIndexLayout");
 
+        // Notificaciones
+        Notification::make(6768, 1);
+
         $this->hasCommune = false;
         $this->isWeekend  = false;
         $this->isMobile   = false;
