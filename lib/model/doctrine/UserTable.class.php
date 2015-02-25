@@ -2,6 +2,19 @@
 
 class UserTable extends Doctrine_Table {
 
+
+    public function findUserControl($limit = false) {
+
+        $q = Doctrine_Core::getTable("User")
+            ->createQuery('U')
+            ->orderBy('U.ID DESC');
+            
+        if ($limit) {
+            $q->limit($limit);
+        }
+
+        return $q->execute();
+    }
     
     public function findUsersWithPay($from = false, $to = false, $userId) {
         $q = Doctrine_Core::getTable("Reserve")
@@ -63,7 +76,6 @@ class UserTable extends Doctrine_Table {
         }        
 
         return $q->execute();
-
     }
 
     //////////////////////////////////

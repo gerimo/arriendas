@@ -73,34 +73,6 @@ logout:
     url: /logout
     param: { module: main, action: logout }
 
-notification:
-    url: /administrador-notificaciones
-    param: {module: notification, action: index }
-
-notification_find_notification:
-    url: /administrador-notificaciones/buscar-notificaciones
-    param: {module: notification, action: findNotification }
-
-notification_edit_notification:
-    url: /administrador-notificaciones/editar-notificaciones
-    param: {module: notification, action: editNotification }
-
-notification_management_action:
-    url: /administrador-acciones 
-    param: {module: notification, action: managementAction }
-
-notification_management_action_crud:
-    url: /administrador-acciones/crud
-    param: {module: notification, action: managementActionCrud }
-
-notification_management_notification_type:
-    url: /administrador-tipos-notificaciones 
-    param: {module: notification, action: managementNotificationType}
-
-notification_management_notification_type_crud:
-    url: /administrador-tipos-notificaciones/crud
-    param: {module: notification, action: managementNotificationTypeCrud}
-
 opportunity_create:
     url: /oportunidades/crear
     param: { module: opportunity, action: create }

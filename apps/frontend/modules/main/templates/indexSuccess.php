@@ -565,9 +565,9 @@
         <div class="col-sm-6 col-md-6">
             <ul>
                 <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
-                <!-- <li><input type="checkbox" name="filter" class="isLowConsumption"> Bajo Consumo</li> -->
+                <li><input type="checkbox" name="filter" class="isLowConsumption"> Bajo Consumo</li>
                 <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
-                <!-- <li><input type="checkbox" name="filrer" class="haveChair"> Silla Bebé</li> -->
+                <li><input type="checkbox" name="filrer" class="haveChair"> Silla Bebé</li>
             </ul>
         </div>
         <div class="col-sm-4 col-md-4 hidden-xs tabset">
@@ -965,64 +965,6 @@
     $(document).on("click", ".see-more", function(){
         searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
     });
-
-    /*function times(valor){
-
-        var fechaF = valor
-
-        var split = fechaF.split(" ");
-        var f = split[0];
-        var h = split[1];
-
-        var split3 = h.split(":");
-        var hora = split3[0];
-        var min = split3[1];
-
-        if(min=="30"){
-            $('#to').datetimepicker({
-                allowTimes:[
-                "00:30", "01:30", "02:30",
-                "03:30", "04:30", "05:30",
-                "06:30", "07:30", "08:30",
-                "09:30", "10:30", "11:30",
-                "12:30", "13:30", "14:30",
-                "15:30", "16:30", "17:30",
-                "18:30", "19:30", "20:30",
-                "21:30", "22:30", "23:30",
-                ],
-                lang:'es',
-                dayOfWeekStart: 1,
-                // minDate:get_date($('#from').val())?get_date($('#from').val()):false,
-                format:'d-m-Y H:i'
-            });
-        }else{
-            $('#to').datetimepicker({
-                allowTimes:[
-                "00:00", "01:00", "02:00",
-                "03:00", "04:00", "05:00",
-                "06:00", "07:00", "08:00",
-                "09:00", "10:00", "11:00",
-                "12:00", "13:00", "14:00",
-                "15:00", "16:00", "17:00",
-                "18:00", "19:00", "20:00",
-                "21:00", "22:00", "23:00",
-                ],
-                lang:'es',
-                dayOfWeekStart: 1,
-                //minDate:get_date($('#from').val())?get_date($('#from').val()):false,
-                format:'d-m-Y H:i'
-            });
-        }
-    }
-
-    function get_date(input) {
-        if(input == '') {
-            return false;
-        }else{
-            var parts = input.match(/(\d+)/g);
-            return parts[2]+'/'+parts[1]+'/'+parts[0];
-        } 
-    }*/
 
     function afterDateRefresh() {
         searchCars(0, $("button.see-more").data("limit"));

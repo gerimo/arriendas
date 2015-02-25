@@ -245,7 +245,7 @@ class khipuActions extends sfActions {
                             }
                         }
                         
-                        error_log("[khipu/notifyPayment] [".date("Y-m-d H:i:s")."] Enviado email al propietario");
+                        error_log("[khipu/notifyPayment] [".date("Y-m-d H:i:s")."] Enviando email al propietario");
                         $mailer->send($message);
 
                         // Correo arrendatario
@@ -315,9 +315,9 @@ class khipuActions extends sfActions {
 
                         error_log("[khipu/notifyPayment] [".date("Y-m-d H:i:s")."] ---------- HABEMUS PAGO --------");
 
-                        $OpportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findOneByReserveId($Reserve->id);
+                        $OpportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findOneByReserve($Reserve);
                         if (!$OpportunityQueue) {
-                            $OpportunityQueue = new OpportunityQueue();
+                            $OpportunityQueue = new OpportunityQueue;
                             $OpportunityQueue->setReserve($Reserve);
                             $OpportunityQueue->save();
                         }

@@ -32,7 +32,7 @@ class CheckCompleteRegisterCar extends sfFilter
         {
             $userId = sfContext::getInstance()->getUser()->getAttribute('userid');
             $User = Doctrine_core::getTable("user")->find($userId);
-            $Car = Doctrine_Core::getTable('Car')->findOneByUserIdAndSeguroOkAndCapacity($userId, 4, 0);
+            $Car = Doctrine_Core::getTable('Car')->findOneByUserIdAndSeguroOkAndCapacityAndActivo($userId, 4, 0, 1);
 
             if ($Car) {
                 $this->getContext()->getController()->redirect('cars/edit?id=' . $Car->id);

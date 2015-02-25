@@ -1,3 +1,3 @@
 <?php
 
-class NotificactionType extends BaseNotificationType {}
+class NotificationType extends BaseNotificationType {}

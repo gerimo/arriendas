@@ -1190,35 +1190,35 @@ class mainActions extends sfActions {
     }
 
     public function executeGenerarFormularioEntregaDevolucion(sfWebRequest $request) {
+
         //Creamos la instancia de la libreria mPDF
         require sfConfig::get('sf_app_lib_dir')."/mpdf53/mpdf.php";
         $this->getResponse()->setContentType('application/pdf');
         $pdf= new mPDF();
 
         //Generamos el HTML correspondiente
-        $request->setParameter("idReserve",$request->getParameter("idReserve"));
-        $request->setParameter("tokenReserve",$request->getParameter("tokenReserve"));
+        $request->setParameter("idReserve", $request->getParameter("idReserve"));
+        $request->setParameter("tokenReserve", $request->getParameter("tokenReserve"));
+
+        $html = $this->getController()->getPresentationFor("main","formularioEntrega");
         
-        $html=$this->getController()->getPresentationFor("main","formularioEntrega");
         $pdf->WriteHTML($html,0);
+        
         return $this->renderText($pdf->Output());
-        //return $this->renderText($html);
     }
 
     public function executeFormularioEntrega(sfWebRequest $request){
-        //se asume que se recibe el id de la tabla reserva desde la página anterior
-        //$idReserve = 605;
-        $idReserve= $request->getParameter("idReserve");
-        $tokenReserve= $request->getParameter("tokenReserve");
+        
+        $idReserve    = $request->getParameter("idReserve");
+        $tokenReserve = $request->getParameter("tokenReserve");
 
-        //id del usuario que accede al sitio
         $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
 
 		if (!$tokenReserve){
 			$reserve = Doctrine_Core::getTable('reserve')->findOneById($idReserve);
-		}else{
+		} else {
 			$reserve = Doctrine_Core::getTable('reserve')->findOneByToken($tokenReserve);
-		};
+		}
 
         sfContext::getInstance()->getConfiguration()->loadHelpers(array('Url'));
         $this->url = public_path("");
@@ -1243,7 +1243,6 @@ class mainActions extends sfActions {
         $modeloId = $carClass->getModel();
 
         $car['duracion'] = $reserve->getTiempoArriendoTexto();
-
         $car['id'] = $carId;
         $car['marca'] = $carClass->getModel()->getBrand();
         $car['modelo'] = $carClass->getModel();
@@ -1252,44 +1251,33 @@ class mainActions extends sfActions {
         $arrendadorClass = Doctrine_Core::getTable('user')->findOneById($arrendadorId);
         $propietarioClass = Doctrine_Core::getTable('user')->findOneById($propietarioId);
 
-        if($propietarioId == $idUsuario){
+        if ($propietarioId == $idUsuario) {
             $car['propietario'] = true;
-        }else{
+        } else {
             $car['propietario'] = false;
         }
 
         $arrendador['nombreCompleto'] = $arrendadorClass->getFirstname()." ".$arrendadorClass->getLastname();
-        $arrendador['rut'] = $arrendadorClass->getRutFormatted();
-        $arrendador['direccion'] = $arrendadorClass->getAddress();
-        $arrendador['telefono'] = $arrendadorClass->getTelephone();
-
-        /*$comunaId = $arrendadorClass->getComuna();
-        $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
-        $arrendador['comuna'] = ucfirst(strtolower($comunaClass['nombre']));*/
-        $arrendador['comuna'] = ucfirst(strtolower($arrendadorClass->getCommune()->name));
+        $arrendador['rut']            = $arrendadorClass->getRutFormatted();
+        $arrendador['direccion']      = $arrendadorClass->getAddress();
+        $arrendador['telefono']       = $arrendadorClass->getTelephone();
+        $arrendador['comuna']         = ucfirst(strtolower($arrendadorClass->getCommune()->name));
 
         $propietario['nombreCompleto'] = $propietarioClass->getFirstname()." ".$propietarioClass->getLastname();
-        $propietario['rut'] = $propietarioClass->getRutFormatted();
-        $propietario['direccion'] = $propietarioClass->getAddress();
-        $propietario['telefono'] = $propietarioClass->getTelephone();
+        $propietario['rut']            = $propietarioClass->getRutFormatted();
+        $propietario['direccion']      = $propietarioClass->getAddress();
+        $propietario['telefono']       = $propietarioClass->getTelephone();
+        $propietario['comuna']         = ucfirst(strtolower($propietarioClass->getCommune()->name));
 
-        /*$comunaId = $propietarioClass->getComuna();
-        $comunaClass = Doctrine_Core::getTable('comunas')->findOneByCodigoInterno($comunaId);
-        $propietario['comuna'] = ucfirst(strtolower($comunaClass['nombre']));*/
-        $propietario['comuna'] = ucfirst(strtolower($propietarioClass->getCommune()->name));
+        $damageClass = Doctrine_Core::getTable('Damage')->findByCarId($carId);
 
-        //echo $carId;
-        $damageClass = Doctrine_Core::getTable('damage')->findByCarId($carId);
-        //$damageClass = Doctrine_Core::getTable('damage')->findByCarId(553);
         $descripcionDanios = null;
         $i = 0;
         foreach ($damageClass as $damage) {
             $descripcionDanios[$i] = $damage->getDescription();
             $i++;
         }
-
-        //die();
-
+        
         $this->descripcionDanios = $descripcionDanios;
         $this->arrendador = $arrendador;
         $this->propietario = $propietario;

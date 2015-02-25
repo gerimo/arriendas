@@ -2,6 +2,19 @@
 
 class ReserveTable extends Doctrine_Table {
 
+    public function findActiveReserve($reserveId) {
+
+        $reserveId = $this->findOriginalReserve($reserveId);
+
+        $q = Doctrine_Core::getTable("Reserve")
+            ->createQuery('R')
+            ->innerJoin('R.Transaction T')
+            ->where('R.id = ? OR R.reserva_original = ?', array($reserveId, $reserveId))
+            ->andWhere('T.completed = 1');
+
+        return $q->fetchOne();
+    }
+
     public function findOriginalReserve($reserveId) {
 
         $Reserve = Doctrine_Core::getTable("Reserve")->find($reserveId);
@@ -17,17 +30,37 @@ class ReserveTable extends Doctrine_Table {
         return null;
     }   
 
-    public function findActiveReserve($reserveId) {
-
-        $reserveId = $this->findOriginalReserve($reserveId);
+    public function findProblematicsReserve($limit) {
 
         $q = Doctrine_Core::getTable("Reserve")
             ->createQuery('R')
             ->innerJoin('R.Transaction T')
-            ->where('R.id = ? OR R.reserva_original = ?', array($reserveId, $reserveId))
-            ->andWhere('T.completed = 1');
+            ->innerJoin('R.User U')
+            ->Where('T.completed = 1')
+            ->andWhere('U.chequeo_judicial = 0')
+            ->andWhere('U.driver_license_file is null');
 
-        return $q->fetchOne();
+        if ($limit) {
+            $q->limit($limit);
+        }
+
+        return $q->execute();
+    }   
+
+    public function findExpiredReserves($from, $to, $amount) {
+
+        $q = Doctrine_Core::getTable("Reserve")
+            ->createQuery('R')
+            ->innerJoin('R.Transaction T')
+            ->Where('DATE_ADD(R.date, INTERVAL R.duration HOUR) > ?', $from)
+            ->AndWhere('DATE_ADD(R.date, INTERVAL R.duration HOUR) < ?', $to )
+            ->AndWhere('T.completed = 1');
+
+        if($amount) {
+            $q->andWhere('R.montoLiberacion = 180000');
+        }
+
+        return $q->execute();
     }
 
     ///////////////////////////
@@ -346,5 +379,4 @@ class ReserveTable extends Doctrine_Table {
                 ->andWhere('HOUR(TIMEDIFF(NOW(), DATE_ADD(r.date, INTERVAL r.duration HOUR))) >  ?', sfConfig::get("app_horas_para_moroso"));
         return $q->count();
     }
-
 }

@@ -2,7 +2,7 @@ body {
     background-image: url('/images/newDesign/background.jpg');
 }
 
-h1 {
+h1.completeRegister {
     color: rgb(70, 70, 70);
     font-weight: 300;
     margin: 0 0 20px 0;
@@ -63,4 +63,8 @@ input, select, button {
     padding-left: 10px;
     max-width: 100px;
     max-height: 30px;
+}
+
+div.como-radio {
+    padding-left: 21px;
 }

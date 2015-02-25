@@ -7,6 +7,9 @@ class carActions extends sfActions {
 	public function executeIndex(sfWebRequest $request) {
 	}
 
+    public function executeCarControl(sfWebRequest $request) {
+    }
+
     public function executeDeleteDamage(sfWebRequest $request) {
 
         $return = array("error" => false);
@@ -30,6 +33,53 @@ class carActions extends sfActions {
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorCode"] = $e->getCode();
+            $return["errorMessage"] = $e->getMessage();
+        }
+
+        $this->renderText(json_encode($return));
+        
+        return sfView::NONE;
+    }
+
+    public function executeFindAll(sfWebRequest $request) {
+
+        $return = array("error" => false);
+
+        try {
+
+            $limit = $request->getPostParameter("limit", null);
+
+            $return["data"] = array();
+
+            $Cars = Doctrine_Core::getTable('Car')->findAllCar($limit);
+
+            if(count($Cars) == 0){
+                throw new Exception("No se encuentran autos", 1);
+            }
+
+            foreach($Cars as $i => $Car){
+
+                $CarProximityMetro = $Car->getNearestMetro();
+
+                $return["data"][$i] = array(
+                    'id' => $Car->id,
+                    'brand' => $Car->getModel()->getBrand()->name,
+                    'model' => $Car->getModel()->name,
+                    'year' => $Car->year,
+                    'transmission' => $Car->transmission == 1 ? 'Automática' : 'Manual',
+                    'nearestMetroName' => $CarProximityMetro->getMetro()->name,
+                    'type' => $Car->getModel()->getCarType()->name,
+                    'comunne' =>$Car->getCommune()->name,
+                    'QuantityOfLatestRents' =>$Car->getQuantityOfLatestRents(),
+                    'user_name' =>$Car->getUser()->firstname." ".$Car->getUser()->lastname,
+                    'user_telephone' => $Car->getUser()->telephone
+                );
+                  
+            }
+
+        } catch (Exception $e) {
+            $return["error"]        = true;
+            $return["errorCode"]    = $e->getCode();
             $return["errorMessage"] = $e->getMessage();
         }
 
