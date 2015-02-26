@@ -12,9 +12,9 @@ class NotificationBarFilter extends sfFilter {
             $User   = Doctrine_core::getTable("User")->find($userId);
 
             $UserNotification = Doctrine_Core::getTable('UserNotification')->findOneByUserIdAndViewedAtAsNull($userId);
-error_log("UN: "$UserNotification->getId());
-            if ($UserNotification) {
 
+            if ($UserNotification) {
+error_log("UN: "$UserNotification->getId());
                 $reserveId = $ContextUser->getAttribute('reserveId');
 
                 if(!$reserveId){
