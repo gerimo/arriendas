@@ -182,6 +182,14 @@ reserve:
     url: /rent-a-car/arriendo-de-autos-santiago/:carId
     param: { module: main, action: reserve }
 
+reserve_airport:
+    url: /reserva/aeropuerto
+    param: { module: reserves, action: airport }
+
+reserve_airport_khipu:
+    url: /reserva/aeropuerto/khipu
+    param: { module: reserves, action: airportKiphu }
+
 reserve_approve:
     url: /reserva/aprobar
     param: { module: reserves, action: approve }
