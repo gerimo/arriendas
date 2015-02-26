@@ -36,6 +36,10 @@ class UserNotificationTable extends Doctrine_Table {
             ->andWhere('UN.user_id = ?', $userId)
             ->andWhere('N.notification_type_id = 1');
 
+        $q->execute();
+
+        error_log("ENCONTRADOS: ".$q->count());
+
         return $q->fetchOne();
     }
 
