@@ -79,7 +79,7 @@ EOF;
                 $message->setSubject($subject);
                 $message->setBody($body, "text/html");
                 $message->setFrom($from);
-                /*$message->setTo($to);*/
+                $message->setTo($to);
                 $message->setBcc(array(
                     "cristobal@arriendas.cl" => "Cristóbal Medina Moenne",
                     /*"francoinostrozah@gmail.com" => "Franco Inostroza Hinojosa"*/

@@ -76,3 +76,17 @@
     height: 200px;
     margin: 10px 0 10px 0;
 }
+
+.kpi-primary {
+    font-size: 46px;
+    font-weight: 300;
+    margin: 0;
+    padding: 20px 0;
+}
+
+.kpi-secondary {
+    font-size: 32px;
+    font-weight: 300;
+    margin: 0;
+    padding: 20px 0;
+}
