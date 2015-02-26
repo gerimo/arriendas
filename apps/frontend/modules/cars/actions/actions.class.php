@@ -609,11 +609,13 @@ class carsActions extends sfActions {
                 $fechaHoy = Date("Y-m-d H:i:s");
                 $Car->setFechaSubida($fechaHoy); 
                 $send = 1;
+                $url = $this->generateUrl('car_price');
             }else{
                 $Car = Doctrine_Core::getTable('car')->find($carId);
                 if($Car->getLat() != $lat && $Car->getLng() != $lng) {
                     $changeDistance = 1;
                 }
+                $url = $this->generateUrl('cars');
             }
             
             $Commune = Doctrine_Core::getTable('Commune')->find($commune);
@@ -685,7 +687,7 @@ class carsActions extends sfActions {
 
             $this->getUser()->setAttribute("carId", $Car->getId());
 
-            $url = $this->generateUrl('cars');
+            
             $return["url_complete"] = $url;
 
         } catch (Exception $e) {
