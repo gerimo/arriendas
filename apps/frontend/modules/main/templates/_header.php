@@ -82,7 +82,8 @@
         <div class="notbar">
             <span class="remove glyphicon glyphicon-remove" aria-hidden="true"></span>
             <div class="notbar-body">
-                <?php echo $sf_data->getRaw($sf_user->getAttribute('notificationMessage')) ?>
+                <?php $sf_user = $sf_data->getRaw('sf_user') ?>
+                <?php echo $sf_user->getAttribute('notificationMessage') ?>
             </div>
         </div>
     <?php endif ?>

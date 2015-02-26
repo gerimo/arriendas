@@ -853,8 +853,8 @@
             speed: 450
         });
 
-        initializeDate("from", new Date(<?php echo strtotime($from) * 1000 ?>), true, false);
-        initializeDate("to", new Date(<?php echo strtotime($to) * 1000 ?>), true, false);
+        initializeDate("from", new Date(<?php echo strtotime($from) * 1000 ?>), true, false, true);
+        initializeDate("to", new Date(<?php echo strtotime($to) * 1000 ?>), true, false, true);
 
         // Cuando es fin de semana
         <?php if ($isWeekend): ?>
