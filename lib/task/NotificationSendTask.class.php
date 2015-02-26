@@ -35,11 +35,22 @@ EOF;
         $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
 
         // contadores 
-        $countAction2               = 0;
-        $countAction3               = 0;
-        $countAction4               = 0;
+        $countoTotalNotification    = count($UsersNotifications);
+
+        $countBar                   = 0;
+        $countBarPropietario        = 0;
+
+        $countSMS                   = 0;
+        $countSMSPropietario        = 0;
+
+        $countEmail                 = 0;
+        $countEmailPropietario      = 0;
+
+        $countSoporte               = 0;
+        $countError                 = 0;
+
         $countDefaults              = 0;
-        $countoTotalNotification    = 0;
+
         $countSents                 = 0;
         $countNotActive             = 0;
 
@@ -71,9 +82,16 @@ EOF;
                             case 1:
                                 // tipo de notificacion BARRA
                                 // se ejecuta a traves de un filtro
+                                $countBar++;
                                 break;
 
                             case 2:
+                                // tipo de notificacion BARRA PROPIETARIO
+                                // se ejecuta a traves de un filtro
+                                $countBarPropietario++;
+                                break;
+
+                            case 3:
                                 // tipo de notificacion SMS
                                 $SMS = new SMS("Arriendas");
 
@@ -86,25 +104,35 @@ EOF;
 
                                 $SMS->send($title.$notificationMessage, $User->telephone);
 
-                                $countAction2 ++;
+                                $countSMS++;
                                 break;
 
-                            case 3:
-                                // tipo de notificacion EMAIL USUARIO
-                                $this->log("email usuario");
+                            case 4:
+                                // tipo de notificacion SMS PROPIETARIO
+                                $SMS = new SMS("Arriendas");
 
+                                // si el titulo es diferente de null o vacío, le añade un salto de linea.
+                                if ($title) {
+                                    $title = $title.chr(0x0D).chr(0x0A);
+                                } else {
+                                    $title = "";
+                                }
+
+                                $SMS->send($title.$notificationMessage, $User->telephone);
+
+                                $countSMSPropietario++;
+                                break;
+
+                            case 5:
+                                // tipo de notificacion EMAIL USUARIO
                                 $mail    = new Email();
                                 $mailer  = $mail->getMailer();
                                 $message = $mail->getMessage(); 
 
-                                $this->log("title & body definidos");
-
                                 $subject = $title;
                                 $body    = $notificationMessage;
                                 $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                                 $to      = array($User->email => $User->firstname." ".$User->lastname);
-
-                                $this->log("title & body seteados");
 
                                 $message->setSubject($subject);
                                 $message->setBody($body, 'text/html');
@@ -113,18 +141,16 @@ EOF;
                                 $message->setReplyTo(array("ayuda@arriendas.cl" => "Ayuda Arriendas.cl"));
                                 //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
                                 
-                                $this->log("envío");
-
                                 $mailer->send($message);
 
-                                $countAction3 ++;
+                                $countEmail++;
                                 break;
 
-                            case 4:
+                            case 6:
                                 // tipo de notificacion EMAIL PROPIETARIO
                                 $mail    = new Email();
                                 $mailer  = $mail->getMailer();
-                                $message = $mail->getMessage();     
+                                $message = $mail->getMessage(); 
 
                                 $subject = $title;
                                 $body    = $notificationMessage;
@@ -140,10 +166,11 @@ EOF;
                                 
                                 $mailer->send($message);
 
-                                $countAction3 ++;
+                                $countEmailPropietario++;
                                 break;
 
-                            case 5:
+                            
+                            case 7:
                                 // tipo de notificacion SOPORTE
                                 $mail    = new Email();
                                 $mailer  = $mail->getMailer();
@@ -161,10 +188,10 @@ EOF;
                                 //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
                                 
                                 $mailer->send($message);
-                                $countAction4++;
+                                $countSoporte++;
                                 break;
 
-                            case 6:
+                            case 8:
                                 // tipo de notificacion ERROR
                                 $mail    = new Email();
                                 $mailer  = $mail->getMailer();
@@ -182,7 +209,7 @@ EOF;
                                 //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
                                 
                                 $mailer->send($message);
-                                $countAction4++;
+                                $countError++;
                                 break;
                               
                             default:
@@ -225,9 +252,16 @@ EOF;
         $this->log("[".date("Y-m-d H:i:s")."] ---------------------------------------------------");
         $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones enviadas:            ".$countSents);
         $this->log("[".date("Y-m-d H:i:s")."] ---------------------------------------------------");
-        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo SMS:            ".$countAction2);
-        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo Email:          ".$countAction3);
-        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo Soporte:        ".$countAction4);
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo Barra:          ".$countBar);
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo SMS:            ".$countSMS);
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo Email:          ".$countEmail);
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo Soporte:        ".$countSoporte);
+        $this->log("[".date("Y-m-d H:i:s")."] ---------------------------------------------------");
+        $this->log("[".date("Y-m-d H:i:s")."] ---------------------------------------------------");
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo Barra propietario:   ".$countBar);
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo SMS propietario:     ".$countSMS);
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo Email propietario:   ".$countEmail);
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo Soporte propietario: ".$countSoporte);
         $this->log("[".date("Y-m-d H:i:s")."] ");
         $this->log("[".date("Y-m-d H:i:s")."] ");
         $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones no activadas:        ".$countNotActive);
