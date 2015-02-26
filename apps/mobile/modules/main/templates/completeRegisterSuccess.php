@@ -76,9 +76,7 @@
                     <button class="btn btn-a-primary btn-block" id="save"  onclick="validateForm()">Finalizar</button>
                 </div>
             </div>
-            <div class="hidden-xs space-20"></div>
             <p class="alert pull-right"></p>
-            <div class="hidden-xs space-100"></div>
         </div>
     </div>
 </div>
@@ -87,8 +85,6 @@
         <p></p>
     </div>
 </div>
-
-<div class="hidden-xs space-100"></div>
 
 <script type="text/javascript">
 

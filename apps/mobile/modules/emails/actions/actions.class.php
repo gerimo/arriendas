@@ -65,8 +65,8 @@ class emailsActions extends sfActions {
 
             error_log("[".date("Y-m-d H:i:s")."] [emails/unsubscribe] ERROR: ".$e->getMessage());
 
-            if ($request->getHost() == "www.arriendas.cl") {
-                Utils::reportError($e->getMessage(), "emails/unsubscribe");
+            if ($request->getHost() == "m.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "Version Mobile emails/unsubscribe");
             }
         }
     }

@@ -1,12 +1,7 @@
+
+
 body{
     background-image: url('/images/newDesign/background.jpg');
-}
-
-#commune{
-	margin-bottom: 10px;	
-}
-#address{
-	margin-bottom: 10px;
 }
 
 .note {
@@ -47,6 +42,12 @@ body{
  
 .radio+.radio, .checkbox.checkbox {
  	margin-top: 10px;
+}
+
+.load {
+	position: absolute;
+	width: 30px;
+	margin: -34px 0px 0px -34px;
 }
 
 #mostrarMapa img { max-width: none; }

@@ -17,8 +17,7 @@
                     <div class="space-50"></div>
 
 
-                    <!--precios obligatorios-->
-                    <div class="hidden-xs space-30"></div>    
+                    <!--precios obligatorios-->   
                     <div class="col-md-12">
                         <div class="col-sm-6 col-md-6"> 
 
@@ -47,7 +46,6 @@
                 </fieldset>
             </form>
 
-            <div class="hidden-xs space-100"></div>
             <div class="visible-xs space-50"></div>
 
             <div class="col-md-offset-8 col-md-4">
@@ -57,9 +55,6 @@
         </div>
     </div>
 </div>
-
-<div class="space-100 hidden-xs"></div>
-
 
 
 <script>

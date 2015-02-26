@@ -1,4 +1,3 @@
-<div class="space-100 hidden-xs"></div>
 <div class="space-50 visible-xs"></div>
 
 <div class="row">
@@ -7,8 +6,6 @@
         <div class="BCW">
 
             <h2 class="text-center"><?php echo $paymentMsg ?></h2>
-
-            <div class="space-50 hidden-xs"></div>
 
             <p>El pago puede demorarse unos instantes en asentarse, por favor espere que volveremos a comprobar su estado</p>
 
@@ -19,9 +16,6 @@
         </div>
     </div>		
 </div>
-
-<div class="space-100 hidden-xs"></div>
-<div class="space-100 hidden-xs"></div>
 
 <script>
     (function($) {

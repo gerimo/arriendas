@@ -1,6 +1,5 @@
 <link href="/css/newDesign/valueYourCar.css" rel="stylesheet" type="text/css">
 
-<div class="hidden-xs space-100"></div>
 <div class="visible-xs space-50"></div>
 <div class="container">
 	<div class="row">
@@ -46,26 +45,21 @@
 						<div class="col-md-offset-4 col-md-4 col-xs-12">
 
 							<div class="visible-xs space-40"></div>
-							<div class="hidden-xs space-50"></div>
 
 							<h2>Precios Sugeridos:</h2>
 
 							<div class="visible-xs space-10"></div>
-							<div class="hidden-xs space-30"></div>
 
 							<p class="text-info">Por hora: <span class="precioPorHora"></span></p>
 
 							<div class="visible-xs space-10"></div>
-							<div class="hidden-xs space-30"></div>
 
 							<p class="text-info">Por día: <span class="precioPorDia"></span></p>
 
 				    	</div>	
 			    	</div>
-					<div class="hidden-xs space-10"></div>
 			    	<div class="row text-center">
 			    		<div class="visible-xs space-20"></div>
-			    		<div class="hidden-xs space-30"></div>
 				    	<div class="clearfix col-md-offset-4 col-md-4 col-xs-12">
 			    			<a href="<?php echo url_for('car_create') ?>" class="btn btn-block regular-link btn-a-primary">Sube un auto</a>
 			    		</div>
@@ -76,7 +70,7 @@
 		</div>
 	</div> 
 </div>
-<div class="hidden-xs space-100"></div>
+
 <script>
 
 function formatNumber(precio){

@@ -10,13 +10,11 @@
 
                 <fieldset id="paso3">
                     <h1>Disponibilidad del vehículo </h1>
-                    <div class="hidden-xs space-0"></div>
                     <div class="visible-xs space-10"></div>
                     <div class = "col-md-12 text-center">
                         <p style="font-weight: 300; font-size:20px;">¿Qué días de la semana puedes recibir clientes?</p>
                     </div>
 
-                    <div class="hidden-xs space-50"></div>
                     <div class="visible-xs space-50"></div>  
 
                     <div id="availability-container">
@@ -39,16 +37,14 @@
                         </div>
 
                    </div>
-                    <div class="hidden-xs space-50"></div>
                     <div class="visible-xs space-50"></div>
                     
-                    <div class="hidden-xs space-10"></div>
                     <div class="visible-xs space-50"></div>
 
                     <div class="col-md-12 text-center">
                         <p style="font-weight: 300; font-size:20px;">Otros filtros de busqueda</p>
                     </div>
-                    <div class="hidden-xs space-50"></div>
+                    
                     <div class="visible-xs space-50"></div>  
                     <div class="radio">
                             <label>
@@ -63,7 +59,6 @@
                         </label>
                     </div>
 
-                    <div class="hidden-xs space-50"></div>
                     <div class="visible-xs space-50"></div>
 
                     <div class="col-md-offset-1 col-md-10 text-center">
@@ -80,12 +75,6 @@
         </div>
     </div>
 </div>
-
-<div class="space-100 hidden-xs"></div>
-
-
-
-
 
 <script>
 

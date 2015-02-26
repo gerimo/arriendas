@@ -47,8 +47,8 @@ class opportunitiesActions extends sfActions {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
 
-            if ($request->getHost() == "www.arriendas.cl") {
-                Utils::reportError($e->getMessage(), "opportunities/approve");
+            if ($request->getHost() == "m.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "Version Mobile opportunities/approve");
             }
         }
 
@@ -107,8 +107,8 @@ class opportunitiesActions extends sfActions {
             error_log("[".date("Y-m-d H:i:s")."] [opportunities/mailingApprove] ERROR: ".$e->getMessage());
             /*error_log($e);*/
 
-            if ($request->getHost() == "www.arriendas.cl") {
-                Utils::reportError($e->getMessage(), "opportunities/mailingApprove");
+            if ($request->getHost() == "m.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "Version Mobile opportunities/mailingApprove");
             }
         }
     }
@@ -136,8 +136,8 @@ class opportunitiesActions extends sfActions {
             }
         } catch (Exception $e) {
             error_log("[".date("Y-m-d H:i:s")."] [opportunity/mailingOpen] ERROR: ".$e->getMessage());
-            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
-                Utils::reportError($e->getMessage(), "opportunity/mailingOpen");
+            if ($request->getHost() == "m.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "Version Mobile opportunity/mailingOpen");
             }
         }
 

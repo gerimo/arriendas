@@ -1,6 +1,5 @@
 <link href="/css/newDesign/terminosycondiciones.css" rel="stylesheet" type="text/css">
 
-<div class="hidden-xs space-100"></div>
 <div class="visible-xs space-50"></div>
 <div class="row">
     <div class="col-md-offset-3 col-md-6">
@@ -15,5 +14,4 @@
         </div>
     <br /><br />
     </div>
-</div> 
-<div class="hidden-xs space-100"></div>
+</div>

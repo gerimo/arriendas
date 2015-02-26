@@ -126,8 +126,6 @@
     </div>
 </div>
 
-<div class="space-100 hidden-xs"></div>
-
 
 <script>
 

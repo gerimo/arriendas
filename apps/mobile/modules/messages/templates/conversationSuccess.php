@@ -1,6 +1,5 @@
 <link href="/css/newDesign/conversaciones.css" rel="stylesheet" type="text/css">
 
-<div class="hidden-xs space-100"></div>
 <div class="visible-xs space-50"></div>
 
 <div class="row">
@@ -34,13 +33,12 @@
                 <span><a id="volverAtras" href="<?php echo url_for('messages_inbox') ?>"><i class="fa fa-arrow-left"></i> Bandeja de entrada</a></span>
             </div>
 
-            <div class="hidden-xs space-50"></div>
             <div class="visible-xs space-50"></div>
 
             <div class="row newMessage">
 
                 
-                <div class="imgProfile col-sm-2 col-md-2 hidden-xs text-center">
+                <!-- <div class="imgProfile col-sm-2 col-md-2 hidden-xs text-center">
                     <span class="thumbnail">
                         <?php if($yoSoyElFrom): ?>
                             <?php include_component("profile","pictureFile", array('inboxHeight'=> '100', 'inboxWidth'=> '100', "user" => $objetoConversacion[0]->getUserFrom(), "params" => "width=74px height=74px")) ?>
@@ -48,7 +46,7 @@
                             <?php include_component("profile","pictureFile", array('inboxHeight'=> '100', 'inboxWidth'=> '100', "user" => $objetoConversacion[0]->getUserTo(), "params" => "width=74px height=74px")) ?>
                         <?php endif ?>
                     </span>
-                </div>
+                </div> -->
 
                 <div class="col-sm-10 col-md-9">
                     <textarea  class="form-control" id="bodyMessage" name="nuevoMensaje" placeholder="<?php if($yoSoyElTo){ echo 'Escríbele un nuevo mensaje a '.$objetoConversacion[0]->getUserFrom()->getFirstName();}else if($yoSoyElFrom){ echo 'Escríbele un nuevo mensaje a '.$objetoConversacion[0]->getUserTo()->getFirstName();} ?>"><?php echo $comentarios;?></textarea>
@@ -60,7 +58,6 @@
                 </div>
                 <div id="ajax_loader" class="col-xs-offset-4 col-xs-4"><?php echo image_tag('ajax-loader.gif', 'class=img_loader');?></div>
             </div>  
-            <div class="hidden-xs space-70"></div>
             <div class="visible-xs space-20"></div>
 
             <div class="cargaDeNuevosMensajes"></div>
@@ -70,7 +67,7 @@
                     <?php if ($idUsuarioFrom == $myId): ?>
 
                         <div class='row'>
-                            <div class="leftMessage hidden-xs col-xs-1 col-sm-2 col-md-2">
+                            <!-- <div class="leftMessage hidden-xs col-xs-1 col-sm-2 col-md-2">
 
                                 <div class="imgProfile hidden-sm">
                                     <span class="thumbnail">
@@ -85,7 +82,7 @@
                                     ?>
                                 </div>
 
-                            </div>
+                            </div> -->
                             <!--<div class="puntaCeleste"></div> -->
                             <div class="marcoTextoIzq col-xs-10 col-sm-8 col-md-8">
                                 <div class="texto">
@@ -96,7 +93,6 @@
 
                         </div>
 
-                        <div class="hidden-xs space-30"></div>
                         <div class="visible-xs space-20"></div>
 
                     <?php else: ?>
@@ -110,7 +106,7 @@
                                 </div>
                             </div>
                             <!--<div class="puntaCeleste"></div>-->
-                            <div class="rightMessage hidden-xs col-md-2">
+                           <!--  <div class="rightMessage hidden-xs col-md-2">
                                 <div class="imgProfile hidden-sm">
                                     <span class="thumbnail">
                                         <?php include_component("profile","pictureFile",array('inboxHeight'=> '100', 'inboxWidth'=> '100', "user"=>$objetoConversacion[0]->getUserFrom(),"params"=>"width='74px' height='74px'"));?>
@@ -121,10 +117,9 @@
                                         else echo "<a target='_blank' href='http://www.arriendas.cl/profile/publicprofile/id/".$conversacion[$i]['userMensaje']."'>".$objetoConversacion[0]->getUserFrom()->getFirstName()."</a>";
                                     ?>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
 
-                        <div class="hidden-xs space-30"></div>
                         <div class="visible-xs space-20"></div>
 
                     <?php endif ?>
@@ -133,7 +128,7 @@
                     <?php if ($idUsuarioTo == $myId): ?>
 
                         <div class='row'>
-                            <div class="leftMessage hidden-xs col-xs-1 col-sm-2 col-md-2">
+                            <!-- <div class="leftMessage hidden-xs col-xs-1 col-sm-2 col-md-2">
                                 
                                 
                                 <div class="imgProfile hidden-sm">
@@ -148,7 +143,7 @@
                                         else echo "<a target='_blank' href='http://www.arriendas.cl/profile/publicprofile/id/".$conversacion[$i]['userMensaje']."'>".$objetoConversacion[0]->getUserTo()->getFirstName()."</a>";
                                     ?>
                                 </div>
-                            </div>
+                            </div> -->
                             <!--<div class="puntaBlanca"></div>-->
                             <div class="marcoTextoIzq col-xs-10 col-sm-8 col-md-8">
                                 <div class="texto">
@@ -158,7 +153,6 @@
                             </div>
                         </div>
 
-                        <div class="hidden-xs space-30"></div>
                         <div class="visible-xs space-20"></div>
 
                     <?php else: ?> <!-- Si no soy yo -->
@@ -172,7 +166,7 @@
                                 </div>
                             </div>
 
-                            <div class="rightMessage hidden-xs col-md-2">
+                            <!-- <div class="rightMessage hidden-xs col-md-2">
                                 <div class="imgProfile hidden-sm">
                                     <span class="thumbnail">
                                         <?php include_component("profile","pictureFile",array('inboxHeight'=> '100', 'inboxWidth'=> '100', "user"=>$objetoConversacion[0]->getUserTo(),"params"=>"width='74px' height='74px'"));?>
@@ -184,11 +178,10 @@
                                         else echo "<a target='_blank' href='http://www.arriendas.cl/profile/publicprofile/id/".$conversacion[$i]['userMensaje']."'>".$objetoConversacion[0]->getUserTo()->getFirstName()."</a>";
                                     ?>
                                 </div>
-                            </div>
+                            </div> -->
 
                         </div>
 
-                        <div class="hidden-xs space-30"></div>
                         <div class="visible-xs space-20"></div>
 
                     <?php endif ?>
@@ -199,7 +192,6 @@
     </div>
 </div>
 
-<div class="hidden-xs space-100"></div>
 
 <script type="text/javascript">
 

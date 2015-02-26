@@ -169,7 +169,6 @@
                             <input class="form-control" id="color" value="<?php if($Car->color) echo $Car->color ?>" name="color" placeholder="color" type="text">
                         </div>
                         
-                        <div class="linea espacio hidden-xs col-md-11"></div>
 
                         <div class="visible-xs space-50"></div>
 
@@ -252,14 +251,11 @@
                 <p class="alert"></p> 
             </div>
 
-            <div class="hidden-xs space-100"></div> 
-
             <form id="priceCar">
                 <fieldset id="paso2">
                     <h1>Precios del vehículo</h1>
 
-                    <!--precios obligatorios-->
-                    <div class="hidden-xs space-30"></div>    
+                    <!--precios obligatorios-->    
                     <div class="col-md-12">
                         <div class="col-sm-6 col-md-6"> 
 
@@ -286,7 +282,6 @@
                         </div>
                     </div>
 
-                    <div class="hidden-xs space-100"></div>
                     <div class="visible-xs space-50"></div>
                 </fieldset>
             </form>
@@ -295,7 +290,6 @@
                 <p class="alertPrice"></p> 
             </div>
 
-            <div class="hidden-xs space-100"></div> 
 
             <!-- <form id="availabilityCar">
 
@@ -370,8 +364,6 @@
                 <button class="btn-a-primary btn-block" id="save" onclick="validateFormAvailability()">Guardar</button>
                 <p class="alertAva"></p> 
             </div> -->
-
-            <div class="hidden-xs space-100"></div> 
 
 
                 <fieldset id="paso4">
@@ -493,9 +485,6 @@
         </div>
     </div>
 </div>
-
-<div class="space-100 hidden-xs"></div>
-
 
 
 <script>

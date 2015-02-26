@@ -47,8 +47,8 @@ class mainActions extends sfActions {
 
         } catch (Exception $e) {
             error_log("[".date("Y-m-d H:i:s")."] [main/completeRegister] ERROR: ".$e->getMessage());
-            if ($request->getHost() == "www.arriendas.cl") {
-                Utils::reportError($e->getMessage(), "main/completeRegister");
+            if ($request->getHost() == "m.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "Version Mobile main/completeRegister");
             }
         }
 
@@ -616,7 +616,7 @@ class mainActions extends sfActions {
             try {
                 $user = $q->fetchOne();
             } catch (Exception $e) {
-                Utils::reportError($e->getMessage(), "main/loginDo");
+                Utils::reportError($e->getMessage(), "Version Mobile main/loginDo");
             }
 
             if ($user) {
@@ -753,7 +753,7 @@ class mainActions extends sfActions {
 
         $app_id = "213116695458112";
         $app_secret = "8d8f44d1d2a893e82c89a483f8830c25";
-        //$my_url = "http://www.arriendas.cl/main/loginFacebook";
+        //$my_url = "http://m.arriendas.cl/main/loginFacebook";
         $my_url = $this->generateUrl("facebook_login", array(), true);
         $referer = $this->getUser()->getAttribute("referer");
         // $app_id = "297296160352803";
@@ -774,7 +774,7 @@ class mainActions extends sfActions {
         
         if (empty($code)) {
             $this->getUser()->setAttribute('state', md5(uniqid(rand(), TRUE)));
-            $dialog_url = sprintf("https://www.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s&state=%s&scope=%s,%s", $app_id, urlencode($my_url), $this->getUser()->getAttribute('state'), "email", "user_photos");
+            $dialog_url = sprintf("https://m.facebook.com/dialog/oauth?client_id=%s&redirect_uri=%s&state=%s&scope=%s,%s", $app_id, urlencode($my_url), $this->getUser()->getAttribute('state'), "email", "user_photos");
             return $this->redirect($dialog_url);
         }
     
@@ -1211,8 +1211,8 @@ class mainActions extends sfActions {
         $url = $_SERVER['SERVER_NAME'];
         $url = str_replace('http://', '', $url);
         $url = str_replace('https://', '', $url);
-        // $url = 'http://www.arriendas.cl/main/recover?email=' . $user->getEmail() . "&hash=" . $user->getHash();
-        $url = 'http://www.arriendas.cl/contrasena/modificar/' . $user->getId() . "/" . $user->getHash();
+        // $url = 'http://m.arriendas.cl/main/recover?email=' . $user->getEmail() . "&hash=" . $user->getHash();
+        $url = 'http://m.arriendas.cl/contrasena/modificar/' . $user->getId() . "/" . $user->getHash();
         $this->logMessage($url);
         $body = "<p>Hola:</p><p>Para generar una nueva contraseña, haz click <a href='$url'>aqu&iacute;</a></p>";
         $message = $this->getMailer()->compose();

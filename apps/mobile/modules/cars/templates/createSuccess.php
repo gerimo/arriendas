@@ -1,4 +1,4 @@
-<link href="/css/newDesign/create.css" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/createMobile.css" rel="stylesheet" type="text/css">
 <!-- Google Maps -->
 <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
 
@@ -186,7 +186,7 @@
                     </div>
                     <div class="espacio col-sm-12 col-md-12" > 
                         
-                        <div class="linea espacio hidden-xs col-md-11"></div>
+                    
 
                         <div class="visible-xs space-50"></div>
 
@@ -265,8 +265,9 @@
                 <input id="lng" name="lng" type="hidden" value="">
             </form>
             <div class="col-md-offset-8 col-md-4">
-                <div class="hidden-xs space-60"></div>
-                <button class="btn btn-a-primary btn-block" name="save" onclick="validateForm()">Siguiente</button>
+                
+                <button class="btn btn-a-primary btn-block" id="next" name="save" onclick="validateForm()">Siguiente</button>
+                <img class="load" src="/images/ajax-loader.gif">    
                 <p class="alert"></p> 
             </div>
             
@@ -279,11 +280,16 @@
     </div>
 </div>
 
-<div class="space-100 hidden-xs"></div>
+
 
 
 
 <script>
+    
+    $(document).ready(function() {  
+
+        $(".load").hide();  
+    }); 
 
     $("#brand").change(function(){
 
@@ -331,49 +337,35 @@
         var lat            = $("#lat").val();
         var lng            = $("#lng").val();
 
-        $("#sistemaABS").each(function(){
-            if ($(this).is(':checked')) {
-                sistemaABS = $(this).val();
-                console.log (sistemaABS);
-            }
-        });
 
-        $("#aireAcondicionado").each(function(){
-            if ($(this).is(':checked')) {
-                aireAcondicionado = $(this).val();
-            }
-        });
+        if ($("#sistemaABS").is(':checked')) {
+            var sistemaABS = $("#sistemaABS").val();
+        }
 
-        $("#airBag").each(function(){
-            if ($(this).is(':checked')) {
-                airBag = $(this).val();
-            }
-        });
+        if ($("#aireAcondicionado").is(':checked')) {
+            var aireAcondicionado = $("#aireAcondicionado").val();
+        }
 
-        $("#controlCrucero").each(function(){
-            if ($(this).is(':checked')) {
-                controlCrucero = $(this).val();
-            }
-        });
+        if ($("#airBag").is(':checked')) {
+            var airBag = $("#airBag").val();
+        }
 
-        $("#sensor").each(function(){
-            if ($(this).is(':checked')) {
-                sensor = $(this).val();
-            }
-        });
+        if ($("#controlCrucero").is(':checked')) {
+            var controlCrucero = $("#controlCrucero").val();
+        }
 
-        $("#vidriosElectricos").each(function(){
-            if ($(this).is(':checked')) {
-                vidriosElectricos = $(this).val();
-            }
-        });
+        if ($("#sensor").is(':checked')) {
+            var sensor = $("#sensor").val();
+        }
+
+        if ($("#vidriosElectricos").is(':checked')) {
+            var vidriosElectricos = $("#vidriosElectricos").val();
+        }
 
         var babyChair = false;
-        $("#babyChair").each(function(){
-            if ($(this).is(':checked')) {
-                babyChair = true;
-            }
-        });
+        if ($("#babyChair").is(':checked')) {
+            babyChair = true;
+        }
 
         var capacity1 = $("#capacity1 option:selected").val();
         var capacity2 = $("#capacity2 option:selected").val();
@@ -388,7 +380,6 @@
             "door": door,
             "transmission": transmission,
             "benzine": benzine,
-            "typeCar": typeCar,
             "patent": patent,
             "color": color,
             "lat": lat,
@@ -420,6 +411,8 @@
             $("#typeCar").removeClass("alert-danger");
             $("#patent").removeClass("alert-danger");
             $("#benzine").removeClass("alert-danger");
+            $(".load").show();
+            $("#next").attr("disabled", true);
 
 
             if (r.error) {
@@ -457,7 +450,6 @@
                     $("#color").addClass("alert-danger"); 
                     $('#color').focus();
                 }
-
 
             } else {
                 window.location.href = r.url_complete;
@@ -513,7 +505,8 @@
         $('#lat').val("");
         $('#log').val("");
     });
-
+  
+  
     $('#address').blur(function(){
         if(($("#address").val() != null) && ($("#address").val() != "") && ($("#commune option:selected").val() != "") && ($("#commune option:selected").val() != "")){
             modalShow();
@@ -561,4 +554,15 @@
  
         })
     }
+
+
+
+
+    
+
+       
+
+    
+
+
 </script>

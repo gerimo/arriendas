@@ -153,7 +153,7 @@
             haveChair: haveChair,
             nearToSubway: nearToSubway
         };
-        console.log(parameters);
+        
 
         $.post("<?php echo url_for('car_search') ?>", parameters, function(r){
 
@@ -241,12 +241,11 @@
             if (!$("#list-container").is(":visible")) {
                 $("#list-container").show();
             }
-        console.log("enre");
+        
         }, "json");
     }
 </script>
 
-<div class="hidden-xs space-100"></div>
 <div class="visible-xs space-50"></div>
 
 <div class="row">
@@ -363,7 +362,6 @@
 <script>
 
     $(document).ready(function(){
-        console.log("rosa");
         $('#from').datetimepicker({
             allowTimes:[
             "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",

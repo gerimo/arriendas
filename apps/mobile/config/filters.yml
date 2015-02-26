@@ -17,9 +17,11 @@ optionsCarFilter:
 
 completeRegisterCar:
     class: checkCompleteRegisterCar
+    
 
 notificationFilter:
     class: checkNotificationFilter
+    
 
 cache:     ~
 execution: ~

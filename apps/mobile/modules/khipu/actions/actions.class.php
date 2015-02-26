@@ -34,8 +34,8 @@ class khipuActions extends sfActions {
             $url = $khipuService->createPaymentURL($data)->url;
         } catch (Execption $e) {
             error_log("[".date("Y-m-d H:i:s")."] [khipu/generatePayment] ".$e->getMessage());
-            if ($request->getHost() == "www.arriendas.cl") {
-                Utils::reportError($e->getMessage(), "khipu/generatePayment");
+            if ($request->getHost() == "m.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "Version mobile khipu/generatePayment");
             }
         }
 

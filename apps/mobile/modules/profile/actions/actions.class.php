@@ -116,7 +116,7 @@ class profileActions extends sfActions
         }catch (Exception $e) {
             error_log("No hay nada para borrar");
             $return["error"] = true;
-            Utils::reportError($e->getMessage(), "executeCarAvailabilityDeleteChangeStatus");
+            Utils::reportError($e->getMessage(), "Version Mobile Version Mobile executeCarAvailabilityDeleteChangeStatus");
         }
 
         $this->renderText(json_encode($return));
@@ -152,7 +152,7 @@ class profileActions extends sfActions
         } catch (Exception $e) {
 
             $return["error"] = true;
-            Utils::reportError($e->getMessage(), "executeCarDisabledUntilDelete");
+            Utils::reportError($e->getMessage(), "Version Mobile executeCarDisabledUntilDelete");
         }
 
         $this->renderText(json_encode($return));
@@ -193,7 +193,7 @@ class profileActions extends sfActions
             $return["errorMessage"] = $e->getMessage();
 
             if ($e->getCode() != 2) {
-                Utils::reportError($e->getMessage(), "profile/doChangePassword");
+                Utils::reportError($e->getMessage(), "Version Mobile profile/doChangePassword");
             }
         }
 

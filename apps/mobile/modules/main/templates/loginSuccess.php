@@ -1,6 +1,5 @@
 <link href="/css/newDesign/login.css" rel="stylesheet" type="text/css">
 
-<div class="hidden-xs space-100"></div>
 <div class="visible-xs space-50"></div>
 
 <div class="row">
@@ -46,5 +45,3 @@
         </div>
     </div>
 </div>
-
-<div class="hidden-xs space-100"></div>
