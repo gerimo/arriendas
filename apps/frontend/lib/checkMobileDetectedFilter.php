@@ -14,7 +14,9 @@ class checkMobileDetectedFilter extends sfFilter {
         if ($this->isFirstCall()) {
             $MD = new Mobile_Detect;
             if ($MD->isMobile()) {
+
                 $host = str_replace("arriendas.cl", "m.arriendas.cl", $_SERVER ['HTTP_HOST']);
+                error_log("[De laptop => mobile] Me voy a http://".$host);
                 $this->getContext()->getController()->redirect('http://'.$host);
                 /*$this->redirect('http://www.google.com/');*/
                 throw new sfStopException();
