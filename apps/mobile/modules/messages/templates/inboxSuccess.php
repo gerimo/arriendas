@@ -1,4 +1,4 @@
-<link href="/css/newDesign/inbox.css" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/mobile/inbox.css" rel="stylesheet" type="text/css">
 <?php use_helper("jQuery")?>
 
 <?php

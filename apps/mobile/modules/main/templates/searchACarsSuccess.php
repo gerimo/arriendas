@@ -1,4 +1,4 @@
-<link href="/css/newDesign/searchAcarsMobile.css" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/mobile/searchAcarsMobile.css" rel="stylesheet" type="text/css">
 <script src="/js/newDesign/markerclusterer.js" type="text/javascript"></script>
 
 

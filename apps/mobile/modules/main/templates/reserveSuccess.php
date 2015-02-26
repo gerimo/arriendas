@@ -1,4 +1,4 @@
-<link href="/css/newDesign/reserve.css" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/mobile/reserve.css" rel="stylesheet" type="text/css">
 
 <head>
     <script>(function() {

@@ -1,4 +1,4 @@
-<link href="/css/newDesign/valueYourCar.css" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/mobile/valueYourCar.css" rel="stylesheet" type="text/css">
 
 <div class="visible-xs space-50"></div>
 <div class="container">

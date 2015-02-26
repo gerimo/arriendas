@@ -1,4 +1,4 @@
-<link href="/css/newDesign/indexMobile.css" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/mobile/indexMobile.css" rel="stylesheet" type="text/css">
 
 <script>
     var reserveUrl = "<?php echo url_for('reserve', array('carId' => 'carId'), true) ?>";

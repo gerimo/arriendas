@@ -1,0 +1,76 @@
+body {
+    background-image: url('/images/newDesign/background.jpg');
+}
+
+#section-compare-prices {    
+    background-size: 100% 102%;
+}
+
+#compare-prices-table {
+    width: 100%;
+    text-align: center;
+    color: #5d5d5d;
+    font: 11px/14px 'Roboto', sans-serif;
+    letter-spacing: 1px;
+}
+
+#compare-prices-table img {
+    height: 20px;
+}
+
+#compare-prices-table th {
+    background-color: #5d5d5d;
+    border-left: solid 2px white;
+    height: 40px;
+    padding: 10px;
+    text-align: center;
+    width: 20%;
+}
+#compare-prices-table td {
+    padding: 0 0 3px 3px;
+    height: 62px;
+}
+
+.td {
+    background: #edeeee; 
+    display: block;
+    height: 100%;
+    padding: 11px 18px;
+    font-weight: 700;
+    text-align: center;
+    font-size: small;
+}
+
+.last .td{
+    background-color: #00aced;
+    color: white;
+}
+
+#compare-prices-table .table-transparent {
+    background-color: transparent;
+    color: white;
+}
+
+#compare-prices-table .table-active {
+    background-color: #00aced;
+    color: white;
+}
+
+.text-table{
+
+    margin: 25px 0 70px 0;
+    max-width: 100%;
+    color: #5d5d5d;
+    font: 11px/14px 'Roboto', sans-serif;
+    letter-spacing: 1px;
+}
+
+.BCW h1 {
+	margin-bottom: 60px;
+}
+
+@media screen and (max-width: 767px){
+    .table-responsive {
+        border: 0px solid #ddd; 
+    }
+}

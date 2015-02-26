@@ -1,4 +1,4 @@
-<link href="/css/newDesign/reserves.css?v=2" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/mobile/reserves.css?v=2" rel="stylesheet" type="text/css">
 
 <div class="visible-xs space-50"></div>
 

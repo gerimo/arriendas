@@ -1,4 +1,4 @@
-<link href="/css/newDesign/terminosycondiciones.css" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/mobile/terminosycondiciones.css" rel="stylesheet" type="text/css">
 
 <div class="visible-xs space-50"></div>
 <div class="row">

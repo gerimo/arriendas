@@ -1,4 +1,4 @@
-<link href="/css/newDesign/pricesCompare.css" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/mobile/pricesCompare.css" rel="stylesheet" type="text/css">
 
 <div class="visible-xs space-50"></div>
 

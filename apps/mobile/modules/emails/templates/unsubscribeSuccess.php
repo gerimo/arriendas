@@ -1,4 +1,4 @@
-<link href="/css/newDesign/mailing.css" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/mobile/mailing.css" rel="stylesheet" type="text/css">
 
 <div class="visible-xs space-70"></div>
 
