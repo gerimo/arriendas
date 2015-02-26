@@ -91,14 +91,20 @@ EOF;
 
                             case 3:
                                 // tipo de notificacion EMAIL USUARIO
+                                $this->log("email usuario");
+
                                 $mail    = new Email();
                                 $mailer  = $mail->getMailer();
-                                $message = $mail->getMessage();     
+                                $message = $mail->getMessage(); 
+
+                                $this->log("title & body definidos");
 
                                 $subject = $title;
                                 $body    = $message;
                                 $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                                 $to      = array($User->email => $User->firstname." ".$User->lastname);
+
+                                $this->log("title & body seteados");
 
                                 $message->setSubject($subject);
                                 $message->setBody($body, 'text/html');
@@ -106,6 +112,8 @@ EOF;
                                 $message->setTo($to);
                                 $message->setReplyTo(array("ayuda@arriendas.cl" => "Ayuda Arriendas.cl"));
                                 //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                                
+                                $this->log("envío");
                                 
                                 $mailer->send($message);
 
