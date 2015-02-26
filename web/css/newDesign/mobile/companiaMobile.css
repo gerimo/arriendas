@@ -1,0 +1,161 @@
+body {
+    background-image: url('/images/newDesign/background.jpg');
+}
+
+.Enunciado{
+    font-family: 'Roboto';
+    font-size: 17px;
+    line-height: 20px;   
+}
+
+p.direccion{
+    margin-top: 20px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 17px;
+}
+
+.BCW h1 {
+   color: #ba135f;
+   text-align: center;
+   font-weight: 500;
+}
+
+.BCW h2 {
+   color: #fff;
+   text-align: center;
+   font-weight: 500;
+}
+
+.title {
+    margin: 0 0 28px 16px;
+    color: #fff;
+    font: italic 700 24px/26px 'Open Sans', sans-serif;
+    background: url('/images/newDesign/bg-title2.png') repeat-x;
+    text-shadow: 0 0 2px rgba(0,0,0,0.5);
+    float: left;
+    position: relative;
+    padding: 10px 33px 28px 23px;;
+    left: 17px;
+}
+.title:before {
+    content:"";
+    background:url('/images/newDesign/bg-shadow-3.png') no-repeat;
+    width: 29px;
+    height: 72px;
+    left: -29px;
+    position: absolute;
+    top: -6px;
+}
+.title:after {
+    content:"";
+    background:url('/images/newDesign/bg-shadow4.png') no-repeat;
+    width:25px;
+    height:78px;
+    position:absolute;
+    right:-25px;
+    top:-6px;
+}
+.title span{
+    overflow:hidden;
+    max-height:29px;
+    display:block;
+    padding:0 2px 2px 2px;
+}
+.slick-prev, .slick-next{
+    height: 29px;
+    width: 31px;
+    position: absolute;
+    left: -10%;
+    top: 50%;
+    margin: -17px 0 0;
+    overflow: hidden;
+    text-indent: -9px;
+    border-style: solid;
+    border-width: 17.5px 29px 14.5px 0;
+    border-color: transparent #ba135f transparent transparent;
+}
+
+.slick-next{
+    left: auto;
+    right: -10%;
+    border-width: 17.5px 0 14.5px 29px;
+    border-color: transparent transparent transparent #ba135f;    
+}
+
+#section-partners .title{
+    margin: 0 -86px 60px -50px;
+
+}
+
+#section-partners{
+    padding: 10px 0 0 0;
+}
+
+#section-on-partners-carousel{
+    width: 100%;
+    height: auto;
+}
+#section-on-partners-carousel a{
+    width: 25%;
+    height: auto;
+}
+
+#section-on-partners-carousel a img{
+    width: 69%;
+    height: 60px;
+    margin: auto;
+}
+#section-on-partners-carousel .normal a img{
+    width: 57%;
+    height: 60px;
+    margin: auto;
+}
+#partners{
+    margin-bottom: 10%;
+}
+
+@media only screen and (max-width:767px) {
+    .title {
+            font-size: 12px;
+            line-height: 14px;
+            float: none;
+            display: inline-block;
+            padding: 4px 13px 14px 9px;
+            margin: 0 0 17px;
+            background: url(/images/newDesign/bg-title3.png) repeat-x;
+    }
+    .title:before {
+        background: url(/images/newDesign/bg-shadow5.png) no-repeat;
+        width: 16px;
+        height: 39px;
+        left: -16px;
+        top: -3px;
+    }
+    .title:after {
+        background: url(/images/newDesign/bg-shadow6.png) no-repeat;
+        width: 15px;
+        height: 39px;
+        right: -15px;
+        top: -3px;
+    }
+    .slick-prev, .slick-next{
+    height: 29px;
+    width: 31px;
+    position: absolute;
+    left: -10%;
+    top: 50%;
+    margin: -17px 0 0;
+    overflow: hidden;
+    text-indent: -9px;
+    border-style: solid;
+    border-width: 17.5px 23px 14.5px 0;
+    border-color: transparent #ba135f transparent transparent;
+}
+
+.slick-next{
+    left: auto;
+    right: -10%;
+    border-width: 17.5px 0 14.5px 23px;
+    border-color: transparent transparent transparent #ba135f;    
+}
+}
