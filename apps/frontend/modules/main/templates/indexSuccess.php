@@ -296,6 +296,13 @@
             }
         });
 
+        var isAirportDelivery = false;
+        $(".isAirportDelivery").each(function(){
+            if ($(this).is(':checked')) {
+                isAirportDelivery = true;
+            }
+        });
+
         var isMap = false;
         if ($("#tab-map").is(":visible")) {
             isMap = true;
@@ -318,7 +325,8 @@
             isAutomatic: isAutomatic,
             isLowConsumption: isLowConsumption,
             isMorePassengers: isMorePassengers,
-            haveChair: haveChair            
+            haveChair: haveChair,
+            isAirportDelivery: isAirportDelivery         
         };
 
         /*console.log(parameters);*/
@@ -568,6 +576,7 @@
                 <li><input type="checkbox" name="filter" class="isLowConsumption"> Bajo Consumo</li>
                 <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
                 <li><input type="checkbox" name="filrer" class="haveChair"> Silla Bebé</li>
+                <li><input type="checkbox" name="filrer" class="isAirportDelivery"> Auto en aeropuerto</li>
             </ul>
         </div>
         <div class="col-sm-4 col-md-4 hidden-xs tabset">

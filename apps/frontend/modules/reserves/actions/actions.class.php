@@ -29,6 +29,20 @@ class reservesActions extends sfActions {
         }
     }
 
+    public function executeAirport (sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+    }
+
+    public function executeAirportKiphu (sfWebRequest $request) {
+        $reserveId     = $this->getUser()->getAttribute("reserveId", null);
+        $transactionId = $this->getUser()->getAttribute("transactionId", null);
+
+        $this->getRequest()->setParameter("reserveId", $reserveId);
+        $this->getRequest()->setParameter("transactionId", $transactionId);
+
+        $this->forward("khipu", "generatePayment");
+    }
+
     public function executeApprove (sfWebRequest $request) {
     
         $return = array("error" => false);
@@ -477,9 +491,10 @@ class reservesActions extends sfActions {
             $warranty = $request->getPostParameter("warranty", null);
             $payment  = $request->getPostParameter("payment-group", null); // Se saco la selección de khipu
 
-            $carId = $request->getPostParameter("car", null);
-            $from  = $request->getPostParameter("from", null);
-            $to    = $request->getPostParameter("to", null);        
+            $carId  = $request->getPostParameter("car", null);
+            $from   = $request->getPostParameter("from", null);
+            $to     = $request->getPostParameter("to", null);
+            $option = $request->getPostParameter("option", null);      
         } else {            
             $warranty = $this->getUser()->getAttribute("warranty");
             $payment  = $this->getUser()->getAttribute("payment", null);
@@ -552,6 +567,7 @@ class reservesActions extends sfActions {
             }
             
             $Car = Doctrine_Core::getTable('Car')->find($carId);
+
             if (!$Car) {
                 throw new Exception("El User ".$userId." esta intentando pagar pero no se encontró el auto.", 1);
             }
@@ -559,7 +575,7 @@ class reservesActions extends sfActions {
             if ($Car->hasReserve($from, $to)) {
                 throw new Exception("El User ".$userId." esta intentando pagar pero el Car ".$carId." ya posee un reserva en las fechas indicadas.", 1);
             }
-            
+
             $Reserve = new Reserve();
             $Reserve->setDuration(Utils::calculateDuration($from, $to));
             $Reserve->setDate(date("Y-m-d H:i:s", strtotime($from)));
@@ -665,6 +681,12 @@ class reservesActions extends sfActions {
 
         $this->getRequest()->setParameter("reserveId", $Reserve->getId());
         $this->getRequest()->setParameter("transactionId", $Transaction->getId());
+
+        if ($Car->getIsAirportDelivery() && $option) {
+            $this->getUser()->setAttribute("reserveId", $Reserve->getId());
+            $this->getUser()->setAttribute("transactionId", $Transaction->getId());
+            $this->redirect('reserve_airport');
+        }
 
         $this->forward("khipu", "generatePayment");
     }
