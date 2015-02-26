@@ -482,11 +482,17 @@
         $("#to").val(roundTime($("#to").val()));
 	})
     
-    if(($(window).height())<"700"){
-        $('#section-home').css({
-            'height': $(window).height() + $("#from-container").outerHeight()+ $("#from-container").outerHeight()
-        });
-
+    if(($(window).height())>"1000" ||($(window).width())>"1000"){
+        if(($(window).height())<"1200"){
+            $('#section-home').css({
+                'height': $(window).height() + $("#from-container").outerHeight()+ $("#from-container").outerHeight()
+            });    
+        }else{
+            
+            $('#section-home').css({
+                'height':  "600px"
+            });
+        }
     } else {
         $('#section-home').css({
             'background-size': "100% 100%"

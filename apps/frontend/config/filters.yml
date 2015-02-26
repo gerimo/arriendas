@@ -5,6 +5,9 @@ rendering: ~
 security:  ~
 
 # insert your own filters here
+mobileDetectedFilter:
+    class: checkMobileDetectedFilter
+    
 paymentSuccessFilter:
     class: checkPaymentSuccessFilter
 
@@ -20,6 +23,6 @@ completeRegisterCar:
 
 notificationFilter:
     class: checkNotificationFilter
-
+    
 cache:     ~
 execution: ~
