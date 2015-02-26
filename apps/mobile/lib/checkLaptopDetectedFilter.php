@@ -3,6 +3,7 @@
 /* 
  * Filtro para utilizar version mobile en caso de que se utilice un celular para acceder a la pagina
  */
+require_once sfConfig::get('sf_lib_dir') . '/vendor/mobile-detect/Mobile_Detect.php';
 
 class checkLaptopDetectedFilter extends sfFilter {
     public function execute ($filterChain) {
