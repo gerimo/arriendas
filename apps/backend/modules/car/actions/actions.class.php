@@ -72,7 +72,8 @@ class carActions extends sfActions {
                     'comunne' =>$Car->getCommune()->name,
                     'QuantityOfLatestRents' =>$Car->getQuantityOfLatestRents(),
                     'user_name' =>$Car->getUser()->firstname." ".$Car->getUser()->lastname,
-                    'user_telephone' => $Car->getUser()->telephone
+                    'user_telephone' => $Car->getUser()->telephone,
+                    'user_email'  => $Car->getUser()->email
                 );
                   
             }

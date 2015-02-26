@@ -7,7 +7,7 @@
     <div class="col-md-offset-2 col-md-8">
         <div class="BCW clearfix">
             <div class="text-center" class="col-md-12">
-                <label style="font-way: 300">Lo sentimos, pero en estas fechas no contamos con ningún auto con envió al aeropuerto.</label>
+                <label style="font-weight: 300; font-size:24px; padding: 0 20px">Lo sentimos, pero en estas fechas no contamos con ningún auto con envió al aeropuerto.</label>
                 <div class="hidden-xs space-50"></div>
                 <div class="visible-xs space-50"></div>
             </div>

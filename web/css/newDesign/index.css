@@ -129,7 +129,7 @@ header .navbar-nav .navbar-right ul {
     color: white;
     font-family: 'Open Sans', sans-serif;
     font-size: 15px;
-    padding: 29px 0px 17px 0px;
+    padding: 29px 0px 26px 0px;
 }
 
 #section-map-filters .heading {
@@ -183,7 +183,7 @@ header .navbar-nav .navbar-right ul {
 }*/
 
 #section-map-filters ul {
-    margin-top: 4px;
+    margin-top: -5px;
     margin-left: -10%;
 }
 
