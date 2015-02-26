@@ -3309,7 +3309,7 @@ class mainActions extends sfActions {
 
 
                     // Notificaciones
-                    Notification::make($User->id, 1);
+                    Notification::make($myUser->id, 1);
                     
                 } else {
 					$newUser=false;
