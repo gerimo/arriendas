@@ -6,6 +6,8 @@ class opportunityActions extends sfActions {
 
         $this->oOC = Doctrine_Core::getTable("OpportunityConfig")
             ->createQuery('OC')->fetchOne();
+
+        $this->log = shell_exec("head -n 500 ../log/opportunityGenerate.log | sort -r");
     }
 
     public function executeCreate(sfWebRequest $request) {
@@ -20,9 +22,13 @@ class opportunityActions extends sfActions {
 
         try {
 
-            $return["kpi1"] = 12;
-            $return["kpi2"] = 44;
-            $return["kpi3"] = 67;
+            // KP1 = Arriendos por OPP / Total arriendos
+            $return["kpi1"] = BI::OppKPI1($from, $to);
+            $return["kpi2"] = BI::OppKPI2($from, $to);
+            $return["kpi3"] = BI::OppKPI3($from, $to);
+            $return["kpi4"] = BI::OppKPI4($from, $to);
+            $return["kpi5"] = BI::OppKPI5($from, $to);
+            $return["kpi6"] = BI::OppKPI6($from, $to);
 
         } catch (Exception $e) {
             $return["error"] = true;

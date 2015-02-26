@@ -14,7 +14,7 @@
 
             <div class="collapse navbar-collapse" id="header">
                 
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav" data-section="Autos">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Autos<span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
@@ -22,7 +22,7 @@
                             <li><a href="<?php echo url_for('car_verify_car') ?>">Verificar auto</a></li>
                         </ul>
                     </li>
-                    <li class="dropdown">
+                    <li class="dropdown" data-section="Notificaciones">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Notificaciones<span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="<?php echo url_for('notification') ?>">Notificaciones</a></li>
@@ -31,14 +31,15 @@
                             <li><a href="<?php echo url_for('notification_management_notification_type') ?>">Tipos de notificaciones</a></li>
                         </ul>
                     </li>
-                    <li class="dropdown">
+                    <li class="dropdown" data-section="Oportunidades">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Oportunidades<span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="<?php echo url_for('opportunity_dashboard') ?>">Dashboard</a></li>
+                            <li role="presentation" class="divider"></li>
                             <li><a href="<?php echo url_for('opportunity_create') ?>">Generar</a></li>                            
                         </ul>
                     </li>
-                    <li class="dropdown">
+                    <li class="dropdown" data-section="Reservas">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Reservas<span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="<?php echo url_for('reserve_problematic_reservations') ?>">Reservas Problematicas</a></li>
@@ -46,7 +47,7 @@
                             <li><a href="<?php echo url_for('reserve_fortnightly_Payments') ?>">Pagos Quincenales</a></li>
                         </ul>
                     </li>
-                    <li class="dropdown">
+                    <li class="dropdown" data-section="Usuarios">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Usuarios<span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="<?php echo url_for('user_control') ?>">Control Usuarios</a></li>

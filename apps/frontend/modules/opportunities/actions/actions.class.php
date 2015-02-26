@@ -34,10 +34,11 @@ class opportunitiesActions extends sfActions {
 
         $reserveId = $request->getPostParameter("reserveId", null);
         $carId     = $request->getPostParameter("carId", null);
+        $isBackend = $request->getPostParameter("isBackend", false);
 
         try {
 
-            $error = $this->approve($reserveId, $carId);
+            $error = $this->approve($reserveId, $carId, false, $isBackend);
 
             if ($error) {
                 throw new Exception($error, 1);
@@ -148,7 +149,7 @@ class opportunitiesActions extends sfActions {
         return sfView::NONE;
     }
 
-    private function approve($reserveId, $carId, $isMailing = false) {
+    private function approve($reserveId, $carId, $isMailing = false, $isBackend = false) {
 
         if (is_null($reserveId) || $reserveId == 0) {
             return "No se encontró la reserva";
@@ -185,6 +186,8 @@ class opportunitiesActions extends sfActions {
 
         if ($isMailing) {
             $O->setComentario('Reserva oportunidad - mailing');
+        } elseif ($isBackend) {
+            $O->setComentario('Reserva oportunidad - backend');
         } else {
             $O->setComentario('Reserva oportunidad');
         }

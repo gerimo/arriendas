@@ -383,8 +383,8 @@
             }
         });
 
-        initializeDate("from", new Date(<?php echo strtotime($from) * 1000 ?>), true, true);
-        initializeDate("to", new Date(<?php echo strtotime($to) * 1000 ?>), true, true);
+        initializeDate("from", new Date(<?php echo strtotime($from) * 1000 ?>), true, true, true);
+        initializeDate("to", new Date(<?php echo strtotime($to) * 1000 ?>), true, true, true);
     });
 
     $('#reviews').on('shown.bs.collapse', function () {
