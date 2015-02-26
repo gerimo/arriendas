@@ -452,6 +452,8 @@
                     $("#color").addClass("alert-danger"); 
                     $('#color').focus();
                 }
+                $(".load").hide();
+                $("#next").attr("disabled", false);
 
             } else {
                 window.location.href = r.url_complete;

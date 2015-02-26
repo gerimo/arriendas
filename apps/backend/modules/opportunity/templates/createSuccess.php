@@ -86,6 +86,8 @@
 <div class="hidden-xs space-100"></div>    
 
 <script>
+
+    $("li[data-section='Oportunidades']").addClass("active");
     
     $(document).ready(function() {
         $('#carsActivesTable').DataTable({
@@ -107,7 +109,8 @@
 
         var parameters = {
             "reserveId" : reserveId,
-            "carId" : carId
+            "carId" : carId,
+            "isBackend": true
         };
 
         $.post("<?php echo url_for_frontend('opportunities_approve') ?>", parameters, function(r){

@@ -1,14 +1,20 @@
-function initializeDate(elem, date, withTimePicker, withHumanFormatExtended) {
+function initializeDate(elem, date, withTimePicker, withHumanFormatExtended, withMinDate) {
 
     var format = getHumanFormat(date);
     if (withHumanFormatExtended) {
         format = getHumanFormatExtended(date);
     }
 
+    var minDate = false;
+    if (withMinDate) {
+        minDate = new Date();
+    }
+
+
     $("#"+elem+"H").datetimepicker({ 
         dayOfWeekStart: 1,
         lang: 'es',
-        minDate: new Date(),
+        minDate: minDate,
         timepicker: withTimePicker,
         validateOnBlur: false,
         value: format,
