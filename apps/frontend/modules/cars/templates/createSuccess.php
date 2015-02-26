@@ -240,6 +240,12 @@
                                     Vidrios eléctricos
                                 </label>
                             </div>
+                            <div class="checkbox col-md-4">
+                                <label>
+                                    <input type="checkbox" id="isAirportDelivery">
+                                    puedo entregar mi auto en el aeropuerto
+                                </label>
+                            </div>
                         </div>
 
                         <div class="espacio col-md-11"></div>
@@ -369,6 +375,11 @@
             babyChair = true;
         }
 
+        var isAirportDelivery = false;
+        if ($("#isAirportDelivery").is(':checked')) {
+            isAirportDelivery = true;
+        }
+
         var capacity1 = $("#capacity1 option:selected").val();
         var capacity2 = $("#capacity2 option:selected").val();
         var capacity = capacity1+"."+capacity2;
@@ -393,7 +404,8 @@
             "sensor": sensor,
             "babyChair": babyChair,
             "vidriosElectricos": vidriosElectricos,
-            "capacity":  capacity
+            "capacity":  capacity,
+            "isAirportDelivery" : isAirportDelivery
         };
 
         $.post("<?php echo url_for('cars/getValidateCar') ?>", parameters, function(r){

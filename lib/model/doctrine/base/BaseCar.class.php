@@ -42,6 +42,7 @@
  * @property CarAudioAccesories $CarAudioAccesories
  * @property CarPhoto $CarPhoto
  * @property boolean $baby_chair
+ * @property boolean $is_airport_delivery
  * @property float   $capacity
  *  
  * @method integer             getId()                Returns the current record's "id" value
@@ -84,6 +85,7 @@
  * @method CarAudioAccessories getCarAudioAccessories()   Returns the current record's "CarAudioAccessories" value
  * @method float               getCapacity()               Returns the current record's "capacity" value
  * @method boolean             getBabyChair()              Returns the current record's "baby_chair" value
+ * @method boolean             getIsAirportDelivery()      Returns the current record's "is_airport_delivery" value
  *
  * @method Car                 setId()             Sets the current record's "id" value
  * @method Car                 setUserId()         Sets the current record's "User_id" value
@@ -123,8 +125,9 @@
  * @method Car                 setCarProximityMetros()   Sets the current record's "CarProximityMetros" collection
  * @method Car                 setCarPhoto()   sets the current record's "CarPhoto" value
  * @method Car                 setCarAudioAccessories()   sets the current record's "CarAudioAccessories" value
- * @method Car                 setCapacity()            Sets the current record's "capacity" value
+ * @method Car                 setCapacity()             Sets the current record's "capacity" value
  * @method Car                 setBabyChair()            Sets the current record's "baby_chair" value
+ * @method Car                 setIsAirportDelivery()    Sets the current record's "is_airport_delivery" value
  *
  * @package    CarSharing
  * @subpackage model
@@ -480,6 +483,9 @@ abstract class BaseCar extends sfDoctrineRecord
             'default' => 1,
             ));
         $this->hasColumn('baby_chair', 'boolean', null, array(
+            'type' => 'boolean'
+            ));
+        $this->hasColumn('is_airport_delivery', 'boolean', null, array(
             'type' => 'boolean'
             ));
         $this->hasColumn('ratio_aprobacion', 'float', null, array(
