@@ -483,7 +483,7 @@
         }
         if (object.accesoriosSeguro) {
         	var photo = object.accesoriosSeguro.split("/");
-        	if (photo.length == 0) {
+        	if (photo.length == 1) {
         		var res = object.accesoriosSeguro.split("_");
             	for (i = 0; i < res.length; i++) { 
 	                var name = "#"+res[i];
@@ -612,6 +612,7 @@
 		} else { 
 			$("#deleteButton").show();
 			$("#saveButton").show();
+			$("#photoDamage").show();
 			$("#saveButton").html("Editar");
 			$("#descriptionDiv").show();
 
