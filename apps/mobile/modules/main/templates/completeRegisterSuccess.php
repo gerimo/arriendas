@@ -20,7 +20,7 @@
 
             <input class="form-control" id="rut" name="rut" type="text" placeholder="RUT">
             <input class="form-control" name="telephone" id="telephone" placeholder="Teléfono"  type="text">
-            <input class="datetimepicker form-control" id="birth" name="birth" placeholder="Fecha de nacimiento" >
+            <input class="datetimepicker form-control" readonly="readonly" id="birth" name="birth" placeholder="Fecha de nacimiento" >
             <div class="row">
                 <i class="fa fa-exclamation-triangle"></i><span class="note"> Debes tener desde 24 años para utilizar arriendas.cl .</span>
             </div>

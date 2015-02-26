@@ -66,8 +66,8 @@ class carsActions extends sfActions {
             }
         } catch (Exception $e) {
             error_log("[".date("Y-m-d H:i:s")."] [cars/availabilityEmail] ERROR: ".$e->getMessage());
-            if ($request->getHost() == "m.arriendas.cl" && $e->getCode() < 2) {
-                Utils::reportError($e->getMessage(), "version Mobile cars/availabilityEmail");
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "cars/availabilityEmail");
             }
         }
 
@@ -87,8 +87,8 @@ class carsActions extends sfActions {
 
         } catch (Exception $e) {
             error_log("[".date("Y-m-d H:i:s")."] [cars/availabilityEmailOpen] ERROR: ".$e->getMessage());
-            if ($request->getHost() == "m.arriendas.cl" && $e->getCode() < 2) {
-                Utils::reportError($e->getMessage(), "version Mobile cars/availabilityEmailOpen");
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "cars/availabilityEmailOpen");
             }
         }
 
@@ -125,8 +125,8 @@ class carsActions extends sfActions {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
             error_log("[".date("Y-m-d H:i:s")."] [cars/availabilityRemove] ERROR: ".$e->getMessage());
-            if ($request->getHost() == "m.arriendas.cl" && $e->getCode() < 2) {
-                Utils::reportError($e->getMessage(), "version Mobile cars/availabilityRemove");
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "cars/availabilityRemove");
             }
         }
 
@@ -188,8 +188,8 @@ class carsActions extends sfActions {
                 $return["errorMessage"] = "Estamos teniendo problemas, pero el equipo técnico ha sido notificado. Por favor, inténtalo nuevamente más adelante";
             }            
             error_log("[cars/availabilitySave] ".$e->getMessage());
-            if ($request->getHost() == "m.arriendas.cl" && $e->getCode() < 2) {
-                Utils::reportError($e->getMessage(), "version Mobile cars/availabilitySave");
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "cars/availabilitySave");
             }
         }
 
@@ -241,8 +241,8 @@ class carsActions extends sfActions {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
             error_log("[".date("Y-m-d H:i:s")."] [cars/search] ERROR: ".$e->getMessage());
-            if ($request->getHost() == "m.arriendas.cl") {
-                Utils::reportError($e->getMessage(), "version Mobile cars/search");
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "cars/search");
             }
         }
 
@@ -276,8 +276,8 @@ class carsActions extends sfActions {
             $return["error"] = true;
             $return["errorMessage"] = "No se pudo realizar el cambio. Por favor, intentalo nuevamente más tarde";
             error_log("[".date("Y-m-d H:i:s")."] [cars/setActive] ERROR: ".$e->getMessage());
-            if ($request->getHost() == "m.arriendas.cl") {
-                Utils::reportError($e->getMessage(), "version Mobile cars/setActive");
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "cars/setActive");
             }
         }
         
@@ -320,8 +320,8 @@ class carsActions extends sfActions {
             $return["error"] = true;
             $return["errorMessage"] = "No se pudo guardar la fecha. Por favor, intentalo nuevamente más tarde";
             error_log("[".date("Y-m-d H:i:s")."] [cars/setDisabledUntil] ERROR: ".$e->getMessage());
-            if ($request->getHost() == "m.arriendas.cl") {
-                Utils::reportError($e->getMessage(), "version Mobile cars/setDisabledUntil");
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "cars/setDisabledUntil");
             }
         }
 
@@ -363,8 +363,8 @@ class carsActions extends sfActions {
             $return["error"] = true;
             /*$return["errorMessage"] = "No se pudo realizar el cambio. Por favor, intentalo nuevamente más tarde";*/
             error_log("[".date("Y-m-d H:i:s")."] [cars/setOption] ERROR: ".$e->getMessage());
-            if ($request->getHost() == "m.arriendas.cl") {
-                Utils::reportError($e->getMessage(), "version Mobile cars/setOption");
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "cars/setOption");
             }
         }
 
@@ -372,8 +372,6 @@ class carsActions extends sfActions {
         
         return sfView::NONE;        
     }
-
-    ///////////////////////
 
     /*editar auto*/   
     public function executeEdit(sfWebRequest $request) { 
@@ -596,9 +594,9 @@ class carsActions extends sfActions {
             }
 
             if ($babyChair != "false") {
-                $bool = true;
+                $babyChair = true;
             } else {
-                $bool = false;
+                $babyChair = false;
             }
 
             /*if ((is_null($User) && $User->getConfirmed()) || !$User->getConfirmedFb()) {
@@ -609,11 +607,13 @@ class carsActions extends sfActions {
                 $fechaHoy = Date("Y-m-d H:i:s");
                 $Car->setFechaSubida($fechaHoy); 
                 $send = 1;
+                $url = $this->generateUrl('car_price');
             }else{
                 $Car = Doctrine_Core::getTable('car')->find($carId);
                 if($Car->getLat() != $lat && $Car->getLng() != $lng) {
                     $changeDistance = 1;
                 }
+                $url = $this->generateUrl('cars');
             }
             
             $Commune = Doctrine_Core::getTable('Commune')->find($commune);
@@ -632,7 +632,7 @@ class carsActions extends sfActions {
             $Car->setLat($lat);
             $Car->setLng($lng);
             $Car->setCityId(27);
-            $Car->setBabyChair($bool);
+            $Car->setBabyChair($babyChair);
             $Car->setCapacity($capacity);
             $Car->setAccesoriosSeguro($string);
             $Car->setCityId(27);
@@ -685,7 +685,7 @@ class carsActions extends sfActions {
 
             $this->getUser()->setAttribute("carId", $Car->getId());
 
-            $url = $this->generateUrl('cars');
+            
             $return["url_complete"] = $url;
 
         } catch (Exception $e) {
@@ -930,8 +930,8 @@ class carsActions extends sfActions {
             if ($e->getCode() == 1) {
                 $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
             }
-            if ($request->getHost() == "m.arriendas.cl" && $e->getCode() == 1) {
-                Utils::reportError($e->getMessage(), "version Mobile main/uploadPhoto");
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
+                Utils::reportError($e->getMessage(), "main/uploadPhoto");
             }
         }
 
@@ -1004,8 +1004,8 @@ class carsActions extends sfActions {
             if ($e->getCode() == 1) {
                 $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
             }
-            if ($request->getHost() == "m.arriendas.cl" && $e->getCode() == 1) {
-                Utils::reportError($e->getMessage(), "version Mobile main/uploadPhoto");
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
+                Utils::reportError($e->getMessage(), "main/uploadPhoto");
             }
         }
 
@@ -1078,8 +1078,8 @@ class carsActions extends sfActions {
             if ($e->getCode() == 1) {
                 $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
             }
-            if ($request->getHost() == "m.arriendas.cl" && $e->getCode() == 1) {
-                Utils::reportError($e->getMessage(), "version Mobile main/uploadPhoto");
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
+                Utils::reportError($e->getMessage(), "main/uploadPhoto");
             }
         }
 
@@ -1152,8 +1152,8 @@ class carsActions extends sfActions {
             if ($e->getCode() == 1) {
                 $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
             }
-            if ($request->getHost() == "m.arriendas.cl" && $e->getCode() == 1) {
-                Utils::reportError($e->getMessage(), "version Mobile main/uploadPhoto");
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
+                Utils::reportError($e->getMessage(), "main/uploadPhoto");
             }
         }
 
@@ -1226,8 +1226,8 @@ class carsActions extends sfActions {
             if ($e->getCode() == 1) {
                 $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
             }
-            if ($request->getHost() == "m.arriendas.cl" && $e->getCode() == 1) {
-                Utils::reportError($e->getMessage(), "version Mobile main/uploadPhoto");
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
+                Utils::reportError($e->getMessage(), "main/uploadPhoto");
             }
         }
 
@@ -1300,8 +1300,8 @@ class carsActions extends sfActions {
             if ($e->getCode() == 1) {
                 $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
             }
-            if ($request->getHost() == "m.arriendas.cl" && $e->getCode() == 1) {
-                Utils::reportError($e->getMessage(), "version Mobile main/uploadPhoto");
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
+                Utils::reportError($e->getMessage(), "main/uploadPhoto");
             }
         }
 
@@ -1331,7 +1331,7 @@ class carsActions extends sfActions {
         $this->cars = $q->execute();
     }
 
-    public function recortar_texto($texto, $limite=100)     {   
+    public function recortar_texto($texto, $limite=100) {   
         $texto = trim($texto);
         $texto = strip_tags($texto);
         $tamano = strlen($texto);

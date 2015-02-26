@@ -93,15 +93,15 @@
             <h1><strong>Contacto</strong><h1>
             <p><a href=<?php echo $telefono?>><?php echo $telefonoText?></a></p>
             <p>Manuel Montt 1404</p>
-            <p>Providencia, Santiago/Chile </p>
+            <p style="margin-bottom: -3px;">Providencia, Santiago/Chile </p>
             <div class="row">
                 <div class="collapse navbar-collapse " id="see-more">
                     <ul class="nav navbar-nav">
-                        <li><p><a href="<?php echo url_for('about_company') ?>" title="La compañía Arriendas.cl">La Compañía</a></p></li>
+                        <li><p><a href="<?php echo url_for('about_company') ?>" target="_blank" title="Sobre Arriendas.cl">La Compañía</a></p></li>
                         <li><p><a href="<?php echo url_for('terms_and_conditions') ?>" target="_blank" title="Términos y Condiciones">Términos y Condiciones</a></p></li>
                         <li><p><a href="https://arriendascl.zendesk.com/anonymous_requests/new" target="_blank" title="Contacto">Contacto</a></p></li>
                         <li><p><a href="https://arriendascl.zendesk.com/forums" target="_blank" title="Foro">Foro</a></p></li> 
-                        <li><p><a title="Mapa del sitio" class="item_thm fancybox"href="<?php echo url_for('site_map')?>">Mapa del Sitio</a></p></li>
+                        <li><p><a title="Mapa del sitio" class="item_thm fancybox"href="<?php echo url_for('site_map')?> " target="_blank">Mapa del Sitio</a></p></li>
                     </ul>
                 </div>
                 <div class="navbar-footer pull-left">

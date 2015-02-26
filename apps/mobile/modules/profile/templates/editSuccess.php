@@ -89,7 +89,7 @@
 
                 <input class="form-control" name="telephone" id="telephone" placeholder="Teléfono" value="<?php if ($User->getTelephone()) echo $User->getTelephone() ?>" title="Celular" type="text">
 
-                <input class="datetimepicker form-control" id="birth" name="birth" placeholder="Fecha de nacimiento" value="<?php if ($User->getBirthdate()) echo date('d-m-Y', strtotime($User->getBirthdate())) ?>" type="text">
+                <input class="datetimepicker form-control" id="birth" readonly="readonly" name="birth" placeholder="Fecha de nacimiento" value="<?php if ($User->getBirthdate()) echo date('d-m-Y', strtotime($User->getBirthdate())) ?>" type="text">
                 <div class="row">
                     <i class="fa fa-exclamation-triangle"></i><span class="note"> Debes tener desde 24 años para utilizar arriendas.cl .</span>
                 </div>

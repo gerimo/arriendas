@@ -7,6 +7,10 @@ input, select, button, .alert {
     margin-top: 15px;
 }
 
+.form-control[readonly]{
+    background-color: #FFFFFF;  
+}
+
 h1.title-register {
 	text-align: center;;
     color: rgb(70, 70, 70);

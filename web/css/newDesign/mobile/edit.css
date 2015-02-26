@@ -22,6 +22,10 @@ input, select, button {
     font-weight: 300;
 }
 
+.form-control[readonly]{
+    background-color: #FFFFFF;  
+}
+
 @media only screen and (max-width:767px) {
 
 

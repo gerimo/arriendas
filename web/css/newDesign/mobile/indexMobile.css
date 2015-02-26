@@ -3,9 +3,9 @@ header .navbar-default {
     border-color: rgba(0, 0, 0, 0.8);
 }
 #section-home {
-        background-image: url("/images/newDesign/background-home.jpg");
-        margin-bottom: 5px;
-    }
+    background-image: url("/images/newDesign/background-home.jpg");
+    margin-bottom: 5px;
+}
 
 header .navbar-right .dropdown-menu{
     background-color: rgba(0, 0, 0, 0.8);
@@ -59,7 +59,7 @@ header .navbar-nav .navbar-right ul {
 }
 
 #section-home-carousel {
-    padding-top: 180px;
+    padding-top: 220px;
 }
 
 #section-home-carousel h1 {
@@ -92,50 +92,7 @@ header .navbar-nav .navbar-right ul {
     background: rgba(0,0,0,0.8);
     z-index: 9;
     padding: 40px 20px;
-
 }
-
-/*#section-map-filters {
-    background-color: #00aced;
-    color: white;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 15px;
-    padding: 29px 0px 26px 0px;
-}
-
-#section-map-filters .heading {
-    float: left;
-    font: 700 24px/26px 'Open Sans', sans-serif;
-    color: #fff;
-    position: relative;
-    padding: 0 30px 0 30px;
-}
-
-#section-map-filters .heading:before {
-    content: "";
-    position: absolute;
-    top: -31px;
-    right: 9px;
-    border-right: 5px solid #fff;
-    height: 46px;
-    -webkit-transform: rotate(-25deg);
-    -o-transform: rotate(-25deg);
-    -webkit-transform: rotate(-25deg);
-    transform: rotate(-25deg);
-}
-
-#section-map-filters .heading:after {
-    content: "";
-    position: absolute;
-    bottom: -36px;
-    right: 8px;
-    border-right: 5px solid #fff;
-    height: 52px;
-    -webkit-transform: rotate(22deg);
-    -moz-transform: rotate(22deg);
-    -o-transform: rotate(22deg);
-    transform: rotate(22deg);
-}*/
 
 #section-map{
     position: relative;
@@ -143,30 +100,6 @@ header .navbar-nav .navbar-right ul {
     -moz-box-shadow: 2px 2px 20px rgba(50, 50, 50, 0.5);
     box-shadow: 2px 2px 20px rgba(50, 50, 50, 0.5);
 }
-
-/*#section-map:before{
-    content: "";
-    bottom: -11px;
-    position: absolute;
-    background: url(/images/newDesign/border-tabs.png) repeat-x 50% 0;
-    width: 100%;
-    height: 22px;
-}*/
-
-/*#section-map-filters ul {
-    margin-top: 4px;
-    margin-left: -10%;
-}
-
-#section-map-filters li {
-    padding-right: 8px;
-    float: left;
-    list-style: none;   
-    font: 600 18px/20px 'Open Sans', sans-serif;
-}
-
-#section-map-filters .col-md-7 input[type=checkbox] { margin: 0 10px 0 10px; }*/
-
 
 #list-container {
     background-color: white;
@@ -529,9 +462,6 @@ button.see-more {
 }
 
 @media only screen and (max-width:992px) {
-
-    
-
     #btn-leese {
         position: absolute;
         top: 75%;
@@ -642,5 +572,11 @@ button.see-more {
         top: 67%;
         font-size: 14px;
         padding: 15px 5px;
+    }
+}
+
+@media only screen and (min-height: 1000px){
+    #section-home {
+        background-image: url("/images/newDesign/background-home.jpg");
     }
 }
