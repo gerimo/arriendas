@@ -84,7 +84,7 @@ EOF;
                                 break;
 
                             case 3:
-                                // tipo de notificacion Email
+                                // tipo de notificacion EMAIL USUARIO
                                 $mail    = new Email();
                                 $mailer  = $mail->getMailer();
                                 $message = $mail->getMessage();     
@@ -107,6 +107,29 @@ EOF;
                                 break;
 
                             case 4:
+                                // tipo de notificacion EMAIL PROPIETARIO
+                                $mail    = new Email();
+                                $mailer  = $mail->getMailer();
+                                $message = $mail->getMessage();     
+
+                                $subject = $title;
+                                $body    = $message;
+                                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+                                $to      = array($User->email => $User->firstname." ".$User->lastname);
+
+                                $message->setSubject($subject);
+                                $message->setBody($body, 'text/html');
+                                $message->setFrom($from);
+                                $message->setTo($to);
+                                $message->setReplyTo(array("ayuda@arriendas.cl" => "Ayuda Arriendas.cl"));
+                                //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                                
+                                $mailer->send($message);
+
+                                $countAction3 ++;
+                                break;
+
+                            case 5:
                                 // tipo de notificacion SOPORTE
                                 $mail    = new Email();
                                 $mailer  = $mail->getMailer();
@@ -127,7 +150,7 @@ EOF;
                                 $countAction4++;
                                 break;
 
-                            case 5:
+                            case 6:
                                 // tipo de notificacion ERROR
                                 $mail    = new Email();
                                 $mailer  = $mail->getMailer();
