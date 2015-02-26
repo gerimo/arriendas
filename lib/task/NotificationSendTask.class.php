@@ -64,7 +64,7 @@ EOF;
                     $Type         = $Notification->getNotificationType();
 
                     $title   = Notification::translator($User->id, $Notification->message_title, $Reserve ? $Reserve->id : null );
-                    $message = Notification::translator($User->id, $Notification->message, $Reserve ? $Reserve->id : null );
+                    $notificationMessage = Notification::translator($User->id, $Notification->message, $Reserve ? $Reserve->id : null );
 
                     if($Notification->is_active && $Action->is_active && $Type->is_active) {
                         switch ($Type->id) {
@@ -84,7 +84,7 @@ EOF;
                                     $title = "";
                                 }
 
-                                $SMS->send($title.$message, $User->telephone);
+                                $SMS->send($title.$notificationMessage, $User->telephone);
 
                                 $countAction2 ++;
                                 break;
@@ -100,7 +100,7 @@ EOF;
                                 $this->log("title & body definidos");
 
                                 $subject = $title;
-                                $body    = $message;
+                                $body    = $notificationMessage;
                                 $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                                 $to      = array($User->email => $User->firstname." ".$User->lastname);
 
@@ -114,7 +114,7 @@ EOF;
                                 //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
                                 
                                 $this->log("envío");
-                                
+
                                 $mailer->send($message);
 
                                 $countAction3 ++;
@@ -127,7 +127,7 @@ EOF;
                                 $message = $mail->getMessage();     
 
                                 $subject = $title;
-                                $body    = $message;
+                                $body    = $notificationMessage;
                                 $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                                 $to      = array($User->email => $User->firstname." ".$User->lastname);
 
@@ -150,7 +150,7 @@ EOF;
                                 $message = $mail->getMessage();     
 
                                 $subject = $title;
-                                $body    = $message;
+                                $body    = $notificationMessage;
                                 $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                                 $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
 
@@ -171,7 +171,7 @@ EOF;
                                 $message = $mail->getMessage();     
 
                                 $subject = $title;
-                                $body    = $message;
+                                $body    = $notificationMessage;
                                 $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                                 $to      = array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne");
 
