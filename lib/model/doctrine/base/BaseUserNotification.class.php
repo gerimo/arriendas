@@ -19,7 +19,6 @@ abstract class BaseUserNotification extends sfDoctrineRecord {
 
         $this->hasColumn('created_at', array(
             'type' => 'datetime',
-            'notnull' => true
         ));
 
         $this->hasColumn('notification_id', array(
