@@ -33,7 +33,7 @@ class UserNotificationTable extends Doctrine_Table {
             ->innerJoin('UN.Notification N')
             ->where('UN.sent_at is null')
             ->andWhere('UN.user_id = ?', $userId)
-            ->andWhere('N.action_id = 1');
+            ->andWhere('N.notification_type_id = 1');
 
         return $q->fetchOne();
     }
