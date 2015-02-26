@@ -7,7 +7,7 @@ class opportunityActions extends sfActions {
         $this->oOC = Doctrine_Core::getTable("OpportunityConfig")
             ->createQuery('OC')->fetchOne();
 
-        $this->log = shell_exec("head -n 500 ../log/opportunityGenerate.log | sort -r");
+        $this->log = shell_exec("tail -n 500 ../log/opportunityGenerate.log | sort -r");
     }
 
     public function executeCreate(sfWebRequest $request) {
