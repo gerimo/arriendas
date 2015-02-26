@@ -28,11 +28,14 @@ class Notification extends BaseNotification {
     public static function translator($userId, $message, $reserveId = null){
         $User = Doctrine_Core::getTable("user")->find($userId);
         if($User) {
+
+            $message = str_replace("{User.id}", $User->id, $message);
             $message = str_replace("{User.firstname}", $User->firstname, $message);
             $message = str_replace("{User.lastname}", $User->lastname, $message);
             $message = str_replace("{User.birthdate}", $User->birthdate, $message);
             $message = str_replace("{User.rut}", $User->getRutFormatted(), $message);
             $message = str_replace("{User.email}", $User->email, $message);
+            $message = str_replace("{User.telephone}", $User->telephone, $message);
             $message = str_replace("{User.address}", $User->address, $message);
             $message = str_replace("{User.commune}", $User->getCommune()->name, $message);
             $message = str_replace("{User.region}", $User->getCommune()->getRegion()->name, $message);
