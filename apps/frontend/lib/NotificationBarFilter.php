@@ -11,23 +11,23 @@ class NotificationBarFilter extends sfFilter {
             $userId = $ContextUser->getAttribute('userid');
             $User   = Doctrine_core::getTable("User")->find($userId);
 
-            $UserNotification = Doctrine_Core::getTable('UserNotification')->findOneByUserIdAndViewedAtAsNull($userId);
+            $UserNotification = Doctrine_Core::getTable('UserNotification')->findBarNotification($userId);
 
             if ($UserNotification) {
 
-                $reserveId = $ContextUser->getAttribute('reserveId');
+                if ($UserNotification->getNotification()->is_active &&
+                    $UserNotification->getNotification()->getAction()->is_active &&
+                    $UserNotification->getNotification()->getNotificationType()->is_active) {
+                
+                    $message = Notification::translator($User->id, $UserNotification->getNotification()->message, $UserNotification->reserve_id);
 
-                if(!$reserveId){
-                    $reserveId = null;
-                }
+                    $ContextUser->setAttribute("notificationMessage", $message);
+                    $ContextUser->setAttribute("notificationId", $UserNotification->getNotification()->id);
 
-                $message = Notification::translator($User->id, $UserNotification->getNotification()->message, $reserveId);
-
-                $ContextUser->setAttribute("notificationMessage", $message);
-                $ContextUser->setAttribute("notificationId", $UserNotification->getNotification()->id);
-                if (is_null($UserNotification->getViewedAt())) {
-                    $UserNotification->setViewedAt(date("Y-m-d H:i:s"));
-                    $UserNotification->save();
+                    if (is_null($UserNotification->getViewedAt())) {
+                        $UserNotification->setViewedAt(date("Y-m-d H:i:s"));
+                        $UserNotification->save();
+                    }
                 }                
             }
         }

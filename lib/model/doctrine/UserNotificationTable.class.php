@@ -26,12 +26,15 @@ class UserNotificationTable extends Doctrine_Table {
         return $q->execute();
     }
 
-    public function findOneByUserIdAndViewedAtAsNull($userId) {
+    public function findBarNotification($userId) {
 
         $q = Doctrine_Core::getTable("UserNotification")
             ->createQuery('UN')
-            ->where('UN.sent_at is null')
-            ->andWhere('UN.user_id = ?', $userId);
+            ->innerJoin('UN.Notification N')
+            ->where('UN.sent_at IS NOT NULL')
+            ->andWhere('UN.closed_at IS NULL')
+            ->andWhere('UN.user_id = ?', $userId)
+            ->andWhere('N.notification_type_id = 1');
 
         return $q->fetchOne();
     }
