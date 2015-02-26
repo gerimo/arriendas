@@ -612,6 +612,7 @@
 		} else { 
 			$("#deleteButton").show();
 			$("#saveButton").show();
+			$("#photoDamage").show();
 			$("#saveButton").html("Editar");
 			$("#descriptionDiv").show();
 
