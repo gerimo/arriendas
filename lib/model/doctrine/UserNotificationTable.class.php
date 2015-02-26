@@ -30,8 +30,10 @@ class UserNotificationTable extends Doctrine_Table {
 
         $q = Doctrine_Core::getTable("UserNotification")
             ->createQuery('UN')
+            ->innerJoin('UN.Notification N')
             ->where('UN.sent_at is null')
-            ->andWhere('UN.user_id = ?', $userId);
+            ->andWhere('UN.user_id = ?', $userId)
+            ->andWhere('N.action_id = 1');
 
         return $q->fetchOne();
     }
