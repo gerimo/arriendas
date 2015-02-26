@@ -1,0 +1,97 @@
+body {
+    background-image: url('/images/newDesign/background.jpg');
+}
+
+p {
+    margin: 0;
+    padding: 0;
+}
+
+.loading {
+    display: none;
+    height: 31px;
+    margin-top: 30px;
+    width: 31px;
+}
+
+.paid-reserve-container .loading {
+    margin-top: 14px;
+}
+
+.metro {
+    height: 15px;
+    width:20px;
+}
+
+.price {
+    color: rgb(186, 19, 95);
+    font-size: 16px;
+}
+
+.selected {
+    font-size: 24px;
+    margin-top: 10px;
+}
+
+.reject {
+    cursor: pointer;
+}
+
+.extend, .approve, .approved {
+    margin-top: 6px;
+}
+
+.reserved, .change, .change-with-availability {
+    margin-top: 10%;
+}
+
+.fa-check {
+    color: #00aced !important;
+    font-size: 45px;
+}
+
+.paid-reserve-container {
+    border: solid 1px #ddd;
+    margin-top: 20px;
+}
+
+.panel-group .panel+.panel {
+    margin-top: 20px;
+}
+
+.panel-default > .panel-heading {
+    background-color: rgb(255, 255, 255);
+    /*border: solid 1px rgb(200, 200, 200);*/
+    border-radius: 0 !important;
+    padding: 5px 0 0 0;
+}
+
+.panel-body {
+    padding: 0 0 15px 0;
+}
+
+.panel-body .row {
+    margin-top: 15px;
+}
+
+#extend-alert {
+    line-height: 28px;
+}
+
+#extend-loading {
+    width: 33px;
+}
+
+#payExtend {
+    margin-left: 10px;
+}
+
+@media only screen and (max-width:767px){
+
+    .loading {
+    display: none;
+    height: 31px;
+    margin-top: 5px;
+    width: 31px;
+}
+}

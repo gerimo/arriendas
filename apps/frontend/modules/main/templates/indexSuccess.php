@@ -440,7 +440,7 @@
                     article += "<div class='col-xs-8 col-md-8 text'>";
                     article += "<h2>"+ Car.brand +" "+ Car.model +"<small>, "+Car.year+"</small></h2>";
                     /*article += "<span class='sub-heading'>A 2 km Metro <strong>Tobalaba</strong></span>";*/
-                    article += "<p class='price'>$"+ Car.price +" <small style='color: black; font-weight: 300'>TOTAL</small></p>";
+                    article += "<p class='price'>$"+ Car.price +" <small style='color: black; font-weight: 300'>TOTAL FINAL</small></p>";
                     article += "<div class='metro'><p><img class='km-area' src='/images/newDesign/ico.png' alt='metro'> A <b><em>"+Car.nearestMetroDistance+"</em> km</b> del Metro "+Car.nearestMetroName+"</p></div>"
                     article += "<p class='text-right'><a class='btn btn-a-action btn-sm' href='"+reserveUrl.replace("carId", Car.id)+"' class='reserve' target='_blank'>RESERVAR</a></p>";
                     /*article += "<img src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + contador + "|05a4e7|ffffff' />";*/
@@ -520,7 +520,7 @@
                 <h2>Hay un auto en tu comuna o en un metro cercano.</h2>
             </div>            
         </div>
-        <button id="btn-leese" data-target="#section-map-form-search">Arrienda ahora</button>
+        <button class="hidden-xs" id="btn-leese" data-target="#section-map-form-search">Arrienda ahora</button>
     </div>
 
     <div class="row" id="section-map-form-search">
