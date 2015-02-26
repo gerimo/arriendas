@@ -21,12 +21,18 @@ Call it with:
 EOF;
     }
 
+
+
     protected function execute($arguments = array(), $options = array()) {
 
         $config = ProjectConfiguration::getApplicationConfiguration("frontend", "prod", TRUE);
         sfContext::createInstance($config);
         $context = sfContext::createInstance($this->configuration);
         $context->getConfiguration()->loadHelpers('Partial');
+
+        // initialize the database connection
+        $databaseManager = new sfDatabaseManager($this->configuration);
+        $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
 
         // contadores 
         $countAction2               = 0;
