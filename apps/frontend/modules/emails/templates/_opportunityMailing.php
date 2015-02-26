@@ -16,12 +16,12 @@
         <th style='text-align: left'><?php echo date("d-m-Y H:i", strtotime($Reserve->getFechaTermino2())) ?></th>
     </tr>
     <tr>
-        <td style='text-align: left'>Valor</td>
+        <td style='text-align: left'>Valor total del arriendo</td>
         <th style='text-align: left'>$<?php echo number_format($Reserve->price, 0, ',', '.') ?></th>
     </tr>
 </table>
 
-<p>Para postular a esta oportunidad, puedes hacerlo haciendo <strong><a href='<?php echo $acceptUrl ?>'>click aquí</a></strong>.</p>
+<p>Haciendo <strong><a href='<?php echo $acceptUrl ?>'>click aquí</a></strong> ya estarás postulando a esta oportunidad.</p>
 
 <?php include_partial("emails/footer", array("userId" => $Owner->id, "mailingId" => 1)) ?>
 
