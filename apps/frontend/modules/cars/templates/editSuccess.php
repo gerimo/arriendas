@@ -256,7 +256,7 @@
                 <input id="carId" name="carId" type="hidden" value="<?php if($Car->id) echo $Car->id ?>">
             </form>
             <div class="col-md-offset-8 col-md-4">
-                <button class="btn-a-primary btn-block" name="save" onclick="validateForm()">Guardar</button>
+                <button class="btn-a-primary btn btn-block" name="save" onclick="validateForm()">Guardar</button>
                 <p class="alert"></p> 
             </div>
 
@@ -299,7 +299,7 @@
                 </fieldset>
             </form>
             <div class="col-md-offset-8 col-md-4">
-                <button class="btn-a-primary btn-block" id="save" onclick="validateFormPrice()">Guardar</button>
+                <button class="btn-a-primary btn btn-block" id="save" onclick="validateFormPrice()">Guardar</button>
                 <p class="alertPrice"></p> 
             </div>
 
