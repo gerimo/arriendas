@@ -15,16 +15,19 @@ class NotificationBarFilter extends sfFilter {
 
             if ($UserNotification) {
 
-error_log("UN: ".$UserNotification->getId());
+                if ($UserNotification->getNotification()->is_active &&
+                    $UserNotification->getNotification()->getAction()->is_active &&
+                    $UserNotification->getNotification()->getNotificationType()->is_active) {
                 
-                $message = Notification::translator($User->id, $UserNotification->getNotification()->message, $UserNotification->reserve_id);
+                    $message = Notification::translator($User->id, $UserNotification->getNotification()->message, $UserNotification->reserve_id);
 
-                $ContextUser->setAttribute("notificationMessage", $message);
-                $ContextUser->setAttribute("notificationId", $UserNotification->getNotification()->id);
+                    $ContextUser->setAttribute("notificationMessage", $message);
+                    $ContextUser->setAttribute("notificationId", $UserNotification->getNotification()->id);
 
-                if (is_null($UserNotification->getViewedAt())) {
-                    $UserNotification->setViewedAt(date("Y-m-d H:i:s"));
-                    $UserNotification->save();
+                    if (is_null($UserNotification->getViewedAt())) {
+                        $UserNotification->setViewedAt(date("Y-m-d H:i:s"));
+                        $UserNotification->save();
+                    }
                 }                
             }
         }
