@@ -379,4 +379,16 @@ class ReserveTable extends Doctrine_Table {
                 ->andWhere('HOUR(TIMEDIFF(NOW(), DATE_ADD(r.date, INTERVAL r.duration HOUR))) >  ?', sfConfig::get("app_horas_para_moroso"));
         return $q->count();
     }
+
+    public function findPaidReserves() {
+
+        $q = Doctrine_Core::getTable("Reserve")
+            ->createQuery('R')
+            ->innerJoin('R.Transaction T')
+            ->where('T.completed = 1');
+
+        return $q->execute();
+
+    }
+
 }

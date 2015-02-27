@@ -1661,4 +1661,18 @@ class User extends BaseUser {
         $rutComplete = (string)$this->rut."-".$this->rut_dv;
         return $rutComplete;
     }
+
+    public function hasPayments(){
+        $q = Doctrine_Core::getTable("Transaction")
+            ->createQuery('T')
+            ->where('T.user_id = ?', $this->id)
+            ->andWhere('T.completed = 1');
+
+        $result = $q->execute();
+
+        if($result == 0){
+            return 0;
+        }
+        return 1;
+    }
 }

@@ -59,6 +59,7 @@ class reservesActions extends sfActions {
             }
 
             $Reserve->setConfirmed(1);
+
             /*$Reserve->setCanceled(0);*/
             $Reserve->setFechaConfirmacion(date("Y-m-d H:i:s"));
 
@@ -73,6 +74,9 @@ class reservesActions extends sfActions {
 
             // Correo de notificación
             $User    = $Reserve->getUser();
+
+             // Notificaciones
+            Notification::make($User->id, 14, $Reserve->id); // Confirmar pago
 
             $mail    = new Email();
             $mailer  = $mail->getMailer();
@@ -691,6 +695,9 @@ class reservesActions extends sfActions {
             $mailer  = $mail->getMailer();
             $message = $mail->getMessage();
             $User    = $Reserve->getUser();
+
+             // Notificaciones
+            Notification::make($User->id, 15, $Reserve->id); // Rechazar pago
 
             $message->setSubject("La reserva ha sido rechazada");
             $message->setBody($this->getPartial('emails/reserveRejected', array('Reserve' => $Reserve)), 'text/html');
