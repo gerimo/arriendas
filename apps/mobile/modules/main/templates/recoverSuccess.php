@@ -1,6 +1,5 @@
-<link href="/css/newDesign/recover.css" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/mobile/recover.css" rel="stylesheet" type="text/css">
 
-<div class="hidden-xs space-100"></div>
 <div class="visible-xs space-50"></div>
 <div class="row">
     <div class="col-md-offset-4 col-md-4">
@@ -25,7 +24,6 @@
 
             </form>
             <div class="visible-xs space-20"></div> 
-            <div class="hidden-xs space-40"></div> 
             <div class="row">
                 <div class="alert"></div>
                 <div class="col-md-offset-7 col-md-5" style="padding: 0">
@@ -40,8 +38,7 @@
             <p class="text-center"><?php echo link_to("Volver al inicio","main/index"); ?> </p>
         </div>
     </div>
-</div>
-<div class="hidden-xs space-100"></div>  
+</div> 
 
 
 <script>
