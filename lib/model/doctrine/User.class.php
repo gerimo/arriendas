@@ -1657,6 +1657,12 @@ class User extends BaseUser {
         return $rutFormatted;
     }
 
+    public function getRutBankFormatted() {
+        $rutNumber = number_format($this->getBankAccount()->rut_bank,0,"",".");
+        $rutFormatted = (string)$rutNumber."-".$this->getBankAccount()->rut_dv_bank;
+        return $rutFormatted;
+    }
+
     public function getRutComplete() {
         $rutComplete = (string)$this->rut."-".$this->rut_dv;
         return $rutComplete;

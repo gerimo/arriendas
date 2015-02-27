@@ -219,6 +219,7 @@ class carsActions extends sfActions {
         $isLowConsumption   = $request->getPostParameter('isLowConsumption', false) === 'true' ? true : false;
         $isMorePassengers   = $request->getPostParameter('isMorePassengers', false) === 'true' ? true : false;
         $haveChair          = $request->getPostParameter('haveChair', false) === 'true' ? true : false;
+        $isAirportDelivery  = $request->getPostParameter('isAirportDelivery', false) === 'true' ? true : false;
         $nearToSubway       = $request->getPostParameter('nearToSubway', false) === 'true' ? true : false;
 
         try {
@@ -234,7 +235,7 @@ class carsActions extends sfActions {
                 $withAvailability = true;
             }
 
-            $return["cars"] = CarTable::findCars($offset, $limit, $from, $to, $withAvailability, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $haveChair, $nearToSubway);
+            $return["cars"] = CarTable::findCars($offset, $limit, $from, $to, $withAvailability, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $haveChair, $nearToSubway, $isAirportDelivery);
             /*error_log("Autos encontrados: ".count($return["cars"]));*/
 
         } catch (Exception $e) {
@@ -489,6 +490,7 @@ class carsActions extends sfActions {
             $babyChair           = $request->getPostParameter("babyChair", null);
             $vidriosElectricos   = $request->getPostParameter("vidriosElectricos", null);
             $capacity            = $request->getPostParameter("capacity", null);
+            $isAirportDelivery   = $request->getPostParameter("isAirportDelivery", null);
             $string = "";
 
             /*$userId_session = $this->getUser()->getAttribute("userid");
@@ -596,9 +598,15 @@ class carsActions extends sfActions {
             }
 
             if ($babyChair != "false") {
-                $bool = true;
+                $babyChair = true;
             } else {
-                $bool = false;
+                $babyChair = false;
+            }
+
+            if ($isAirportDelivery != "false") {
+                $isAirportDelivery = true;
+            } else {
+                $isAirportDelivery = false;
             }
 
             /*if ((is_null($User) && $User->getConfirmed()) || !$User->getConfirmedFb()) {
@@ -634,9 +642,10 @@ class carsActions extends sfActions {
             $Car->setLat($lat);
             $Car->setLng($lng);
             $Car->setCityId(27);
-            $Car->setBabyChair($bool);
+            $Car->setBabyChair($babyChair);
             $Car->setCapacity($capacity);
             $Car->setAccesoriosSeguro($string);
+            $Car->setIsAirportDelivery($isAirportDelivery);
             $Car->setCityId(27);
 
             $Car->save();

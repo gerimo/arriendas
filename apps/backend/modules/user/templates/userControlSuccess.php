@@ -33,6 +33,7 @@
 					<th>Nombre</th>
 					<th>Teléfono</th>
 					<th>Email</th>
+                    <th>Rut</th>
 					<th>Dirección</th>
                     <th>bloqueado</th>
                     <th>Antecedentes Validado</th>
@@ -61,6 +62,10 @@
                         <div id="col-md-offset-3 col-md-6">  
                             <img id="photo" style="width:100%; height:auto"></img>
                         </div>
+                    </div>
+                    <div id="photoL">
+                        <label>Foto Licencia</label>
+                        <input name="photo" type="file" class="file-loading" id="photoLicense" accept="image/*" data-id="10">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -97,6 +102,18 @@
 			paging: true,
 			responsive: true
 		});    
+
+        $("#photoLicense").fileinput({
+
+            allowedFileExtensions: ["jpg", "gif", "png", "bmp","jpeg"],
+            uploadUrl: '<?php echo url_for("user_upload_photo")?>',
+            dropZoneEnabled: false,
+            showRemove: false,  
+            elErrorContainer: false,
+            showPreview: false,
+            uploadExtraData:function() { return {userId: $("#userId").val()}; },
+            /*showCaption: false,*/
+        }); 
 	}); 
 
 	$('body').on("click", ".comment", function(e){
@@ -128,9 +145,9 @@
                     var checkValid      = optionSelected(v.user_valid, v.user_id, 2);
                     var checkForeign    = optionSelected(v.user_foreign, v.user_id, 3);
                     var facebook        = facebookUrl(v.user_facebook);
-                    var photo           = photoLincense(v.user_license, v.user_id); 
+                    var checkLicense    = photoLicense(v.user_license, v.user_id); 
 					var button = "<a class='btn btn-block btn-primary comment' href='"+urlComment.replace("userIdPattern", v.user_id)+"'>Comentarios</a>";
-					$('#userControlTable').DataTable().row.add([ v.user_id, v.user_fullname, v.user_telephone, v.user_email, v.user_address,checkBloqued, checkValid, checkForeign, facebook, photo, button ]).draw();
+					$('#userControlTable').DataTable().row.add([ v.user_id, v.user_fullname, v.user_telephone, v.user_email, v.user_rut, v.user_address,checkBloqued, checkValid, checkForeign, facebook, checkLicense, button ]).draw();
 				});
 				$(".load").hide();
 			}
@@ -162,18 +179,20 @@
         return select;
     }
 
-    function photoLincense(license, userId) {
+    function photoLicense(license, userId) {
 
         if (license) {
             
-            var select ="<a type='button' class='btn btn-primary photo' data-license='"+license+"' data-user-id='"+userId+"' onClick'poto()'>Licencia</a>"
+            var select ="<a type='button' class='btn btn-primary photo' data-license='"+license+"' data-user-id='"+userId+"'>Licencia</a>";
            
         } else {
-            var select ="<label>no posee licencia</label>"
+
+            var select ="<a type='button' class='btn btn-primary photo1' data-user-id='"+userId+"'>Subir Licencia</a>";
         }
 
         return select;
     }
+
 
     $('body').on("click", ".photo", function(e){
 
@@ -182,6 +201,16 @@
         var n = license.lastIndexOf("/");
         var res = license.slice(n+1);
         $("#photo").attr("src", "https://www.arriendas.cl/images/licence/"+res);
+        $("#photoModal").modal('show');
+        $("#userId").val(userId);
+    });
+
+    $('body').on("click", ".photo1", function(e){
+        $("#myModalLabel").html("Subir Foto Licencia");
+        $(".modal-footer").hide();
+        $("#carDamages").hide();
+        $("#photoL").show();
+        var userId  = $(this).data("user-id");
         $("#photoModal").modal('show');
         $("#userId").val(userId);
     });
@@ -231,7 +260,10 @@
         findUserControl();
     });
 
-
+    $('#photoLicense').on('filebatchuploadsuccess', function(event, data, previewId, index) {
+        findReserves(); 
+        $("#photoModal").modal('hide');
+    });
     
 
 

@@ -343,6 +343,7 @@
 
         <!-- FORMULARIO -->
         <input id="car" name="car" type="hidden" value="<?php echo $Car->getId() ?>">
+         <input id="option" name="option" type="hidden" value="1">
         <input id="from" name="from" type="hidden" value="<?php echo $from ?>">
         <input id="to" name="to" type="hidden" value="<?php echo $to ?>">
     </form>

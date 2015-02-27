@@ -46,6 +46,42 @@
 		</table>  
 	</div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="photoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Datos de Cuenta de usuario</h4>
+                </div>
+                <div class="modal-body col-md-12">
+                    <input class="form-control" name="rutAccount" id="rutAccount" placeholder="Rut de cuenta"  type="text"> 
+                    <div class="space-10"></div>
+                    <input class="form-control" name="numberAccount" id="numberAccount" placeholder="N° de cuenta" type="text">   
+                    <div class="space-10"></div>
+                    <select class="form-control" id="bank" name="bank">
+                        <option value="0">Seleccione su banco</option>
+                        <?php foreach ($Banks as $Bank): ?>
+                            <option value="<?php echo $Bank->id ?>"><?php echo $Bank->name ?></option>
+                        <?php endforeach ?>
+                    </select>
+                    <div class="space-10"></div>
+                    <select class="form-control" id="account" name="account">
+                        <option value="0">Seleccione el tipo de cuenta</option>
+                        <?php foreach ($BankAccountTypes as $BankAccountType): ?>
+                            <option value="<?php echo $BankAccountType->id ?>"><?php echo $BankAccountType->name ?></option>
+                        <?php endforeach ?>
+                    </select>
+                    <div class="space-30"></div>
+                </div>
+                <div class="modal-footer">
+                    <button data-dismiss="modal" datatype="button" class="btn btn-danger">Cerrar</button>
+                    <button type="button" class="btn btn-success" onclick="saveAccount()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 	<div style="display:none">
         <input id="userI">
 		<div id="dialog-alert" title="">
@@ -64,7 +100,7 @@
 
 		findExpiredReserves();
 	 
-		$('#expiredReservesTable').DataTable({
+	   $('#expiredReservesTable').DataTable({
 			info: false,
 			paging: true,
 			responsive: true
@@ -110,9 +146,9 @@
 			} else {	
 				$('#expiredReservesTable').DataTable().rows().remove().draw();
 				$.each(r.data, function(k, v){  
-                    console.log(v.t_is_paid_user);
                     var paidUser  = optionSelected(v.t_is_paid_user, v.t_id, 1);
-					$('#expiredReservesTable').DataTable().row.add([v.uc_id, v.uc_fullname, v.uc_telephone, v.uc_email, v.r_id, v.r_date, v.r_duration, v.r_price, v.r_fortnightly ,v.t_number, paidUser]).draw();
+                    var button = "<a class='btn btn-block btn-primary datos' data-user-id='"+v.uc_id+"' >Datos de cuenta</a>";
+					$('#expiredReservesTable').DataTable().row.add([v.uc_id, v.uc_fullname, v.uc_telephone, v.uc_email, button, v.r_id, v.r_date, v.r_duration, v.r_price, v.r_fortnightly ,v.t_number, paidUser]).draw();
 				});
 				$(".load").hide();
 			}
@@ -156,5 +192,37 @@
             }
         }, 'json')
     });
+
+    $('body').on("click", ".datos", function(e){
+
+        $("#userId").val($(this).data("user-id"));
+        $("#photoModal").modal('show');
+    });
+
+    function saveAccount() {
+
+        var userId = $("#userId").val();
+        var rutAccount     = $("#rutAccount").val();
+        var numberAccount  = $("#numberAccount").val();
+        var bankId         = $("#bank option:selected").val();
+        var accountId      = $("#account option:selected").val();
+
+        var parameters = {
+            "userId" : userId,
+            "rutAccount": rutAccount,
+            "numberAccount": numberAccount,
+            "bankId": bankId,
+            "accountId": accountId
+        }
+
+        $.post("<?php echo url_for('user_edit_account') ?>", parameters, function(r){
+            if (r.error) {
+                alert(r.errorMessage);
+            } else {
+                $("#photoModal").modal('hide');
+            }
+        }, 'json')
+
+    }
 
 </script>

@@ -42,7 +42,7 @@ class CarTable extends Doctrine_Table {
         return $q->execute();
     }
 
-    public function findCars($offset, $limit, $from, $to, $withAvailability, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $haveChair, $nearToSubway) {
+    public function findCars($offset, $limit, $from, $to, $withAvailability, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $haveChair, $nearToSubway, $isAirportDelivery) {
 
         $CarsFound = array();
 
@@ -116,6 +116,11 @@ class CarTable extends Doctrine_Table {
             if ($haveChair) {
                 /*error_log("$haveChair");*/
                 $q->andWhere("C.baby_chair = true");
+            }
+
+            if ($isAirportDelivery) {
+                /*error_log("$isAirportDelivery");*/
+                $q->andWhere("C.is_airport_delivery = true");
             }
 
             if ($nearToSubway) {

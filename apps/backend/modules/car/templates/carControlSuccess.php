@@ -40,6 +40,7 @@
 					<th>Cant. reserva ult. 3 meses</th>
 					<th>Nombre usuario</th>
 					<th>Telefono usuario</th>
+					<th>email usuario</th>
 				</tr>
 			</thead>
 
@@ -87,7 +88,7 @@
 				$('#reserveTable').DataTable().rows().remove().draw();
                 $('#reserveTable').DataTable().column(0).order( 'desc' );
 				$.each(r.data, function(k, v){
-					$('#reserveTable').DataTable().row.add([v.id, v.comunne, v.brand, v.model, v.year, v.transmission, v.type, v.nearestMetroName, v.QuantityOfLatestRents, v.user_name , v.user_telephone]).draw();
+					$('#reserveTable').DataTable().row.add([v.id, v.comunne, v.brand, v.model, v.year, v.transmission, v.type, v.nearestMetroName, v.QuantityOfLatestRents, v.user_name , v.user_telephone, v.user_email]).draw();
 				});
 				$(".load").hide();
 			}

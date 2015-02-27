@@ -204,6 +204,10 @@ class profileActions extends sfActions {
             $birth          = $request->getPostParameter("birth", null);
             $address        = $request->getPostParameter("address", null);
             $commune        = $request->getPostParameter("commune", null);
+            $rutAccount     = $request->getPostParameter("rutAccount", null);
+            $numberAccount  = $request->getPostParameter("numberAccount", null);
+            $bankId         = $request->getPostParameter("bankId", null);
+            $accountId      = $request->getPostParameter("accountId", null);
 
             $userId = $this->getUser()->getAttribute("userid");
 
@@ -277,6 +281,43 @@ class profileActions extends sfActions {
                 throw new Exception("Debes indicar tu comuna", 1);
             }
 
+            if (is_null($rutAccount) || $rutAccount == "") {
+                    throw new Exception("Debes indicar el rut del banco", 1);
+            } else {
+
+                $rutAccount      = Utils::isValidRUT($rutAccount);
+                $dvAccount       = substr($rutAccount, -1);
+                $rutNumberAccount   = substr($rutAccount, 0, -1);
+
+                if ($rutAccount == false || strlen($rutNumberAccount)>8) {
+                    throw new Exception("el rut del banco ingresado es inválido", 1);
+                }            
+            }
+
+            if (is_null($numberAccount) || $numberAccount == "") {
+                throw new Exception("Debes indicar tu N° de cuenta", 1);
+            }
+
+            if (is_null($bankId) || $bankId == "0") {
+                throw new Exception("Debes indicar tu banco", 1);
+            }
+
+            if (is_null($accountId) || $accountId == "0") {
+                throw new Exception("Debes indicar el tipo de cuenta", 1);
+            }
+
+            $bankAccount = $User->getBankAccount();
+            if ($bankAccount) {
+                $bankAccount->setNumber($numberAccount);
+                $bankAccount->setRutBank($rutNumberAccount);
+                $bankAccount->setRutDvBank($dvAccount);
+                $bankAccount->setBankId($bankId);
+                $bankAccount->setBankAccountTypeId($accountId);
+                $bankAccount->setCreatedAt(date("Y-m-d H:i:s"));
+                $bankAccount->save();
+            }
+
+
             $User->setFirstname($firstname);
             $User->setLastname($lastname);
             $User->setApellidoMaterno($motherLastname ? $motherLastname : "");
@@ -339,6 +380,8 @@ class profileActions extends sfActions {
         $userId = $this->getUser()->getAttribute("userid");
 
         $this->User = Doctrine_Core::getTable('User')->find($userId);
+        $this->Banks = Doctrine_Core::getTable('Bank')->findAll();
+        $this->BankAccountTypes = Doctrine_Core::getTable('BankAccountType')->findAll();
 
         // Si el usuario posee "extranjero" = false y "rut" = null entonces se setea "extranjero" a true
         // en el caso contrario ("extranjero" = true y "rut" != null) se setea a "extranjero" a false
