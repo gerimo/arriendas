@@ -406,6 +406,7 @@ abstract class BaseUser extends sfDoctrineRecord {
                 0 => 'commune_id',
             ),
         ));
+
         $this->index('id_UNIQUE', array(
             'fields' =>
             array(
@@ -450,6 +451,13 @@ abstract class BaseUser extends sfDoctrineRecord {
         $this->hasOne('Commune', array(
             'local' => 'commune_id',
             'foreign' => 'id',
+            'onDelete' => 'no action',
+            'onUpdate' => 'no action'
+        ));
+
+        $this->hasOne('BankAccount', array(
+            'local' => 'id',
+            'foreign' => 'user_id',
             'onDelete' => 'no action',
             'onUpdate' => 'no action'
         ));

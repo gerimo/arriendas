@@ -37,8 +37,9 @@ class ReserveTable extends Doctrine_Table {
             ->innerJoin('R.Transaction T')
             ->innerJoin('R.User U')
             ->Where('T.completed = 1')
-            ->andWhere('U.chequeo_judicial = 0')
-            ->andWhere('U.driver_license_file is null');
+            ->andWhere('U.chequeo_judicial = 0 or U.is_valid_license = 0')
+            ->groupBy('R.user_id')
+            ->orderBy('R.date DESC');
 
         if ($limit) {
             $q->limit($limit);
