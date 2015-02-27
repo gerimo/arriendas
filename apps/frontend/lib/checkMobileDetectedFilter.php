@@ -13,13 +13,19 @@ class checkMobileDetectedFilter extends sfFilter {
         $action = $this->context->getActionName();
 
         if ($this->isFirstCall()) {
-            $MD = new Mobile_Detect;
-            if ($MD->isMobile()) {
 
+            $MD = new Mobile_Detect;
+            $referer    = $request->getUri();
+
+            if ($MD->isMobile()) {
                 $host = str_replace("arriendas.cl", "m.arriendas.cl", $_SERVER ['HTTP_HOST']);
-                error_log("[De laptop => mobile] Me voy a http://".$host);
-                $this->getContext()->getController()->redirect('http://'.$host);
-                /*$this->redirect('http://www.google.com/');*/
+                $url  = str_replace("arriendas.cl", "m.arriendas.cl", $referer);
+                
+                if($this->getContext()->getActionStack()->getSize() != null){
+                    $this->getContext()->getController()->redirect($url);
+                } else {
+                    $this->getContext()->getController()->redirect('http://'.$host);
+                }
                 throw new sfStopException();
             }
         }
