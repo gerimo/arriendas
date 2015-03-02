@@ -459,7 +459,26 @@ class reservesActions extends sfActions {
                 throw new Exception("La extensión no se puede realizar debido a que el auto ya posee una reserva en la fecha consultada", 1);
             }
 
-            $price = CarTable::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth());
+            // Calculamos
+            $accumulatedPrice = 0;
+            $iterate = true;
+            $auxReserve = $Reserve;
+            
+            while ($iterate) {
+
+                $originalFrom     = $auxReserve->getDate();
+                $accumulatedPrice = $auxReserve->getPrice();
+                
+                if ($auxReserve->getIdPadre()) {
+                    $auxReserve = Doctrine_Core::getTable('Reserve')->find($auxReserve->getIdPadre());
+                } else {
+                    $iterate = false;
+                }
+            }
+
+            $extendedPrice = CarTable::getPrice($originalFrom, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth());
+
+            $price = $extendedPrice - $accumulatedPrice;
 
             if ($Reserve->getLiberadoDeGarantia()) {
                 $price += Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to);
