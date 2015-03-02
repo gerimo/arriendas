@@ -385,13 +385,13 @@ class reservesActions extends sfActions {
             throw new Exception("Falta fecha hasta", 1);
         }
 
-        $Car = $Reserve->getCar();        
+        $Car = $Reserve->getCar();
 
         $NewReserve = $Reserve->copy(true);
         $NewReserve->setCar($Car);
         $NewReserve->setDate($Reserve->getFechaTermino2());
         $NewReserve->setDuration(Utils::calculateDuration($from, $to));
-        $NewReserve->setPrice(CarTable::getPrice($from, $to, $Car->price_per_hour, $Car->price_per_day, $Car->price_per_week, $Car->price_per_month));
+        $NewReserve->setPrice($this->calculateExtendedPrice($Reserve, $to));
         $NewReserve->setComentario("Reserva extendida");
         $NewReserve->setFechaReserva(date("Y-m-d H:i:s"));
         $NewReserve->setIdPadre($Reserve->id);
@@ -459,26 +459,7 @@ class reservesActions extends sfActions {
                 throw new Exception("La extensión no se puede realizar debido a que el auto ya posee una reserva en la fecha consultada", 1);
             }
 
-            // Calculamos
-            $accumulatedPrice = 0;
-            $iterate = true;
-            $auxReserve = $Reserve;
-            
-            while ($iterate) {
-
-                $originalFrom     = $auxReserve->getDate();
-                $accumulatedPrice = $auxReserve->getPrice();
-                
-                if ($auxReserve->getIdPadre()) {
-                    $auxReserve = Doctrine_Core::getTable('Reserve')->find($auxReserve->getIdPadre());
-                } else {
-                    $iterate = false;
-                }
-            }
-
-            $extendedPrice = CarTable::getPrice($originalFrom, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth());
-
-            $price = $extendedPrice - $accumulatedPrice;
+            $price = $this->calculateExtendedPrice($Reserve, $to);
 
             if ($Reserve->getLiberadoDeGarantia()) {
                 $price += Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to);
@@ -840,6 +821,31 @@ class reservesActions extends sfActions {
     }
 
     // FUNCIONES PRIVADAS
+    private function calculateExtendedPrice($Reserve, $to) {
+
+        $accumulatedPrice = 0;
+        $auxReserve       = $Reserve;
+        $iterate          = true;        
+        
+        while ($iterate) {
+
+            $originalFrom     = $auxReserve->getDate();
+            $accumulatedPrice = $auxReserve->getPrice();
+            
+            if ($auxReserve->getIdPadre()) {
+                $auxReserve = Doctrine_Core::getTable('Reserve')->find($auxReserve->getIdPadre());
+            } else {
+                $iterate = false;
+            }
+        }
+
+        $Car = $Reserve->getCar();
+
+        $extendedPrice = CarTable::getPrice($originalFrom, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth());
+
+        return $extendedPrice - $accumulatedPrice;
+    }
+
     private function makeChange ($NewActiveReserve) {
 
         try {
