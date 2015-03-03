@@ -44,18 +44,21 @@ class mainActions extends sfActions {
             $this->isWeekend = true;
         }
 
-        // Se define la fecha DESDE
-        if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
-            $this->from = date("Y-m-d 08:00", strtotime("+12 Hours"));
+        if ($this->getUser()->getAttribute("from", false) && $this->getUser()->getAttribute("to", false)) {
+            $this->from = $this->getUser()->getAttribute("from");
+            $this->to   = $this->getUser()->getAttribute("to");
         } else {
-            $this->from = date("Y-m-d H:i", strtotime("+4 Hours"));
-        }
+            if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
+                $this->from = date("Y-m-d 08:00", strtotime("+12 Hours"));
+            } else {
+                $this->from = date("Y-m-d H:i", strtotime("+4 Hours"));
+            }
 
-        // Se define la fecha HASTA
-        if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
-            $this->to = date("Y-m-d 08:00", strtotime("+32 Hours"));
-        } else {
-            $this->to = date("Y-m-d H:i", strtotime("+24 Hours"));
+            if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
+                $this->to = date("Y-m-d 08:00", strtotime("+32 Hours"));
+            } else {
+                $this->to = date("Y-m-d H:i", strtotime("+24 Hours"));
+            }
         }
     }
 
@@ -655,32 +658,39 @@ class mainActions extends sfActions {
 
         $this->setLayout("newIndexLayout");
 
-        if ($this->getUser()->getAttribute("from", false)) {
-            $from = $this->getUser()->getAttribute("from");
-        } else {
-            $from = date("Y-m-d H:i:s");
-        }
-        
-        if ($this->getUser()->getAttribute("to", false)) {
-            $to = $this->getUser()->getAttribute("to");
-        } else {
-            $to = date("Y-m-d H:i:s", strtotime("+1 day", strtotime($from)));
-        }        
-
-        /*$userId = $this->getUser()->getAttribute("userid");*/
-
         $carId = $request->getParameter("carId", null);
 
-        if (is_null($carId)) {
-            $this->forward404();
+        $this->Car = Doctrine_Core::getTable('Car')->find($carId);
+        $this->forward404If(!$this->Car);
+
+        $setDates = true;
+        if ($this->getUser()->getAttribute("from", false) && $this->getUser()->getAttribute("to", false)) {
+            
+            $from = $this->getUser()->getAttribute("from");
+            $to   = $this->getUser()->getAttribute("to");
+
+            $setDates = false;
+            if ($this->Car->hasReserve($from, $to)) {
+                $setDates = true;
+            }
+        }
+
+        if ($setDates) {
+            if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
+                $from = date("Y-m-d 08:00", strtotime("+12 Hours"));
+            } else {
+                $from = date("Y-m-d H:i", strtotime("+4 Hours"));
+            }
+
+            if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
+                $to = date("Y-m-d 08:00", strtotime("+32 Hours"));
+            } else {
+                $to = date("Y-m-d H:i", strtotime("+24 Hours"));
+            }
         }
 
         $f = strtotime($from);
         $t = strtotime($to);
-
-        if ($t <= $f) {
-            throw new Exception("No, no, no", 1);
-        }
 
         $from = date("Y-m-d H:i", $f);
         $this->from = date("Y-m-d H:i", $f);
@@ -689,16 +699,12 @@ class mainActions extends sfActions {
         $this->to = date("Y-m-d H:i", $t);
         $this->toHuman = date("D d/m/Y H:i", $t);
 
-        $this->Car = Doctrine_Core::getTable('Car')->find($carId);
-        if (!$this->Car) {
-            $this->forward404();
-        }
+        
 
-        if ($this->Car->hasReserve($from, $to)) {
+        /*if ($this->Car->hasReserve($from, $to)) {
             throw new Exception("Auto ya posee reserva", 1);        
-        }
+        }*/
 
-        $this->time = Car::getTime($from, $to);
         $this->price = CarTable::getPrice($from, $to, $this->Car->getPricePerHour(), $this->Car->getPricePerDay(), $this->Car->getPricePerWeek(), $this->Car->getPricePerMonth());
 
         // Reviews (hay que arreglar las clase Rating)
@@ -760,11 +766,6 @@ class mainActions extends sfActions {
             $this->transmission = true;
         }
 
-        /*$userId = $this->getUser()->getAttribute("userid");
-        $User = Doctrine_Core::getTable('User')->find($userId);
-
-        $this->license            = $User->getDriverLicenseFile();
-        $this->isDebtor           = $User->moroso;*/
         $this->amountWarranty     = sfConfig::get("app_monto_garantia");
         $this->amountWarrantyFree = sfConfig::get("app_monto_garantia_por_dia");
 

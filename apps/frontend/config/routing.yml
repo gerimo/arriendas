@@ -29,6 +29,10 @@ car_availability_save:
     url: /auto/disponibilidad/guardar
     param: { module: cars, action: availabilitySave }
 
+car_is_available:
+    url: /auto/disponibilidad/consultar
+    param: { module: cars, action: isAvailable }
+
 car_set_active:
     url: /auto/cambiar/activo
     param: { module: cars, action: setActive }

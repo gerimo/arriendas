@@ -635,42 +635,6 @@ class reservesActions extends sfActions {
                 $mailer->send($message);
             }
 
-            if(!$User->getDriverLicenseFile()){
-                $mail    = new Email();
-                $mailer  = $mail->getMailer();
-                $message = $mail->getMessage();            
-
-                $subject = "¡Se ha registrado un pago de un usuario sin verificacion de licencia de conducir!";
-                $body    = $this->getPartial('emails/paymentDoneUnverifiedUser', array('Transaction' => $Transaction));
-                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-                $to      = array("soporte@arriendas.cl");
-
-                $message->setSubject($subject);
-                $message->setBody($body, 'text/html');
-                $message->setFrom($from);
-                $message->setTo($to);
-                $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
-                
-                $mailer->send($message);
-            }/* elseif($User->getBlockedLicense()){
-                $mail    = new Email();
-                $mailer  = $mail->getMailer();
-                $message = $mail->getMessage();            
-
-                $subject = "¡Se ha registrado un pago de un usuario sin licencia de conducir o bloqueada!";
-                $body    = $this->getPartial('emails/paymentDoneUnverifiedUser', array('Transaction' => $Transaction));
-                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-                $to      = array("soporte@arriendas.cl");
-
-                $message->setSubject($subject);
-                $message->setBody($body, 'text/html');
-                $message->setFrom($from);
-                $message->setTo($to);
-                $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
-                
-                $mailer->send($message);
-            }*/
-
         } catch (Exception $e) {
             error_log("[reserves/pay] ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {

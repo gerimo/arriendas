@@ -318,6 +318,23 @@ class khipuActions extends sfActions {
                             $OpportunityQueue->setPaidAt($Reserve->getFechaPago());
                             $OpportunityQueue->save();
                         }
+
+                        if(!$Reserve->getUser()->getDriverLicenseFile()){
+
+                            $subject = "Pago de usuario sin licencia de conducir";
+                            $body    = $this->getPartial('emails/paymentDoneUnverifiedUser', array('Transaction' => $Transaction));
+                            $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+                            $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+
+                            $message = $mail->getMessage();
+                            $message->setSubject($subject);
+                            $message->setBody($body, 'text/html');
+                            $message->setFrom($from);
+                            $message->setTo($to);
+                            $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                            
+                            $mailer->send($message);
+                        }
                     }
                 }
             } else {
