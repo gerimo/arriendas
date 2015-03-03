@@ -141,8 +141,13 @@ class CarTable extends Doctrine_Table {
                 if (!$Car->hasReserve(date("Y-m-d H:i:s", strtotime($from)), date("Y-m-d H:i:s", strtotime($to)))) {
 
                     $count = 1;
-error_log("CarID: ".$Car->getId());
+
                     $CarProximityMetro = $Car->getNearestMetro();
+
+                    if (!$CarProximityMetro) { // Se agrega esto porque se subio un auto sin distancia al metro y error 500
+                        error_log("[CarTable/findCars] Car ".$Car->getId()." no tiene distancias al metro. Calculando...");
+                        CarProximityMetro::setNewCarProximityMetro($Car);
+                    }
 
                     $CarsFound[] = array(
                         'id' => $Car->id,
