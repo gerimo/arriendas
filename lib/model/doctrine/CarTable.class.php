@@ -141,7 +141,7 @@ class CarTable extends Doctrine_Table {
                 if (!$Car->hasReserve(date("Y-m-d H:i:s", strtotime($from)), date("Y-m-d H:i:s", strtotime($to)))) {
 
                     $count = 1;
-
+error_log("CarID: ".$Car->getId());
                     $CarProximityMetro = $Car->getNearestMetro();
 
                     $CarsFound[] = array(
