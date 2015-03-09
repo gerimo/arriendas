@@ -1,3 +1,9 @@
+MailMessage:
+  actAs: { Timestampable: ~ }
+  columns:
+    message: { type: clob, notnull: true }
+    priority: { type: integer }
+
 Availability:
   tableName: Availability
   columns:

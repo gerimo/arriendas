@@ -5,6 +5,10 @@
 #     url: /test/khipu
 #     param: { module: main, action: testKhipu }
 
+test_mailing:
+    url: /test/email
+    param: { module: main, action: testMailing }
+
 about_company:
     url: /nosotros
     param: { module: main, action: compania }

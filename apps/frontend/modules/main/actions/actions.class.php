@@ -11,6 +11,19 @@ class mainActions extends sfActions {
         $this->transactionId = 21097;
     }*/
 
+    public function executeTestMailing (sfWebRequest $request) {
+
+        $this->setLayout(false);
+
+        $message = Swift_Message::newInstance()
+            ->setFrom(array('no-reply@arriendas.cl' => "Arriendas.cl"))
+            ->setTo(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"))
+            ->setSubject('Email de prueba')
+            ->setBody("<h1>¡Hola Mundo!</h1>", "text/html");
+
+        $this->getMailer()->send($message);
+    }
+
     public function executeIndex (sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
