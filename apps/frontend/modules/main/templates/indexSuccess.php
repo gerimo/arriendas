@@ -200,30 +200,6 @@
         <?php endif ?>
     }
 
-    /*function validateTime(){
-
-        var fechaF = splitTime($("#from").val());
-        var fechaT = splitTime($("#to").val());
-
-        if(fechaF > fechaT){
-            return true;
-        }
-        return false;
-    }*/
-
-    /*function splitTime(time){
-        var split = time.split(" ");
-        var f = split[0];
-        var h = split[1];
-
-        var split = f.split("-");
-        var dia = split[0];
-        var mes = split[1];
-        var ano = split[2];
-
-        return (mes+dia+ano);
-    }*/
-
     function searchCars(offset, limit) {
 
         if (offset == 0) {
@@ -526,6 +502,7 @@
     <div class="row" id="section-map-form-search">
 
         <span class="ico-search hidden-xs" data-target="#section-map-form-search"><img src="/images/newDesign/ico-search.svg"></span>
+        <a class="search-by-commune" href="<?php echo url_for('rent_a_car') ?>">Buscar por comuna</a>
 
         <!-- List -->
         <div class="col-xs-6 col-sm-3 col-md-3" id="region-container">
@@ -550,6 +527,8 @@
         <div class="hidden-xs col-sm-6 col-md-6" id="direction-container">
             <input class="direction form-control" id="direction" placeholder="Dirección" type="text">
         </div>
+
+        <!-- From To -->
         <div class="col-xs-6 col-sm-2 col-md-2" id="from-container">
             <input class="datetimepicker form-control text-left" id="fromH" placeholder="Desde" type="button">
         </div>
@@ -561,58 +540,18 @@
         <div class="col-xs-12 col-sm-2 col-md-2 text-center">
             <button class="btn btn-a-action btn-block" id="search" type="button">Buscar</button>
         </div>
+<hr>
+        <div class="filters">
+            <input type="checkbox" name="filter" class="isAutomatic"> Automático
+            <input type="checkbox" name="filter" class="isLowConsumption"> Bajo Consumo
+            <input type="checkbox" name="filter" class="isMorePassengers"> Más de 5 pasajeros
+            <input type="checkbox" name="filter" class="haveChair"> Silla Bebé
+            <input type="checkbox" name="filter" class="isAirportDelivery"> Auto en aeropuerto
+        </div>
     </div>
 </section>
 
 <section id="section-map">
-
-    <div class="hidden-xs row" id="section-map-filters">
-        <div class=" col-sm-2 col-md-2 text-center">
-            <strong class="heading">Filtros</strong>
-        </div>
-        <div class="col-sm-6 col-md-6">
-            <ul>
-                <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
-                <li><input type="checkbox" name="filter" class="isLowConsumption"> Bajo Consumo</li>
-                <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
-                <li><input type="checkbox" name="filrer" class="haveChair"> Silla Bebé</li>
-            </ul>
-            <ul class="text-center">
-                <li><input type="checkbox" name="filrer" class="isAirportDelivery"> Auto en aeropuerto</li>
-            </ul>
-        </div>
-        <div class="col-sm-4 col-md-4 hidden-xs tabset">
-            <div class="map col-sm-6 col-md-6 text-center tab activo" data-target="#tab-map"><strong><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Mapa</strong></div>
-            <div class="list col-sm-6 col-md-6 text-center tab" data-target="#tab-list"><strong><span class="glyphicon glyphicon-list" aria-hidden="true"></span> Lista</strong></div>
-        </div>
-    </div>
-
-    <nav class="visible-xs navbar navbar-default" id="filters-navbar" role="navigation">
-        <div class="container">
-
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-filters">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#filters">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <h3 style="margin-top: 5px; padding-top: 12px">Filtros</h3>
-            </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="filters">
-                <div class="container">
-                    <ul class="nav navbar-nav">
-                        <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
-                        <li><input type="checkbox" name="filter" class="isLowConsumption"> Petrolero</li>
-                        <li><input type="checkbox" name="filrer" class="isMorePassengers"> Más de 5 pasajeros</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </nav>
 
     <div id="section-map-body">
 
@@ -888,7 +827,7 @@
         });
 
         $("#map, #map-list").css({
-            height: $(window).height() - $("#section-map-form-search").outerHeight() - $("#section-map-filters").outerHeight()
+            height: $(window).height() - $("#section-map-form-search").outerHeight() - 50
         });
     <?php endif ?>
 
@@ -898,6 +837,7 @@
 
     $("#search").click(function(e){
         searchCars(0, $("button.see-more").data("limit"));
+        $(".ico-search").click();
     });
 
     $("#commune").change(function(){
