@@ -284,7 +284,7 @@ class CarTable extends Doctrine_Table {
             ->createQuery('C')
             ->innerJoin('C.Reserve R')
             ->Where('R.fecha_pago is null')
-            ->andWhere('C.activo = 1');
+            ->andWhere('C.activo = 1')
             ->andWhere('C.seguro_ok = 4');
 
         return $q->execute();
