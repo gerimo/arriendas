@@ -6,7 +6,11 @@ class reserveActions extends sfActions {
 	}
 
     public function executeFortnightlyPayments(sfWebRequest $request) {
+
+        $this->Banks = Doctrine_Core::getTable('Bank')->findAll();
+        $this->BankAccountTypes = Doctrine_Core::getTable('BankAccountType')->findAll();
     }
+
 
     public function executeEditReserve(sfWebRequest $request) {
 
@@ -152,20 +156,19 @@ class reserveActions extends sfActions {
             foreach($Reserves as $i => $Reserve){
 
                 $Car = $Reserve->getCar();
-                $User = $Reserve->getUser();
+                $UserPay = $Reserve->getUser();
+                $UserOwned = $Car->getUser();
                 $return["data"][$i] = array(
                     'r_id'        => $Reserve->id,
-                    'r_date'      => $Reserve->date,
-                    'c_type'      => $Car->getModel()->getCarType()->name,
-                    'c_brand'     => $Car->getModel()->getBrand()->name,
-                    'c_model'     => $Car->getModel()->name,
-                    'u_id'        => $User->id,
-                    'u_fullname'  => ucfirst(strtolower($User->firstname.' '.$User->lastname)),
-                    'u_telephone' => $User->telephone,
-                    'u_email'     => $User->email,
-                    'u_foreign'   => $User->extranjero,
-                    'u_license'   => $User->driver_license_file,
-                    'u_check'     => $User->chequeo_judicial
+                    'r_date'      => $Reserve->getFechaInicio2(),
+                    'r_date_end'  => $Reserve->getFechaTermino2(),
+                    'up_id'       => $UserPay->id,
+                    'up_fullname' => ucfirst(strtolower($UserPay->firstname.' '.$UserPay->lastname)),
+                    'up_telephone'=> $UserPay->telephone,
+                    'up_license'  => $UserPay->driver_license_file,
+                    'up_check'    => $UserPay->chequeo_judicial,
+                    'uo_id'       => $UserOwned->id,
+                    'c_id'        => $Car->id
                 );  
             }
 
