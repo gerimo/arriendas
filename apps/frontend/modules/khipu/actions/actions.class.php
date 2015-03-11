@@ -205,7 +205,7 @@ class khipuActions extends sfActions {
                         $Functions->generarNroFactura($Reserve, $Transaction);
 
                         // Notificaciones
-                        if(!$Renter->hasPayments())){
+                        if (!$Renter->hasPayments()) {
                             Notification::make($Renter->id, 2, $Reserve->id); // primer pago
                         } else {
                             Notification::make($Renter->id, 4, $Reserve->id); // Pago

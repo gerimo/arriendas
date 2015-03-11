@@ -498,7 +498,7 @@ class reservesActions extends sfActions {
             $carId  = $request->getPostParameter("car", null);
             $from   = $request->getPostParameter("from", null);
             $to     = $request->getPostParameter("to", null);
-            $option = $request->getPostParameter("option", null);      
+            $isAirportDelivery = $request->getPostParameter("isAirportDelivery", null);      
         } else {            
             $warranty = $this->getUser()->getAttribute("warranty");
             $payment  = $this->getUser()->getAttribute("payment", null);
@@ -650,7 +650,9 @@ class reservesActions extends sfActions {
         $this->getRequest()->setParameter("reserveId", $Reserve->getId());
         $this->getRequest()->setParameter("transactionId", $Transaction->getId());
 
-        if ($Car->getIsAirportDelivery() && $option) {
+        if ($Car->getIsAirportDelivery() && $isAirportDelivery) {
+            $Reserve->setIsAirportDelivery(true);
+            $Reserve->save();
             $this->getUser()->setAttribute("reserveId", $Reserve->getId());
             $this->getUser()->setAttribute("transactionId", $Transaction->getId());
             $this->redirect('reserve_airport');

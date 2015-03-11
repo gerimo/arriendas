@@ -432,6 +432,11 @@ a:focus {
     margin: 0 0 47px;
 }
 
+.isAirportDelivery {
+    font-size: 18px;
+    font-weight: 400;
+}
+
 #main .reserve-area{
     padding: 0;
 }
