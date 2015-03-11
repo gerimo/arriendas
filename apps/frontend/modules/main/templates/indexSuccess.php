@@ -207,21 +207,6 @@
         }
         $(".loading").show();
 
-        /*if (validateTime()) {
-
-            $("#dialog-alert p").html('Fecha "Hasta" debe ser posterior a la fecha "Desde"');
-            $("#dialog-alert").attr('title','Fecha "Hasta" mal ingresada');
-            $("#dialog-alert").dialog({
-                buttons: [{
-                    text: "Aceptar",
-                    click: function() {
-                        $( this ).dialog( "close" );
-                    }
-                }]
-            });
-            return false;
-        }*/
-
         // First, determine the map bounds
         var bounds = map.getBounds();
 
@@ -276,6 +261,10 @@
         $(".isAirportDelivery").each(function(){
             if ($(this).is(':checked')) {
                 isAirportDelivery = true;
+                console.log(reserveUrl+": "+reserveUrl.indexOf("?a"));
+                if (reserveUrl.indexOf("?a") == -1) {
+                    reserveUrl = reserveUrl+"?a";
+                }
             }
         });
 

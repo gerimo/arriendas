@@ -270,4 +270,23 @@ class CarTable extends Doctrine_Table {
         
         return floor($pricePerDay * $days + $pricePerHour * $hours);
     }
+
+    public function findByNotSeguroOk(){
+        $q = Doctrine_Core::getTable("Car")
+            ->createQuery('C')
+            ->Where('C.seguro_ok != 4');
+
+        return $q->execute();
+    }
+
+    public function findCarsWithoutReserves(){
+        $q = Doctrine_Core::getTable("Car")
+            ->createQuery('C')
+            ->innerJoin('C.Reserve R')
+            ->Where('R.fecha_pago is null')
+            ->andWhere('C.activo = 1')
+            ->andWhere('C.seguro_ok = 4');
+
+        return $q->execute();
+    }
 }

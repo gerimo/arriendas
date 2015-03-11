@@ -34,6 +34,7 @@
  * @property timestamp $fecha_pago
  * @property boolean $is_warranty_back
  * @property boolean $is_sinister
+ * @property boolean $is_airport_delivery
  * 
  * @method integer             getId()          Returns the current record's "id" value
  * @method timestamp           getDate()        Returns the current record's "date" value
@@ -66,6 +67,7 @@
  * @method boolean             getFechaPago()   Return the current record's "fecha_pago" value
  * @method boolean             getIsWarrantyBack()  Return the current record's "is_warranty_back" value
  * @method boolean             getIsSinister()      Return the current record's "is_sinister" value
+ * @method boolean             getIsAirportDelivery()      Return the current record's "is_airport_delivery" value
  *
  * @method Reserve             setId()          Sets the current record's "id" value
  * @method Reserve             setDate()        Sets the current record's "date" value
@@ -100,6 +102,7 @@
  * @method Reserve             setFechaPago() Sets the current record's "fecha_pago" value
  * @method Reserve             setIsWarrantyBack()  Sets the current record's "is_warranty_back" value
  * @method Reserve             setIsSinister()      Sets the current record's "is_sinister" value
+ * @method Reserve             setIsAirportDelivery() Sets the current record's "is_airport_delivery" value
  * 
  * @package    CarSharing
  * @subpackage model
@@ -332,6 +335,11 @@ abstract class BaseReserve extends sfDoctrineRecord
              'default' => 0,
             ));
         $this->hasColumn('is_sinister', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
+             'default' => 0,
+            ));
+        $this->hasColumn('is_airport_delivery', 'boolean', null, array(
              'type' => 'boolean',
              'notnull' => true,
              'default' => 0,

@@ -27,18 +27,16 @@
 		<table  class="display responsive no-wrap" id="reserveTable" cellspacing="0" width="100%">
 			<thead>
 				<tr>
-					<th>ID Usuario</th>
-					<th>Nombre Usuario</th>
-					<th>Teléfono Usuario</th>
-					<th>Email Usuario</th>
-					<th>Usuario Extranjero</th>
-					<th>Usuario Foto Licencia</th>
-					<th>Usuario Chequeo Judicial</th>
 					<th>ID Reserva</th>
-					<th>Fecha Reserva</th>
-					<th>Marca Auto</th>
-					<th>Modelo Auto</th>
-					<th>Tipo Auto</th>
+					<th>Fecha Inicio Reserva</th>
+					<th>Fecha devolución Reserva</th>
+					<th>ID Usuario Pagador</th>
+					<th>Nombre Usuario Pagador</th>
+					<th>Teléfono Usuario Pagador</th>
+					<th>Licencia Usuario Pagador</th>
+					<th>Chequeo Judicial</th>
+					<th>ID Usuario Beneficiario</th>
+					<th>ID Car</th>
 				</tr>
 			</thead>
 
@@ -61,10 +59,14 @@
 							<img id="photo" style="width:100%; height:auto"></img>
 						</div>
 					</div>
+					<div id="photoL">
+						<label>Foto Licencia</label>
+						<input name="photo" type="file" class="file-loading" id="photoLicense" accept="image/*" data-id="10">
+					</div>
 				</div>
 				<div class="modal-footer">
-					<button data-dismiss="modal" datatype="button" class="btn btn-danger">No</button>
-					<button data-dismiss="modal" type="button" class="btn btn-success" onclick="isValidLicense()">SI</button>
+					<button data-dismiss="modal" datatype="button" class="btn btn-danger botones">No</button>
+					<button data-dismiss="modal" type="button" class="btn btn-success botones" onclick="isValidLicense()">SI</button>
 				</div>
 			</div>
 		</div>
@@ -86,13 +88,26 @@
 
 	$(document).ready(function() {
 
-		findReserves();
+
+		findReserves();		
 	 
 		$('#reserveTable').DataTable({
 			info: false,
 			paging: true,
 			responsive: true
-		});    
+		}); 
+
+		$("#photoLicense").fileinput({
+
+			allowedFileExtensions: ["jpg", "gif", "png", "bmp","jpeg"],
+			uploadUrl: '<?php echo url_for("user_upload_photo")?>',
+			dropZoneEnabled: false,
+			showRemove: false,  
+			elErrorContainer: false,
+			showPreview: false,
+			uploadExtraData:function() { return {userId: $("#userId").val()}; },
+			/*showCaption: false,*/
+		});	
 	}); 
 
 	function findReserves() {
@@ -108,16 +123,17 @@
 				console.log(r.errorMessage);
 			} else {	
 				$('#reserveTable').DataTable().rows().remove().draw();
+
 				$.each(r.data, function(k, v){
-					var checkForeign    = optionSelected(v.u_foreign, v.u_id, 3);
-					var checkLicense    = photoLincense(v.u_license, v.u_id); 
-					var checkJudicial   = optionSelected(v.u_check, v.u_id, 5); 
-					$('#reserveTable').DataTable().row.add([v.u_id, v.u_fullname, v.u_telephone, v.u_email, checkForeign, checkLicense, checkJudicial,v.r_id, v.r_date, v.c_brand, v.c_model, v.c_type]).draw();
+					var checkLicense    = photoLicense(v.up_license, v.up_id); 
+					var chequeo         = optionSelected(v.up_check, v.up_id, 5);
+					$('#reserveTable').DataTable().row.add([v.r_id, v.r_date, v.r_date_end, v.up_id, v.up_fullname, v.up_telephone, checkLicense, chequeo, v.uo_id, v.c_id]).draw();
 				});
 				$(".load").hide();
 			}
 		}, 'json');
 	}
+
 
 	function optionSelected(option, userId, type) {
 
@@ -157,26 +173,40 @@
 		}, 'json')
 	});
 
-	function photoLincense(license, userId) {
+	function photoLicense(license, userId) {
 
 		if (license) {
 			
-			var select ="<a type='button' class='btn btn-primary photo' data-license='"+license+"' data-user-id='"+userId+"' onClick'poto()'>Licencia</a>"
+			var select ="<a type='button' class='btn btn-primary photo' data-license='"+license+"' data-user-id='"+userId+"'>Licencia</a>";
 		   
 		} else {
-			var select ="<label>no posee licencia</label>"
+
+			var select ="<a type='button' class='btn btn-primary photo1' data-user-id='"+userId+"'>Subir Licencia</a>";
 		}
 
 		return select;
 	}
 
 	$('body').on("click", ".photo", function(e){
-
+		$("#myModalLabel").html("¿Es valida la licencia?");
+		$("#photoL").hide();
+		$("#carDamages").show();
+		$(".modal-footer").show();
 		var userId  = $(this).data("user-id");
 		var license = $(this).data("license");
 		var n = license.lastIndexOf("/");
 		var res = license.slice(n+1);
 		$("#photo").attr("src", "https://www.arriendas.cl/images/licence/"+res);
+		$("#photoModal").modal('show');
+		$("#userId").val(userId);
+	});
+
+	$('body').on("click", ".photo1", function(e){
+		$("#myModalLabel").html("Subir Foto Licencia");
+		$(".modal-footer").hide();
+		$("#carDamages").hide();
+		$("#photoL").show();
+		var userId  = $(this).data("user-id");
 		$("#photoModal").modal('show');
 		$("#userId").val(userId);
 	});
@@ -203,6 +233,11 @@
 		
 		findReserves();
 	});
+
+	$('#photoLicense').on('filebatchuploadsuccess', function(event, data, previewId, index) {
+        findReserves();	
+        $("#photoModal").modal('hide');
+    });
 
 
 </script>

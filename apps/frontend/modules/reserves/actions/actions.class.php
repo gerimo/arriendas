@@ -73,6 +73,7 @@ class reservesActions extends sfActions {
             }
 
             $Reserve->setConfirmed(1);
+
             /*$Reserve->setCanceled(0);*/
             $Reserve->setFechaConfirmacion(date("Y-m-d H:i:s"));
 
@@ -87,6 +88,9 @@ class reservesActions extends sfActions {
 
             // Correo de notificación
             $User    = $Reserve->getUser();
+
+             // Notificaciones
+            Notification::make($User->id, 14, $Reserve->id); // Confirmar pago
 
             $mail    = new Email();
             $mailer  = $mail->getMailer();
@@ -494,7 +498,7 @@ class reservesActions extends sfActions {
             $carId  = $request->getPostParameter("car", null);
             $from   = $request->getPostParameter("from", null);
             $to     = $request->getPostParameter("to", null);
-            $option = $request->getPostParameter("option", null);      
+            $isAirportDelivery = $request->getPostParameter("isAirportDelivery", null);      
         } else {            
             $warranty = $this->getUser()->getAttribute("warranty");
             $payment  = $this->getUser()->getAttribute("payment", null);
@@ -646,7 +650,9 @@ class reservesActions extends sfActions {
         $this->getRequest()->setParameter("reserveId", $Reserve->getId());
         $this->getRequest()->setParameter("transactionId", $Transaction->getId());
 
-        if ($Car->getIsAirportDelivery() && $option) {
+        if ($Car->getIsAirportDelivery() && $isAirportDelivery) {
+            $Reserve->setIsAirportDelivery(true);
+            $Reserve->save();
             $this->getUser()->setAttribute("reserveId", $Reserve->getId());
             $this->getUser()->setAttribute("transactionId", $Transaction->getId());
             $this->redirect('reserve_airport');
@@ -677,6 +683,9 @@ class reservesActions extends sfActions {
             $mailer  = $mail->getMailer();
             $message = $mail->getMessage();
             $User    = $Reserve->getUser();
+
+             // Notificaciones
+            Notification::make($User->id, 15, $Reserve->id); // Rechazar pago
 
             $message->setSubject("La reserva ha sido rechazada");
             $message->setBody($this->getPartial('emails/reserveRejected', array('Reserve' => $Reserve)), 'text/html');
