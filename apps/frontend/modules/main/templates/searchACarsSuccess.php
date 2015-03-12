@@ -1,325 +1,79 @@
-<link href="/css/newDesign/searchACars.css" rel="stylesheet" type="text/css">
-<script src="/js/newDesign/markerclusterer.js" type="text/javascript"></script>
+<link href="/css/newDesign/searchACars.css?v=1" rel="stylesheet" type="text/css">
+<script src="/js/newDesign/dates.js" type="text/javascript"></script>
 
+<div class="space-100"></div>
 
-
-<script>
-    var reserveUrl = "<?php echo url_for('reserve', array('carId' => 'carId'), true) ?>";
-    var usuarioLogeado = "<?php echo $usuarioLog; ?>";
-
-    var map; // initialize, searchCars
-    var geolocalizacion; // coordenadas
-    var latitud; // coordenadas
-    var lastValidCenter; // initialize
-    var longitud; // coordenadas
-    var map; // initialize, searchCars
-    var markerCluster; // searchCars
-    var markers = []; // searchCars
-    var strictBounds = null; // initialize
-
-    var swLat; // searchCars
-    var swLng; // searchCars
-    var neLat; // searchCars
-    var neLng; // searchCars
-
-    function coordenadas(position) {
-
-        latitud  = position.coords.latitude; // Guardamos nuestra latitud
-        longitud = position.coords.longitude; // Guardamos nuestra longitud
-        
-        <?php if ($sf_user->getAttribute('geolocalizacion') == true): ?>
-            geolocalizacion = true;
-        <?php else: ?>
-            geolocalizacion = false;
-        <?php endif ?>
-    }
-    function localizame() {
-        <?php if (!$isMobile): ?>
-            if (navigator.geolocation) { // Si el navegador tiene geolocalizacion
-                navigator.geolocation.getCurrentPosition(coordenadas, errores);
-            } else {
-                alert('¡Oops! Tu navegador no soporta geolocalización. Bájate Chrome, que es gratis!');
-            }
-        <?php endif ?>
-    }
-
-    function errores(err) {
-
-        // Controlamos los posibles errores
-        if (err.code == 0) {
-            alert("¡Oops! Algo ha salido mal");
-        }
-        if (err.code == 1) {
-            alert("¡Oops! No has aceptado compartir tu posición");
-        }
-        if (err.code == 2) {
-            alert("¡Oops! No se puede obtener la posición actual");
-        }
-        if (err.code == 3) {
-            alert("¡Oops! Hemos superado el tiempo de espera");
-        }
-    }
-
-    function searchCars() {
-
-        if (validateTime()) {
-            
-            $("#dialog-alert p").html('Fecha "Hasta" debe ser posterior a la fecha "Desde"');
-            $("#dialog-alert").attr('title','Fecha "Hasta" mal ingresada');
-            $("#dialog-alert").dialog({
-                buttons: [{
-                    text: "Aceptar",
-                    click: function() {
-                        $( this ).dialog( "close" );
-                    }
-                }]
-            });
-            return false;
-        }
-
-        if(validateMin()){
-            $("#dialog-alert p").html('No se puede ingresar "Fechas" con duraciones de media hora.');
-            $("#dialog-alert").attr('title','Fecha "Hasta" mal ingresada');
-            $("#dialog-alert").dialog({
-                buttons: [{
-                    text: "Aceptar",
-                    click: function() {
-                        $( this ).dialog( "close" );
-                    }
-                }]
-            });
-            return false;
-        }
-
-        $('#list-container').hide();
-        $(".loading").show();
-
-        var from      = $("#from").val();
-        var to        = $("#to").val();
-        var regionId  = parseInt($("#region option:selected").val());
-        var communeId = parseInt($("#commune option:selected").val());
-
-        //Filtro busqueda
-        var isAutomatic = false;
-        $(".isAutomatic").each(function(){
-            if ($(this).is(':checked')) {
-                isAutomatic = true;
-            }
-        });
-        
-        var isLowConsumption = false;
-        $(".isLowConsumption").each(function(){
-            if ($(this).is(':checked')) {
-                isLowConsumption = true;
-            }
-        });
-
-        var isMorePassengers = false;
-        $(".isMorePassengers").each(function(){
-            if ($(this).is(':checked')) {
-                isMorePassengers = true;
-            }
-        });
-
-        var nearToSubway = false;
-        $(".nearToSubway").each(function(){
-            if ($(this).is(':checked')) {
-                nearToSubway = true;
-            }
-        });
-
-        // Validación de la búsqueda
-        var error = false;
-        var errorMessage = "<p style='padding: 5% 5% 0 5%'>Para buscar, debes:<ul>";
-
-        if (from == "") {
-            errorMessage += "<li>Seleccionar una fecha de inicio</li>";
-            error = true;
-        }
-
-        if (to == "") {
-            errorMessage += "<li>Seleccionar una fecha de término</li>";
-            error = true;
-        }
-        errorMessage += "</ul></p>";
-
-        if (error) {
-
-            $("#list-container").html(errorMessage);
-            $('.loading').hide();
-            $("#list-container").show();
-
-            return false;
-        }
-
-        var parameters = {
-            //Parameters List
-            from : from,
-            to: to,
-            regionId: regionId,
-            communeId: communeId,
-            isAutomatic: isAutomatic,
-            isLowConsumption: isLowConsumption,
-            isMorePassengers: isMorePassengers,
-            nearToSubway: nearToSubway
-        }
-
-        $.post("<?php echo url_for('car_search') ?>", parameters, function(r){
-
-            var listContent = "";
-            var markersLength = markers.length;
-
-            if (markersLength > 0) {
-                markerCluster.clearMarkers();
-            }
-
-            if (r.cars.length > 0) {
-                for (var i = 0 ; i < r.cars.length ; i++) {
-
-                    var Car = r.cars[i];
-
-                    var urlFotoTipo      = "<?php echo image_path('../uploads/cars/" + Car.photo + "'); ?>";
-                    var urlFotoThumbTipo = "<?php echo image_path('../uploads/cars/" + Car.photo + "'); ?>";
-                    
-                    if (Car.photoType == 1) {
-                        urlFotoTipo = Car.photo;
-                        urlFotoThumbTipo = Car.photo;
-                    }
-
-                    var str = 0;
-                    if (Car.photo) {
-                        str = Car.photo.indexOf("cars");
-                    }
-
-                    if(str > 0) {
-                        urlFotoTipo = Car.photo;
-                        urlFotoThumbTipo = Car.photo;
-                    }
-    
-                    article = "<article class='box'>";
-                    article += "<div class='row'>";
-                    article += "<div class='col-xs-4 col-md-4 image'>";
-                   if(str > 0) {
-                        article += "<img class='img-responsive' src='http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='rent a car "+ Car.brand +" "+ Car.model +"'/>";
-                    }else   {
-                        article += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='rent a car " + Car.brand +" "+ Car.model +"'/>";
-                    }
-                    article += "</div>";
-                    article += "<div class='col-xs-8 col-md-8 text'>";
-                    article += "<h2>"+ Car.brand +" "+ Car.model +"<small>, "+Car.year+"</small></h2>";
-                    /*article += "<span class='sub-heading'>A 2 km Metro <strong>Tobalaba</strong></span>";*/
-                    article += "<p class='price'>$"+ Car.price +" <small style='color: black; font-weight: 300; font-size: 9px;'>TOTAL</small></p>";
-                    article += "<div class='metro'><p><img class='km-area' src='/images/newDesign/ico.png' alt='metro'> A <b><em>"+Car.nearestMetroDistance+"</em> km</b> del Metro "+Car.nearestMetroName+"</p></div>";
-                    article += "<p class='text-right'><a class='btn btn-a-action btn-sm' href='"+reserveUrl.replace("carId", Car.id)+"' class='reserve' target='_blank'>RESERVAR</a></p>";
-                    /*article += "<img src='http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + contador + "|05a4e7|ffffff' />";*/
-                    article += "</div>";
-                    article += "</div>";
-                    article += "</article>";
-
-                    listContent += "<div class='col-md-4'>";
-                    listContent += article;
-                    listContent += "</div>";  
-                   
-
-                    /*listContent += "<article class='box'>";
-                    listContent += "<div class='img-holder'><img src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_134,h_99,c_fill,g_center/" + urlFotoThumbTipo + "' height='99' width='134' alt=''></div>";
-                    listContent += "<div class='text-area'>";
-                    listContent += "<h2><a href='<?php echo url_for("arriendo-de-autos/rent-a-car") ?>/" + Car.brand + Car.model + "/" + Car.comuna + "/" + Car.id + "'>"+ Car.brand +" "+ Car.model +"<span>, "+Car.year+"</span></a></h2>";
-                    listContent += "<span class='sub'>Providencia </span>";
-                    listContent += "<span class='sub-heading'>A 2 km Metro <strong>Tobalaba</strong></span>";
-                    listContent += "<span class='price'>$"+ Car.price_per_day +"</span>";
-                    listContent += "<a href='<?php echo url_for("profile/reserve?id=") ?>"+ Car.id + "' class='reserve'>RESERVAR</a>";
-                    listContent += "</div>";
-                    listContent += "</article>";*/
-                }
-            } else {
-                //mapListContent += "<h2 style='text-align: center'>No hemos encontrado vehículos</h2>";
-                listContent += "<h2 style='text-align: center'>No hemos encontrado vehículos</h2>";
-            }
-
-            //$("#map-list-container").html(mapListContent);
-            $("#list-container").html(listContent);
-
-            $('.loading').hide();
-            $("#list-container").show();
-
-            var mcOptions = {
-                maxZoom: 10
-            };
-
-            //markerCluster = new MarkerClusterer(map, markers, mcOptions);
-        }, "json");
-    }
-
-</script>
-
-<div class="hidden-xs space-100"></div>
-<div class="visible-xs space-50"></div>
-
+<!-- Buscador -->
 <div class="row">
     <div class="col-md-12">
         <div class="BCW">
-            <h1>¡Arrienda un Auto!</h1>
 
-            <!--Solo debe aparecer la Lista-->
-            <div class="listagrey">
-                <div class="row ">
-                    <div class="col-xs-6 col-sm-3 col-md-3" id="region-container">
-                        <select class="region form-control" id="region">
-                            <?php if ($hasRegion && $Region->id == $hasRegion): ?>
-                                <option selected value="<?php echo $Region->id ?>"><?php echo ucwords(strtolower($Region->name)) ?></option> 
-                            <?php else: ?>
-                                <option disabled selected value="<?php echo $Region->id ?>"><?php echo $Region->name ?></option>
-                            <?php endif ?>
-                        </select>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 col-md-3" id="commune-container">
-                        <select class="commune form-control" id="commune">
-                            <option value="0">Todas Las Comunas</option>
-                            <?php foreach ($Region->getCommunes() as $Commune): ?>
-                                   <?php if ($hasCommune && $Commune->id == $hasCommune): ?>
-                                        <option selected value="<?php echo $Commune->id ?>"><?php echo ucwords(strtolower($Commune->name)) ?></option> 
-                                    <?php else: ?>
-                                        <option value="<?php echo $Commune->id ?>"><?php echo ucwords(strtolower($Commune->name)) ?></option>
-                                    <?php endif ?>
-                            <?php endforeach ?>
-                        </select>
-                    </div>
+            <h1 class="text-center">¡Arrienda un Auto Ahora!</h1>
 
-                    <div class="col-xs-6 col-sm-2 col-md-2" id="from-container">
-                        <input class="from daepicker form-control" id="from" placeholder="Desde" type="text" value="<?php if(date("H:i") >= "20:00" || date("H:i") <= "08:00"):echo date("d-m-Y 08:00",(strtotime ("+12 Hours"))); else:echo date("d-m-Y H:i", (strtotime ("+4 Hours"))); endif; ?>" >
-                    </div>
-                    <div class="col-xs-6 col-sm-2 col-md-2" id="to-container">
-                        <input class="to datetimepicker form-control" id="to" placeholder="Hasta" type="text" value="<?php if(date("H:i") >= "20:00" || date("H:i") <= "08:00"):echo date("d-m-Y 08:00",(strtotime ("+32 Hours"))); else:echo date("d-m-Y H:i", (strtotime ("+24 Hours"))); endif; ?>" >
-                    </div>
-
-                     <!-- Search -->
-                    <div class="col-xs-12 col-sm-2 col-md-2 text-center">
-                        <a class="btn btn-a-action btn-block" href id="search">Buscar</a>
-                    </div>
+            <!-- Formulario de búsqueda -->
+            <div class="row ">
+                <div class="col-xs-6 col-sm-3 col-md-3" id="region-container">
+                    <select class="region form-control" id="region">
+                        <?php if ($hasRegion && $Region->id == $hasRegion): ?>
+                            <option selected value="<?php echo $Region->id ?>"><?php echo ucwords(strtolower($Region->name)) ?></option> 
+                        <?php else: ?>
+                            <option disabled selected value="<?php echo $Region->id ?>"><?php echo $Region->name ?></option>
+                        <?php endif ?>
+                    </select>
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3" id="commune-container">
+                    <select class="commune form-control" id="commune">
+                        <option value="0">Todas Las Comunas</option>
+                        <?php foreach ($Region->getCommunes() as $Commune): ?>
+                               <?php if ($hasCommune && $Commune->id == $hasCommune): ?>
+                                    <option selected value="<?php echo $Commune->id ?>"><?php echo ucwords(strtolower($Commune->name)) ?></option> 
+                                <?php else: ?>
+                                    <option value="<?php echo $Commune->id ?>"><?php echo ucwords(strtolower($Commune->name)) ?></option>
+                                <?php endif ?>
+                        <?php endforeach ?>
+                    </select>
                 </div>
 
-                <div class="hidden-xs row" id="section-map-filters">
-                    <div class=" col-md-offset-1 col-md-6 col-sm-2 col-md-2 text-center">
-                        <strong class="heading">Filtros:</strong>
-                    </div>
-                    <div class="col-sm-8 col-md-8">
-                        <ul>
-                            <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
-                            <li><input type="checkbox" name="filter" class="isLowConsumption"> Petrolero</li>
-                            <li><input type="checkbox" name="filter" class="isMorePassengers"> Más de 5 pasajeros</li>
-                            <li><input type="checkbox" name="filter" class="nearToSubway"> Cercano al metro</li>
-                        </ul>
-                    </div>
+                <div class="col-xs-6 col-sm-2 col-md-2" id="from-container">
+                    <input class="datetimepicker form-control text-left" id="fromH" placeholder="Desde" type="button">
+                </div>
+                <div class="col-xs-6 col-sm-2 col-md-2" id="to-container">
+                    <input class="datetimepicker form-control text-left" id="toH" placeholder="Hasta" type="button">
+                </div>
+
+                 <!-- Search -->
+                <div class="col-xs-12 col-sm-2 col-md-2 text-center">
+                    <button class="btn btn-a-action btn-block" id="search">Buscar</button>
                 </div>
             </div>
 
+            <!-- Filtros -->
+            <div class="row filters">
+                <div class="col-md-12">
+                    <strong class="heading">Filtros:</strong>
+                    <ul>
+                        <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
+                        <li><input type="checkbox" name="filter" class="isLowConsumption"> Bajo consumo</li>
+                        <li><input type="checkbox" name="filter" class="isMorePassengers"> Más de 5 pasajeros</li>
+                        <li><input type="checkbox" name="filter" class="nearToSubway"> Cercano al metro</li>
+                        <li><input type="checkbox" name="filter" class="haveChair"> Silla Bebé</li>
+                        <li><input type="checkbox" name="filter" class="isAirportDelivery"> Auto en aeropuerto</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Contenedor -->
+            <div class="row">
+                <div class="row" id="list-container"></div>
+                <div id="list-loading" class="loading" style="text-align: center; margin: 4% 0 4% 0"><?php echo image_tag('ajax-loader.gif', array("width" => "80px", "height" => "80px")) ?></div>                
+                <button class="see-more btn-block" data-offset="0" data-limit="<?php echo $limit ?>" type="button">Ver más</button>
+            </div>
+
             <!--Mobile-->
-            <section id="section-map">
+            <!-- <section id="section-map">
                 <nav class="visible-xs navbar navbar-default" id="filters-navbar" role="navigation">
                     <div class="container">
 
-                        <!-- Brand and toggle get grouped for better mobile display -->
                         <div class="navbar-filters">
                             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#filters">
                                 <span class="sr-only">Toggle navigation</span>
@@ -330,7 +84,6 @@
                             <h3 class="filter"style="margin-top: 5px; padding-top: 12px">Filtros:</h3>
                         </div>
 
-                        <!-- Collect the nav links, forms, and other content for toggling -->
                         <div class="collapse navbar-collapse" id="filters">
                             <div class="container">
                                 <ul class="nav navbar-nav">
@@ -352,17 +105,18 @@
                         </div>
                     </div>
                 </div>
-            </section>
+            </section> -->         
+        </div>
+    </div>
+</div>
 
-            <!--Alert-->
-            <div style="display:none">
-                <div id="dialog-alert" title="">
-                    <p></p>
-                </div>
-            </div>
-            <br>
+<div class="space-50"></div>
 
-            <!--Anuncios-->
+<!-- Anuncios -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="BCW">
+
             <div class="panel-group-spam" id="accordions" role="tablist" aria-multiselectable="true">
                 <div class="panel panel-default hidden-xs">
                     <div class="panel-heading" role="tab" id="spam">
@@ -404,46 +158,31 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            
+            </div>            
         </div>
     </div>
 </div>
 
-<div class="hidden-xs space-100"></div>
+<!--Alert-->
+<div style="display:none">
+    <div id="dialog-alert" title="">
+        <p></p>
+    </div>
+</div>
 
+<input id="from" type="hidden">
+<input id="to" type="hidden">
+
+<div class="space-60"></div>
 
 <script>
 
-    $('#accordions').on('hidden.bs.collapse', function () {
-        checkCollapse();
-    });
-
-    $('#accordions').on('shown.bs.collapse', function () {
-        checkCollapse();
-    });
-
-    function checkCollapse() {
-
-        $("a[data-toggle='collapse']").each(function(){
-
-            var html = "";
-            var isCollapse = $.parseJSON($(this).attr("aria-expanded"));
-            //var numberOfOpportunities = $(this).data("number-of-opportunities");
-
-            if (isCollapse) {
-                html += "Arriendo de autos en otras comunas de Santiago<i class='pull-right fa fa-chevron-up'></i>";
-            } else {
-                html += "Arriendo de autos en otras comunas de Santiago<i class='pull-right fa fa-chevron-down'></i>";
-            }
-
-            $(this).html(html);
-        });
-    }
+    var reserveUrl = "<?php echo url_for('reserve', array('carId' => 'carId'), true) ?>";
+    var usuarioLogeado = "<?php echo $usuarioLog; ?>";
 
     $(document).ready(function(){
         
-        $('#from').datetimepicker({
+        /*$('#from').datetimepicker({
             allowTimes:[
             "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
             "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
@@ -466,35 +205,183 @@
                 var to = $("#from").val();
                 times(to);
             }
-        });
+        });*/
 
-        $("#search").click(function(e){
-            e.preventDefault();
-            searchCars();
+        $("#search").click(function(){
+            searchCars(0, $("button.see-more").data("limit"));
         });
 
         $("#commune").change(function(){
-            searchCars(); 
+            searchCars(0, $("button.see-more").data("limit"));
         });
 
         $("input[type='checkbox']").change(function(){
-            searchCars();
+            searchCars(0, $("button.see-more").data("limit"));
         });
-
-        $("#from").val(roundTime($("#from").val()));
-        $("#to").val(roundTime($("#to").val()));
-
-        localizame();
 
         <?php if (!($hasCommune)): ?>
             $("#commune").focus();
+        <?php endif ?>                
 
-        <?php endif ?>
+        initializeDate("from", new Date(<?php echo strtotime($from) * 1000 ?>), true, false, true);
+        initializeDate("to", new Date(<?php echo strtotime($to) * 1000 ?>), true, false, true);
+
+        checkCollapse();
 
         $("#search").click();
-        checkCollapse();
-        
     });
+
+    $('#accordions').on('hidden.bs.collapse', function () {
+        checkCollapse();
+    });
+
+    $('#accordions').on('shown.bs.collapse', function () {
+        checkCollapse();
+    });
+
+    function checkCollapse() {
+
+        $("a[data-toggle='collapse']").each(function(){
+
+            var html = "";
+            var isCollapse = $.parseJSON($(this).attr("aria-expanded"));
+
+            if (isCollapse) {
+                html += "Arriendo de autos en otras comunas de Santiago<i class='pull-right fa fa-chevron-up'></i>";
+            } else {
+                html += "Arriendo de autos en otras comunas de Santiago<i class='pull-right fa fa-chevron-down'></i>";
+            }
+
+            $(this).html(html);
+        });
+    }
+
+    function searchCars(offset, limit) {
+
+        if (offset == 0) {
+            $('#list-container').hide();
+        }
+        $(".loading").show();
+
+        var from      = $("#from").val();
+        var to        = $("#to").val();
+        var regionId  = parseInt($("#region option:selected").val());
+        var communeId = parseInt($("#commune option:selected").val());
+
+        //Filtro busqueda
+        var isAutomatic = $(".isAutomatic").is(':checked');
+        var isLowConsumption = $(".isLowConsumption").is(':checked');
+        var isMorePassengers = $(".isMorePassengers").is(':checked');
+        var nearToSubway = $(".nearToSubway").is(':checked');
+        var haveChair = $(".haveChair").is(":checked");
+        var isAirportDelivery = $(".isAirportDelivery").is(":checked");
+
+        var parameters = {
+            offset: offset,
+            limit: limit,
+            from : from,
+            to: to,
+            regionId: regionId,
+            communeId: communeId,
+            isAutomatic: isAutomatic,
+            isLowConsumption: isLowConsumption,
+            isMorePassengers: isMorePassengers,
+            nearToSubway: nearToSubway,
+            haveChair: haveChair,
+            isAirportDelivery: isAirportDelivery
+        }
+
+        $.post("<?php echo url_for('car_search') ?>", parameters, function(r){
+
+            var listContent = "";
+
+            if (r.cars.length > 0) {
+                for (var i = 0 ; i < r.cars.length ; i++) {
+
+                    var Car = r.cars[i];
+
+                    var urlFotoTipo      = "<?php echo image_path('../uploads/cars/" + Car.photo + "'); ?>";
+                    var urlFotoThumbTipo = "<?php echo image_path('../uploads/cars/" + Car.photo + "'); ?>";
+                    
+                    if (Car.photoType == 1) {
+                        urlFotoTipo = Car.photo;
+                        urlFotoThumbTipo = Car.photo;
+                    }
+
+                    var str = 0;
+                    if (Car.photo) {
+                        str = Car.photo.indexOf("cars");
+                    }
+
+                    if(str > 0) {
+                        urlFotoTipo = Car.photo;
+                        urlFotoThumbTipo = Car.photo;
+                    }
+    
+                    article = "<article class='box'>";
+                    article += "<div class='row'>";
+                    article += "<div class='col-xs-4 col-md-4 image'>";
+                   if(str > 0) {
+                        article += "<img class='img-responsive' src='http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='rent a car "+ Car.brand +" "+ Car.model +"'/>";
+                    }else   {
+                        article += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='rent a car " + Car.brand +" "+ Car.model +"'/>";
+                    }
+                    article += "</div>";
+                    article += "<div class='col-xs-8 col-md-8 text'>";
+                    article += "<h2>"+ Car.brand +" "+ Car.model +"<small>, "+Car.year+"</small></h2>";
+                    article += "<p class='price'>$"+ Car.price +" <small style='color: black; font-weight: 300; font-size: 9px;'>TOTAL</small></p>";
+                    article += "<div class='metro'><p><img class='km-area' src='/images/newDesign/ico.png' alt='metro'> A <b><em>"+Car.nearestMetroDistance+"</em> km</b> del Metro "+Car.nearestMetroName+"</p></div>";
+                    article += "<p class='text-right'><a class='btn btn-a-action btn-sm' href='"+reserveUrl.replace("carId", Car.id)+"' class='reserve' target='_blank'>RESERVAR</a></p>";
+                    article += "</div>";
+                    article += "</div>";
+                    article += "</article>";
+
+                    listContent += "<div class='col-md-4'>";
+                    listContent += article;
+                    listContent += "</div>";
+                }
+            } else {
+                if (offset) {
+                    listContent += "<div class='col-md-12'><p class='msg-search' style='padding-top: 3%'>Ya se están mostrando todos los autos disponibles para las fechas indicadas</p></div>";
+                } else {
+                    listContent += "<div class='col-md-12'><p class='msg-search'>No hemos encontrado autos</p></div>";
+                }
+            }
+
+            if (offset) {
+                $("#list-container").append(listContent);
+            } else {
+                $("#list-container").html(listContent);
+            }
+
+            if (r.cars.length) {
+                $("button.see-more").data("offset", parseInt(offset)+parseInt(limit));
+                
+                if (r.cars.length < limit) {
+                    /*$("button.see-more").hide();*/ // Al arreglar la query de búsqueda se descomenta esto
+                } else {
+                    $("button.see-more").show();
+                }
+            } else {
+                $("button.see-more").hide();
+            }
+
+            $('.loading').hide();
+            if (!$("#list-container").is(":visible")) {
+                $("#list-container").show();
+            }
+        }, "json");
+    }
+
+    $(document).on("click", ".see-more", function(){
+        searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
+    });
+
+    function afterDateRefresh() {
+        searchCars(0, $("button.see-more").data("limit"));
+    }
+
+    /*
 
     function roundTime(valor){
 
@@ -577,7 +464,6 @@
     function times(valor){
         var fechaF = valor
 
-
         var split = fechaF.split(" ");
         var f = split[0];
         var h = split[1];
@@ -643,9 +529,9 @@
             }
             return false;
         }
-    }
+    }*/
 
-    function splitTime(time){
+    /*function splitTime(time){
         var split = time.split(" ");
         var f = split[0];
         var h = split[1];
@@ -690,8 +576,5 @@
                 return false;
             }
         }
-    }
-
-    
-
+    }*/
 </script>

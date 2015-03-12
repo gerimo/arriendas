@@ -4,5 +4,8 @@ availabilityEmail:
 availabilityEmailOpen:
     is_secure: false
 
+isAvailable:
+    is_secure: false
+
 search:
     is_secure: false

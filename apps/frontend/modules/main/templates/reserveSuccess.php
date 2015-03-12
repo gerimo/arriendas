@@ -1,4 +1,4 @@
-<link href="/css/newDesign/reserve.css" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/reserve.css?v=1" rel="stylesheet" type="text/css">
 
 <script>(function() {
     var _fbq = window._fbq || (window._fbq = []);
@@ -260,6 +260,13 @@
                 <h3>HASTA:</h3>
                 <input class="datetimepicker btn-block" id="toH" type="button"></input>
 
+                <?php if (isset($_GET['a'])): ?>
+                    <div class="space-20 hidden-xs"></div>
+                    <label class="isAirportDelivery"><input id="isAirportDelivery" name="isAirportDelivery" type="checkbox" checked value="1"> <span class="glyphicon glyphicon-plane" aria-hidden="true"></span> Deseo el auto en el aeropuerto</label>
+                <?php else: ?>
+                    <input id="isAirportDelivery" name="isAirportDelivery" type="hidden" value="0">
+                <?php endif ?>
+
                 <div class="space-50 hidden-xs"></div>
 
                 <!-- Garantía -->
@@ -343,7 +350,6 @@
 
         <!-- FORMULARIO -->
         <input id="car" name="car" type="hidden" value="<?php echo $Car->getId() ?>">
-         <input id="option" name="option" type="hidden" value="1">
         <input id="from" name="from" type="hidden" value="<?php echo $from ?>">
         <input id="to" name="to" type="hidden" value="<?php echo $to ?>">
     </form>
@@ -358,12 +364,6 @@
     </div>
 
     <?php include_partial('contratosArrendatario') ?>
-    <!-- 
-    <form action="<?php echo url_for('main/uploadLicense?photo=licence&width=194&height=204&file=filelicence') ?>" enctype="multipart/form-data" id="formlicence" method="post">
-        <input id="filelicence" name="filelicence" type="file">
-        <input type="submit">
-    </form>
-     -->
 </div>
 
 <script>
@@ -482,7 +482,36 @@
         $('html, body').animate({
             scrollTop: position
         }, 1250);
-    });    
+    });
+
+    function confirmAvailabilityOfTheCar() {
+
+        var carId = $("#car").val();
+        var from  = $("#from").val();
+        var to    = $("#to").val();
+
+        var parameters = {
+            "carId": carId,
+            "from": from,
+            "to": to
+        };
+
+        $.post("<?php echo url_for('car_is_available') ?>", parameters, function(r){
+
+            if (!r.isAvailable) {
+                $("#dialog-alert p").html("Lo sentimos, pero el auto no se encuentra disponible para las fechas indicadas");
+                $("#dialog-alert").attr("title", "El auto ya posee una reserva");
+                $("#dialog-alert").dialog({
+                    buttons: [{
+                        text: "Aceptar",
+                        click: function() {
+                            $(this).dialog( "close" );
+                        }
+                    }]
+                });
+            }
+        }, 'json');
+    }
 
     function explodeDate(date) {
 
@@ -672,50 +701,11 @@
                 }, 'json');
             }
         }
-
-        /*var warrantyType  = $('input[type=radio][name=warranty]:checked').val();
-        var warrantyPrice = parseInt($('input[type=radio][name=warranty]:checked').data("value"));
-
-        fromDate = explodeDate($("#from").val());
-        toDate = explodeDate($("#to").val());
-
-        var from     = new Date(fromDate['year'], fromDate['month'], fromDate['day'], fromDate['hours'], fromDate['minutes'], 0, 0);
-        var to       = new Date(toDate['year'], toDate['month'], toDate['day'], toDate['hours'], toDate['minutes'], 0, 0);
-        var duration = (to - from)/1000/60/60;
-        var days     = Math.floor(duration/24);
-        var hours    = duration % 24;
-
-        var price        = parseInt($("#price").val());
-        var totalPrice   = 0;
-
-        if (warrantyType === undefined) {
-            totalPrice = price;
-        } else {
-            if (warrantyType == 1) {
-                totalPrice = price + warrantyPrice;
-            } else {
-                if (hours >= 6) {
-                    if (days) {
-                        totalPrice = price + (days * warrantyPrice) + warrantyPrice;
-                    } else {
-                        totalPrice = price + warrantyPrice;
-                    }            
-                } else {
-                    if (days) {
-                        totalPrice = price + (days * warrantyPrice) + ((hours/6) * warrantyPrice);
-                    } else {
-                        totalPrice = price + (hours/6) * warrantyPrice;
-                    }
-                }
-            }
-        }
-
-        $("#total-price").val(totalPrice);
-        $(".total-price").html($.number(totalPrice, 0, ',', '.'));*/
     }
 
     function afterDateRefresh() {
         getRentalPrice();
+        confirmAvailabilityOfTheCar();
     }
 </script>
 <script src="/js/newDesign/dates.js" type="text/javascript"></script>

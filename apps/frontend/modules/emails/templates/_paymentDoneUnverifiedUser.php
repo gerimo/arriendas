@@ -2,7 +2,9 @@
     $User = $Transaction->getUser();
     $Reserve = $Transaction->getReserve();
 ?>
+
 <h3>Datos del Usuario</h3>
+
 <table>
     <tr>
         <th style='text-align: left'>ID</th>
@@ -32,10 +34,10 @@
         <th style='text-align: left'>Rut</th>
         <td><?php echo $User->getRutFormatted() ?></td>
     </tr>
-    
 </table>
 
 <h3>Datos del La Reserva</h3>
+
 <table>
     <tr>
         <th style='text-align: left'>ID</th>
@@ -62,10 +64,10 @@
             <td>$<?php echo number_format(180000, 0, ',', '.') ?></td>
         <?php endif ?>
     </tr>
-    
 </table>
 
 <h3>Datos del La Transacción</h3>
+
 <table>
     <tr>
         <th style='text-align: left'>ID</th>
@@ -78,6 +80,5 @@
     <tr>
         <th style='text-align: left'>Precio</th>
         <td>$<?php echo number_format($Transaction->price, 0, ',', '.') ?></td>
-    </tr>
-    
+    </tr> 
 </table>

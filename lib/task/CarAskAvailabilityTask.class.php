@@ -51,8 +51,8 @@ EOF;
 
                 $this->log("[".date("Y-m-d H:i:s")."] Mañana ".date("Y-m-d", $tomorrow)." es fin de semana o festivo.");
 
-                /*$days = Utils::isWeekend(true, true); // envio de viernes*/
-                $days = Utils::isWeekend(true, false); // envio de sabado
+                $days = Utils::isWeekend(true, true); // envio de viernes
+                /*$days = Utils::isWeekend(true, false); // envio de sabado*/
             } else {
                 $this->log("[".date("Y-m-d H:i:s")."] Mañana ".date("Y-m-d", $tomorrow)." NO es fin de semana o festivo.");
                 exit;
@@ -123,7 +123,7 @@ EOF;
                             $this->log("[".date("Y-m-d H:i:s")."] Enviando consulta a ".$oCar->getUser()->firstname." ".$oCar->getUser()->lastname." Car ".$oCar->getId());                        
 
                             $subject = "¿Tienes disponibilidad para recibir clientes esta semana? [E".$CarAvailabilityEmail->getId()."]";
-                            $body    = get_partial('emails/carAskAvailabilityMailingWeek', array(
+                            $body    = get_partial('emails/carAskAvailabilityMailing', array(
                                 'Car' => $oCar,
                                 'days' => $days,
                                 'imageUrl' => $imageUrl,

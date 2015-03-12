@@ -136,11 +136,14 @@ EOF;
                     $q = Doctrine_Core::getTable('Car')
                         ->createQuery('C')
                         ->innerJoin('C.Model M')
+                        ->innerJoin('C.Commune Co')
+                        ->innerJoin('Co.Region R')
                         ->where('distancia(?, ?, C.lat, C.lng) > ?', array($Reserve->getCar()->getLat(), $Reserve->getCar()->getLng(), $desde))
                         ->andWhere('distancia(?, ?, C.lat, C.lng) <= ?',  array($Reserve->getCar()->getLat(), $Reserve->getCar()->getLng(), $hasta))
                         ->andWhere('C.seguro_ok = 4')
                         ->andWhere('C.activo = 1')
-                        ->andWhere('C.transmission = ?', $Reserve->getCar()->getTransmission());
+                        ->andWhere('C.transmission = ?', $Reserve->getCar()->getTransmission())
+                        ->andWhere('R.id = 13');
 
                     if ($Reserve->getCar()->getModel()->getIdOtroTipoVehiculo() == 1) {
                         $q->andWhere('M.id_otro_tipo_vehiculo IN (1,2)');

@@ -198,6 +198,40 @@ class carsActions extends sfActions {
         return sfView::NONE;
     }
 
+    public function executeIsAvailable(sfWebRequest $request) {
+
+        $return = array(
+            "error" => false,
+            "isAvailable" =>false
+        );
+
+        $carId = $request->getPostParameter('carId', null);
+        $from  = $request->getPostParameter('from', null);
+        $to    = $request->getPostParameter('to', null);
+
+        $this->forward404If(!$carId || !$from || !$to);
+
+        try {
+            $oCar = Doctrine_Core::getTable("Car")->find($carId);
+        } catch (Exception $e) {
+            error_log("[cars/isAvailable] ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "cars/isAvailable");
+            }
+        }
+
+        if (!$oCar->hasReserve($from, $to)) {
+            $return["isAvailable"] = true;
+        }
+
+        $this->getUser()->setAttribute("from", $from);
+        $this->getUser()->setAttribute("to", $to);
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;        
+    }
+
     public function executeSearch(sfWebRequest $request) {
 
         $return = array("error" => false);
@@ -226,8 +260,11 @@ class carsActions extends sfActions {
 
             $this->getUser()->setAttribute('from', date("Y-m-d H:i:s", strtotime($from)));
             $this->getUser()->setAttribute('to', date("Y-m-d H:i:s", strtotime($to)));
-            $this->getUser()->setAttribute("mapCenterLat", $mapCenterLat);
-            $this->getUser()->setAttribute("mapCenterLng", $mapCenterLng);
+
+            if ($mapCenterLat && $mapCenterLng) {
+                $this->getUser()->setAttribute("mapCenterLat", $mapCenterLat);
+                $this->getUser()->setAttribute("mapCenterLng", $mapCenterLng);
+            }
 
             $withAvailability = false;
             $days = Utils::isWeekend(true);
@@ -649,6 +686,9 @@ class carsActions extends sfActions {
             $Car->setCityId(27);
 
             $Car->save();
+
+            // Notificaciones
+            Notification::make($idUsuario, 8);
 
 
              if($send == 1){

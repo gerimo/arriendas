@@ -161,9 +161,17 @@ user_edit:
     url: /usuarios/editar-usuario
     param: { module: user, action: editUser }
 
+user_edit_account:
+    url: /usuarios/editar-usuario-cuenta
+    param: { module: user, action: editUserAccount }
+
 user_find_all:
     url: /usuarios/buscar-todos
     param: { module: user, action: userFindAll }
+
+user_upload_photo:
+    url: /usuarios/subir-foto
+    param: { module: user, action: uploadPhoto }
 
 user_whitout_car:
     url: /usuarios/sin-auto

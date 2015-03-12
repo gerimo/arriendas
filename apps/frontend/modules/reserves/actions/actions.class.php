@@ -73,6 +73,7 @@ class reservesActions extends sfActions {
             }
 
             $Reserve->setConfirmed(1);
+
             /*$Reserve->setCanceled(0);*/
             $Reserve->setFechaConfirmacion(date("Y-m-d H:i:s"));
 
@@ -87,6 +88,9 @@ class reservesActions extends sfActions {
 
             // Correo de notificación
             $User    = $Reserve->getUser();
+
+             // Notificaciones
+            Notification::make($User->id, 14, $Reserve->id); // Confirmar pago
 
             $mail    = new Email();
             $mailer  = $mail->getMailer();
@@ -385,13 +389,13 @@ class reservesActions extends sfActions {
             throw new Exception("Falta fecha hasta", 1);
         }
 
-        $Car = $Reserve->getCar();        
+        $Car = $Reserve->getCar();
 
         $NewReserve = $Reserve->copy(true);
         $NewReserve->setCar($Car);
         $NewReserve->setDate($Reserve->getFechaTermino2());
         $NewReserve->setDuration(Utils::calculateDuration($from, $to));
-        $NewReserve->setPrice(CarTable::getPrice($from, $to, $Car->price_per_hour, $Car->price_per_day, $Car->price_per_week, $Car->price_per_month));
+        $NewReserve->setPrice($this->calculateExtendedPrice($Reserve, $to));
         $NewReserve->setComentario("Reserva extendida");
         $NewReserve->setFechaReserva(date("Y-m-d H:i:s"));
         $NewReserve->setIdPadre($Reserve->id);
@@ -459,7 +463,7 @@ class reservesActions extends sfActions {
                 throw new Exception("La extensión no se puede realizar debido a que el auto ya posee una reserva en la fecha consultada", 1);
             }
 
-            $price = CarTable::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth());
+            $price = $this->calculateExtendedPrice($Reserve, $to);
 
             if ($Reserve->getLiberadoDeGarantia()) {
                 $price += Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to);
@@ -494,7 +498,7 @@ class reservesActions extends sfActions {
             $carId  = $request->getPostParameter("car", null);
             $from   = $request->getPostParameter("from", null);
             $to     = $request->getPostParameter("to", null);
-            $option = $request->getPostParameter("option", null);      
+            $isAirportDelivery = $request->getPostParameter("isAirportDelivery", null);      
         } else {            
             $warranty = $this->getUser()->getAttribute("warranty");
             $payment  = $this->getUser()->getAttribute("payment", null);
@@ -635,42 +639,6 @@ class reservesActions extends sfActions {
                 $mailer->send($message);
             }
 
-            if(!$User->getDriverLicenseFile()){
-                $mail    = new Email();
-                $mailer  = $mail->getMailer();
-                $message = $mail->getMessage();            
-
-                $subject = "¡Se ha registrado un pago de un usuario sin verificacion de licencia de conducir!";
-                $body    = $this->getPartial('emails/paymentDoneUnverifiedUser', array('Transaction' => $Transaction));
-                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-                $to      = array("soporte@arriendas.cl");
-
-                $message->setSubject($subject);
-                $message->setBody($body, 'text/html');
-                $message->setFrom($from);
-                $message->setTo($to);
-                $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
-                
-                $mailer->send($message);
-            }/* elseif($User->getBlockedLicense()){
-                $mail    = new Email();
-                $mailer  = $mail->getMailer();
-                $message = $mail->getMessage();            
-
-                $subject = "¡Se ha registrado un pago de un usuario sin licencia de conducir o bloqueada!";
-                $body    = $this->getPartial('emails/paymentDoneUnverifiedUser', array('Transaction' => $Transaction));
-                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-                $to      = array("soporte@arriendas.cl");
-
-                $message->setSubject($subject);
-                $message->setBody($body, 'text/html');
-                $message->setFrom($from);
-                $message->setTo($to);
-                $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
-                
-                $mailer->send($message);
-            }*/
-
         } catch (Exception $e) {
             error_log("[reserves/pay] ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
@@ -682,7 +650,9 @@ class reservesActions extends sfActions {
         $this->getRequest()->setParameter("reserveId", $Reserve->getId());
         $this->getRequest()->setParameter("transactionId", $Transaction->getId());
 
-        if ($Car->getIsAirportDelivery() && $option) {
+        if ($Car->getIsAirportDelivery() && $isAirportDelivery) {
+            $Reserve->setIsAirportDelivery(true);
+            $Reserve->save();
             $this->getUser()->setAttribute("reserveId", $Reserve->getId());
             $this->getUser()->setAttribute("transactionId", $Transaction->getId());
             $this->redirect('reserve_airport');
@@ -713,6 +683,9 @@ class reservesActions extends sfActions {
             $mailer  = $mail->getMailer();
             $message = $mail->getMessage();
             $User    = $Reserve->getUser();
+
+             // Notificaciones
+            Notification::make($User->id, 15, $Reserve->id); // Rechazar pago
 
             $message->setSubject("La reserva ha sido rechazada");
             $message->setBody($this->getPartial('emails/reserveRejected', array('Reserve' => $Reserve)), 'text/html');
@@ -821,6 +794,31 @@ class reservesActions extends sfActions {
     }
 
     // FUNCIONES PRIVADAS
+    private function calculateExtendedPrice($Reserve, $to) {
+
+        $accumulatedPrice = 0;
+        $auxReserve       = $Reserve;
+        $iterate          = true;        
+        
+        while ($iterate) {
+
+            $originalFrom     = $auxReserve->getDate();
+            $accumulatedPrice = $auxReserve->getPrice();
+            
+            if ($auxReserve->getIdPadre()) {
+                $auxReserve = Doctrine_Core::getTable('Reserve')->find($auxReserve->getIdPadre());
+            } else {
+                $iterate = false;
+            }
+        }
+
+        $Car = $Reserve->getCar();
+
+        $extendedPrice = CarTable::getPrice($originalFrom, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth());
+
+        return $extendedPrice - $accumulatedPrice;
+    }
+
     private function makeChange ($NewActiveReserve) {
 
         try {

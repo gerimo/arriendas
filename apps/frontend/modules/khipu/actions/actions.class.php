@@ -203,6 +203,13 @@ class khipuActions extends sfActions {
 
                         $Functions = new Functions;
                         $Functions->generarNroFactura($Reserve, $Transaction);
+
+                        // Notificaciones
+                        if (!$Renter->hasPayments()) {
+                            Notification::make($Renter->id, 2, $Reserve->id); // primer pago
+                        } else {
+                            Notification::make($Renter->id, 4, $Reserve->id); // Pago
+                        }
                         
                         $Transaction->setCompleted(true);
                         $Transaction->save();
@@ -317,6 +324,23 @@ class khipuActions extends sfActions {
                             $OpportunityQueue->setReserveId($Transaction->getReserveId());
                             $OpportunityQueue->setPaidAt($Reserve->getFechaPago());
                             $OpportunityQueue->save();
+                        }
+
+                        if(!$Reserve->getUser()->getDriverLicenseFile()){
+
+                            $subject = "Pago de usuario sin licencia de conducir";
+                            $body    = $this->getPartial('emails/paymentDoneUnverifiedUser', array('Transaction' => $Transaction));
+                            $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+                            $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+
+                            $message = $mail->getMessage();
+                            $message->setSubject($subject);
+                            $message->setBody($body, 'text/html');
+                            $message->setFrom($from);
+                            $message->setTo($to);
+                            $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                            
+                            $mailer->send($message);
                         }
                     }
                 }
