@@ -2824,24 +2824,10 @@ class mainActions extends sfActions {
         $this->setLayout("newIndexLayout");
 
         $this->isWeekend  = false;
-        $this->isMobile   = false;
-
-        if (is_null($this->getUser()->getAttribute('geolocalizacion'))) {
-            $this->getUser()->setAttribute('geolocalizacion', true);
-        } elseif ($this->getUser()->getAttribute('geolocalizacion') == true) {
-            $this->getUser()->setAttribute('geolocalizacion', false);
-        }
-
-        $this->limit = 33;
-        $MD = new Mobile_Detect;
-        if ($MD->isMobile()) {
-            $this->limit = 5;
-            $this->isMobile = true;
-        }
-
-        $this->Region = Doctrine_Core::getTable("Region")->find(13);
+        $this->limit      = 33;
+        $this->Region     = Doctrine_Core::getTable("Region")->find(13);
         $this->hasCommune = false;
-        $this->hasRegion = false;
+        $this->hasRegion  = false;
 
         if ($request->hasParameter('region','commune', 'carType')){
             $regionSlug = $request->getParameter('region');
@@ -2858,6 +2844,22 @@ class mainActions extends sfActions {
             }
         }
 
+        if ($this->getUser()->getAttribute("from", false) && $this->getUser()->getAttribute("to", false)) {
+            $this->from = $this->getUser()->getAttribute("from");
+            $this->to   = $this->getUser()->getAttribute("to");
+        } else {
+            if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
+                $this->from = date("Y-m-d 08:00", strtotime("+12 Hours"));
+            } else {
+                $this->from = date("Y-m-d H:i", strtotime("+4 Hours"));
+            }
+
+            if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
+                $this->to = date("Y-m-d 08:00", strtotime("+32 Hours"));
+            } else {
+                $this->to = date("Y-m-d H:i", strtotime("+24 Hours"));
+            }
+        }
     }
 
     //////////////////Enlasnoticias//////////////////////////////

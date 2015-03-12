@@ -16,7 +16,7 @@ class carActions extends sfActions {
 
         try {   
 
-            $damageId    = $request->getPostParameter("damageId", null);
+            $damageId = $request->getPostParameter("damageId", null);
 
             $Damage = Doctrine_Core::getTable('Damage')->find($damageId);
 

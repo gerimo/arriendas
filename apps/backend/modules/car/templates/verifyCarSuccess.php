@@ -12,7 +12,7 @@
 	</div>
 
 	<div id="formulario">
-		<h1 class="text-center ">Verificar auto</h1>
+		<h1>Verificar auto</h1>
 		<div class="space-20"></div>
 		<div id="hk-container" class="carousel slide" data-ride="carousel">
 			<div class="carousel-inner" role="listbox">
@@ -95,12 +95,17 @@
 				</div> 
 
 				<div class="item">
-					<h2>Audio del auto</h2>
-					<div class="col-md-offset-2 col-md-8"id="soundOption">
-						<div class="col-md-12"><label>¿Tiene el equipo de audio original de se vehículo?</label></div>
-						<div class="col-md-4"><button class="btn btn-block btn-primary" data-target="#hk-container" data-slide-to="1">Anterior</button></div>
-						<div class="col-md-4"><button class="btn btn-block btn-primary soundOptionYes">SI</button></div>
-						<div class="col-md-4"><button class="btn btn-block btn-primary" data-target="#hk-container" data-slide-to="3">NO</button></div>
+
+					<div class="row">
+						<div class="col-md-2"><button class="btn btn-block" data-target="#hk-container" data-slide-to="1"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span></button></div>
+					</div>
+
+					<h2 class="text-center">Audio del auto</h2>					
+
+					<div class="col-md-offset-2 col-md-8" id="soundOption">						
+						<p class="text-center">¿Tiene el equipo de audio original de se vehículo?</p>
+						<div class="col-md-6"><button class="btn btn-block btn-primary soundOptionYes">NO</button></div>
+						<div class="col-md-6"><button class="btn btn-block btn-primary" data-target="#hk-container" data-slide-to="3">SI</button></div>
 					</div>
 					<div class="container hk-container" id="audio">                      
 						<div class="col-md-12"> 

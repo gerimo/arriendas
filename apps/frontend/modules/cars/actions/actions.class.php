@@ -260,8 +260,11 @@ class carsActions extends sfActions {
 
             $this->getUser()->setAttribute('from', date("Y-m-d H:i:s", strtotime($from)));
             $this->getUser()->setAttribute('to', date("Y-m-d H:i:s", strtotime($to)));
-            $this->getUser()->setAttribute("mapCenterLat", $mapCenterLat);
-            $this->getUser()->setAttribute("mapCenterLng", $mapCenterLng);
+
+            if ($mapCenterLat && $mapCenterLng) {
+                $this->getUser()->setAttribute("mapCenterLat", $mapCenterLat);
+                $this->getUser()->setAttribute("mapCenterLng", $mapCenterLng);
+            }
 
             $withAvailability = false;
             $days = Utils::isWeekend(true);

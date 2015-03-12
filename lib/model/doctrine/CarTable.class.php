@@ -46,20 +46,23 @@ class CarTable extends Doctrine_Table {
 
         $CarsFound = array();
 
-        //error_log("OFFSET: ".$offset);
-        //error_log("LIMIT: ".$limit);
-        //error_log("FROM: ".$from);
-        //error_log("TO: ".$to);
-        //error_log("ISMAP: ".$isMap);
-        //error_log("NELAT: ".$NELat);
-        //error_log("NELNG: ".$NELng);
-        //error_log("SWLAT: ".$SWLat);
-        //error_log("SWLNG: ".$SWLng);
-        //error_log("REGIONID: ".$regionId);
-        //error_log("COMMUNEID: ".$communeId);
-        //error_log("ISAUTOMATIC: ".$isAutomatic);
-        //error_log("ISLOWCONSUMPTION: ".$isLowConsumption);
-        //error_log("ISMOREPASSENGERS: ".$isMorePassengers);
+        /*error_log("OFFSET: ".$offset);
+        error_log("LIMIT: ".$limit);
+        error_log("FROM: ".$from);
+        error_log("TO: ".$to);
+        error_log("ISMAP: ".$isMap);
+        error_log("NELAT: ".$NELat);
+        error_log("NELNG: ".$NELng);
+        error_log("SWLAT: ".$SWLat);
+        error_log("SWLNG: ".$SWLng);
+        error_log("REGIONID: ".$regionId);
+        error_log("COMMUNEID: ".$communeId);
+        error_log("ISAUTOMATIC: ".print_r($isAutomatic));
+        error_log("ISLOWCONSUMPTION: ".print_r($isLowConsumption));
+        error_log("ISMOREPASSENGERS: ".print_r($isMorePassengers));
+        error_log("HAVECHAIR ".print_r($haveChair));
+        error_log("NEARTOSUBWAY ".print_r($nearToSubway));
+        error_log("ISAIRPORTDELIVERY ".print_r($isAirportDelivery));*/
         
         try {
 
@@ -105,7 +108,7 @@ class CarTable extends Doctrine_Table {
             if ($isLowConsumption) {
                 /*error_log("isLowConsumption");*/
                 $q->andWhere("C.capacity < 1.6");
-                $q->andWhere("C.capacity != 0");
+                $q->andWhere("C.capacity > 0");
             }
 
             if ($isMorePassengers) {
@@ -124,14 +127,11 @@ class CarTable extends Doctrine_Table {
             }
 
             if ($nearToSubway) {
-                /*error_log($nearToSubway);*/
-                //15 cuadras->18 minutos a pie
                 $distanceMax = 1.5;
 
                 $q->innerJoin('C.CarProximityMetros CPM');
                 $q->andWhere('CPM.distance < ?', $distanceMax);
                 $q->addOrderBy('CPM.distance ASC');
-
             }
 
             $Cars = $q->execute();
