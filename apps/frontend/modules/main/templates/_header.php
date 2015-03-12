@@ -28,11 +28,9 @@
             <div class="collapse navbar-collapse" id="header">
                 
                 <ul class="nav navbar-nav">
-                    <?php if($this->context->getActionName()!="reserve"): ?>
-                    
+                    <?php if($this->context->getActionName() != "reserve"): ?>                    
+                        <li><a href="<?php echo url_for("rent_a_car")?>">Buscar autos</a></li>
                         <?php if ($sf_user->isAuthenticated()): ?>
-                            <li><a href="<?php echo url_for("homepage") ?>" data-target="homepage">Inicio</a></li>
-
                             <?php if($hasCars): ?>
                                 <li><a href="<?php echo url_for("cars") ?>" data-target="cars">Mis autos</a></li>
                             <?php else: ?>
@@ -45,12 +43,9 @@
                             
                             <li><a href="<?php echo url_for("reserves") ?>" data-target="reserves">Reservas</a></li>
                         <?php else: ?>
-                            
-                            <li><a href="<?php echo url_for("rent_a_car")?>">Buscar autos</a></li>
                             <li><a href="<?php echo url_for("how-works")?>">¿Cómo funciona?</a></li>
                             <li><a href="<?php echo url_for("prices_compare")?>">Compara precios</a></li>
                             <li><a href="<?php echo url_for("news")?>">En las noticias</a></li>
-                            <!-- <li><a onclick="playPause()">Play / Pause</a></li> -->
                         <?php endif?>
                         <li><a href="<?php echo url_for('questions') ?>" data-target="questions">Preguntas Frecuentes</a></li>
                     
