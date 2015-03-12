@@ -74,8 +74,18 @@ EOF;
                     $Action       = $Notification->getAction();
                     $Type         = $Notification->getNotificationType();
 
-                    $title   = Notification::translator($User->id, $Notification->message_title, $Reserve ? $Reserve->id : null );
-                    $notificationMessage = Notification::translator($User->id, $Notification->message, $Reserve ? $Reserve->id : null );
+                    if($Reserve){
+                        $Owner = $Reserve->getCar()->getUser();
+
+                        $OwnerTitle   = Notification::translator($User->id, $Notification->message_title, $Reserve ? $Reserve->id : null );
+                        $OwnerNotificationMessage = Notification::translator($User->id, $Notification->message, $Reserve ? $Reserve->id : null );
+                    } else {
+                        $OwnerTitle = Notification::translator($User->id, $Notification->message_title, $Reserve ? $Reserve->id : null );
+                        $OwnerNotificationMessage = Notification::translator($User->id, $Notification->message, $Reserve ? $Reserve->id : null );
+                    }
+
+                    $UserTitle   = Notification::translator($User->id, $Notification->message_title, $Reserve ? $Reserve->id : null );
+                    $UserNotificationMessage = Notification::translator($User->id, $Notification->message, $Reserve ? $Reserve->id : null );
 
                     if($Notification->is_active && $Action->is_active && $Type->is_active) {
                         switch ($Type->id) {
@@ -86,9 +96,11 @@ EOF;
                                 break;
 
                             case 2:
-                                // tipo de notificacion BARRA PROPIETARIO
-                                // se ejecuta a traves de un filtro
-                                $countBarPropietario++;
+                                if($Reserve) {
+                                    // tipo de notificacion BARRA PROPIETARIO
+                                    // se ejecuta a traves de un filtro
+                                    $countBarPropietario++;
+                                }
                                 break;
 
                             case 3:
@@ -96,31 +108,33 @@ EOF;
                                 $SMS = new SMS("Arriendas");
 
                                 // si el titulo es diferente de null o vacío, le añade un salto de linea.
-                                if ($title) {
-                                    $title = $title.chr(0x0D).chr(0x0A);
+                                if ($UserTitle) {
+                                    $UserTitle = $UserTitle.chr(0x0D).chr(0x0A);
                                 } else {
-                                    $title = "";
+                                    $UserTitle = "";
                                 }
 
-                                $SMS->send($title.$notificationMessage, $User->telephone);
+                                $SMS->send($UserTitle.$UserNotificationMessage, $User->telephone);
 
                                 $countSMS++;
                                 break;
 
                             case 4:
                                 // tipo de notificacion SMS PROPIETARIO
-                                $SMS = new SMS("Arriendas");
+                                if($Reserve) {
+                                    $SMS = new SMS("Arriendas");
 
-                                // si el titulo es diferente de null o vacío, le añade un salto de linea.
-                                if ($title) {
-                                    $title = $title.chr(0x0D).chr(0x0A);
-                                } else {
-                                    $title = "";
+                                    // si el titulo es diferente de null o vacío, le añade un salto de linea.
+                                    if ($OwnerTitle) {
+                                        $OwnerTitle = $OwnerTitle.chr(0x0D).chr(0x0A);
+                                    } else {
+                                        $OwnerTitle = "";
+                                    }
+
+                                    $SMS->send($OwnerTitle.$OwnerNotificationMessage, $Owner->telephone);
+
+                                    $countSMSPropietario++;
                                 }
-
-                                $SMS->send($title.$notificationMessage, $User->telephone);
-
-                                $countSMSPropietario++;
                                 break;
 
                             case 5:
@@ -129,8 +143,8 @@ EOF;
                                 $mailer  = $mail->getMailer();
                                 $message = $mail->getMessage(); 
 
-                                $subject = $title;
-                                $body    = $notificationMessage;
+                                $subject = $UserTitle;
+                                $body    = $UserNotificationMessage;
                                 $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                                 $to      = array($User->email => $User->firstname." ".$User->lastname);
 
@@ -148,25 +162,27 @@ EOF;
 
                             case 6:
                                 // tipo de notificacion EMAIL PROPIETARIO
-                                $mail    = new Email();
-                                $mailer  = $mail->getMailer();
-                                $message = $mail->getMessage(); 
+                                if($Reserve) {
+                                    $mail    = new Email();
+                                    $mailer  = $mail->getMailer();
+                                    $message = $mail->getMessage(); 
 
-                                $subject = $title;
-                                $body    = $notificationMessage;
-                                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-                                $to      = array($User->email => $User->firstname." ".$User->lastname);
+                                    $subject = $OwnerTitle;
+                                    $body    = $OwnerNotificationMessage;
+                                    $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+                                    $to      = array($Owner->email => $Owner->firstname." ".$Owner->lastname);
 
-                                $message->setSubject($subject);
-                                $message->setBody($body, 'text/html');
-                                $message->setFrom($from);
-                                $message->setTo($to);
-                                $message->setReplyTo(array("ayuda@arriendas.cl" => "Ayuda Arriendas.cl"));
-                                //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
-                                
-                                $mailer->send($message);
+                                    $message->setSubject($subject);
+                                    $message->setBody($body, 'text/html');
+                                    $message->setFrom($from);
+                                    $message->setTo($to);
+                                    $message->setReplyTo(array("ayuda@arriendas.cl" => "Ayuda Arriendas.cl"));
+                                    //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                                    
+                                    $mailer->send($message);
 
-                                $countEmailPropietario++;
+                                    $countEmailPropietario++;
+                                }
                                 break;
 
                             
@@ -176,8 +192,8 @@ EOF;
                                 $mailer  = $mail->getMailer();
                                 $message = $mail->getMessage();     
 
-                                $subject = $title;
-                                $body    = $notificationMessage;
+                                $subject = $UserTitle;
+                                $body    = $UserNotificationMessage;
                                 $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                                 $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
 
@@ -197,8 +213,8 @@ EOF;
                                 $mailer  = $mail->getMailer();
                                 $message = $mail->getMessage();     
 
-                                $subject = $title;
-                                $body    = $notificationMessage;
+                                $subject = $UserTitle;
+                                $body    = $UserNotificationMessage;
                                 $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                                 $to      = array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne");
 
@@ -255,13 +271,15 @@ EOF;
         $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo Barra:          ".$countBar);
         $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo SMS:            ".$countSMS);
         $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo Email:          ".$countEmail);
+        $this->log("[".date("Y-m-d H:i:s")."] ---------------------------------------------------");
+        $this->log("[".date("Y-m-d H:i:s")."] ---------------------------------------------------");
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo Barra propietario:   ".$countBarPropietario);
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo SMS propietario:     ".$countSMSPropietario);
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo Email propietario:   ".$countEmailPropietario);
+        $this->log("[".date("Y-m-d H:i:s")."] ");
+        $this->log("[".date("Y-m-d H:i:s")."] ");
         $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo Soporte:        ".$countSoporte);
-        $this->log("[".date("Y-m-d H:i:s")."] ---------------------------------------------------");
-        $this->log("[".date("Y-m-d H:i:s")."] ---------------------------------------------------");
-        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo Barra propietario:   ".$countBar);
-        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo SMS propietario:     ".$countSMS);
-        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo Email propietario:   ".$countEmail);
-        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo Soporte propietario: ".$countSoporte);
+        $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones tipo Error:          ".$countError);
         $this->log("[".date("Y-m-d H:i:s")."] ");
         $this->log("[".date("Y-m-d H:i:s")."] ");
         $this->log("[".date("Y-m-d H:i:s")."] Total Notificaciones no activadas:        ".$countNotActive);

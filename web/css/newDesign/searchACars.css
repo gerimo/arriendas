@@ -2,55 +2,19 @@ body {
     background-image: url('/images/newDesign/background.jpg');
 }
 
-#list-container {
-    background-color: white;
-    min-height: 250px;
+.filters {
+    font-size: 18px;
+    font-weight: 400;
+    margin: 20px 0 40px 0;
 }
 
-#list-container h2 {
-    font-weight: 300;
+.filters ul {
+    list-style: none;
 }
 
-#filters-navbar {
-    background-color: white;
-    border-color: white;
-    margin: 0;
-}
-
-#section-map-filters {
-    color:rgb(10, 9, 9);
-    font-family: 'Open Sans', sans-serif;
-    font-size: 15px;
-    padding: 29px 0px 26px 0px;
-}
-
-#section-map-filters .heading {
+.filters ul li {
     float: left;
-    font: 500 24px/26px 'Open Sans', sans-serif;
-    color: #050505;
-    position: relative;
-    padding: 0 30px 0 30px;
-}
-
-#section-map-filters ul {
-    margin-top: 4px;
-    margin-left: -10%;
-}
-
-#section-map-filters li {
-    float: left;
-    list-style: none;   
-    font: 600 18px/20px 'Open Sans', sans-serif;
-    margin-left: 15px;
-}
-
-#section-map-filters .col-md-7 input[type=checkbox] { 
-	margin: 0 10px 0 10px; 
-}
-
-
-h3 .filter{
-	color:rgb(10, 9, 9);
+    margin-right: 15px;
 }
 
 .box .price {
@@ -78,33 +42,6 @@ h3 .filter{
     margin: 0;
     padding: 0;
 }
-
-.grey{
-
-    background: #FAFAFA;
-    border-radius: 5px;
-    margin-top: 2px;
-    margin-bottom: 5px;
-    padding: inherit;
-}
-
-.links{
-    margin-top: 55px;
-    margin-left: 70px;
-    margin-right: 78px;
-}
-.panel-title{
-    font: 400 23px/20px 'Roboto', sans-serif;
-
-}
-.panel-group-spam{
-     margin-top: 55px;
-}
-
-.panel-heading{
-    background-color: #FAFAFA;
-}
-
 .box {
     background-color: #fff;
     padding: 10px;
@@ -130,16 +67,11 @@ h3 .filter{
     height: 1em;
 }
 
-#tab-map .box {
-    /*border-bottom: solid 1px #ddd;*/
-}
-
 .box:hover {
     background-color: #f8f8f8;
 }
 
 .box .image .car {
-    /*height: 100%;*/
     width: 100%;
 }
 
@@ -180,7 +112,24 @@ h3 .filter{
     margin-bottom: 0px;
 }
 
-@media only screen and (max-width:767px) {
+.msg-search {
+    font-size: 20px;
+    font-weight: 400;
+    text-align: center;
+}
+
+button.see-more {
+    background-color: #5d5d5d;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+    padding: 10px 5px;
+    text-align: center;
+}
+
+/*@media only screen and (max-width:767px) {
 
     .iframe{
         height: 200px;
@@ -226,4 +175,4 @@ h3 .filter{
     .listagrey input {
         margin-top: 5px;
     }
-}
+}*/

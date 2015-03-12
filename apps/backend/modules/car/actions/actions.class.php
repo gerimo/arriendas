@@ -16,7 +16,7 @@ class carActions extends sfActions {
 
         try {   
 
-            $damageId    = $request->getPostParameter("damageId", null);
+            $damageId = $request->getPostParameter("damageId", null);
 
             $Damage = Doctrine_Core::getTable('Damage')->find($damageId);
 
@@ -334,6 +334,8 @@ class carActions extends sfActions {
 
             if ($option == 4) {
                 $Car->setSeguroOk(4);
+                // Notificaciones
+                Notification::make($Car->getUser()->id, 10); // Confirmar pago
                 $Car->save();
                 $return["option"] = 4; 
             }

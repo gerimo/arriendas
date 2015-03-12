@@ -39,4 +39,25 @@ class Utils {
 
         return false;
     }
+
+    public static function isValidRUT($rut) {
+
+        $rut = str_replace(array('.', ',', '-', ' '), '', $rut);
+
+        $dv     = substr($rut, -1);
+        $number = substr($rut, 0, -1);
+
+        $s = 1;
+        for($m = 0; $number != 0; $number /= 10) {
+            $s = ($s + $number % 10 * (9 - $m++ % 6)) % 11;
+        }
+
+        $newDv = chr($s ? $s + 47 : 75);
+
+        if (strtolower($newDv) == strtolower($dv)) {
+            return $rut;
+        }
+
+        return false;
+    }
 }

@@ -127,13 +127,53 @@
                     <div style="font-size:11px; float: left; margin-top: 10px;">
                         <input type="checkbox" id="tandc" name="tandc" style="width:12px;height:12px; vertical-align: middle; " /> Acepto terminos y condiciones
                     </div>
-                </div>-->
+                </div>-->   
 
+                <div class="hidden-xs space-30"></div>
+            </div>
+
+            <div class="col-md-12">
+                <hr>
+                <h1 class="text-center">Ingresa los datos de tu cuenta</h1>
+                <div class="col-md-6">
+                    <input class="form-control" name="rutAccount" id="rutAccount" placeholder="Rut de cuenta" value="<?php if ($User->getBankAccount()->rut_bank): echo $User->getRutBankFormatted(); else: echo $User->getRutFormatted(); endif; ?>" type="text"> 
+                </div>
+                <div class="col-md-6">
+                    <input class="form-control" name="numberAccount" id="numberAccount" placeholder="N° de cuenta" value="<?php if ($User->getBankAccount()->number) echo $User->getBankAccount()->number ?>" title="Numero de cuenta" type="text">   
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <select class="form-control" id="bank" name="bank">
+                        <option value="0">Seleccione su banco</option>
+                        <?php foreach ($Banks as $Bank): ?>
+                            <?php if ($Bank->getId() == $User->getBankAccount()->getBankId()): ?>
+                                <option selected value="<?php echo $Bank->id ?>"><?php echo $Bank->name ?></option>
+                            <?php else: ?>
+                                <option value="<?php echo $Bank->id ?>"><?php echo $Bank->name ?></option>
+                            <?php endif ?>
+                        <?php endforeach ?>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <select class="form-control" id="account" name="account">
+                        <option value="0">Seleccione el tipo de cuenta</option>
+                        <?php foreach ($BankAccountTypes as $BankAccountType): ?>
+                            <?php if ($BankAccountType->getId() == $User->getBankAccount()->getBankAccountTypeId()): ?>
+                                <option selected value="<?php echo $BankAccountType->id ?>"><?php echo $BankAccountType->name ?></option>
+                            <?php else: ?>
+                                <option value="<?php echo $BankAccountType->id ?>"><?php echo $BankAccountType->name ?></option>
+                            <?php endif ?>
+                        <?php endforeach ?>
+                    </select>
+                </div>
+            </div>
+
+                <div class="col-md-6 pull-right">
+                    <div class="hidden-xs space-50"></div>
                 <button class="btn btn-a-primary btn-block" name="save" onclick="validateForm()">Guardar</button>
-
                 <p class="alert"></p>
-
-                <div class="hidden-xs space-100"></div>
+                <div class="hidden-xs space-30"></div>
             </div>
         </div>
 
@@ -274,6 +314,10 @@
         var birth          = $("#birth").val();
         var address        = $("#address").val();
         var commune        = $("#commune option:selected").val();
+        var rutAccount     = $("#rutAccount").val();
+        var numberAccount  = $("#numberAccount").val();
+        var bankId         = $("#bank option:selected").val();
+        var accountId      = $("#account option:selected").val();
 
         var parameters = {
             "firstname": firstname,
@@ -286,7 +330,11 @@
             "telephone": telephone,
             "birth": birth,
             "address": address,
-            "commune": commune
+            "commune": commune,
+            "rutAccount": rutAccount,
+            "numberAccount": numberAccount,
+            "bankId": bankId,
+            "accountId": accountId
         }
 
         $("#dialog-alert").html("¡Advertencia! <br> Estás modificando tus datos personales. <br> <b>¿Estas seguro que quieres continuar? </b").addClass("text-center");

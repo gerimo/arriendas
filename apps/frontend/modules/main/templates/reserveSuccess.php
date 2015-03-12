@@ -1,4 +1,4 @@
-<link href="/css/newDesign/reserve.css" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/reserve.css?v=1" rel="stylesheet" type="text/css">
 
 <script>(function() {
     var _fbq = window._fbq || (window._fbq = []);
@@ -260,6 +260,13 @@
                 <h3>HASTA:</h3>
                 <input class="datetimepicker btn-block" id="toH" type="button"></input>
 
+                <?php if (isset($_GET['a'])): ?>
+                    <div class="space-20 hidden-xs"></div>
+                    <label class="isAirportDelivery"><input id="isAirportDelivery" name="isAirportDelivery" type="checkbox" checked value="1"> <span class="glyphicon glyphicon-plane" aria-hidden="true"></span> Deseo el auto en el aeropuerto</label>
+                <?php else: ?>
+                    <input id="isAirportDelivery" name="isAirportDelivery" type="hidden" value="0">
+                <?php endif ?>
+
                 <div class="space-50 hidden-xs"></div>
 
                 <!-- Garantía -->
@@ -343,7 +350,6 @@
 
         <!-- FORMULARIO -->
         <input id="car" name="car" type="hidden" value="<?php echo $Car->getId() ?>">
-         <input id="option" name="option" type="hidden" value="1">
         <input id="from" name="from" type="hidden" value="<?php echo $from ?>">
         <input id="to" name="to" type="hidden" value="<?php echo $to ?>">
     </form>

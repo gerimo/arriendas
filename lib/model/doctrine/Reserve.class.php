@@ -504,5 +504,24 @@ class Reserve extends BaseReserve {
                 $iteration++;
             }            
         }
-    }    
+    }
+
+    public function IsFirstReserve($userId) {
+
+        $q = Doctrine_Core::getTable("Reserve")
+            ->createQuery('R')
+            ->innerJoin('R.Transaction T')
+            ->where('R.user_id = ?', $userId)
+            ->andWhere('T.completed = 0');
+
+        $q->execute();
+
+        if(count($q)==1){
+            return true;
+        }
+         
+        return false;
+    }
+
+
 }

@@ -18,25 +18,25 @@ header .navbar-nav .navbar-right ul {
     height: 15px;
     margin-bottom: 6px;
 }
-.metro{
+
+.metro {
     margin-bottom: 10px;
     padding-top: 2px;
-
 }
 
-#filters-navbar {
+/*#filters-navbar {
     background-color: white;
     border-color: white;
     margin: 0;
-}
+}*/
 
-#filters {
+/*#filters {
     margin: 0;
-}
+}*/
 
-.activo {
+/*.activo {
     background-color: #ba135f;
-}
+}*/
 
 #video {
     position: fixed; 
@@ -104,7 +104,7 @@ header .navbar-nav .navbar-right ul {
     left: 0;
     background: rgba(0,0,0,0.8);
     z-index: 9;
-    padding: 40px 20px;
+    padding: 20px 20px 10px;
 
 }
 
@@ -122,6 +122,27 @@ header .navbar-nav .navbar-right ul {
     margin: 10px 5px 5px 5px;
     padding: 5px;
     width: 87px;
+}
+
+#section-map-form-search .search-by-commune {
+    background: rgba(0,0,0,0.8);
+    border-radius: 0;
+    bottom: -29px;
+    color: white;
+    left: 6%;
+    padding: 5px 10px;
+    position: absolute;
+}
+
+#section-map-form-search .filters {
+    color: white;
+    margin: 10px 0 0 0;
+    padding: 0;
+    text-align: center;
+}
+
+#section-map-form-search .filters input {
+    margin-left: 10px
 }
 
 #section-map-filters {
@@ -172,15 +193,6 @@ header .navbar-nav .navbar-right ul {
     -moz-box-shadow: 2px 2px 20px rgba(50, 50, 50, 0.5);
     box-shadow: 2px 2px 20px rgba(50, 50, 50, 0.5);
 }
-
-/*#section-map:before{
-    content: "";
-    bottom: -11px;
-    position: absolute;
-    background: url(/images/newDesign/border-tabs.png) repeat-x 50% 0;
-    width: 100%;
-    height: 22px;
-}*/
 
 #section-map-filters ul {
     margin-top: -5px;

@@ -87,8 +87,6 @@ class KhipuService {
                 '&payer_email=' . urlencode($data["payer_email"]) .
                 '&custom=' . urlencode($data["custom"]);
 
-        error_log("[KhipuService/notificationValidation] DEBUG: ".$to_send);
-
         $ch = curl_init($this->khipuUrl);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_POST, 1);
