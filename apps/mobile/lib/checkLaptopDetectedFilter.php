@@ -18,8 +18,8 @@ class checkLaptopDetectedFilter extends sfFilter {
             $referer    = $request->getUri();
 
             if (!$MD->isMobile()) {
-                $host = str_replace("m.arriendas.cl", "arriendas.cl", $_SERVER ['HTTP_HOST']);
-                $url  = str_replace("m.arriendas.cl", "arriendas.cl", $referer);
+                $host = str_replace("m.arriendas.cl", "www.arriendas.cl", $_SERVER ['HTTP_HOST']);
+                $url  = str_replace("m.arriendas.cl", "www.arriendas.cl", $referer);
                 
                 if($this->getContext()->getActionStack()->getSize() != null){
                     $this->getContext()->getController()->redirect($url);

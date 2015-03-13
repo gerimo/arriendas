@@ -18,8 +18,8 @@ class checkMobileDetectedFilter extends sfFilter {
             $referer    = $request->getUri();
 
             if ($MD->isMobile()) {
-                $host = str_replace("arriendas.cl", "m.arriendas.cl", $_SERVER ['HTTP_HOST']);
-                $url  = str_replace("arriendas.cl", "m.arriendas.cl", $referer);
+                $host = str_replace("www", "m", $_SERVER ['HTTP_HOST']);
+                $url  = str_replace("www", "m", $referer);
                 
                 if($this->getContext()->getActionStack()->getSize() != null){
                     $this->getContext()->getController()->redirect($url);
