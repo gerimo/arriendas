@@ -34,9 +34,9 @@ class profileActions extends sfActions {
 
                 $days = null;                
 
-                if (Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"))) {
+                if (date("N") == 6 || date("N") == 7 || Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"))) {
                     $days = Utils::isWeekend(true, false);
-                } elseif (Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+1 day")))) {
+                } elseif (date("N", strtotime("+1 day")) == 6 || date("N", strtotime("+1 day")) == 7 || Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+1 day")))) {
                     $days = Utils::isWeekend(true, true);
                 }
 
@@ -47,11 +47,6 @@ class profileActions extends sfActions {
                         $data["day"] = $day;
                         $data["dayName"] = $week[date("N", strtotime($day))];
 
-                        //$Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime($day)));
-                        //if ($Holiday) {
-                        //    $data["dayName"] .= " (Feriado)";
-                        //}
-
                         $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
                         if ($CarAvailability) {
                             $data["from"] = $CarAvailability->getStartedAt();
@@ -61,51 +56,6 @@ class profileActions extends sfActions {
                         $this->availabilityOfCars[$Car->getId()][] = $data;
                     }
                 }
-
-                /*$Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+1 day")));
-                if (date("N", strtotime("+1 day")) == 7 || date("N", strtotime("+1 day")) == 6 || $Holiday) {
-                    
-                    $this->availabilityOfCars[$Car->getId()] = array();
-
-                    $i       = 1;
-                    $day     = date("Y-m-d", strtotime("+1 day"));
-                    $Holiday = null;
-                    
-                    do {
-
-                        $data = array(
-                            "day" => $day,
-                            "dayName" => $week[date("N", strtotime($day))]
-                        );
-
-                        //$this->availabilityOfCars[$Car->getId()][$i] = array();
-
-                        //$this->availabilityOfCars[$Car->getId()][$i]["day"]     = $day;
-                        //$this->availabilityOfCars[$Car->getId()][$i]["dayName"] = $week[date("N", strtotime($day))];
-                        
-                        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime($day)));
-                        if ($Holiday) {
-                            //$this->availabilityOfCars[$Car->getId()][$i]["dayName"] .= " (Feriado)";
-                            $data["dayName"] .= " (Feriado)";
-                        }
-
-                        $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
-                        if ($CarAvailability) {
-                            //$this->availabilityOfCars[$Car->getId()][$i]["from"] = $CarAvailability->getStartedAt();
-                            //$this->availabilityOfCars[$Car->getId()][$i]["to"] = $CarAvailability->getEndedAt();
-                            $data["from"] = $CarAvailability->getStartedAt();
-                            $data["to"] = $CarAvailability->getEndedAt();
-                        }
-                        
-                        $this->availabilityOfCars[$Car->getId()][] = $data;
-
-
-                        $i++;
-                        $day = date("Y-m-d", strtotime("+".$i." day"));
-                        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime($day)));                         
-                        
-                    } while(date("N", strtotime($day)) == 6 || date("N", strtotime($day)) == 7 || $Holiday);
-                }*/
             }
         }
     }
