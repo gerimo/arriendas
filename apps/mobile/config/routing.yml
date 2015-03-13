@@ -1,0 +1,323 @@
+# You can find more information about this file on the symfony website:
+# http://www.symfony-project.org/reference/1_4/en/10-Routing
+
+# test_khipu:
+#     url: /test/khipu
+#     param: { module: main, action: testKhipu }
+
+about_company:
+    url: /nosotros
+    param: { module: main, action: compania }
+
+car_availability:
+   url: /auto/vista-3
+   param: { module: cars, action: availability }
+
+car_availability_email:
+    url: /auto/disponibilidad/:id/:o/:signature
+    param: { module: cars, action: availabilityEmail }
+
+car_availability_email_open:
+    url: /auto/disponibilidad/imagen/:id
+    param: { module: cars, action: availabilityEmailOpen }
+
+car_availability_remove:
+    url: /auto/disponibilidad/eliminar
+    param: { module: cars, action: availabilityRemove }
+
+car_availability_save:
+    url: /auto/disponibilidad/guardar
+    param: { module: cars, action: availabilitySave }
+
+car_set_active:
+    url: /auto/cambiar/activo
+    param: { module: cars, action: setActive }
+
+car_set_option:
+    url: /auto/cambiar/opcion
+    param: { module: cars, action: setOption }
+
+car_set_disabled_until:
+    url: /auto/cambiar/deshabilitadoHasta
+    param: { module: cars, action: setDisabledUntil }
+
+car_price:
+   url: /auto/precios
+   param: { module: cars, action: price }
+
+car_photo:
+   url: /auto/foto
+   param: { module: cars, action: photo }
+
+car_edit:
+   url: /auto/editar/:id
+   param: { module: cars, action: edit }
+
+car_create:
+   url: /auto/crear
+   param: { module: cars, action: create }
+
+car_search:
+    url: /autos/buscar
+    param: { module: cars, action: search }
+
+cars:
+    url: /mis-autos
+    param: { module: profile, action: cars }
+    #param: { module: cars, action: index }
+change_password:
+    url: /cambiar-contrasena
+    param: { module: profile, action: changePassword }
+
+data_for_payment:
+    url: /data-for-payment
+    param: { module: main, action: dataForPayment }
+
+emails_unsubscribe:
+    url: /mailing/darse-de-baja/:user_id/:mailing_id/:signature
+    param: { module: emails, action: unsubscribe }
+
+forgot_password:
+    url: /contrasena/recuperar
+    param: { module: main, action: forgot }
+
+forgot_password_send:
+    url: /contrasena/enviar
+    param: { module: main, action: forgotSend }
+
+forgot_password_update:
+    url: /contrasena/modificar/:id/:hash
+    param: { module: main, action: recover }
+
+homepage:
+    url: /
+    param: { module: main, action: index }
+
+how-works:
+    url: /como-funciona
+    param: { module: main, action: howWorks }
+
+login:
+    url: /login
+    param: { module: main, action: login }
+
+login_do:
+    url: /login/do
+    param: { module: main, action: loginDo }
+
+logout:
+    url: /logout
+    param: { module: main, action: logout }
+
+messages:
+    url: /mensajes/:id
+    param: { module: messages, action: conversation }
+
+messages_inbox:
+    url: /mis-mensajes
+    param: { module: messages, action: inbox }
+
+message_register_success:
+    url: /registro/exitoso
+    param: { module: main , action: messageRegister }
+
+news:
+    url: /arrienda-en-las-noticias
+    param: { module: main , action: news }
+
+notification_close:
+    url: /notification/close
+    param: { module: main, action: notificationClose }
+
+opportunities:
+    url: /oportunidades
+    param: { module: opportunities, action: index }
+
+opportunities_approve:
+    url: /oportunidades/aprobar
+    param: { module: opportunities, action: approve }
+
+opportunities_mailing_approve:
+    url: /oportunidades/mailing/aprobar/:reserve_id/:car_id/:signature
+    param: { module: opportunities, action: mailingApprove }
+
+opportunities_mailing_open:
+    url: /oportunidades/mailing/:id/:signature
+    param: { module: opportunities, action: mailingOpen }
+
+prices_compare:
+    url: /compare-precios
+    param: { module: main, action: pricesCompare }
+
+questions:
+    url: /preguntas-frecuentes
+    param: { module: main , action: questions }
+
+rent_a_car_a:
+    url: /rent-a-car
+    param: { module: main, action: searchACars }
+
+rent_a_car:
+    url: /rent-a-car/arriendo-de-autos
+    param: { module: main, action: searchACars }
+
+rent_a_car_region:
+    url: /rent-a-car/arriendo-de-autos/:region
+    param: { module: main, action: searchACars }
+
+rent_a_car_region_commune:
+    url: /rent-a-car/arriendo-de-autos/:region/:commune
+    param: {module: main, action: searchACars }
+
+rent_a_car_santiago:
+    url: /rent-a-car/arriendo-de-autos-santiago
+    param: {module: main, action: searchACars }
+
+reserve:
+    url: /rent-a-car/arriendo-de-autos-santiago/:carId
+    param: { module: main, action: reserve }
+
+reserve_approve:
+    url: /reserva/aprobar
+    param: { module: reserves, action: approve }
+
+reserve_calculate_price:
+    url: /reserva/calcular-precio
+    param: { module: reserves, action: calculatePrice }
+
+reserve_change:
+    url: /reserva/cambiar
+    param: { module: reserves, action: change }
+
+reserve_change_with_availability:
+    url: /reserva/cambiar-con-disponibilidad
+    param: { module: reserves, action: changeWithAvailability }
+
+reserve_extend:
+    url: /reserva/extender
+    param: { module: reserves, action: extend }
+
+reserve_extend_get_price:
+    url: /reserva/extender/obtenerPrecio
+    param: { module: reserves, action: getExtendPrice }
+
+reserve_pay:
+    url: /reserva/pagar
+    param: { module: reserves, action: pay }
+
+reserve_reject:
+    url: /reserva/rechazar
+    param: { module: reserves, action: reject }
+
+reserve_success:
+    url: /reserva/exitosa
+    param: { module: reserves, action: success }
+
+reserves:
+    url: /reservas
+    param: { module: reserves, action: index }
+
+return_form:
+    url: /informe-de-devolucion/:tokenReserve
+    param: { module: main, action: generarFormularioEntregaDevolucion }
+
+terms_and_conditions:
+    url: /terminos-y-condiciones
+    param: { module: main, action: terminos }
+
+site_map:
+    url: /mapa-del-sitio
+    param: { module:main, action: siteMap}
+
+transactions:
+    url: /mis-transacciones
+    param: { module: profile, action: transactions }
+
+user_register:
+    url: /registro
+    param: { module: main, action: register }
+
+user_register_complete:
+    url: /registro/completar
+    param: { module: main, action: completeRegister }
+
+value_your_car:
+    url: /monetiza-tu-auto
+    param: { module: main, action: valueYourCar }
+
+
+
+# old Design
+
+# index_by_city:
+#   url:    /c/:c
+#   param:  { module: main, action: index }
+
+perfil_auto:
+    url:  /arriendo-de-autos/rent-a-car/*/:chile/:id
+    param:  { module: auto, action: economico }
+
+paypalReturn:
+    url:  /paypal/processPayment
+    param:  { module: paypal, action: processPayment }
+
+paypalCancel:
+    url:  /paypal/processPaymentCanceled
+    param:  { module: paypal, action: processPaymentCanceled }
+
+webpayReturn:
+    url:  /webpay/processPayment
+    param:  { module: webpay, action: processPayment }
+
+webpayCancel:
+    url:  /webpay/processPaymentCanceled
+    param:  { module: webpay, action: processPaymentCanceled }
+
+webpayFinal:
+    url:  /webpay/processPaymentFinal
+    param:  { module: webpay, action: processPaymentFinal }
+
+khipuNotify:
+    url:  /khipu/notifyPayment
+    param:  { module: khipu, action: notifyPayment }
+
+khipuReturn:
+    url:  /khipu/paymentInformation
+    param:  { module: khipu, action: paymentInformation }
+
+khipuCancel:
+    url:  /khipu/processPaymentCanceled
+    param:  { module: khipu, action: processPaymentCanceled }
+
+pedidos:
+    url: /profile/pedidos
+    param:  { module: profile, action: pedidos }
+
+editReserve:
+    url: /profile/editReserve
+    param:  { module: profile, action: editReserve }
+
+aprobarReserve:
+    url:  /profile/aprobarReserve/:idReserve/:idUser
+    param:  { module: profile, action: aprobarReserve }
+
+aprobarOportunidad:
+    url:  /profile/aprobarOportunidad/:idReserve/:idCar/:idUser
+    param:  { module: profile, action: aprobarOportunidad }
+
+facebook_login:
+    url: /main/loginFacebook 
+    param:  { module: main, action: loginFacebook }
+
+fbShare:
+  url:    /fb/:id/
+  param:  { module: main, action: fbShare }
+
+# generic rules
+# please, remove them by adding more specific rules
+# default_index:
+#   url:   /:module
+#   param: { action: index }
+
+default:
+  url:   /:module/:action/*

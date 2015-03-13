@@ -1,0 +1,74 @@
+
+
+body{
+    background-image: url('/images/newDesign/background.jpg');
+}
+
+.note {
+    font-size: 11px;
+    font-weight: 300;
+}
+
+.espacio{
+
+    margin-top: 5%;
+}
+
+.linea{
+    border-top: 1px solid #848484;
+    margin-left: 4%;
+}
+
+.photo{
+	padding:0 5%;
+}
+.photo img{
+	width: 100%;
+	height: 300px;	
+}
+.alert, .alertPrice, .alertAva{
+	color: red;
+}
+
+#mostrarMapa {
+	width: 100%;
+	height: 400px;
+	background-color: #CCC;
+}
+
+#cilindrada .form-control {
+	width: 50%;
+}
+ 
+.radio+.radio, .checkbox.checkbox {
+ 	margin-top: 10px;
+}
+
+.load {
+	position: absolute;
+	width: 30px;
+	margin: -34px 0px 0px -34px;
+}
+
+#mostrarMapa img { max-width: none; }
+
+h3{
+	font-weight: 300;
+	font-size: 15px;
+}
+
+
+
+@media only screen and (max-width:767px) {
+
+.previewPhoto{
+	border: none;
+	padding: 0;
+}
+
+.BCW{
+	margin-left: 0px;
+}
+
+
+}

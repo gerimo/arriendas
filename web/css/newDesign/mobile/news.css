@@ -1,0 +1,18 @@
+body {
+    background-image: url('/images/newDesign/background.jpg');
+}
+
+
+.thumb {
+    margin-bottom: 30px;
+    border: white;
+}
+
+.thumbnail{
+	border:white;
+}
+
+div .logos{
+	margin-right: 29px;
+	
+}

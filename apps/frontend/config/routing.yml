@@ -74,6 +74,10 @@ cars:
     param: { module: profile, action: cars }
     #param: { module: cars, action: index }
 
+change_password:
+    url: /cambiar-contrasena
+    param: { module: profile, action: changePassword }
+
 data_for_payment:
     url: /data-for-payment
     param: { module: main, action: dataForPayment }
