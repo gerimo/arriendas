@@ -441,7 +441,8 @@ class reservesActions extends sfActions {
 
             $carId = $request->getPostParameter("car", null);
             $from  = $request->getPostParameter("from", null);
-            $to    = $request->getPostParameter("to", null);        
+            $to    = $request->getPostParameter("to", null);
+            $isAirportDelivery = $request->getPostParameter("isAirportDelivery", null);       
         } else {            
             $warranty = $this->getUser()->getAttribute("warranty");
             $payment  = $this->getUser()->getAttribute("payment", null);
@@ -510,8 +511,6 @@ class reservesActions extends sfActions {
             }
             
             if ($User->getBlocked()) {
-                error_log("BLOCKEADO: ".$User->getBlocked());
-                error_log("TIPO: ".gettype($User->getBlocked()));
                 throw new Exception("Rechazado el pago de User ".$userId." (".$User->firstname." ".$User->lastname.") debido a que se encuentra bloqueado, por lo que no esta autorizado para generar pagos", 1);            
             }
             
@@ -529,6 +528,10 @@ class reservesActions extends sfActions {
             $Reserve->setDate(date("Y-m-d H:i:s", strtotime($from)));
             $Reserve->setUser($User);
             $Reserve->setCar($Car);
+            
+            if ($User->moroso) {
+                $warranty = true;
+            }
             
             if ($warranty) {
                 $amountWarranty = sfConfig::get("app_monto_garantia");
@@ -565,7 +568,7 @@ class reservesActions extends sfActions {
                 $mailer  = $mail->getMailer();
                 $message = $mail->getMessage();            
 
-                $subject = "¡Se ha registrado pago de un usuario sin verificacion judicial!";
+                $subject = "¡Se ha registrado un pago de un usuario sin verificacion judicial!";
                 $body    = $this->getPartial('emails/paymentDoneUnverifiedUser', array('Transaction' => $Transaction));
                 $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                 $to      = array("soporte@arriendas.cl");
@@ -589,6 +592,14 @@ class reservesActions extends sfActions {
 
         $this->getRequest()->setParameter("reserveId", $Reserve->getId());
         $this->getRequest()->setParameter("transactionId", $Transaction->getId());
+
+        if ($Car->getIsAirportDelivery() && $isAirportDelivery) {
+            $Reserve->setIsAirportDelivery(true);
+            $Reserve->save();
+            $this->getUser()->setAttribute("reserveId", $Reserve->getId());
+            $this->getUser()->setAttribute("transactionId", $Transaction->getId());
+            $this->redirect('reserve_airport');
+        }
 
         $this->forward("khipu", "generatePayment");
     }
