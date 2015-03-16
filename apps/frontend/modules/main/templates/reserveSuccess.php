@@ -350,8 +350,8 @@
 
         <!-- FORMULARIO -->
         <input id="car" name="car" type="hidden" value="<?php echo $Car->getId() ?>">
-        <input id="from" name="from" type="hidden" value="<?php echo $from ?>">
-        <input id="to" name="to" type="hidden" value="<?php echo $to ?>">
+        <input id="from" name="from" type="hidden">
+        <input id="to" name="to" type="hidden">
     </form>
     <input id="price" type="hidden" value="<?php echo $price ?>">
     <input id="total-price" type="hidden" value="<?php echo $price ?>">
@@ -384,8 +384,8 @@
             }
         });
 
-        initializeDate("from", new Date(<?php echo strtotime($from) * 1000 ?>), true, true, true);
-        initializeDate("to", new Date(<?php echo strtotime($to) * 1000 ?>), true, true, true);
+        initializeDate("from", new Date(<?php echo strtotime($from) * 1000 ?>), true, true);
+        initializeDate("to", new Date(<?php echo strtotime($to) * 1000 ?>), true, true);
     });
 
     $('#reviews').on('shown.bs.collapse', function () {

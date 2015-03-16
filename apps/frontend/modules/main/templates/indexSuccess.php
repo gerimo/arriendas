@@ -759,11 +759,6 @@
 
     $(document).ready(function(){
 
-        /*// Si comuna es visible, se preselecciona comuna más hot
-        if ($("#commune").is(':visible')) {            
-            $("#commune option[value=93]").attr("selected", true);
-        }*/
-
         localizame();
         initialize();
 
@@ -792,8 +787,8 @@
             speed: 450
         });
 
-        initializeDate("from", new Date(<?php echo strtotime($from) * 1000 ?>), true, false, true);
-        initializeDate("to", new Date(<?php echo strtotime($to) * 1000 ?>), true, false, true);
+        initializeDate("from", new Date(<?php echo strtotime($from) * 1000 ?>), true, false);
+        initializeDate("to", new Date(<?php echo strtotime($to) * 1000 ?>), true, false);
 
         // Cuando es fin de semana
         <?php if ($isWeekend): ?>
