@@ -69,6 +69,10 @@ change_password:
     url: /cambiar-contrasena
     param: { module: profile, action: changePassword }
 
+commune_get:
+    url: /obtener-comunas
+    param: { module: main, action: getCommunes }
+
 data_for_payment:
     url: /data-for-payment
     param: { module: main, action: dataForPayment }

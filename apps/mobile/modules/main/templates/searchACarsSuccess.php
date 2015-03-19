@@ -408,6 +408,35 @@
         searchCars(0, $("button.see-more").data("limit")); 
     });
 
+    $("#region").change(function(){
+
+        var regionId = $("#region option:selected").val();        
+
+        var parameters = {
+            regionId: regionId
+        };
+
+        console.log(parameters);
+
+        $.post("<?php echo url_for('commune_get') ?>", parameters, function(r){
+            if (r.error) {
+
+            } else {
+
+                var html = "<option value='0'>Todas Las Comunas</option>";
+
+                $.each(r.communes, function(k, v){
+                    console.log(v);
+                    html += "<option value=''></option>";
+                });
+
+                $("#commune").append(html);
+
+                searchCars(0, $("button.see-more").data("limit"));
+            }
+        }, "json");
+    });
+
     $(document).on("click", ".see-more", function(){
         searchCars($("button.see-more").data("offset"), $("button.see-more").data("limit"));
     });
