@@ -1,8 +1,6 @@
 <link href="/css/newDesign/mobile/searchAcarsMobile.css" rel="stylesheet" type="text/css">
 <script src="/js/newDesign/markerclusterer.js" type="text/javascript"></script>
 
-
-
 <script>
     var reserveUrl = "<?php echo url_for('reserve', array('carId' => 'carId'), true) ?>";
     var usuarioLogeado = "<?php echo $usuarioLog; ?>";
@@ -262,6 +260,7 @@
                                 <option selected value="<?php echo $Region->id ?>"><?php echo ucwords(strtolower($Region->name)) ?></option> 
                             <?php else: ?>
                                 <option disabled selected value="<?php echo $Region->id ?>"><?php echo $Region->name ?></option>
+                                <option value="5">Región de Valparaiso</option>
                             <?php endif ?>
                         </select>
                     </div>
