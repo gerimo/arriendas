@@ -249,7 +249,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="BCW ">
-            <h1>¡Arrienda un Auto!</h1>
+            <h1 class="text-center">¡Arrienda un Auto!</h1>
             <!--Mobile-->
 
             <section id="section-home">
