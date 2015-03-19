@@ -1,4 +1,4 @@
-<link href="/css/newDesign/searchACars.css?v=1" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/searchACars.css?v=2" rel="stylesheet" type="text/css">
 <script src="/js/newDesign/dates.js" type="text/javascript"></script>
 
 <div class="space-100"></div>
