@@ -427,7 +427,7 @@
 
                 $.each(r.communes, function(k, v){
                     console.log(v);
-                    html += "<option value=''></option>";
+                    html += "<option value='"+v['id']+"'>"+v['name']+"</option>";
                 });
 
                 $("#commune").html(html);
