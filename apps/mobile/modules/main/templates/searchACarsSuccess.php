@@ -430,7 +430,7 @@
                     html += "<option value=''></option>";
                 });
 
-                $("#commune").append(html);
+                $("#commune").html(html);
 
                 searchCars(0, $("button.see-more").data("limit"));
             }
