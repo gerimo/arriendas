@@ -359,6 +359,7 @@ class khipuActions extends sfActions {
             $this->_log("Call", "info", $msg);
 
             $response = $khipuService->paymentStatus($data);
+            error_log("[mobile] [khipu/paymentInformation] ".print_r($response, true));
             switch ($response->status) {
                 case "done":
                     $this->paymentMsg = "El pago ha sido realizado.";
