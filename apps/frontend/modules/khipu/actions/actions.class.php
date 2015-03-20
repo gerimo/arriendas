@@ -176,6 +176,8 @@ class khipuActions extends sfActions {
             $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["notification-validation-url"]);
             $response = $khipuService->notificationValidation($data);
 
+            error_log("[khipu/notifyPayment] ----------------- ENTRANDO NOTIFICACION -----------------");
+            error_log("[khipu/notifyPayment] ".print_r($request->getPostParameters(), true));
             error_log("[khipu/notifyPayment] ".print_r($response, true));
 
             if ($response == 'VERIFIED' && $data["receiver_id"] == $settings["receiver_id"]) {
