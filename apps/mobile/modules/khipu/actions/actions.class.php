@@ -384,134 +384,80 @@ class khipuActions extends sfActions {
 
                     $Transaction = Doctrine_Core::getTable('Transaction')->find($khipuTransaction['transaction-id']);
 
-                    $Reserve = $Transaction->getReserve();
+                    if (!$Transaction->getCompleted()) {
+                        $Reserve = $Transaction->getReserve();
 
-                    $Renter = $Reserve->getUser();
-                    $Owner  = $Reserve->getCar()->getUser();
+                        $Renter = $Reserve->getUser();
+                        $Owner  = $Reserve->getCar()->getUser();
 
-                    $Functions = new Functions;
-                    $Functions->generarNroFactura($Reserve, $Transaction);
+                        $Functions = new Functions;
+                        $Functions->generarNroFactura($Reserve, $Transaction);
 
-                    // Notificaciones
-                    if (!$Renter->hasPayments()) {
-                        Notification::make($Renter->id, 2, $Reserve->id); // primer pago
-                    } else {
-                        Notification::make($Renter->id, 4, $Reserve->id); // Pago
-                    }
-                    
-                    $Transaction->setCompleted(true);
-                    $Transaction->save();
-
-                    $Reserve->setFechaPago(date("Y-m-d H:i:s"));
-                    $Reserve->save();
-
-                    $formulario = $Functions->generarFormulario(NULL, $Reserve->token);
-                    $reporte    = $Functions->generarReporte($Reserve->getCar()->id);
-                    $contrato   = $Functions->generarContrato($Reserve->token);
-                    $pagare     = $Functions->generarPagare($Reserve->token);
-
-                    // Correo dueño
-                    $subject = "¡Has recibido un pago! Apruébalo ahora";
-                    $body    = $this->getPartial('emails/paymentDoneOwner', array('Reserve' => $Reserve));
-                    $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
-                    $to      = array($Owner->email => $Owner->firstname." ".$Owner->lastname);
-
-                    $message = Swift_Message::newInstance()
-                        ->setSubject($subject)
-                        ->setBody($body, 'text/html')
-                        ->setFrom($from)
-                        ->setTo($to)
-                        ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
-                        ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
-                        ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
-                    
-                    if (!is_null($Renter->getDriverLicenseFile())) {
-                        $filepath = $Renter->getDriverLicenseFile();
-                        if (is_file($filepath)) {
-                            $message->attach(Swift_Attachment::fromPath($Renter->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$Renter->getLicenceFileName()));
+                        // Notificaciones
+                        if (!$Renter->hasPayments()) {
+                            Notification::make($Renter->id, 2, $Reserve->id); // primer pago
+                        } else {
+                            Notification::make($Renter->id, 4, $Reserve->id); // Pago
                         }
-                    }
-                    
-                    error_log("[khipu/notifyPayment] Enviando email al propietario");
-                    $this->getMailer()->send($message);
+                        
+                        $Transaction->setCompleted(true);
+                        $Transaction->save();
 
-                    // Correo arrendatario
-                    $subject = "La reserva ha sido pagada";
-                    $body    = $this->getPartial('emails/paymentDoneRenter', array('Reserve' => $Reserve));
-                    $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
-                    $to      = array($Renter->email => $Renter->firstname." ".$Renter->lastname);
-
-                    $message = Swift_Message::newInstance()
-                        ->setSubject($subject)
-                        ->setBody($body, 'text/html')
-                        ->setFrom($from)
-                        ->setTo($to)
-                        ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
-                        ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
-                        ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'))
-                        ->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
-
-                    error_log("[khipu/notifyPayment] Enviando email al arrendatario");
-                    $this->getMailer()->send($message);
-
-                    // Correo soporte
-                    $subject = "Nuevo pago. Reserva: ".$Reserve->id;
-                    $body    = $this->getPartial('emails/paymentDoneSupport', array('Reserve' => $Reserve));
-                    $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-                    $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
-
-                    $message = Swift_Message::newInstance()
-                        ->setSubject($subject)
-                        ->setBody($body, 'text/html')
-                        ->setFrom($from)
-                        ->setTo($to)
-                        ->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"))
-                        ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
-                        ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
-                        ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
-
-                    if (!is_null($Renter->getDriverLicenseFile())) {
-                        $filepath = $Renter->getDriverLicenseFile();
-                        if (is_file($filepath)) {
-                            $message->attach(Swift_Attachment::fromPath($Renter->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$Renter->getLicenceFileName()));
-                        }
-                    }
-                    
-                    error_log("[khipu/notifyPayment] Enviando email a soporte");
-                    $this->getMailer()->send($message);
-
-                    // Crea la fila calificaciones habilitada para la fecha de término de reserva + 2 horas (solo si no es una extension de otra reserva)
-                    if (!$Reserve->getIdPadre()) {
-
-                        $Rating = new Rating();
-                        $Rating->setFechaHabilitadaDesde($Reserve->getFechaHabilitacionRating());
-                        $Rating->setIdOwner($Owner->id);
-                        $Rating->setIdRenter($Renter->id);
-                        $Rating->save();
-
-                        // Actualiza rating_id en la tabla Reserve
-                        $ratingId = $Rating->id;
-                        $Reserve->setRatingId($ratingId);
+                        $Reserve->setFechaPago(date("Y-m-d H:i:s"));
                         $Reserve->save();
-                    }
 
-                    // Almacena reserveId en la tabla mail calificaciones
-                    $Reserve->encolarMailCalificaciones();
+                        $formulario = $Functions->generarFormulario(NULL, $Reserve->token);
+                        $reporte    = $Functions->generarReporte($Reserve->getCar()->id);
+                        $contrato   = $Functions->generarContrato($Reserve->token);
+                        $pagare     = $Functions->generarPagare($Reserve->token);
 
-                    error_log("[khipu/notifyPayment] ---------- HABEMUS PAGO --------");
+                        // Correo dueño
+                        $subject = "¡Has recibido un pago! Apruébalo ahora";
+                        $body    = $this->getPartial('emails/paymentDoneOwner', array('Reserve' => $Reserve));
+                        $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+                        $to      = array($Owner->email => $Owner->firstname." ".$Owner->lastname);
 
-                    $OpportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findOneByReserveId($Transaction->getReserveId());
-                    if (!$OpportunityQueue) {
-                        $OpportunityQueue = new OpportunityQueue;
-                        $OpportunityQueue->setReserveId($Transaction->getReserveId());
-                        $OpportunityQueue->setPaidAt($Reserve->getFechaPago());
-                        $OpportunityQueue->save();
-                    }
+                        $message = Swift_Message::newInstance()
+                            ->setSubject($subject)
+                            ->setBody($body, 'text/html')
+                            ->setFrom($from)
+                            ->setTo($to)
+                            ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
+                            ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
+                            ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+                        
+                        if (!is_null($Renter->getDriverLicenseFile())) {
+                            $filepath = $Renter->getDriverLicenseFile();
+                            if (is_file($filepath)) {
+                                $message->attach(Swift_Attachment::fromPath($Renter->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$Renter->getLicenceFileName()));
+                            }
+                        }
+                        
+                        error_log("[khipu/notifyPayment] Enviando email al propietario");
+                        $this->getMailer()->send($message);
 
-                    if(!$Reserve->getUser()->getDriverLicenseFile()){
+                        // Correo arrendatario
+                        $subject = "La reserva ha sido pagada";
+                        $body    = $this->getPartial('emails/paymentDoneRenter', array('Reserve' => $Reserve));
+                        $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+                        $to      = array($Renter->email => $Renter->firstname." ".$Renter->lastname);
 
-                        $subject = "Pago de usuario sin licencia de conducir";
-                        $body    = $this->getPartial('emails/paymentDoneUnverifiedUser', array('Transaction' => $Transaction));
+                        $message = Swift_Message::newInstance()
+                            ->setSubject($subject)
+                            ->setBody($body, 'text/html')
+                            ->setFrom($from)
+                            ->setTo($to)
+                            ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
+                            ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
+                            ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'))
+                            ->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
+
+                        error_log("[khipu/notifyPayment] Enviando email al arrendatario");
+                        $this->getMailer()->send($message);
+
+                        // Correo soporte
+                        $subject = "Nuevo pago. Reserva: ".$Reserve->id;
+                        $body    = $this->getPartial('emails/paymentDoneSupport', array('Reserve' => $Reserve));
                         $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                         $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
 
@@ -520,9 +466,65 @@ class khipuActions extends sfActions {
                             ->setBody($body, 'text/html')
                             ->setFrom($from)
                             ->setTo($to)
-                            ->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                            ->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"))
+                            ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
+                            ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
+                            ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+
+                        if (!is_null($Renter->getDriverLicenseFile())) {
+                            $filepath = $Renter->getDriverLicenseFile();
+                            if (is_file($filepath)) {
+                                $message->attach(Swift_Attachment::fromPath($Renter->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$Renter->getLicenceFileName()));
+                            }
+                        }
                         
+                        error_log("[khipu/notifyPayment] Enviando email a soporte");
                         $this->getMailer()->send($message);
+
+                        // Crea la fila calificaciones habilitada para la fecha de término de reserva + 2 horas (solo si no es una extension de otra reserva)
+                        if (!$Reserve->getIdPadre()) {
+
+                            $Rating = new Rating();
+                            $Rating->setFechaHabilitadaDesde($Reserve->getFechaHabilitacionRating());
+                            $Rating->setIdOwner($Owner->id);
+                            $Rating->setIdRenter($Renter->id);
+                            $Rating->save();
+
+                            // Actualiza rating_id en la tabla Reserve
+                            $ratingId = $Rating->id;
+                            $Reserve->setRatingId($ratingId);
+                            $Reserve->save();
+                        }
+
+                        // Almacena reserveId en la tabla mail calificaciones
+                        $Reserve->encolarMailCalificaciones();
+
+                        error_log("[khipu/notifyPayment] ---------- HABEMUS PAGO --------");
+
+                        $OpportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findOneByReserveId($Transaction->getReserveId());
+                        if (!$OpportunityQueue) {
+                            $OpportunityQueue = new OpportunityQueue;
+                            $OpportunityQueue->setReserveId($Transaction->getReserveId());
+                            $OpportunityQueue->setPaidAt($Reserve->getFechaPago());
+                            $OpportunityQueue->save();
+                        }
+
+                        if(!$Reserve->getUser()->getDriverLicenseFile()){
+
+                            $subject = "Pago de usuario sin licencia de conducir";
+                            $body    = $this->getPartial('emails/paymentDoneUnverifiedUser', array('Transaction' => $Transaction));
+                            $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+                            $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+
+                            $message = Swift_Message::newInstance()
+                                ->setSubject($subject)
+                                ->setBody($body, 'text/html')
+                                ->setFrom($from)
+                                ->setTo($to)
+                                ->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                            
+                            $this->getMailer()->send($message);
+                        }
                     }
                     // AQUI TERMINA
                     $this->redirect("reserves");
