@@ -382,6 +382,10 @@ class khipuActions extends sfActions {
                     // ESTO ES MOMENTANEO MIENTRAS SE RESUELVE EL TEMA DE LAS MULTIPLES URLS DE NOTIFICACION
                     error_log("[khipu/notifyPayment] Nuevo pago recibido");
 
+                    $Transaction = Doctrine_Core::getTable('Transaction')->find($khipuTransaction['transaction-id']);
+
+                    $Reserve = $Transaction->getReserve();
+
                     $Renter = $Reserve->getUser();
                     $Owner  = $Reserve->getCar()->getUser();
 
