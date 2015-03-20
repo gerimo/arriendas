@@ -377,7 +377,8 @@ class khipuActions extends sfActions {
                     /* update transaction info */
                     $khipuTransaction["status"] = "done";
                     $this->getUser()->setAttribute("khipu-transaction", $khipuTransaction);
-                    $this->forward("khipu", "processPayment");
+                    /*$this->forward("khipu", "processPayment");*/
+                    $this->redirect("reserves");
                     break;
                 case "pending":
                     $this->paymentMsg = "El pago aun no ha sido realizado.";

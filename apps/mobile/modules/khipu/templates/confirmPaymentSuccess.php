@@ -15,10 +15,10 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="bordeDerGris bordeIzqGris"><?= $ppIdReserva; ?></td>
-                                <td class="bordeDerGris"><?= $ppId; ?></td>
-                                <td class="bordeDerGris"><?= $carMarcaModel; ?><?= " / " . $duracionReserva; ?></td>
-                                <td class="bordeDerGris"><?= number_format($ppMonto, 0, ',', '.'); ?> CLP</td>
+                                <td class="bordeDerGris bordeIzqGris"><?php $ppIdReserva; ?></td>
+                                <td class="bordeDerGris"><?php $ppId; ?></td>
+                                <td class="bordeDerGris"><?php $carMarcaModel; ?><?php " / " . $duracionReserva; ?></td>
+                                <td class="bordeDerGris"><?php number_format($ppMonto, 0, ',', '.'); ?> CLP</td>
                             </tr>
                             <tr>
                                 <td class="bordeDerGris bordeIzqGris"></td>
@@ -33,7 +33,7 @@
                                 </td>
                                 <td class="bordeDerGris">
                                     <?php if ($montoDeposito == 0) echo "ERROR";else { ?>
-                                        <?= number_format($montoDeposito, 0, ',', '.'); ?> CLP
+                                        <?php number_format($montoDeposito, 0, ',', '.'); ?> CLP
                                     <?php } ?>
                                 </td>
                             </tr>
@@ -44,7 +44,7 @@
                                     <td class="bordeDerGris"></td>
                                     <td class="bordeDerGris">
                                         Descuento Facebook</td>
-                                    <td class="bordeDerGris">- <?= number_format($ppMonto * (1 - $priceMultiply), 0, ',', '.'); ?> CLP</td>
+                                    <td class="bordeDerGris">- <?php number_format($ppMonto * (1 - $priceMultiply), 0, ',', '.'); ?> CLP</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
@@ -54,7 +54,7 @@
                                 <td class="bordeDerGris"></td>
                                 <th class="bordeDerGris">Valor Total a pagar con Khipu</th>
                                 <?php if ($montoDeposito == 0) echo "<th class='bordeDerGris'>ERROR</th>";else { ?>
-                                    <th class="bordeDerGris"><?= number_format($finalPrice, 0, ',', '.'); ?> CLP</th>
+                                    <th class="bordeDerGris"><?php number_format($finalPrice, 0, ',', '.'); ?> CLP</th>
                                 <?php } ?>
                             </tr>
                         </tfoot>
