@@ -48,7 +48,7 @@ class khipuActions extends sfActions {
     
     public function executeConfirmPayment(sfWebRequest $request) {
 
-        error_log("[ConfirmPayment] REQUESTED");
+        error_log("[mobile] [khipu/confirmPayment] REQUESTED");
 
         $this->carMarcaModel = urldecode($request->getParameter("carMarcaModel"));
         $this->duracionReserva = urldecode($request->getParameter("duracionReserva"));
@@ -339,7 +339,7 @@ class khipuActions extends sfActions {
 
     public function executePaymentInformation(sfWebRequest $request) {
 
-        error_log("[PaymentInformation] REQUESTED");
+        error_log("[mobile] [khipu/paymentInformation] ".print_r($request->getParameterHolder(), true));
 
         $this->setLayout("newIndexLayout");
 
@@ -352,7 +352,8 @@ class khipuActions extends sfActions {
 
             $khipuTransaction = $this->getUser()->getAttribute("khipu-transaction");
 
-            $data = array('receiver_id' => $settings["receiver_id"],
+            $data = array(
+                'receiver_id' => $settings["receiver_id"],
                 'payment_id' => $khipuTransaction["payment-id"]
             );
             $msg = "Call khipu with url => " . $settings["payment-status-url"] . ", payment_id:" . $data["payment_id"];
