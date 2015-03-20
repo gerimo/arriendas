@@ -31,6 +31,8 @@ class khipuActions extends sfActions {
                 'custom'         => "",
             );
 
+            error_log("[khipu/generatePayment] ".print_r($data, true));
+
             $url = $khipuService->createPaymentURL($data)->url;
         } catch (Execption $e) {
             error_log("[khipu/generatePayment] ".$e->getMessage());
@@ -173,6 +175,8 @@ class khipuActions extends sfActions {
 
             $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["notification-validation-url"]);
             $response = $khipuService->notificationValidation($data);
+
+            error_log("[khipu/notifyPayment] ".print_r($response, true));
 
             if ($response == 'VERIFIED' && $data["receiver_id"] == $settings["receiver_id"]) {
                 

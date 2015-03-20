@@ -31,7 +31,7 @@ class khipuActions extends sfActions {
                 'custom'         => "",
             );
 
-            error_log("[GeneratePayment] ".print_r($data, true));
+            error_log("[khipu/generatePayment] ".print_r($data, true));
 
             $url = $khipuService->createPaymentURL($data)->url;
         } catch (Execption $e) {
@@ -154,8 +154,6 @@ class khipuActions extends sfActions {
 
     public function executeNotifyPayment(sfWebRequest $request) {
 
-        error_log("[khipu/notifyPayment] [".date("Y-m-d H:i:s")."] Request recibido");
-
         $this->_log("NotifyPayment", "INFO", "Start validation");
 
         $userId = $this->getUser()->getAttribute("userid");
@@ -175,14 +173,12 @@ class khipuActions extends sfActions {
             "notification_signature" => $_POST['notification_signature']
         );
 
-        error_log("[khipu/notifyPayment] [".date("Y-m-d H:i:s")."] Comenzando. Receiver ".$data["receiver_id"].". Transaction ".$data["transaction_id"]);
-
         try {
 
             $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["notification-validation-url"]);
             $response = $khipuService->notificationValidation($data);
 
-            error_log(print_r($response, true));
+            error_log("[mobile] [khipu/notifyPayment] ".print_r($response, true));
 
             if ($response == 'VERIFIED' && $data["receiver_id"] == $settings["receiver_id"]) {
                 
