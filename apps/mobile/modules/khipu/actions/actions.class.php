@@ -33,7 +33,17 @@ class khipuActions extends sfActions {
 
             error_log("[khipu/generatePayment] ".print_r($data, true));
 
-            $url = $khipuService->createPaymentURL($data)->url;
+            $response = $khipuService->createPaymentURL($data);
+
+            $khipuTransaction = array(
+                "payment-id" => $response->id,
+                "transaction-id" => $transactionId,
+                "status" => "created"
+            );
+
+            $this->getUser()->setAttribute("khipu-transaction", $khipuTransaction);
+
+            $url = $response->url;
         } catch (Execption $e) {
             error_log("[".date("Y-m-d H:i:s")."] [khipu/generatePayment] ".$e->getMessage());
             if ($request->getHost() == "m.arriendas.cl") {
