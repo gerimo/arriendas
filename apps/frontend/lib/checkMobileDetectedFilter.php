@@ -13,15 +13,13 @@ class checkMobileDetectedFilter extends sfFilter {
         $user    = $this->getContext()->getUser();
         $action  = $this->context->getActionName();
 
-        error_log("[DEBUG] ".$action);
-
         if ($this->isFirstCall() && $action != "getExtendPrice") {
 
             $MD = new Mobile_Detect;
             $referer = $request->getUri();
 
             if ($MD->isMobile()) {
-                error_log("[DEBUG] es mobile");
+                
                 $host = str_replace("www", "m", $_SERVER ['HTTP_HOST']);
                 $url  = str_replace("www", "m", $referer);
                 
