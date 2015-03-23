@@ -41,6 +41,23 @@ all:
       cache_key_use_vary_headers: true
       cache_key_use_host_name:    true
 
+  mailer:
+    class: sfMailer
+    param:
+      logging:           %SF_LOGGING_ENABLED%
+      charset:           %SF_CHARSET%
+      delivery_strategy: spool
+      spool_class:       Swift_FileSpool
+      spool_arguments:   [ %SF_ROOT_DIR%/spool ]
+      transport:
+        class: Swift_SmtpTransport
+        param:
+          host:       email-smtp.us-east-1.amazonaws.com
+          port:       25
+          encryption: tls
+          username:   AKIAJRRM5T4IKKLOSENA
+          password:   Akg+kowIIe25c5kq2L/6zq+WD1+3TQEqw0mHoWGoTIa9
+
   storage:
     class: sfSessionStorage
     param:

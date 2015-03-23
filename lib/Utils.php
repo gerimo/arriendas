@@ -14,16 +14,18 @@ class Utils {
 
     public static function reportError($errorMessage, $place) {
 
-        $mail = new Email();
-        $mailer = $mail->getMailer();
+        /*$mail = new Email();
+        $mailer = $mail->getMailer();*/
 
-        $message = $mail->getMessage()
+        $message = $this->getMailer()->compose()
+        /*$message = $mail->getMessage()*/
             ->setSubject("Error ".$place." ".date("Y-m-d H:i:s"))
             ->setBody("<p>".$errorMessage."</p>", "text/html")
             ->setFrom(array("no-reply@arriendas.cl" => "Errores Arriendas.cl"))
             ->setTo(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
         
-        $mailer->send($message);
+        $this->getMailer()->send($message);
+        /*$mailer->send($message);*/
     }
 
     public static function isValidRUT($rut) {
@@ -82,8 +84,14 @@ class Utils {
 
     public static function validateDates ($from, $to) {
 
+        $fromPlus1H = strtotime("+1 Hours", strtotime($from));
+
         $from = strtotime($from);
         $to   = strtotime($to);
+
+        if ($to > $from && $fromPlus1H > $to) {
+            return "La fecha de término debe ser al menos 1 hora superior a la fecha de inicio.";
+        }
 
         if ($from >= $to) {
             return "La fecha de inicio debe ser menor a la fecha de término.";

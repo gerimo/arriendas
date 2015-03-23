@@ -227,7 +227,7 @@ reserve_extend:
     param: { module: reserves, action: extend }
 
 reserve_extend_get_price:
-    url: /reserva/extender/obtenerPrecio
+    url: /reserva/extender/obtener-precio
     param: { module: reserves, action: getExtendPrice }
 
 reserve_pay:

@@ -1,3 +1,5 @@
+<?php use_helper('FrontendRouting') ?>
+
 <link href="/css/newDesign/mobile/reserves.css?v=2" rel="stylesheet" type="text/css">
 
 <div class="visible-xs space-50"></div>
@@ -501,7 +503,7 @@
 
         $("#payExtend").attr("disabled", true);
 
-        $.post("<?php echo url_for('reserve_extend_get_price') ?>", {"reserveId": reserveId, "from": from, "to": to}, function(r){
+        $.post("<?php echo url_for_frontend('reserve_extend_get_price') ?>", {"reserveId": reserveId, "from": from, "to": to}, function(r){
 
             $("#extendPriceLoading").hide();
 
