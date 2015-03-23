@@ -553,6 +553,12 @@ class reservesActions extends sfActions {
         }
 
         try {
+            Utils::validateDates($from, $to);
+        } catch (Exception $e) {
+            error_log("[DEBUG] ERROR: ".$e->getMessage());
+        }
+
+        try {
 
             if (is_null($warranty) || is_null($carId) || is_null($from) || is_null($to)) {
                 throw new Exception("El User ".$userId." esta intentando pagar pero uno de los campos es nulo. Garantia: ".$warranty.", Car: ".$carId.", Desde: ".$from.", Hasta: ".$to, 1);

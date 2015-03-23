@@ -49,7 +49,7 @@ class Utils {
         }
 
         return false;
-   }
+    }
 
     public static function isWeekend($getDays = false, $tomorrow = false) {
 
@@ -84,7 +84,7 @@ class Utils {
         return false;
     }
 
-    public static function validateDates ($from, $to) {
+    public static function validateDates($from, $to) {
 
         $fromPlus1H = strtotime("+1 Hours", strtotime($from));
 
