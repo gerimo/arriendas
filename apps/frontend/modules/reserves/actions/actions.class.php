@@ -565,7 +565,8 @@ class reservesActions extends sfActions {
             }
             error_log("[DEBUG] 1");
             $datesError = Utils::validateDates($from, $to);
-            if (!is_null($datesError)) {
+            error_log("[DEBUG] Type: ".gettype($datesError).", Value: ".$datesError);
+            if ($datesError) {
                 throw new Exception($datesError, 2);
             }
             error_log("[DEBUG] 2");
