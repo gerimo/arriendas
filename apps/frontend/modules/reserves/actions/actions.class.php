@@ -617,23 +617,21 @@ class reservesActions extends sfActions {
             
             $Transaction->save();
 
-            if($UnverifiedMail) {
-                $mail    = new Email();
-                $mailer  = $mail->getMailer();
-                $message = $mail->getMessage();            
+            if($UnverifiedMail) {          
 
                 $subject = "¡Se ha registrado un pago de un usuario sin verificacion judicial!";
                 $body    = $this->getPartial('emails/paymentDoneUnverifiedUser', array('Transaction' => $Transaction));
                 $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                 $to      = array("soporte@arriendas.cl");
 
+                $message = Swift_Message::newInstance();
                 $message->setSubject($subject);
                 $message->setBody($body, 'text/html');
                 $message->setFrom($from);
                 $message->setTo($to);
                 $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
                 
-                $mailer->send($message);
+                $this->getMailer()->send($message);
             }
 
         } catch (Exception $e) {
@@ -675,28 +673,25 @@ class reservesActions extends sfActions {
             $Reserve->setConfirmed(false);
             $Reserve->setCanceled(true);
 
-            // Correo de notificación
-            $mail    = new Email();
-            $mailer  = $mail->getMailer();
-            $message = $mail->getMessage();
-            $User    = $Reserve->getUser();
+            $User = $Reserve->getUser();
 
              // Notificaciones
             Notification::make($User->id, 15, $Reserve->id); // Rechazar pago
 
+            $message = Swift_Message::newInstance();
             $message->setSubject("La reserva ha sido rechazada");
             $message->setBody($this->getPartial('emails/reserveRejected', array('Reserve' => $Reserve)), 'text/html');
             $message->setFrom(array("soporte@arriendas.cl" => "Soporte Arriendas.cl"));
             $message->setTo(array($User->email => $User->firstname." ".$User->lastname));
             /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
             
-            $mailer->send($message);
+            $this->getMailer()->send($message);
 
             $Reserve->save();
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
-            error_log("[".date("Y-m-d H:i:s")."] [reserves/reject] ".$e->getMessage());
+            error_log("[frontend] [reserves/reject] ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl") {
                 Utils::reportError($e->getMessage(), "reserves/reject");
             }
@@ -844,9 +839,6 @@ class reservesActions extends sfActions {
 
             $Renter = $NewActiveReserve->getUser();
             $Owner  = $NewActiveReserve->getCar()->getUser();
-
-            $mail    = new Email();
-            $mailer  = $mail->getMailer();
             
             $functions  = new Functions;
             $formulario = $functions->generarFormulario(NULL, $NewActiveReserve->token);
@@ -860,7 +852,7 @@ class reservesActions extends sfActions {
             $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
             $to      = array($Owner->email => $Owner->firstname." ".$Owner->lastname);
 
-            $message = $mail->getMessage();
+            $message = Swift_Message::newInstance();
             $message->setSubject($subject);
             $message->setBody($body, 'text/html');
             $message->setFrom($from);
@@ -878,7 +870,7 @@ class reservesActions extends sfActions {
                 }
             }
             
-            $mailer->send($message);
+            $this->getMailer()->send($message);
 
             // CORREO ARRENDATARIO
             $subject = "Has cambiado el auto de tu reserva";
@@ -886,7 +878,7 @@ class reservesActions extends sfActions {
             $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
             $to      = array($Renter->email => $Renter->firstname." ".$Renter->lastname);
 
-            $message = $mail->getMessage();
+            $message = Swift_Message::newInstance();
             $message->setSubject($subject);
             $message->setBody($body, 'text/html');
             $message->setFrom($from);
@@ -898,7 +890,7 @@ class reservesActions extends sfActions {
             $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
             $message->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
                 
-            $mailer->send($message);
+            $this->getMailer()->send($message);
 
             // CORREO SOPORTE
             if ($NewActiveReserve->reserva_original) {
@@ -912,7 +904,7 @@ class reservesActions extends sfActions {
             $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
             $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
 
-            $message = $mail->getMessage();
+            $message = Swift_Message::newInstance();
             $message->setSubject($subject);
             $message->setBody($body, 'text/html');
             $message->setFrom($from);
@@ -930,7 +922,7 @@ class reservesActions extends sfActions {
                 }
             }
 
-            $mailer->send($message);
+            $this->getMailer()->send($message);
         } catch (Exception $e) {
             error_log("[reserves/makeChange] User ".$userId." está intentado realizar un cambio a Car ".$NewActiveReserve->getCar()->id." pero este no se ha podido concretar. ERROR: ".$e->getMessage());
             if ($_SERVER['SERVER_NAME'] == "www.arriendas.cl") {

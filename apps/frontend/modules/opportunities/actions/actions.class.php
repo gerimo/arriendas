@@ -26,7 +26,6 @@ class opportunitiesActions extends sfActions {
                 }
             }
         }
-
     }
 
     public function executeApprove(sfWebRequest $request) {
