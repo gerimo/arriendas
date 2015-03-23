@@ -92,10 +92,6 @@ class reservesActions extends sfActions {
              // Notificaciones
             Notification::make($User->id, 14, $Reserve->id); // Confirmar pago
 
-            $mail    = new Email();
-            $mailer  = $mail->getMailer();
-            $message = $mail->getMessage();            
-
             $Functions  = new Functions;
             $formulario = $Functions->generarFormulario(NULL, $Reserve->token);
             $reporte    = $Functions->generarReporte($Reserve->getCar()->id);
@@ -106,6 +102,7 @@ class reservesActions extends sfActions {
             $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
             $to      = array($User->email => $User->firstname." ".$User->lastname);
 
+            $message = Swift_Message::newInstance();
             $message->setSubject($subject);
             $message->setBody($body, 'text/html');
             $message->setFrom($from);
@@ -123,7 +120,7 @@ class reservesActions extends sfActions {
                 }
             }
             
-            $mailer->send($message);
+            $this->getMailer()->send($message);
             
             $Reserve->save();
 
@@ -152,7 +149,7 @@ class reservesActions extends sfActions {
 
         try {
 
-            $datesError = $this->validateDates($from, $to);
+            $datesError = Utils::validateDates($from, $to);
             if ($datesError) {
                 throw new Exception($datesError, 2);
             }
@@ -197,7 +194,7 @@ class reservesActions extends sfActions {
 
         try {
 
-            $datesError = $this->validateDates($from, $to);
+            $datesError = Utils::validateDates($from, $to);
             if ($datesError) {
                 throw new Exception($datesError, 2);
             }
@@ -244,7 +241,7 @@ class reservesActions extends sfActions {
 
         try {
 
-            $datesError = $this->validateDates($from, $to);
+            $datesError = Utils::validateDates($from, $to);
             if ($datesError) {
                 throw new Exception($datesError, 1);
             }
@@ -363,7 +360,7 @@ class reservesActions extends sfActions {
         $from      = $request->getPostParameter("from", null);
         $to        = $request->getPostParameter("to", null);
 
-        $datesError = $this->validateDates($from, $to);
+        $datesError = Utils::validateDates($from, $to);
         if ($datesError) {
             throw new Exception($datesError, 1);
         }
@@ -434,7 +431,7 @@ class reservesActions extends sfActions {
 
         try {
 
-            $datesError = $this->validateDates($from, $to);
+            $datesError = Utils::validateDates($from, $to);
             if ($datesError) {
                 throw new Exception($datesError, 1);
             }
@@ -475,7 +472,7 @@ class reservesActions extends sfActions {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
 
-            error_log("[".date("Y-m-d H:i:s")."] [reserves/getExtendPrice] ERROR: ".$e->getMessage());
+            error_log("[frontend] [reserves/getExtendPrice] ERROR: ".$e->getMessage());
 
             if ($request->getHost() == "www.arriendas.cl") {
                 Utils::reportError($e->getMessage(), "reserves/getExtendPrice");
@@ -561,7 +558,7 @@ class reservesActions extends sfActions {
                 throw new Exception("El User ".$userId." esta intentando pagar pero uno de los campos es nulo. Garantia: ".$warranty.", Car: ".$carId.", Desde: ".$from.", Hasta: ".$to, 1);
             }
             
-            $datesError = $this->validateDates($from, $to);
+            $datesError = Utils::validateDates($from, $to);
             if (!is_null($datesError)) {
                 throw new Exception($datesError, 2);
             }
@@ -943,18 +940,6 @@ class reservesActions extends sfActions {
         }
 
         return true;
-    }
-
-    private function validateDates ($from, $to) {
-
-        $from = strtotime($from);
-        $to   = strtotime($to);
-
-        if ($from >= $to) {
-            return "La fecha de término debe ser al menos 3 horas superior a la fecha de inicio.";
-        }
-
-        return null;
     }
 
     protected function getConfiguration() {

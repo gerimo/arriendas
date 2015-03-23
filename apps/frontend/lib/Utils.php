@@ -82,8 +82,14 @@ class Utils {
 
     public static function validateDates ($from, $to) {
 
+        $fromPlus1H = strtotime("+1 Hours", strtotime($from));
+
         $from = strtotime($from);
         $to   = strtotime($to);
+
+        if ($to > $from && $fromPlus1H > $to) {
+            return "La fecha de término debe ser al menos 1 hora superior a la fecha de inicio.";
+        }
 
         if ($from >= $to) {
             return "La fecha de inicio debe ser menor a la fecha de término.";
