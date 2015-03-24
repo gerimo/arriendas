@@ -439,7 +439,7 @@ class reservesActions extends sfActions {
             }
             
             $datesError = Utils::validateDates($from, $to);
-            if (!is_null($datesError)) {
+            if ($datesError) {
                 throw new Exception($datesError, 2);
             }
             

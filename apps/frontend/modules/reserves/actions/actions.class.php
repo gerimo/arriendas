@@ -553,23 +553,16 @@ class reservesActions extends sfActions {
         }
 
         try {
-            Utils::validateDates($from, $to);
-        } catch (Exception $e) {
-            error_log("[DEBUG] ERROR: ".$e->getMessage());
-        }
-
-        try {
 
             if (is_null($warranty) || is_null($carId) || is_null($from) || is_null($to)) {
                 throw new Exception("El User ".$userId." esta intentando pagar pero uno de los campos es nulo. Garantia: ".$warranty.", Car: ".$carId.", Desde: ".$from.", Hasta: ".$to, 1);
             }
-            error_log("[DEBUG] 1");
+            
             $datesError = Utils::validateDates($from, $to);
-            error_log("[DEBUG] Type: ".gettype($datesError).", Value: ".$datesError);
             if ($datesError) {
                 throw new Exception($datesError, 2);
             }
-            error_log("[DEBUG] 2");
+            
             if ($User->getBlocked()) {
                 throw new Exception("Rechazado el pago de User ".$userId." (".$User->firstname." ".$User->lastname.") debido a que se encuentra bloqueado, por lo que no esta autorizado para generar pagos", 1);            
             }
@@ -631,18 +624,14 @@ class reservesActions extends sfActions {
                 $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                 $to      = array("soporte@arriendas.cl");
 
-                error_log("[DEBUG] 3");
                 $message = Swift_Message::newInstance();
-                error_log("[DEBUG] 4");
                 $message->setSubject($subject);
                 $message->setBody($body, 'text/html');
                 $message->setFrom($from);
                 $message->setTo($to);
                 $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
                 
-                error_log("[DEBUG] 5");
                 $this->getMailer()->send($message);
-                error_log("[DEBUG] 6");
             }
 
         } catch (Exception $e) {
