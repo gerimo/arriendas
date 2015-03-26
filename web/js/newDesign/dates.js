@@ -34,9 +34,9 @@ function initializeDate(elem, date, withTimePicker, withHumanFormatExtended) {
                 refresh(elem, withTimePicker, withHumanFormatExtended);
             },
             onShow: function(){
-                this.setOptions({
+                /*this.setOptions({
                     maxDate: $('#to').val() ? $('#to').val().split(" ")[0] : false
-                });
+                });*/
             }
         });
     } else {
@@ -157,6 +157,24 @@ function refresh(elem, withTimePicker, withHumanFormatExtended) {
 
     $("#"+elem+"H").val(value);
     $("#"+elem).val(getFormat(date));
+
+    if (elem == "from") {
+        
+        date.setDate(date.getDate()+1);
+        to = chileanFormat2Date($("#toH").val());
+
+        if (date >= to) {
+
+            if (withHumanFormatExtended) {
+                value = getHumanFormatExtended(date);
+            } else {
+                value = getHumanFormat(date);
+            }
+
+            $("#toH").val(value);
+            $("#to").val(getFormat(date));
+        }
+    }
 
     afterDateRefresh();
 }
