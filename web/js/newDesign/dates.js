@@ -28,10 +28,10 @@ function initializeDate(elem, date, withTimePicker, withHumanFormatExtended) {
                 "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
             ],
             onSelectDate: function() {
-                refresh(elem, withTimePicker, withHumanFormatExtended);
+                refresh(elem, withHumanFormatExtended);
             },
             onSelectTime: function() {
-                refresh(elem, withTimePicker, withHumanFormatExtended);
+                refresh(elem, withHumanFormatExtended);
             },
             onShow: function(){
                 /*this.setOptions({
@@ -59,10 +59,10 @@ function initializeDate(elem, date, withTimePicker, withHumanFormatExtended) {
                 "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
             ],
             onSelectDate: function() {
-                refresh(elem, withTimePicker, withHumanFormatExtended);
+                refresh(elem, withHumanFormatExtended);
             },
             onSelectTime: function() {
-                refresh(elem, withTimePicker, withHumanFormatExtended);
+                refresh(elem, withHumanFormatExtended);
             },
             onShow: function(){
                 this.setOptions({
@@ -73,6 +73,15 @@ function initializeDate(elem, date, withTimePicker, withHumanFormatExtended) {
     }
 
     $("#"+elem).val(getFormat(date));
+}
+
+function chileanExtendedFormat2Date(CEF) {
+
+    s = CEF.split(" ");
+    d = s[0].split("-");
+    t = s[1].split(":");
+
+    return new Date(d[2]+"-"+d[1]+"-"+d[0]+" "+roundTime(t[0]+":"+t[1]));
 }
 
 function chileanFormat2Date(CF) {
@@ -144,11 +153,10 @@ function getHumanFormatExtended(date) {
     return dayOfWeek+" "+day+" de "+month+" de "+year+" a las "+time;
 }
 
-function refresh(elem, withTimePicker, withHumanFormatExtended) {
+function refresh(elem, withHumanFormatExtended) {
 
     var date = chileanFormat2Date($("#"+elem+"H").val());
 
-    // Se actualizan los valores
     if (withHumanFormatExtended) {
         value = getHumanFormatExtended(date);
     } else {
@@ -161,7 +169,8 @@ function refresh(elem, withTimePicker, withHumanFormatExtended) {
     if (elem == "from") {
         
         date.setDate(date.getDate()+1);
-        to = chileanFormat2Date($("#toH").val());
+        //to = chileanFormat2Date($("#toH").val());
+        to = new Date($("#to").val());
 
         if (date >= to) {
 

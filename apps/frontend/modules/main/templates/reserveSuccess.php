@@ -461,7 +461,7 @@
                 ]
             });
         }
-    });    
+    });
 
     $("input[type=radio][name=warranty]").on('change', function(e) {
         refreshTotalPrice();
@@ -513,21 +513,6 @@
         }, 'json');
     }
 
-    function explodeDate(date) {
-
-        sDT = date.split(" ");
-        sD = sDT[0].split("-");
-        sT = sDT[1].split(":");
-
-        return {
-            "year": parseInt(sD[0]),
-            "month": parseInt(sD[1]),
-            "day": parseInt(sD[2]),
-            "hours": parseInt(sT[0]),
-            "minutes": parseInt(sT[1])
-        }
-    }
-
     function getRentalPrice() {
 
         var carId = $("#car").val();
@@ -560,34 +545,6 @@
             }
         }, 'json');
     }
-
-    function getCarTime() {
-
-        var from  = $("#from").val();
-        var to    = $("#to").val();
-
-        $.post("<?php echo url_for('reserves/calculateTime') ?>", {"from": from, "to": to}, function(r){
-            
-            if (r.error) {
-                $("#dialog-alert p").html(r.errorMessage);
-                $("#dialog-alert").attr("title", "¡Alerta!");
-                $("#dialog-alert").dialog({
-                    buttons: [{
-                        text: "Aceptar",
-                        click: function() {
-                            $( this ).dialog( "close" );
-                        }
-                    }]
-                });
-
-                setDefaultDateH();
-
-            } else {
-                $("#time").html("("+r.tiempo+" Horas)");
-            }
-
-        }, 'json');
-    }    
 
     function imageUpload (form, formfile, preview, link) {
 
@@ -681,7 +638,6 @@
                 };
 
                 $.post("<?php echo url_for('reserve_calculate_amount_warranty_free') ?>", parameters, function(r){
-                    console.log(r);
                     if (r.error) {
                         $("#dialog-alert p").html(r.errorMessage);
                         $("#dialog-alert").attr("title", "Error al calcular el precio");
@@ -708,4 +664,4 @@
         confirmAvailabilityOfTheCar();
     }
 </script>
-<script src="/js/newDesign/dates.js?v=2" type="text/javascript"></script>
+<script src="/js/newDesign/dates.js?v=3" type="text/javascript"></script>
