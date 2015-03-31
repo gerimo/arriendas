@@ -169,7 +169,6 @@ function refresh(elem, withHumanFormatExtended) {
     if (elem == "from") {
         
         date.setDate(date.getDate()+1);
-        //to = chileanFormat2Date($("#toH").val());
         to = new Date($("#to").val());
 
         if (date >= to) {

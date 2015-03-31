@@ -151,6 +151,7 @@ EOF;
                                     /*"franco.inostrozah@gmail.com" => "Franco Inostroza Hinojoza"*/
                                     /*"francofre@arriendas.cl" => "Francisca Cofré Ulloa"*/
                                 ));
+                                $message->setPriority(1);
                             }
                             
                             $this->getMailer()->send($message);
