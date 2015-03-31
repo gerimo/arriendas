@@ -123,7 +123,8 @@ EOF;
                             $this->log("[".date("Y-m-d H:i:s")."] Enviando consulta a ".$oCar->getUser()->firstname." ".$oCar->getUser()->lastname." Car ".$oCar->getId());                        
 
                             $subject = "¿Tienes disponibilidad para recibir clientes esta semana? [E".$CarAvailabilityEmail->getId()."]";
-                            $body    = get_partial('emails/carAskAvailabilityMailing', array(
+                            //$body    = get_partial('emails/carAskAvailabilityMailing', array( // Fin de semana normal
+                            $body    = get_partial('emails/carAskAvailabilityMailingLongWeekend', array( // Fin de semana largo
                                 'Car' => $oCar,
                                 'days' => $days,
                                 'imageUrl' => $imageUrl,

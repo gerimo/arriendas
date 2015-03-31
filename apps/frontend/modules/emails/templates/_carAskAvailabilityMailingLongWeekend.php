@@ -25,9 +25,7 @@
 
 <p>Hola <?php echo $Owner->firstname ?>,</p>
 
-<p>Febrero es el mes con más movimiento en Arriendas y con poca oferta dado que muchos de los dueños se van de vacaciones.</p>
-
-<p>Es por esto que necesitamos nos indiques tu disponibilidad para recibir clientes esta semana:</p>
+<p>Tenemos una alta demanda por estar próximos a al fin de semana de samana santa. Es por esto que necesitamos nos indiques tu disponibilidad para recibir clientes durante los próximos días:</p>
 
 <ul>
     <?php foreach ($days as $day): ?>
