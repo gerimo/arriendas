@@ -111,7 +111,7 @@
     </div>
     
     <!-- Reviews -->
-    <?php if ($reviews): ?>
+    <?php if (count($reviews) > 0): ?>
         <div class="row">
             <div class="panel-group col-md-11" id="reviews">
 
