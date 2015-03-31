@@ -25,7 +25,7 @@
 
 <p>Hola <?php echo $Owner->firstname ?>,</p>
 
-<p>Tenemos una alta demanda por estar próximos a al fin de semana de samana santa. Es por esto que necesitamos nos indiques tu disponibilidad para recibir clientes durante los próximos días:</p>
+<p>Tenemos una alta demanda por estar próximos a al fin de semana largo de samana santa. Es por esto que necesitamos nos indiques tu disponibilidad para recibir clientes durante los próximos días:</p>
 
 <ul>
     <?php foreach ($days as $day): ?>
