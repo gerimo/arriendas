@@ -11,7 +11,7 @@ class CarAskAvailabilityNewTask extends sfBaseTask {
         ));
 
         $this->namespace = 'car';
-        $this->name = 'askAvailability';
+        $this->name = 'askAvailabilityNew';
         $this->briefDescription = 'Envía un correo preguntando por la disponibilidad del auto para el fin de semana o festivo';
         $this->detailedDescription = <<<EOF
 The [CarAskAvailability|INFO] task does things.
