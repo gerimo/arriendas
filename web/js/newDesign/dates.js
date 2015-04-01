@@ -81,6 +81,7 @@ function chileanFormat2Date(CF) {
     d = s[0].split("-");
     t = s[1].split(":");
 
+    console.log(d[2], d[1], d[0], roundTime(t[0]+":"+t[1]).split(":")[0], roundTime(t[0]+":"+t[1]).split(":")[1], 0, 0);
     return new Date(d[2], d[1], d[0], roundTime(t[0]+":"+t[1]).split(":")[0], roundTime(t[0]+":"+t[1]).split(":")[1], 0, 0);
 }
 
@@ -147,6 +148,7 @@ function getHumanFormatExtended(date) {
 function refresh(elem, withHumanFormatExtended) {
     
     var date = chileanFormat2Date($("#"+elem+"H").val());
+    console.log(date);
 
     if (withHumanFormatExtended) {
         value = getHumanFormatExtended(date);
