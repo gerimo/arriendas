@@ -75,22 +75,13 @@ function initializeDate(elem, date, withTimePicker, withHumanFormatExtended) {
     $("#"+elem).val(getFormat(date));
 }
 
-function chileanExtendedFormat2Date(CEF) {
-
-    s = CEF.split(" ");
-    d = s[0].split("-");
-    t = s[1].split(":");
-
-    return new Date(d[2]+"-"+d[1]+"-"+d[0]+" "+roundTime(t[0]+":"+t[1]));
-}
-
 function chileanFormat2Date(CF) {
 
     s = CF.split(" ");
     d = s[0].split("-");
     t = s[1].split(":");
 
-    return new Date(d[2]+"-"+d[1]+"-"+d[0]+" "+roundTime(t[0]+":"+t[1]));
+    return new Date(d[2], d[1], d[0], roundTime(t[0]+":"+t[1]).split(":")[0], roundTime(t[0]+":"+t[1]).split(":")[1], 0, 0);
 }
 
 function getDayFormat(day) {
@@ -154,7 +145,7 @@ function getHumanFormatExtended(date) {
 }
 
 function refresh(elem, withHumanFormatExtended) {
-
+    
     var date = chileanFormat2Date($("#"+elem+"H").val());
 
     if (withHumanFormatExtended) {

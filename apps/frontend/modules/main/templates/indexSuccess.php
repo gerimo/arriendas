@@ -7,8 +7,6 @@
 <!-- Varios -->
 <script type="text/javascript">
 
-    /*google.maps.event.addDomListener(window, 'load', initialize);*/
-
     var reserveUrl = "<?php echo url_for('reserve', array('carId' => 'carId'), true) ?>";
 
     var usuarioLogeado = "<?php echo $usuarioLog; ?>";
