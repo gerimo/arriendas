@@ -57,10 +57,18 @@ class mainActions extends sfActions {
             $this->isWeekend = true;
         }
 
-        if ($this->getUser()->getAttribute("from", false) && $this->getUser()->getAttribute("to", false)) {
+        if ($this->getUser()->getAttribute("from", false) &&
+            $this->getUser()->getAttribute("to", false)) &&
+            strtotime($this->getUser()->getAttribute("from")) > time() &&
+            strtotime($this->getUser()->getAttribute("to")) > strtotime($this->getUser()->getAttribute("from")) {
+
             $this->from = $this->getUser()->getAttribute("from");
             $this->to   = $this->getUser()->getAttribute("to");
         } else {
+
+            $this->getUser()->getAttributeHolder()->remove('from');
+            $this->getUser()->getAttributeHolder()->remove('to');
+
             if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
                 $this->from = date("Y-m-d 08:00", strtotime("+12 Hours"));
             } else {
