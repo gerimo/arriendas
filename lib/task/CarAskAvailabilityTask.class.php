@@ -110,7 +110,7 @@ EOF;
 
             try {
 
-                /*$CarAvailabilityEmail = new CarAvailabilityEmail();
+                $CarAvailabilityEmail = new CarAvailabilityEmail();
 
                 $CarAvailabilityEmail->setCar($oCar);
                 $CarAvailabilityEmail->setSentAt(date("Y-m-d H:i:s"));
@@ -168,7 +168,7 @@ EOF;
                     $message->setPriority(1);
                 }
                 
-                $this->getMailer()->send($message);*/
+                $this->getMailer()->send($message);
 
                 $sentEmails++;
             } catch (Exception $e) {
