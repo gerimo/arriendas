@@ -259,7 +259,6 @@
         $(".isAirportDelivery").each(function(){
             if ($(this).is(':checked')) {
                 isAirportDelivery = true;
-                console.log(reserveUrl+": "+reserveUrl.indexOf("?a"));
                 if (reserveUrl.indexOf("?a") == -1) {
                     reserveUrl = reserveUrl+"?a";
                 }
@@ -759,10 +758,6 @@
 
         localizame();
         initialize();
-
-        $(".box").click(function(){
-            console.log("123");
-        });
 
         // Carousel
         $('#section-home-carousel').slick({
