@@ -86,7 +86,7 @@
         }
 
         map = new google.maps.Map(document.getElementById('map-container'), {
-            zoom: 14,
+            zoom: 20,
             center: center,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             scrollwheel: false
