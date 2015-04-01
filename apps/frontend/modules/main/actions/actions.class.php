@@ -60,7 +60,7 @@ class mainActions extends sfActions {
         if ($this->getUser()->getAttribute("from", false) &&
             $this->getUser()->getAttribute("to", false) &&
             strtotime($this->getUser()->getAttribute("from")) > time() &&
-            strtotime($this->getUser()->getAttribute("to")) > strtotime($this->getUser()->getAttribute("from")) {
+            strtotime($this->getUser()->getAttribute("to")) > strtotime($this->getUser()->getAttribute("from"))) {
 
             $this->from = $this->getUser()->getAttribute("from");
             $this->to   = $this->getUser()->getAttribute("to");
