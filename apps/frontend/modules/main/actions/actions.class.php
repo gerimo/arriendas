@@ -684,7 +684,7 @@ class mainActions extends sfActions {
         $this->Car = Doctrine_Core::getTable('Car')->find($carId);
         $this->forward404If(!$this->Car);
 
-        $setDates = true;
+        /*$setDates = true;
         if ($this->getUser()->getAttribute("from", false) && $this->getUser()->getAttribute("to", false)) {
             
             $from = $this->getUser()->getAttribute("from");
@@ -707,6 +707,31 @@ class mainActions extends sfActions {
                 $to = date("Y-m-d 08:00", strtotime("+32 Hours"));
             } else {
                 $to = date("Y-m-d H:i", strtotime("+24 Hours"));
+            }
+        }*/
+
+        if ($this->getUser()->getAttribute("from", false) &&
+            $this->getUser()->getAttribute("to", false) &&
+            strtotime($this->getUser()->getAttribute("from")) > time() &&
+            strtotime($this->getUser()->getAttribute("to")) > strtotime($this->getUser()->getAttribute("from"))) {
+
+            $this->from = $this->getUser()->getAttribute("from");
+            $this->to   = $this->getUser()->getAttribute("to");
+        } else {
+
+            $this->getUser()->getAttributeHolder()->remove('from');
+            $this->getUser()->getAttributeHolder()->remove('to');
+
+            if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
+                $this->from = date("Y-m-d 08:00", strtotime("+12 Hours"));
+            } else {
+                $this->from = date("Y-m-d H:i", strtotime("+4 Hours"));
+            }
+
+            if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
+                $this->to = date("Y-m-d 08:00", strtotime("+32 Hours"));
+            } else {
+                $this->to = date("Y-m-d H:i", strtotime("+24 Hours"));
             }
         }
 
@@ -2845,10 +2870,18 @@ class mainActions extends sfActions {
             }
         }
 
-        if ($this->getUser()->getAttribute("from", false) && $this->getUser()->getAttribute("to", false)) {
+        if ($this->getUser()->getAttribute("from", false) &&
+            $this->getUser()->getAttribute("to", false) &&
+            strtotime($this->getUser()->getAttribute("from")) > time() &&
+            strtotime($this->getUser()->getAttribute("to")) > strtotime($this->getUser()->getAttribute("from"))) {
+
             $this->from = $this->getUser()->getAttribute("from");
             $this->to   = $this->getUser()->getAttribute("to");
         } else {
+
+            $this->getUser()->getAttributeHolder()->remove('from');
+            $this->getUser()->getAttributeHolder()->remove('to');
+
             if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
                 $this->from = date("Y-m-d 08:00", strtotime("+12 Hours"));
             } else {
