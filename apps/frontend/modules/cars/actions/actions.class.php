@@ -14,29 +14,33 @@ class carsActions extends sfActions {
 
             $CarAvailabilityEmail = Doctrine_Core::getTable("CarAvailabilityEmail")->find($carAvailabilityEmailId);
 
-            if (!$CarAvailabilityEmail) {
-                throw new Exception("No se encontró el registro.", 1);
-            }
-
-            if ($CarAvailabilityEmail->getSignature() != $signature) {
-                throw new Exception("Las firmas no coinciden. ¿Trampa?", 2);
-            }
+            $this->forward404If(!$CarAvailabilityEmail || $CarAvailabilityEmail->getSignature() != $signature);
 
             if (is_null($CarAvailabilityEmail->getCheckedAt())) {
                 $CarAvailabilityEmail->setCheckedAt(date("Y-m-d H:i:s"));
                 $CarAvailabilityEmail->save();
             }
             
-            $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
+            /*$Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"));
             if ($Holiday || date("N") == 6 || date("N") == 7) {
                 $days = Utils::isWeekend(true, false);
             } else {
                 $days = Utils::isWeekend(true, true);
-            }
+            }*/
 
-            $Car  = $CarAvailabilityEmail->getCar();
+            if ($option > 0) {
 
-            if ($option == 2) {
+                if ($option == 1) {
+                    $days = Utils::isWeek(true, !Utils::isWeek());
+                } elseif ($option == 2) {
+                    error_log("2");
+                    $days = Utils::isWeekend(true, !Utils::isWeekend());
+                } else {
+                    $this->forward404();
+                }
+
+                $Car = $CarAvailabilityEmail->getCar();
+
                 foreach ($days as $day) {
                     $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
                     if (!$CarAvailability) {
@@ -50,19 +54,6 @@ class carsActions extends sfActions {
                     $CarAvailability->setEndedAt("20:00:00");
                     $CarAvailability->save();
                 }
-            } elseif ($option == 1) {
-                $day = $days[count($days)-1];
-                $CarAvailability = Doctrine_Core::getTable("CarAvailability")->findOneByDayAndCarIdAndIsDeleted($day, $Car->getId(), false);
-                if (!$CarAvailability) {
-
-                    $CarAvailability = new CarAvailability();
-                    $CarAvailability->setCar($Car);
-                    $CarAvailability->setDay($day);
-                }
-
-                $CarAvailability->setStartedAt("08:00:00");
-                $CarAvailability->setEndedAt("20:00:00");
-                $CarAvailability->save();
             }
         } catch (Exception $e) {
             error_log("[".date("Y-m-d H:i:s")."] [cars/availabilityEmail] ERROR: ".$e->getMessage());

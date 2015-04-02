@@ -111,6 +111,7 @@
 
     <div class="space-50"></div>
 
+    <!-- Garantía arriendas -->
     <h2 class="body-title">Garantía Arriendas.cl</h2>
     <div class="row">
         <div class="steps col-md-offset-1 col-md-10">            
@@ -122,20 +123,17 @@
         </div>
     </div>
 
-    <div class="space-50"></div>
-
     <!-- Reviews -->
     <?php if (count($first_reviews) > 0): ?>
-        <div class="row">
-            <div class="panel-group col-md-11" id="reviews">
+        <div class="space-50"></div>
+        <div class="body row">
+            <div class="col-md-offset-1 col-md-10" id="reviews">
 
                 <div class="panel-heading">
                     <h2><?php echo count($first_reviews)+count($reviews) ?> Reviews <span class="car-rating pull-right" data-number="<?php echo $reviews_avg ?>" ></span></h2>
                 </div>
 
-                <div class="space-30 hidden-xs"></div>
-
-                <div id="reviewsCollapseOne" class="panel-collapse col-md-offset-1 col-md-11" >
+                <div id="reviewsCollapseOne" class="panel-collapse col-md-offset-1 col-md-11" style="margin-left: 20px">
                     <div class="border">
                         <?php foreach ($first_reviews as $review): ?>
                             <div class="row review">
@@ -148,7 +146,7 @@
                                     <p style="margin: 0; text-align: center"><?php echo $review['user_name'] ?></p>
                                 </div>
                                 <div class="col-md-10">
-                                    <p><?php echo $review['opinion'] ?></p>                                    
+                                    <p style="margin-top: 20px"><?php echo $review['opinion'] ?></p>                                    
                                 </div>
                                 <div class="col-md-12">
                                     <span class="car-rating pull-right" data-number="<?php echo $review['rating'] ?>" ></span>
@@ -169,7 +167,7 @@
                                         <p style="margin: 0; text-align: center"><?php echo $review['user_name'] ?></p>
                                     </div>
                                     <div class="col-md-10">
-                                        <p><?php echo $review['opinion'] ?></p>
+                                        <p style="margin-top: 20px"><?php echo $review['opinion'] ?></p>
                                     </div>
                                     <div class="col-md-12">
                                         <span class="car-rating pull-right" data-number="<?php echo $review['rating'] ?>" ></span>
@@ -179,7 +177,6 @@
                             <?php endforeach ?>
 
                         </div>
-
                     </div>
 
                     <a class="title-collapse text-center" data-toggle="collapse" href="#collapseReviews" aria-expanded="false" aria-controls="collapseReviews">
@@ -190,9 +187,9 @@
             </div>
         </div>
     <?php endif ?>
-    
-    <div class="space-50"></div>
 
+    <!-- Formulario -->
+    <div class="space-50"></div>
     <form action="<?php echo url_for('reserve_pay') ?>" id="reserve-form" method="post">
         
         <h1 class="body-title" id="reserve">Arriendo de <?php echo $Car->getModel()->getBrand()->name ?> <?php echo $Car->getModel()->name ?> a $<span class="price"><?php echo number_format($price, 0, ',', '.') ?></span> en <?php echo $Car->getCommune()->name ?></h1>
