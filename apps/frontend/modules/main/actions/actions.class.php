@@ -715,23 +715,23 @@ class mainActions extends sfActions {
             strtotime($this->getUser()->getAttribute("from")) > time() &&
             strtotime($this->getUser()->getAttribute("to")) > strtotime($this->getUser()->getAttribute("from"))) {
 
-            $this->from = $this->getUser()->getAttribute("from");
-            $this->to   = $this->getUser()->getAttribute("to");
+            $from = $this->getUser()->getAttribute("from");
+            $to   = $this->getUser()->getAttribute("to");
         } else {
 
             $this->getUser()->getAttributeHolder()->remove('from');
             $this->getUser()->getAttributeHolder()->remove('to');
 
             if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
-                $this->from = date("Y-m-d 08:00", strtotime("+12 Hours"));
+                $from = date("Y-m-d 08:00", strtotime("+12 Hours"));
             } else {
-                $this->from = date("Y-m-d H:i", strtotime("+4 Hours"));
+                $from = date("Y-m-d H:i", strtotime("+4 Hours"));
             }
 
             if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
-                $this->to = date("Y-m-d 08:00", strtotime("+32 Hours"));
+                $to = date("Y-m-d 08:00", strtotime("+32 Hours"));
             } else {
-                $this->to = date("Y-m-d H:i", strtotime("+24 Hours"));
+                $to = date("Y-m-d H:i", strtotime("+24 Hours"));
             }
         }
 
