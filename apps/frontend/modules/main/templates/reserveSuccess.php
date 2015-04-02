@@ -624,4 +624,4 @@
         confirmAvailabilityOfTheCar();
     }
 </script>
-<script src="/js/newDesign/dates.js?v=3" type="text/javascript"></script>
+<script src="/js/newDesign/dates.js?v=4" type="text/javascript"></script>
