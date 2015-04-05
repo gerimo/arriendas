@@ -177,14 +177,13 @@ EOF;
                 $message->setSubject($subject);
                 $message->setBody($body, 'text/html');
                 $message->setFrom($from);
-                //$message->setTo($to);
-                $message->setTo(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                $message->setTo($to);
+                /*$message->setTo(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
                 
                 $this->log("[".date("Y-m-d H:i:s")."] Enviando consulta por Car ".$oCar->id." a User ".$oOwner->id." (".$oOwner->firstname." ".$oOwner->lastname.")");
                 $this->getMailer()->send($message);
 
                 $iSentEmails++;
-                exit;
             }
 
             $this->log("[".date("Y-m-d H:i:s")."] ------------------------------");
