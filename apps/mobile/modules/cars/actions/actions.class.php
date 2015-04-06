@@ -219,11 +219,13 @@ class carsActions extends sfActions {
             $this->getUser()->setAttribute("mapCenterLat", $mapCenterLat);
             $this->getUser()->setAttribute("mapCenterLng", $mapCenterLng);
 
-            $withAvailability = false;
+            /*$withAvailability = false;
             $days = Utils::isWeekend(true);
             if (in_array(date("Y-m-d", strtotime($from)), $days)) {
                 $withAvailability = true;
-            }
+            }*/
+
+            $withAvailability = true;
 
             $return["cars"] = CarTable::findCars($offset, $limit, $from, $to, $withAvailability, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $haveChair, $nearToSubway);
             /*error_log("Autos encontrados: ".count($return["cars"]));*/
