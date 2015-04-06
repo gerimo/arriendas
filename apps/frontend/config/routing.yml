@@ -9,6 +9,10 @@ test_mailing:
     url: /test/email
     param: { module: main, action: testMailing }
 
+test_upload_images:
+    url: /imagenes
+    param: { module: main, action: testImageUpload }
+
 about_company:
     url: /nosotros
     param: { module: main, action: compania }
