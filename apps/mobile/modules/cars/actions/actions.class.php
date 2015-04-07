@@ -226,6 +226,9 @@ class carsActions extends sfActions {
             }*/
 
             $withAvailability = true;
+            if (strtotime($from) >= strtotime("+7 day", strtotime(date("Y-m-d 00:00:00")))) {
+                $withAvailability = false;
+            }
 
             $return["cars"] = CarTable::findCars($offset, $limit, $from, $to, $withAvailability, $isMap, $NELat, $NELng, $SWLat, $SWLng, $regionId, $communeId, $isAutomatic, $isLowConsumption, $isMorePassengers, $haveChair, $nearToSubway);
             /*error_log("Autos encontrados: ".count($return["cars"]));*/
