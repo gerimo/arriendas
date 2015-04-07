@@ -55,7 +55,12 @@
                         <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
                         <li><input type="checkbox" name="filter" class="isLowConsumption"> Bajo consumo</li>
                         <li><input type="checkbox" name="filter" class="isMorePassengers"> Más de 5 pasajeros</li>
-                        <li><input type="checkbox" name="filter" class="nearToSubway"> Cercano al metro</li>
+                        <li><?php if($nearToSubway): ?>
+                                <input type="checkbox" checked="checked" name="filter" class="nearToSubway"> Cercano al metro
+                            <?php else: ?>
+                                <input type="checkbox" name="filter" class="nearToSubway"> Cercano al metro
+                            <?php endif; ?>
+                        </li>
                         <li><input type="checkbox" name="filter" class="haveChair"> Silla Bebé</li>
                         <li><input type="checkbox" name="filter" class="isAirportDelivery"> Auto en aeropuerto</li>
                     </ul>

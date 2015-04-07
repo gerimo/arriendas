@@ -2899,11 +2899,18 @@ class mainActions extends sfActions {
         
         $this->setLayout("newIndexLayout");
 
-        $this->isWeekend  = false;
-        $this->limit      = 33;
-        $this->Region     = Doctrine_Core::getTable("Region")->find(13);
-        $this->hasCommune = false;
-        $this->hasRegion  = false;
+        $this->isWeekend    = false;
+        $this->limit        = 33;
+        $this->Region       = Doctrine_Core::getTable("Region")->find(13);
+        $this->hasCommune   = false;
+        $this->hasRegion    = false;
+        $this->nearToSubway = false;
+
+        if ($request->hasParameter('metro')){
+            if($request->getParameter('metro')=='cercanos-al-metro'){
+                $this->nearToSubway = true;
+            }
+        }
 
         if ($request->hasParameter('region','commune', 'carType')){
             $regionSlug = $request->getParameter('region');

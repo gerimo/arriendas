@@ -491,7 +491,8 @@
     <div class="row" id="section-map-form-search">
 
         <span class="ico-search hidden-xs" data-target="#section-map-form-search"><img src="/images/newDesign/ico-search.svg"></span>
-        <a class="search-by-commune" href="<?php echo url_for('rent_a_car') ?>">Buscar por comuna</a>
+        <p class="available-cars" >Mostrando autos con disponibilidad confirmada</p>
+        <p class="search-by">Buscar por: <a href="<?php echo url_for('rent_a_car')?>">Comuna</a> / <a href="<?php echo url_for('rent_a_car_near_to_subway', array('metro' => 'cercanos-al-metro'))?>">Cercanos al metro</a> </p>
 
         <!-- List -->
         <div class="col-xs-6 col-sm-3 col-md-3" id="region-container">
@@ -551,6 +552,7 @@
                 </div>
 
                 <div class="col-sm-4 col-md-4" id="map-list">
+                    <div class='hidden-xs space-50'></div>
                     <div id="map-list-loading" class="loading" style="text-align: center; margin-top: 30%"><?php echo image_tag('ajax-loader.gif', array("width" => "80px", "height" => "80px")) ?></div>
                     <div id="map-list-container"></div>
                 </div>

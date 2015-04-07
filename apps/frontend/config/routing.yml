@@ -9,9 +9,9 @@ test_mailing:
     url: /test/email
     param: { module: main, action: testMailing }
 
-test_upload_images:
-    url: /imagenes
-    param: { module: main, action: testImageUpload }
+#test_upload_images:
+#    url: /imagenes
+#    param: { module: main, action: testImageUpload }
 
 about_company:
     url: /nosotros
@@ -180,6 +180,10 @@ rent_a_car_a:
 
 rent_a_car:
     url: /rent-a-car/arriendo-de-autos
+    param: { module: main, action: searchACars }
+
+rent_a_car_near_to_subway:
+    url: /rent-a-car/arriendo-de-autos/:metro
     param: { module: main, action: searchACars }
 
 rent_a_car_region:
