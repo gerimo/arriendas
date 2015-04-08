@@ -10,36 +10,44 @@
 			
 					<h1>¡PAGO EXITOSO!</h1>
 					<div class="contenido text-center">
-						<h2>¡Advertencia!</h2>
-						<i class="fa fa-exclamation-triangle fa-2"></i>
-						<p>
-							Para ver los datos del dueño y del arriendo debes subir la foto de tu licencia de conducir.</br>
-							Puedes subir la foto directamente desde el botón </br>
-							<a class="btn btn-a-action" id="linklicense" href="">  SUBIR FOTO  </a>
-						</p>
-						<div class="text-center" id="previewlicense"></div>
+
+						<div class="warning col-md-offset-1 col-md-10 thumbnail">
+							<h2 class="warning-title">¡Advertencia!</h2>
+							<i class="fa fa-exclamation-triangle fa-2"></i>
+							<p>
+								Para ver los datos del dueño y del arriendo debes subir la foto de tu licencia de conducir.</br><br>
+								Puedes subir la foto directamente desde </br>
+								<a id="linklicense" href="">  Aquí  </a>
+							</p>
+							<div class="text-center" id="previewlicense"></div>
+						</div>
+
 						<br>
-						<p class="Owner text-center">
-							<b>Datos del dueño del auto</b>
-						</p>
-						<p>
-							<b>Nombre:</b>    XXXXX XXXXX
-							<br>
-							<b>Direccion:</b> XXXXXX XXXX, XXXXXX
-							<br>
-							<b>Teléfono:</b>  XXXXXXXX
-							<br>
-							<b>Correo:</b>    XXXXXXXX@XXXX.XXX            
-						</p>
-						<hr>
-						<p class="Owner text-center">
-							<b>Datos del arriendo</b>
-						</p>
-						<p>  
-							<b>Fecha Inicio:</b>  XX-XX-XXX XX:XX
-							<br>
-							<b>Fecha Termino:</b>  XX-XX-XXX XX:XX
-						</p>
+
+						<div class="col-md-offset-1 col-md-10">
+							<p class="Owner text-center">
+								<b>Datos del dueño del auto</b>
+							</p>
+							<p>
+								<b>Nombre:</b>    XXXXX XXXXX
+								<br>
+								<b>Direccion:</b> XXXXXX XXXX, XXXXXX
+								<br>
+								<b>Teléfono:</b>  XXXXXXXX
+								<br>
+								<b>Correo:</b>    XXXXXXXX@XXXX.XXX            
+							</p>
+							<hr>
+							<p class="Owner text-center">
+								<b>Datos del arriendo</b>
+							</p>
+							<p>  
+								<b>Fecha Inicio:</b>  XX-XX-XXX XX:XX
+								<br>
+								<b>Fecha Termino:</b>  XX-XX-XXX XX:XX
+							</p>
+						</div>
+
 					</div>
 				<div class="row hidden-xs" style="margin-top: 30px">
 					<div class="hidden-xs space-40"></div>
