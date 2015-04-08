@@ -250,6 +250,10 @@ reserve_success:
     url: /reserva/exitosa
     param: { module: reserves, action: success }
 
+reserve_success_license:
+    url: /reserva/advertencia
+    param: { module: reserves, action: warningUploadLicense }
+
 reserves:
     url: /reservas
     param: { module: reserves, action: index }

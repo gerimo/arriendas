@@ -908,7 +908,6 @@ class mainActions extends sfActions {
     
         $return = array("error" => false);
         $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
-
         try {            
 
             $name = $_FILES[$request->getParameter('file')]['name'];
