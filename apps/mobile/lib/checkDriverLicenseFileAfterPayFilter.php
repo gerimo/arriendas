@@ -1,38 +1,32 @@
 <?php
 
-/* 
- * Filtro para validación de pantalla de pago exitoso
- */
-
-    class CheckPaymentSuccessFilter extends sfFilter
+    class CheckDriverLicenseFileAfterPayFilter extends sfFilter
     {
         public function execute($filterChain)
         {
             $request = $this->getContext()->getRequest();
             $user  = $this->getContext()->getUser();
             $action = $this->context->getActionName();
-                
-            // Ejecutar este filtro solo una vez, y si el action
-            // no es el de login y no es succes->para que no se produzca un loop con el redireccionamiento
+
             if ($this->isFirstCall()
                     && $user 
                     && $user->isAuthenticated()
-                    && $action != 'success'
                     && $action != 'warningUploadLicense'
                     && $action != 'uploadLicense'
                     && $action != 'logout')
             {
                 $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
+                $User = Doctrine_core::getTable("user")->find($idUsuario);
                 $toShow = Doctrine_Core::getTable("Transaction")->countPendingToShowByUser($idUsuario);
-                if($toShow > 0){
-                    
-                    /*$this->getContext()->getController()->forward('bcpuntopagos', 'showExito');*/
-                    $this->getContext()->getController()->redirect('reserve_success', true, 301);
-                    throw new sfStopException();
-
+                if($toShow > 0 ) {
+                    if(is_null($User->driver_license_file)){
+                        $this->getContext()->getController()->redirect('reserve_success_license');
+                        throw new sfStopException();
+                    }
                 }
+
             }
-            // Ejecutar el proximo filtro
+
             $filterChain->execute();
         }
 
