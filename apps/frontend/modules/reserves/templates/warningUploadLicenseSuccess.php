@@ -11,19 +11,6 @@
 					<h1>¡PAGO EXITOSO!</h1>
 					<div class="contenido text-center">
 
-						<div class="warning col-md-offset-1 col-md-10 thumbnail">
-							<h2 class="warning-title">¡Advertencia!</h2>
-							<i class="fa fa-exclamation-triangle fa-2"></i>
-							<p>
-								Para ver los datos del dueño y del arriendo debes subir la foto de tu licencia de conducir.</br><br>
-								Puedes subir la foto directamente desde </br>
-								<a id="linklicense" href="">  Aquí  </a>
-							</p>
-							<div class="text-center" id="previewlicense"></div>
-						</div>
-
-						<br>
-
 						<div class="col-md-offset-1 col-md-10">
 							<p class="Owner text-center">
 								<b>Datos del dueño del auto</b>
@@ -70,9 +57,27 @@
 	</div>
 </div>
 
+<div style="display:none">
+	<div id="dialog-alert" class="text-center" title="">
+		<p></p>
+	</div>
+</div>
+
 <script type="text/javascript">
 
 	$(document).ready(function() {
+		$("#dialog-alert p").html("Para continuar primero debes subir la foto de tu licencia de conducir.");
+		$("#dialog-alert").attr("title", "¡Advertencia!");
+		$("#dialog-alert").dialog({
+			dialogClass: "no-close",
+			modal: true,
+			buttons: [{
+				text: "Subir foto",
+				'id': 'linklicense',
+				click: function() {
+				}
+			}]
+		});
 		$('#previewlicense').hide();	
 		imageUpload('#formlicense', '#filelicense', '#previewlicense','#linklicense');
 	});
@@ -88,17 +93,20 @@
 				target: preview,
 				success: function(r){
 					if (r.error) {
+
 						$("#dialog-alert p").html(r.errorMessage);
-						$("#dialog-alert").attr("title", "Problemas al subir la imagen");
+						$("#dialog-alert").attr("title", "¡Advertencia!");
 						$("#dialog-alert").dialog({
+							modal: true,
+							dialogClass: "no-close",
 							buttons: [{
-								text: "Aceptar",
+								text: "aceptar",
 								click: function() {
-									$('#previewlicense').hide();
-									$( this ).dialog( "close" );
+                                    location.reload();
 								}
 							}]
 						});
+						
 					} else {
 						location.reload();
 					}

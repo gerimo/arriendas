@@ -23,3 +23,10 @@ body {
 .warning{
 	background-color: #D0D0D0;
 }
+.no-close .ui-dialog-titlebar-close {
+  display: none;
+}
+
+.ui-dialog-title {
+	text-align: center;
+}
