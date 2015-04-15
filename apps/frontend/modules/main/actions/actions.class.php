@@ -24,6 +24,82 @@ class mainActions extends sfActions {
         $this->getMailer()->send($message);
     }
 
+    public function executeTestImageUpload (sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+    }
+
+    public function executeUploadImages(sfWebRequest $request) {
+
+        $return = array("error" => false);
+        $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
+
+        try {
+
+            $name = $_FILES[$request->getParameter('file')]['name'];
+            $size = $_FILES[$request->getParameter('file')]['size'];
+            $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
+
+            if (!strlen($name)) {
+                throw new Exception("Por favor, seleccione una imagen", 2);
+            }
+
+            list($txt, $ext) = explode(".", $name);
+
+            $ext = strtolower($ext);
+
+            if (!in_array($ext, $valid_formats)) {
+                throw new Exception("Formato de la imagen inválido", 2);
+            }
+
+            if ($size > (5 * 1024 * 1024)) {
+                throw new Exception("La imagen excede el tamaño máximo permitido (1 MB)", 2);                
+            }
+            
+            /*$sizewh = getimagesize($tmp);
+
+            if($sizewh[0] > 194 || $sizewh[1] > 204) {
+                echo '<script>alert(\'La imagen no cumple con las dimensiones especificadas. Puede continuar si lo desea\')</script>';
+            }*/
+        
+            $userId = $this->getUser()->getAttribute("userid");
+            $actual_image_name = time() ."$". $userId . "$." . $ext;
+
+            $uploadDir = sfConfig::get("sf_web_dir");
+            $path      = $uploadDir . '/images/tmp_images/';
+            $fileName  = $actual_image_name . "." . $ext;
+
+            $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
+
+            if (!move_uploaded_file($tmp, $path . $actual_image_name)) {
+                throw new Exception("El User ".$userId." tiene problemas para grabar la imagen de su perfil", 1);
+            }
+
+            sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
+
+            /*echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
+            echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";*/
+
+            $User = Doctrine_Core::getTable('User')->find($userId);
+            $User->setPictureFile("/images/users/".$actual_image_name);
+            $User->save();
+        } catch (Exception $e) {
+            $return["error"] = true;
+            if ($e->getCode() < 2) {
+                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo nuevamente más tarde";
+                error_log("[".date("Y-m-d H:i:s")."] [main/uploadPhoto] ERROR: ".$e->getMessage());
+            } else {
+                $return["errorMessage"] = $e->getMessage();
+            }            
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "main/uploadPhoto");
+            }
+        }
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }    
+
     public function executeIndex (sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
@@ -858,7 +934,6 @@ class mainActions extends sfActions {
     
         $return = array("error" => false);
         $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
-
         try {            
 
             $name = $_FILES[$request->getParameter('file')]['name'];
@@ -2849,11 +2924,18 @@ class mainActions extends sfActions {
         
         $this->setLayout("newIndexLayout");
 
-        $this->isWeekend  = false;
-        $this->limit      = 33;
-        $this->Region     = Doctrine_Core::getTable("Region")->find(13);
-        $this->hasCommune = false;
-        $this->hasRegion  = false;
+        $this->isWeekend    = false;
+        $this->limit        = 33;
+        $this->Region       = Doctrine_Core::getTable("Region")->find(13);
+        $this->hasCommune   = false;
+        $this->hasRegion    = false;
+        $this->nearToSubway = false;
+
+        if ($request->hasParameter('metro')){
+            if($request->getParameter('metro')=='cercanos-al-metro'){
+                $this->nearToSubway = true;
+            }
+        }
 
         if ($request->hasParameter('region','commune', 'carType')){
             $regionSlug = $request->getParameter('region');

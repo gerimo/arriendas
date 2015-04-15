@@ -791,6 +791,20 @@ class reservesActions extends sfActions {
         }       
     }
 
+    public function executeWarningUploadLicense(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+        $userId = $this->getUser()->getAttribute('userid');
+        $User = Doctrine_Core::getTable("user")->find($userId);
+        $countOrders = Doctrine_Core::getTable("Transaction")->countPendingToShowByUser($User->id);
+
+        // si no existen transacciones pagadas ya vistas por el usuario 
+        // o si el usuario ya tiene foto de licencia, entonces no puede ver la vista de advertencia
+        if($countOrders == 0 || $User->driver_license_file) {
+            $this->redirect('homepage');
+        }
+
+    }
+
     // FUNCIONES PRIVADAS
     private function calculateExtendedPrice($Reserve, $to) {
 

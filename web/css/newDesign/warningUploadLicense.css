@@ -1,0 +1,32 @@
+body {
+    background-image: url('/images/newDesign/background.jpg');
+}
+
+.contenido h2{
+	color: black;
+	font-size:300 16px;
+}
+.contenido i{
+	font-size: 40px !important;
+	color: black;
+}
+.Owner{
+	font-size: 16px;
+	color:#ba135f
+}
+.BCW h1 {
+   color: #ba135f;
+   text-align: center;
+   font-weight: 500;
+}
+
+.warning{
+	background-color: #D0D0D0;
+}
+.no-close .ui-dialog-titlebar-close {
+  display: none;
+}
+
+.ui-dialog-title {
+	text-align: center;
+}

@@ -7,7 +7,7 @@ security:  ~
 # insert your own filters here
 mobileDetectedFilter:
     class: checkMobileDetectedFilter
-    
+
 paymentSuccessFilter:
     class: checkPaymentSuccessFilter
 
@@ -20,6 +20,9 @@ optionsCarFilter:
 
 completeRegisterCar:
     class: checkCompleteRegisterCar
+
+driverLicenseFileAfterPayFilter:
+    class: checkDriverLicenseFileAfterPayFilter
 
 cache:     ~
 execution: ~

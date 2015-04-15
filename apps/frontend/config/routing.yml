@@ -9,6 +9,10 @@ test_mailing:
     url: /test/email
     param: { module: main, action: testMailing }
 
+#test_upload_images:
+#    url: /imagenes
+#    param: { module: main, action: testImageUpload }
+
 about_company:
     url: /nosotros
     param: { module: main, action: compania }
@@ -178,6 +182,10 @@ rent_a_car:
     url: /rent-a-car/arriendo-de-autos
     param: { module: main, action: searchACars }
 
+rent_a_car_near_to_subway:
+    url: /rent-a-car/arriendo-de-autos/:metro
+    param: { module: main, action: searchACars }
+
 rent_a_car_region:
     url: /rent-a-car/arriendo-de-autos/:region
     param: { module: main, action: searchACars }
@@ -241,6 +249,10 @@ reserve_reject:
 reserve_success:
     url: /reserva/exitosa
     param: { module: reserves, action: success }
+
+reserve_success_license:
+    url: /reserva/advertencia
+    param: { module: reserves, action: warningUploadLicense }
 
 reserves:
     url: /reservas

@@ -12,7 +12,7 @@ paymentSuccessFilter:
     class: checkPaymentSuccessFilter
 
 completeRegisterFilter:
-    class:  checkCompleteRegisterFilter
+    class: checkCompleteRegisterFilter
 
 optionsCarFilter:
     class: checkOptionsCarFilter
@@ -20,6 +20,9 @@ optionsCarFilter:
 
 completeRegisterCar:
     class: checkCompleteRegisterCar
-    
+
+driverLicenseFileAfterPayFilter:
+    class: checkDriverLicenseFileAfterPayFilter
+
 cache:     ~
 execution: ~
