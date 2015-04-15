@@ -1,4 +1,4 @@
-<link href="/css/newDesign/index.css?v=7" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/index.css?v=8" rel="stylesheet" type="text/css">
 
 <!-- Google Maps -->
 <script src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;sensor=false" type="text/javascript"></script>
