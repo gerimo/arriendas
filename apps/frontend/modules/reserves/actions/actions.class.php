@@ -816,7 +816,7 @@ class reservesActions extends sfActions {
             $newImageName = time() . "-" . $userId . "." . $ext;
 
             $path = sfConfig::get("sf_web_dir") . '/images/licence/';
-
+            $error = $error." Directorio e fotos: ".$path;
             $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
 
             if (!move_uploaded_file($tmp, $path . $newImageName)) {
@@ -828,6 +828,7 @@ class reservesActions extends sfActions {
             $User->save();
 
             $Reserves = Doctrine_Core::getTable("reserve")->findByUserId($userId);
+            $error = $error." Cantidad de reservas: ".count($Reserves);
             foreach ($Reserves as $Reserve) {
                 if($Reserve->getPayEmailPending()){
                     // Correo arrendatario
@@ -852,8 +853,8 @@ class reservesActions extends sfActions {
                 }
                 $Reserve->save();
             }
-            $error = "problemas enviando el mail";
-    
+            $error = $error." problemas enviando el mail";
+     
         } catch (Exception $e) {
             $return["error"] = true;
             if ($e->getCode() < 2) {
