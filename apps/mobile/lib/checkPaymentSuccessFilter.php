@@ -18,6 +18,8 @@
                     && $user 
                     && $user->isAuthenticated()
                     && $action != 'success'
+                    && $action != 'warningUploadLicense'
+                    && $action != 'uploadLicense'
                     && $action != 'logout')
             {
                 $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
