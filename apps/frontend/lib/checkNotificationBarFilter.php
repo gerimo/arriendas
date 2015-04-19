@@ -1,11 +1,10 @@
 <?php
 
-class NotificationBarFilter extends sfFilter {
+class checkNotificationBarFilter extends sfFilter {
 
     public function execute($filterChain) {
 
         $ContextUser = $this->getContext()->getUser();
-
         if ($this->isFirstCall() && $ContextUser->isAuthenticated()) {
 
             $userId = $ContextUser->getAttribute('userid');
@@ -14,7 +13,6 @@ class NotificationBarFilter extends sfFilter {
             $UserNotification = Doctrine_Core::getTable('UserNotification')->findBarNotification($userId);
 
             if ($UserNotification) {
-
                 if ($UserNotification->getNotification()->is_active &&
                     $UserNotification->getNotification()->getAction()->is_active &&
                     $UserNotification->getNotification()->getNotificationType()->is_active) {
@@ -22,7 +20,7 @@ class NotificationBarFilter extends sfFilter {
                     $message = Notification::translator($User->id, $UserNotification->getNotification()->message, $UserNotification->reserve_id);
 
                     $ContextUser->setAttribute("notificationMessage", $message);
-                    $ContextUser->setAttribute("notificationId", $UserNotification->getNotification()->id);
+                    $ContextUser->setAttribute("notificationId", $UserNotification->id);
 
                     if (is_null($UserNotification->getViewedAt())) {
                         $UserNotification->setViewedAt(date("Y-m-d H:i:s"));

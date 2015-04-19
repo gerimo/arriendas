@@ -49,7 +49,7 @@ EOF;
             }
 
             if($days = 1){
-                Notification::make($Reserve->getUser()->id, 16, $Reserve->id);
+                Notification::make($Reserve->getUser()->id, 14, $Reserve->id);
             }
         }
         

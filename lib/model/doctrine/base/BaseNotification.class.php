@@ -80,5 +80,6 @@ abstract class BaseNotification extends sfDoctrineRecord {
             'onDelete' => 'no action',
             'onUpdate' => 'no action'
         ));
+
     }
 }

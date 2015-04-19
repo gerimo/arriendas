@@ -1681,4 +1681,5 @@ class User extends BaseUser {
         }
         return 1;
     }
+
 }
