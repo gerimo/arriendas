@@ -117,13 +117,18 @@ class Car extends BaseCar {
       return $Opportunities;
   }
 
-    public function hasAvailability($datetime) {
-      
+    public function hasAvailability($date) {
+
         $q = Doctrine_Core::getTable("CarAvailability")
             ->createQuery('CA')
-            ->where('CA.car_id = ?', $this->id)
-            ->andWhere('CA.day = ?', date("Y-m-d", strtotime($datetime)))
-            ->andWhere('? BETWEEN CA.started_at AND CA.ended_at', date("H:i:s", strtotime($datetime)));
+            ->where('CA.car_id = ?', $this->id);
+
+        if (is_array($date)) {
+            $q->andWhereIn('CA.day', implode(',', $date));
+        } else {
+            $q->andWhere('CA.day = ?', date("Y-m-d", strtotime($date)));
+            $q->andWhere('? BETWEEN CA.started_at AND CA.ended_at', date("H:i:s", strtotime($date)));
+        }
 
         $checkAvailability = $q->execute();
 
@@ -133,6 +138,7 @@ class Car extends BaseCar {
 
         return false;
     }
+
 
   public function hasReserve($from, $to, $userId = false) {
       

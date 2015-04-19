@@ -19,12 +19,11 @@
     <img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=1519934024954094&amp;ev=PixelInitialized" />
 </noscript>
 
-<div class="space-90 hidden-xs"></div>
-<div class="space-50 visible-xs"></div>
+<div class="space-90"></div>
 
 <div class="container">
 
-    <h1 class="hidden-xs text-capitalize reserve-title">
+    <h1 class="text-capitalize reserve-title">
         <?php echo $Car->getModel()->getBrand()->name." ".$Car->getModel()->name.", <span>".$Car->year.", ".$Car->getCommune()->name."</span>" ?>
     </h1>
 
@@ -48,7 +47,7 @@
         </div>
     </div>
 
-    <div class="hidden-xs hidden-sm row">
+    <div class="row">
         <div class="col-md-3 car-sep">
             <h2>Características:</h2>
             <ul id="features">
@@ -110,64 +109,9 @@
         </div>
     </div>
 
-    <div class="visible-xs">
+    <div class="space-50"></div>
 
-        <h1><?php echo $Car->getModel()->getBrand()->name." ".$Car->getModel()->name.", <small>".$Car->getYear().", ".$Car->getCommune()."</small>" ?></h1>
-
-        <h2>Características:</h2>
-
-        <ul class="features">
-            <?php if ($metro): ?>
-                <li><span class="metro-mobile"></span> A <strong>1.5 km</strong> del Metro Católica</li>
-            <?php endif ?>
-            <?php if ($passengers): ?>
-                <li><span class="icon-svg_01"></span> 5 o más pasajeros</li>
-            <?php else: ?>
-                <li><span class="icon-svg_01"></span> 4 pasajeros</li>
-            <?php endif ?>
-
-            <?php if ($diesel): ?>
-                <li><i class="fa fa-tint"></i> Petrolero</li>
-            <?php else: ?>
-                <li><i class="fa fa-tint"></i> Bencinero</li>
-            <?php endif ?>
-
-            <?php if ($airCondition): ?>
-                <li><span class="icon-svg_03"></span> Aire acondicionado</li>
-            <?php endif ?>
-
-            <?php if ($transmission): ?>
-                <li><i class="fa fa-cog"></i> Automático</li>
-            <?php else: ?>
-                <li><i class="fa fa-cog"></i> Mecánico</li>
-            <?php endif ?>
-
-            <li><img class="metro" src='/images/newDesign/ico.png' alt='metro'> A <b><?php echo round($Car->getNearestMetro()->distance, 1) ?> km</b> del Metro <?php echo $Car->getNearestMetro()->getMetro()->name ?></li>
-        </ul>
-
-        <div class="space-20 visible-xs"></div>
-        
-        <div class="block-mobile">
-            <div class="saved pull-right"><strong>40%</strong>AHORRO</div>
-            <div class="prices">
-                <?php if ($Car->getPricePerHour()):?>
-                    <p>$<?php echo number_format(round($Car->getPricePerHour()), 0, '', '.')?> / <small>HORA</small></p>
-                <?php endif ?>
-                <?php if ($Car->getPricePerDay()):?>
-                    <p><strong>$<?php echo number_format(round($Car->getPricePerDay()), 0, '', '.')?> / <small>DÍA</small></strong></p>
-                <?php endif ?>
-                <?php if ($Car->getPricePerWeek()):?>
-                    <p>$<?php echo number_format(round(($Car->getPricePerWeek()/7)), 0, '', '.') ?> / <small>DÍA SEMANA</small></p>
-                <?php endif ?>
-                <?php if ($Car->getPricePerMonth()):?>
-                    <p>$<?php echo number_format(round(($Car->getPricePerMonth()/30)), 0, '', '.') ?> / <small>DÍA MES</small></p>
-                <?php endif ?> 
-            </div>
-        </div>
-    </div>
-
-    <div class="space-50 hidden-xs"></div>
-
+    <!-- Garantía arriendas -->
     <h2 class="body-title">Garantía Arriendas.cl</h2>
     <div class="row">
         <div class="steps col-md-offset-1 col-md-10">            
@@ -179,59 +123,60 @@
         </div>
     </div>
 
-    <div class="space-50 hidden-xs"></div>
-
-    <!-- Reviews -->  
-    <!-- 
-    <?php if (count($reviews) > 0): ?>
-        <div class="row">
-            <div class="panel-group col-md-11" id="reviews">
+    <!-- Reviews -->
+    <?php if (count($first_reviews) > 0): ?>
+        <div class="space-50"></div>
+        <div class="body row">
+            <div class="col-md-offset-1 col-md-10" id="reviews">
 
                 <div class="panel-heading">
-                    <h2>Reviews <span class="car-rating pull-right" data-number="<?php echo $average ?>" ></span> <small>(<?php echo $quantity?>)</small></h2>
+                    <h2><?php echo count($first_reviews)+count($reviews) ?> Reviews <span class="car-rating pull-right" data-number="<?php echo $reviews_avg ?>" ></span></h2>
                 </div>
 
-                <div class="space-30 hidden-xs"></div>
-                <div id="reviewsCollapseOne" class="panel-collapse col-md-offset-1 col-md-11" >
+                <div id="reviewsCollapseOne" class="panel-collapse col-md-offset-1 col-md-11" style="margin-left: 20px">
                     <div class="border">
-                        <?php count($reviews) ?> 
-
-                        <div class="row review">
-                            <div class="col-md-1">
-                                <?php if ( getimagesize($defaultReviews['picture'])): ?>
-                                    <img class="img-responsive" src="<?php echo $defaultReviews['picture'] ?>">
-                                <?php else: ?>
-                                    <i class="fa fa-user" style="font-size: 38px"></i>
-                                <?php endif ?>
+                        <?php foreach ($first_reviews as $review): ?>
+                            <div class="row review">
+                                <div class="col-md-2 text-center">
+                                    <?php if ($review['user_photo']): ?>
+                                        <img src="<?php echo $review['user_photo'] ?>">
+                                    <?php else: ?>
+                                        <i class="fa fa-user" style="font-size: 38px; padding: 0"></i>
+                                    <?php endif ?>
+                                    <p style="margin: 0; text-align: center"><?php echo $review['user_name'] ?></p>
+                                </div>
+                                <div class="col-md-10">
+                                    <p style="margin-top: 20px"><?php echo $review['opinion'] ?></p>                                    
+                                </div>
+                                <div class="col-md-12">
+                                    <span class="car-rating pull-right" data-number="<?php echo $review['rating'] ?>" ></span>
+                                    <i class="pull-right"><?php echo $review['date'] ?></i>
+                                </div>
                             </div>
-                            <div class="col-md-11">
-                                <p><?php echo ucfirst($defaultReviews['opinion']) ?></p>
-                                <span class="car-rating pull-right" data-number="<?php echo $defaultReviews['star'] ?>" ></span>
-                                <i class="pull-right"><?php echo $defaultReviews['date'] ?></i>
-                            </div>
-                        </div>
-
+                        <?php endforeach ?>
                         <div class="collapse" id="collapseReviews">
 
                             <?php foreach ($reviews as $review): ?>
                                 <div class="row review">
-                                    <div class="col-md-1">
-                                        <?php if (getimagesize($review['picture'])): ?>
-                                            <img src="<?php echo $review['picture'] ?>">
+                                    <div class="col-md-2 text-center">
+                                        <?php if ($review['user_photo']): ?>
+                                            <img src="<?php echo $review['user_photo'] ?>">
                                         <?php else: ?>
-                                            <i class="fa fa-user" style="font-size: 38px"></i>
+                                            <i class="fa fa-user" style="font-size: 38px; padding: 0"></i>
                                         <?php endif ?>
+                                        <p style="margin: 0; text-align: center"><?php echo $review['user_name'] ?></p>
                                     </div>
-                                    <div class="col-md-11">
-                                        <p><?php echo ucfirst($review['opinion']) ?></p>
-                                        <span class="car-rating pull-right" data-number="<?php echo $review['star'] ?>" ></span>
+                                    <div class="col-md-10">
+                                        <p style="margin-top: 20px"><?php echo $review['opinion'] ?></p>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <span class="car-rating pull-right" data-number="<?php echo $review['rating'] ?>" ></span>
                                         <i class="pull-right"><?php echo $review['date'] ?></i>
                                     </div>
                                 </div>
                             <?php endforeach ?>
 
                         </div>
-
                     </div>
 
                     <a class="title-collapse text-center" data-toggle="collapse" href="#collapseReviews" aria-expanded="false" aria-controls="collapseReviews">
@@ -241,17 +186,16 @@
                 </div>
             </div>
         </div>
-    <?php endif ?> 
-    -->
-    
-    <div class="space-50 hidden-xs"></div>
+    <?php endif ?>
 
+    <!-- Formulario -->
+    <div class="space-50"></div>
     <form action="<?php echo url_for('reserve_pay') ?>" id="reserve-form" method="post">
         
         <h1 class="body-title" id="reserve">Arriendo de <?php echo $Car->getModel()->getBrand()->name ?> <?php echo $Car->getModel()->name ?> a $<span class="price"><?php echo number_format($price, 0, ',', '.') ?></span> en <?php echo $Car->getCommune()->name ?></h1>
         
         <div class="body row">
-            <div class="col-sm-12 col-xs-12 col-md-offset-1 col-md-10">
+            <div class="col-md-offset-1 col-md-10">
 
                 <!-- Duración -->
                 <h2><span class="num">1</span> DURACIÓN</h2>
@@ -261,13 +205,13 @@
                 <input class="datetimepicker btn-block" id="toH" type="button"></input>
 
                 <?php if (isset($_GET['a'])): ?>
-                    <div class="space-20 hidden-xs"></div>
+                    <div class="space-20"></div>
                     <label class="isAirportDelivery"><input id="isAirportDelivery" name="isAirportDelivery" type="checkbox" checked value="1"> <span class="glyphicon glyphicon-plane" aria-hidden="true"></span> Deseo el auto en el aeropuerto</label>
                 <?php else: ?>
                     <input id="isAirportDelivery" name="isAirportDelivery" type="hidden" value="0">
                 <?php endif ?>
 
-                <div class="space-50 hidden-xs"></div>
+                <div class="space-50"></div>
 
                 <!-- Garantía -->
                 <h2 id="warranty-section"><span class="num">2</span> GARANTÍA</h2>
@@ -283,22 +227,37 @@
                             </label>
                         </div>
                        
-                            <div class="radio">
-                                <label>
-                                    <input data-value="<?php echo $amountWarrantyFree ?>" name="warranty" type="radio" value="0">
-                                    $<?php echo number_format($amountWarrantyFree, 0, ',', '.') ?> por Eliminar el Depósito en Garantía <small>(por día de arriendo)</small>
-                                </label>
-                            </div>
-                        
+                        <div class="radio">
+                            <label>
+                                <input data-value="<?php echo $amountWarrantyFree ?>" name="warranty" type="radio" value="0">
+                                $<?php echo number_format($amountWarrantyFree, 0, ',', '.') ?> por Eliminar el Depósito en Garantía <small>(por día de arriendo)</small>
+                            </label>
+                        </div>                        
                     </div>
                     <span class="pull-right total-box">TOTAL <strong>$<span class="total-price"><?php echo number_format($price, 0, ',', '.') ?></span></strong></span>
                 </div>
 
-                <div class="space-30 hidden-xs"></div>
+                <div class="space-30"></div>
 
                 <!-- Medio de pago -->
                 <h2><span class="num">3</span> MEDIO DE PAGO</h2>
                 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                    <!-- <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingTwo">
+                            <h4 class="panel-title">
+                                <a class="payment btn-block" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                    <img class="pull-right" src="/images/newDesign/payments/webpay.png">
+                                    <input name="payment" type="radio" value="2"> Tarjeta de débito / crédito
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                            <div class="panel-body">
+                                <p>Paga a través de WebPay con tu tarjeta de débito o crédito</p>
+                                <p class="text-center"><img src="/images/newDesign/payments/webpayCyD.jpg" style="width: 33%"></p>
+                            </div>
+                        </div>
+                    </div> -->
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="headingOne">
                             <h4 class="panel-title">
@@ -337,16 +296,14 @@
         </div>
 
         <!-- Botón de pago -->
-        <div class="space-100 hidden-xs"></div>
+        <div class="space-100"></div>
         <div class="row">
-            <div class="col-md-offset-4 col-md-4">
-                
-                    <button class="btn-block" id="btn-pay" type="button">PAGAR</button>
-                    <p class="secure-payment"><span class="icon-svg_21"></span> Pago seguro</p>
-              
+            <div class="col-md-offset-4 col-md-4">                
+                <button class="btn-block" id="btn-pay" type="button">PAGAR</button>
+                <p class="secure-payment"><span class="icon-svg_21"></span> Pago seguro</p>              
             </div>
         </div>
-        <div class="space-100 hidden-xs"></div>
+        <div class="space-100"></div>
 
         <!-- FORMULARIO -->
         <input id="car" name="car" type="hidden" value="<?php echo $Car->getId() ?>">
@@ -664,4 +621,4 @@
         confirmAvailabilityOfTheCar();
     }
 </script>
-<script src="/js/newDesign/dates.js?v=3" type="text/javascript"></script>
+<script src="/js/newDesign/dates.js?v=4" type="text/javascript"></script>

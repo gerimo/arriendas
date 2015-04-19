@@ -1044,43 +1044,39 @@ class mainActions extends sfActions {
         $this->time = Car::getTime($from, $to);
         $this->price = CarTable::getPrice($from, $to, $this->Car->getPricePerHour(), $this->Car->getPricePerDay(), $this->Car->getPricePerWeek(), $this->Car->getPricePerMonth());
 
-        // Reviews (hay que arreglar las clase Rating)
-        // Comentado, Estrellas erroneas en produccion
-        /*
-        $this->reviews = array();
-        $this->defaultReviews = array();
+        // Reviews
 
-        $cont=0;
-
+        $this->reviews = null;
+        $this->reviews_avg = 0;
+        
         $Ratings = Doctrine_Core::getTable('Rating')->getOwnerReviewsOrderByDateById($this->Car->getUserId());
-        $this->average = Doctrine_Core::getTable("Rating")->getOwnerAverageById($this->Car->getUserId());
-        $this->quantity = Doctrine_Core::getTable("Rating")->getCountOwnerReviewsById($this->Car->getUserId());
+        if ($Ratings) {
 
-        foreach ($Ratings as $i => $Rating) {
-            $opinion = $Rating->getOpinionAboutOwner();
-            $U = Doctrine_Core::getTable('User')->find($Rating->getIdRenter());
+            $this->reviews = array();
 
-            if ($opinion) {
-                // obtiene solo el primer $Rating y continúa la iteracion.
-                if($cont==0){
-                    $this->defaultReviews["opinion"] = $Rating->getOpinionAboutOwner();
-                    $this->defaultReviews["picture"] = $U->getPictureFile();
-                    $this->defaultReviews["star"] = $Rating->getOpCleaningAboutOwner();
-                    $formatoFecha = Split($Rating->getFechaCalificacionOwner(), " ");
-                    $this->defaultReviews["date"] = date('Y-m-d',(empty($Rating->getFechaCalificacionOwner()) ? strtotime(rand(1,28)."-".rand(5,12)."-2013") : strtotime($Rating->getFechaCalificacionOwner())));
-                    $cont++;
-    
-                } else {
-                    $this->reviews[$i]["opinion"] = $Rating->getOpinionAboutOwner();
-                    $this->reviews[$i]["picture"] = $U->getPictureFile();
-                    $this->reviews[$i]["star"] = $Rating->getOpCleaningAboutOwner();
-                    $formatoFecha = Split($Rating->getFechaCalificacionOwner(), " ");
-                    $this->reviews[$i]["date"] = date('Y-m-d',(empty($Rating->getFechaCalificacionOwner()) ? strtotime(rand(1,28)."-".rand(5,12)."-2013") : strtotime($Rating->getFechaCalificacionOwner())));
-                    $cont++;
+            foreach ($Ratings as $Rating) {
+
+                $U = Doctrine_Core::getTable('User')->find($Rating->getIdRenter());
+
+                $review = array(
+                    "user_name" => $U->getFirstname()." ".$U->getLastname(),
+                    "user_photo" => null,
+                    "date" => date("d-m-Y", strtotime($Rating->getFechaCalificacionOwner())),
+                    "rating" => $Rating->getOpCleaningAboutOwner(),
+                    "opinion" => $Rating->getOpinionAboutOwner()
+                );
+
+                if ($U->getPictureFile() && !strstr($U->getPictureFile(), "/var/")) {
+                    $review["user_photo"] = $U->getPictureFile();
                 }
+
+                $this->reviews[] = $review;
+
+                $this->reviews_avg += $review["rating"];
             }
 
-        }*/
+            $this->reviews_avg = round($this->reviews_avg / count($this->reviews), 0);
+        }
 
         // Características
         $this->passengers = false;

@@ -7,8 +7,6 @@
 <!-- Varios -->
 <script type="text/javascript">
 
-    /*google.maps.event.addDomListener(window, 'load', initialize);*/
-
     var reserveUrl = "<?php echo url_for('reserve', array('carId' => 'carId'), true) ?>";
 
     var usuarioLogeado = "<?php echo $usuarioLog; ?>";
@@ -86,7 +84,7 @@
         }
 
         map = new google.maps.Map(document.getElementById('map-container'), {
-            zoom: 14,
+            zoom: 11,
             center: center,
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             scrollwheel: false
@@ -261,7 +259,6 @@
         $(".isAirportDelivery").each(function(){
             if ($(this).is(':checked')) {
                 isAirportDelivery = true;
-                console.log(reserveUrl+": "+reserveUrl.indexOf("?a"));
                 if (reserveUrl.indexOf("?a") == -1) {
                     reserveUrl = reserveUrl+"?a";
                 }
@@ -764,10 +761,6 @@
         localizame();
         initialize();
 
-        $(".box").click(function(){
-            console.log("123");
-        });
-
         // Carousel
         $('#section-home-carousel').slick({
             autoplay: true,
@@ -907,4 +900,4 @@
         searchCars(0, $("button.see-more").data("limit"));
     }
 </script>
-<script src="/js/newDesign/dates.js?v=2" type="text/javascript"></script>
+<script src="/js/newDesign/dates.js?v=5" type="text/javascript"></script>
