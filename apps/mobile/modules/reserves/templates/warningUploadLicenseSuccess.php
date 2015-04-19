@@ -40,7 +40,7 @@
 </div>
 
 <div style="display:none">
-	<form action="<?php echo url_for('main/uploadLicense?photo=license&width=194&height=204&file=filelicense') ?>" enctype="multipart/form-data" id="formlicense" method="post">
+	<form action="<?php echo url_for('reserves/uploadLicenseWarning?photo=license&width=194&height=204&file=filelicense') ?>" enctype="multipart/form-data" id="formlicense" method="post">
 			<input id="filelicense" name="filelicense" type="file">
 			<input type="submit">
 	</form>
