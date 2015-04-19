@@ -48,6 +48,14 @@ class RatingTable extends Doctrine_Table
 	  		return array_rand($best);
 	}
 
+    public function getPendingsReviews($userId) {
+        $q = Doctrine_Query::create()
+                ->select('*')
+                ->from('Rating r')
+                ->where('r.idOwner = ?', $idOwner);
+        return $q->execute();
+    }
+
 	public function getOwnerReviewsOrderByRateById($idOwner) {
 		$q = Doctrine_Query::create()
                 ->select('*')
