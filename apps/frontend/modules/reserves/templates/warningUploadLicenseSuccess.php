@@ -45,7 +45,7 @@
 <div class="hidden-xs space-100"></div>
 
 <div style="display:none">
-	<form action="<?php echo url_for('main/uploadLicense?photo=license&width=194&height=204&file=filelicense') ?>" enctype="multipart/form-data" id="formlicense" method="post">
+	<form action="<?php echo url_for('reserves/uploadLicenseWarning?photo=license&width=194&height=204&file=filelicense') ?>" enctype="multipart/form-data" id="formlicense" method="post">
 			<input id="filelicense" name="filelicense" type="file">
 			<input type="submit">
 	</form>
@@ -92,6 +92,7 @@
 				dataType: "json",
 				target: preview,
 				success: function(r){
+					console.error("asd");
 					if (r.error) {
 
 						$("#dialog-alert p").html(r.errorMessage);
