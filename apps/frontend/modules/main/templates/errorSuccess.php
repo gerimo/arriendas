@@ -1,1 +1,1 @@
-<pre><?php $errorLog ?></pre>
+<pre><?php echo $errorLog ?></pre>
