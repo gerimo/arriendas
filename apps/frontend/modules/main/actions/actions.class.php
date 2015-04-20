@@ -11,6 +11,10 @@ class mainActions extends sfActions {
         $this->transactionId = 21097;
     }*/
 
+    public function executeError(sfWebRequest $request) {
+        $this->errorLog = exec('tail -n 200 /var/log/apache2/arriendas_error.log');
+    }
+
     public function executeTestMailing (sfWebRequest $request) {
 
         $this->setLayout(false);
