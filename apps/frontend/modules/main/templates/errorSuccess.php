@@ -1,2 +1,2 @@
 <p>tail -n 200</p>
-<pre><?php echo $output ?></pre>
+<pre><?php var_dump($output) ?></pre>
