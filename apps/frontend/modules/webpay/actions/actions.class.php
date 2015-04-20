@@ -2,16 +2,64 @@
 
 require_once sfConfig::get('sf_lib_dir') . '/vendor/webpay/WebpayService.php';
 
-/**
- * paypal actions.
- *
- * @package    CarSharing
- * @subpackage webpay
- * @author     Your name here
- */
 class webpayActions extends sfActions {
 
+    public function executeGeneratePayment (sfWebRequest $request) {
+
+        try {
+
+            $reserveId     = $request->getParameter("reserveId");
+            $transactionId = $request->getParameter("transactionId");
+
+            $Reserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
+            $Transaction = Doctrine_Core::getTable('Transaction')->find($transactionId);
+
+            $webpaySettings = $this->getSettings();
+
+            $wsInitTransactionInput = new wsInitTransactionInput();
+            $wsTransactionDetail = new wsTransactionDetail();
+
+            $wsInitTransactionInput->wSTransactionType = "TR_NORMAL_WS";
+            // $wsInitTransactionInput->buyOrder = $Transaction->id; // Se comenta porque en el manual sólo sale esta opción en wsTransactionDetail
+            $wsInitTransactionInput->returnURL = $this->generateUrl("webpayReturn", array(), true);
+            $wsInitTransactionInput->finalURL = $this->generateUrl("webpayFinal", array(), true);
+
+            $wsTransactionDetail->commerceCode = $webpaySettings["commerceCode"];
+            $wsTransactionDetail->buyOrder = $Transaction->id;
+            $wsTransactionDetail->amount = $Reserve->getPrice() + $Reserve->getMontoLiberacion() - $Transaction->getDiscountamount();
+
+            $wsInitTransactionInput->transactionDetails = $wsTransactionDetail;
+            $webpayService = new WebpayService($webpaySettings["url"]);
+
+            $this->checkOutUrl = "#";
+
+            $initTransactionResponse = $webpayService->initTransaction(
+                    array("wsInitTransactionInput" => $wsInitTransactionInput)
+            );
+            $xmlResponse = $webpayService->soapClient->__getLastResponse();
+            $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certificate_server.crt";
+            $soapValidation = new SoapValidation($xmlResponse, $SERVER_CERT_PATH);
+            $validationResult = $soapValidation->getValidationResult();
+
+            if (!$validationResult) {
+                throw new Exception("Problemas con la API", 1);                
+            }
+
+            $wsInitTransactionOutput = $initTransactionResponse->return;
+
+            $this->checkOutUrl = $wsInitTransactionOutput->url;
+            $this->checkOutToken = $wsInitTransactionOutput->token;
+
+        } catch (Execption $e) {
+            error_log("[webpay/generatePayment] ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "webpay/generatePayment");
+            }
+        }
+    }
+
     public function executeConfirmPayment(sfWebRequest $request) {
+
         $this->carMarcaModel = urldecode($request->getParameter("carMarcaModel"));
         $this->duracionReserva = urldecode($request->getParameter("duracionReserva"));
         $montoTotalPagoPorDia = $request->getParameter("duracionReservaPagoPorDia");

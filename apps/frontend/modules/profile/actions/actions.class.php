@@ -34,10 +34,14 @@ class profileActions extends sfActions {
 
                 $days = null;                
 
-                if (date("N") == 6 || date("N") == 7 || Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"))) {
+                /*if (date("N") == 6 || date("N") == 7 || Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d"))) {
                     $days = Utils::isWeekend(true, false);
                 } elseif (date("N", strtotime("+1 day")) == 6 || date("N", strtotime("+1 day")) == 7 || Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+1 day")))) {
                     $days = Utils::isWeekend(true, true);
+                }*/
+
+                for ($i = 0 ; $i < 7 ; $i++) { // Si se cambia el 7, debe cambiarse tambien en el task CarAskAvailability2
+                    $days[$i] = date("Y-m-d", strtotime("+".$i." day"));
                 }
 
                 if ($days) {

@@ -14,10 +14,10 @@
 
 <p>Hola <?php echo $Owner->firstname ?>,</p>
 
-<p><strong>Para recibir arriendos esta semana, debes indicar tu disponibilidad</strong>.</p>
+<p><strong>Para recibir clientes este FIN DE SEMANA, debes indicar tu disponibilidad</strong>.</p>
 
 <ul>
-    <li>Si tienes disponibilidad de <strong><?php echo $week[date("N", strtotime($days[0]))] ?></strong> a <strong><?php echo $week[date("N", strtotime($days[count($days)-1]))] ?></strong> de 08:00 a 20:00, has <a href='<?php echo $urlWeek ?>'>click aquí</a>.</li>
+    <li>Si tienes disponibilidad de <strong><?php echo $week[date("N", strtotime($days[0]))] ?></strong> a <strong><?php echo $week[date("N", strtotime($days[count($days)-1]))] ?></strong> de 08:00 a 20:00, has <a href='<?php echo $urlWeekend ?>'>click aquí</a>.</li>
     <li>Si tienes disponibilidad solo algunos días y horarios, has <a href='<?php echo $urlMisAutos ?>'>click aquí</a>.</li>
 </ul>
 

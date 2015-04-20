@@ -496,7 +496,7 @@ class reservesActions extends sfActions {
 
         if ($request->hasParameter('warranty','payment-group','car','from','to')) {
             $warranty = $request->getPostParameter("warranty", null);
-            $payment  = $request->getPostParameter("payment-group", null); // Se saco la selección de khipu
+            $payment  = $request->getPostParameter("payment", null); // Se saco la selección de khipu
 
             $carId  = $request->getPostParameter("car", null);
             $from   = $request->getPostParameter("from", null);
@@ -659,7 +659,13 @@ class reservesActions extends sfActions {
             $this->redirect('reserve_airport');
         }
 
-        $this->forward("khipu", "generatePayment");
+        if ($payment == 1) {
+            $this->forward("khipu", "generatePayment");
+        } elseif ($payment == 2) {
+            $this->forward("webpay", "generatePayment");
+        } else {
+            $this->forward404();
+        }
     }
 
     public function executeReject (sfWebRequest $request) {
@@ -790,6 +796,20 @@ class reservesActions extends sfActions {
         } else {
             $this->redirect('@homepage');
         }       
+    }
+
+    public function executeWarningUploadLicense(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+        $userId = $this->getUser()->getAttribute('userid');
+        $User = Doctrine_Core::getTable("user")->find($userId);
+        $countOrders = Doctrine_Core::getTable("Transaction")->countPendingToShowByUser($User->id);
+
+        // si no existen transacciones pagadas ya vistas por el usuario 
+        // o si el usuario ya tiene foto de licencia, entonces no puede ver la vista de advertencia
+        if($countOrders == 0 || $User->driver_license_file) {
+            $this->redirect('homepage');
+        }
+
     }
 
     // FUNCIONES PRIVADAS
