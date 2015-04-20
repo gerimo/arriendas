@@ -51,7 +51,7 @@ EOF;
             }
 
             if($minuts >= 30 && $minuts < 40){
-                Notification::make($Reserve->getUser()->id, 17, $Reserve->id);
+                Notification::make($Reserve->getUser()->id, 10, $Reserve->id);
             }
         }
         

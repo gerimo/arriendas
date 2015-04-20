@@ -51,7 +51,7 @@ EOF;
             }
 
             if($months == 2){
-                Notification::make($Reserve->getUser()->id, 18, $Reserve->id);
+                Notification::make($Reserve->getUser()->id, 11, $Reserve->id);
             }
         }
         

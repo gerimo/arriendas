@@ -38,7 +38,7 @@ EOF;
 
         foreach ($Users as $User) {
             if(Reserve::IsFirstReserve($User->id)){
-                Notification::make($User->id, 3);
+                Notification::make($User->id, 2);
             }
         }
         

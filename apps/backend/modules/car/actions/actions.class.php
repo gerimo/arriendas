@@ -335,7 +335,7 @@ class carActions extends sfActions {
             if ($option == 4) {
                 $Car->setSeguroOk(4);
                 // Notificaciones
-                Notification::make($Car->getUser()->id, 10); // Confirmar pago
+                Notification::make($Car->getUser()->id, 6); 
                 $Car->save();
                 $return["option"] = 4; 
             }

@@ -34,25 +34,15 @@ EOF;
         $databaseManager = new sfDatabaseManager($this->configuration);
         $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
 
-        $Reserves = Doctrine_core::getTable("Reserve")->findByConfirmed(0);
+        $Reserves = Doctrine_core::getTable("Reserve")->findByConfirmed(1);
         $dateNow = date("Y-m-d H:i:s");
 
         foreach ($Reserves as $Reserve) {
-            if($Reserve->fecha_pago) {
-                $reserveDate = date("Y-m-d H:i:s", strtotime($Reserve->getFechaTermino()));
-                
-                $diff = (strtotime($dateNow) - strtotime($reserveDate));
+            $Car = $reserve->getCar();
+            $User = $Car->getUser();   
+            if($Car->getQuantityOfLatestRents() == 1) {
 
-                    if($diff > 0) {
-                        $years   = floor($diff / (365*60*60*24)); 
-                        $months  = floor(($diff - $years * 365*60*60*24) / (30*60*60*24)); 
-                        $days    = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
-                        $hours   = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24 - $days*60*60*24)/ (60*60)); 
-                    }
-
-                if($hours >= 3 && $hours < 4){
-                    Notification::make($Car->getUser()->id, 19);
-                }
+                Notification::make($Car->getUser()->id, 13);
             }
         }
         
