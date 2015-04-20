@@ -90,6 +90,10 @@ error:
     url: /debug/error
     param: { module: main, action: error }
 
+error_nblgr:
+    url: /debug/error/nblgr
+    param: { module: main, action: errorNBLGR }
+
 emails_unsubscribe:
     url: /mailing/darse-de-baja/:user_id/:mailing_id/:signature
     param: { module: emails, action: unsubscribe }
