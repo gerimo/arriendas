@@ -16,6 +16,11 @@ class mainActions extends sfActions {
         $this->errorLog = exec('tail -n 200 /var/log/apache2/arriendas_error.log');
     }
 
+    public function executeErrorNBLGR(sfWebRequest $request) {
+        $this->setLayout(false);
+        $this->errorLog = exec('tail -n 200 /var/log/apache2/arriendas_nblgr_error.log');
+    }
+
     public function executeTestMailing (sfWebRequest $request) {
 
         $this->setLayout(false);
