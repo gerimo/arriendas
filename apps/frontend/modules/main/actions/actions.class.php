@@ -13,7 +13,12 @@ class mainActions extends sfActions {
 
     public function executeError(sfWebRequest $request) {
         $this->setLayout("newIndexLayout");
-        $this->lastLine = system('tail -n 200 /var/log/apache2/arriendas_error.log', $this->output);
+        try {
+            $this->lastLine = system('cat /var/log/apache2/arriendas_error.log', $this->output);
+        } catch (Exception $e) {
+            error_log($e);
+        }
+        
     }
 
     public function executeTestMailing (sfWebRequest $request) {
