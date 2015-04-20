@@ -136,7 +136,7 @@
                 $("#table tbody th").remove();
                 $.each(r.data, function(k, v){ 
                     if(v.n_condition == 1) {
-                        $("#table th:last").after('<th class="area" data-id="'+v.n_id+'" data-title="'+v.n_title+'" data-name="'+v.n_name+'" ></th>');
+                        $("#table th:last").after('<th class="area" data-id="'+v.n_id+'" data-title="'+v.n_title+'" data-name="'+v.n_name+'" >'+caracteres(v.n_name)+'</th>');
                     } else {
                         $("#table tr:last").before('<th class="text-center">'+v.n_name+'</th>');
                         $("#table").append('<tr></tr>');
@@ -145,6 +145,18 @@
                 $("#table").show();
             }
         }, 'json');
+    }
+
+    function caracteres(texto){
+        var caracteres = 100;
+        var text = texto;
+        if(texto.length > caracteres){
+
+            console.log(texto.length);
+            text = texto.substr(0, caracteres);
+        }
+
+        return text+"...";
     }
 
     function createNotificationOrAction() {
