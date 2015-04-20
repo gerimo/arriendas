@@ -1,16 +1,36 @@
 # You can find more information about this file on the symfony website:
 # http://www.symfony-project.org/reference/1_4/en/10-Routing
 
-# default rules
 homepage:
   url:   /
-  param: { module: default, action: index }
+  param: { module: main, action: index }
 
-# generic rules
-# please, remove them by adding more specific rules
-default_index:
-  url:   /:module
-  param: { action: index }
+login:
+    url: /login
+    param: { module: main, action: login }
 
-default:
-  url:   /:module/:action/*
+login_do:
+    url: /login/do
+    param: { module: main, action: loginDo }
+
+logout:
+    url: /logout
+    param: { module: main, action: logout }
+
+notification:
+    url: /notificaciones
+    param: {module: notification, action: index}
+
+notification_create:
+    url: /notificaciones/crear
+    param: {module: notification, action: create}
+
+notification_edit:
+    url: /notificaciones/editar
+    param: {module: notification, action: edit}    
+
+notification_find:
+    url: /notificaciones/buscar
+    param: {module: notification, action: find}
+
+

@@ -88,9 +88,12 @@ class reservesActions extends sfActions {
 
             // Correo de notificación
             $User    = $Reserve->getUser();
+            $UserCar     = $Reserve->getCar()->getUser();;
 
              // Notificaciones
-            Notification::make($User->id, 14, $Reserve->id); // Confirmar pago
+            Notification::make($UserCar->id, 8, $Reserve->id); // Confirmar pago
+            Notification::make($User->id, 16, $Reserve->id); // Confirmar pago
+
 
             $Functions  = new Functions;
             $formulario = $Functions->generarFormulario(NULL, $Reserve->token);
@@ -333,7 +336,10 @@ class reservesActions extends sfActions {
                 $OT->setReverseDiscount($originalCarPrice - $carPrice);
             }
 
+
             $OT->save();
+
+            Notification::make($O->getUser()->id, 17, $O->id); // Confirmar pago
 
             if (!$this->makeChange($O)) {
                 $return["error"] = true;
@@ -680,9 +686,10 @@ class reservesActions extends sfActions {
             $Reserve->setCanceled(true);
 
             $User = $Reserve->getUser();
+            $CarUser = $Reserve->getCar()->getUser();
 
              // Notificaciones
-            Notification::make($User->id, 15, $Reserve->id); // Rechazar pago
+            Notification::make($CarUser->id, 7, $Reserve->id); // Rechazar pago
 
             $message = Swift_Message::newInstance();
             $message->setSubject("La reserva ha sido rechazada");

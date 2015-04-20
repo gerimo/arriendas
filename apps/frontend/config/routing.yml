@@ -154,6 +154,10 @@ notification_close:
     url: /notification/close
     param: { module: main, action: notificationClose }
 
+notification_register:
+    url: /notification/register
+    param: {module: main, action: notificationRegister}
+
 opportunities:
     url: /oportunidades
     param: { module: opportunities, action: index }

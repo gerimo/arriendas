@@ -95,15 +95,15 @@ EOF;
                                 $countBar++;
                                 break;
 
-                            case 2:
+                            /*case 10:
                                 if($Reserve) {
                                     // tipo de notificacion BARRA PROPIETARIO
                                     // se ejecuta a traves de un filtro
                                     $countBarPropietario++;
                                 }
-                                break;
+                                break;*/
 
-                            case 3:
+                            case 2:
                                 // tipo de notificacion SMS
                                 $SMS = new SMS("Arriendas");
 
@@ -119,7 +119,7 @@ EOF;
                                 $countSMS++;
                                 break;
 
-                            case 4:
+                            /*case 11:
                                 // tipo de notificacion SMS PROPIETARIO
                                 if($Reserve) {
                                     $SMS = new SMS("Arriendas");
@@ -135,9 +135,9 @@ EOF;
 
                                     $countSMSPropietario++;
                                 }
-                                break;
+                                break;*/
 
-                            case 5:
+                            case 3:
                                 // tipo de notificacion EMAIL USUARIO
                                 $mail    = new Email();
                                 $mailer  = $mail->getMailer();
@@ -160,7 +160,7 @@ EOF;
                                 $countEmail++;
                                 break;
 
-                            case 6:
+                            case 4:
                                 // tipo de notificacion EMAIL PROPIETARIO
                                 if($Reserve) {
                                     $mail    = new Email();
@@ -186,7 +186,7 @@ EOF;
                                 break;
 
                             
-                            case 7:
+                            case 5:
                                 // tipo de notificacion SOPORTE
                                 $mail    = new Email();
                                 $mailer  = $mail->getMailer();
@@ -207,7 +207,7 @@ EOF;
                                 $countSoporte++;
                                 break;
 
-                            case 8:
+                            case 6:
                                 // tipo de notificacion ERROR
                                 $mail    = new Email();
                                 $mailer  = $mail->getMailer();

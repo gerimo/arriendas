@@ -282,7 +282,7 @@ class mainActions extends sfActions {
     public function executeNotificationClose(sfWebRequest $request) {
 
         $userNotificationId = $this->getUser()->getAttribute("notificationId");
-
+        error_log($userNotificationId);
         try {            
 
             $UN = Doctrine_Core::getTable('UserNotification')->find($userNotificationId);
@@ -303,6 +303,33 @@ class mainActions extends sfActions {
 
         return sfView::NONE;
     }
+
+     public function executeNotificationRegister(sfWebRequest $request) {
+
+        $option = $request->getPostParameter("option");
+        $userId = $this->getUser()->getAttribute("userid");
+
+        try {            
+
+            $User = Doctrine_Core::getTable('user')->find($userId);
+            
+            if ($option == 1) {
+                Notification::make($User->id, 1);
+
+            } else {
+                Notification::make($User->id, 4);
+            }
+
+
+        } catch (Exception $e) {
+            $return["error"] = true;
+            $return["errorCode"] = $e->getCode();
+            $return["errorMessage"] = $e->getMessage();
+        }
+
+        return sfView::NONE;
+    }
+
 
     public function executeDoCompleteRegister(sfWebRequest $request) {
         
@@ -523,9 +550,6 @@ class mainActions extends sfActions {
             $User->save();
 
             $url = $this->generateUrl('user_register_complete');
-
-            // Notificaciones
-            Notification::make($User->id, 1);
 
             // Login
             $this->getUser()->setAuthenticated(true);
@@ -3443,10 +3467,6 @@ class mainActions extends sfActions {
                     $myUser->setPictureFile($photo_indexurl);
                     $myUser->setConfirmedFb(true);
                     $myUser->save();
-
-
-                    // Notificaciones
-                    Notification::make($myUser->id, 1);
                     
                 } else {
 					$newUser=false;

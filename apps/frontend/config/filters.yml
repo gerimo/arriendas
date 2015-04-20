@@ -24,5 +24,8 @@ completeRegisterCar:
 driverLicenseFileAfterPayFilter:
     class: checkDriverLicenseFileAfterPayFilter
 
+notificationBarFilter:
+    class: checkNotificationBarFilter
+
 cache:     ~
 execution: ~
