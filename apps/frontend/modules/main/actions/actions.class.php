@@ -16,7 +16,7 @@ class mainActions extends sfActions {
         try {
             $this->lastLine = system('tail -n 200 /var/log/apache2/arriendas_error.log', $this->output);
         } catch (Exception $e) {
-            error_log($e)
+            error_log($e);
         }
         
     }
