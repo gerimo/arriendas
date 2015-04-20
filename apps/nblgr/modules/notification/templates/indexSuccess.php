@@ -154,9 +154,10 @@
 
             console.log(texto.length);
             text = texto.substr(0, caracteres);
+            text = text+"...";
         }
 
-        return text+"...";
+        return text;
     }
 
     function createNotificationOrAction() {
