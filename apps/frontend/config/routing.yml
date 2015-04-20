@@ -86,6 +86,10 @@ data_for_payment:
     url: /data-for-payment
     param: { module: main, action: dataForPayment }
 
+error:
+    url: /debug/error
+    param: { module: main, action: error }
+
 emails_unsubscribe:
     url: /mailing/darse-de-baja/:user_id/:mailing_id/:signature
     param: { module: emails, action: unsubscribe }
