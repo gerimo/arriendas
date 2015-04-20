@@ -1,1 +1,1 @@
-<pre><?php var_dump($output) ?></pre>
+<pre><?php var_dump($errorLog) ?></pre>
