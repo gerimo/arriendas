@@ -14,7 +14,7 @@ class mainActions extends sfActions {
     public function executeError(sfWebRequest $request) {
         $this->setLayout("newIndexLayout");
         try {
-            $this->lastLine = system('cat /var/log/apache2/arriendas_error.log', $this->output);
+            $this->lastLine = system('ls', $this->output);
         } catch (Exception $e) {
             error_log($e);
         }
