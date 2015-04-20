@@ -1,5 +1,5 @@
-<link href="/css/newDesign/searchACars.css?v=1" rel="stylesheet" type="text/css">
-<script src="/js/newDesign/dates.js" type="text/javascript"></script>
+<link href="/css/newDesign/searchACars.css?v=2" rel="stylesheet" type="text/css">
+<script src="/js/newDesign/dates.js?v=2" type="text/javascript"></script>
 
 <div class="space-100"></div>
 
@@ -55,7 +55,12 @@
                         <li><input type="checkbox" name="filter" class="isAutomatic"> Automático</li>
                         <li><input type="checkbox" name="filter" class="isLowConsumption"> Bajo consumo</li>
                         <li><input type="checkbox" name="filter" class="isMorePassengers"> Más de 5 pasajeros</li>
-                        <li><input type="checkbox" name="filter" class="nearToSubway"> Cercano al metro</li>
+                        <li><?php if($nearToSubway): ?>
+                                <input type="checkbox" checked="checked" name="filter" class="nearToSubway"> Cercano al metro
+                            <?php else: ?>
+                                <input type="checkbox" name="filter" class="nearToSubway"> Cercano al metro
+                            <?php endif; ?>
+                        </li>
                         <li><input type="checkbox" name="filter" class="haveChair"> Silla Bebé</li>
                         <li><input type="checkbox" name="filter" class="isAirportDelivery"> Auto en aeropuerto</li>
                     </ul>
@@ -181,31 +186,6 @@
     var usuarioLogeado = "<?php echo $usuarioLog; ?>";
 
     $(document).ready(function(){
-        
-        /*$('#from').datetimepicker({
-            allowTimes:[
-            "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
-            "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
-            "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
-            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-            "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-            "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-            "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-            "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
-            ],
-            format:'d-m-Y H:i',
-            minDate : "<?php echo date('d-m-Y') ?>",
-            dayOfWeekStart: 1,
-            lang:'es',
-            onSelectTime: function() {
-                    var to = $("#from").val();
-                    times(to);
-            },
-            onSelectDate: function() {
-                var to = $("#from").val();
-                times(to);
-            }
-        });*/
 
         $("#search").click(function(){
             searchCars(0, $("button.see-more").data("limit"));
@@ -223,8 +203,8 @@
             $("#commune").focus();
         <?php endif ?>                
 
-        initializeDate("from", new Date(<?php echo strtotime($from) * 1000 ?>), true, false, true);
-        initializeDate("to", new Date(<?php echo strtotime($to) * 1000 ?>), true, false, true);
+        initializeDate("from", new Date(<?php echo strtotime($from) * 1000 ?>), true, false);
+        initializeDate("to", new Date(<?php echo strtotime($to) * 1000 ?>), true, false);
 
         checkCollapse();
 

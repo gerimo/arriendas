@@ -92,10 +92,6 @@ class reservesActions extends sfActions {
              // Notificaciones
             Notification::make($User->id, 14, $Reserve->id); // Confirmar pago
 
-            $mail    = new Email();
-            $mailer  = $mail->getMailer();
-            $message = $mail->getMessage();            
-
             $Functions  = new Functions;
             $formulario = $Functions->generarFormulario(NULL, $Reserve->token);
             $reporte    = $Functions->generarReporte($Reserve->getCar()->id);
@@ -106,6 +102,7 @@ class reservesActions extends sfActions {
             $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
             $to      = array($User->email => $User->firstname." ".$User->lastname);
 
+            $message = Swift_Message::newInstance();
             $message->setSubject($subject);
             $message->setBody($body, 'text/html');
             $message->setFrom($from);
@@ -123,7 +120,7 @@ class reservesActions extends sfActions {
                 }
             }
             
-            $mailer->send($message);
+            $this->getMailer()->send($message);
             
             $Reserve->save();
 
@@ -152,7 +149,7 @@ class reservesActions extends sfActions {
 
         try {
 
-            $datesError = $this->validateDates($from, $to);
+            $datesError = Utils::validateDates($from, $to);
             if ($datesError) {
                 throw new Exception($datesError, 2);
             }
@@ -197,7 +194,7 @@ class reservesActions extends sfActions {
 
         try {
 
-            $datesError = $this->validateDates($from, $to);
+            $datesError = Utils::validateDates($from, $to);
             if ($datesError) {
                 throw new Exception($datesError, 2);
             }
@@ -244,7 +241,7 @@ class reservesActions extends sfActions {
 
         try {
 
-            $datesError = $this->validateDates($from, $to);
+            $datesError = Utils::validateDates($from, $to);
             if ($datesError) {
                 throw new Exception($datesError, 1);
             }
@@ -363,7 +360,7 @@ class reservesActions extends sfActions {
         $from      = $request->getPostParameter("from", null);
         $to        = $request->getPostParameter("to", null);
 
-        $datesError = $this->validateDates($from, $to);
+        $datesError = Utils::validateDates($from, $to);
         if ($datesError) {
             throw new Exception($datesError, 1);
         }
@@ -434,7 +431,7 @@ class reservesActions extends sfActions {
 
         try {
 
-            $datesError = $this->validateDates($from, $to);
+            $datesError = Utils::validateDates($from, $to);
             if ($datesError) {
                 throw new Exception($datesError, 1);
             }
@@ -475,7 +472,7 @@ class reservesActions extends sfActions {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
 
-            error_log("[".date("Y-m-d H:i:s")."] [reserves/getExtendPrice] ERROR: ".$e->getMessage());
+            error_log("[frontend] [reserves/getExtendPrice] ERROR: ".$e->getMessage());
 
             if ($request->getHost() == "www.arriendas.cl") {
                 Utils::reportError($e->getMessage(), "reserves/getExtendPrice");
@@ -493,7 +490,7 @@ class reservesActions extends sfActions {
 
         if ($request->hasParameter('warranty','payment-group','car','from','to')) {
             $warranty = $request->getPostParameter("warranty", null);
-            $payment  = $request->getPostParameter("payment-group", null); // Se saco la selección de khipu
+            $payment  = $request->getPostParameter("payment", null); // Se saco la selección de khipu
 
             $carId  = $request->getPostParameter("car", null);
             $from   = $request->getPostParameter("from", null);
@@ -561,8 +558,8 @@ class reservesActions extends sfActions {
                 throw new Exception("El User ".$userId." esta intentando pagar pero uno de los campos es nulo. Garantia: ".$warranty.", Car: ".$carId.", Desde: ".$from.", Hasta: ".$to, 1);
             }
             
-            $datesError = $this->validateDates($from, $to);
-            if (!is_null($datesError)) {
+            $datesError = Utils::validateDates($from, $to);
+            if ($datesError) {
                 throw new Exception($datesError, 2);
             }
             
@@ -620,23 +617,21 @@ class reservesActions extends sfActions {
             
             $Transaction->save();
 
-            if($UnverifiedMail) {
-                $mail    = new Email();
-                $mailer  = $mail->getMailer();
-                $message = $mail->getMessage();            
+            if($UnverifiedMail) {          
 
                 $subject = "¡Se ha registrado un pago de un usuario sin verificacion judicial!";
                 $body    = $this->getPartial('emails/paymentDoneUnverifiedUser', array('Transaction' => $Transaction));
                 $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                 $to      = array("soporte@arriendas.cl");
 
+                $message = Swift_Message::newInstance();
                 $message->setSubject($subject);
                 $message->setBody($body, 'text/html');
                 $message->setFrom($from);
                 $message->setTo($to);
                 $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
                 
-                $mailer->send($message);
+                $this->getMailer()->send($message);
             }
 
         } catch (Exception $e) {
@@ -658,7 +653,13 @@ class reservesActions extends sfActions {
             $this->redirect('reserve_airport');
         }
 
-        $this->forward("khipu", "generatePayment");
+        if ($payment == 1) {
+            $this->forward("khipu", "generatePayment");
+        } elseif ($payment == 2) {
+            $this->forward("webpay", "generatePayment");
+        } else {
+            $this->forward404();
+        }
     }
 
     public function executeReject (sfWebRequest $request) {
@@ -678,28 +679,25 @@ class reservesActions extends sfActions {
             $Reserve->setConfirmed(false);
             $Reserve->setCanceled(true);
 
-            // Correo de notificación
-            $mail    = new Email();
-            $mailer  = $mail->getMailer();
-            $message = $mail->getMessage();
-            $User    = $Reserve->getUser();
+            $User = $Reserve->getUser();
 
              // Notificaciones
             Notification::make($User->id, 15, $Reserve->id); // Rechazar pago
 
+            $message = Swift_Message::newInstance();
             $message->setSubject("La reserva ha sido rechazada");
             $message->setBody($this->getPartial('emails/reserveRejected', array('Reserve' => $Reserve)), 'text/html');
             $message->setFrom(array("soporte@arriendas.cl" => "Soporte Arriendas.cl"));
             $message->setTo(array($User->email => $User->firstname." ".$User->lastname));
             /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
             
-            $mailer->send($message);
+            $this->getMailer()->send($message);
 
             $Reserve->save();
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorMessage"] = $e->getMessage();
-            error_log("[".date("Y-m-d H:i:s")."] [reserves/reject] ".$e->getMessage());
+            error_log("[frontend] [reserves/reject] ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl") {
                 Utils::reportError($e->getMessage(), "reserves/reject");
             }
@@ -793,6 +791,106 @@ class reservesActions extends sfActions {
         }       
     }
 
+    public function executeUploadLicenseWarning (sfWebRequest $request) {
+    
+        $return = array("error" => false);
+        $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
+        try {            
+
+            $name = $_FILES[$request->getParameter('file')]['name'];
+            $size = $_FILES[$request->getParameter('file')]['size'];
+            $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
+
+            list($txt, $ext) = explode(".", $name);
+
+            $ext = strtolower($ext);
+            
+            if (strlen($name) == 0) {
+                throw new Exception("Por favor, selecciona una imagen", 2);   
+            }
+                
+            if (!in_array($ext, $valid_formats)) {
+                throw new Exception("Formato de la imagen no permitido", 2);
+            }
+
+            if ($size >= (5 * 1024 * 1024)) { // Image size max 1 MB
+                throw new Exception("La imagen excede el máximo permitido (1 MB)", 2);
+            }
+                
+            $userId = $this->getUser()->getAttribute("userid");
+            
+            $newImageName = time() . "-" . $userId . "." . $ext;
+
+            $path = sfConfig::get("sf_web_dir") . '/images/licence/';
+
+            $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
+
+            if (!move_uploaded_file($tmp, $path . $newImageName)) {
+                throw new Exception("El User ".$userId." tiene problemas para grabar la imagen de su licencia", 1);
+            }
+
+            $User = Doctrine_Core::getTable('User')->find($userId);
+            $User->setDriverLicenseFile("/images/licence/".$newImageName);
+            $User->save();
+
+            $Reserves = Doctrine_Core::getTable("reserve")->findByUserId($userId);
+            foreach ($Reserves as $Reserve) {
+                if($Reserve->getPayEmailPending()){
+                    // Correo arrendatario
+                    $subject = "La reserva ha sido pagada";
+                    $body    = $this->getPartial('emails/paymentDoneRenter', array('Reserve' => $Reserve));
+                    $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+                    $to      = array($Reserve->getUser()->email => $Reserve->getUser()->firstname." ".$Reserve->getUser()->lastname);
+
+                    $message = Swift_Message::newInstance()
+                        ->setSubject($subject)
+                        ->setBody($body, 'text/html')
+                        ->setFrom($from)
+                        ->setTo($to)
+                        ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
+                        ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
+                        ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'))
+                        ->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
+
+                    error_log("[reserves/uploadLicenseWarning] Enviando email al arrendatario");
+                    $this->getMailer()->send($message);
+                    $Reserve->setPayEmailPending(0);
+                }
+                $Reserve->save();
+            }
+    
+        } catch (Exception $e) {
+            $return["error"] = true;
+            if ($e->getCode() < 2) {
+                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo nuevamente más tarde";
+            } else {
+                $return["errorMessage"] = $e->getMessage();
+            }
+            error_log("[".date("Y-m-d H:i:s")."] [reserves/uploadLicenseWarning] ERROR: ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "reserves/uploadLicenseWarning");
+            }
+        }
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
+    public function executeWarningUploadLicense(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+        $userId = $this->getUser()->getAttribute('userid');
+        $User = Doctrine_Core::getTable("user")->find($userId);
+        $countOrders = Doctrine_Core::getTable("Transaction")->countPendingToShowByUser($User->id);
+
+        // si no existen transacciones pagadas ya vistas por el usuario 
+        // o si el usuario ya tiene foto de licencia, entonces no puede ver la vista de advertencia
+        if($countOrders == 0 || $User->driver_license_file) {
+            $this->redirect('homepage');
+        }
+
+    }
+
     // FUNCIONES PRIVADAS
     private function calculateExtendedPrice($Reserve, $to) {
 
@@ -847,9 +945,6 @@ class reservesActions extends sfActions {
 
             $Renter = $NewActiveReserve->getUser();
             $Owner  = $NewActiveReserve->getCar()->getUser();
-
-            $mail    = new Email();
-            $mailer  = $mail->getMailer();
             
             $functions  = new Functions;
             $formulario = $functions->generarFormulario(NULL, $NewActiveReserve->token);
@@ -863,7 +958,7 @@ class reservesActions extends sfActions {
             $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
             $to      = array($Owner->email => $Owner->firstname." ".$Owner->lastname);
 
-            $message = $mail->getMessage();
+            $message = Swift_Message::newInstance();
             $message->setSubject($subject);
             $message->setBody($body, 'text/html');
             $message->setFrom($from);
@@ -881,7 +976,7 @@ class reservesActions extends sfActions {
                 }
             }
             
-            $mailer->send($message);
+            $this->getMailer()->send($message);
 
             // CORREO ARRENDATARIO
             $subject = "Has cambiado el auto de tu reserva";
@@ -889,7 +984,7 @@ class reservesActions extends sfActions {
             $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
             $to      = array($Renter->email => $Renter->firstname." ".$Renter->lastname);
 
-            $message = $mail->getMessage();
+            $message = Swift_Message::newInstance();
             $message->setSubject($subject);
             $message->setBody($body, 'text/html');
             $message->setFrom($from);
@@ -901,7 +996,7 @@ class reservesActions extends sfActions {
             $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
             $message->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
                 
-            $mailer->send($message);
+            $this->getMailer()->send($message);
 
             // CORREO SOPORTE
             if ($NewActiveReserve->reserva_original) {
@@ -915,7 +1010,7 @@ class reservesActions extends sfActions {
             $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
             $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
 
-            $message = $mail->getMessage();
+            $message = Swift_Message::newInstance();
             $message->setSubject($subject);
             $message->setBody($body, 'text/html');
             $message->setFrom($from);
@@ -933,7 +1028,7 @@ class reservesActions extends sfActions {
                 }
             }
 
-            $mailer->send($message);
+            $this->getMailer()->send($message);
         } catch (Exception $e) {
             error_log("[reserves/makeChange] User ".$userId." está intentado realizar un cambio a Car ".$NewActiveReserve->getCar()->id." pero este no se ha podido concretar. ERROR: ".$e->getMessage());
             if ($_SERVER['SERVER_NAME'] == "www.arriendas.cl") {
@@ -943,18 +1038,6 @@ class reservesActions extends sfActions {
         }
 
         return true;
-    }
-
-    private function validateDates ($from, $to) {
-
-        $from = strtotime($from);
-        $to   = strtotime($to);
-
-        if ($from >= $to) {
-            return "La fecha de término debe ser al menos 3 horas superior a la fecha de inicio.";
-        }
-
-        return null;
     }
 
     protected function getConfiguration() {

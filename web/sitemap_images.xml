@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xhtml="http://www.w3.org/1999/xhtml"
+      xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+      xsi:schemaLocation="
+            http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with PRO Sitemap Service https://pro-sitemaps.com -->
+
+  <url>
+       <loc>http://www.arriendas.cl/</loc>
+       <lastmod>2015-03-20T16:13:40+00:00</lastmod>
+       <changefreq>daily</changefreq>
+       <priority>0.9500</priority>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logoIndex.svg</image:loc>
+         <image:caption>Arriendas.cl</image:caption>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/ico.png</image:loc>
+         <image:caption>metro</image:caption>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/ico-search.svg</image:loc>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/ajax-loader.gif</image:loc>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logo-avis.svg</image:loc>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logo-hertz.svg</image:loc>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logo-europcar.svg</image:loc>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logo.svg</image:loc>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logos_canais/13.png</image:loc>
+         <image:caption>Canal 13</image:caption>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logos_canais/LogoCNN.png</image:loc>
+         <image:caption>CNN Chile</image:caption>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logos_canais/logotvn2.png</image:loc>
+         <image:caption>TVN</image:caption>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logos_canais/LogoEmol.png</image:loc>
+         <image:caption>EMOL</image:caption>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logos_canais/LogoLUN.png</image:loc>
+         <image:caption>Las &amp;Uacute;ltimas Noticias</image:caption>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logos_canais/LogoPublimetro.png</image:loc>
+         <image:caption>Publimetro</image:caption>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logos_canais/LogoLaSegunda.png</image:loc>
+         <image:caption>La Segunda</image:caption>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logos_canais/LogoLaCuarta.png</image:loc>
+         <image:caption>La Cuarta</image:caption>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logos_canais/LogoDiarioPyme.png</image:loc>
+         <image:caption>Diario PYME</image:caption>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logo-whatsapp.png</image:loc>
+       </image:image>
+  </url>
+  <url>
+       <loc>http://www.arriendas.cl/arrienda-en-las-noticias</loc>
+       <lastmod>2015-03-20T16:13:40+00:00</lastmod>
+       <changefreq>daily</changefreq>
+       <priority>0.9500</priority>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logos_colores/13.png</image:loc>
+         <image:caption>Canal 13</image:caption>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logos_colores/LogoCNN.png</image:loc>
+         <image:caption>CNN Chile</image:caption>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logos_colores/logotvn2.png</image:loc>
+         <image:caption>TVN</image:caption>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logos_colores/LogoLUN.png</image:loc>
+         <image:caption>Las &amp;Uacute;ltimas Noticias</image:caption>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logos_colores/LogoPublimetro.png</image:loc>
+         <image:caption>Publimetro</image:caption>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logos_colores/LogoLaSegunda.png</image:loc>
+         <image:caption>La Segunda</image:caption>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logos_colores/LogoLaCuarta.png</image:loc>
+         <image:caption>La Cuarta</image:caption>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logos_colores/LogoDiarioPyme.png</image:loc>
+         <image:caption>Diario PYME</image:caption>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/logos_colores/LogoEmol.png</image:loc>
+         <image:caption>EMOL</image:caption>
+       </image:image>
+  </url>
+  <url>
+       <loc>http://www.arriendas.cl/login</loc>
+       <lastmod>2015-03-20T16:13:40+00:00</lastmod>
+       <changefreq>daily</changefreq>
+       <priority>0.9500</priority>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/img_login/login_btn_fb.png</image:loc>
+       </image:image>
+  </url>
+  <url>
+       <loc>http://www.arriendas.cl/nosotros</loc>
+       <lastmod>2015-03-20T16:13:40+00:00</lastmod>
+       <changefreq>daily</changefreq>
+       <priority>0.9500</priority>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/partners/bci-seguros.png</image:loc>
+         <image:caption>bci-seguros</image:caption>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/partners/wayra1.png</image:loc>
+         <image:caption>wayra</image:caption>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/partners/telefonica1.png</image:loc>
+         <image:caption>telefonica</image:caption>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/partners/Startupchile.png</image:loc>
+         <image:caption>Startupchile</image:caption>
+       </image:image>
+       <image:image>
+         <image:loc>http://www.arriendas.cl/images/newDesign/partners/australincuba.png</image:loc>
+         <image:caption>austral-incuba</image:caption>
+       </image:image>
+  </url>
+</urlset>

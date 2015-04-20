@@ -48,6 +48,14 @@ class RatingTable extends Doctrine_Table
 	  		return array_rand($best);
 	}
 
+    public function getPendingsReviews($userId) {
+        $q = Doctrine_Query::create()
+                ->select('*')
+                ->from('Rating r')
+                ->where('r.idOwner = ?', $idOwner);
+        return $q->execute();
+    }
+
 	public function getOwnerReviewsOrderByRateById($idOwner) {
 		$q = Doctrine_Query::create()
                 ->select('*')
@@ -58,11 +66,14 @@ class RatingTable extends Doctrine_Table
 	}
 
 	public function getOwnerReviewsOrderByDateById($idOwner) {
-		$q = Doctrine_Query::create()
-                ->select('*')
-                ->from('Rating r')
-                ->where('r.idOwner = ?', $idOwner)
-                ->orderBy('r.fecha_calificacion_owner desc');
+		$q = Doctrine_Core::getTable("Rating")
+            ->createQuery('R')
+            ->where('R.idOwner = ?', $idOwner)
+            ->andWhere('R.opinion_about_owner IS NOT NULL')
+            ->andWhere('R.op_cleaning_about_owner IS NOT NULL')
+            ->andWhere('R.fecha_calificacion_owner IS NOT NULL')
+            ->orderBy('R.fecha_calificacion_owner desc');
+
         return $q->execute();
 	}
 

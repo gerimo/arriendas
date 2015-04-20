@@ -22,13 +22,9 @@
 </head>
 
 <!-- <div class="space-90 hidden-xs"></div> -->
-<div class="space-50 visible-xs"></div>
+<div class="space-50"></div>
 
 <div class="container">
-
-    <!-- <h1 class="hidden-xs text-capitalize reserve-title">
-        <?php echo $Car->getModel()->getBrand()->name." ".$Car->getModel()->name.", <span>".$Car->year.", ".$Car->getCommune()->name."</span>" ?>
-    </h1> -->
 
     <div class="col-md-5 carousal-area">
         <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
@@ -48,123 +44,58 @@
             <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev"></a>
             <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next"></a>
         </div>
-    </div> 
+    </div>
 
-    <!-- <div class="hidden-xs hidden-sm row">
-        <div class="col-md-3 car-sep">
-            <h2>Características:</h2>
-            <ul id="features">
-                <?php if ($passengers): ?>
-                    <li><span class="icon-svg_01"></span> 5 o más pasajeros</li>
-                <?php else: ?>
-                    <li><span class="icon-svg_01"></span> 4 pasajeros</li>
-                <?php endif ?>
+    <h1><?php echo $Car->getModel()->getBrand()->name." ".$Car->getModel()->name.", <small>".$Car->getYear().", ".$Car->getCommune()."</small>" ?></h1>
 
-                <?php if ($diesel): ?>
-                    <li><span><i class="fa fa-tint"></i></span> Petrolero</li>
-                <?php else: ?>
-                    <li><span><i class="fa fa-tint"></i></span> Bencinero</li>
-                <?php endif ?>
+    <h2>Características:</h2>
 
-                <?php if ($airCondition): ?>
-                    <li><span class="icon-svg_03"></span> Aire acondicionado</li>
-                <?php endif ?>
+    <ul class="features">
+        <?php if ($metro): ?>
+            <li><span class="metro-mobile"></span> A <strong>1.5 km</strong> del Metro Católica</li>
+        <?php endif ?>
+        <?php if ($passengers): ?>
+            <li><span class="icon-svg_01"></span> 5 o más pasajeros</li>
+        <?php else: ?>
+            <li><span class="icon-svg_01"></span> 4 pasajeros</li>
+        <?php endif ?>
 
-                <?php if ($transmission): ?>
-                    <li><span><i class="fa fa-cog"></i></span> Automático</li>
-                <?php else: ?>
-                    <li><span><i class="fa fa-cog"></i></span> Mecánico</li>
-                <?php endif ?>
+        <?php if ($diesel): ?>
+            <li><i class="fa fa-tint"></i> Petrolero</li>
+        <?php else: ?>
+            <li><i class="fa fa-tint"></i> Bencinero</li>
+        <?php endif ?>
 
-                <li><img class="metro" src='/images/newDesign/ico.png' alt='metro'> A <b><?php echo round($Car->getNearestMetro()->distance, 1) ?> km</b> del Metro <?php echo $Car->getNearestMetro()->getMetro()->name ?></li>
-            </ul>
-        </div>
+        <?php if ($airCondition): ?>
+            <li><span class="icon-svg_03"></span> Aire acondicionado</li>
+        <?php endif ?>
 
-        <div class="col-md-4 reserve-area">
-            <div class="block">
-                <div class="saved">
-                    <strong>40%</strong>AHORRO
-                </div>
-                <div class="price-area">
-                    <?php if ($Car->getPricePerHour() != 0):?>
-                        <span class="text">$<?php echo number_format(round($Car->getPricePerHour()), 0, '', '.')?> / <small>HORA</small></span>
-                    <?php endif ?>
-                    <?php if ($Car->getPricePerDay() != 0):?>
-                        <span class="text"><strong>$<?php echo number_format(round($Car->getPricePerDay()), 0, '', '.')?> / <small>DÍA</small></strong></span>
-                    <?php endif ?>                    
-                    <?php if ($Car->getPricePerWeek() != 0):?>
-                        <span class="text">$<?php echo number_format(round(($Car->getPricePerWeek()/7)), 0, '', '.') ?> / <small>DÍA SEMANA</small></span>
-                    <?php endif ?>
-                    <?php if ($Car->getPricePerMonth() != 0):?>
-                        <span class="text">$<?php echo number_format(round(($Car->getPricePerMonth()/30)), 0, '', '.') ?> / <small>DÍA MES</small></span>
-                    <?php endif ?> 
-                </div>
-                    <ul class="list list-unstyled">
-                        <li><span class="icon-svg_16"></span>Seguro</li>
-                        <li><span class="icon-svg_16"></span>Tags</li>
-                        <li><span class="icon-svg_16"></span>Conductor Adicional</li>
-                        <li><span class="icon-svg_16"></span>Kilometraje Libre</li>
-                        <li><span class="icon-svg_16"></span>Asistencia en ruta 24/7</li>
-                    </ul>
-                    <a href="#" class="reserve btn btn-warning text-uppercase" data-target="#reserve">RESERVAR</a>                
-                <div class="space-20"></div>
-            </div>
-        </div>
-    </div> -->
+        <?php if ($transmission): ?>
+            <li><i class="fa fa-cog"></i> Automático</li>
+        <?php else: ?>
+            <li><i class="fa fa-cog"></i> Mecánico</li>
+        <?php endif ?>
 
-    <div class="visible-xs">
+        <li><img class="metro" src='/images/newDesign/ico.png' alt='metro'> A <b><?php echo round($Car->getNearestMetro()->distance, 1) ?> km</b> del Metro <?php echo $Car->getNearestMetro()->getMetro()->name ?></li>
+    </ul>
 
-        <h1><?php echo $Car->getModel()->getBrand()->name." ".$Car->getModel()->name.", <small>".$Car->getYear().", ".$Car->getCommune()."</small>" ?></h1>
-
-        <h2>Características:</h2>
-
-        <ul class="features">
-            <?php if ($metro): ?>
-                <li><span class="metro-mobile"></span> A <strong>1.5 km</strong> del Metro Católica</li>
+    <div class="space-20"></div>
+    
+    <div class="block-mobile">
+        <div class="saved pull-right"><strong>40%</strong>AHORRO</div>
+        <div class="prices">
+            <?php if ($Car->getPricePerHour()):?>
+                <p>$<?php echo number_format(round($Car->getPricePerHour()), 0, '', '.')?> / <small>HORA</small></p>
             <?php endif ?>
-            <?php if ($passengers): ?>
-                <li><span class="icon-svg_01"></span> 5 o más pasajeros</li>
-            <?php else: ?>
-                <li><span class="icon-svg_01"></span> 4 pasajeros</li>
+            <?php if ($Car->getPricePerDay()):?>
+                <p><strong>$<?php echo number_format(round($Car->getPricePerDay()), 0, '', '.')?> / <small>DÍA</small></strong></p>
             <?php endif ?>
-
-            <?php if ($diesel): ?>
-                <li><i class="fa fa-tint"></i> Petrolero</li>
-            <?php else: ?>
-                <li><i class="fa fa-tint"></i> Bencinero</li>
+            <?php if ($Car->getPricePerWeek()):?>
+                <p>$<?php echo number_format(round(($Car->getPricePerWeek()/7)), 0, '', '.') ?> / <small>DÍA SEMANA</small></p>
             <?php endif ?>
-
-            <?php if ($airCondition): ?>
-                <li><span class="icon-svg_03"></span> Aire acondicionado</li>
-            <?php endif ?>
-
-            <?php if ($transmission): ?>
-                <li><i class="fa fa-cog"></i> Automático</li>
-            <?php else: ?>
-                <li><i class="fa fa-cog"></i> Mecánico</li>
-            <?php endif ?>
-
-            <li><img class="metro" src='/images/newDesign/ico.png' alt='metro'> A <b><?php echo round($Car->getNearestMetro()->distance, 1) ?> km</b> del Metro <?php echo $Car->getNearestMetro()->getMetro()->name ?></li>
-        </ul>
-
-        <div class="space-20 visible-xs"></div>
-        
-        <div class="block-mobile">
-            <div class="saved pull-right"><strong>40%</strong>AHORRO</div>
-            <div class="prices">
-                <?php if ($Car->getPricePerHour()):?>
-                    <p>$<?php echo number_format(round($Car->getPricePerHour()), 0, '', '.')?> / <small>HORA</small></p>
-                <?php endif ?>
-                <?php if ($Car->getPricePerDay()):?>
-                    <p><strong>$<?php echo number_format(round($Car->getPricePerDay()), 0, '', '.')?> / <small>DÍA</small></strong></p>
-                <?php endif ?>
-                <?php if ($Car->getPricePerWeek()):?>
-                    <p>$<?php echo number_format(round(($Car->getPricePerWeek()/7)), 0, '', '.') ?> / <small>DÍA SEMANA</small></p>
-                <?php endif ?>
-                <?php if ($Car->getPricePerMonth()):?>
-                    <p>$<?php echo number_format(round(($Car->getPricePerMonth()/30)), 0, '', '.') ?> / <small>DÍA MES</small></p>
-                <?php endif ?> 
-            </div>
+            <?php if ($Car->getPricePerMonth()):?>
+                <p>$<?php echo number_format(round(($Car->getPricePerMonth()/30)), 0, '', '.') ?> / <small>DÍA MES</small></p>
+            <?php endif ?> 
         </div>
     </div>
 
@@ -178,52 +109,34 @@
             </ul>
         </div>
     </div>
-
-
-    <!-- Reviews -->  
-    <!-- 
+    
+    <!-- Reviews -->
     <?php if (count($reviews) > 0): ?>
         <div class="row">
             <div class="panel-group col-md-11" id="reviews">
 
-                <div class="panel-heading">
-                    <h2>Reviews <span class="car-rating pull-right" data-number="<?php echo $average ?>" ></span> <small>(<?php echo $quantity?>)</small></h2>
+                <div class="panel-heading text-center">
+                    <h1 class="body-title"><?php echo count($reviews) ?> Reviews</h1>
+                    <span class="car-rating" data-number="<?php echo $reviews_avg ?>" ></span>
                 </div>
 
                 <div class="space-30 hidden-xs"></div>
                 <div id="reviewsCollapseOne" class="panel-collapse col-md-offset-1 col-md-11" >
                     <div class="border">
-                        <?php count($reviews) ?> 
-
-                        <div class="row review">
-                            <div class="col-md-1">
-                                <?php if ( getimagesize($defaultReviews['picture'])): ?>
-                                    <img class="img-responsive" src="<?php echo $defaultReviews['picture'] ?>">
-                                <?php else: ?>
-                                    <i class="fa fa-user" style="font-size: 38px"></i>
-                                <?php endif ?>
-                            </div>
-                            <div class="col-md-11">
-                                <p><?php echo ucfirst($defaultReviews['opinion']) ?></p>
-                                <span class="car-rating pull-right" data-number="<?php echo $defaultReviews['star'] ?>" ></span>
-                                <i class="pull-right"><?php echo $defaultReviews['date'] ?></i>
-                            </div>
-                        </div>
-
                         <div class="collapse" id="collapseReviews">
 
                             <?php foreach ($reviews as $review): ?>
                                 <div class="row review">
-                                    <div class="col-md-1">
-                                        <?php if (getimagesize($review['picture'])): ?>
-                                            <img src="<?php echo $review['picture'] ?>">
+                                    <div class="col-xs-12 text-center">
+                                        <?php if ($review['user_photo']): ?>
+                                            <img src="<?php echo $review['user_photo'] ?>">
                                         <?php else: ?>
                                             <i class="fa fa-user" style="font-size: 38px"></i>
                                         <?php endif ?>
                                     </div>
-                                    <div class="col-md-11">
-                                        <p><?php echo ucfirst($review['opinion']) ?></p>
-                                        <span class="car-rating pull-right" data-number="<?php echo $review['star'] ?>" ></span>
+                                    <div class="col-xs-12">
+                                        <p><?php echo $review['opinion'] ?></p>
+                                        <span class="car-rating pull-right" data-number="<?php echo $review['rating'] ?>" ></span>
                                         <i class="pull-right"><?php echo $review['date'] ?></i>
                                     </div>
                                 </div>
@@ -240,9 +153,7 @@
                 </div>
             </div>
         </div>
-    <?php endif ?> 
-    -->
-    
+    <?php endif ?>
 
     <form action="<?php echo url_for('reserve_pay') ?>" id="reserve-form" method="post">
         
@@ -296,24 +207,6 @@
                         <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
                             <div class="panel-body">
                                 <p>Paga a través de una Transferencia Bancaria, mediante Khipu. Podrás hacerlo a través de los diversos bancos nacionales.</p>
-                                <!-- <div class="hidden-xs row">
-                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/banco_estado.png" alt="Banco Estado"></div>
-                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/consorcio.png" alt="Consorcio"></div>
-                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/banco_chile.png" alt="Banco de Chile"></div>
-                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/scotiabank.png" alt="Scotiabank"></div>
-                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/bice.png" alt="Bancio Bice"></div>
-                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/falabella.png" alt="Banco Falabella"></div>
-                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/bbva.png" alt="Banco BBVA"></div>
-                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/ripley.png" alt="Banco Ripley"></div>
-                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/bcinova.png" alt="BCI Nova"></div>
-                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/bci.png" alt="Banco Crédito e Inversiones"></div>
-                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/itau.png" alt="Banco Itaú"></div>
-                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/tbanc.png" alt="T Bank"></div>
-                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/security.png" alt="Banco Security"></div>
-                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/paris.png" alt="Banco Pais"></div>
-                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/santander.png" alt="Banco Santander"></div>
-                                    <div class="col-md-2 text-center" style="height: 60px"><img class="img-responsive" src="/images/newDesign/payments/banks/internacional.png" alt="Banco Internacional"></div>
-                                </div> -->
                             </div>
                         </div>
                     </div>

@@ -31,6 +31,8 @@ class khipuActions extends sfActions {
                 'custom'         => "",
             );
 
+            error_log("[khipu/generatePayment] ".print_r($data, true));
+
             $url = $khipuService->createPaymentURL($data)->url;
         } catch (Execption $e) {
             error_log("[khipu/generatePayment] ".$e->getMessage());
@@ -174,6 +176,10 @@ class khipuActions extends sfActions {
             $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["notification-validation-url"]);
             $response = $khipuService->notificationValidation($data);
 
+            error_log("[khipu/notifyPayment] ----------------- ENTRANDO NOTIFICACION -----------------");
+            error_log("[khipu/notifyPayment] ".print_r($request->getPostParameters(), true));
+            error_log("[khipu/notifyPayment] ".print_r($response, true));
+
             if ($response == 'VERIFIED' && $data["receiver_id"] == $settings["receiver_id"]) {
                 
                 // Los parametros son correctos, ahora falta verificar que transacion_id, custom, subject y amount correspondan al pedido 
@@ -217,9 +223,6 @@ class khipuActions extends sfActions {
                         $Reserve->setFechaPago(date("Y-m-d H:i:s"));
                         $Reserve->save();
 
-                        $mail   = new Email();
-                        $mailer = $mail->getMailer();
-
                         $formulario = $Functions->generarFormulario(NULL, $Reserve->token);
                         $reporte    = $Functions->generarReporte($Reserve->getCar()->id);
                         $contrato   = $Functions->generarContrato($Reserve->token);
@@ -231,15 +234,14 @@ class khipuActions extends sfActions {
                         $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
                         $to      = array($Owner->email => $Owner->firstname." ".$Owner->lastname);
 
-                        $message = $mail->getMessage();
-                        $message->setSubject($subject);
-                        $message->setBody($body, 'text/html');
-                        $message->setFrom($from);
-                        $message->setTo($to);
-                        
-                        $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
-                        $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
-                        $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+                        $message = Swift_Message::newInstance()
+                            ->setSubject($subject)
+                            ->setBody($body, 'text/html')
+                            ->setFrom($from)
+                            ->setTo($to)
+                            ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
+                            ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
+                            ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
                         
                         if (!is_null($Renter->getDriverLicenseFile())) {
                             $filepath = $Renter->getDriverLicenseFile();
@@ -249,27 +251,43 @@ class khipuActions extends sfActions {
                         }
                         
                         error_log("[khipu/notifyPayment] Enviando email al propietario");
-                        $mailer->send($message);
+                        $this->getMailer()->send($message);
 
-                        // Correo arrendatario
-                        $subject = "La reserva ha sido pagada";
-                        $body    = $this->getPartial('emails/paymentDoneRenter', array('Reserve' => $Reserve));
-                        $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
-                        $to      = array($Renter->email => $Renter->firstname." ".$Renter->lastname);
+                        if($Renter->getDriverLicenseFile()){ // envía un mail al usuario dependiendo si tiene foto de licencia o no
+                            // Correo arrendatario
+                            $subject = "La reserva ha sido pagada";
+                            $body    = $this->getPartial('emails/paymentDoneRenter', array('Reserve' => $Reserve));
+                            $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+                            $to      = array($Renter->email => $Renter->firstname." ".$Renter->lastname);
 
-                        $message = $mail->getMessage();
-                        $message->setSubject($subject);
-                        $message->setBody($body, 'text/html');
-                        $message->setFrom($from);
-                        $message->setTo($to);
+                            $message = Swift_Message::newInstance()
+                                ->setSubject($subject)
+                                ->setBody($body, 'text/html')
+                                ->setFrom($from)
+                                ->setTo($to)
+                                ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
+                                ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
+                                ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'))
+                                ->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
 
-                        $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
-                        $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
-                        $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));                        
-                        $message->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
+                            error_log("[khipu/notifyPayment] Enviando email al arrendatario");
+                        } else {
+                            $Reserve->setPayEmailPending(1);
+                            $subject = "La reserva ha sido pagada";
+                            $body    = $this->getPartial('emails/paymentDoneRenterWithoutDriverLicense', array('Renter' => $Renter));
+                            $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+                            $to      = array($Renter->email => $Renter->firstname." ".$Renter->lastname);
 
-                        error_log("[khipu/notifyPayment] Enviando email al arrendatario");
-                        $mailer->send($message);
+                            $message = Swift_Message::newInstance()
+                                ->setSubject($subject)
+                                ->setBody($body, 'text/html')
+                                ->setFrom($from)
+                                ->setTo($to);
+
+                            error_log("[khipu/notifyPayment] Enviando email al arrendatario sin licencia");
+
+                        }   
+                        $this->getMailer()->send($message);
 
                         // Correo soporte
                         $subject = "Nuevo pago. Reserva: ".$Reserve->id;
@@ -277,16 +295,15 @@ class khipuActions extends sfActions {
                         $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                         $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
 
-                        $message = $mail->getMessage();
-                        $message->setSubject($subject);
-                        $message->setBody($body, 'text/html');
-                        $message->setFrom($from);
-                        $message->setTo($to);
-                        $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
-
-                        $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
-                        $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
-                        $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+                        $message = Swift_Message::newInstance()
+                            ->setSubject($subject)
+                            ->setBody($body, 'text/html')
+                            ->setFrom($from)
+                            ->setTo($to)
+                            ->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"))
+                            ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
+                            ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
+                            ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
 
                         if (!is_null($Renter->getDriverLicenseFile())) {
                             $filepath = $Renter->getDriverLicenseFile();
@@ -296,7 +313,7 @@ class khipuActions extends sfActions {
                         }
                         
                         error_log("[khipu/notifyPayment] Enviando email a soporte");
-                        $mailer->send($message);
+                        $this->getMailer()->send($message);
 
                         // Crea la fila calificaciones habilitada para la fecha de término de reserva + 2 horas (solo si no es una extension de otra reserva)
                         if (!$Reserve->getIdPadre()) {
@@ -333,14 +350,14 @@ class khipuActions extends sfActions {
                             $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                             $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
 
-                            $message = $mail->getMessage();
-                            $message->setSubject($subject);
-                            $message->setBody($body, 'text/html');
-                            $message->setFrom($from);
-                            $message->setTo($to);
-                            $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                            $message = Swift_Message::newInstance()
+                                ->setSubject($subject)
+                                ->setBody($body, 'text/html')
+                                ->setFrom($from)
+                                ->setTo($to)
+                                ->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
                             
-                            $mailer->send($message);
+                            $this->getMailer()->send($message);
                         }
                     }
                 }

@@ -10,35 +10,19 @@
         6 => "Sábado",
         7 => "Domingo"
     );
-
-    $dayNames = array();
-
-    foreach ($days as $day)
-        $dayNames[] = $week[date("N", strtotime($day))];
-
-    if (count($dayNames) == 2) {
-        $daysString = str_replace(",", " y", implode(", ", $dayNames));
-    } elseif (count($dayNames) > 2) {
-        $daysString = str_replace(", ".$dayNames[count($dayNames)-1], " y ".$dayNames[count($dayNames)-1], implode(", ", $dayNames));
-    }
 ?>
 
 <p>Hola <?php echo $Owner->firstname ?>,</p>
 
-<p>Febrero es el mes con más movimiento en Arriendas y con poca oferta dado que muchos de los dueños se van de vacaciones.</p>
-
-<p>Es por esto que necesitamos nos indiques tu disponibilidad para recibir clientes esta semana:</p>
+<p><strong>Para recibir arriendos esta semana, debes indicar tu disponibilidad</strong>.</p>
 
 <ul>
-    <?php foreach ($days as $day): ?>
-        <li><?php echo $week[date("N", strtotime($day))]." ".date("d", strtotime($day)) ?></li>
-    <?php endforeach ?>
+    <li>Si tienes disponibilidad de <strong><?php echo $week[date("N", strtotime($days[0]))] ?></strong> a <strong><?php echo $week[date("N", strtotime($days[count($days)-1]))] ?></strong> de 08:00 a 20:00, has <a href='<?php echo $urlWeek ?>'>click aquí</a>.</li>
+    <li>Si tienes disponibilidad solo algunos días y horarios, has <a href='<?php echo $urlMisAutos ?>'>click aquí</a>.</li>
 </ul>
 
-<p>Para indicar tu disponibilidad haz <a href='<?php echo $urlMisAutos ?>'><strong>click aquí</strong></a>.</p>
-
-<!-- <p>Se te informará con un mínimo de 3 horas de anticipación para que puedas gestionar la entrega. Tu auto figurará como disponible para el pago, para reservas iniciadas en esos horarios.</p> -->
+<p>Tu auto figurará como disponible para el pago, para reservas iniciadas en esos horarios.</p>
 
 <?php include_partial("emails/footer", array("userId" => $Owner->id, "mailingId" => 2)) ?>
 
-<img src='<?php echo $imageUrl ?>'>
+<img src='<?php echo $imageForTrackEmail ?>'>

@@ -24,6 +24,82 @@ class mainActions extends sfActions {
         $this->getMailer()->send($message);
     }
 
+    public function executeTestImageUpload (sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+    }
+
+    public function executeUploadImages(sfWebRequest $request) {
+
+        $return = array("error" => false);
+        $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
+
+        try {
+
+            $name = $_FILES[$request->getParameter('file')]['name'];
+            $size = $_FILES[$request->getParameter('file')]['size'];
+            $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
+
+            if (!strlen($name)) {
+                throw new Exception("Por favor, seleccione una imagen", 2);
+            }
+
+            list($txt, $ext) = explode(".", $name);
+
+            $ext = strtolower($ext);
+
+            if (!in_array($ext, $valid_formats)) {
+                throw new Exception("Formato de la imagen inválido", 2);
+            }
+
+            if ($size > (5 * 1024 * 1024)) {
+                throw new Exception("La imagen excede el tamaño máximo permitido (1 MB)", 2);                
+            }
+            
+            /*$sizewh = getimagesize($tmp);
+
+            if($sizewh[0] > 194 || $sizewh[1] > 204) {
+                echo '<script>alert(\'La imagen no cumple con las dimensiones especificadas. Puede continuar si lo desea\')</script>';
+            }*/
+        
+            $userId = $this->getUser()->getAttribute("userid");
+            $actual_image_name = time() ."$". $userId . "$." . $ext;
+
+            $uploadDir = sfConfig::get("sf_web_dir");
+            $path      = $uploadDir . '/images/tmp_images/';
+            $fileName  = $actual_image_name . "." . $ext;
+
+            $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
+
+            if (!move_uploaded_file($tmp, $path . $actual_image_name)) {
+                throw new Exception("El User ".$userId." tiene problemas para grabar la imagen de su perfil", 1);
+            }
+
+            sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
+
+            /*echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
+            echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";*/
+
+            $User = Doctrine_Core::getTable('User')->find($userId);
+            $User->setPictureFile("/images/users/".$actual_image_name);
+            $User->save();
+        } catch (Exception $e) {
+            $return["error"] = true;
+            if ($e->getCode() < 2) {
+                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo nuevamente más tarde";
+                error_log("[".date("Y-m-d H:i:s")."] [main/uploadPhoto] ERROR: ".$e->getMessage());
+            } else {
+                $return["errorMessage"] = $e->getMessage();
+            }            
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "main/uploadPhoto");
+            }
+        }
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }    
+
     public function executeIndex (sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");
@@ -57,10 +133,18 @@ class mainActions extends sfActions {
             $this->isWeekend = true;
         }
 
-        if ($this->getUser()->getAttribute("from", false) && $this->getUser()->getAttribute("to", false)) {
+        if ($this->getUser()->getAttribute("from", false) &&
+            $this->getUser()->getAttribute("to", false) &&
+            strtotime($this->getUser()->getAttribute("from")) > time() &&
+            strtotime($this->getUser()->getAttribute("to")) > strtotime($this->getUser()->getAttribute("from"))) {
+
             $this->from = $this->getUser()->getAttribute("from");
             $this->to   = $this->getUser()->getAttribute("to");
         } else {
+
+            $this->getUser()->getAttributeHolder()->remove('from');
+            $this->getUser()->getAttributeHolder()->remove('to');
+
             if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
                 $this->from = date("Y-m-d 08:00", strtotime("+12 Hours"));
             } else {
@@ -676,7 +760,7 @@ class mainActions extends sfActions {
         $this->Car = Doctrine_Core::getTable('Car')->find($carId);
         $this->forward404If(!$this->Car);
 
-        $setDates = true;
+        /*$setDates = true;
         if ($this->getUser()->getAttribute("from", false) && $this->getUser()->getAttribute("to", false)) {
             
             $from = $this->getUser()->getAttribute("from");
@@ -700,6 +784,31 @@ class mainActions extends sfActions {
             } else {
                 $to = date("Y-m-d H:i", strtotime("+24 Hours"));
             }
+        }*/
+
+        if ($this->getUser()->getAttribute("from", false) &&
+            $this->getUser()->getAttribute("to", false) &&
+            strtotime($this->getUser()->getAttribute("from")) > time() &&
+            strtotime($this->getUser()->getAttribute("to")) > strtotime($this->getUser()->getAttribute("from"))) {
+
+            $from = $this->getUser()->getAttribute("from");
+            $to   = $this->getUser()->getAttribute("to");
+        } else {
+
+            $this->getUser()->getAttributeHolder()->remove('from');
+            $this->getUser()->getAttributeHolder()->remove('to');
+
+            if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
+                $from = date("Y-m-d 08:00", strtotime("+12 Hours"));
+            } else {
+                $from = date("Y-m-d H:i", strtotime("+4 Hours"));
+            }
+
+            if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
+                $to = date("Y-m-d 08:00", strtotime("+32 Hours"));
+            } else {
+                $to = date("Y-m-d H:i", strtotime("+24 Hours"));
+            }
         }
 
         $f = strtotime($from);
@@ -712,51 +821,44 @@ class mainActions extends sfActions {
         $this->to = date("Y-m-d H:i", $t);
         $this->toHuman = date("D d/m/Y H:i", $t);
 
-        
-
-        /*if ($this->Car->hasReserve($from, $to)) {
-            throw new Exception("Auto ya posee reserva", 1);        
-        }*/
-
         $this->price = CarTable::getPrice($from, $to, $this->Car->getPricePerHour(), $this->Car->getPricePerDay(), $this->Car->getPricePerWeek(), $this->Car->getPricePerMonth());
 
-        // Reviews (hay que arreglar las clase Rating)
-        // Comentado, Estrellas erroneas en produccion
-        /*
-        $this->reviews = array();
-        $this->defaultReviews = array();
+        // Reviews
 
-        $cont=0;
-
+        $reviews = null;
+        $this->reviews_avg = 0;
+        
         $Ratings = Doctrine_Core::getTable('Rating')->getOwnerReviewsOrderByDateById($this->Car->getUserId());
-        $this->average = Doctrine_Core::getTable("Rating")->getOwnerAverageById($this->Car->getUserId());
-        $this->quantity = Doctrine_Core::getTable("Rating")->getCountOwnerReviewsById($this->Car->getUserId());
+        if ($Ratings) {
 
-        foreach ($Ratings as $i => $Rating) {
-            $opinion = $Rating->getOpinionAboutOwner();
-            $U = Doctrine_Core::getTable('User')->find($Rating->getIdRenter());
+            $reviews = array();
 
-            if ($opinion) {
-                // obtiene solo el primer $Rating y continúa la iteracion.
-                if($cont==0){
-                    $this->defaultReviews["opinion"] = $Rating->getOpinionAboutOwner();
-                    $this->defaultReviews["picture"] = $U->getPictureFile();
-                    $this->defaultReviews["star"] = $Rating->getOpCleaningAboutOwner();
-                    $formatoFecha = Split($Rating->getFechaCalificacionOwner(), " ");
-                    $this->defaultReviews["date"] = date('Y-m-d',(empty($Rating->getFechaCalificacionOwner()) ? strtotime(rand(1,28)."-".rand(5,12)."-2013") : strtotime($Rating->getFechaCalificacionOwner())));
-                    $cont++;
-    
-                } else {
-                    $this->reviews[$i]["opinion"] = $Rating->getOpinionAboutOwner();
-                    $this->reviews[$i]["picture"] = $U->getPictureFile();
-                    $this->reviews[$i]["star"] = $Rating->getOpCleaningAboutOwner();
-                    $formatoFecha = Split($Rating->getFechaCalificacionOwner(), " ");
-                    $this->reviews[$i]["date"] = date('Y-m-d',(empty($Rating->getFechaCalificacionOwner()) ? strtotime(rand(1,28)."-".rand(5,12)."-2013") : strtotime($Rating->getFechaCalificacionOwner())));
-                    $cont++;
+            foreach ($Ratings as $Rating) {
+
+                $U = Doctrine_Core::getTable('User')->find($Rating->getIdRenter());
+
+                $review = array(
+                    "user_name" => ucwords(strtolower($U->getFirstname()))." ".ucwords(strtolower($U->getLastname())),
+                    "user_photo" => null,
+                    "date" => date("d-m-Y", strtotime($Rating->getFechaCalificacionOwner())),
+                    "rating" => $Rating->getOpCleaningAboutOwner(),
+                    "opinion" => $Rating->getOpinionAboutOwner()
+                );
+
+                if ($U->getPictureFile() && !strstr($U->getPictureFile(), "/var/")) {
+                    $review["user_photo"] = $U->getPictureFile();
                 }
+
+                $reviews[] = $review;
+
+                $this->reviews_avg += $review["rating"];
             }
 
-        }*/
+            $this->first_reviews = array_slice($reviews, 0, 3);
+            $this->reviews = array_slice($reviews, 3);
+
+            $this->reviews_avg = round($this->reviews_avg / count($reviews), 0);
+        }
 
         // Características
         $this->passengers = false;
@@ -832,7 +934,6 @@ class mainActions extends sfActions {
     
         $return = array("error" => false);
         $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
-
         try {            
 
             $name = $_FILES[$request->getParameter('file')]['name'];
@@ -2823,11 +2924,18 @@ class mainActions extends sfActions {
         
         $this->setLayout("newIndexLayout");
 
-        $this->isWeekend  = false;
-        $this->limit      = 33;
-        $this->Region     = Doctrine_Core::getTable("Region")->find(13);
-        $this->hasCommune = false;
-        $this->hasRegion  = false;
+        $this->isWeekend    = false;
+        $this->limit        = 33;
+        $this->Region       = Doctrine_Core::getTable("Region")->find(13);
+        $this->hasCommune   = false;
+        $this->hasRegion    = false;
+        $this->nearToSubway = false;
+
+        if ($request->hasParameter('metro')){
+            if($request->getParameter('metro')=='cercanos-al-metro'){
+                $this->nearToSubway = true;
+            }
+        }
 
         if ($request->hasParameter('region','commune', 'carType')){
             $regionSlug = $request->getParameter('region');
@@ -2844,10 +2952,18 @@ class mainActions extends sfActions {
             }
         }
 
-        if ($this->getUser()->getAttribute("from", false) && $this->getUser()->getAttribute("to", false)) {
+        if ($this->getUser()->getAttribute("from", false) &&
+            $this->getUser()->getAttribute("to", false) &&
+            strtotime($this->getUser()->getAttribute("from")) > time() &&
+            strtotime($this->getUser()->getAttribute("to")) > strtotime($this->getUser()->getAttribute("from"))) {
+
             $this->from = $this->getUser()->getAttribute("from");
             $this->to   = $this->getUser()->getAttribute("to");
         } else {
+
+            $this->getUser()->getAttributeHolder()->remove('from');
+            $this->getUser()->getAttributeHolder()->remove('to');
+
             if (strtotime(date("Y-m-d H:i:s")) >= strtotime(date("Y-m-d 20:00:00")) || strtotime(date("Y-m-d H:i:s")) <= strtotime(date("Y-m-d 08:00:00"))) {
                 $this->from = date("Y-m-d 08:00", strtotime("+12 Hours"));
             } else {

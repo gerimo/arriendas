@@ -1,42 +1,106 @@
-function initializeDate(elem, date, withTimePicker, withHumanFormatExtended, withMinDate) {
+function initializeDate(elem, date, withTimePicker, withHumanFormatExtended) {
 
-    var format = getHumanFormat(date);
+    var format = "d-m-Y H:i";
+    var value  = getHumanFormat(date);
+
     if (withHumanFormatExtended) {
-        format = getHumanFormatExtended(date);
+        value  = getHumanFormatExtended(date);
     }
 
-    var minDate = false;
-    if (withMinDate) {
-        minDate = new Date();
+    if (elem == "from") {
+        $("#fromH").datetimepicker({ 
+            dayOfWeekStart: 1,
+            lang: 'es',
+            timepicker: withTimePicker,
+            validateOnBlur: false,
+            value: value,
+            format: format,
+            minDate: new Date(),
+            maxDate: false,
+            allowTimes:[
+                "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
+                "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
+                "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
+                "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+                "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+                "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
+                "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
+                "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
+            ],
+            onSelectDate: function() {
+                refresh(elem, withHumanFormatExtended);
+            },
+            onSelectTime: function() {
+                refresh(elem, withHumanFormatExtended);
+            },
+            onShow: function(){
+                /*this.setOptions({
+                    maxDate: $('#to').val() ? $('#to').val().split(" ")[0] : false
+                });*/
+            }
+        });
+    } else {
+        $("#toH").datetimepicker({ 
+            dayOfWeekStart: 1,
+            lang: 'es',
+            timepicker: withTimePicker,
+            validateOnBlur: false,
+            value: value,
+            format: format,
+            minDate: $('#from').val().split(" ")[0],
+            allowTimes:[
+                "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
+                "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
+                "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
+                "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+                "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+                "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
+                "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
+                "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
+            ],
+            onSelectDate: function() {
+                refresh(elem, withHumanFormatExtended);
+            },
+            onSelectTime: function() {
+                refresh(elem, withHumanFormatExtended);
+            },
+            onShow: function(){
+                this.setOptions({
+                    minDate: $('#from').val() ? $('#from').val().split(" ")[0] : false
+                });
+            },
+        });
     }
-
-
-    $("#"+elem+"H").datetimepicker({ 
-        dayOfWeekStart: 1,
-        lang: 'es',
-        minDate: minDate,
-        timepicker: withTimePicker,
-        validateOnBlur: false,
-        value: format,
-        allowTimes:[
-            "00:00", "00:30", "01:00", "01:30", "02:00", "02:30",
-            "03:00", "03:30", "04:00", "04:30", "05:00", "05:30",
-            "06:00", "06:30", "07:00", "07:30", "08:00", "08:30",
-            "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-            "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-            "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-            "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-            "21:00", "21:30", "22:00", "22:30", "23:00", "23:30",
-        ],
-        onSelectDate: function() {
-            refresh(elem, withHumanFormatExtended);
-        },
-        onSelectTime: function() {
-            refresh(elem, withHumanFormatExtended);
-        }
-    });
 
     $("#"+elem).val(getFormat(date));
+}
+
+function chileanFormat2Date(CF) {
+
+    s = CF.split(" ");
+    d = s[0].split("-");
+    t = s[1].split(":");
+
+    return new Date(d[2], d[1]-1, d[0], roundTime(t[0]+":"+t[1]).split(":")[0], roundTime(t[0]+":"+t[1]).split(":")[1], 0, 0);
+}
+
+function getDayFormat(day) {
+
+    if (day < 10) {
+        day = "0"+day;
+    }
+
+    return day;
+}
+
+function getMonthFormat(month) {
+
+    month = month + 1;
+    if (month < 10) {
+        month = "0"+month;
+    }
+
+    return month;
 }
 
 function getFormat(date) {
@@ -51,22 +115,14 @@ function getFormat(date) {
         month = "0"+month;
     }
 
-    return date.getFullYear()+"-"+month+"-"+day+" "+roundTime(date.getHours()+":"+date.getMinutes())+":00";
+    return date.getFullYear()+"/"+month+"/"+day+" "+roundTime(date.getHours()+":"+date.getMinutes())+":00";
 }
 
 function getHumanFormat(date) {
 
-    var day = date.getDate();
-    if (day < 10) {
-        day = "0"+day;
-    }
+    var day = getDayFormat(date.getDate());
+    var month = getMonthFormat(date.getMonth());
 
-    var month = date.getMonth()+1;
-    if (month < 10) {
-        month = "0"+month;
-    }
-
-    return date.getFullYear()+"-"+month+"-"+day+" "+roundTime(date.getHours()+":"+date.getMinutes());
     return day+"-"+month+"-"+date.getFullYear()+" "+roundTime(date.getHours()+":"+date.getMinutes());
 }
 
@@ -89,37 +145,33 @@ function getHumanFormatExtended(date) {
 }
 
 function refresh(elem, withHumanFormatExtended) {
+    
+    var date = chileanFormat2Date($("#"+elem+"H").val());
 
-    var date = new Date($("#"+elem+"H").val());
-
-    // Si es menos de 1 dia desde NOW se deja la misma fecha
-    dateNow = new Date();
-    dateNow.setDate(dateNow.getDate()+1);
-    if (elem == "to" && date.getTime() < dateNow.getTime()) {
-        date = new Date($("#"+elem).val());
-    }
-
-    // Se actualizan los valores
     if (withHumanFormatExtended) {
-        $("#"+elem+"H").val(getHumanFormatExtended(date));
+        value = getHumanFormatExtended(date);
     } else {
-        $("#"+elem+"H").val(getHumanFormat(date));
+        value = getHumanFormat(date);
     }
+
+    $("#"+elem+"H").val(value);
     $("#"+elem).val(getFormat(date));
 
-    // Revisamos que la fecha desde no sea mayor a la fecha hasta
-    var dateFrom = new Date($("#from").val());
-    var dateTo = new Date($("#to").val());
+    if (elem == "from") {
+        
+        date.setDate(date.getDate()+1);
+        to = new Date($("#to").val());
 
-    if (dateTo.getTime() == dateFrom.getTime() || dateFrom.getTime() > dateTo.getTime()) {
-        if (elem == "from") {
-            dateTo = dateFrom;
-            dateTo.setDate(dateFrom.getDate()+1);
-            initializeDate("to", dateTo, true, withHumanFormatExtended);
-        } else {
-            dateFrom = dateTo;
-            dateFrom.setDate(dateTo.getDate()-1);
-            initializeDate("from", dateFrom, true, withHumanFormatExtended);
+        if (date >= to) {
+
+            if (withHumanFormatExtended) {
+                value = getHumanFormatExtended(date);
+            } else {
+                value = getHumanFormat(date);
+            }
+
+            $("#toH").val(value);
+            $("#to").val(getFormat(date));
         }
     }
 

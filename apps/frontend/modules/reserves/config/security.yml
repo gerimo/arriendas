@@ -3,3 +3,6 @@ calculateAmountWarrantyFree:
 
 calculatePrice:
     is_secure: false
+
+getExtendPrice:
+    is_secure: false

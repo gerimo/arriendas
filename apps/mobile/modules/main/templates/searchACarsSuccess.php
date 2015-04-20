@@ -1,8 +1,6 @@
 <link href="/css/newDesign/mobile/searchAcarsMobile.css" rel="stylesheet" type="text/css">
 <script src="/js/newDesign/markerclusterer.js" type="text/javascript"></script>
 
-
-
 <script>
     var reserveUrl = "<?php echo url_for('reserve', array('carId' => 'carId'), true) ?>";
     var usuarioLogeado = "<?php echo $usuarioLog; ?>";
@@ -251,7 +249,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="BCW ">
-            <h1>¡Arrienda un Auto!</h1>
+            <h1 class="text-center">¡Arrienda un Auto!</h1>
             <!--Mobile-->
 
             <section id="section-home">
@@ -262,6 +260,7 @@
                                 <option selected value="<?php echo $Region->id ?>"><?php echo ucwords(strtolower($Region->name)) ?></option> 
                             <?php else: ?>
                                 <option disabled selected value="<?php echo $Region->id ?>"><?php echo $Region->name ?></option>
+                                <option value="5">Región de Valparaiso</option>
                             <?php endif ?>
                         </select>
                     </div>
@@ -407,6 +406,35 @@
 
     $("#commune").change(function(){
         searchCars(0, $("button.see-more").data("limit")); 
+    });
+
+    $("#region").change(function(){
+
+        var regionId = $("#region option:selected").val();        
+
+        var parameters = {
+            regionId: regionId
+        };
+
+        console.log(parameters);
+
+        $.post("<?php echo url_for('commune_get') ?>", parameters, function(r){
+            if (r.error) {
+
+            } else {
+
+                var html = "<option value='0'>Todas Las Comunas</option>";
+
+                $.each(r.communes, function(k, v){
+                    console.log(v);
+                    html += "<option value='"+v['id']+"'>"+v['name']+"</option>";
+                });
+
+                $("#commune").html(html);
+
+                searchCars(0, $("button.see-more").data("limit"));
+            }
+        }, "json");
     });
 
     $(document).on("click", ".see-more", function(){

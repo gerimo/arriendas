@@ -14,16 +14,20 @@ class Utils {
 
     public static function reportError($errorMessage, $place) {
 
-        $mail = new Email();
-        $mailer = $mail->getMailer();
+        /*$mail = new Email();
+        $mailer = $mail->getMailer();*/
 
-        $message = $mail->getMessage()
+        $mailer = sfContext::getInstance()->getMailer();
+
+        $message = $mailer->compose()
+        /*$message = $mail->getMessage()*/
             ->setSubject("Error ".$place." ".date("Y-m-d H:i:s"))
             ->setBody("<p>".$errorMessage."</p>", "text/html")
             ->setFrom(array("no-reply@arriendas.cl" => "Errores Arriendas.cl"))
             ->setTo(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
         
         $mailer->send($message);
+        /*$mailer->send($message);*/
     }
 
     public static function isValidRUT($rut) {
@@ -45,7 +49,40 @@ class Utils {
         }
 
         return false;
-   }
+    }
+
+    public static function isWeek($getDays = false, $tomorrow = false) {
+
+        $days = array();
+
+        $tomorrow ? $i = 1 : $i = 0;
+
+        $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+".$i." day")));
+        if (!$Holiday && date("N", strtotime("+".$i." day")) != 6 && date("N", strtotime("+".$i." day")) != 7) {
+
+            if (!$getDays) {
+                return true;
+            }
+
+            $days[] = date("Y-m-d", strtotime("+".$i." day"));
+            $i++;
+
+            $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+".$i." day")));
+            while (!$Holiday && date("N", strtotime("+".$i." day")) != 6 && date("N", strtotime("+".$i." day")) != 7) {
+
+                $days[] = date("Y-m-d", strtotime("+".$i." day"));
+                $i++;
+
+                $Holiday = Doctrine_Core::getTable("Holiday")->findOneByDate(date("Y-m-d", strtotime("+".$i." day")));
+            }
+        }
+
+        if (count($days) > 0) {
+            return $days;
+        }
+
+        return false;
+    }
 
     public static function isWeekend($getDays = false, $tomorrow = false) {
 
@@ -80,10 +117,16 @@ class Utils {
         return false;
     }
 
-    public static function validateDates ($from, $to) {
+    public static function validateDates($from, $to) {
+
+        $fromPlus1H = strtotime("+1 Hours", strtotime($from));
 
         $from = strtotime($from);
         $to   = strtotime($to);
+
+        if ($to > $from && $fromPlus1H > $to) {
+            return "La fecha de término debe ser al menos 1 hora superior a la fecha de inicio.";
+        }
 
         if ($from >= $to) {
             return "La fecha de inicio debe ser menor a la fecha de término.";

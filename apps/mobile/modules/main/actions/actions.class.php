@@ -1044,43 +1044,39 @@ class mainActions extends sfActions {
         $this->time = Car::getTime($from, $to);
         $this->price = CarTable::getPrice($from, $to, $this->Car->getPricePerHour(), $this->Car->getPricePerDay(), $this->Car->getPricePerWeek(), $this->Car->getPricePerMonth());
 
-        // Reviews (hay que arreglar las clase Rating)
-        // Comentado, Estrellas erroneas en produccion
-        /*
-        $this->reviews = array();
-        $this->defaultReviews = array();
+        // Reviews
 
-        $cont=0;
-
+        $this->reviews = null;
+        $this->reviews_avg = 0;
+        
         $Ratings = Doctrine_Core::getTable('Rating')->getOwnerReviewsOrderByDateById($this->Car->getUserId());
-        $this->average = Doctrine_Core::getTable("Rating")->getOwnerAverageById($this->Car->getUserId());
-        $this->quantity = Doctrine_Core::getTable("Rating")->getCountOwnerReviewsById($this->Car->getUserId());
+        if ($Ratings) {
 
-        foreach ($Ratings as $i => $Rating) {
-            $opinion = $Rating->getOpinionAboutOwner();
-            $U = Doctrine_Core::getTable('User')->find($Rating->getIdRenter());
+            $this->reviews = array();
 
-            if ($opinion) {
-                // obtiene solo el primer $Rating y continúa la iteracion.
-                if($cont==0){
-                    $this->defaultReviews["opinion"] = $Rating->getOpinionAboutOwner();
-                    $this->defaultReviews["picture"] = $U->getPictureFile();
-                    $this->defaultReviews["star"] = $Rating->getOpCleaningAboutOwner();
-                    $formatoFecha = Split($Rating->getFechaCalificacionOwner(), " ");
-                    $this->defaultReviews["date"] = date('Y-m-d',(empty($Rating->getFechaCalificacionOwner()) ? strtotime(rand(1,28)."-".rand(5,12)."-2013") : strtotime($Rating->getFechaCalificacionOwner())));
-                    $cont++;
-    
-                } else {
-                    $this->reviews[$i]["opinion"] = $Rating->getOpinionAboutOwner();
-                    $this->reviews[$i]["picture"] = $U->getPictureFile();
-                    $this->reviews[$i]["star"] = $Rating->getOpCleaningAboutOwner();
-                    $formatoFecha = Split($Rating->getFechaCalificacionOwner(), " ");
-                    $this->reviews[$i]["date"] = date('Y-m-d',(empty($Rating->getFechaCalificacionOwner()) ? strtotime(rand(1,28)."-".rand(5,12)."-2013") : strtotime($Rating->getFechaCalificacionOwner())));
-                    $cont++;
+            foreach ($Ratings as $Rating) {
+
+                $U = Doctrine_Core::getTable('User')->find($Rating->getIdRenter());
+
+                $review = array(
+                    "user_name" => $U->getFirstname()." ".$U->getLastname(),
+                    "user_photo" => null,
+                    "date" => date("d-m-Y", strtotime($Rating->getFechaCalificacionOwner())),
+                    "rating" => $Rating->getOpCleaningAboutOwner(),
+                    "opinion" => $Rating->getOpinionAboutOwner()
+                );
+
+                if ($U->getPictureFile() && !strstr($U->getPictureFile(), "/var/")) {
+                    $review["user_photo"] = $U->getPictureFile();
                 }
+
+                $this->reviews[] = $review;
+
+                $this->reviews_avg += $review["rating"];
             }
 
-        }*/
+            $this->reviews_avg = round($this->reviews_avg / count($this->reviews), 0);
+        }
 
         // Características
         $this->passengers = false;
@@ -1199,6 +1195,66 @@ class mainActions extends sfActions {
                 $this->getResponse()->setTitle(sprintf('Arriendo de Autos entre persona. Rent a car en %s, Region Metropolitana, Chile ', $nameComune));
             }
         }
+    }
+
+    public function executeUploadLicense (sfWebRequest $request) {
+    
+        $return = array("error" => false);
+        $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
+        try {            
+
+            $name = $_FILES[$request->getParameter('file')]['name'];
+            $size = $_FILES[$request->getParameter('file')]['size'];
+            $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
+
+            list($txt, $ext) = explode(".", $name);
+
+            $ext = strtolower($ext);
+            
+            if (strlen($name) == 0) {
+                throw new Exception("Por favor, selecciona una imagen", 2);   
+            }
+                
+            if (!in_array($ext, $valid_formats)) {
+                throw new Exception("Formato de la imagen no permitido", 2);
+            }
+
+            if ($size >= (5 * 1024 * 1024)) { // Image size max 1 MB
+                throw new Exception("La imagen excede el máximo permitido (1 MB)", 2);
+            }
+                
+            $userId = $this->getUser()->getAttribute("userid");
+            
+            $newImageName = time() . "-" . $userId . "." . $ext;
+
+            $path = sfConfig::get("sf_web_dir") . '/images/licence/';
+
+            $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
+
+            if (!move_uploaded_file($tmp, $path . $newImageName)) {
+                throw new Exception("El User ".$userId." tiene problemas para grabar la imagen de su licencia", 1);
+            }
+
+            $User = Doctrine_Core::getTable('User')->find($userId);
+            $User->setDriverLicenseFile("/images/licence/".$newImageName);
+            $User->save();
+    
+        } catch (Exception $e) {
+            $return["error"] = true;
+            if ($e->getCode() < 2) {
+                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo nuevamente más tarde";
+            } else {
+                $return["errorMessage"] = $e->getMessage();
+            }
+            error_log("[".date("Y-m-d H:i:s")."] [main/uploadLicense] ERROR: ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "main/uploadLicense");
+            }
+        }
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
     }
 
     public function calificacionesPendientes(){

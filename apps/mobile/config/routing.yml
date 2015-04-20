@@ -69,6 +69,10 @@ change_password:
     url: /cambiar-contrasena
     param: { module: profile, action: changePassword }
 
+commune_get:
+    url: /obtener-comunas
+    param: { module: main, action: getCommunes }
+
 data_for_payment:
     url: /data-for-payment
     param: { module: main, action: dataForPayment }
@@ -173,6 +177,10 @@ rent_a_car_santiago:
     url: /rent-a-car/arriendo-de-autos-santiago
     param: {module: main, action: searchACars }
 
+reserve_success_license:
+    url: /reserva/advertencia
+    param: { module: reserves, action: warningUploadLicense }
+    
 reserve:
     url: /rent-a-car/arriendo-de-autos-santiago/:carId
     param: { module: main, action: reserve }

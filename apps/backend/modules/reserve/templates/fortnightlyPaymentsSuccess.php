@@ -38,6 +38,7 @@
                     <th>Quincena de la Reserva</th>
                     <th>N° de factura</th>
                     <th>¿Se realizo pago?</th>
+                    <th>&nbsp;</th>
 				</tr>
 			</thead>
 
@@ -148,7 +149,7 @@
 				$.each(r.data, function(k, v){  
                     var paidUser  = optionSelected(v.t_is_paid_user, v.t_id, 1);
                     var button = "<a class='btn btn-block btn-primary datos' data-user-id='"+v.uc_id+"' >Datos de cuenta</a>";
-					$('#expiredReservesTable').DataTable().row.add([v.uc_id, v.uc_fullname, v.uc_telephone, v.uc_email, button, v.r_id, v.r_date, v.r_duration, v.r_price, v.r_fortnightly ,v.t_number, paidUser]).draw();
+					$('#expiredReservesTable').DataTable().row.add([v.uc_id, v.uc_fullname, v.uc_telephone, v.uc_email, v.r_id, v.r_date, v.r_duration, v.r_price, v.r_fortnightly ,v.t_number, paidUser, button]).draw();
 				});
 				$(".load").hide();
 			}

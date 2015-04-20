@@ -18,12 +18,13 @@
                     && $user 
                     && $user->isAuthenticated()
                     && $action != 'success'
+                    && $action != 'warningUploadLicense'
+                    && $action != 'uploadLicenseWarning'
                     && $action != 'logout')
             {
                 $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
                 $toShow = Doctrine_Core::getTable("Transaction")->countPendingToShowByUser($idUsuario);
                 if($toShow > 0){
-                    
                     /*$this->getContext()->getController()->forward('bcpuntopagos', 'showExito');*/
                     $this->getContext()->getController()->redirect('reserve_success', true, 301);
                     throw new sfStopException();

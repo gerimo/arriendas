@@ -6,20 +6,22 @@
 require_once sfConfig::get('sf_lib_dir') . '/vendor/mobile-detect/Mobile_Detect.php';
 
 class checkMobileDetectedFilter extends sfFilter {
+
     public function execute ($filterChain) {
     
         $request = $this->getContext()->getRequest();
-        $user  = $this->getContext()->getUser();
-        $action = $this->context->getActionName();
+        $user    = $this->getContext()->getUser();
+        $action  = $this->context->getActionName();
 
-        if ($this->isFirstCall()) {
+        if ($this->isFirstCall() && $action != "getExtendPrice") {
 
             $MD = new Mobile_Detect;
-            $referer    = $request->getUri();
+            $referer = $request->getUri();
 
             if ($MD->isMobile()) {
-                $host = str_replace("arriendas.cl", "m.arriendas.cl", $_SERVER ['HTTP_HOST']);
-                $url  = str_replace("arriendas.cl", "m.arriendas.cl", $referer);
+                
+                $host = str_replace("www", "m", $_SERVER ['HTTP_HOST']);
+                $url  = str_replace("www", "m", $referer);
                 
                 if($this->getContext()->getActionStack()->getSize() != null){
                     $this->getContext()->getController()->redirect($url);

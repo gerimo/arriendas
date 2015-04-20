@@ -2,13 +2,13 @@
 
     $U = sfContext::getInstance()->getUser();
 
-    if (strtotime(date("H:i")) > strtotime("19:00") || strtotime(date("H:i")) < strtotime("09:00") || strtotime(date("l")) == strtotime("Saturday") || strtotime(date("l")) == strtotime("Sunday")) {
+    /*if (strtotime(date("H:i")) > strtotime("19:00") || strtotime(date("H:i")) < strtotime("09:00") || strtotime(date("l")) == strtotime("Saturday") || strtotime(date("l")) == strtotime("Sunday")) {*/
         $telefono = "tel:0223333714";
         $telefonoText = "(02) 2333 3714"; 
-    } else {
+    /*} else {
         $telefono = "tel:0226402900";
         $telefonoText = "(02) 2640 2900";
-    }
+    }*/
 ?>
 
 <header>
@@ -28,11 +28,9 @@
             <div class="collapse navbar-collapse" id="header">
                 
                 <ul class="nav navbar-nav">
-                    <?php if($this->context->getActionName()!="reserve"): ?>
-                    
+                    <?php if($this->context->getActionName() != "reserve"): ?>
+                        <li><a href="<?php echo url_for("rent_a_car")?>">Buscar autos</a></li>
                         <?php if ($sf_user->isAuthenticated()): ?>
-                            <li><a href="<?php echo url_for("homepage") ?>" data-target="homepage">Inicio</a></li>
-
                             <?php if($hasCars): ?>
                                 <li><a href="<?php echo url_for("cars") ?>" data-target="cars">Mis autos</a></li>
                             <?php else: ?>
@@ -45,12 +43,9 @@
                             
                             <li><a href="<?php echo url_for("reserves") ?>" data-target="reserves">Reservas</a></li>
                         <?php else: ?>
-                            
-                            <li><a href="<?php echo url_for("rent_a_car")?>">Buscar autos</a></li>
                             <li><a href="<?php echo url_for("how-works")?>">¿Cómo funciona?</a></li>
                             <li><a href="<?php echo url_for("prices_compare")?>">Compara precios</a></li>
                             <li><a href="<?php echo url_for("news")?>">En las noticias</a></li>
-                            <!-- <li><a onclick="playPause()">Play / Pause</a></li> -->
                         <?php endif?>
                         <li><a href="<?php echo url_for('questions') ?>" data-target="questions">Preguntas Frecuentes</a></li>
                     
