@@ -1,3 +1,2 @@
-<div class="space-100"></div>
-<h2>tail -n 200</h2>
+<p>tail -n 200</p>
 <pre><?php echo $output ?></pre>
