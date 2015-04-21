@@ -5,3 +5,8 @@ p{
 .row .btn-make-rate{
 	margin-top: 30px;
 }
+
+.turn-touched{
+	background-color: #9C9C9C;
+	border: solid 2px #9C9C9C;
+}
