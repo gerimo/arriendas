@@ -1,4 +1,4 @@
-<link href="/css/newDesign/ratingIndex.css" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/mobile/ratingIndex.css" rel="stylesheet" type="text/css">
 <div class="hidden-xs space-100"></div>
 <div class="row">
     <div class="col-md-offset-2 col-md-8">
