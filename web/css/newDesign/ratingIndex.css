@@ -1,0 +1,19 @@
+body {
+	background-image: url('/images/newDesign/background.jpg');
+}
+
+.rating-option{
+	padding-right: 0px !important;
+	padding-left: 0px !important; 
+}
+
+.turn-touched{
+	background-color: #9C9C9C;
+	border: solid 2px #9C9C9C;
+}
+
+#content{
+	overflow: scroll;
+	height: 600px;
+	overflow-x: hidden;
+}

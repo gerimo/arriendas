@@ -496,7 +496,7 @@ class reservesActions extends sfActions {
 
         if ($request->hasParameter('warranty','payment-group','car','from','to')) {
             $warranty = $request->getPostParameter("warranty", null);
-            $payment  = $request->getPostParameter("payment", null); // Se saco la selección de khipu
+            $payment  = $request->getPostParameter("payment-group", null); // Se saco la selección de khipu
 
             $carId  = $request->getPostParameter("car", null);
             $from   = $request->getPostParameter("from", null);
@@ -659,13 +659,7 @@ class reservesActions extends sfActions {
             $this->redirect('reserve_airport');
         }
 
-        if ($payment == 1) {
-            $this->forward("khipu", "generatePayment");
-        } elseif ($payment == 2) {
-            $this->forward("webpay", "generatePayment");
-        } else {
-            $this->forward404();
-        }
+        $this->forward("khipu", "generatePayment");
     }
 
     public function executeReject (sfWebRequest $request) {
@@ -799,7 +793,7 @@ class reservesActions extends sfActions {
     }
 
     public function executeUploadLicenseWarning (sfWebRequest $request) {
-    
+        $error="";
         $return = array("error" => false);
         $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
         try {            
@@ -829,7 +823,7 @@ class reservesActions extends sfActions {
             $newImageName = time() . "-" . $userId . "." . $ext;
 
             $path = sfConfig::get("sf_web_dir") . '/images/licence/';
-
+            $error = $error." Directorio e fotos: ".$path;
             $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
 
             if (!move_uploaded_file($tmp, $path . $newImageName)) {
@@ -841,6 +835,7 @@ class reservesActions extends sfActions {
             $User->save();
 
             $Reserves = Doctrine_Core::getTable("reserve")->findByUserId($userId);
+            $error = $error." Cantidad de reservas: ".count($Reserves);
             foreach ($Reserves as $Reserve) {
                 if($Reserve->getPayEmailPending()){
                     // Correo arrendatario
@@ -865,13 +860,14 @@ class reservesActions extends sfActions {
                 }
                 $Reserve->save();
             }
-    
+            $error = $error." problemas enviando el mail";
+     
         } catch (Exception $e) {
             $return["error"] = true;
             if ($e->getCode() < 2) {
                 $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo nuevamente más tarde";
             } else {
-                $return["errorMessage"] = $e->getMessage();
+                $return["errorMessage"] = $e->getMessage() . " " . $error;
             }
             error_log("[".date("Y-m-d H:i:s")."] [reserves/uploadLicenseWarning] ERROR: ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
