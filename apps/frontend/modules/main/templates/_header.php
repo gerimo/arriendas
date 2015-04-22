@@ -60,6 +60,7 @@
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="<?php echo url_for('profile/edit') ?>">Mi perfil</a></li>
                                 <li><a href="<?php echo url_for('transactions') ?>">Mis transacciones</a></li>
+                                <li><a href="<?php echo url_for('rating_show_reserves') ?>">Calificaciones</a></li>
                                 <li><a href="<?php echo url_for('profile/changePassword') ?>">Seguridad</a></li>
                                 <li class="divider"></li>
                                 <li><a href="<?php echo url_for('logout') ?>">Salir</a></li>

@@ -12,7 +12,7 @@
                     && $user 
                     && $user->isAuthenticated()
                     && $action != 'warningUploadLicense'
-                    && $action != 'uploadLicense'
+                    && $action != 'uploadLicenseWarning'
                     && $action != 'logout')
             {
                 $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
