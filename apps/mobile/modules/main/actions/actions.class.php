@@ -237,7 +237,7 @@ class mainActions extends sfActions {
                 //exec($comandLicense);
             }
 
-            $finish_message = "Felicitaciones!<br><br>Tu cuenta a sido activada, ahora puedes ingresar con tu nombre de usuario y contrase&ntilde;a. <br><br><b>¿Qué quieres hacer ahora?</b>";
+            $finish_message = "Felicitaciones!<br><br>Tu cuenta ha sido activada, ahora puedes ingresar con tu nombre de usuario y contrase&ntilde;a. <br><br><b>¿Qué quieres hacer ahora?</b>";
             $return["message"] = $finish_message;
             $User->save();
 

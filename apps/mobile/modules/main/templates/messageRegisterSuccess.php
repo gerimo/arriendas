@@ -6,7 +6,7 @@
     <div class="col-md-offset-3 col-md-6">
       	<div class="BCW">
 	    	<h1>¡Felicitaciones!</h1>
-	    	<p class="text-center">Tu cuenta a sido activada, ya puedes ingresar con tu nombre de usuario y contraseña. </p>
+	    	<p class="text-center">Tu cuenta ha sido activada, ya puedes ingresar con tu nombre de usuario y contraseña. </p>
 	    	<br>
 	    	<p class="hacer text-center">
               <b>¿Qué quieres hacer ahora?</b>
