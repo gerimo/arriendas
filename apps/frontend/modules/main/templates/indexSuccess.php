@@ -255,6 +255,13 @@
             }
         });
 
+        var nearToSubway = false;
+        $(".nearToSubway").each(function(){
+            if ($(this).is(':checked')) {
+                nearToSubway = true;
+            }
+        });
+
         var isAirportDelivery = false;
         $(".isAirportDelivery").each(function(){
             if ($(this).is(':checked')) {
@@ -288,7 +295,8 @@
             isLowConsumption: isLowConsumption,
             isMorePassengers: isMorePassengers,
             haveChair: haveChair,
-            isAirportDelivery: isAirportDelivery         
+            isAirportDelivery: isAirportDelivery,
+            nearToSubway: nearToSubway        
         };
 
         /*console.log(parameters);*/
@@ -534,6 +542,7 @@
             <input type="checkbox" name="filter" class="isMorePassengers"> Más de 5 pasajeros
             <input type="checkbox" name="filter" class="haveChair"> Silla Bebé
             <input type="checkbox" name="filter" class="isAirportDelivery"> Auto en aeropuerto
+            <input type="checkbox" name="filter" class="nearToSubway"> Cercano al metro(máximo a 15 minutos)
         </div>
     </div>
 </section>
