@@ -785,6 +785,7 @@ class reservesActions extends sfActions {
         }       
     }
 
+    // méodo en "main actions", (haciendo pruebas)
     public function executeUploadLicenseWarning (sfWebRequest $request) {
         $error="";
         $return = array("error" => false);
