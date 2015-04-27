@@ -9,8 +9,7 @@
         <div class="space-100"></div>
         <div class="col-sm-4 col-md-4">   
             <label>Tipo de Usuario</label>
-            <select class="form-control" id="userType" type="text">
-                    <option value="">--</option>
+            <select class="form-control" id="userType" type="text"> 
                 <?php
                     foreach ($UserTypes as $UserType):
                 ?>
