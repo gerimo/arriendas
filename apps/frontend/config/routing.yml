@@ -318,17 +318,25 @@ paypalCancel:
     url:  /paypal/processPaymentCanceled
     param:  { module: paypal, action: processPaymentCanceled }
 
-webpayReturn:
+webpay_return:
     url:  /webpay/processPayment
     param:  { module: webpay, action: processPayment }
 
-webpayCancel:
+webpay_cancel:
     url:  /webpay/processPaymentCanceled
     param:  { module: webpay, action: processPaymentCanceled }
 
-webpayFinal:
+webpay_final:
     url:  /webpay/processPaymentFinal
     param:  { module: webpay, action: processPaymentFinal }
+
+webpay_reject:
+    url: /pago/webpay/rechazo
+    param: { module: webpay, action: processPaymentRejected }
+
+webpay_failure:
+    url: /pago/webpay/error
+    param: { module: webpay, action: processPaymentFailure }
 
 khipuNotify:
     url:  /khipu/notifyPayment
