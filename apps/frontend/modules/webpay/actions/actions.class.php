@@ -47,6 +47,9 @@ class webpayActions extends sfActions {
                 throw new Exception("Problemas con la API", 1);                
             }
 
+            error_log("initTransactionResponse");
+            error_log(print_r($initTransactionResponse, true));
+
             $wsInitTransactionOutput = $initTransactionResponse->return;
 
             $this->checkOutUrl = $wsInitTransactionOutput->url;
@@ -62,6 +65,7 @@ class webpayActions extends sfActions {
 
     public function executeConfirmPayment(sfWebRequest $request) {
 
+        error_log("ConfirmPayment");
         $this->carMarcaModel = urldecode($request->getParameter("carMarcaModel"));
         $this->duracionReserva = urldecode($request->getParameter("duracionReserva"));
         $montoTotalPagoPorDia = $request->getParameter("duracionReservaPagoPorDia");
@@ -173,8 +177,6 @@ class webpayActions extends sfActions {
         
         $this->setLayout("newIndexLayout");
 
-        error_log("Hola mundo!");
-
         $customer_in_session = $this->getUser()->getAttribute('userid');
         if ($customer_in_session) {
 
@@ -188,17 +190,22 @@ class webpayActions extends sfActions {
             $webpayService = new WebpayService($webpaySettings["url"]);
             $getTransactionResultResponse = $webpayService->getTransactionResult($getTransactionResult);
             $transactionResultOutput = $getTransactionResultResponse->return;
+
+            error_log("transactionResultResponse");
+            error_log(print_r($getTransactionResultResponse, true));
             
+            /*
+             * Resultado de la autenticación para comercios Webpay Plus
+             * TSY: Autenticación exitosa
+             * TSN: autenticación fallida.
+             * TO: Tiempo máximo excedido para autenticación.
+             * ABO: Autenticación abortada por tarjetahabiente.
+             * U3: Error interno en la autenticación.
+             * Puede ser vacío si la transacción no se autentico.
+             */
 
-            /* validamos respuesta */
+            error_log("VCI: ".$transactionResultOutput->VCI);
 
-            /*$xmlResponse = $webpayService->soapClient->__getLastResponse();
-            $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certifacate_server.crt";
-            $soapValidation = new SoapValidation($xmlResponse, $SERVER_CERT_PATH);
-            $validationResult = $soapValidation->getValidationResult();*/
-
-            /*if ($validationResult) {*/
-            error_log(print_r($transactionResultOutput, true));
             if ($transactionResultOutput->VCI == "TSY") {
 
                 /* informo a webpay que se recibio la notificación de transaccion */
@@ -227,13 +234,10 @@ class webpayActions extends sfActions {
                  * -8 Rubro no autorizado.
                  */
 
+                error_log("Response: ".$wsTransactionDetailOutput->responseCode);
+
                 switch ($wsTransactionDetailOutput->responseCode) {
                     case "0":
-                        /* transaccion aprobada */
-                        /*$order = Doctrine_Core::getTable("Transaction")->getTransaction($transactionId);
-                        $this->idReserva = $order->getReserveId();
-                        $reserve = Doctrine_Core::getTable('reserve')->findOneById($this->idReserva);*/
-
                         $Transaction = Doctrine_Core::getTable("Transaction")->find($transactionId);
                         $Reserve     = Doctrine_Core::getTable('Reserve')->find($Transaction->getReserveId());
                         $this->idReserva = $Reserve->getId();
@@ -586,6 +590,7 @@ class webpayActions extends sfActions {
     }
 
     public function executeProcessPaymentFinal(sfWebRequest $request) {
+        error_log("ProcessPaymentFinal");
         $customer_in_session = $this->getUser()->getAttribute('userid');
         if ($customer_in_session) {
             $this->redirect("reserves");
@@ -595,10 +600,12 @@ class webpayActions extends sfActions {
     }
 
     public function executeProcessPaymentFailure(sfWebRequest $request) {
+        error_log("ProcessPaymentFailure");
         $this->setLayout("newIndexLayout");
     }
 
     public function executeProcessPaymentRejected(sfWebRequest $request) {
+        error_log("ProcessPaymentRejected");
         $this->setLayout("newIndexLayout");
     }
 
