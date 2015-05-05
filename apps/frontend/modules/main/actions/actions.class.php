@@ -1024,6 +1024,95 @@ class mainActions extends sfActions {
         return sfView::NONE;
     }
 
+    public function executeUploadLicenseWarning (sfWebRequest $request) {
+        $error="";
+        $return = array("error" => false);
+        $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
+        try {            
+
+            $name = $_FILES[$request->getParameter('file')]['name'];
+            $size = $_FILES[$request->getParameter('file')]['size'];
+            $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
+
+            list($txt, $ext) = explode(".", $name);
+
+            $ext = strtolower($ext);
+            
+            if (strlen($name) == 0) {
+                throw new Exception("Por favor, selecciona una imagen", 2);   
+            }
+                
+            if (!in_array($ext, $valid_formats)) {
+                throw new Exception("Formato de la imagen no permitido", 2);
+            }
+
+            if ($size >= (5 * 1024 * 1024)) { // Image size max 1 MB
+                throw new Exception("La imagen excede el máximo permitido (1 MB)", 2);
+            }
+                
+            $userId = $this->getUser()->getAttribute("userid");
+            
+            $newImageName = time() . "-" . $userId . "." . $ext;
+
+            $path = sfConfig::get("sf_web_dir") . '/images/licence/';
+            $error = $error." Directorio e fotos: ".$path;
+            $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
+
+            if (!move_uploaded_file($tmp, $path . $newImageName)) {
+                throw new Exception("El User ".$userId." tiene problemas para grabar la imagen de su licencia", 1);
+            }
+
+            $User = Doctrine_Core::getTable('User')->find($userId);
+            $User->setDriverLicenseFile("/images/licence/".$newImageName);
+            $User->save();
+
+            $Reserves = Doctrine_Core::getTable("reserve")->findByUserId($userId);
+            $error = $error." Cantidad de reservas: ".count($Reserves);
+            foreach ($Reserves as $Reserve) {
+                if($Reserve->getPayEmailPending()){
+                    // Correo arrendatario
+                    $subject = "La reserva ha sido pagada";
+                    $body    = $this->getPartial('emails/paymentDoneRenter', array('Reserve' => $Reserve));
+                    $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+                    $to      = array($Reserve->getUser()->email => $Reserve->getUser()->firstname." ".$Reserve->getUser()->lastname);
+
+                    $message = Swift_Message::newInstance()
+                        ->setSubject($subject)
+                        ->setBody($body, 'text/html')
+                        ->setFrom($from)
+                        ->setTo($to)
+                        ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
+                        ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
+                        ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'))
+                        ->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
+
+                    error_log("[reserves/uploadLicenseWarning] Enviando email al arrendatario");
+                    $this->getMailer()->send($message);
+                    $Reserve->setPayEmailPending(0);
+                    $Reserve->save();
+                }
+                
+            }
+            $error = $error." problemas enviando el mail";
+     
+        } catch (Exception $e) {
+            $return["error"] = true;
+            if ($e->getCode() < 2) {
+                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo nuevamente más tarde";
+            } else {
+                $return["errorMessage"] = $e->getMessage() . " " . $error;
+            }
+            error_log("[".date("Y-m-d H:i:s")."] [reserves/uploadLicenseWarning] ERROR: ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "reserves/uploadLicenseWarning");
+            }
+        }
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
 	/////////////////////////////////////////////////////////////////////////////
 
     public function executeArriendo(sfWebRequest $request){
