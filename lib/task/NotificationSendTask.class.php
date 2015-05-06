@@ -121,9 +121,7 @@ EOF;
 
                             case 3:
                                 // tipo de notificacion EMAIL USUARIO
-                                $mail    = new Email();
-                                $mailer  = $mail->getMailer();
-                                $message = $mail->getMessage(); 
+
 
                                 $subject = $UserTitle;
                                 $body    = $UserNotificationMessage;
@@ -136,6 +134,8 @@ EOF;
 
                                     $to      = array($User->email => $User->firstname." ".$User->lastname);
                                 }
+
+                                $message = Swift_Message::newInstance();
                                 $message->setSubject($subject);
                                 $message->setBody($body, 'text/html');
                                 $message->setFrom($from);
@@ -143,7 +143,7 @@ EOF;
                                 $message->setReplyTo(array("ayuda@arriendas.cl" => "Ayuda Arriendas.cl"));
                                 //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
                                 
-                                $mailer->send($message);
+                                $this->getMailer()->send($message);
 
                                 $countEmail++;
                                 break;
