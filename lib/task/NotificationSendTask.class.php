@@ -129,7 +129,7 @@ EOF;
 
                                 if ($options["env"] != "prod") {
 
-                                    $to      = array("franco.inostrozah@gmail.com");
+                                    $to      = array("franco.inostrozah@gmail.com", "constanza@arriendas.cl");
                                 } else {
 
                                     $to      = array($User->email => $User->firstname." ".$User->lastname);
