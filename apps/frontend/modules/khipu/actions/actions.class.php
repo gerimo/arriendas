@@ -269,7 +269,7 @@ class khipuActions extends sfActions {
 
                             error_log("[khipu/notifyPayment] Enviando email al arrendatario");
                         } else {
-
+                            $Reserve->setPayEmailPending(1);
                             $subject = "La reserva ha sido pagada";
                             $body    = $this->getPartial('emails/paymentDoneRenterWithoutDriverLicense', array('Renter' => $Renter));
                             $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
