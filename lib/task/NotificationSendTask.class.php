@@ -89,19 +89,12 @@ EOF;
 
                     if($Notification->is_active && $Action->is_active && $Type->is_active) {
                         switch ($Type->id) {
+
                             case 1:
                                 // tipo de notificacion BARRA
                                 // se ejecuta a traves de un filtro
                                 $countBar++;
                                 break;
-
-                            /*case 10:
-                                if($Reserve) {
-                                    // tipo de notificacion BARRA PROPIETARIO
-                                    // se ejecuta a traves de un filtro
-                                    $countBarPropietario++;
-                                }
-                                break;*/
 
                             case 2:
                                 // tipo de notificacion SMS
@@ -114,15 +107,60 @@ EOF;
                                     $UserTitle = "";
                                 }
 
-                                $SMS->send($UserTitle.$UserNotificationMessage, $User->telephone);
+                                if ($options["env"] != "prod") {
+
+                                    $SMS->send($UserTitle.$UserNotificationMessage, "66010666");
+                                } else {
+
+                                    $SMS->send($UserTitle.$UserNotificationMessage, $User->telephone);
+                                }
+                                
 
                                 $countSMS++;
                                 break;
 
+                            case 3:
+                                // tipo de notificacion EMAIL USUARIO
+                                $mail    = new Email();
+                                $mailer  = $mail->getMailer();
+                                $message = $mail->getMessage(); 
+
+                                $subject = $UserTitle;
+                                $body    = $UserNotificationMessage;
+                                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+
+                                if ($options["env"] != "prod") {
+
+                                    $to      = array("franco.inostrozah@gmail.com");
+                                } else {
+
+                                    $to      = array($User->email => $User->firstname." ".$User->lastname);
+                                }
+                                $message->setSubject($subject);
+                                $message->setBody($body, 'text/html');
+                                $message->setFrom($from);
+                                $message->setTo($to);
+                                $message->setReplyTo(array("ayuda@arriendas.cl" => "Ayuda Arriendas.cl"));
+                                //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                                
+                                $mailer->send($message);
+
+                                $countEmail++;
+                                break;
+
+                             /*case 10:
+                                if($Reserve) {
+                                    // tipo de notificacion BARRA PROPIETARIO
+                                    // se ejecuta a traves de un filtro
+                                    $countBarPropietario++;
+                                }
+                                break;*/
+
+
                             /*case 11:
                                 // tipo de notificacion SMS PROPIETARIO
                                 if($Reserve) {
-                                    $SMS = new SMS("Arriendas");
+                                      $SMS = new SMS("Arriendas");
 
                                     // si el titulo es diferente de null o vacío, le añade un salto de linea.
                                     if ($OwnerTitle) {
@@ -135,29 +173,6 @@ EOF;
 
                                     $countSMSPropietario++;
                                 }
-                                break;*/
-
-                            case 3:
-                                // tipo de notificacion EMAIL USUARIO
-                                $mail    = new Email();
-                                $mailer  = $mail->getMailer();
-                                $message = $mail->getMessage(); 
-
-                                $subject = $UserTitle;
-                                $body    = $UserNotificationMessage;
-                                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-                                $to      = array($User->email => $User->firstname." ".$User->lastname);
-
-                                $message->setSubject($subject);
-                                $message->setBody($body, 'text/html');
-                                $message->setFrom($from);
-                                $message->setTo($to);
-                                $message->setReplyTo(array("ayuda@arriendas.cl" => "Ayuda Arriendas.cl"));
-                                //$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
-                                
-                                $mailer->send($message);
-
-                                $countEmail++;
                                 break;
 
                             case 4:
@@ -226,7 +241,7 @@ EOF;
                                 
                                 $mailer->send($message);
                                 $countError++;
-                                break;
+                                break;*/
                               
                             default:
                                 $alreadySent = false;
