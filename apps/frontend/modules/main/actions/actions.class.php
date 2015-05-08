@@ -1012,7 +1012,7 @@ class mainActions extends sfActions {
                 throw new Exception("Formato de la imagen no permitido", 2);
             }
 
-            if ($size >= (5 * 1024 * 1024)) { // Image size max 1 MB
+            if ($size >= (10 * 1024 * 1024)) { // Image size max 1 MB
                 throw new Exception("La imagen excede el máximo permitido (1 MB)", 2);
             }
                 
