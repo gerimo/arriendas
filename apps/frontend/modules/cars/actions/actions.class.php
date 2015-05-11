@@ -717,7 +717,11 @@ class carsActions extends sfActions {
                 
                 $mailer->send($message);
 
+                Notification::make($Car->getUser()->id, 5); 
+
             }
+
+
             
             if ($carId) {
                 if($changeDistance) {
