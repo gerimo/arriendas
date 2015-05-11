@@ -467,7 +467,7 @@ class mainActions extends sfActions {
                 //exec($comandLicense);
             }
 
-            $finish_message = "Felicitaciones!<br><br>Tu cuenta a sido activada, ahora puedes ingresar con tu nombre de usuario y contrase&ntilde;a. <br><br><b>¿Qué quieres hacer ahora?</b>";
+            $finish_message = "Felicitaciones!<br><br>Tu cuenta ha sido activada, ahora puedes ingresar con tu nombre de usuario y contrase&ntilde;a. <br><br><b>¿Qué quieres hacer ahora?</b>";
             $return["message"] = $finish_message;
             $User->save();
 
@@ -1046,7 +1046,7 @@ class mainActions extends sfActions {
                 throw new Exception("Formato de la imagen no permitido", 2);
             }
 
-            if ($size >= (5 * 1024 * 1024)) { // Image size max 1 MB
+            if ($size >= (10 * 1024 * 1024)) { // Image size max 1 MB
                 throw new Exception("La imagen excede el máximo permitido (1 MB)", 2);
             }
                 
