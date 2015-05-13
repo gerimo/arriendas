@@ -392,4 +392,49 @@ class ReserveTable extends Doctrine_Table {
 
     }
 
+    public function findPaidReservesWithoutRating() {
+
+        $q = Doctrine_Core::getTable("Reserve")
+            ->createQuery('R')
+            ->innerJoin('R.Transaction T')
+            ->where('T.completed = 1')
+            ->andWhere('R.confirmed = 1')
+            ->andWhere('R.canceled = 0')
+            ->andWhere('R.rating_id IS NULL');
+
+        return $q->execute();
+
+    }
+
+    public function findPaidReservesByUser($userId) {
+
+        $q = Doctrine_Core::getTable("Reserve")
+            ->createQuery('R')
+            ->innerJoin('R.Transaction T')
+            ->innerJoin('R.Car C')
+            ->where('T.completed = 1')
+            ->andWhere('R.confirmed = 1')
+            ->andWhere('R.canceled = 0')
+            ->andWhere('R.user_id = ? OR C.user_id = ?', array($userId, $userId));
+
+        return $q->execute();
+
+    }
+
+    public function findRatingReservesByUser($userId) {
+
+        $q = Doctrine_Core::getTable("Reserve")
+            ->createQuery('R')
+            ->innerJoin('R.Transaction T')
+            ->innerJoin('R.Car C')
+            ->where('T.completed = 1')
+            ->andWhere('R.confirmed = 1')
+            ->andWhere('R.rating_id IS NOT NULL')
+            ->andWhere('R.canceled = 0')
+            ->andWhere('R.user_id = ? OR C.user_id = ?', array($userId, $userId));
+
+        return $q->execute();
+
+    }
+
 }

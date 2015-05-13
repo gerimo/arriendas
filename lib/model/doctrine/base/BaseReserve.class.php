@@ -35,6 +35,7 @@
  * @property boolean $is_warranty_back
  * @property boolean $is_sinister
  * @property boolean $is_airport_delivery
+ * @property boolean $pay_email_pending
  * 
  * @method integer             getId()          Returns the current record's "id" value
  * @method timestamp           getDate()        Returns the current record's "date" value
@@ -132,6 +133,13 @@ abstract class BaseReserve extends sfDoctrineRecord
              'notnull' => true,
              'default' => 0,
              ));
+
+            $this->hasColumn('pay_email_pending', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
+             'default' => 0,
+             ));
+
         $this->hasColumn('User_id', 'integer', 4, array(
              'type' => 'integer',
              'notnull' => true,
