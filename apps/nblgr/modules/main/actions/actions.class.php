@@ -3,6 +3,32 @@
 class mainActions extends sfActions {
 	
 	public function executeIndex(sfWebRequest $request) {
+
+        $this->NTS = Doctrine_Core::getTable('NotificationType')->findAll();
+        $Actions = Doctrine_Core::getTable('Action')->findByUserTypeId(1);
+        $this->UserTypes = Doctrine_Core::getTable('UserType')->findAll();
+
+        foreach ($Actions as $Action) {
+            $Notifications[] = array (
+                    "id"        => $Action->id,
+                    "name"      => $Action->name,
+                    "title"     => "nada",
+                    "condition" => 0
+                    );
+            foreach ($this->NTS as $NT) {
+                $Notification = Doctrine_Core::getTable('Notification')->findNotification($Action->id, $NT->id);
+                $name2 = substr($Notification->message,0,100)."...";
+                $Notifications[] = array (
+                    "id"        => $Notification->id,
+                    "name"      => $Notification->message,
+                    "name2"     => $name2,
+                    "title"     => $Notification->message_title,
+                    "condition" => 1
+                    );
+            }
+        }
+
+        $this->Notifications = $Notifications;
   	}
 
   	public function executeLogin (sfWebRequest $request) {
@@ -23,7 +49,7 @@ class mainActions extends sfActions {
         if ($request->isMethod("post")) {
 
             try {
-
+                
                 $q = Doctrine::getTable('user')
                 ->createQuery('u')
                 ->where('(u.email = ? OR u.username = ?) and u.password = ?', array($this->getRequestParameter('username'), $this->getRequestParameter('username'), md5($this->getRequestParameter('password'))));
