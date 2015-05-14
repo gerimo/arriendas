@@ -289,4 +289,6 @@ class CarTable extends Doctrine_Table {
 
         return $q->execute();
     }
+
+    
 }

@@ -33,6 +33,6 @@ abstract class BaseGPS extends sfDoctrineRecord {
         parent::setUp();
         
     }
-
+}
 
          

@@ -102,6 +102,18 @@ forgot_password_update:
     url: /contrasena/modificar/:id/:hash
     param: { module: main, action: recover }
 
+gps_pay:
+    url: /gps/pago/:car
+    param: { module: gps, action: payGps}
+
+gps_message:
+    url: /gps/aviso/:car
+    param: { module: gps, action: showMessage }
+
+gps_cancel:
+    url: /gps/cancel
+    param: { module: gps, action: cancelUploadCar }
+
 homepage:
     url: /
     param: { module: main, action: index }
