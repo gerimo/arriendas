@@ -16,6 +16,9 @@ class webpayActions extends sfActions {
             $Reserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
             $Transaction = Doctrine_Core::getTable('Transaction')->find($transactionId);
 
+            $Transaction->setPaymentMethodId(2);
+            $Transaction->save();
+
             $webpaySettings = $this->getSettings();
 
             $wsInitTransactionInput = new wsInitTransactionInput();
@@ -25,6 +28,8 @@ class webpayActions extends sfActions {
             // $wsInitTransactionInput->buyOrder = $Transaction->id; // Se comenta porque en el manual sólo sale esta opción en wsTransactionDetail
             $wsInitTransactionInput->returnURL = $this->generateUrl("webpay_return", array(), true);
             $wsInitTransactionInput->finalURL = $this->generateUrl("webpay_final", array(), true);
+
+            error_log("wsInitTransactionInput: ".print_r($wsInitTransactionInput, true));
 
             $wsTransactionDetail->commerceCode = $webpaySettings["commerceCode"];
             $wsTransactionDetail->buyOrder = $Transaction->id;
@@ -47,8 +52,7 @@ class webpayActions extends sfActions {
                 throw new Exception("Problemas con la API", 1);                
             }
 
-            error_log("initTransactionResponse");
-            error_log(print_r($initTransactionResponse, true));
+            error_log("initTransactionResponse: ".print_r($initTransactionResponse, true));
 
             $wsInitTransactionOutput = $initTransactionResponse->return;
 
