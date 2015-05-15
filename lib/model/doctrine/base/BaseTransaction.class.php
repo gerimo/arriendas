@@ -220,6 +220,13 @@ abstract class BaseTransaction extends sfDoctrineRecord
             'default' => 'null'
             ));
 
+        $this->index('fk_Transaction_PaymentMethod1', array(
+             'fields' => 
+             array(
+              0 => 'payment_method_id',
+             ),
+             ));
+
         $this->option('charset', 'utf8');
         $this->option('type', 'InnoDB');
     }
