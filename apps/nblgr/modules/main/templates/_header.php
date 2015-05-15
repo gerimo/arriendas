@@ -81,7 +81,7 @@
                             </a>        
                         
                             <ul class="dropdown-menu">
-                                <li><a href="<?php echo url_for('homepage   ') ?>">Dueño</a></li>
+                                <li><a href="<?php echo url_for('homepage') ?>">Dueño</a></li>
                                 <li><a href="<?php echo url_for('notification') ?>">Arrendatario</a></li>
                             </ul>               
                         </li>
