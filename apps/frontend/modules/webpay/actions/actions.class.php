@@ -16,13 +16,15 @@ class webpayActions extends sfActions {
             $Reserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
             $Transaction = Doctrine_Core::getTable('Transaction')->find($transactionId);
 
+            $Transaction->setPaymentMethodId(2);
+            $Transaction->save();
+
             $webpaySettings = $this->getSettings();
 
             $wsInitTransactionInput = new wsInitTransactionInput();
             $wsTransactionDetail = new wsTransactionDetail();
 
             $wsInitTransactionInput->wSTransactionType = "TR_NORMAL_WS";
-            // $wsInitTransactionInput->buyOrder = $Transaction->id; // Se comenta porque en el manual sólo sale esta opción en wsTransactionDetail
             $wsInitTransactionInput->returnURL = $this->generateUrl("webpay_return", array(), true);
             $wsInitTransactionInput->finalURL = $this->generateUrl("webpay_final", array(), true);
 
@@ -31,6 +33,7 @@ class webpayActions extends sfActions {
             $wsTransactionDetail->amount = $Reserve->getPrice() + $Reserve->getMontoLiberacion() - $Transaction->getDiscountamount();
 
             $wsInitTransactionInput->transactionDetails = $wsTransactionDetail;
+            error_log("wsInitTransactionInput: ".print_r($wsInitTransactionInput, true));
             $webpayService = new WebpayService($webpaySettings["url"]);
 
             $this->checkOutUrl = "#";
@@ -47,8 +50,7 @@ class webpayActions extends sfActions {
                 throw new Exception("Problemas con la API", 1);                
             }
 
-            error_log("initTransactionResponse");
-            error_log(print_r($initTransactionResponse, true));
+            error_log("initTransactionResponse: ".print_r($initTransactionResponse, true));
 
             $wsInitTransactionOutput = $initTransactionResponse->return;
 
@@ -186,13 +188,13 @@ class webpayActions extends sfActions {
             /* execute payment */
             $getTransactionResult = new getTransactionResult();
             $getTransactionResult->tokenInput = $token;
+            error_log("getTransactionResult: ".print_r($getTransactionResult, true));
 
             $webpayService = new WebpayService($webpaySettings["url"]);
             $getTransactionResultResponse = $webpayService->getTransactionResult($getTransactionResult);
             $transactionResultOutput = $getTransactionResultResponse->return;
 
-            error_log("transactionResultResponse");
-            error_log(print_r($getTransactionResultResponse, true));
+            error_log("getTransactionResultResponse: ".print_r($getTransactionResultResponse, true));
             
             /*
              * Resultado de la autenticación para comercios Webpay Plus
@@ -204,14 +206,14 @@ class webpayActions extends sfActions {
              * Puede ser vacío si la transacción no se autentico.
              */
 
-            error_log("VCI: ".$transactionResultOutput->VCI);
-
             if ($transactionResultOutput->VCI == "TSY") {
 
                 /* informo a webpay que se recibio la notificación de transaccion */
                 $acknowledgeTransaction = new acknowledgeTransaction();
                 $acknowledgeTransaction->tokenInput = $token;
+                error_log("acknowledgeTransaction: ".print_r($acknowledgeTransaction, true));
                 $acknowledgeTransactionResponse = $webpayService->acknowledgeTransaction($acknowledgeTransaction);
+                error_log("acknowledgeTransactionResponse: ".print_r($acknowledgeTransactionResponse, true));
                 
                 $xmlResponse = $webpayService->soapClient->__getLastResponse();
                 $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certifacate_server.crt";
@@ -233,8 +235,6 @@ class webpayActions extends sfActions {
                  * -7 Excede límite diario por transacción.
                  * -8 Rubro no autorizado.
                  */
-
-                error_log("Response: ".$wsTransactionDetailOutput->responseCode);
 
                 switch ($wsTransactionDetailOutput->responseCode) {
                     case "0":

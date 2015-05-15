@@ -1022,6 +1022,9 @@ Transaction:
       default: null
     numero_factura:
       type: integer(7)
+    payment_method_id:
+      type: integer(4)
+      default: null
   relations:
     User:
       class: User
@@ -1054,6 +1057,8 @@ Transaction:
       type: unique
     fk_Transaction_Reserve1:
       fields: [Reserve_id]
+    fk_Transaction_PaymentMethod1:
+      fields: [payment_method_id]
   options:
     charset: utf8
     type: InnoDB
