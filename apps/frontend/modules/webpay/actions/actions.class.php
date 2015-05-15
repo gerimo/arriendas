@@ -25,17 +25,16 @@ class webpayActions extends sfActions {
             $wsTransactionDetail = new wsTransactionDetail();
 
             $wsInitTransactionInput->wSTransactionType = "TR_NORMAL_WS";
-            // $wsInitTransactionInput->buyOrder = $Transaction->id; // Se comenta porque en el manual sólo sale esta opción en wsTransactionDetail
+            $wsInitTransactionInput->buyOrder = $Transaction->id;
             $wsInitTransactionInput->returnURL = $this->generateUrl("webpay_return", array(), true);
             $wsInitTransactionInput->finalURL = $this->generateUrl("webpay_final", array(), true);
-
-            error_log("wsInitTransactionInput: ".print_r($wsInitTransactionInput, true));
 
             $wsTransactionDetail->commerceCode = $webpaySettings["commerceCode"];
             $wsTransactionDetail->buyOrder = $Transaction->id;
             $wsTransactionDetail->amount = $Reserve->getPrice() + $Reserve->getMontoLiberacion() - $Transaction->getDiscountamount();
 
             $wsInitTransactionInput->transactionDetails = $wsTransactionDetail;
+            error_log("wsInitTransactionInput: ".print_r($wsInitTransactionInput, true));
             $webpayService = new WebpayService($webpaySettings["url"]);
 
             $this->checkOutUrl = "#";
@@ -190,13 +189,13 @@ class webpayActions extends sfActions {
             /* execute payment */
             $getTransactionResult = new getTransactionResult();
             $getTransactionResult->tokenInput = $token;
+            error_log("getTransactionResult: ".print_r($getTransactionResultResponse, true));
 
             $webpayService = new WebpayService($webpaySettings["url"]);
             $getTransactionResultResponse = $webpayService->getTransactionResult($getTransactionResult);
             $transactionResultOutput = $getTransactionResultResponse->return;
 
-            error_log("transactionResultResponse");
-            error_log(print_r($getTransactionResultResponse, true));
+            error_log("getTransactionResultResponse: ".print_r($getTransactionResultResponse, true));
             
             /*
              * Resultado de la autenticación para comercios Webpay Plus
@@ -215,7 +214,9 @@ class webpayActions extends sfActions {
                 /* informo a webpay que se recibio la notificación de transaccion */
                 $acknowledgeTransaction = new acknowledgeTransaction();
                 $acknowledgeTransaction->tokenInput = $token;
+                error_log("acknowledgeTransaction: ".print_r($acknowledgeTransaction, true));
                 $acknowledgeTransactionResponse = $webpayService->acknowledgeTransaction($acknowledgeTransaction);
+                error_log("acknowledgeTransactionResponse: ".print_r($acknowledgeTransactionResponse, true));
                 
                 $xmlResponse = $webpayService->soapClient->__getLastResponse();
                 $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certifacate_server.crt";
