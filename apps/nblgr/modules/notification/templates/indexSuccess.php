@@ -2,22 +2,23 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12 col-xs-12">
+                <div class="btn-group pull-right">
+                    <button type="button" class="btn btn-primary">Nueva</button>
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                    <ul class="dropdown-menu" role="menu">
+                      <li><a class="action" data-name="1">Acción</a></li>
+                      <li><a class="action" data-name="2">Tipo de notificación</a></li>
+                    </ul>
+                </div>
                 <div class="widget stacked widget-table action-table">
                     <div class="widget-header">
                         <i class="icon-th-list"></i>
-                        <h3>Notificaciones Arrendatario</h3>
-                        <div style="margin:2px 2px 0 0" class="btn-group pull-right">
-                            <button type="button" class="btn btn-primary">Nueva</button>
-                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-                            <ul class="dropdown-menu" role="menu">
-                              <li><a class="action" data-name="1">Acción</a></li>
-                              <li><a class="action" data-name="2">Tipo de notificación</a></li>
-                            </ul>
-                        </div>
+                        <h3>Notificaciones Dueño</h3>
+                        
                     </div>
 
-                    <div class="widget-content">
-                        <table class="table table-striped table-bordered" id="table">
+                    <div class="widget-content table-responsive">
+                        <table class="table table-striped table-bordered table-hover" id="table">
                             <thead>
                                 <tr>
                                     <th></th>
