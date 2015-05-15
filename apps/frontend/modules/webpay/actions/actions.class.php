@@ -33,7 +33,7 @@ class webpayActions extends sfActions {
             $wsTransactionDetail->amount = $Reserve->getPrice() + $Reserve->getMontoLiberacion() - $Transaction->getDiscountamount();
 
             $wsInitTransactionInput->transactionDetails = $wsTransactionDetail;
-            error_log("wsInitTransactionInput: ".print_r($wsInitTransactionInput, true));
+            error_log(print_r(json_encode($wsInitTransactionInput), true));
             $webpayService = new WebpayService($webpaySettings["url"]);
 
             $this->checkOutUrl = "#";
@@ -50,7 +50,7 @@ class webpayActions extends sfActions {
                 throw new Exception("Problemas con la API", 1);                
             }
 
-            error_log("initTransactionResponse: ".print_r($initTransactionResponse, true));
+            error_log(print_r(json_encode($initTransactionResponse), true));
 
             $wsInitTransactionOutput = $initTransactionResponse->return;
 
@@ -188,13 +188,13 @@ class webpayActions extends sfActions {
             /* execute payment */
             $getTransactionResult = new getTransactionResult();
             $getTransactionResult->tokenInput = $token;
-            error_log("getTransactionResult: ".print_r($getTransactionResult, true));
+            error_log(print_r(json_encode($getTransactionResult), true));
 
             $webpayService = new WebpayService($webpaySettings["url"]);
             $getTransactionResultResponse = $webpayService->getTransactionResult($getTransactionResult);
             $transactionResultOutput = $getTransactionResultResponse->return;
 
-            error_log("getTransactionResultResponse: ".print_r($getTransactionResultResponse, true));
+            error_log(print_r(json_encode($getTransactionResultResponse), true));
             
             /*
              * Resultado de la autenticación para comercios Webpay Plus
@@ -211,9 +211,9 @@ class webpayActions extends sfActions {
                 /* informo a webpay que se recibio la notificación de transaccion */
                 $acknowledgeTransaction = new acknowledgeTransaction();
                 $acknowledgeTransaction->tokenInput = $token;
-                error_log("acknowledgeTransaction: ".print_r($acknowledgeTransaction, true));
+                error_log(print_r(json_encode($acknowledgeTransaction), true));
                 $acknowledgeTransactionResponse = $webpayService->acknowledgeTransaction($acknowledgeTransaction);
-                error_log("acknowledgeTransactionResponse: ".print_r($acknowledgeTransactionResponse, true));
+                error_log(print_r(json_encode($acknowledgeTransactionResponse), true));
                 
                 $xmlResponse = $webpayService->soapClient->__getLastResponse();
                 $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certifacate_server.crt";
