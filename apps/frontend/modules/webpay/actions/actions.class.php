@@ -25,7 +25,6 @@ class webpayActions extends sfActions {
             $wsTransactionDetail = new wsTransactionDetail();
 
             $wsInitTransactionInput->wSTransactionType = "TR_NORMAL_WS";
-            $wsInitTransactionInput->buyOrder = $Transaction->id;
             $wsInitTransactionInput->returnURL = $this->generateUrl("webpay_return", array(), true);
             $wsInitTransactionInput->finalURL = $this->generateUrl("webpay_final", array(), true);
 
@@ -189,7 +188,7 @@ class webpayActions extends sfActions {
             /* execute payment */
             $getTransactionResult = new getTransactionResult();
             $getTransactionResult->tokenInput = $token;
-            error_log("getTransactionResult: ".print_r($getTransactionResultResponse, true));
+            error_log("getTransactionResult: ".print_r($getTransactionResult, true));
 
             $webpayService = new WebpayService($webpaySettings["url"]);
             $getTransactionResultResponse = $webpayService->getTransactionResult($getTransactionResult);
@@ -206,8 +205,6 @@ class webpayActions extends sfActions {
              * U3: Error interno en la autenticación.
              * Puede ser vacío si la transacción no se autentico.
              */
-
-            error_log("VCI: ".$transactionResultOutput->VCI);
 
             if ($transactionResultOutput->VCI == "TSY") {
 
@@ -238,8 +235,6 @@ class webpayActions extends sfActions {
                  * -7 Excede límite diario por transacción.
                  * -8 Rubro no autorizado.
                  */
-
-                error_log("Response: ".$wsTransactionDetailOutput->responseCode);
 
                 switch ($wsTransactionDetailOutput->responseCode) {
                     case "0":
