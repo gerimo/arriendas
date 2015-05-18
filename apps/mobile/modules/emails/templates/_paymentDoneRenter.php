@@ -8,7 +8,7 @@
 
 <p>El dueño tiene 4 horas para aprobar la reserva. Si no lo hace, el sistema te ofrecerá opciones de reemplazo.</p> 
 
-<p>En caso de que el precio del auto de reemplazo sea mayor al pagado, la diferencia será absorbida por arriendas.</p> 
+<p>En caso de que el precio del auto de reemplazo sea mayor, arriendas pondrá un 15% del valor del auto ya pagado.</p> 
 
 <h3>Datos del propietario</h3>
 
