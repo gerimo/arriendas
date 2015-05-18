@@ -51,7 +51,7 @@ EOF;
                     }
 
                 if($hours >= 2 && $hours < 3){
-                    Notification::make($Car->getUser()->id, 12);
+                    Notification::make($Car->getUser()->id, 15);
                 }
             }
         }

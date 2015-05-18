@@ -27,5 +27,8 @@ driverLicenseFileAfterPayFilter:
 hasNotPaidAGPSFilter:
     class: checkHasNotPaidAGPSFilter
 
+notificationBarFilter:
+    class: checkNotificationBarFilter
+
 cache:     ~
 execution: ~

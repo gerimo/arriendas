@@ -6,6 +6,7 @@ class gpsActions extends sfActions {
 
 	public function executeShowMessage(sfWebRequest $request) {
 		$this->setLayout("newIndexLayout");
+
 		$userId = $this->getUser()->getAttribute("userid");
 		$carId = $request->getParameter('car');
 
@@ -19,14 +20,75 @@ class gpsActions extends sfActions {
 		}
 
 		$Gps = Doctrine_core::getTable("gps")->find(1);
-		$this->gps_description = $Gps->getDescription();
-		$this->gps_price = $Gps->getPrice();
+
+		$this->gps_description = $Gps->description;
+		$this->gps_price = $Gps->price;
+		$this->gpsId = $Gps->id;
 
 		$this->carId = $request->getParameter("car");
 	}
 
 	public function executePayGps(sfWebRequest $request) {
-		$this->setLayout("newIndexLayout");
+		
+		$userId = $this->getUser()->getAttribute('userid');        
+		$carId  = $request->getParameter("carId", null);
+        $gpsId   = $request->getParameter("gpsId", null);
+        $gps_price   = $request->getParameter("price", null);
+        $gps_description   = $request->getParameter("description", null);
+        error_log("precio ".$gps_price);
+        $User = Doctrine_Core::getTable('User')->find($userId);
+        $this->forward404If(!$User);
+   		
+   		// chequeo judicial
+        $Gps = Doctrine_core::getTable("gps")->find($gpsId);
+        try {
+
+            if (empty($carId) || $carId == 0 || empty($gpsId) || $gpsId == 0 || empty($gps_price) || $gps_price == 0) {
+                throw new Exception("El User ".$userId." esta intentando pagar pero uno de los campos es nulo. Car: ".$carId.", GPS: ".$gpsId.", Precio: ".$gps_price, 1);
+            }
+
+            if ($Gps->price != $gps_price) {
+                throw new Exception("El User ".$userId." esta intentando pagar pero el precio que visualizó: ".$gps_price.", no coincide con el de la base de datos: ".$Gps->price, 1);
+            }
+
+            if ($User->getBlocked()) {
+                throw new Exception("Rechazado el pago de User ".$userId." (".$User->firstname." ".$User->lastname.") debido a que se encuentra bloqueado, por lo que no esta autorizado para generar pagos", 1);            
+            }
+            
+            $Car = Doctrine_Core::getTable('Car')->find($carId);
+
+            if (!$Car) {
+                throw new Exception("El User ".$userId." esta intentando pagar un gps pero no se encontró el auto.", 1);
+            }
+            
+            if ($Car->has_gps) {
+                throw new Exception("El User ".$userId." esta intentando pagar pero el Car ".$carId." ya posee un GPS.", 1);
+            }
+
+            $GPSTransaction = new GPSTransaction();
+            error_log("pasa");
+            $GPSTransaction->setCarId();
+            $GPSTransaction->setGpsId();
+            $GPSTransaction->setAmount();
+
+            $GPSTransaction->setCompleted(0);
+            $GPSTransaction->setPaidOn(null);
+
+           	$GPSTransaction->save();
+
+        } catch (Exception $e) {
+            error_log("[GPS/payGps] ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "GPS/payGps");
+            }
+            $this->redirect("homepage");
+        }
+
+        
+        $this->getRequest()->setParameter("gps_transactionId", $GPSTransaction->getId());
+        error_log("[GPS/payGPS] Procesando pago por webpay");
+        $this->forward("webpay", "generatePayment");
+
 	}
 
 	public function executeCancelUploadCar(sfWebRequest $request) {

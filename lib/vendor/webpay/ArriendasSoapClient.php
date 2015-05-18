@@ -9,9 +9,8 @@ class ArriendasSoapClient extends SoapClient {
 
     function __doRequest($request, $location, $action, $version, $oneWay = 0) {
 
-
-        $PRIVATE_KEY_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/arriendasVentas.key";
-        $CERT_FILE_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/arriendasVentas.crt";
+        $PRIVATE_KEY_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/arriendas_webpay.key";
+        $CERT_FILE_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/arriendas_webpay.crt";
         $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certificate_server.crt";
 
         $doc = new DOMDocument('1.0');

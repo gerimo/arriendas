@@ -4,7 +4,7 @@ abstract class BaseGPSTransaction extends sfDoctrineRecord {
 
     public function setTableDefinition() {
 
-        $this->setTableName('GPS_transaction');
+        $this->setTableName('gps_transaction');
         
         $this->hasColumn('id', array(
             'type' => 'integer',
@@ -23,6 +23,12 @@ abstract class BaseGPSTransaction extends sfDoctrineRecord {
             'type' => 'integer',
             'notnull' => true,
             'length' => 4,
+        ));
+
+        $this->hasColumn('completed', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
+             'default' => 0,
         ));
 
         $this->hasColumn('paid_on', array(
@@ -57,4 +63,5 @@ abstract class BaseGPSTransaction extends sfDoctrineRecord {
             'onDelete' => 'no action',
             'onUpdate' => 'no action'
         ));
-         
+    }
+} 

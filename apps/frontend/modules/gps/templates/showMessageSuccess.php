@@ -53,14 +53,28 @@
 </div>
 <div class="hidden-xs space-100"></div>																			
 <div class="visible-xs space-50"></div> 
-<div id="id" data-id="<?php echo $carId ?>"></div>
+
+<!-- <div id="id" data-id="<?php echo $carId ?>"></div>
 <div id="description" data-description="<?php echo $gps_description ?>"></div>
 <div id="price" data-price="<?php echo $gps_price ?>"></div>
+<div id="gps-id" data-gpsId="<?php echo $gpsId ?>"></div> -->
+
+<form id="pay_form" method="POST" action="<?php echo url_for('gps_pay') ?>">
+	<input type="hidden" id="carId" name="carId" value="<?php echo $carId ?>"/>
+	<input type="hidden" id="description" name="description" value="<?php echo $gps_description ?>"/>
+	<input type="hidden" id="price" name="price" value="<?php echo $gps_price ?>"/>
+	<input type="hidden" id="gpsId" name="gpsId" value="<?php echo $gpsId ?>"/>
+</form>
+
 <div id="dialog-alert" title="">
 	<p></p>
 </div>
 
 <script>
+	$("#pay").click(function(){
+		$("#pay_form").submit();
+	});
+
 	$("#cancel").click(function(){
 		$("#dialog-alert p").html("¿Estás seguro?");
 	    $("#dialog-alert").attr('title','¡ADVERTENCIA!');
@@ -88,7 +102,7 @@
 	
     function cancel(){
     	var parameters = {
-			"carId"         : $("#id").data("id")
+			"carId"         : $("#carId").val()
 		};
     	$.post("<?php echo url_for('gps_cancel') ?>", parameters, function(r){
 			if (r.error) {

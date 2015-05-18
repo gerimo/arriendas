@@ -13,6 +13,7 @@
                     && $user->isAuthenticated()
                     && $action != 'showMessage'
                     && $action != 'cancelUploadCar'
+                    && $action != 'payGps'
                     && $action != 'logout')
             {
                 

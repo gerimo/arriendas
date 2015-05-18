@@ -7,12 +7,14 @@ class Notification extends BaseNotification {
 
         $Notifications = Doctrine_Core::getTable("Notification")->findByActionId($actionId);
 
+
         foreach ($Notifications as $Notification) {
 
         	$Action = $Notification->getAction();
-            $Type = $Notification->getNotificationType();
+            $Type   = $Notification->getNotificationType();
 
         	if($Notification->is_active && $Action->is_active && $Type->is_active) {
+
 
                 $UserNotification = new UserNotification();
                 $UserNotification->setCreatedAt(date("Y-m-d H:i:s"));
@@ -29,16 +31,16 @@ class Notification extends BaseNotification {
         $User = Doctrine_Core::getTable("user")->find($userId);
         if($User) {
 
-            $message = str_replace("{User.id}", $User->id, $message);
-            $message = str_replace("{User.firstname}", $User->firstname, $message);
-            $message = str_replace("{User.lastname}", $User->lastname, $message);
-            $message = str_replace("{User.birthdate}", $User->birthdate, $message);
-            $message = str_replace("{User.rut}", $User->getRutFormatted(), $message);
-            $message = str_replace("{User.email}", $User->email, $message);
-            $message = str_replace("{User.telephone}", $User->telephone, $message);
-            $message = str_replace("{User.address}", $User->address, $message);
-            $message = str_replace("{User.commune}", $User->getCommune()->name, $message);
-            $message = str_replace("{User.region}", $User->getCommune()->getRegion()->name, $message);
+                $message = str_replace("    ", $User->id, $message);
+                $message = str_replace("{User.firstname}", $User->firstname, $message);
+                $message = str_replace("{User.lastname}", $User->lastname, $message);
+                $message = str_replace("{User.birthdate}", $User->birthdate, $message);
+                $message = str_replace("{User.rut}", $User->getRutFormatted(), $message);
+                $message = str_replace("{User.email}", $User->email, $message);
+                $message = str_replace("{User.telephone}", $User->telephone, $message);
+                $message = str_replace("{User.address}", $User->address, $message);
+                $message = str_replace("{User.commune}", $User->getCommune()->name, $message);
+                $message = str_replace("{User.region}", $User->getCommune()->getRegion()->name, $message);
         }
         if($reserveId) {
             $Reserve = Doctrine_Core::getTable("Reserve")->find($$reserveId);
@@ -56,6 +58,18 @@ class Notification extends BaseNotification {
                     $message = str_replace("{Car.brand}", $Car->getModel()->getBrand()->name, $message);
                     $message = str_replace("{Car.commune}", $Car->getCommune()->name, $message);
                     $message = str_replace("{Car.region}", $Car->getCommune()->getRegion()->name, $message);
+
+                    $UserCar = $Car->getUser();
+                    $message = str_replace("    ", $UserCar->id, $message);
+                    $message = str_replace("{UserCar.firstname}", $UserCar->firstname, $message);
+                    $message = str_replace("{UserCar.lastname}", $UserCar->lastname, $message);
+                    $message = str_replace("{UserCar.birthdate}", $UserCar->birthdate, $message);
+                    $message = str_replace("{UserCar.rut}", $UserCar->getRutFormatted(), $message);
+                    $message = str_replace("{UserCar.email}", $UserCar->email, $message);
+                    $message = str_replace("{UserCar.telephone}", $UserCar->telephone, $message);
+                    $message = str_replace("{UserCar.address}", $UserCar->address, $message);
+                    $message = str_replace("{UserCar.commune}", $UserCar->getCommune()->name, $message);
+                    $message = str_replace("{UserCar.region}", $UserCar->getCommune()->getRegion()->name, $message);
                 }
             }
         }

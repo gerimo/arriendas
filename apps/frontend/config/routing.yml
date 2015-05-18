@@ -86,6 +86,14 @@ data_for_payment:
     url: /data-for-payment
     param: { module: main, action: dataForPayment }
 
+error:
+    url: /debug/error
+    param: { module: main, action: error }
+
+error_nblgr:
+    url: /debug/error/nblgr
+    param: { module: main, action: errorNBLGR }
+
 emails_unsubscribe:
     url: /mailing/darse-de-baja/:user_id/:mailing_id/:signature
     param: { module: emails, action: unsubscribe }
@@ -103,7 +111,7 @@ forgot_password_update:
     param: { module: main, action: recover }
 
 gps_pay:
-    url: /gps/pago/:car
+    url: /gps/pago/
     param: { module: gps, action: payGps}
 
 gps_message:
@@ -161,6 +169,10 @@ news:
 notification_close:
     url: /notification/close
     param: { module: main, action: notificationClose }
+
+notification_register:
+    url: /notification/register
+    param: {module: main, action: notificationRegister}
 
 opportunities:
     url: /oportunidades
@@ -338,17 +350,33 @@ paypalCancel:
     url:  /paypal/processPaymentCanceled
     param:  { module: paypal, action: processPaymentCanceled }
 
-webpayReturn:
+webpay_return:
     url:  /webpay/processPayment
     param:  { module: webpay, action: processPayment }
 
-webpayCancel:
+webpay_gps_return:
+    url:  /webpay/processPaymentGPS
+    param:  { module: webpay, action: processPaymentGPS }
+
+webpay_cancel:
     url:  /webpay/processPaymentCanceled
     param:  { module: webpay, action: processPaymentCanceled }
 
-webpayFinal:
+webpay_final:
     url:  /webpay/processPaymentFinal
     param:  { module: webpay, action: processPaymentFinal }
+
+webpay_gps_final:
+    url:  /webpay/processPaymentFinalGPS
+    param:  { module: webpay, action: processPaymentFinalGPS }
+
+webpay_reject:
+    url: /pago/webpay/rechazo
+    param: { module: webpay, action: processPaymentRejected }
+
+webpay_failure:
+    url: /pago/webpay/error
+    param: { module: webpay, action: processPaymentFailure }
 
 khipuNotify:
     url:  /khipu/notifyPayment

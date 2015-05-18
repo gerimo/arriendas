@@ -50,6 +50,7 @@
  * @method integer         getNumeroFactura()      Returns the current record's "numero_factura" value
  * @method decimal         getReverseDiscount()    Returns the current record's "reverse_discount" value
  * @method boolean         getIsPaidUser()         Returns the current record's "is_paid_user" value
+ * @method integer         getPaymentMethodId()    Returns the current record's "payment_method_id" value
  * 
  * @method Transaction     setId()                 Sets the current record's "id" value
  * @method Transaction     setCar()                Sets the current record's "car" value
@@ -72,7 +73,8 @@
  * @method integer         setTransaccionOriginal()      Sets the current record's "transaccion_original" value
  * @method integer         setNumeroFactura()      Sets the current record's "numero_factura" value
  * @method Transaction     setReverseDiscount()    Sets the current record's "reverse_discount" value
- * @method Transaction     getIsPaidUser()         Sets the current record's "is_paid_user" value
+ * @method Transaction     setIsPaidUser()         Sets the current record's "is_paid_user" value
+ * @method Transaction     setPaymentMethodId()    Sets the current record's "payment_method_id" value
  * 
  * @package    CarSharing
  * @subpackage model
@@ -212,6 +214,18 @@ abstract class BaseTransaction extends sfDoctrineRecord
             'length' => 11,
             'default' => 'null',
             ));
+        $this->hasColumn('payment_method_id', 'integer', null, array(
+            'type' => 'integer',
+            'length' => 11,
+            'default' => 'null'
+            ));
+
+        $this->index('fk_Transaction_PaymentMethod1', array(
+             'fields' => 
+             array(
+              0 => 'payment_method_id',
+             ),
+             ));
 
         $this->option('charset', 'utf8');
         $this->option('type', 'InnoDB');
