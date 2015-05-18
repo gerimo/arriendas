@@ -44,15 +44,13 @@ class webpayActions extends sfActions {
 
                 $wsInitTransactionInput = new wsInitTransactionInput();
                 $wsTransactionDetail = new wsTransactionDetail();
-                error_log("algo**********************************************");
                 $wsInitTransactionInput->wSTransactionType = "TR_NORMAL_WS";
                 $wsInitTransactionInput->returnURL = $this->generateUrl("webpay_gps_return", array(), true);
-                $wsInitTransactionInput->finalURL = $this->generateUrl("webpay_gps_final", array("carId" => $GPSTransaction->getCarId()), true);
+                $wsInitTransactionInput->finalURL = $this->generateUrl("webpay_gps_final", array(), true);
                 
                 $wsTransactionDetail->commerceCode = $webpaySettings["commerceCode"];
                 $wsTransactionDetail->buyOrder = "G".$GPSTransaction->id;
                 $wsTransactionDetail->amount = $GPSTransaction->getAmount();
-                error_log("message");
 
             }
 
@@ -82,6 +80,7 @@ class webpayActions extends sfActions {
             $this->checkOutToken = $wsInitTransactionOutput->token;
 
         } catch (Execption $e) {
+            error_log("PROCESAR PAGO!**************************+");
             error_log("[webpay/generatePayment] ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl") {
                 Utils::reportError($e->getMessage(), "webpay/generatePayment");
@@ -616,7 +615,6 @@ class webpayActions extends sfActions {
     public function executeProcessPaymentGPS(sfWebRequest $request) {
         
         $this->setLayout("newIndexLayout");
-
         $customer_in_session = $this->getUser()->getAttribute('userid');
         if ($customer_in_session) {
 
@@ -660,7 +658,6 @@ class webpayActions extends sfActions {
                 
                 $GPSTransactionId = ltrim($transactionResultOutput->buyOrder, "G");                
                 $wsTransactionDetailOutput = $transactionResultOutput->detailOutput;
-
                 /*
                  * Resultados posibles de la transaccion:
                  * 0 Transacción aprobada.
@@ -676,7 +673,7 @@ class webpayActions extends sfActions {
 
                 switch ($wsTransactionDetailOutput->responseCode) {
                     case "0":
-                        $GPSTransaction = Doctrine_Core::getTable("GPS_transaction")->find($GPSTransactionId);
+                        $GPSTransaction = Doctrine_Core::getTable("GPSTransaction")->find($GPSTransactionId);
                         
                         if (!$GPSTransaction->getCompleted()) {
                     
@@ -690,10 +687,14 @@ class webpayActions extends sfActions {
                             // Notificaciones *******************************************
 
                             //Notification::make($Renter->id, 3, $Reserve->id); // pago
-                            
+                            $User = Doctrine_Core::getTable("user")->find($customer_in_session);
                             $GPSTransaction->setCompleted(true);
                             $GPSTransaction->setPaidOn(date("Y-m-d H:i:s"));
-                            $Transaction->save();
+                            $GPSTransaction->save();
+
+                            $Car = Doctrine_Core::getTable("car")->find($GPSTransaction->car_id);
+                            $Car->setHasGps(1);
+                            $Car->save();
 
                             //$formulario = $Functions->generarFormulario(NULL, $Reserve->token);
                             //$reporte    = $Functions->generarReporte($Reserve->getCar()->id);
@@ -706,9 +707,9 @@ class webpayActions extends sfActions {
 
                             
                             $subject = "Has Comprado un GPS!";
-                            $body    = $this->getPartial('emails/paymentDoneGPS', array('GPSTransaction' => $GPSTransaction));
+                            $body    = $this->getPartial('emails/paymentDoneGPS', array('GPSTransaction' => $GPSTransaction, 'User' => $User));
                             $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
-                            $to      = array($GPSTransaction->getUser()->email => $GPSTransaction->getUser()->firstname." ".$GPSTransaction->getUser()->lastname);
+                            $to      = array($User()->email => $User()->firstname." ".$User()->lastname);
 
                             $message = Swift_Message::newInstance()
                                 ->setSubject($subject)
@@ -718,10 +719,11 @@ class webpayActions extends sfActions {
 
                             
                             $this->getMailer()->send($message);
+                            error_log("[webpay/processPaymentGPS] mensaje enviado");
 
                             // Correo soporte
                             $subject = "Nuevo pago. GPS: ".$GPSTransaction->id;
-                            $body    = $this->getPartial('emails/paymentDoneGPS', array('GPSTransaction' => $GPSTransaction));
+                            $body    = $this->getPartial('emails/paymentDoneGPS', array('GPSTransaction' => $GPSTransaction, 'User' => $User));
                             $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                             $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
 
@@ -733,6 +735,7 @@ class webpayActions extends sfActions {
                             
                             error_log("[webpay/processPaymentGPS] Enviando email a soporte");
                             $this->getMailer()->send($message);
+                            error_log("[webpay/processPaymentGPS] mensaje enviado");
 
                             // Crea la fila calificaciones habilitada para la fecha de término de reserva + 2 horas (solo si no es una extension de otra reserva)
 

@@ -14,6 +14,8 @@
                     && $action != 'showMessage'
                     && $action != 'cancelUploadCar'
                     && $action != 'payGps'
+                    && $action != 'processPaymentGPS'
+                    && $action != 'processPaymentFinalGPS'
                     && $action != 'logout')
             {
                 

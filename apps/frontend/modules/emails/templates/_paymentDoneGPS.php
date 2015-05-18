@@ -1,6 +1,6 @@
 <?php
     $GPSTransaction  = $GPSTransaction;
-    $User = $GPSTransaction->getUser();
+    $User = $User;
 ?>
 
 <p><?php echo $User->firstname ?>, has pagado un gps.</p>
