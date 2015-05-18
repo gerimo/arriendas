@@ -35,7 +35,6 @@ class gpsActions extends sfActions {
         $gpsId   = $request->getParameter("gpsId", null);
         $gps_price   = $request->getParameter("price", null);
         $gps_description   = $request->getParameter("description", null);
-        error_log("precio ".$gps_price);
         $User = Doctrine_Core::getTable('User')->find($userId);
         $this->forward404If(!$User);
    		
@@ -67,9 +66,9 @@ class gpsActions extends sfActions {
 
             $GPSTransaction = new GPSTransaction();
             error_log("pasa");
-            $GPSTransaction->setCarId();
-            $GPSTransaction->setGpsId();
-            $GPSTransaction->setAmount();
+            $GPSTransaction->setCarId($carId);
+            $GPSTransaction->setGpsId($gpsId);
+            $GPSTransaction->setAmount($gps_price);
 
             $GPSTransaction->setCompleted(0);
             $GPSTransaction->setPaidOn(null);

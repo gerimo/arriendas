@@ -44,7 +44,7 @@ class webpayActions extends sfActions {
 
                 $wsInitTransactionInput = new wsInitTransactionInput();
                 $wsTransactionDetail = new wsTransactionDetail();
-
+                error_log("algo**********************************************");
                 $wsInitTransactionInput->wSTransactionType = "TR_NORMAL_WS";
                 $wsInitTransactionInput->returnURL = $this->generateUrl("webpay_gps_return", array(), true);
                 $wsInitTransactionInput->finalURL = $this->generateUrl("webpay_gps_final", array("carId" => $GPSTransaction->getCarId()), true);
