@@ -208,6 +208,13 @@ class webpayActions extends sfActions {
 
             if ($transactionResultOutput->VCI == "TSY") {
 
+                $transactionId = $transactionResultOutput->buyOrder;
+                $Transaction = Doctrine_Core::getTable("Transaction")->find($transactionId);
+
+                if ($Transaction->getCompleted()) {
+                    $this->redirect("webpay_failure");
+                }
+
                 /* informo a webpay que se recibio la notificación de transaccion */
                 $acknowledgeTransaction = new acknowledgeTransaction();
                 $acknowledgeTransaction->tokenInput = $token;
@@ -219,8 +226,9 @@ class webpayActions extends sfActions {
                 $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certifacate_server.crt";
                 $soapValidation = new SoapValidation($xmlResponse, $SERVER_CERT_PATH);
                 $validationResult = $soapValidation->getValidationResult();
+                error_log("VALIDATION");
+                error_log(print_r($validationResult, true));
                 
-                $transactionId = $transactionResultOutput->buyOrder;                
                 $wsTransactionDetailOutput = $transactionResultOutput->detailOutput;
 
                 /*
@@ -238,8 +246,7 @@ class webpayActions extends sfActions {
 
                 switch ($wsTransactionDetailOutput->responseCode) {
                     case "0":
-                        $Transaction = Doctrine_Core::getTable("Transaction")->find($transactionId);
-                        $Reserve     = Doctrine_Core::getTable('Reserve')->find($Transaction->getReserveId());
+                        $Reserve = Doctrine_Core::getTable('Reserve')->find($Transaction->getReserveId());
                         $this->idReserva = $Reserve->getId();
 
                         $montoLiberacion = 0;
