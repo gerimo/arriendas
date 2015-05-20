@@ -5,7 +5,7 @@ class Car extends BaseCar {
   public function getQuantityOfLatestRents($date = null ) { 
 
       if($date == null) {
-        $date = date("Y-m-d H:i:s", strtotime("-3 month"));
+        $date = date("Y-m-d H:i:s", strtotime("-2 month"));
       }
 
       $q = Doctrine_Core::getTable("Reserve")

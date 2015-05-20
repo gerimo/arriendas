@@ -14,14 +14,12 @@ class NotificationAtTheEndOfTheReserveTask extends sfBaseTask {
         $this->name = 'AtTheEndOfTheReserve';
         $this->briefDescription = 'genera las notificaciones a los propietarios que hayan finalizado su primer arriendo hace 30 min';
         $this->detailedDescription = <<<EOF
-The [AtTheEndOfTheReserve|INFO] task does things.
-Call it with:
-
-  [php symfony notification:AtTheEndOfTheReserve|INFO]
+        
+        The [AtTheEndOfTheReserve|INFO] task does things.
+        Call it with:
+        [php symfony notification:AtTheEndOfTheReserve|INFO]
 EOF;
     }
-
-
 
     protected function execute($arguments = array(), $options = array()) {
 
@@ -35,23 +33,29 @@ EOF;
         $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
 
         $Reserves = Doctrine_core::getTable("Reserve")->findPaidReserves();
-        $dateNow = date("Y-m-d H:i:s");
 
         foreach ($Reserves as $Reserve) {
-            $reserveDate = date("Y-m-d H:i:s", strtotime($Reserve->date));
-            
-            $diff = (strtotime($dateNow) - strtotime($reserveDate));
 
-            if($diff > 0) {
-                $years   = floor($diff / (365*60*60*24)); 
-                $months  = floor(($diff - $years * 365*60*60*24) / (30*60*60*24)); 
-                $days    = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
-                $hours   = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24 - $days*60*60*24)/ (60*60)); 
-                $minuts  = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24 - $days*60*60*24 - $hours*60*60)/ 60); 
+            $endReserveDate = date("Y-m-d H:i", strtotime('-30 minute', strtotime($Reserve->getFechaTermino2())));
+            $startReserveDate = date("Y-m-d H:i", strtotime($Reserve->getFechaInicio2()));
+            $beforeReserveDate = date("Y-m-d H:i", strtotime('-1 days', strtotime($Reserve->getFechaInicio2())));
+            $twoHourAfterReserveDate = date("Y-m-d H:i", strtotime('+2 hour', strtotime($Reserve->getFechaInicio2())));
+            $dateNow = date('Y-m-d H:i');
+
+            if ($endReserveDate == $dateNow) {
+                Notification::make($Reserve->getUser()->id, 10, $Reserve->id);
             }
 
-            if($minuts >= 30 && $minuts < 40){
-                Notification::make($Reserve->getUser()->id, 10, $Reserve->id);
+            if($startReserveDate == $dateNow) { 
+                Notification::make($Reserve->getUser()->id, 9,$Reserve->id);
+            }
+
+            if($beforeReserveDate == $dateNow) {
+                Notification::make($Reserve->getUser()->id, 14,$Reserve->id);
+            }
+
+            if($twoHourAfterReserveDate == $dateNow) {
+                Notification::make($Reserve->getUser()->id, 15,$Reserve->id);
             }
         }
         
