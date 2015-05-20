@@ -278,15 +278,4 @@ class CarTable extends Doctrine_Table {
 
         return $q->execute();
     }
-
-    public function findCarsWithoutReserves(){
-        $q = Doctrine_Core::getTable("Car")
-            ->createQuery('C')
-            ->innerJoin('C.Reserve R')
-            ->Where('R.fecha_pago is null')
-            ->andWhere('C.activo = 1')
-            ->andWhere('C.seguro_ok = 4');
-
-        return $q->execute();
-    }
 }

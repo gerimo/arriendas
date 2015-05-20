@@ -517,11 +517,11 @@ class Reserve extends BaseReserve {
         $q->execute();
 
         if(count($q)==1){
+            
             return true;
         }
          
         return false;
     }
-
 
 }
