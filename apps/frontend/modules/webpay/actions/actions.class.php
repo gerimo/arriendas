@@ -445,7 +445,7 @@ class webpayActions extends sfActions {
         error_log("ProcessPaymentFinal");
         $customer_in_session = $this->getUser()->getAttribute('userid');
         if ($customer_in_session) {
-            $this->redirect("webpay_reject");
+            $this->redirect("webpay_failure");
         } else {
             $this->redirect('@homepage');
         }
