@@ -66,26 +66,20 @@
                 <div class="collapse subnav-collapse">
                     <ul class="mainnav">
                     
-                        <!--  <li class="active">
+                        <li class="active" id="uno">
                             <a href="<?php echo url_for('homepage') ?>">
-                                <i class="icon-home"></i>
-                                <span>Home</span>
-                            </a>                        
-                        </li> -->
-                        
-                        <li class="dropdown">                   
-                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="icon-th"></i>
-                                <span>Notificaciones</span>
-                                <b class="caret"></b>
-                            </a>        
-                        
-                            <ul class="dropdown-menu">
-                                <li><a href="<?php echo url_for('notification') ?>">Dueño</a></li>
-                                <li><a href="<?php echo url_for('homepage') ?>">Arrendatario</a></li>
-                            </ul>               
+                                <span>Arrendatario</span>
+                            </a>                        
                         </li>
-                        
+
+                        <li class="" id="dos">
+                            <a href="<?php echo url_for('notification') ?>">
+                                <i class="icon-th"></i>
+                                <span>Dueño</span>
+                            </a>                        
+                        </li>
+
                         <!-- <li class="dropdown">                   
                             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="icon-copy"></i>
@@ -130,5 +124,7 @@
         </div>
     </div>
 </header>
+
+
 
 
