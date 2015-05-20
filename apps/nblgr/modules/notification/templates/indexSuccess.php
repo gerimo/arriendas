@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12 col-xs-12">
-                <div class="btn-group pull-right">
+                <div class="btn-group">
                     <button type="button" class="btn btn-primary">Nueva</button>
                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                     <ul class="dropdown-menu" role="menu">
@@ -31,9 +31,9 @@
                                 <?php foreach ($Notifications as $Notification):?>
                                    <?php if($Notification['condition'] == 0):?>
                                     <tr></tr>
-                                    <th class="text-center"><?php echo $Notification['name']?></th>
+                                    <td class="text-center"><?php echo $Notification['name']?></td>
                                 <?php else:?>
-                                    <th class="text-center area " data-id="<?php echo $Notification['id']?>" data-title="<?php echo $Notification['title']?>" data-name="<?php echo $Notification['name']?>" ><?php echo $Notification['name2']?></th>
+                                    <td class="text-center area " data-id="<?php echo $Notification['id']?>" data-title="<?php echo $Notification['title']?>" data-name="<?php echo $Notification['name']?>" ><?php echo $Notification['name2']?></td>
                                 <?php endif ?>
                                 <?php endforeach ?>
                             </tbody>
@@ -246,8 +246,14 @@
 
 <script>
 
-    $(document).ready(function() {      
+    $(document).ready(function() {  
+
+       
     }); 
+
+    $("#dos").addClass("active");
+    $("#uno").removeClass("active");    
+
 
     $('body').on("click", ".action", function(e){
 

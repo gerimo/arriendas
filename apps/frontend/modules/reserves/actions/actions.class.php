@@ -92,7 +92,7 @@ class reservesActions extends sfActions {
 
              // Notificaciones
             Notification::make($UserCar->id, 8, $Reserve->id); // Confirmar pago
-            Notification::make($User->id, 16, $Reserve->id); // Confirmar pago
+            Notification::make($User->id, 16, $Reserve->id); // reserva pago
 
 
             $Functions  = new Functions;
@@ -339,7 +339,7 @@ class reservesActions extends sfActions {
 
             $OT->save();
 
-            Notification::make($O->getUser()->id, 17, $O->id); // Confirmar pago
+            Notification::make($O->getUser()->id, 17, $O->id); // Cambio de reserva
 
             if (!$this->makeChange($O)) {
                 $return["error"] = true;
