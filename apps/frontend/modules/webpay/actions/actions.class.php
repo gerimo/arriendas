@@ -443,10 +443,9 @@ class webpayActions extends sfActions {
 
     public function executeProcessPaymentFinal(sfWebRequest $request) {
         error_log("ProcessPaymentFinal");
-        error_log("token: ".$request->getPostParameter("token_ws"));
         $customer_in_session = $this->getUser()->getAttribute('userid');
         if ($customer_in_session) {
-            $this->redirect("reserves");
+            $this->redirect("webpay_reject");
         } else {
             $this->redirect('@homepage');
         }
