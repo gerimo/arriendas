@@ -564,7 +564,6 @@ class webpayActions extends sfActions {
 
                             
                             error_log("[webpay/processPaymentGPS] Enviando email al usuario");
-                            $this->getMailer()->send($message);
 
                             
                             $subject = "Has Comprado un GPS!";
