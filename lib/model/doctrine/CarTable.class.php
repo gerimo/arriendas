@@ -279,6 +279,7 @@ class CarTable extends Doctrine_Table {
         return $q->execute();
     }
 
+
     public function findCarsWithoutReserves(){
         $q = Doctrine_Core::getTable("Car")
             ->createQuery('C')
@@ -291,4 +292,5 @@ class CarTable extends Doctrine_Table {
     }
 
     
+
 }

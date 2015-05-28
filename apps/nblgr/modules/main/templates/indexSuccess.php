@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12 col-xs-12">
-                <div style="margin:2px 2px 0 0" class="btn-group pull-right">
+                <div style="margin:2px 2px 0 0" class="btn-group">
                     <button type="button" class="btn btn-primary">Nueva</button>
                     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                     <ul class="dropdown-menu" role="menu">
@@ -245,8 +245,13 @@
 
 <script>
 
-    $(document).ready(function() {      
+    $(document).ready(function() {   
+
+               
     }); 
+
+    $("#uno").addClass("active");
+    $("#dos").removeClass("active");
 
     $('body').on("click", ".action", function(e){
 
