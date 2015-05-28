@@ -111,7 +111,7 @@ forgot_password_update:
     param: { module: main, action: recover }
 
 gps_pay:
-    url: /gps/pago/:car
+    url: /gps/pago/
     param: { module: gps, action: payGps}
 
 gps_message:
@@ -354,13 +354,10 @@ webpay_return:
     url:  /webpay/processPayment
     param:  { module: webpay, action: processPayment }
 
-<<<<<<< HEAD
 webpay_gps_return:
     url:  /webpay/processPaymentGPS
     param:  { module: webpay, action: processPaymentGPS }
 
-=======
->>>>>>> dev
 webpay_cancel:
     url:  /webpay/processPaymentCanceled
     param:  { module: webpay, action: processPaymentCanceled }
@@ -369,13 +366,10 @@ webpay_final:
     url:  /webpay/processPaymentFinal
     param:  { module: webpay, action: processPaymentFinal }
 
-<<<<<<< HEAD
 webpay_gps_final:
     url:  /webpay/processPaymentFinalGPS
     param:  { module: webpay, action: processPaymentFinalGPS }
 
-=======
->>>>>>> dev
 webpay_reject:
     url: /pago/webpay/rechazo
     param: { module: webpay, action: processPaymentRejected }
