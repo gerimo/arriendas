@@ -33,6 +33,11 @@ abstract class BaseAction extends sfDoctrineRecord {
             'notnull' => true
         ));
 
+        $this->hasColumn('user_type_id', array(
+            'type' => 'integer',
+            'length' => 4 
+        ));
+
         $this->option('charset', 'utf8');
         $this->option('type', 'InnoDB');
     }
@@ -44,6 +49,13 @@ abstract class BaseAction extends sfDoctrineRecord {
         $this->hasMany('Notifications as Notification', array(
              'local' => 'id',
              'foreign' => 'action_id'
+        ));
+
+        $this->hasOne('UserType', array(
+            'local' => 'user_type_id',
+            'foreign' => 'id',
+            'onDelete' => 'no action',
+            'onUpdate' => 'no action'
         ));
     }
 }

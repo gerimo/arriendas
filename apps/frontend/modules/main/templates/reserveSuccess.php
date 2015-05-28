@@ -242,7 +242,7 @@
                 <!-- Medio de pago -->
                 <h2><span class="num">3</span> MEDIO DE PAGO</h2>
                 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                    <!-- <div class="panel panel-default">
+                    <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="headingTwo">
                             <h4 class="panel-title">
                                 <a class="payment btn-block" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
@@ -257,7 +257,7 @@
                                 <p class="text-center"><img src="/images/newDesign/payments/webpayCyD.jpg" style="width: 33%"></p>
                             </div>
                         </div>
-                    </div> -->
+                    </div>
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="headingOne">
                             <h4 class="panel-title">

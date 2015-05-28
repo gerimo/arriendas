@@ -88,9 +88,12 @@ class reservesActions extends sfActions {
 
             // Correo de notificación
             $User    = $Reserve->getUser();
+            $UserCar     = $Reserve->getCar()->getUser();;
 
              // Notificaciones
-            Notification::make($User->id, 14, $Reserve->id); // Confirmar pago
+            Notification::make($UserCar->id, 8, $Reserve->id); // Confirmar pago
+            Notification::make($User->id, 16, $Reserve->id); // reserva pago
+
 
             $Functions  = new Functions;
             $formulario = $Functions->generarFormulario(NULL, $Reserve->token);
@@ -333,7 +336,10 @@ class reservesActions extends sfActions {
                 $OT->setReverseDiscount($originalCarPrice - $carPrice);
             }
 
+
             $OT->save();
+
+            Notification::make($O->getUser()->id, 17, $O->id); // Cambio de reserva
 
             if (!$this->makeChange($O)) {
                 $return["error"] = true;
@@ -488,9 +494,9 @@ class reservesActions extends sfActions {
 
         $userId = $this->getUser()->getAttribute('userid');        
 
-        if ($request->hasParameter('warranty','payment-group','car','from','to')) {
+        if ($request->hasParameter('warranty','payment','car','from','to')) {
             $warranty = $request->getPostParameter("warranty", null);
-            $payment  = $request->getPostParameter("payment-group", null); // Se saco la selección de khipu
+            $payment  = $request->getPostParameter("payment", null); // Se saco la selección de khipu
 
             $carId  = $request->getPostParameter("car", null);
             $from   = $request->getPostParameter("from", null);
@@ -653,7 +659,13 @@ class reservesActions extends sfActions {
             $this->redirect('reserve_airport');
         }
 
-        $this->forward("khipu", "generatePayment");
+        if ($payment == 1) {
+            $this->forward("khipu", "generatePayment");
+        } elseif ($payment == 2) {
+            $this->forward("webpay", "generatePayment");
+        } else {
+            $this->forward404("No se encontró el medio de pago");
+        }
     }
 
     public function executeReject (sfWebRequest $request) {
@@ -674,9 +686,10 @@ class reservesActions extends sfActions {
             $Reserve->setCanceled(true);
 
             $User = $Reserve->getUser();
+            $CarUser = $Reserve->getCar()->getUser();
 
              // Notificaciones
-            Notification::make($User->id, 15, $Reserve->id); // Rechazar pago
+            Notification::make($CarUser->id, 7, $Reserve->id); // Rechazar pago
 
             $message = Swift_Message::newInstance();
             $message->setSubject("La reserva ha sido rechazada");

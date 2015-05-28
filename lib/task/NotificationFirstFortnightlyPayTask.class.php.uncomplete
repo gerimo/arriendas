@@ -14,10 +14,10 @@ class NotificationFirstFortnightlyPayTask extends sfBaseTask {
         $this->name = 'FirstFortnightlyPay';
         $this->briefDescription = 'genera las notificaciones a los propietarios que posean pagos pagos a favor en quincena';
         $this->detailedDescription = <<<EOF
-The [FirstFortnightlyPay|INFO] task does things.
-Call it with:
+        The [FirstFortnightlyPay|INFO] task does things.
+        Call it with:
 
-  [php symfony notification:AtThreeHoursOfTheEnd|INFO]
+        [php symfony notification:NotificationFirstFortnightlyPay|INFO]
 EOF;
     }
 
@@ -34,27 +34,19 @@ EOF;
         $databaseManager = new sfDatabaseManager($this->configuration);
         $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
 
-        $Reserves = Doctrine_core::getTable("Reserve")->findByConfirmed(0);
-        $dateNow = date("Y-m-d H:i:s");
-
+        $Reserves = Doctrine_core::getTable("Reserve")->findByConfirmed(1);
+        $date = date("Y-m-d H:i:s", strtotime("2014-01-01"));
+        $c = 0;
         foreach ($Reserves as $Reserve) {
-            if($Reserve->fecha_pago) {
-                $reserveDate = date("Y-m-d H:i:s", strtotime($Reserve->getFechaTermino()));
-                
-                $diff = (strtotime($dateNow) - strtotime($reserveDate));
 
-                    if($diff > 0) {
-                        $years   = floor($diff / (365*60*60*24)); 
-                        $months  = floor(($diff - $years * 365*60*60*24) / (30*60*60*24)); 
-                        $days    = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
-                        $hours   = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24 - $days*60*60*24)/ (60*60)); 
-                    }
+            $Car = $reserve->getCar();
+            $User = $Car->getUser();   
+            if($Car->getQuantityOfLatestRents($date) == 1) {
 
-                if($hours >= 3 && $hours < 4){
-                    Notification::make($Car->getUser()->id, 19);
-                }
+                $c++;
             }
         }
-        
+
+        $this->log($c);
     }
 }

@@ -683,9 +683,6 @@ class carsActions extends sfActions {
 
             $Car->save();
 
-            // Notificaciones
-            Notification::make($idUsuario, 8);
-
 
              if($send == 1){
                 // Correo de notificación de un nuevo vehículo a soporte de arriendas
@@ -720,7 +717,11 @@ class carsActions extends sfActions {
                 
                 $mailer->send($message);
 
+                Notification::make($Car->getUser()->id, 5); 
+
             }
+
+
             
             if ($carId) {
                 if($changeDistance) {

@@ -14,10 +14,10 @@ class NotificationCarsWithoutVerificationTask extends sfBaseTask {
         $this->name = 'CarsWithoutVerification';
         $this->briefDescription = 'genera las notificaciones a los usuarios que posean autos sin verificacion por mas de 10 dias';
         $this->detailedDescription = <<<EOF
-The [CarsWithoutVerification|INFO] task does things.
-Call it with:
+        The [CarsWithoutVerification|INFO] task does things.
+        Call it with:
 
-  [php symfony notification:CarsWithoutVerification|INFO]
+        [php symfony notification:CarsWithoutVerification|INFO]
 EOF;
     }
 
@@ -35,21 +35,15 @@ EOF;
         $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
 
         $Cars = Doctrine_core::getTable("Car")->findByNotSeguroOk();
-        $dateNow = date("Y-m-d H:i:s");
 
         foreach ($Cars as $Car) {
-            $carDate = date("Y-m-d H:i:s", strtotime($Car->fecha_subida));
-            
-            $diff = abs(strtotime($dateNow) - strtotime($carDate));
 
-                $years   = floor($diff / (365*60*60*24)); 
-                $months  = floor(($diff - $years * 365*60*60*24) / (30*60*60*24)); 
-                $days    = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+            $dateCar = date("Y-m-d", strtotime('+10 days', strtotime($Car->fecha_subida)));
+            $dateNow = date('Y-m-d');
 
-            if($days == 10){
-                Notification::make($Car->getUser()->id, 9);
+            if($dateNow == $dateCar){
+                Notification::make($Car->getUser()->id, 12);
             }
         }
-        
     }
 }

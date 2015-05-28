@@ -24,8 +24,13 @@ completeRegisterCar:
 driverLicenseFileAfterPayFilter:
     class: checkDriverLicenseFileAfterPayFilter
 
+
 hasNotPaidAGPSFilter:
     class: checkHasNotPaidAGPSFilter
+
+notificationBarFilter:
+    class: checkNotificationBarFilter
+
 
 cache:     ~
 execution: ~
