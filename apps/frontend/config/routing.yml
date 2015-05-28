@@ -110,6 +110,18 @@ forgot_password_update:
     url: /contrasena/modificar/:id/:hash
     param: { module: main, action: recover }
 
+gps_pay:
+    url: /gps/pago/
+    param: { module: gps, action: payGps}
+
+gps_message:
+    url: /gps/aviso/:car
+    param: { module: gps, action: showMessage }
+
+gps_cancel:
+    url: /gps/cancel
+    param: { module: gps, action: cancelUploadCar }
+
 homepage:
     url: /
     param: { module: main, action: index }
@@ -342,6 +354,10 @@ webpay_return:
     url:  /webpay/processPayment
     param:  { module: webpay, action: processPayment }
 
+webpay_gps_return:
+    url:  /webpay/processPaymentGPS
+    param:  { module: webpay, action: processPaymentGPS }
+
 webpay_cancel:
     url:  /webpay/processPaymentCanceled
     param:  { module: webpay, action: processPaymentCanceled }
@@ -349,6 +365,10 @@ webpay_cancel:
 webpay_final:
     url:  /webpay/processPaymentFinal
     param:  { module: webpay, action: processPaymentFinal }
+
+webpay_gps_final:
+    url:  /webpay/processPaymentFinalGPS
+    param:  { module: webpay, action: processPaymentFinalGPS }
 
 webpay_reject:
     url: /pago/webpay/rechazo

@@ -1,0 +1,21 @@
+body {
+    background-image: url('/images/newDesign/background.jpg');
+}
+
+.foot-cancel{
+	font-size: 11px;
+  	margin-bottom: -18px;
+}
+
+.image{
+	margin-bottom: 0px;
+	margin-top: 20px;
+}
+
+hr{
+	margin-top: 5px;
+}
+
+.detail{
+	height: 23px;
+}
