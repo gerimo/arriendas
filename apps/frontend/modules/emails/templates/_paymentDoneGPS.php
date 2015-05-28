@@ -1,5 +1,6 @@
 <?php
     $GPSTransaction  = $GPSTransaction;
+    $GPS = Doctrine_Core::getTable("gps")->find($GPSTransaction->gps_id);
     $User = $User;
 ?>
 
@@ -14,7 +15,7 @@
 <table>
     <tr>
         <th style='text-align: left'>Descripción</th>
-        <td><?php echo $GPSTransaction->description ?></td>
+        <td><?php echo $GPS->description ?></td>
     </tr>
     <tr>
         <th style='text-align: left'>Precio</th>
