@@ -37,12 +37,18 @@ EOF;
         $Cars = Doctrine_core::getTable("Car")->findBySeguroOkAndActivo(4,1);
 
         foreach ($Cars as $Car) {
-            $this->log($Car->getUser()->id);
-            if ($Car->getQuantityOfLatestRents() == 0) {
 
+            $Reserve = Doctrine_core::getTable("reserve")->findTheLastReserves($Car->id);
+
+            $reserveDate = date("Y-m-d", strtotime('+2 month', strtotime($Reserve->fecha_reserva)));
+            $dateNow = date('Y-m-d');
+
+            if ($reserveDate == $dateNow) {
+                $this->log($Car->id);
+                $this->log($Reserve->id);
                 Notification::make($Car->getUser()->id, 11);
-
             }
+            
         }  
     }
 }

@@ -397,4 +397,15 @@ class ReserveTable extends Doctrine_Table {
 
         return $q->execute();
     }
+
+    public function findTheLastReserves($carId) {
+
+        $q = Doctrine_Core::getTable("Reserve")
+            ->createQuery('R')
+            ->where('R.car_id = ?', $carId)
+            ->orderBy('R.id DESC')
+            ->limit(1);
+
+        return $q->fetchOne();
+    }
 }
