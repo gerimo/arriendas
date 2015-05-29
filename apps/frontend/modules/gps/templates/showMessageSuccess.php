@@ -34,7 +34,7 @@
                     	<span class="pull-right">$<span class="price"><?php echo $gps_price ?></span></span>TOTAL
                 	</div>
 
-	            	<div class="hidden-xs space-20"></div>
+	            	<div class="hidden-xs space-40"></div>
 
 	            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                     <div class="panel panel-default">
@@ -87,7 +87,7 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="hidden-xs space-20"></div>
                 	<div class="">
 		            	<div class="row">
 	            			<a class="btn btn-block btn-a-action" id="pay">¡Comprar!</a>
