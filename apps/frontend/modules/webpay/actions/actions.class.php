@@ -564,13 +564,12 @@ class webpayActions extends sfActions {
 
                             
                             error_log("[webpay/processPaymentGPS] Enviando email al usuario");
-                            $this->getMailer()->send($message);
 
                             
                             $subject = "Has Comprado un GPS!";
                             $body    = $this->getPartial('emails/paymentDoneGPS', array('GPSTransaction' => $GPSTransaction, 'User' => $User));
                             $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
-                            $to      = array($User()->email => $User()->firstname." ".$User()->lastname);
+                            $to      = array($User->email => $User->firstname." ".$User->lastname);
 
                             $message = Swift_Message::newInstance()
                                 ->setSubject($subject)

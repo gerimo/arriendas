@@ -339,11 +339,8 @@ class reservesActions extends sfActions {
 
             $OT->save();
 
-<<<<<<< HEAD
-            Notification::make($O->getUser()->id, 17, $O->id); // Confirmar pago
-=======
             Notification::make($O->getUser()->id, 17, $O->id); // Cambio de reserva
->>>>>>> dev
+
 
             if (!$this->makeChange($O)) {
                 $return["error"] = true;
