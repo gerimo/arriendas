@@ -7,11 +7,14 @@
 	<div class="content">
 	    <div class="col-md-offset-2 col-md-8">
 	        <div class="BCW clearfix">
-	            <h1 class="text-center">¡ADVERTENCIA!</h1>
+	            <h1 class="text-center">¡ENTREGA DE TU GPS!</h1>
             	<div class="row">
 	            	<p class="text-center thumbnail">
-		            	Desde el 15 de Mayo del 2015, <a href="www.arriendas.cl">Arriendas</a> exije que adquieras un sistema de rastreo por GPS.<br>
+	            		<a href="www.arriendas.cl">Arriendas</a> exije que adquieras un sistema de rastreo por GPS. 
 		            	Esto, para garantizar una mayor seguridad en tus arriendos.<br><br>
+
+	            		Si devuelves el equipo GPS, puedes solicitar la devolución del dinero.<br>
+	            		 El equipo <b>NO</b> tiene costos fijos mensuales adicionales.
 					</p>
 	            </div>
 
