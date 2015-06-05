@@ -124,7 +124,7 @@ EOF;
 
 
                                 $subject = $UserTitle;
-                                $body    = $UserNotificationMessage;
+                                $body    = nl2br($UserNotificationMessage);
                                 $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
 
                                 if ($options["env"] != "prod") {

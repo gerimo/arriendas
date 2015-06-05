@@ -341,6 +341,7 @@ class reservesActions extends sfActions {
 
             Notification::make($O->getUser()->id, 17, $O->id); // Cambio de reserva
 
+
             if (!$this->makeChange($O)) {
                 $return["error"] = true;
                 $return["errorMessage"] = "No se pudo realizar el cambio. Por favor, intentalo nuevamente más tarde";

@@ -21,6 +21,8 @@ class NotificationAtTheEndOfTheReserveTask extends sfBaseTask {
 EOF;
     }
 
+
+
     protected function execute($arguments = array(), $options = array()) {
 
         $config = ProjectConfiguration::getApplicationConfiguration("frontend", "prod", TRUE);
