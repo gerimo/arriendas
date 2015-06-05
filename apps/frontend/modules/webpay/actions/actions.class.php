@@ -62,13 +62,15 @@ class webpayActions extends sfActions {
             $initTransactionResponse = $webpayService->initTransaction(
                     array("wsInitTransactionInput" => $wsInitTransactionInput)
             );
+
             $xmlResponse = $webpayService->soapClient->__getLastResponse();
+
             $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certificate_server.crt";
             $soapValidation = new SoapValidation($xmlResponse, $SERVER_CERT_PATH);
             $validationResult = $soapValidation->getValidationResult();
 
             if (!$validationResult) {
-                throw new Exception("Problemas con la API", 1);                
+                $this->redirect("webpay_reject");
             }
 
             error_log(print_r(json_encode($initTransactionResponse), true));
@@ -79,7 +81,6 @@ class webpayActions extends sfActions {
             $this->checkOutToken = $wsInitTransactionOutput->token;
 
         } catch (Execption $e) {
-            error_log("PROCESAR PAGO!**************************+");
             error_log("[webpay/generatePayment] ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl") {
                 Utils::reportError($e->getMessage(), "webpay/generatePayment");
@@ -217,6 +218,16 @@ class webpayActions extends sfActions {
             $transactionResultOutput = $getTransactionResultResponse->return;
 
             error_log(print_r(json_encode($getTransactionResultResponse), true));
+
+            $xmlResponse = $webpayService->soapClient->__getLastResponse();
+            
+            $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certificate_server.crt";
+            $soapValidation = new SoapValidation($xmlResponse, $SERVER_CERT_PATH);
+            $validationResult = $soapValidation->getValidationResult();
+
+            if (!$validationResult) {
+                $this->redirect("webpay_reject");                
+            }
             
             /*
              * Resultado de la autenticación para comercios Webpay Plus
