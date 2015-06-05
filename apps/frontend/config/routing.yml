@@ -378,6 +378,10 @@ webpay_failure:
     url: /pago/webpay/error
     param: { module: webpay, action: processPaymentFailure }
 
+khipuNotifyGPS:
+    url:  /khipu/notifyPaymentGPS
+    param:  { module: khipu, action: notifyPaymentGPS }
+
 khipuNotify:
     url:  /khipu/notifyPayment
     param:  { module: khipu, action: notifyPayment }

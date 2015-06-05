@@ -37,7 +37,6 @@ class webpayActions extends sfActions {
                 $wsTransactionDetail->amount = $Reserve->getPrice() + $Reserve->getMontoLiberacion() - $Transaction->getDiscountamount();
 
             } else {
-                error_log("intentando procesar pago");
                 $GPSTransaction = Doctrine_Core::getTable("GPSTransaction")->find($GPSTransactionId);
 
                 $webpaySettings = $this->getSettings();

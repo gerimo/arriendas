@@ -35,9 +35,11 @@ class gpsActions extends sfActions {
         $gpsId   = $request->getParameter("gpsId", null);
         $gps_price   = $request->getParameter("price", null);
         $gps_description   = $request->getParameter("description", null);
+        $payment  = $request->getPostParameter("payment", null);
         $User = Doctrine_Core::getTable('User')->find($userId);
         $this->forward404If(!$User);
    		
+        error_log($payment);
    		// chequeo judicial
         $Gps = Doctrine_core::getTable("gps")->find($gpsId);
         try {
@@ -64,6 +66,10 @@ class gpsActions extends sfActions {
                 throw new Exception("El User ".$userId." esta intentando pagar pero el Car ".$carId." ya posee un GPS.", 1);
             }
 
+            if (!$payment) {
+                throw new Exception("El User ".$userId." esta intentando pagar un gps pero no se especifico el medio de pago", 1);
+            }
+
             $GPSTransaction = new GPSTransaction();
             error_log("pasa");
             $GPSTransaction->setCarId($carId);
@@ -85,8 +91,17 @@ class gpsActions extends sfActions {
 
         
         $this->getRequest()->setParameter("gps_transactionId", $GPSTransaction->getId());
-        error_log("[GPS/payGPS] Procesando pago por webpay");
-        $this->forward("webpay", "generatePayment");
+        
+
+        if ($payment == 2) {
+            error_log("[GPS/payGPS] Procesando pago por Khipu");
+            $this->forward("khipu", "generatePayment");
+        } elseif ($payment == 1) {
+            error_log("[GPS/payGPS] Procesando pago por webpay");
+            $this->forward("webpay", "generatePayment");
+        } else {
+            $this->forward404("No se encontró el medio de pago");
+        }
 
 	}
 
