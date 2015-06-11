@@ -800,7 +800,7 @@ class reservesActions extends sfActions {
                             $this->sharesType = "Sin cuotas";
                         } elseif ($oT->webpayType == "VC") {
                             $this->sharesType = "Cuotas normales";
-                        } else ($oT->webpayType == "SI") {
+                        } else {
                             $this->sharesType = "Sin interés";
                         }
 
