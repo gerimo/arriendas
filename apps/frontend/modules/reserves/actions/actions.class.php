@@ -785,6 +785,32 @@ class reservesActions extends sfActions {
                     $this->durationFrom   = $reserve->getFechaInicio2();
                     $this->durationTo     = $reserve->getFechaTermino2();
 
+                    $oT = $reserve->getTransaction();
+
+                    $this->paymentMethodId = $oT->paymentMethodId;
+
+                    if ($oT->paymentMethodId == 2) {
+
+                        $this->payType = "Crédito";
+
+                        if ($oT->webpayType == "VD") {
+                            $this->payType = "Débito";
+                            $this->sharesType = "Venta débito";
+                        } elseif ($oT->webpayType == "VN") {
+                            $this->sharesType = "Sin cuotas";
+                        } elseif ($oT->webpayType == "VC") {
+                            $this->sharesType = "Cuotas normales";
+                        } else ($oT->webpayType == "SI") {
+                            $this->sharesType = "Sin interés";
+                        }
+
+                        $this->sharesNumber = $oT->webpaySharesNumber;
+                        $this->authorization = $oT->webpayAuthorization;
+                        $this->lastDigits = $oT->webpayLastDigits;
+
+                        $this->reserveId = $reserve->id;
+                    }
+
                 } else {
                     echo "No hay compras hechas para ser pagadas (Error de monto invalido)";
                     $this->_log("Pago", "Error", "Usuario: " . $customer_in_session . ". Order ID: " . $order->getId());

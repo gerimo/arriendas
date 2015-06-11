@@ -70,7 +70,7 @@ class webpayActions extends sfActions {
             $validationResult = $soapValidation->getValidationResult();
 
             if (!$validationResult) {
-                $this->redirect("webpay_reject");
+                $this->redirect("webpay_failure");
             }
 
             error_log(print_r(json_encode($initTransactionResponse), true));
@@ -226,7 +226,7 @@ class webpayActions extends sfActions {
             $validationResult = $soapValidation->getValidationResult();
 
             if (!$validationResult) {
-                $this->redirect("webpay_reject");                
+                $this->redirect("webpay_failure");                
             }
             
             /*
@@ -283,6 +283,14 @@ class webpayActions extends sfActions {
                         $Transaction = Doctrine_Core::getTable("Transaction")->find($transactionId);
                         $Reserve     = Doctrine_Core::getTable('Reserve')->find($Transaction->getReserveId());
                         $this->idReserva = $Reserve->getId();
+
+                        $wsTransactionCardDetail = $transactionResultOutput->cardDetail;
+
+                        $Transaction->setWebpayType($wsTransactionDetailOutput->paymentTypeCode);
+                        $Transaction->setWebpaySharesNumber($wsTransactionDetailOutput->sharesNumber);
+                        $Transaction->setWebpayAuthorization($wsTransactionDetailOutput->authorizationCode);
+                        $Transaction->setWebpayLastDigits($wsTransactionCardDetail->cardNumber);
+                        $Transaction->save();
 
                         $montoLiberacion = 0;
                         if ($Reserve->getLiberadoDeGarantia()) {
@@ -456,13 +464,15 @@ class webpayActions extends sfActions {
                         /* transaccion rechazada por el medio de pago */
                         $msg = "Transaccion #:" . $transactionId . " fue rechazada.";
                         $this->_log("Pago", "Transaction Rejected", $msg);
-                        $this->redirect("webpay_reject");
+                        $this->getRequest()->setParameter("reserveId", $Transaction->getReserve()->getId());
+                        $this->forward("webpay", "processPaymentRejected");
                         break;
                     case "-2":
                         /* transaccion rechazada por el medio de pago */
                         $msg = "Transaccion #:" . $transactionId . " debe reintentarse.";
                         $this->_log("Pago", "Transaction Rejected", $msg);
-                        $this->redirect("webpay_reject");
+                        $this->getRequest()->setParameter("reserveId", $Transaction->getReserve()->getId());
+                        $this->forward("webpay", "processPaymentRejected");
                         break;
                     default:
                         /* se produjo un error en el medio de pago */
@@ -766,13 +776,15 @@ class webpayActions extends sfActions {
                         /* transaccion rechazada por el medio de pago */
                         $msg = "Transaccion #:" . $GPSTransactionId . " fue rechazada.";
                         $this->_log("Pago", "Transaction Rejected", $msg);
-                        $this->redirect("webpay_reject");
+                        $this->getRequest()->setParameter("reserveId", $Transaction->getReserve()->getId());
+                        $this->forward("webpay", "processPaymentRejected");
                         break;
                     case "-2":
                         /* transaccion rechazada por el medio de pago */
                         $msg = "Transaccion #:" . $GPSTransactionId . " debe reintentarse.";
                         $this->_log("Pago", "Transaction Rejected", $msg);
-                        $this->redirect("webpay_reject");
+                        $this->getRequest()->setParameter("reserveId", $Transaction->getReserve()->getId());
+                        $this->forward("webpay", "processPaymentRejected");
                         break;
                     default:
                         /* se produjo un error en el medio de pago */
@@ -821,6 +833,7 @@ class webpayActions extends sfActions {
 
     public function executeProcessPaymentRejected(sfWebRequest $request) {
         error_log("ProcessPaymentRejected");
+        $this->reserveId = $request->getParameter("reserveId");
         $this->setLayout("newIndexLayout");
     }
 
