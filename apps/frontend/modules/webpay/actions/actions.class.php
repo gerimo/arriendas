@@ -228,6 +228,10 @@ class webpayActions extends sfActions {
             if (!$validationResult) {
                 $this->redirect("webpay_failure");                
             }
+
+            $transactionId = $transactionResultOutput->buyOrder;
+            $Transaction = Doctrine_Core::getTable("Transaction")->find($transactionId);
+            $Reserve = Doctrine_Core::getTable("Reserve")->find($Transaction->getReserveId());
             
             /*
              * Resultado de la autenticación para comercios Webpay Plus
@@ -239,10 +243,7 @@ class webpayActions extends sfActions {
              * Puede ser vacío si la transacción no se autentico.
              */
 
-            if ($transactionResultOutput->VCI == "TSY") {
-
-                $transactionId = $transactionResultOutput->buyOrder;
-                $Transaction = Doctrine_Core::getTable("Transaction")->find($transactionId);
+            if ($transactionResultOutput->VCI == "TSY") {                
 
                 if ($Transaction->getCompleted()) {
                     $this->redirect("webpay_failure");
