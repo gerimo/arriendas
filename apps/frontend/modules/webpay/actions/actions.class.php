@@ -473,12 +473,12 @@ class webpayActions extends sfActions {
                     default:
                         $msg = "Transaccion #:" . $transactionId . " debe reintentarse.";
                         $this->_log("Pago", "Transaction Rejected", $msg);
-                        $this->getRequest()->setParameter("reserveId", $Transaction->getReserve()->getId());
+                        $this->getRequest()->setParameter("reserveId", $Reserve()->getId());
                         $this->forward("webpay", "processPaymentRejected");
                         break;
                 };
             } elseif ($transactionResultOutput->VCI == "TSN") {
-                $this->getRequest()->setParameter("reserveId", $Transaction->getReserve()->getId());
+                $this->getRequest()->setParameter("reserveId", $Reserve()->getId());
                 $this->forward("webpay", "processPaymentRejected");
             } else {
                 /* getExpressCheckout Failure */
@@ -775,14 +775,14 @@ class webpayActions extends sfActions {
                         /* transaccion rechazada por el medio de pago */
                         $msg = "Transaccion #:" . $GPSTransactionId . " fue rechazada.";
                         $this->_log("Pago", "Transaction Rejected", $msg);
-                        $this->getRequest()->setParameter("reserveId", $Transaction->getReserve()->getId());
+                        $this->getRequest()->setParameter("reserveId", $Reserve()->getId());
                         $this->forward("webpay", "processPaymentRejected");
                         break;
                     case "-2":
                         /* transaccion rechazada por el medio de pago */
                         $msg = "Transaccion #:" . $GPSTransactionId . " debe reintentarse.";
                         $this->_log("Pago", "Transaction Rejected", $msg);
-                        $this->getRequest()->setParameter("reserveId", $Transaction->getReserve()->getId());
+                        $this->getRequest()->setParameter("reserveId", $Reserve()->getId());
                         $this->forward("webpay", "processPaymentRejected");
                         break;
                     default:
