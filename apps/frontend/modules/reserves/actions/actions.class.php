@@ -787,9 +787,9 @@ class reservesActions extends sfActions {
 
                     $oT = $reserve->getTransaction();
 
-                    $this->paymentMethodId = $oT->paymentMethodId;
+                    $this->paymentMethodId = $oT->getPaymentMethodId();
 
-                    if ($oT->paymentMethodId == 2) {
+                    if ($this->paymentMethodId == 2) {
 
                         $this->payType = "Crédito";
 
