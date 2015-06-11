@@ -477,6 +477,9 @@ class webpayActions extends sfActions {
                         $this->forward("webpay", "processPaymentRejected");
                         break;
                 };
+            } elseif ($transactionResultOutput->VCI == "TSN") {
+                $this->getRequest()->setParameter("reserveId", $Transaction->getReserve()->getId());
+                $this->forward("webpay", "processPaymentRejected");
             } else {
                 /* getExpressCheckout Failure */
                 $msg = "API Error Message : " . $validationResult;
