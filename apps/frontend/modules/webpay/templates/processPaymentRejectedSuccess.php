@@ -3,9 +3,12 @@
     
     <div class="row">
         <div class="col-md-offset-3 col-md-6">
-            <p>Orden de Compra <strong><?php echo $reserveId ?></strong></p>
+            
+            <br>
+            
+            <p>Reserva <strong><?php echo $reserveId ?></strong></p>
 
-            <br><br>
+            <br>
 
             <p>Las posibles causas de este rechazo son:</p>
             <ul>
