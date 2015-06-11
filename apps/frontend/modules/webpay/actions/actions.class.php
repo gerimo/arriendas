@@ -460,25 +460,21 @@ class webpayActions extends sfActions {
                             }
                         }
                         break;
-                    case "-1":
-                        /* transaccion rechazada por el medio de pago */
-                        $msg = "Transaccion #:" . $transactionId . " fue rechazada.";
-                        $this->_log("Pago", "Transaction Rejected", $msg);
-                        $this->getRequest()->setParameter("reserveId", $Transaction->getReserve()->getId());
-                        $this->forward("webpay", "processPaymentRejected");
+                    case "-3":
+                        $msg = "Transaccion #: " . $transactionId . "  Error code:" . $wsTransactionDetailOutput->responseCode;
+                        $this->_log("Pago", "ApiError", $msg);
+                        $this->redirect("webpay_failure");
                         break;
-                    case "-2":
-                        /* transaccion rechazada por el medio de pago */
+                    case "-8":
+                        $msg = "Transaccion #: " . $transactionId . "  Error code:" . $wsTransactionDetailOutput->responseCode;
+                        $this->_log("Pago", "ApiError", $msg);
+                        $this->redirect("webpay_failure");
+                        break;
+                    default:
                         $msg = "Transaccion #:" . $transactionId . " debe reintentarse.";
                         $this->_log("Pago", "Transaction Rejected", $msg);
                         $this->getRequest()->setParameter("reserveId", $Transaction->getReserve()->getId());
                         $this->forward("webpay", "processPaymentRejected");
-                        break;
-                    default:
-                        /* se produjo un error en el medio de pago */
-                        $msg = "Transaccion #: " . $transactionId . "  Error code:" . $wsTransactionDetailOutput->responseCode;
-                        $this->_log("Pago", "ApiError", $msg);
-                        $this->redirect("webpay_failure");
                         break;
                 };
             } else {
