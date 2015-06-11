@@ -793,22 +793,22 @@ class reservesActions extends sfActions {
 
                         $this->payType = "Crédito";
 
-                        if ($oT->webpayType == "VD") {
+                        if ($oT->getWebpayType() == "VD") {
                             $this->payType = "Débito";
                             $this->sharesType = "Venta débito";
-                        } elseif ($oT->webpayType == "VN") {
+                        } elseif ($oT->getWebpayType() == "VN") {
                             $this->sharesType = "Sin cuotas";
-                        } elseif ($oT->webpayType == "VC") {
+                        } elseif ($oT->getWebpayType() == "VC") {
                             $this->sharesType = "Cuotas normales";
                         } else {
                             $this->sharesType = "Sin interés";
                         }
 
-                        $this->sharesNumber = $oT->webpaySharesNumber;
-                        $this->authorization = $oT->webpayAuthorization;
-                        $this->lastDigits = $oT->webpayLastDigits;
+                        $this->sharesNumber = $oT->getWebpaySharesNumber();
+                        $this->authorization = $oT->getWebpayAuthorization();
+                        $this->lastDigits = $oT->getWebpayLastDigits();
 
-                        $this->reserveId = $reserve->id;
+                        $this->reserveId = $reserve->getId();
                     }
 
                 } else {
