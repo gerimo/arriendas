@@ -835,7 +835,7 @@ class webpayActions extends sfActions {
         error_log("ProcessPaymentRejected");
         $this->setLayout("newIndexLayout");
 
-        if (isset($request->getParameter("reserveId"))) {
+        if (!is_null($request->getParameter("reserveId"))) {
             $this->reserveId = $request->getParameter("reserveId");
         } else {
             $this->reserveId = $this->getUser()->getAttribute("reserveId");
