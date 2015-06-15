@@ -820,10 +820,7 @@ class webpayActions extends sfActions {
         error_log("ProcessPaymentFinal");
         $customer_in_session = $this->getUser()->getAttribute('userid');
         if ($customer_in_session) {
-            
-            $token = $request->getPostParameter("token_ws");
-
-            error_log("TOKEN: ".$token);
+            $this->forward("webpay", "processPaymentRejected");
         } else {
             $this->redirect('@homepage');
         }
@@ -837,7 +834,13 @@ class webpayActions extends sfActions {
     public function executeProcessPaymentRejected(sfWebRequest $request) {
         error_log("ProcessPaymentRejected");
         $this->setLayout("newIndexLayout");
-        $this->reserveId = $request->getParameter("reserveId");        
+
+        if (isset($request->getParameter("reserveId"))) {
+            $this->reserveId = $request->getParameter("reserveId");
+        } else {
+            $this->reserveId = $this->getUser()->getAttribute("reserveId");
+        }
+
     }
 
     /**

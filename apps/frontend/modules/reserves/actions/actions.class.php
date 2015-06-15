@@ -649,6 +649,8 @@ class reservesActions extends sfActions {
             $this->redirect("homepage");
         }
 
+        $this->getUser()->setAttribute("reserveId", $Reserve->getId());
+
         $this->getRequest()->setParameter("reserveId", $Reserve->getId());
         $this->getRequest()->setParameter("transactionId", $Transaction->getId());
 
