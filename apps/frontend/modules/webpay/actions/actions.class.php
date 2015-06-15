@@ -820,7 +820,10 @@ class webpayActions extends sfActions {
         error_log("ProcessPaymentFinal");
         $customer_in_session = $this->getUser()->getAttribute('userid');
         if ($customer_in_session) {
-            $this->redirect("webpay_failure");
+            
+            $token = $request->getPostParameter("token_ws");
+
+            error_log("TOKEN: ".$token);
         } else {
             $this->redirect('@homepage');
         }
