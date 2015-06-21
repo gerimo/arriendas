@@ -7,6 +7,7 @@
             <br>
             
             <p>Reserva <strong><?php echo $reserveId ?></strong></p>
+            <p>Transacción <strong><?php echo $transactionId ?></strong></p>
 
             <br>
 

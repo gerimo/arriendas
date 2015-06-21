@@ -843,6 +843,11 @@ class webpayActions extends sfActions {
             $this->reserveId = $this->getUser()->getAttribute("reserveId");
         }
 
+        $oR = $Reserve = Doctrine_Core::getTable('Reserve')->find($this->reserveId);
+        $oT = $oR->getTransaction();
+
+        $this->transactionId = $oT->getId();
+
     }
 
     /**
