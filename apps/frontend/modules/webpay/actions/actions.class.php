@@ -70,7 +70,8 @@ class webpayActions extends sfActions {
             $validationResult = $soapValidation->getValidationResult();
 
             if (!$validationResult) {
-                $this->redirect("webpay_failure");
+                $this->getRequest()->setParameter("reserveId", $reserveId);
+                $this->forward("webpay", "processPaymentRejected");
             }
 
             error_log(print_r(json_encode($initTransactionResponse), true));
@@ -225,14 +226,15 @@ class webpayActions extends sfActions {
             $soapValidation = new SoapValidation($xmlResponse, $SERVER_CERT_PATH);
             $validationResult = $soapValidation->getValidationResult();
 
-            if (!$validationResult) {
-                $this->redirect("webpay_failure");                
-            }
-
             $transactionId = $transactionResultOutput->buyOrder;
             $Transaction = Doctrine_Core::getTable("Transaction")->find($transactionId);
             $Reserve = Doctrine_Core::getTable("Reserve")->find($Transaction->getReserveId());
-            
+
+            if (!$validationResult) {
+                $this->getRequest()->setParameter("reserveId", $Reserve->getId());
+                $this->forward("webpay", "processPaymentRejected");
+            }
+
             /*
              * Resultado de la autenticación para comercios Webpay Plus
              * TSY: Autenticación exitosa

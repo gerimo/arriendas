@@ -809,8 +809,10 @@ class reservesActions extends sfActions {
                         $this->sharesNumber = $oT->getWebpaySharesNumber();
                         $this->authorization = $oT->getWebpayAuthorization();
                         $this->lastDigits = $oT->getWebpayLastDigits();
+                        $this->amount = $reserve->getPrice() + $reserve->getMontoLiberacion() - $oT->getDiscountamount()
 
                         $this->reserveId = $reserve->getId();
+                        $this->transactionId = $$oT->getId();
                     }
 
                 } else {

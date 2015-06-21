@@ -13,6 +13,8 @@
             <?php if ($paymentMethodId == 2): ?> 
               <p>
                 <b>Reserva: </b><?php echo $reserveId ?><br>
+                <b>Transacción: </b><?php echo $transactionId ?><br>
+                <b>Monto: </b><?php echo number_format($amount, 0, ',', '.') ?><br>
                 <b>Tipo de pago: </b><?php echo $payType ?><br>
                 <b>Tipo de cuota: </b><?php echo $sharesType ?><br>
                 <b>Número de cuotas: </b><?php echo $sharesNumber ?><br>
