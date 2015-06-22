@@ -812,7 +812,7 @@ class reservesActions extends sfActions {
                         $this->amount = $reserve->getPrice() + $reserve->getMontoLiberacion() - $oT->getDiscountamount();
 
                         $this->reserveId = $reserve->getId();
-                        $this->transactionId = $$oT->getId();
+                        $this->transactionId = $oT->getId();
                     }
 
                 } else {
