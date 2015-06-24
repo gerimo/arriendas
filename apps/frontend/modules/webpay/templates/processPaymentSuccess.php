@@ -7,6 +7,6 @@
 
 <script>
     $(document).ready(function(){
-    	$("#voucher").submit();
+    	/*$("#voucher").submit();*/
     });
 </script>
