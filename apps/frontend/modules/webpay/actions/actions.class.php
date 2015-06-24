@@ -459,8 +459,8 @@ class webpayActions extends sfActions {
                                     $this->getMailer()->send($message);
                                 }
 
-                                $this->getRequest()->setParameter("token_ws", $token);
-                                $this->redirect($transactionResultOutput->urlRedirection);
+                                $this->voucerUrl = $transactionResultOutput->urlRedirection);
+                                $this->token = $token;
                             }
                         }
                         break;
