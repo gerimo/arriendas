@@ -459,7 +459,7 @@ class webpayActions extends sfActions {
                                     $this->getMailer()->send($message);
                                 }
 
-                                $this->getRequest()->setPostParameter("token_ws", $token);
+                                $this->getRequest()->setParameter("token_ws", $token);
                                 $this->redirect($transactionResultOutput->urlRedirection);
                             }
                         }
