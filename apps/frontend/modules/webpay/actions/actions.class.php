@@ -251,6 +251,9 @@ class webpayActions extends sfActions {
                     $this->redirect("webpay_failure");
                 }
 
+                error_log("PROBANDO:");
+                error_log($transactionResultOutput->url);
+
                 /* informo a webpay que se recibio la notificación de transaccion */
                 $acknowledgeTransaction = new acknowledgeTransaction();
                 $acknowledgeTransaction->tokenInput = $token;
