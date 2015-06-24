@@ -251,9 +251,6 @@ class webpayActions extends sfActions {
                     $this->redirect("webpay_failure");
                 }
 
-                error_log("PROBANDO:");
-                error_log($transactionResultOutput->url);
-
                 /* informo a webpay que se recibio la notificación de transaccion */
                 $acknowledgeTransaction = new acknowledgeTransaction();
                 $acknowledgeTransaction->tokenInput = $token;
@@ -462,7 +459,8 @@ class webpayActions extends sfActions {
                                     $this->getMailer()->send($message);
                                 }
 
-                                $this->redirect("reserves");
+                                $this->getRequest()->setPostParameter("token_ws", $token);
+                                $this->redirect($transactionResultOutput->urlRedirection);
                             }
                         }
                         break;
@@ -825,7 +823,7 @@ class webpayActions extends sfActions {
         error_log("ProcessPaymentFinal");
         $customer_in_session = $this->getUser()->getAttribute('userid');
         if ($customer_in_session) {
-            $this->forward("webpay", "processPaymentRejected");
+            $this->redirect("reserves");
         } else {
             $this->redirect('@homepage');
         }
