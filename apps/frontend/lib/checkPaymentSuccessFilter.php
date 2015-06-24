@@ -20,7 +20,8 @@
                     && $action != 'success'
                     && $action != 'warningUploadLicense'
                     && $action != 'uploadLicenseWarning'
-                    && $action != 'logout')
+                    && $action != 'logout'
+                    && $action != 'processPayment')
             {
                 $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');
                 $toShow = Doctrine_Core::getTable("Transaction")->countPendingToShowByUser($idUsuario);
