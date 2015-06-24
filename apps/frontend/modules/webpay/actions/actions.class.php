@@ -459,7 +459,7 @@ class webpayActions extends sfActions {
                                     $this->getMailer()->send($message);
                                 }
 
-                                $this->voucerUrl = $transactionResultOutput->urlRedirection;
+                                $this->voucherUrl = $transactionResultOutput->urlRedirection;
                                 $this->token = $token;
                             }
                         }
