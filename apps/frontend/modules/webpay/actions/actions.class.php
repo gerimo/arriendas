@@ -183,14 +183,12 @@ class webpayActions extends sfActions {
                             $this->checkOutUrl = $wsInitTransactionOutput->url;
                             $this->checkOutToken = $wsInitTransactionOutput->token;
                         } else {
-                            $msg = " | API Error Message : " . "";
-                            $this->_log("Pago", "ApiError", "Usuario: " . $customer_in_session . ". Order ID: " . $order->getId() . $msg);
-                            $this->redirect("webpay_failure");
+                            $this->getRequest()->setParameter("reserveId", $Reserve->getId());
+                            $this->forward("webpay", "processPaymentRejected");
                         }
                     } catch (Exception $ex) {
-                        $msg = " | Exception : " . $ex->getMessage();
-                        $this->_log("Exception", "Error", "Usuario: " . $customer_in_session . ". Order ID: " . $order->getId() . $msg);
-                        $this->redirect("webpay_failure");
+                        $this->getRequest()->setParameter("reserveId", $Reserve->getId());
+                        $this->forward("webpay", "processPaymentRejected");
                     }
                 }
             }
@@ -248,7 +246,8 @@ class webpayActions extends sfActions {
             if ($transactionResultOutput->VCI == "TSY") {                
 
                 if ($Transaction->getCompleted()) {
-                    $this->redirect("webpay_failure");
+                    $this->getRequest()->setParameter("reserveId", $Reserve->getId());
+                    $this->forward("webpay", "processPaymentRejected");
                 }
 
                 /* informo a webpay que se recibio la notificación de transaccion */
@@ -465,18 +464,14 @@ class webpayActions extends sfActions {
                         }
                         break;
                     case "-3":
-                        $msg = "Transaccion #: " . $transactionId . "  Error code:" . $wsTransactionDetailOutput->responseCode;
-                        $this->_log("Pago", "ApiError", $msg);
-                        $this->redirect("webpay_failure");
+                        $this->getRequest()->setParameter("reserveId", $Reserve->getId());
+                        $this->forward("webpay", "processPaymentRejected");
                         break;
                     case "-8":
-                        $msg = "Transaccion #: " . $transactionId . "  Error code:" . $wsTransactionDetailOutput->responseCode;
-                        $this->_log("Pago", "ApiError", $msg);
-                        $this->redirect("webpay_failure");
+                        $this->getRequest()->setParameter("reserveId", $Reserve->getId());
+                        $this->forward("webpay", "processPaymentRejected");
                         break;
                     default:
-                        $msg = "Transaccion #:" . $transactionId . " debe reintentarse.";
-                        $this->_log("Pago", "Transaction Rejected", $msg);
                         $this->getRequest()->setParameter("reserveId", $Reserve->getId());
                         $this->forward("webpay", "processPaymentRejected");
                         break;
@@ -485,10 +480,8 @@ class webpayActions extends sfActions {
                 $this->getRequest()->setParameter("reserveId", $Reserve->getId());
                 $this->forward("webpay", "processPaymentRejected");
             } else {
-                /* getExpressCheckout Failure */
-                $msg = "API Error Message : " . $validationResult;
-                $this->_log("Pago", "ApiError", $msg);
-                $this->redirect("webpay_failure");
+                $this->getRequest()->setParameter("reserveId", $Reserve->getId());
+                $this->forward("webpay", "processPaymentRejected");
             }
         } else {
             /* not session */

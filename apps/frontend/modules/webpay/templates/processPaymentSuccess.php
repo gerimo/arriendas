@@ -2,8 +2,11 @@
     <input type="hidden" name="token_ws" value="<?php echo $token ?>"/>
 </form>
 
-<h1>Validando pago</h1>
-<p>Un momento por favor...</p>
+<br><br><br>
+<h1 class="text-center">Validando pago</h1>
+<br>
+<p class="text-center">Un momento por favor...</p>
+<br><br><br><br>
 
 <script>
     $(document).ready(function(){
