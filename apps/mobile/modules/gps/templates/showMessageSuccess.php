@@ -5,7 +5,7 @@
 
 <div class="row">
 	<div class="content">
-	    <div class="col-md-offset-2 col-md-8">
+	    <div class="">
 	        <div class="BCW clearfix">
 	            <h1 class="text-center">¡ENTREGA DE TU GPS!</h1>
             	<div class="row">
@@ -18,7 +18,7 @@
 					</p>
 	            </div>
 
-	            <div class="hidden-xs space-40"></div>
+	            <div class="visible-xs space-20"></div>
 
 	            <div class="col-md-offset-1 col-md-10">
 		            <div class="text-center">
@@ -37,7 +37,7 @@
                     	<span class="pull-right">$<span class="price"><?php echo $gps_price ?></span></span>TOTAL
                 	</div>
 
-	            	<div class="hidden-xs space-40"></div>
+	            	<div class="visible-xs space-40"></div>
 
 	            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                     <div class="panel panel-default">
