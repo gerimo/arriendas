@@ -13,27 +13,49 @@ abstract class BaseImage extends sfDoctrineRecord {
             'autoincrement' => true            
         ));
 
-        $this->hasColumn('path', array(
+        $this->hasColumn('path_original', array(
             'type' => 'string',
             'length' => 255
         ));
 
-        $this->hasColumn('width', array(
-            'type' => 'integer',
-            'length' => 11        
+        $this->hasColumn('path_xs', array(
+            'type' => 'string',
+            'length' => 255
         ));
 
-        $this->hasColumn('Height', array(
+        $this->hasColumn('path_sm', array(
+            'type' => 'string',
+            'length' => 255
+        ));
+
+        $this->hasColumn('path_md', array(
+            'type' => 'string',
+            'length' => 255
+        ));
+
+        $this->hasColumn('path_lg', array(
+            'type' => 'string',
+            'length' => 255
+        ));
+
+        $this->hasColumn('car_id', array(
+            'type' => 'integer',
+            'notnull' => false,
+            'length' => 11          
+        ));
+
+        $this->hasColumn('user_id', array(
+            'type' => 'integer',
+            'notnull' => false,
+            'length' => 11          
+        ));
+
+        $this->hasColumn('image_type_id', array(
             'type' => 'integer',
             'length' => 11          
         ));
 
-        $this->hasColumn('size', array(
-            'type' => 'integer',
-            'length' => 11          
-        ));
-
-        $this->hasColumn('isOnS3', 'boolean', null, array(
+        $this->hasColumn('is_on_s3', 'boolean', null, array(
          'type' => 'boolean',
          'notnull' => true,
          'default' => 0,

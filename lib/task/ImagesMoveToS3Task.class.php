@@ -36,24 +36,48 @@ EOF;
         $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
 
         // se establecen las medidas de la imagenes de salida
-        $miniatura_ancho_maximo = 800;
-        $miniatura_alto_maximo = 600;
+        /*
+            ** MEDIDAS **
+            XS = 112 x 84 
+            SM = 224 x 168
+            MD = 448 x 336
+            LG = 896 x 672
+        */
+        $medidas["xs"][0]=112;
+        $medidas["xs"][1]=84;
+
+        $medidas["sm"][0]=224;
+        $medidas["sm"][1]=168;
+
+        $medidas["md"][0]=448;
+        $medidas["md"][1]=336;
+
+        $medidas["lg"][0]=896;
+        $medidas["lg"][1]=672;
 
         // se establece el directorio del proyecto en donde buscar las imágenes
         $uploadDir = sfConfig::get("sf_web_dir");
-        $path      = $uploadDir . '/images/s3_temp/';
+        $path      = $uploadDir . '/images/tmp_images/';
 
         // se obtienen los registros de las imagenes almacenadas en la base de datos
-        $Images = Doctrine_core::getTable("image")->findAll();
+        $Images = Doctrine_core::getTable("image")->findByIsOnS3(0);
 
         // se iteran lás imágenes
         foreach ($Images as $Image) {
+            $this->log("path:" . $Image->path_original);
+            foreach ($medidas as $medida => $value) {
 
-            // si el registro no fué procesado y subido a s3, lo hace
-            if(!$Image->getIsOnS3()){
+                $this->log("MEDIDA: ".$medida." - " . $value);
+                
+                
+                $miniatura_ancho_maximo = $value[0];
+                $miniatura_alto_maximo = $value[1];
+
+                $this->log($miniatura_ancho_maximo);
+                $this->log($miniatura_alto_maximo);
 
                 // se definen los atributos de la imagen
-                $info_imagen = getimagesize($Image->path);
+                $info_imagen = getimagesize($uploadDir . $Image->path_original);
                 $imagen_ancho = $info_imagen[0];
                 $imagen_alto = $info_imagen[1];
                 $imagen_tipo = $info_imagen['mime'];
@@ -80,41 +104,66 @@ EOF;
                 switch ( $imagen_tipo ){
                     case "image/jpg":
                     case "image/jpeg":
-                        $imagen = imagecreatefromjpeg( $Image->path );
+                        $imagen = imagecreatefromjpeg($uploadDir . $Image->path_original );
                         break;
                     case "image/png":
-                        $imagen = imagecreatefrompng( $Image->path );
+                        $imagen = imagecreatefrompng($uploadDir . $Image->path_original );
                         break;
                     case "image/gif":
-                        $imagen = imagecreatefromgif( $Image->path );
+                        $imagen = imagecreatefromgif($uploadDir . $Image->path_original );
                         break;
                 }
 
                 // se establece el nombre de la imagen final
-                $nueva_imagen_sin_path = "h" . $miniatura_alto . "w" . $miniatura_ancho . "-" . time() . "-" . $Image->getId() . ".jpg";
+                $nueva_imagen_sin_path = $Image->getId() . "-" . ($medida) . ".jpg";
                 $nueva_imagen = $path . $nueva_imagen_sin_path;
 
                 $lienzo = imagecreatetruecolor( $miniatura_ancho, $miniatura_alto );
                 imagecopyresampled($lienzo, $imagen, 0, 0, 0, 0, $miniatura_ancho, $miniatura_alto, $imagen_ancho, $imagen_alto);
 
+                $this->log($nueva_imagen);
                 if(imagejpeg($lienzo, $nueva_imagen, 100)) {
 
                     // se elimina la foto en s3_temp
-                    if(unlink($Image->path)) {
-                        $this->log($Image->path . " Deleted");
-                    }
+                    // if(unlink($Image->path)) {
+                    //     $this->log($Image->path . " Deleted");
+                    // }
 
-                     // se reestablecen los datos en la BD
+                    // se guarda en s3
+                    //$this->log("lib: " . sfConfiG::get("sf_lib_dir"));
+
+                    // se reestablecen los datos en la BD
                     $Image->setIsOnS3(true);
-                    $Image->setPath($nueva_imagen);
+
+                    switch ($medida) {
+                        case "xs":
+                            $this->log("xs");
+                            $Image->setPathXs("/images/tmp_images/" . $nueva_imagen_sin_path);
+                            break;
+
+                        case "sm":
+                            $this->log("sm");
+                            $Image->setPathSm("/images/tmp_images/" . $nueva_imagen_sin_path);
+                            break;
+
+                        case "md":
+                            $this->log("md");
+                            $Image->setPathMd("/images/tmp_images/" . $nueva_imagen_sin_path);
+                            break;
+
+                        case "lg":
+                            $this->log("lg");
+                            $Image->setPathLg("/images/tmp_images/" . $nueva_imagen_sin_path);
+                            break;
+                        
+                        default:
+                            $this->log("NA");
+                            $Image->setPathLg("N/A");
+                            break;
+                    }
                     $Image->save();
                 }
-                
-
-            } else {
-                $this->log($Image->id . " ya se procesó.");
             }
-
         }
 
     }

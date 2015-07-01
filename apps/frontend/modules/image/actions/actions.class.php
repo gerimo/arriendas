@@ -8,6 +8,7 @@ class imageActions extends sfActions {
 
 	}
 
+/*
 	public function executeUpload(sfWebRequest $request) {
 		require sfConfig::get('sf_app_lib_dir') . "/s3upload/image_check.php";
 		$this->setLayout("newIndexLayout");
@@ -82,5 +83,33 @@ class imageActions extends sfActions {
         }
 
 	}
+*/
+
+    public function executeUpload(sfWebRequest $request) {
+        $this->setLayout("newIndexLayout");
+        if (!empty($_FILES)) {
+            
+            $userId = $this->getUser()->getAttribute("userid");
+
+            $tempFile = $_FILES['Filedata']['tmp_name'];
+            $name = $_FILES['Filedata']['name'];
+            $size = $_FILES['Filedata']['size'];
+
+            error_log("subiendo");
+            $message = Image::UploadImageToTempFolder($tempFile, $size, $name, 1, $userId);
+
+            error_log("RESULTADO: ". $message);
+            if(strpos($message, "Mensaje:")){
+
+                $this->imagen = "http://friendsoftype.com/wp-content/uploads/2011/03/FOT_EM_NOPE_05_LRG-1250x1250.jpg";
+            } else {
+                $Image = Doctrine_core::getTable("image")->find($message);
+                $this->imagen = $Image->path_original;
+            }
+
+        }
+        
+
+    }
 
 }

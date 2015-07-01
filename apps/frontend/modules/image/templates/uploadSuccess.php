@@ -6,13 +6,7 @@
         <div class="BCW" id="frm">
             <h1 class="completeRegister">Imagen</h1>
 
-			<?php 
-				if($imagen){
-					echo "<h2>EXITO!</h2>";
-				} else {
-					echo "<h2>ERROR! :(</h2>";
-				} 
-			?>
+			<img id="imagen" src="<?php echo $imagen ?>" alt="imagen"></img>
 
 		</div>
 	</div>
