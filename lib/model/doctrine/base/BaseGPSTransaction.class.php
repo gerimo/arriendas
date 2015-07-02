@@ -41,6 +41,12 @@ abstract class BaseGPSTransaction extends sfDoctrineRecord {
             'length' => 10,
             'scale' => '2',
         ));
+
+        $this->hasColumn('viewed', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
+             'default' => 0,
+        ));
         
         $this->option('charset', 'utf8');
         $this->option('type', 'InnoDB');
