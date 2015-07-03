@@ -100,8 +100,7 @@ class imageActions extends sfActions {
 
             error_log("RESULTADO: ". $message);
             if(strpos($message, "Mensaje:")){
-
-                $this->imagen = "http://friendsoftype.com/wp-content/uploads/2011/03/FOT_EM_NOPE_05_LRG-1250x1250.jpg";
+                
             } else {
                 $Image = Doctrine_core::getTable("image")->find($message);
                 $this->imagen = $Image->path_original;

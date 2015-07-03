@@ -72,6 +72,9 @@ EOF;
 
         // se iteran lás imágenes
         foreach ($Images as $Image) {
+            $userId = $Image->user_id;
+            $carId = $Image->car_id;
+
             $cantidadImagenesSubidasAlLocal = 1 + $cantidadImagenesSubidasAlLocal;
             // se definen los atributos de la imagen
             $info_imagen = getimagesize($uploadDir . $Image->path_original);
@@ -192,6 +195,257 @@ EOF;
             $Image->setIsOnS3(true);
 
             $Image->save();
+
+            // añade el link de la imagen a cada entidad coorrespondiente
+            switch ($Image->image_type_id) {
+
+                // FOTO DE PERFIL
+                case 1:
+                    if($userId){
+                        $User = Doctrine_core::getTable("user")->find($userId);
+                        $User->setPictureFile($Image->path_md);
+                        $User->save();
+                    }
+                    break;
+
+                // FOTO DE LICENCIA 
+                case 2:
+                    if($userId){
+                        $User = Doctrine_core::getTable("user")->find($userId);
+                        $User->setPictureFile($Image->path_md);
+                        $User->save();
+                    }
+                    break;
+
+                // FOTO DE PERFIL DE AUTOMOVIL
+                case 3:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setFotoPerfil($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // FOTO PADRON REVERSO AUTOMOVIL
+                case 4:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setFotoPadronReverso($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // FOTO PADRON FRONTAL AUTOMOVIL
+                case 5:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setFotoPadron($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // FOTO COSTADO DERECHO AUTOMOVIL
+                case 6:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setSeguroFotoCostadoDerecho($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // FOTO COSTADO IZQUIERDO AUTOMOVIL
+                case 7:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setSeguroFotoCostadoIzquierdo($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // FOTO TRASERO DERECHO AUTOMOVIL
+                case 8:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setSeguroFotoTraseroDerecho($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // FOTO TRASERO IZQUIERDO AUTOMOVIL
+                case 9:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setSeguroFotoTraseroIzquierdo($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // LLANTA DELANTERA DERECHA
+                case 10:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setLlantaDelDer($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // LLANTA DELANTERA IZQUIERDA    
+                case 11:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setLlantaDelIzq($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // LLANTA TRASERA IZQUIERDA
+                case 12:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setLlantaTraIzq($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // LLANTA TRASERA DERECHA
+                case 13:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setLlantaTraDer($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // TABLERO AUTOMOVIL
+                case 14:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setTablero($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // EQUIPO AUDIO
+                case 15:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setEquipoAudio($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // RUEDA REPUESTO
+                case 16:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setRuedaRepuesto($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // ACCESORIO 1 AUTOMOVIL
+                case 17:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setAccesorio1($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // ACCESORIO 2 AUTOMOVIL
+                case 18:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setAccesorio2($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // FRONTAL DERECHO AUTOMOVIL
+                case 19:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setFrontalDer($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // FRONTAL IZQUIERDO AUTOMOVIL
+                case 20:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setFrontalIzq($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // FRONTAL CENTRO AUTOMOVIL
+                case 21:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setFrontalCen($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // TRASERO IZQUIERDO AUTOMOVIL
+                case 22:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setTraseroIzq($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // TRASERO DERECHO AUTOMOVIL
+                case 23:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setTraseroDer($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // TRASERO CENTRO AUTOMOVIL
+                case 24:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setTraseroCen($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // LATERAL DERECHO AUTOMOVIL
+                case 25:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setLateralDer($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // LATERAL IZQUIERDO AUTOMOVIL
+                case 26:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setLateralIzq($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+
+                // FOTO FRONTAL AUTOMOVIL
+                case 27:
+                    if($carId){
+                        $Car = Doctrine_core::getTable("car")->find($carId);
+                        $Car->setSeguroFotoFrente($Image->path_md);
+                        $Car->save();
+                    }
+                    break;
+                
+                default:
+
+                    break;
+            }
         }
 
         $this->log("Total de imágenes a procesar: " . $cantidadImagenesSubidasAlLocal);
