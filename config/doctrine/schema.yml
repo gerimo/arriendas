@@ -1025,6 +1025,18 @@ Transaction:
     payment_method_id:
       type: integer(4)
       default: null
+    webpay_type:
+      type: string(2)
+      default: null
+    webpay_shares_number:
+      type: integer(11)
+      default: null
+    webpay_authorization:
+      type: string(6)
+      default: null
+    webpay_last_digits:
+      type: string(16)
+      default: null
   relations:
     User:
       class: User

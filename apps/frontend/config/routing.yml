@@ -126,6 +126,10 @@ gps_cancel:
     url: /gps/cancel
     param: { module: gps, action: cancelUploadCar }
 
+gps_payed_message:
+    url: /gps/pago/confirmacion/:transactionId
+    param: { module: gps, action: showPayedMessageGPS }
+
 homepage:
     url: /
     param: { module: main, action: index }
@@ -381,6 +385,10 @@ webpay_reject:
 webpay_failure:
     url: /pago/webpay/error
     param: { module: webpay, action: processPaymentFailure }
+
+khipuNotifyGPS:
+    url:  /khipu/notifyPaymentGPS
+    param:  { module: khipu, action: notifyPaymentGPS }
 
 khipuNotify:
     url:  /khipu/notifyPayment

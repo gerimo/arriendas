@@ -37,7 +37,6 @@ class webpayActions extends sfActions {
                 $wsTransactionDetail->amount = $Reserve->getPrice() + $Reserve->getMontoLiberacion() - $Transaction->getDiscountamount();
 
             } else {
-                error_log("intentando procesar pago");
                 $GPSTransaction = Doctrine_Core::getTable("GPSTransaction")->find($GPSTransactionId);
 
                 $webpaySettings = $this->getSettings();
@@ -63,13 +62,16 @@ class webpayActions extends sfActions {
             $initTransactionResponse = $webpayService->initTransaction(
                     array("wsInitTransactionInput" => $wsInitTransactionInput)
             );
+
             $xmlResponse = $webpayService->soapClient->__getLastResponse();
+
             $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certificate_server.crt";
             $soapValidation = new SoapValidation($xmlResponse, $SERVER_CERT_PATH);
             $validationResult = $soapValidation->getValidationResult();
 
             if (!$validationResult) {
-                throw new Exception("Problemas con la API", 1);                
+                $this->getRequest()->setParameter("reserveId", $reserveId);
+                $this->forward("webpay", "processPaymentRejected");
             }
 
             error_log(print_r(json_encode($initTransactionResponse), true));
@@ -80,7 +82,6 @@ class webpayActions extends sfActions {
             $this->checkOutToken = $wsInitTransactionOutput->token;
 
         } catch (Execption $e) {
-            error_log("PROCESAR PAGO!**************************+");
             error_log("[webpay/generatePayment] ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl") {
                 Utils::reportError($e->getMessage(), "webpay/generatePayment");
@@ -182,14 +183,12 @@ class webpayActions extends sfActions {
                             $this->checkOutUrl = $wsInitTransactionOutput->url;
                             $this->checkOutToken = $wsInitTransactionOutput->token;
                         } else {
-                            $msg = " | API Error Message : " . "";
-                            $this->_log("Pago", "ApiError", "Usuario: " . $customer_in_session . ". Order ID: " . $order->getId() . $msg);
-                            $this->redirect("webpay_failure");
+                            $this->getRequest()->setParameter("reserveId", $Reserve->getId());
+                            $this->forward("webpay", "processPaymentRejected");
                         }
                     } catch (Exception $ex) {
-                        $msg = " | Exception : " . $ex->getMessage();
-                        $this->_log("Exception", "Error", "Usuario: " . $customer_in_session . ". Order ID: " . $order->getId() . $msg);
-                        $this->redirect("webpay_failure");
+                        $this->getRequest()->setParameter("reserveId", $Reserve->getId());
+                        $this->forward("webpay", "processPaymentRejected");
                     }
                 }
             }
@@ -218,7 +217,22 @@ class webpayActions extends sfActions {
             $transactionResultOutput = $getTransactionResultResponse->return;
 
             error_log(print_r(json_encode($getTransactionResultResponse), true));
+
+            $xmlResponse = $webpayService->soapClient->__getLastResponse();
             
+            $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certificate_server.crt";
+            $soapValidation = new SoapValidation($xmlResponse, $SERVER_CERT_PATH);
+            $validationResult = $soapValidation->getValidationResult();
+
+            $transactionId = $transactionResultOutput->buyOrder;
+            $Transaction = Doctrine_Core::getTable("Transaction")->find($transactionId);
+            $Reserve = Doctrine_Core::getTable("Reserve")->find($Transaction->getReserveId());
+
+            if (!$validationResult) {
+                $this->getRequest()->setParameter("reserveId", $Reserve->getId());
+                $this->forward("webpay", "processPaymentRejected");
+            }
+
             /*
              * Resultado de la autenticación para comercios Webpay Plus
              * TSY: Autenticación exitosa
@@ -229,13 +243,11 @@ class webpayActions extends sfActions {
              * Puede ser vacío si la transacción no se autentico.
              */
 
-            if ($transactionResultOutput->VCI == "TSY") {
-
-                $transactionId = $transactionResultOutput->buyOrder;
-                $Transaction = Doctrine_Core::getTable("Transaction")->find($transactionId);
+            if ($transactionResultOutput->VCI == "TSY") {                
 
                 if ($Transaction->getCompleted()) {
-                    $this->redirect("webpay_failure");
+                    $this->getRequest()->setParameter("reserveId", $Reserve->getId());
+                    $this->forward("webpay", "processPaymentRejected");
                 }
 
                 /* informo a webpay que se recibio la notificación de transaccion */
@@ -273,6 +285,14 @@ class webpayActions extends sfActions {
                         $Transaction = Doctrine_Core::getTable("Transaction")->find($transactionId);
                         $Reserve     = Doctrine_Core::getTable('Reserve')->find($Transaction->getReserveId());
                         $this->idReserva = $Reserve->getId();
+
+                        $wsTransactionCardDetail = $transactionResultOutput->cardDetail;
+
+                        $Transaction->setWebpayType($wsTransactionDetailOutput->paymentTypeCode);
+                        $Transaction->setWebpaySharesNumber($wsTransactionDetailOutput->sharesNumber);
+                        $Transaction->setWebpayAuthorization($wsTransactionDetailOutput->authorizationCode);
+                        $Transaction->setWebpayLastDigits($wsTransactionCardDetail->cardNumber);
+                        $Transaction->save();
 
                         $montoLiberacion = 0;
                         if ($Reserve->getLiberadoDeGarantia()) {
@@ -438,34 +458,30 @@ class webpayActions extends sfActions {
                                     $this->getMailer()->send($message);
                                 }
 
-                                $this->redirect("reserves");
+                                $this->voucherUrl = $transactionResultOutput->urlRedirection;
+                                $this->token = $token;
                             }
                         }
                         break;
-                    case "-1":
-                        /* transaccion rechazada por el medio de pago */
-                        $msg = "Transaccion #:" . $transactionId . " fue rechazada.";
-                        $this->_log("Pago", "Transaction Rejected", $msg);
-                        $this->redirect("webpay_reject");
+                    case "-3":
+                        $this->getRequest()->setParameter("reserveId", $Reserve->getId());
+                        $this->forward("webpay", "processPaymentRejected");
                         break;
-                    case "-2":
-                        /* transaccion rechazada por el medio de pago */
-                        $msg = "Transaccion #:" . $transactionId . " debe reintentarse.";
-                        $this->_log("Pago", "Transaction Rejected", $msg);
-                        $this->redirect("webpay_reject");
+                    case "-8":
+                        $this->getRequest()->setParameter("reserveId", $Reserve->getId());
+                        $this->forward("webpay", "processPaymentRejected");
                         break;
                     default:
-                        /* se produjo un error en el medio de pago */
-                        $msg = "Transaccion #: " . $transactionId . "  Error code:" . $wsTransactionDetailOutput->responseCode;
-                        $this->_log("Pago", "ApiError", $msg);
-                        $this->redirect("webpay_failure");
+                        $this->getRequest()->setParameter("reserveId", $Reserve->getId());
+                        $this->forward("webpay", "processPaymentRejected");
                         break;
                 };
+            } elseif ($transactionResultOutput->VCI == "TSN") {
+                $this->getRequest()->setParameter("reserveId", $Reserve->getId());
+                $this->forward("webpay", "processPaymentRejected");
             } else {
-                /* getExpressCheckout Failure */
-                $msg = "API Error Message : " . $validationResult;
-                $this->_log("Pago", "ApiError", $msg);
-                $this->redirect("webpay_failure");
+                $this->getRequest()->setParameter("reserveId", $Reserve->getId());
+                $this->forward("webpay", "processPaymentRejected");
             }
         } else {
             /* not session */
@@ -756,13 +772,15 @@ class webpayActions extends sfActions {
                         /* transaccion rechazada por el medio de pago */
                         $msg = "Transaccion #:" . $GPSTransactionId . " fue rechazada.";
                         $this->_log("Pago", "Transaction Rejected", $msg);
-                        $this->redirect("webpay_reject");
+                        $this->getRequest()->setParameter("reserveId", $Reserve->getId());
+                        $this->forward("webpay", "processPaymentRejected");
                         break;
                     case "-2":
                         /* transaccion rechazada por el medio de pago */
                         $msg = "Transaccion #:" . $GPSTransactionId . " debe reintentarse.";
                         $this->_log("Pago", "Transaction Rejected", $msg);
-                        $this->redirect("webpay_reject");
+                        $this->getRequest()->setParameter("reserveId", $Reserve->getId());
+                        $this->forward("webpay", "processPaymentRejected");
                         break;
                     default:
                         /* se produjo un error en el medio de pago */
@@ -798,7 +816,20 @@ class webpayActions extends sfActions {
         error_log("ProcessPaymentFinal");
         $customer_in_session = $this->getUser()->getAttribute('userid');
         if ($customer_in_session) {
-            $this->redirect("webpay_failure");
+
+            $reserveId = $this->getUser()->getAttribute('reserveId');
+
+            $oReserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
+
+            $oTransaction = $oReserve->getTransaction();
+
+            if ($oTransaction->getCompleted()) {
+                $this->redirect("reserves");
+            } else {
+                $this->getRequest()->setParameter("reserveId", $reserveId);
+                $this->forward("webpay", "processPaymentRejected");
+            }
+            
         } else {
             $this->redirect('@homepage');
         }
@@ -812,6 +843,18 @@ class webpayActions extends sfActions {
     public function executeProcessPaymentRejected(sfWebRequest $request) {
         error_log("ProcessPaymentRejected");
         $this->setLayout("newIndexLayout");
+
+        if (!is_null($request->getParameter("reserveId"))) {
+            $this->reserveId = $request->getParameter("reserveId");
+        } else {
+            $this->reserveId = $this->getUser()->getAttribute("reserveId");
+        }
+
+        $oR = $Reserve = Doctrine_Core::getTable('Reserve')->find($this->reserveId);
+        $oT = $oR->getTransaction();
+
+        $this->transactionId = $oT->getId();
+
     }
 
     /**

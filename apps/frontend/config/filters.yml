@@ -30,5 +30,8 @@ hasNotPaidAGPSFilter:
 notificationBarFilter:
     class: checkNotificationBarFilter
 
+GPSPaymentMessageFilter:
+    class: checkGPSPaymentMessageFilter
+
 cache:     ~
 execution: ~

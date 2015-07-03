@@ -1,8 +1,15 @@
-<div class="container" style="margin-top: 10%">
-    <div class="row">
-        <div class="col-md-offset-1 col-md-10">
-            <h1>PAGO EXITOSO</h1>
-            <p>TU PAGO SE RECIBIÓ EXITOSAMENTE!</p>
-        </div>
-    </div>		
-</div>
+<form action="<?php echo $voucherUrl ?>" method="post" id="voucher">
+    <input type="hidden" name="token_ws" value="<?php echo $token ?>"/>
+</form>
+
+<br><br><br>
+<h1 class="text-center">Validando pago</h1>
+<br>
+<p class="text-center">Un momento por favor...</p>
+<br><br><br><br>
+
+<script>
+    $(document).ready(function(){
+    	$("#voucher").submit();
+    });
+</script>

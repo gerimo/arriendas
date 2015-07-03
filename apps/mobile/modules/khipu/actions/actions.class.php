@@ -10,44 +10,63 @@ class khipuActions extends sfActions {
 
             $reserveId     = $request->getParameter("reserveId");
             $transactionId = $request->getParameter("transactionId");
+            $GPSTransactionId = $request->getParameter("gps_transactionId", null);
 
-            $Reserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
-            $Transaction = Doctrine_Core::getTable('Transaction')->find($transactionId);
+            if(is_null($GPSTransactionId)){
 
-            $settings = $this->getSettings();
+                $Reserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
+                $Transaction = Doctrine_Core::getTable('Transaction')->find($transactionId);
+
+                $settings = $this->getSettings();
                         
-            $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["create-payment-url"]);
+                $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["create-payment-url"]);
 
-            $data = array(
-                'receiver_id'    => $settings["receiver_id"],
-                'subject'        => "Arriendo " . $Reserve->getCar()->getModel()->getBrand()->getName()." ".$Reserve->getCar()->getModel()->getName(),
-                'body'           => "Reserva n° ".$Reserve->getId(),
-                'amount'         => $Reserve->getPrice() + $Reserve->getMontoLiberacion() - $Transaction->getDiscountamount(),
-                'notify_url'     => $this->generateUrl("khipuNotify", array(), true),
-                'return_url'     => $this->generateUrl("khipuReturn", array(), true),
-                'cancel_url'     => $this->generateUrl("khipuCancel", array(), true),
-                'transaction_id' => $transactionId,
-                'picture_url'    => "",
-                'custom'         => "",
-            );
+                $data = array(
+                    'receiver_id'    => $settings["receiver_id"],
+                    'subject'        => "Arriendo " . $Reserve->getCar()->getModel()->getBrand()->getName()." ".$Reserve->getCar()->getModel()->getName(),
+                    'body'           => "Reserva n° ".$Reserve->getId(),
+                    'amount'         => $Reserve->getPrice() + $Reserve->getMontoLiberacion() - $Transaction->getDiscountamount(),
+                    'notify_url'     => $this->generateUrl("khipuNotify", array(), true),
+                    'return_url'     => $this->generateUrl("khipuReturn", array(), true),
+                    'cancel_url'     => $this->generateUrl("khipuCancel", array(), true),
+                    'transaction_id' => $transactionId,
+                    'picture_url'    => "",
+                    'custom'         => "",
+                );
+
+            }else{
+                $GPSTransaction = Doctrine_Core::getTable("GPSTransaction")->find($GPSTransactionId);
+                $GPS = Doctrine_Core::getTable("gps")->find($GPSTransaction->gps_id);
+                $Car = Doctrine_Core::getTable("car")->find($GPSTransaction->car_id);
+                $User = Doctrine_Core::getTable("user")->find($Car->getUser()->id);
+                $settings = $this->getSettings();
+                        
+                $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["create-payment-url"]);
+
+                $data = array(
+                    'receiver_id'    => $settings["receiver_id"],
+                    'subject'        => "GPS :" . $GPS->description,
+                    'body'           => "Transacción n° ".$GPSTransaction->id,
+                    'amount'         => round($GPSTransaction->amount),
+                    'notify_url'     => $this->generateUrl("khipuNotifyGPS", array(), true),
+                    'return_url'     => $this->generateUrl("khipuReturn", array(), true),
+                    'cancel_url'     => $this->generateUrl("khipuCancel", array(), true),
+                    'transaction_id' => "G".$GPSTransaction->id,
+                    'picture_url'    => "",
+                    'custom'         => "",
+                );
+
+            }
+
+           
 
             error_log("[khipu/generatePayment] ".print_r($data, true));
 
-            $response = $khipuService->createPaymentURL($data);
-
-            $khipuTransaction = array(
-                "payment-id" => $response->id,
-                "transaction-id" => $transactionId,
-                "status" => "created"
-            );
-
-            $this->getUser()->setAttribute("khipu-transaction", $khipuTransaction);
-
-            $url = $response->url;
+            $url = $khipuService->createPaymentURL($data)->url;
         } catch (Execption $e) {
-            error_log("[".date("Y-m-d H:i:s")."] [khipu/generatePayment] ".$e->getMessage());
-            if ($request->getHost() == "m.arriendas.cl") {
-                Utils::reportError($e->getMessage(), "Version mobile khipu/generatePayment");
+            error_log("[khipu/generatePayment] ".$e->getMessage());
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError($e->getMessage(), "khipu/generatePayment");
             }
         }
 
@@ -606,4 +625,121 @@ class khipuActions extends sfActions {
         $custom_logger = new sfFileLogger(new sfEventDispatcher(), array('file' => $logPath));
         $custom_logger->info($step . " - " . $status . ". " . $msg);
     }
+
+    public function executeNotifyPaymentGPS(sfWebRequest $request) {
+
+        $this->_log("NotifyPaymentGPS", "INFO", "Start validation");
+
+        $userId = $this->getUser()->getAttribute("userid");
+        
+        $settings = $this->getSettings();
+
+        $data = array(
+            "api_version" => $_POST['api_version'],
+            "receiver_id" => $_POST['receiver_id'],
+            "notification_id" => $_POST['notification_id'],
+            "subject" => $_POST['subject'],
+            "amount" => $_POST['amount'],
+            "currency" => $_POST['currency'],
+            "custom" => $_POST['custom'],
+            "transaction_id" => $_POST['transaction_id'],
+            "payer_email" => $_POST['payer_email'],
+            "notification_signature" => $_POST['notification_signature']
+        );
+
+        try {
+
+            $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["notification-validation-url"]);
+            $response = $khipuService->notificationValidation($data);
+
+            error_log("[khipu/notifyPaymentGPS] ----------------- ENTRANDO NOTIFICACION -----------------");
+            error_log("[khipu/notifyPaymentGPS] ".print_r($request->getPostParameters(), true));
+            error_log("[khipu/notifyPaymentGPS] ".print_r($response, true));
+
+            if ($response == 'VERIFIED' && $data["receiver_id"] == $settings["receiver_id"]) {
+                
+                // Los parametros son correctos, ahora falta verificar que transacion_id, custom, subject y amount correspondan al pedido 
+                $this->_log("NotifyPaymentGPS", "INFO", "cobro verificado");
+                $this->_log("NotifyPaymentGPS", "INFO", "respuesta: ".  serialize($response));
+
+                $GPSTransactionId = ltrim($data["transaction_id"], 'G');
+                $GPSTransaction = Doctrine_Core::getTable("GPSTransaction")->find($GPSTransactionId);
+
+                $this->_log("Pago", "Exito", "Usuario: " . $userId . ". GPSTransaction ID: " . $GPSTransaction->id);
+
+                if (!$GPSTransaction->getCompleted()) {
+                    
+                    error_log("[khipu/notifyPaymentGPS] Nuevo pago recibido");
+
+                    // $Functions = new Functions;
+                    // $Functions->generarNroFactura($Reserve, $Transaction);
+
+                    // Notificaciones
+                    // Notification::make($Renter->id, 3, $Reserve->id); // pago
+                    
+                    $User = Doctrine_Core::getTable("user")->find($userId);
+                    $GPSTransaction->setCompleted(true);
+                    $GPSTransaction->setPaidOn(date("Y-m-d H:i:s"));
+                    $GPSTransaction->save();
+
+                    $Car = Doctrine_Core::getTable("car")->find($GPSTransaction->car_id);
+                    $Car->setHasGps(1);
+                    $Car->save();
+
+                    //$formulario = $Functions->generarFormulario(NULL, $Reserve->token);
+                    //$reporte    = $Functions->generarReporte($Reserve->getCar()->id);
+                    //$contrato   = $Functions->generarContrato($Reserve->token);
+                    //$pagare     = $Functions->generarPagare($Reserve->token);
+
+                    
+                    error_log("[khipu/notifyPaymentGPS] Enviando email al usuario");
+
+                    
+                    $subject = "Has Comprado un GPS!";
+                    $body    = $this->getPartial('emails/paymentDoneGPS', array('GPSTransaction' => $GPSTransaction, 'User' => $User));
+                    $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+                    $to      = array($User->email => $User->firstname." ".$User->lastname);
+
+                    $message = Swift_Message::newInstance()
+                        ->setSubject($subject)
+                        ->setBody($body, 'text/html')
+                        ->setFrom($from)
+                        ->setTo($to);
+
+                    
+                    $this->getMailer()->send($message);
+                    error_log("[khipu/notifyPaymentGPS] mensaje enviado");
+
+                    // Correo soporte
+                    $subject = "Nuevo pago. GPS: ".$GPSTransaction->id;
+                    $body    = $this->getPartial('emails/paymentDoneGPS', array('GPSTransaction' => $GPSTransaction, 'User' => $User));
+                    $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+                    $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+
+                    $message = Swift_Message::newInstance()
+                        ->setSubject($subject)
+                        ->setBody($body, 'text/html')
+                        ->setFrom($from)
+                        ->setTo($to);
+                    
+                    error_log("[khipu/notifyPaymentGPS] Enviando email a soporte");
+                    $this->getMailer()->send($message);
+                    error_log("[khipu/notifyPaymentGPS] mensaje enviado");
+
+                    error_log("[khipu/notifyPaymentGPS] ---------- HABEMUS PAGO --------");
+                }
+                
+            } else {
+                error_log("[khipu/notifyPaymentGPS] Error en el proceso de verificacion: Response: ".$response.", Receiver local: ".$settings["receiver_id"].", Receiver request: ".$data["receiver_id"]);
+                $this->_log("NotifyPaymentGPS", "ERROR", "Hubo un error en el proceso de verificacion.");
+            }
+        } catch (Exception $e) {
+            error_log("[khipu/notifyPayment] ERROR: ".$e->getMessage());
+            Utils::reportError($e->getMessage(), "khipu/notifyPaymentGPS");
+        }
+
+        die();
+    }
+
+
 }

@@ -649,6 +649,8 @@ class reservesActions extends sfActions {
             $this->redirect("homepage");
         }
 
+        $this->getUser()->setAttribute("reserveId", $Reserve->getId());
+
         $this->getRequest()->setParameter("reserveId", $Reserve->getId());
         $this->getRequest()->setParameter("transactionId", $Transaction->getId());
 
@@ -784,6 +786,34 @@ class reservesActions extends sfActions {
 
                     $this->durationFrom   = $reserve->getFechaInicio2();
                     $this->durationTo     = $reserve->getFechaTermino2();
+
+                    $oT = $reserve->getTransaction();
+
+                    $this->paymentMethodId = $oT->getPaymentMethodId();
+
+                    if ($this->paymentMethodId == 2) {
+
+                        $this->payType = "Crédito";
+
+                        if ($oT->getWebpayType() == "VD") {
+                            $this->payType = "Débito";
+                            $this->sharesType = "Venta débito";
+                        } elseif ($oT->getWebpayType() == "VN") {
+                            $this->sharesType = "Sin cuotas";
+                        } elseif ($oT->getWebpayType() == "VC") {
+                            $this->sharesType = "Cuotas normales";
+                        } else {
+                            $this->sharesType = "Sin interés";
+                        }
+
+                        $this->sharesNumber = $oT->getWebpaySharesNumber();
+                        $this->authorization = $oT->getWebpayAuthorization();
+                        $this->lastDigits = $oT->getWebpayLastDigits();
+                        $this->amount = $reserve->getPrice() + $reserve->getMontoLiberacion() - $oT->getDiscountamount();
+
+                        $this->reserveId = $reserve->getId();
+                        $this->transactionId = $oT->getId();
+                    }
 
                 } else {
                     echo "No hay compras hechas para ser pagadas (Error de monto invalido)";

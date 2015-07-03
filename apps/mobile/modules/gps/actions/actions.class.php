@@ -40,7 +40,7 @@ class gpsActions extends sfActions {
         $User = Doctrine_Core::getTable('User')->find($userId);
         $this->forward404If(!$User);
    		
-        error_log($payment);
+        
    		// chequeo judicial
         $Gps = Doctrine_core::getTable("gps")->find($gpsId);
         try {
@@ -72,7 +72,7 @@ class gpsActions extends sfActions {
             }
 
             $GPSTransaction = new GPSTransaction();
-            error_log("pasa");
+            
             $GPSTransaction->setCarId($carId);
             $GPSTransaction->setGpsId($gpsId);
             $GPSTransaction->setAmount($gps_price);
@@ -113,9 +113,9 @@ class gpsActions extends sfActions {
 			$userId = $this->getUser()->getAttribute("userid");
 			$carId = $request->getParameter('carId');
 			$Car = Doctrine_core::getTable("car")->find($carId);
-			error_log($Car->getUserId()."   ".$userid);
+			
 			if($Car->getUserId() == $userId){
-				error_log("pasa");
+				
 				$Car->delete();
 				$return["message"] = "El vehículo fué cancelado.";
 			} else {
@@ -141,9 +141,7 @@ class gpsActions extends sfActions {
 
 
         $GPSTransaction = Doctrine_core::getTable("GPSTransaction")->find($transactionId);
-        error_log($transactionId);
         
-
         $carId = $GPSTransaction->car_id;
         $Car = Doctrine_core::getTable("car")->find($carId);
 
@@ -152,7 +150,7 @@ class gpsActions extends sfActions {
             $this->redirect("homepage");                  
 
         }
-        error_log("CAMBIA");
+        
         $GPSTransaction->setViewed(1);
         $GPSTransaction->save();
 
