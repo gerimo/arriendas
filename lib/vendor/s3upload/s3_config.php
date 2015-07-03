@@ -1,6 +1,6 @@
 <?php
 // Bucket Name
-$bucket="arriendas.testing";
+$bucket="arriendas.images";
 //$bucket="arriendas.cl";
 if (!class_exists('S3'))require_once('S3.php');
 			

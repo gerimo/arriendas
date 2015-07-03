@@ -59,28 +59,53 @@ EOF;
         $uploadDir = sfConfig::get("sf_web_dir");
         $path      = $uploadDir . '/images/tmp_images/';
 
+        // se carga la librería del aws
+        require sfConfig::get('sf_lib_dir')."/vendor/s3upload/s3_config.php";
+
         // se obtienen los registros de las imagenes almacenadas en la base de datos
         $Images = Doctrine_core::getTable("image")->findByIsOnS3(0);
 
+        // Indicadores
+        $cantidadImagenesSubidasAlLocal = 0;
+        $cantidadImagenesEliminadasEnLocal = 0;
+        $cantidadImagenesSubidasAlS3 = 0;
+
         // se iteran lás imágenes
         foreach ($Images as $Image) {
-            $this->log("path:" . $Image->path_original);
-            foreach ($medidas as $medida => $value) {
+            $cantidadImagenesSubidasAlLocal = 1 + $cantidadImagenesSubidasAlLocal;
+            // se definen los atributos de la imagen
+            $info_imagen = getimagesize($uploadDir . $Image->path_original);
+            $imagen_ancho = $info_imagen[0];
+            $imagen_alto = $info_imagen[1];
+            $imagen_tipo = $info_imagen['mime'];
 
-                $this->log("MEDIDA: ".$medida." - " . $value);
-                
+            // se detecta el tipo de imágen del archivo original
+            switch ( $imagen_tipo ){
+                case "image/jpg":
+                    $nueva_imagen_sin_path = $Image->getId() . "-original" . ".jpg";
+                    break;
+                case "image/jpeg":
+                    $nueva_imagen_sin_path = $Image->getId() . "-original" . ".jpeg";
+                    break;
+                case "image/png":
+                    $nueva_imagen_sin_path = $Image->getId() . "-original" . ".png";
+                    break;
+                case "image/gif":
+                    $nueva_imagen_sin_path = $Image->getId() . "-original" . ".gif";
+                    break;
+            }
+            
+            // se sube la imagen original al s3
+            if($s3->putObjectFile($uploadDir.$Image->path_original, $bucket , $nueva_imagen_sin_path, S3::ACL_PUBLIC_READ) ) {
+                $s3file_original ='http://'.$bucket.'.s3.amazonaws.com/'.$nueva_imagen_sin_path;
+                $cantidadImagenesSubidasAlS3 = 1 + $cantidadImagenesSubidasAlS3;
+            }
+
+            // se crearán y se subirán las imágenes con las medidas previamente establecidas.
+            foreach ($medidas as $medida => $value) {
                 
                 $miniatura_ancho_maximo = $value[0];
                 $miniatura_alto_maximo = $value[1];
-
-                $this->log($miniatura_ancho_maximo);
-                $this->log($miniatura_alto_maximo);
-
-                // se definen los atributos de la imagen
-                $info_imagen = getimagesize($uploadDir . $Image->path_original);
-                $imagen_ancho = $info_imagen[0];
-                $imagen_alto = $info_imagen[1];
-                $imagen_tipo = $info_imagen['mime'];
 
                 // se establece un "marco" del tamaño especificado anteriormente, en donde de ajustará la imagen en cuestión
                 $lienzo = imagecreatetruecolor( $miniatura_ancho_maximo, $miniatura_alto_maximo );
@@ -121,50 +146,58 @@ EOF;
                 $lienzo = imagecreatetruecolor( $miniatura_ancho, $miniatura_alto );
                 imagecopyresampled($lienzo, $imagen, 0, 0, 0, 0, $miniatura_ancho, $miniatura_alto, $imagen_ancho, $imagen_alto);
 
-                $this->log($nueva_imagen);
                 if(imagejpeg($lienzo, $nueva_imagen, 100)) {
 
-                    // se elimina la foto en s3_temp
-                    // if(unlink($Image->path)) {
-                    //     $this->log($Image->path . " Deleted");
-                    // }
+                    // se sube la imágen al s3
+                    if($s3->putObjectFile($nueva_imagen, $bucket , $nueva_imagen_sin_path, S3::ACL_PUBLIC_READ) ) {
+                        $cantidadImagenesSubidasAlS3 = 1 + $cantidadImagenesSubidasAlS3;
 
-                    // se guarda en s3
-                    //$this->log("lib: " . sfConfiG::get("sf_lib_dir"));
+                        $s3file ='http://'.$bucket.'.s3.amazonaws.com/'.$nueva_imagen_sin_path;
+                        if(unlink($nueva_imagen)){
+                            //$cantidadImagenesEliminadasEnLocal = 1 + $cantidadImagenesEliminadasEnLocal;
+                        }
 
-                    // se reestablecen los datos en la BD
-                    $Image->setIsOnS3(true);
-
+                    }
+                    
                     switch ($medida) {
                         case "xs":
-                            $this->log("xs");
-                            $Image->setPathXs("/images/tmp_images/" . $nueva_imagen_sin_path);
+                            $Image->setPathXs($s3file);
                             break;
 
                         case "sm":
-                            $this->log("sm");
-                            $Image->setPathSm("/images/tmp_images/" . $nueva_imagen_sin_path);
+                            $Image->setPathSm($s3file);
                             break;
 
                         case "md":
-                            $this->log("md");
-                            $Image->setPathMd("/images/tmp_images/" . $nueva_imagen_sin_path);
+                            $Image->setPathMd($s3file);
                             break;
 
                         case "lg":
-                            $this->log("lg");
-                            $Image->setPathLg("/images/tmp_images/" . $nueva_imagen_sin_path);
+                            $Image->setPathLg($s3file);
                             break;
                         
                         default:
-                            $this->log("NA");
                             $Image->setPathLg("N/A");
                             break;
                     }
-                    $Image->save();
+
+                    
                 }
             }
+            if(unlink($uploadDir . $Image->path_original)){
+                $cantidadImagenesEliminadasEnLocal = 1 + $cantidadImagenesEliminadasEnLocal;
+            }
+
+            $Image->setPathOriginal($s3file_original);
+            $Image->setIsOnS3(true);
+
+            $Image->save();
         }
+
+        $this->log("Total de imágenes a procesar: " . $cantidadImagenesSubidasAlLocal);
+        $this->log("Total de imágenes procesadas: " . $cantidadImagenesEliminadasEnLocal);
+        $this->log("Total de imágenes subidas a s3: " . $cantidadImagenesSubidasAlS3);
+        
 
     }
 
