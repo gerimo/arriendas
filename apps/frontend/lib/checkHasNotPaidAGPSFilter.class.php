@@ -16,6 +16,7 @@
                     && $action != 'payGps'
                     && $action != 'processPaymentGPS'
                     && $action != 'processPaymentFinalGPS'
+                    && $action != 'showPayedMessageGPS'
                     && $action != 'logout')
             {
                 
