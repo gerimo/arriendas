@@ -816,7 +816,20 @@ class webpayActions extends sfActions {
         error_log("ProcessPaymentFinal");
         $customer_in_session = $this->getUser()->getAttribute('userid');
         if ($customer_in_session) {
-            $this->redirect("reserves");
+
+            $reserveId = $this->getUser()->getAttribute('reserveId');
+
+            $oReserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
+
+            $oTransaction = $oReserve->getTransaction();
+
+            if ($oTransaction->getCompleted()) {
+                $this->redirect("reserves");
+            } else {
+                $this->getRequest()->setParameter("reserveId", $reserveId);
+                $this->forward("webpay", "processPaymentRejected");
+            }
+            
         } else {
             $this->redirect('@homepage');
         }
