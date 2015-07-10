@@ -18,26 +18,6 @@ abstract class BaseImage extends sfDoctrineRecord {
             'length' => 255
         ));
 
-        $this->hasColumn('path_xs', array(
-            'type' => 'string',
-            'length' => 255
-        ));
-
-        $this->hasColumn('path_sm', array(
-            'type' => 'string',
-            'length' => 255
-        ));
-
-        $this->hasColumn('path_md', array(
-            'type' => 'string',
-            'length' => 255
-        ));
-
-        $this->hasColumn('path_lg', array(
-            'type' => 'string',
-            'length' => 255
-        ));
-
         $this->hasColumn('car_id', array(
             'type' => 'integer',
             'notnull' => false,

@@ -76,4 +76,20 @@ class Image extends BaseImage {
 
 	}
 
+    public function getImageSize($size){
+        $isOns3 = $this->is_on_s3;
+        if($isOns3){
+            $size = strtoupper($size);
+            $sizes = array("XS", "SM", "MD", "LG");
+            $path = $this->path_original;
+            if(in_array($size, $sizes)){
+                $resultado = str_replace("original", $size, $path);
+                if($resultado){
+                    return $resultado;
+                }
+            }
+        }
+        return null;
+    }
+
 }
