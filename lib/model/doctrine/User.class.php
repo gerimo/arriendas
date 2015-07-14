@@ -1682,4 +1682,10 @@ class User extends BaseUser {
         return 1;
     }
 
+    public function getArrayImages(){
+        
+    }
+
+
+
 }

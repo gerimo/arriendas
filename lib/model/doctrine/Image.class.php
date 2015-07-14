@@ -7,8 +7,9 @@ class Image extends BaseImage {
 	public static function uploadImageToTempFolder($tempFile, $size, $name, $type, $userId = null, $carId = null) {
 		require sfConfig::get('sf_app_lib_dir') . "/s3upload/image_check.php";
  		
- 		$msg = null;
-
+        // variable que almacenará el resultado de la funcion, si tuvo exito, devolverá el id de la foto modificada. Si no, el respectivo mensaje
+ 		$msg = null; 
+        $hasChange = false;
         // Extrae la extencion
         list($txt, $ext) = explode(".", $name);
         $ext = strtolower($ext);
@@ -20,9 +21,21 @@ class Image extends BaseImage {
                     $uploadDir = sfConfig::get("sf_web_dir");
         			$path      = $uploadDir . '/images/tmp_images/';
 
-        			// se crea un registro imagen sin y se instancia para adquirir un ID
-        			$image = new Image();
-        			$image->save();
+        			// Verifica si esisten registros de una foto yá subida, si exite se modifica, si no, se crea una instancia.
+                    if($userId){
+                        error_log("se modifica");
+                        $image = Doctrine_core::getTable("image")->findOneByImageTypeIdAndUserId($type, $userId);
+                        $hasChange = true;
+                    }elseif ($carId) {
+                        error_log("se modifica");
+                        $image = Doctrine_core::getTable("image")->findOneByImageTypeIdAndCarId($type, $carId);
+                        $hasChange = true;
+                    }
+
+                    if(!$image){
+                        $image = new Image();
+                        $image->save();
+                    }
 
         			// se establece el nombre de la imagen subida
         			$actual_name = $image->id . "." . $ext;
@@ -50,9 +63,12 @@ class Image extends BaseImage {
                         $image->save();
 
                     } else {
-                    	// se elimina el registro de imagen, si no se pudo guardar
-                    	$image->delete();
-                    	$msg = "Mensaje: Error al guardar la imagen, porfavor intente otra vez.";
+                        // si la imagen fué modificada, no la elimina cuando no pueda guardarla en local
+                        if(!$hasChange){
+                        	// se elimina el registro de imagen, si no se pudo guardar
+                        	$image->delete();
+                        }
+                        $msg = "Mensaje: Error al guardar la imagen, porfavor intente otra vez.";
                     }
 
                     
@@ -69,6 +85,10 @@ class Image extends BaseImage {
         if($msg){
         	return $msg;
         }else{
+            if($hasChange){
+                $image->setIsOnS3(false);   
+                $image->save();
+            }
         	$msg = $image->id;
         	return $msg;
         }
@@ -84,6 +104,7 @@ class Image extends BaseImage {
             $path = $this->path_original;
             if(in_array($size, $sizes)){
                 $resultado = str_replace("original", $size, $path);
+                $resultado = str_replace(array("png", "gif", "jpeg"), "jpg", $resultado);
                 if($resultado){
                     return $resultado;
                 }
