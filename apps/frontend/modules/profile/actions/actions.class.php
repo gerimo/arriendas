@@ -5997,7 +5997,8 @@ class profileActions extends sfActions {
         if (!empty($_FILES)) {
 
             $userId = $this->getUser()->getAttribute("userid");
-            error_log($userId);
+            $User = Doctrine_Core::getTable("user")->find($userId);
+
             $tempFile = $_FILES['filelicense']['tmp_name'];
             $name = $_FILES['filelicense']['name'];
             $size = $_FILES['filelicense']['size'];
@@ -6007,6 +6008,10 @@ class profileActions extends sfActions {
             if(strpos($message, "Mensaje:")){
                 $return["error"] = true;
                 $return["errorMessage"] = $message;
+            }else{
+                $Image = Doctrine_Core::getTable("image")->find($message);
+                $User->setDriverLicenseFile($Image->getImageSize("md"));
+                $User->save();
             }
 
         }
