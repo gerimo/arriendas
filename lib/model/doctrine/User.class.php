@@ -1682,8 +1682,45 @@ class User extends BaseUser {
         return 1;
     }
 
+    public function getFotoPerfilS3(){
+        $Image = Doctrine_Core::getTable("image")->findOneByImageTypeIdAndUserId(1, $this->id);
+        if($Image){
+            return $Image;
+        }
+        return null;
+    }
+
+    public function getFotoLicenciaS3(){
+        $Image = Doctrine_Core::getTable("image")->findOneByImageTypeIdAndUserId(2, $this->id);
+        if($Image){
+            return $Image;
+        }
+        return null;
+    }
+
     public function getArrayImages(){
-        
+        $Images = Doctrine_Core::getTable("image")->findByUserId($this->id);
+        $arrayImages = array();
+
+        foreach ($Images as $Image) {
+
+            switch ($Image->image_type_id) {
+                case 1:
+                    $arrayImages["fotoPerfil"] = $Image;
+                    break;
+
+                case 2:
+                    $arrayImages["fotoLicencia"] = $Image;
+                    break;
+
+                default:
+                    $arrayImages["otro"] = $Image;
+                    break;
+            }
+
+        }
+
+        return $arrayImages;
     }
 
 

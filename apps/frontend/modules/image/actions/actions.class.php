@@ -95,7 +95,7 @@ class imageActions extends sfActions {
             $name = $_FILES['Filedata']['name'];
             $size = $_FILES['Filedata']['size'];
 
-            error_log("subiendo");
+            // se sube la foto al local, se especifica qué tipo de foto es.
             $message = Image::UploadImageToTempFolder($tempFile, $size, $name, 1, $userId);
 
             error_log("RESULTADO: ". $message);
@@ -108,7 +108,22 @@ class imageActions extends sfActions {
 
         }
         
+    }
 
+    public function executeShowImages(sfWebRequest $request){
+        $this->setLayout("newIndexLayout");
+        $imageId = $request->getParameter("id");
+
+        if($imageId){
+            error_log($imageId);
+            $Image = Doctrine_core::getTable("image")->find($imageId);
+            error_log($Image->path_original);
+            $this->imagenXs = $Image->getImageSize("XS");
+            error_log($Image->getImageSize("XS"));
+            $this->imagenSm = $Image->getImageSize("SM");
+            $this->imagenMd = $Image->getImageSize("MD");
+            $this->imagenLg = $Image->getImageSize("LG");
+        }
     }
 
 }

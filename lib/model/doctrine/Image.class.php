@@ -4,8 +4,8 @@ class Image extends BaseImage {
 
 	// método que guarda una imagen en la carpeta temporal del proyecto. devuelve el id de la imagen si se completó con éxito.
 	// De lo contrario devuelve el mensaje de error.
-	public static function uploadImageToTempFolder($tempFile, $size, $name, $type, $userId = null, $carId = null) {
-		require sfConfig::get('sf_app_lib_dir') . "/s3upload/image_check.php";
+	public static function uploadImageToTempFolder($tempFile, $size, $name, $type, $userId = null, $carId = null, $damageId = null) {
+		require sfConfig::get('sf_lib_dir') . "/vendor/s3upload/image_check.php";
  		
         // variable que almacenará el resultado de la funcion, si tuvo exito, devolverá el id de la foto modificada. Si no, el respectivo mensaje
  		$msg = null; 
@@ -23,12 +23,13 @@ class Image extends BaseImage {
 
         			// Verifica si esisten registros de una foto yá subida, si exite se modifica, si no, se crea una instancia.
                     if($userId){
-                        error_log("se modifica");
                         $image = Doctrine_core::getTable("image")->findOneByImageTypeIdAndUserId($type, $userId);
                         $hasChange = true;
                     }elseif ($carId) {
-                        error_log("se modifica");
                         $image = Doctrine_core::getTable("image")->findOneByImageTypeIdAndCarId($type, $carId);
+                        $hasChange = true;
+                    }elseif ($damageId) {
+                        $image = Doctrine_core::getTable("image")->findOneByImageTypeIdAndDamageId($type, $damageId);
                         $hasChange = true;
                     }
 
@@ -40,12 +41,9 @@ class Image extends BaseImage {
         			// se establece el nombre de la imagen subida
         			$actual_name = $image->id . "." . $ext;
 
-        			error_log("PATH: ". $path ."    TEMPFILE: ".$tempFile);
-        			error_log("PATH: ". $path . $actual_name);
-
         			// se guarda la foto en el directorio especificado.
                     if(move_uploaded_file($tempFile, $path . $actual_name)){
-
+                        
                     	// se completan los datos del registro imagen en la DB
                         $image->setPathOriginal('/images/tmp_images/' . $actual_name);
                         $image->setImageTypeId($type);
@@ -58,6 +56,10 @@ class Image extends BaseImage {
                         // si no se envía un Car Id no se setea.
                         if($carId){
                         	$image->setCarId($carId);
+                        }
+
+                        if($damageId){
+                            $image->setDamageId($damageId);
                         }
 
                         $image->save();
@@ -98,17 +100,20 @@ class Image extends BaseImage {
 
     public function getImageSize($size){
         $isOns3 = $this->is_on_s3;
-        if($isOns3){
+        if($isOns3 || strtoupper($size) == "ORIGINAL"){
             $size = strtoupper($size);
             $sizes = array("XS", "SM", "MD", "LG");
             $path = $this->path_original;
             if(in_array($size, $sizes)){
-                $resultado = str_replace("original", $size, $path);
-                $resultado = str_replace(array("png", "gif", "jpeg"), "jpg", $resultado);
+                $resultado = str_replace("original", strtolower($size), $path);
+                $resultado = str_replace(array("png", "gif", "jpeg"), "jpeg", $resultado);
                 if($resultado){
                     return $resultado;
                 }
             }
+        } else {
+            return $this->path_original;
+
         }
         return null;
     }

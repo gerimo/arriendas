@@ -30,6 +30,12 @@ abstract class BaseImage extends sfDoctrineRecord {
             'length' => 11          
         ));
 
+        $this->hasColumn('damage_id', array(
+            'type' => 'integer',
+            'notnull' => false,
+            'length' => 11          
+        ));
+
         $this->hasColumn('image_type_id', array(
             'type' => 'integer',
             'length' => 11          

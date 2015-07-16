@@ -133,6 +133,8 @@ EOF;
                 //se crea la imagen del tipo espefico
                 switch ( $imagen_tipo ){
                     case "image/jpg":
+                        $imagen = imagecreatefromjpeg($uploadDir . $Image->path_original );
+                        break;
                     case "image/jpeg":
                         $imagen = imagecreatefromjpeg($uploadDir . $Image->path_original );
                         break;
@@ -145,13 +147,14 @@ EOF;
                 }
 
                 // se establece el nombre de la imagen final
-                $nueva_imagen_sin_path = $Image->getId() . ".jpg";
+                $nueva_imagen_sin_path = $Image->getId() . ".jpeg";
                 $nueva_imagen = $path . $nueva_imagen_sin_path;
 
                 $lienzo = imagecreatetruecolor( $miniatura_ancho, $miniatura_alto );
                 imagecopyresampled($lienzo, $imagen, 0, 0, 0, 0, $miniatura_ancho, $miniatura_alto, $imagen_ancho, $imagen_alto);
                 
                 if(imagejpeg($lienzo, $nueva_imagen, 100)) {
+
                     $cantidadImagenesTemporalesSubidasEnLocal = $cantidadImagenesTemporalesSubidasEnLocal + 1;
                     // se sube la imágen al s3
                     if($s3->putObjectFile($nueva_imagen, $bucket, $medida."/".$nueva_imagen_sin_path, S3::ACL_PUBLIC_READ) ) {
@@ -162,8 +165,12 @@ EOF;
                             $cantidadImagenesTemporalesEliminadasEnLocal = 1 + $cantidadImagenesTemporalesEliminadasEnLocal;
                         }
                         
+                    } else {
+                        error_log("no sube al s3");
                     }                                
                      
+                } else {
+                    error_log("no se crea la imagen proporcional");
                 }
 
             }

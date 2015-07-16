@@ -165,8 +165,8 @@ class reserveActions extends sfActions {
                     'up_id'       => $UserPay->id,
                     'up_fullname' => ucfirst(strtolower($UserPay->firstname.' '.$UserPay->lastname)),
                     'up_telephone'=> $UserPay->telephone,
-                    'up_license'  => $UserPay->driver_license_file,
-                    'up_check'    => $UserPay->chequeo_judicial,
+                    'up_license'  => $UserPay->getFotoPerfilS3() ? $UserPay->getFotoPerfilS3()->getImageSize('lg') : $UserPay->driver_license_file,
+                    'up_check'    => $UserPay->getFotoLicenciaS3() ? $UserPay->getFotoLicenciaS3()->getImageSize('lg') : $UserPay->chequeo_judicial,
                     'uo_id'       => $UserOwned->id,
                     'c_id'        => $Car->id
                 );  

@@ -442,49 +442,85 @@
 
     function photoData(object) {
         if (object.frente) {
-        	var photo = object.frente.split("/");
-        	var url = photo[photo.length-1];
-            $("#imagePhoto1").attr("src","http://www.arriendas.cl/images/cars/"+url);
+        	if(object.frente.search("cars") < 5){
+	        	$("#imagePhoto1").attr("src",object.frente);
+	        } else {
+	        	var photo = object.frente.split("/");
+	        	var url = photo[photo.length-1];
+	            $("#imagePhoto1").attr("src","http://www.arriendas.cl/images/cars/"+url);
+	        }
         }
         if (object.costadoD) {
-        	var photo = object.costadoD.split("/");
-        	var url = photo[photo.length-1];
-            $("#imagePhoto2").attr("src","http://www.arriendas.cl/images/cars/"+url);
+        	if(object.costadoD.search("cars") < 5){
+        		$("#imagePhoto2").attr("src",object.costadoD);
+        	} else {
+	        	var photo = object.costadoD.split("/");
+	        	var url = photo[photo.length-1];
+	            $("#imagePhoto2").attr("src","http://www.arriendas.cl/images/cars/"+url);
+	        }
         }
         if (object.costadoI) {
-        	var photo = object.costadoI.split("/");
-        	var url = photo[photo.length-1];
-            $("#imagePhoto3").attr("src","http://www.arriendas.cl/images/cars/"+url);
+        	if(object.costadoI.search("cars") < 5){
+        		$("#imagePhoto3").attr("src",object.costadoI);
+        	} else {
+	        	var photo = object.costadoI.split("/");
+	        	var url = photo[photo.length-1];
+	            $("#imagePhoto3").attr("src","http://www.arriendas.cl/images/cars/"+url);
+	        }
         }
         if (object.traseroD) {
-        	var photo = object.traseroD.split("/");
-        	var url = photo[photo.length-1];
-            $("#imagePhoto4").attr("src","http://www.arriendas.cl/images/cars/"+url);
+        	if(object.traseroD.search("cars") < 5){
+        		$("#imagePhoto4").attr("src",object.traseroD);
+        	} else {
+	        	var photo = object.traseroD.split("/");
+	        	var url = photo[photo.length-1];
+	            $("#imagePhoto4").attr("src","http://www.arriendas.cl/images/cars/"+url);
+	        }
         }
         if (object.traseroI) {
-        	var photo = object.traseroI.split("/");
-        	var url = photo[photo.length-1];
-            $("#imagePhoto5").attr("src","http://www.arriendas.cl/images/cars/"+url);
+        	if(object.traseroI.search("cars") < 5){
+        		$("#imagePhoto5").attr("src",object.traseroI);
+        	} else {
+	        	var photo = object.traseroI.split("/");
+	        	var url = photo[photo.length-1];
+	            $("#imagePhoto5").attr("src","http://www.arriendas.cl/images/cars/"+url);
+	        }
         }
         if (object.panel) {
-        	var photo = object.panel.split("/");
-        	var url = photo[photo.length-1];
-            $("#imagePhoto6").attr("src","http://www.arriendas.cl/images/cars/"+url);
+        	if(object.panel.search("cars") < 5){
+        		$("#imagePhoto6").attr("src",object.panel);
+        	} else {
+	        	var photo = object.panel.split("/");
+	        	var url = photo[photo.length-1];
+	            $("#imagePhoto6").attr("src","http://www.arriendas.cl/images/cars/"+url);
+	        }
         }
         if (object.padron) {
-        	var photo = object.padron.split("/");
-        	var url = photo[photo.length-1];
-            $("#imagePhoto7").attr("src","http://www.arriendas.cl/images/cars/"+url);
+        	if(object.padron.search("cars") < 5){
+        		$("#imagePhoto7").attr("src",object.padron);
+        	} else {
+	        	var photo = object.padron.split("/");
+	        	var url = photo[photo.length-1];
+	            $("#imagePhoto7").attr("src","http://www.arriendas.cl/images/cars/"+url);
+	        }
         }
         if (object.accesorio1) {
-        	var photo = object.accesorio1.split("/");
-        	var url = photo[photo.length-1];
-            $("#imagePhoto8").attr("src","http://www.arriendas.cl/images/cars/"+url);
+        	if(object.accesorio1.search("cars") < 5){
+        		$("#imagePhoto8").attr("src",object.accesorio1);
+        	} else {
+	        	var photo = object.accesorio1.split("/");
+	        	var url = photo[photo.length-1];
+	            $("#imagePhoto8").attr("src","http://www.arriendas.cl/images/cars/"+url);
+	        }
         }
         if (object.accesorio2) {
-        	var photo = object.accesorio2.split("/");
-        	var url = photo[photo.length-1];
-            $("#imagePhoto9").attr("src","http://www.arriendas.cl/images/cars/"+url);
+        	if(object.accesorio2.search("cars") < 5){
+        		$("#imagePhoto9").attr("src",object.accesorio2);
+        	} else {
+	        	var photo = object.accesorio2.split("/");
+	        	var url = photo[photo.length-1];
+	            $("#imagePhoto9").attr("src","http://www.arriendas.cl/images/cars/"+url);
+	        }
         }
         if (object.accesoriosSeguro) {
         	var photo = object.accesoriosSeguro.split("/");
@@ -721,10 +757,14 @@
 			} else {
 				if (r.opcion) {
 					$("#description").val(r.description);
-					if (r.urlFoto) {
-						$("#imagePhoto10").attr("src","http://www.arriendas.cl/images/cars/"+r.urlFoto);
+					if (r.urlFotoS3) {
+						$("#imagePhoto10").attr("src",r.urlFotoS3);
 					} else {
-						$("#imagePhoto10").attr("src","http://www.arriendas.cl/images/img_asegura_tu_auto/AutoFrente.png");
+						if(r.urlFoto){
+							$("#imagePhoto10").attr("src","http://www.arriendas.cl/images/cars/"+r.urlFoto);
+						} else {
+							$("#imagePhoto10").attr("src","http://www.arriendas.cl/images/img_asegura_tu_auto/AutoFrente.png");
+						}
 					}
 				} else {
 					$.each(r.data, function(k, v){
