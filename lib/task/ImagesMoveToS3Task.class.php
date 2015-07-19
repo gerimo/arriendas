@@ -62,6 +62,8 @@ EOF;
         // se carga la librería del aws
         require_once sfConfig::get('sf_lib_dir')."/vendor/s3upload/s3_config.php";
 
+        $this->log("Ejecutando...");
+
         // se obtienen los registros de las imagenes almacenadas en la base de datos
         $Images = Doctrine_core::getTable("image")->findByIsOnS3(0);
 
@@ -71,6 +73,7 @@ EOF;
         $cantidadImagenesSubidasAlS3 = 0;
         $cantidadImagenesTemporalesSubidasEnLocal = 0;
         $cantidadImagenesTemporalesEliminadasEnLocal = 0;
+        $cantidadImagenesConProblemasDeSubida = 0;
 
         // se iteran lás imágenes
         foreach ($Images as $Image) {
@@ -166,11 +169,11 @@ EOF;
                         }
                         
                     } else {
-                        error_log("no sube al s3");
+                        $cantidadImagenesConProblemasDeSubida++;
                     }                                
                      
                 } else {
-                    error_log("no se crea la imagen proporcional");
+                    $cantidadImagenesConProblemasDeSubida++;
                 }
 
             }
@@ -192,6 +195,8 @@ EOF;
         $this->log("Total de imágenes temporales Eliminadas: " . $cantidadImagenesTemporalesEliminadasEnLocal);
         $this->log("--------------------------------------------------");
         $this->log("Total de imágenes subidas a s3: " . $cantidadImagenesSubidasAlS3);
+        $this->log("--------------------------------------------------");
+        $this->log("Total de imágenes con error: " . $cantidadImagenesConProblemasDeSubida);
         
 
     }

@@ -112,10 +112,10 @@ class gpsActions extends sfActions {
 		try {
 			$userId = $this->getUser()->getAttribute("userid");
 			$carId = $request->getParameter('carId');
+
 			$Car = Doctrine_core::getTable("car")->find($carId);
 			error_log($Car->getUserId()."   ".$userid);
 			if($Car->getUserId() == $userId){
-				error_log("pasa");
 				$Car->delete();
 				$return["message"] = "El vehículo fué cancelado.";
 			} else {
