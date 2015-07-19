@@ -13,7 +13,7 @@ class gpsActions extends sfActions {
 		$Car = Doctrine_core::getTable("car")->find($carId);
 
         // Cambiar fecha el dia de subida a prod
-		$fecha = Date("Y-m-d H:i:s", strtotime("2015-05-09"));
+		$fecha = Date("Y-m-d H:i:s", strtotime("2015-07-07"));
 
 		//restricciones de acceso a la vista.
 		if($Car->has_gps || $Car->getUserId() != $userId || $Car->getFechaSubida() < $fecha){

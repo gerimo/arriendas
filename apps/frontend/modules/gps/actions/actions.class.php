@@ -13,7 +13,23 @@ class gpsActions extends sfActions {
 		$Car = Doctrine_core::getTable("car")->find($carId);
 
         // Cambiar fecha el dia de subida a prod
-		$fecha = Date("Y-m-d H:i:s", strtotime("2015-05-09"));
+		$fecha = Date("Y-m-d H:i:s", strtotime("2015-07-07"));
+
+        // Comprueba si existen transacciones por visualizar
+        $GPSTransactions = Doctrine_core::getTable("GPSTransaction")->findByCompletedAndViewed(1,0);
+
+        foreach ($GPSTransactions as $GPSTransaction) {
+            $carId_transaction = $GPSTransaction->car_id;
+            if($carId_transaction == $carId){
+                $Car = Doctrine_core::getTable("car")->find($carId);
+                error_log("message");
+                if($Car->getUser()->id == $userId){
+                    $this->redirect('gps/showPayedMessageGPS?transactionId='. $GPSTransaction->id);
+
+                }
+            }
+
+        }
 
 		//restricciones de acceso a la vista.
 		if($Car->has_gps || $Car->getUserId() != $userId || $Car->getFechaSubida() < $fecha){
@@ -114,7 +130,6 @@ class gpsActions extends sfActions {
 			$carId = $request->getParameter('carId');
 
 			$Car = Doctrine_core::getTable("car")->find($carId);
-			error_log($Car->getUserId()."   ".$userid);
 			if($Car->getUserId() == $userId){
 				$Car->delete();
 				$return["message"] = "El vehículo fué cancelado.";
@@ -140,9 +155,7 @@ class gpsActions extends sfActions {
         $transactionId  = $request->getParameter("transactionId", null);
 
 
-        $GPSTransaction = Doctrine_core::getTable("GPSTransaction")->find($transactionId);
-        error_log($transactionId);
-        
+        $GPSTransaction = Doctrine_core::getTable("GPSTransaction")->find($transactionId);        
 
         $carId = $GPSTransaction->car_id;
         $Car = Doctrine_core::getTable("car")->find($carId);
