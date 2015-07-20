@@ -654,81 +654,109 @@ class carsActions extends sfActions {
             /*if ((is_null($User) && $User->getConfirmed()) || !$User->getConfirmedFb()) {
                 $this->redirect('main/index');
             }*/
+
+            $Commune = Doctrine_Core::getTable('Commune')->find($commune);
+
             if (is_null($carId) || $carId == "") {
-                $Car = new Car();
+
+                $Car = new CarTmp();
+
                 $fechaHoy = Date("Y-m-d H:i:s");
                 $Car->setFechaSubida($fechaHoy); 
                 $send = 1;
                 $url = $this->generateUrl('car_price');
+
+                $Car->setAddress($address);
+                $Car->setCommuneId($Commune->id);
+                $Car->setModelId($model);
+                $Car->setYear($ano);
+                $Car->setAddress($address);
+                $Car->setDoors($door);
+                $Car->setTransmission($transmission);
+                $Car->setTipoBencina($benzine);
+                $Car->setPatente($patent);
+                $Car->setUserId($idUsuario);
+                $Car->setColor($color);
+                $Car->setLat($lat);
+                $Car->setLng($lng);
+                $Car->setBabyChair($babyChair);
+                $Car->setCapacity($capacity);
+                $Car->setAccesoriosSeguro($string);
+                $Car->setIsAirportDelivery($isAirportDelivery);
+                $Car->setCityId(27);
+
+                $Car->save();
+
             }else{
+                error_log("modifica");
                 $Car = Doctrine_Core::getTable('car')->find($carId);
                 if($Car->getLat() != $lat && $Car->getLng() != $lng) {
                     $changeDistance = 1;
+                
+                    $url = $this->generateUrl('cars');
+
+                    $Car->setAddress($address);
+                    $Car->setCommune($Commune);
+                    $Car->setModelId($model);
+                    $Car->setYear($ano);
+                    $Car->setAddress($address);
+                    $Car->setDoors($door);
+                    $Car->setTransmission($transmission);
+                    $Car->setTipoBencina($benzine);
+                    $Car->setPatente($patent);
+                    $Car->setUserId($idUsuario);
+                    $Car->setColor($color);
+                    $Car->setLat($lat);
+                    $Car->setLng($lng);
+                    $Car->setBabyChair($babyChair);
+                    $Car->setCapacity($capacity);
+                    $Car->setAccesoriosSeguro($string);
+                    $Car->setIsAirportDelivery($isAirportDelivery);
+                    $Car->setCityId(27);
+
+                    $Car->save();
                 }
-                $url = $this->generateUrl('cars');
             }
             
-            $Commune = Doctrine_Core::getTable('Commune')->find($commune);
-
-            $Car->setAddress($address);
-            $Car->setCommune($Commune);
-            $Car->setModelId($model);
-            $Car->setYear($ano);
-            $Car->setAddress($address);
-            $Car->setDoors($door);
-            $Car->setTransmission($transmission);
-            $Car->setTipoBencina($benzine);
-            $Car->setPatente($patent);
-            $Car->setUserId($idUsuario);
-            $Car->setColor($color);
-            $Car->setLat($lat);
-            $Car->setLng($lng);
-            $Car->setCityId(27);
-            $Car->setBabyChair($babyChair);
-            $Car->setCapacity($capacity);
-            $Car->setAccesoriosSeguro($string);
-            $Car->setIsAirportDelivery($isAirportDelivery);
-            $Car->setCityId(27);
-
-            $Car->save();
+           
 
 
-             if($send == 1){
-                // Correo de notificación de un nuevo vehículo a soporte de arriendas
-                $mail    = new Email();
-                $mailer  = $mail->getMailer();
-                $message = $mail->getMessage();            
+            //  if($send == 1){
+            //     // Correo de notificación de un nuevo vehículo a soporte de arriendas
+            //     $mail    = new Email();
+            //     $mailer  = $mail->getMailer();
+            //     $message = $mail->getMessage();            
 
-                $subject = "¡Se ha registrado un nuevo vehículo!";
-                $body    = $this->getPartial('emails/carCreateSupport', array('Car' => $Car));
-                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-                $to      = array("soporte@arriendas.cl");
+            //     $subject = "¡Se ha registrado un nuevo vehículo!";
+            //     $body    = $this->getPartial('emails/carCreateSupport', array('Car' => $Car));
+            //     $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+            //     $to      = array("soporte@arriendas.cl");
 
-                $message->setSubject($subject);
-                $message->setBody($body, 'text/html');
-                $message->setFrom($from);
-                $message->setTo($to);
-                /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
+            //     $message->setSubject($subject);
+            //     $message->setBody($body, 'text/html');
+            //     $message->setFrom($from);
+            //     $message->setTo($to);
+            //     /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
                 
-                $mailer->send($message);
+            //     $mailer->send($message);
 
-                // Correo de notificación del registro del vehículo al usuario
-                $subject = "¡Tu vehículo ha sido registrado!";
-                $body    = $this->getPartial('emails/carCreateOwner', array('Car' => $Car));
-                $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
-                $to      = array($Car->getUser()->email => $Car->getUser()->firstname." ".$Car->getUser()->lastname);
+            //     // Correo de notificación del registro del vehículo al usuario
+            //     $subject = "¡Tu vehículo ha sido registrado!";
+            //     $body    = $this->getPartial('emails/carCreateOwner', array('Car' => $Car));
+            //     $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+            //     $to      = array($Car->getUser()->email => $Car->getUser()->firstname." ".$Car->getUser()->lastname);
 
-                $message->setSubject($subject);
-                $message->setBody($body, 'text/html');
-                $message->setFrom($from);
-                $message->setTo($to);
-                /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
+            //     $message->setSubject($subject);
+            //     $message->setBody($body, 'text/html');
+            //     $message->setFrom($from);
+            //     $message->setTo($to);
+            //     /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
                 
-                $mailer->send($message);
+            //     $mailer->send($message);
 
-                Notification::make($Car->getUser()->id, 5); 
+            //     Notification::make($Car->getUser()->id, 5); 
 
-            }
+            // }
 
 
             
@@ -737,13 +765,16 @@ class carsActions extends sfActions {
                     CarProximityMetro::setCarProximityMetro($Car);
                 }
             } else {
-                CarProximityMetro::setNewCarProximityMetro($Car);
+                // CarProximityMetro::setNewCarProximityMetro($Car);
             }
 
             $this->getUser()->setAttribute("carId", $Car->getId());
 
-            
-            $return["url_complete"] = $url;
+            if (!$send) {
+                $return["url_complete"] = $url;
+            } else {
+                $return["url_complete"] = "http://local.arriendas.cl/";
+            }
 
         } catch (Exception $e) {
             $return["error"] = true;
