@@ -19,8 +19,10 @@ class CheckGPSPaymentMessageFilter extends sfFilter
                 && $user->isAuthenticated()
                 && $action != 'logout'
                 && $action != 'showPayedMessageGPS'
+                && $action != 'showMessage'
             ) 
         {
+            error_log($action);
         	$userId = sfContext::getInstance()->getUser()->getAttribute('userid');
             $GPSTransactions = Doctrine_core::getTable("GPSTransaction")->findByCompletedAndViewed(1,0);
 
@@ -29,7 +31,7 @@ class CheckGPSPaymentMessageFilter extends sfFilter
             	$Car = Doctrine_core::getTable("car")->find($carId);
             	
             	if($Car->getUser()->id == $userId){
-
+                    error_log("USERID ".$Car->getUser()->id."--".$userId);
         			$this->getContext()->getController()->redirect('gps/showPayedMessageGPS?transactionId='. $GPSTransaction->id);
             		throw new sfStopException();
 
