@@ -629,7 +629,7 @@ class webpayActions extends sfActions {
         error_log("ProcessPaymentFinal");
         
         $token = $request->getPostParameter("token_ws");
-error_log(1);
+error_log($token);
         $Transaction = Doctrine_Core::getTable("Transaction")->findOneByWebpayToken($token);
 
         if ($Transaction) {
