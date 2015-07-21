@@ -629,12 +629,19 @@ class webpayActions extends sfActions {
         error_log("ProcessPaymentFinal");
 
         /*error_log(print_r($request->getParameterHolder(), true));*/
+
+        if (isset($request->getPostParameter("TBK_TOKEN"))) {
+
+            $Transaction = Doctrine_Core::getTable("Transaction")->findOneByWebpayToken($request->getPostParameter("TBK_TOKEN"));
+            $Reserve = Doctrine_Core::getTable('Reserve')->find($Transaction->getReserveId());
+
+            if ($Transaction->getCompleted()) {
+                $this->getRequest()->setParameter("reserveId", $Reserve->getId());
+                $this->forward("webpay", "processPaymentRejected");
+            }
+        }
         
         $token = $request->getPostParameter("token_ws");
-
-        if (!$token) {
-            $token = $request->getPostParameter("TBK_TOKEN");
-        }
 
         $Transaction = Doctrine_Core::getTable("Transaction")->findOneByWebpayToken($token);
 
