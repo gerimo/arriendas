@@ -87,6 +87,7 @@ class webpayActions extends sfActions {
         }
     }
 
+    // Revisar esta acción, no sé qué hace
     public function executeConfirmPayment(sfWebRequest $request) {
 
         error_log("ConfirmPayment");
@@ -199,40 +200,37 @@ class webpayActions extends sfActions {
         
         $this->setLayout("newIndexLayout");
 
-        $customer_in_session = $this->getUser()->getAttribute('userid');
-        if ($customer_in_session) {
+        $token = $request->getPostParameter("token_ws");
 
-            $token = $request->getPostParameter("token_ws");
+        $Transaction = Doctrine_Core::getTable("Transaction")->findOneByWebpayToken($token);
+
+        if ($Transaction) {
+
+            $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certificate_server.crt";
+
+            $Reserve = Doctrine_Core::getTable("Reserve")->find($Transaction->getReserveId());
+
             $webpaySettings = $this->getSettings();
 
-            /* execute payment */
+            $webpayService = new WebpayService($webpaySettings["url"]);
+
             $getTransactionResult = new getTransactionResult();
             $getTransactionResult->tokenInput = $token;
+            
             error_log(print_r(json_encode($getTransactionResult), true));
-
-            $webpayService = new WebpayService($webpaySettings["url"]);
             $getTransactionResultResponse = $webpayService->getTransactionResult($getTransactionResult);
-            $transactionResultOutput = $getTransactionResultResponse->return;
-
             error_log(print_r(json_encode($getTransactionResultResponse), true));
 
             $xmlResponse = $webpayService->soapClient->__getLastResponse();
-            
-            $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certificate_server.crt";
             $soapValidation = new SoapValidation($xmlResponse, $SERVER_CERT_PATH);
-            $validationResult = $soapValidation->getValidationResult();
-
-            $transactionId = $transactionResultOutput->buyOrder;
-            $Transaction = Doctrine_Core::getTable("Transaction")->find($transactionId);
-            $Reserve = Doctrine_Core::getTable("Reserve")->find($Transaction->getReserveId());
-
-            if (!$validationResult) {
+            if (!$soapValidation->getValidationResult()) {
                 $this->getRequest()->setParameter("reserveId", $Reserve->getId());
                 $this->forward("webpay", "processPaymentRejected");
             }
 
+            $transactionResultOutput = $getTransactionResultResponse->return;
+
             /*
-             * Resultado de la autenticación para comercios Webpay Plus
              * TSY: Autenticación exitosa
              * TSN: autenticación fallida.
              * TO: Tiempo máximo excedido para autenticación.
@@ -248,25 +246,23 @@ class webpayActions extends sfActions {
                     $this->forward("webpay", "processPaymentRejected");
                 }
 
-                /* informo a webpay que se recibio la notificación de transaccion */
                 $acknowledgeTransaction = new acknowledgeTransaction();
                 $acknowledgeTransaction->tokenInput = $token;
+
                 error_log(print_r(json_encode($acknowledgeTransaction), true));
                 $acknowledgeTransactionResponse = $webpayService->acknowledgeTransaction($acknowledgeTransaction);
                 error_log(print_r(json_encode($acknowledgeTransactionResponse), true));
                 
                 $xmlResponse = $webpayService->soapClient->__getLastResponse();
-                $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certifacate_server.crt";
                 $soapValidation = new SoapValidation($xmlResponse, $SERVER_CERT_PATH);
-                $validationResult = $soapValidation->getValidationResult();
-                error_log("VALIDATION");
-                error_log(print_r($validationResult, true));
+                if (!$soapValidation->getValidationResult()) {
+                    $this->getRequest()->setParameter("reserveId", $Reserve->getId());
+                    $this->forward("webpay", "processPaymentRejected");
+                }
                 
-                $transactionId = $transactionResultOutput->buyOrder;                
                 $wsTransactionDetailOutput = $transactionResultOutput->detailOutput;
 
                 /*
-                 * Resultados posibles de la transaccion:
                  * 0 Transacción aprobada.
                  * -1 Rechazo de transacción.
                  * -2 Transacción debe reintentarse.
@@ -278,205 +274,24 @@ class webpayActions extends sfActions {
                  * -8 Rubro no autorizado.
                  */
 
-                switch ($wsTransactionDetailOutput->responseCode) {
-                    case "0":
-                        $Transaction = Doctrine_Core::getTable("Transaction")->find($transactionId);
-                        $Reserve     = Doctrine_Core::getTable('Reserve')->find($Transaction->getReserveId());
-                        $this->idReserva = $Reserve->getId();
+                if ($wsTransactionDetailOutput->responseCode == 0) {
 
-                        $wsTransactionCardDetail = $transactionResultOutput->cardDetail;
+                    $this->idReserva = $Reserve->getId();
 
-                        $Transaction->setWebpayType($wsTransactionDetailOutput->paymentTypeCode);
-                        $Transaction->setWebpaySharesNumber($wsTransactionDetailOutput->sharesNumber);
-                        $Transaction->setWebpayAuthorization($wsTransactionDetailOutput->authorizationCode);
-                        $Transaction->setWebpayLastDigits($wsTransactionCardDetail->cardNumber);
-                        $Transaction->save();
+                    $wsTransactionCardDetail = $transactionResultOutput->cardDetail;
 
-                        $montoLiberacion = 0;
-                        if ($Reserve->getLiberadoDeGarantia()) {
-                            $montoLiberacion = $Reserve->getMontoLiberacion();
-                        }
+                    $Transaction->setWebpayType($wsTransactionDetailOutput->paymentTypeCode);
+                    $Transaction->setWebpaySharesNumber($wsTransactionDetailOutput->sharesNumber);
+                    $Transaction->setWebpayAuthorization($wsTransactionDetailOutput->authorizationCode);
+                    $Transaction->setWebpayLastDigits($wsTransactionCardDetail->cardNumber);
+                    $Transaction->save();
 
-                        $finalPrice = $Transaction->getPrice() + $montoLiberacion;
-
-                        if ($finalPrice > 0) {
-                            if (!$Transaction->getCompleted()) {
-                        
-                                error_log("[webpay/processPayment] Nuevo pago recibido");
-
-                                $Renter = $Reserve->getUser();
-                                $Owner  = $Reserve->getCar()->getUser();
-
-                                $Functions = new Functions;
-                                $Functions->generarNroFactura($Reserve, $Transaction);
-
-                                // Notificaciones
-                                Notification::make($Renter->id, 3, $Reserve->id); // pago
-                                
-                                $Transaction->setCompleted(true);
-                                $Transaction->save();
-
-                                $Reserve->setFechaPago(date("Y-m-d H:i:s"));
-                                $Reserve->save();
-
-                                $formulario = $Functions->generarFormulario(NULL, $Reserve->token);
-                                $reporte    = $Functions->generarReporte($Reserve->getCar()->id);
-                                $contrato   = $Functions->generarContrato($Reserve->token);
-                                $pagare     = $Functions->generarPagare($Reserve->token);
-
-                                // Correo dueño
-                                $subject = "¡Has recibido un pago! Apruébalo ahora";
-                                $body    = $this->getPartial('emails/paymentDoneOwner', array('Reserve' => $Reserve));
-                                $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
-                                $to      = array($Owner->email => $Owner->firstname." ".$Owner->lastname);
-
-                                $message = Swift_Message::newInstance()
-                                    ->setSubject($subject)
-                                    ->setBody($body, 'text/html')
-                                    ->setFrom($from)
-                                    ->setTo($to)
-                                    ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
-                                    ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
-                                    ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
-                                
-                                if (!is_null($Renter->getDriverLicenseFile())) {
-                                    $filepath = $Renter->getDriverLicenseFile();
-                                    if (is_file($filepath)) {
-                                        $message->attach(Swift_Attachment::fromPath($Renter->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$Renter->getLicenceFileName()));
-                                    }
-                                }
-                                
-                                error_log("[webpay/processPayment] Enviando email al propietario");
-                                $this->getMailer()->send($message);
-
-                                if($Renter->getDriverLicenseFile()){ // envía un mail al usuario dependiendo si tiene foto de licencia o no
-                                    // Correo arrendatario
-                                    $subject = "La reserva ha sido pagada";
-                                    $body    = $this->getPartial('emails/paymentDoneRenter', array('Reserve' => $Reserve));
-                                    $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
-                                    $to      = array($Renter->email => $Renter->firstname." ".$Renter->lastname);
-
-                                    $message = Swift_Message::newInstance()
-                                        ->setSubject($subject)
-                                        ->setBody($body, 'text/html')
-                                        ->setFrom($from)
-                                        ->setTo($to)
-                                        ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
-                                        ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
-                                        ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'))
-                                        ->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
-
-                                    error_log("[webpay/processPayment] Enviando email al arrendatario");
-                                } else {
-
-                                    $subject = "La reserva ha sido pagada";
-                                    $body    = $this->getPartial('emails/paymentDoneRenterWithoutDriverLicense', array('Renter' => $Renter));
-                                    $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
-                                    $to      = array($Renter->email => $Renter->firstname." ".$Renter->lastname);
-
-                                    $message = Swift_Message::newInstance()
-                                        ->setSubject($subject)
-                                        ->setBody($body, 'text/html')
-                                        ->setFrom($from)
-                                        ->setTo($to);
-
-                                    error_log("[webpay/processPayment] Enviando email al arrendatario sin licencia");
-
-                                }   
-                                $this->getMailer()->send($message);
-
-                                // Correo soporte
-                                $subject = "Nuevo pago. Reserva: ".$Reserve->id;
-                                $body    = $this->getPartial('emails/paymentDoneSupport', array('Reserve' => $Reserve));
-                                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-                                $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
-
-                                $message = Swift_Message::newInstance()
-                                    ->setSubject($subject)
-                                    ->setBody($body, 'text/html')
-                                    ->setFrom($from)
-                                    ->setTo($to)
-                                    ->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"))
-                                    ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
-                                    ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
-                                    ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
-
-                                if (!is_null($Renter->getDriverLicenseFile())) {
-                                    $filepath = $Renter->getDriverLicenseFile();
-                                    if (is_file($filepath)) {
-                                        $message->attach(Swift_Attachment::fromPath($Renter->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$Renter->getLicenceFileName()));
-                                    }
-                                }
-                                
-                                error_log("[webpay/processPayment] Enviando email a soporte");
-                                $this->getMailer()->send($message);
-
-                                // Crea la fila calificaciones habilitada para la fecha de término de reserva + 2 horas (solo si no es una extension de otra reserva)
-                                if (!$Reserve->getIdPadre()) {
-
-                                    $Rating = new Rating();
-                                    $Rating->setFechaHabilitadaDesde($Reserve->getFechaHabilitacionRating());
-                                    $Rating->setIdOwner($Owner->id);
-                                    $Rating->setIdRenter($Renter->id);
-                                    $Rating->save();
-
-                                    // Actualiza rating_id en la tabla Reserve
-                                    $ratingId = $Rating->id;
-                                    $Reserve->setRatingId($ratingId);
-                                    $Reserve->save();
-                                }
-
-                                // Almacena reserveId en la tabla mail calificaciones
-                                $Reserve->encolarMailCalificaciones();
-
-                                error_log("[webpay/processPayment] ---------- HABEMUS PAGO --------");
-
-                                $OpportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findOneByReserveId($Transaction->getReserveId());
-                                if (!$OpportunityQueue) {
-                                    $OpportunityQueue = new OpportunityQueue;
-                                    $OpportunityQueue->setReserveId($Transaction->getReserveId());
-                                    $OpportunityQueue->setPaidAt($Reserve->getFechaPago());
-                                    $OpportunityQueue->save();
-                                }
-
-                                if(!$Reserve->getUser()->getDriverLicenseFile()){
-
-                                    $subject = "Pago de usuario sin licencia de conducir";
-                                    $body    = $this->getPartial('emails/paymentDoneUnverifiedUser', array('Transaction' => $Transaction));
-                                    $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-                                    $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
-
-                                    $message = Swift_Message::newInstance()
-                                        ->setSubject($subject)
-                                        ->setBody($body, 'text/html')
-                                        ->setFrom($from)
-                                        ->setTo($to)
-                                        ->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
-                                    
-                                    $this->getMailer()->send($message);
-                                }
-
-                                $this->voucherUrl = $transactionResultOutput->urlRedirection;
-                                $this->token = $token;
-                            }
-                        }
-                        break;
-                    case "-3":
-                        $this->getRequest()->setParameter("reserveId", $Reserve->getId());
-                        $this->forward("webpay", "processPaymentRejected");
-                        break;
-                    case "-8":
-                        $this->getRequest()->setParameter("reserveId", $Reserve->getId());
-                        $this->forward("webpay", "processPaymentRejected");
-                        break;
-                    default:
-                        $this->getRequest()->setParameter("reserveId", $Reserve->getId());
-                        $this->forward("webpay", "processPaymentRejected");
-                        break;
-                };
-            } elseif ($transactionResultOutput->VCI == "TSN") {
-                $this->getRequest()->setParameter("reserveId", $Reserve->getId());
-                $this->forward("webpay", "processPaymentRejected");
+                    $this->voucherUrl = $transactionResultOutput->urlRedirection;
+                    $this->token = $token;
+                } else {
+                    $this->getRequest()->setParameter("reserveId", $Reserve->getId());
+                    $this->forward("webpay", "processPaymentRejected");
+                }
             } else {
                 $this->getRequest()->setParameter("reserveId", $Reserve->getId());
                 $this->forward("webpay", "processPaymentRejected");
@@ -812,22 +627,175 @@ class webpayActions extends sfActions {
 
     public function executeProcessPaymentFinal(sfWebRequest $request) {
         error_log("ProcessPaymentFinal");
-        $customer_in_session = $this->getUser()->getAttribute('userid');
-        if ($customer_in_session) {
+        
+        $token = $request->getPostParameter("token_ws");
 
-            $reserveId = $this->getUser()->getAttribute('reserveId');
+        $Transaction = Doctrine_Core::getTable("Transaction")->findOneByWebpayToken($token);
 
-            $oReserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
+        if ($Transaction) {
 
-            $oTransaction = $oReserve->getTransaction();
+            $Reserve = Doctrine_Core::getTable('Reserve')->find($Transaction->getReserveId());
 
-            if ($oTransaction->getCompleted()) {
-                $this->redirect("reserves");
-            } else {
-                $this->getRequest()->setParameter("reserveId", $reserveId);
+            if ($Transaction->getCompleted()) {
+                $this->getRequest()->setParameter("reserveId", $Reserve->getId());
                 $this->forward("webpay", "processPaymentRejected");
             }
+
+            error_log("[webpay/processPayment] Nuevo pago recibido");
+
+            $Renter = $Reserve->getUser();
+            $Owner  = $Reserve->getCar()->getUser();
+
+            $Functions = new Functions;
+            $Functions->generarNroFactura($Reserve, $Transaction);
+
+            $Reserve->setFechaPago(date("Y-m-d H:i:s"));
+            $Reserve->save();
+
+            $formulario = $Functions->generarFormulario(NULL, $Reserve->token);
+            $reporte    = $Functions->generarReporte($Reserve->getCar()->id);
+            $contrato   = $Functions->generarContrato($Reserve->token);
+            $pagare     = $Functions->generarPagare($Reserve->token);
+
+            // Correo dueño
+            $subject = "¡Has recibido un pago! Apruébalo ahora";
+            $body    = $this->getPartial('emails/paymentDoneOwner', array('Reserve' => $Reserve));
+            $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+            $to      = array($Owner->email => $Owner->firstname." ".$Owner->lastname);
+
+            $message = Swift_Message::newInstance()
+                ->setSubject($subject)
+                ->setBody($body, 'text/html')
+                ->setFrom($from)
+                ->setTo($to)
+                ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
+                ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
+                ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
             
+            if (!is_null($Renter->getDriverLicenseFile())) {
+                $filepath = $Renter->getDriverLicenseFile();
+                if (is_file($filepath)) {
+                    $message->attach(Swift_Attachment::fromPath($Renter->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$Renter->getLicenceFileName()));
+                }
+            }
+            
+            error_log("[webpay/processPayment] Enviando email al propietario");
+            $this->getMailer()->send($message);
+
+            if($Renter->getDriverLicenseFile()){ // envía un mail al usuario dependiendo si tiene foto de licencia o no
+                // Correo arrendatario
+                $subject = "La reserva ha sido pagada";
+                $body    = $this->getPartial('emails/paymentDoneRenter', array('Reserve' => $Reserve));
+                $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+                $to      = array($Renter->email => $Renter->firstname." ".$Renter->lastname);
+
+                $message = Swift_Message::newInstance()
+                    ->setSubject($subject)
+                    ->setBody($body, 'text/html')
+                    ->setFrom($from)
+                    ->setTo($to)
+                    ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
+                    ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
+                    ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'))
+                    ->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
+
+                error_log("[webpay/processPayment] Enviando email al arrendatario");
+            } else {
+
+                $subject = "La reserva ha sido pagada";
+                $body    = $this->getPartial('emails/paymentDoneRenterWithoutDriverLicense', array('Renter' => $Renter));
+                $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+                $to      = array($Renter->email => $Renter->firstname." ".$Renter->lastname);
+
+                $message = Swift_Message::newInstance()
+                    ->setSubject($subject)
+                    ->setBody($body, 'text/html')
+                    ->setFrom($from)
+                    ->setTo($to);
+
+                error_log("[webpay/processPayment] Enviando email al arrendatario sin licencia");
+
+            }   
+            $this->getMailer()->send($message);
+
+            // Correo soporte
+            $subject = "Nuevo pago. Reserva: ".$Reserve->id;
+            $body    = $this->getPartial('emails/paymentDoneSupport', array('Reserve' => $Reserve));
+            $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+            $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+
+            $message = Swift_Message::newInstance()
+                ->setSubject($subject)
+                ->setBody($body, 'text/html')
+                ->setFrom($from)
+                ->setTo($to)
+                ->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"))
+                ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
+                ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
+                ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+
+            if (!is_null($Renter->getDriverLicenseFile())) {
+                $filepath = $Renter->getDriverLicenseFile();
+                if (is_file($filepath)) {
+                    $message->attach(Swift_Attachment::fromPath($Renter->getDriverLicenseFile())->setFilename("LicenciaArrendatario-".$Renter->getLicenceFileName()));
+                }
+            }
+            
+            error_log("[webpay/processPayment] Enviando email a soporte");
+            $this->getMailer()->send($message);
+
+            // Crea la fila calificaciones habilitada para la fecha de término de reserva + 2 horas (solo si no es una extension de otra reserva)
+            if (!$Reserve->getIdPadre()) {
+
+                $Rating = new Rating();
+                $Rating->setFechaHabilitadaDesde($Reserve->getFechaHabilitacionRating());
+                $Rating->setIdOwner($Owner->id);
+                $Rating->setIdRenter($Renter->id);
+                $Rating->save();
+
+                // Actualiza rating_id en la tabla Reserve
+                $ratingId = $Rating->id;
+                $Reserve->setRatingId($ratingId);
+                $Reserve->save();
+            }
+
+            // Almacena reserveId en la tabla mail calificaciones
+            $Reserve->encolarMailCalificaciones();
+
+            error_log("[webpay/processPayment] ---------- HABEMUS PAGO --------");
+
+            $OpportunityQueue = Doctrine_Core::getTable('OpportunityQueue')->findOneByReserveId($Transaction->getReserveId());
+            if (!$OpportunityQueue) {
+                $OpportunityQueue = new OpportunityQueue;
+                $OpportunityQueue->setReserveId($Transaction->getReserveId());
+                $OpportunityQueue->setPaidAt($Reserve->getFechaPago());
+                $OpportunityQueue->save();
+            }
+
+            if(!$Reserve->getUser()->getDriverLicenseFile()){
+
+                $subject = "Pago de usuario sin licencia de conducir";
+                $body    = $this->getPartial('emails/paymentDoneUnverifiedUser', array('Transaction' => $Transaction));
+                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+                $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+
+                $message = Swift_Message::newInstance()
+                    ->setSubject($subject)
+                    ->setBody($body, 'text/html')
+                    ->setFrom($from)
+                    ->setTo($to)
+                    ->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
+                
+                $this->getMailer()->send($message);
+            }
+
+            // Notificaciones
+            Notification::make($Renter->id, 3, $Reserve->id); // pago
+            
+            $Transaction->setCompleted(true);
+            $Transaction->save();
+
+            $this->redirect('reserves');
         } else {
             $this->redirect('@homepage');
         }
