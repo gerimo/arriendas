@@ -232,28 +232,28 @@ abstract class BaseTransaction extends sfDoctrineRecord
         $this->hasColumn('webpay_type', 'string', 2, array(
              'type' => 'string',
              'length' => 2,
-             'default' => 'null'
+             'default' => null
              ));
         $this->hasColumn('webpay_shares_number', 'integer', null, array(
              'type' => 'integer',
              'length' => 11,
-             'default' => 'null'
+             'default' => null
              ));
         $this->hasColumn('webpay_authorization', 'string', 6, array(
              'type' => 'string',
              'length' => 6,
-             'default' => 'null'
+             'default' => null
              ));
         $this->hasColumn('webpay_last_digits', 'string', 16, array(
              'type' => 'string',
              'length' => 16,
-             'default' => 'null'
+             'default' => null
              ));
 
         $this->hasColumn('webpay_token', array(
              'type' => 'string',
              'length' => 255,
-             'default' => 'null'
+             'default' => null
              ));
 
         $this->index('fk_Transaction_PaymentMethod1', array(
