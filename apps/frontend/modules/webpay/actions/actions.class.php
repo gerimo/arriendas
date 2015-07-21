@@ -637,6 +637,10 @@ class webpayActions extends sfActions {
             $Transaction = Doctrine_Core::getTable("Transaction")->findOneByWebpayToken($token);
             $Reserve = Doctrine_Core::getTable('Reserve')->find($Transaction->getReserveId());
 
+            $webpaySettings = $this->getSettings();
+
+            $webpayService = new WebpayService($webpaySettings["url"]);
+
             $getTransactionResult = new getTransactionResult();
             $getTransactionResult->tokenInput = $token;
             
