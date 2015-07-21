@@ -645,8 +645,12 @@ class webpayActions extends sfActions {
             $getTransactionResult->tokenInput = $token;
             
             error_log(print_r(json_encode($getTransactionResult), true));
-            $getTransactionResultResponse = $webpayService->getTransactionResult($getTransactionResult);
-            error_log(print_r(json_encode($getTransactionResultResponse), true));
+            try {
+                $getTransactionResultResponse = $webpayService->getTransactionResult($getTransactionResult);
+                error_log(print_r(json_encode($getTransactionResultResponse), true));
+            } catch (Exception $e) {
+                error_log("EXCEPTION");
+            }            
 
             $this->getRequest()->setParameter("reserveId", $Reserve->getId());
             $this->forward("webpay", "processPaymentRejected");
