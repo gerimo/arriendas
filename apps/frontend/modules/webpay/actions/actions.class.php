@@ -630,9 +630,11 @@ class webpayActions extends sfActions {
 
         /*error_log(print_r($request->getParameterHolder(), true));*/
 
-        if (isset($request->getPostParameter("TBK_TOKEN"))) {
+        $token = $request->getPostParameter("TBK_TOKEN");
 
-            $Transaction = Doctrine_Core::getTable("Transaction")->findOneByWebpayToken($request->getPostParameter("TBK_TOKEN"));
+        if ($token) {
+
+            $Transaction = Doctrine_Core::getTable("Transaction")->findOneByWebpayToken($token);
             $Reserve = Doctrine_Core::getTable('Reserve')->find($Transaction->getReserveId());
 
             if ($Transaction->getCompleted()) {
