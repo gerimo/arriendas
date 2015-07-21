@@ -628,7 +628,7 @@ class webpayActions extends sfActions {
     public function executeProcessPaymentFinal(sfWebRequest $request) {
         error_log("ProcessPaymentFinal");
 
-        /*error_log(print_r($request->getParameterHolder(), true));*/
+        error_log(print_r($request->getParameterHolder(), true));
 
         $token = $request->getPostParameter("TBK_TOKEN");
 
