@@ -637,6 +637,13 @@ class webpayActions extends sfActions {
             $Transaction = Doctrine_Core::getTable("Transaction")->findOneByWebpayToken($token);
             $Reserve = Doctrine_Core::getTable('Reserve')->find($Transaction->getReserveId());
 
+            $getTransactionResult = new getTransactionResult();
+            $getTransactionResult->tokenInput = $token;
+            
+            error_log(print_r(json_encode($getTransactionResult), true));
+            $getTransactionResultResponse = $webpayService->getTransactionResult($getTransactionResult);
+            error_log(print_r(json_encode($getTransactionResultResponse), true));
+
             $this->getRequest()->setParameter("reserveId", $Reserve->getId());
             $this->forward("webpay", "processPaymentRejected");
         }
