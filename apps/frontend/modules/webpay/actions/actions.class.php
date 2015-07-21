@@ -628,12 +628,12 @@ class webpayActions extends sfActions {
     public function executeProcessPaymentFinal(sfWebRequest $request) {
         error_log("ProcessPaymentFinal");
 
-        error_log(print_r($request->getParameterHolder(), true));
+        /*error_log(print_r($request->getParameterHolder(), true));*/
         
         $token = $request->getPostParameter("token_ws");
 
         if (!$token) {
-            $this->redirect('@homepage');
+            $token = $request->getPostParameter("TBK_TOKEN");
         }
 
         $Transaction = Doctrine_Core::getTable("Transaction")->findOneByWebpayToken($token);
