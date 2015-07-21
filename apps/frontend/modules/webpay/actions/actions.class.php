@@ -10,76 +10,74 @@ class webpayActions extends sfActions {
 
         try {
 
-            $reserveId     = $request->getParameter("reserveId");
-            $transactionId = $request->getParameter("transactionId");
+            $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certificate_server.crt";
+
+            $reserveId     = $request->getParameter("reserveId", null);
+            $transactionId = $request->getParameter("transactionId", null);
             $GPSTransactionId = $request->getParameter("gps_transactionId", null);
 
-           // proceso que verifica si la transaccion es de una reserva o el pago de un gps
-            if(is_null($GPSTransactionId)){
+            $webpaySettings = $this->getSettings();
 
+            $wsInitTransactionInput = new wsInitTransactionInput();
+            $wsInitTransactionInput->wSTransactionType = "TR_NORMAL_WS";
+
+            $wsTransactionDetail = new wsTransactionDetail();
+            $wsTransactionDetail->commerceCode = $webpaySettings["commerceCode"];
+
+            // proceso que verifica si la transaccion es de una reserva o el pago de un gps
+            if ($reserveId && $transactionId) {
                 $Reserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
-                $Transaction = Doctrine_Core::getTable('Transaction')->find($transactionId);
 
+                $Transaction = Doctrine_Core::getTable('Transaction')->find($transactionId);
                 $Transaction->setPaymentMethodId(2);
                 $Transaction->save();
-
-                $webpaySettings = $this->getSettings();
-
-                $wsInitTransactionInput = new wsInitTransactionInput();
-                $wsTransactionDetail = new wsTransactionDetail();
-
-                $wsInitTransactionInput->wSTransactionType = "TR_NORMAL_WS";
+                
                 $wsInitTransactionInput->returnURL = $this->generateUrl("webpay_return", array(), true);
                 $wsInitTransactionInput->finalURL = $this->generateUrl("webpay_final", array(), true);
-
-                $wsTransactionDetail->commerceCode = $webpaySettings["commerceCode"];
+                
                 $wsTransactionDetail->buyOrder = $Transaction->id;
                 $wsTransactionDetail->amount = $Reserve->getPrice() + $Reserve->getMontoLiberacion() - $Transaction->getDiscountamount();
-
-            } else {
+            } elseif ($GPSTransactionId) {
                 $GPSTransaction = Doctrine_Core::getTable("GPSTransaction")->find($GPSTransactionId);
 
-                $webpaySettings = $this->getSettings();
-
-                $wsInitTransactionInput = new wsInitTransactionInput();
-                $wsTransactionDetail = new wsTransactionDetail();
-                $wsInitTransactionInput->wSTransactionType = "TR_NORMAL_WS";
                 $wsInitTransactionInput->returnURL = $this->generateUrl("webpay_gps_return", array(), true);
                 $wsInitTransactionInput->finalURL = $this->generateUrl("webpay_gps_final", array(), true);
                 
-                $wsTransactionDetail->commerceCode = $webpaySettings["commerceCode"];
                 $wsTransactionDetail->buyOrder = "G".$GPSTransaction->id;
                 $wsTransactionDetail->amount = $GPSTransaction->getAmount();
-
+            } else {
+                if ($request->getHost() == "www.arriendas.cl") {
+                    Utils::reportError("Se está intentando realizar un pago que no es una reserva o GPS", "webpay/generatePayment");
+                }
+                $this->redirect('@homepage');
             }
 
             $wsInitTransactionInput->transactionDetails = $wsTransactionDetail;
-            error_log(print_r(json_encode($wsInitTransactionInput), true));
+
             $webpayService = new WebpayService($webpaySettings["url"]);
 
-            $this->checkOutUrl = "#";
-
+            error_log(print_r(json_encode($wsInitTransactionInput), true));
             $initTransactionResponse = $webpayService->initTransaction(
                     array("wsInitTransactionInput" => $wsInitTransactionInput)
             );
+            error_log(print_r(json_encode($initTransactionResponse), true));
 
             $xmlResponse = $webpayService->soapClient->__getLastResponse();
 
-            $SERVER_CERT_PATH = sfConfig::get('sf_lib_dir') . "/vendor/webpay/certificates/certificate_server.crt";
             $soapValidation = new SoapValidation($xmlResponse, $SERVER_CERT_PATH);
-            $validationResult = $soapValidation->getValidationResult();
 
-            if (!$validationResult) {
+            if (!$soapValidation->getValidationResult()) {
                 $this->getRequest()->setParameter("reserveId", $reserveId);
                 $this->forward("webpay", "processPaymentRejected");
-            }
-
-            error_log(print_r(json_encode($initTransactionResponse), true));
+            }            
 
             $wsInitTransactionOutput = $initTransactionResponse->return;
 
             $this->checkOutUrl = $wsInitTransactionOutput->url;
             $this->checkOutToken = $wsInitTransactionOutput->token;
+
+            $Transaction->setWebpayToken($wsInitTransactionOutput->token);
+            $Transaction->save();
 
         } catch (Execption $e) {
             error_log("[webpay/generatePayment] ".$e->getMessage());

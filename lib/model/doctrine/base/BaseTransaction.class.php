@@ -55,6 +55,7 @@
  * @method string          getWebpaySharesNumber() Returns the current record's "webpay_shares_number" value
  * @method string          getWebpayAuthorization() Returns the current record's "webpay_authorization" value
  * @method string          getWebpayLastDigits()   Returns the current record's "webpay_last_digits" value
+ * @method string          getWebpayToken()        Returns the current record's "webpay_token" value
  * 
  * @method Transaction     setId()                 Sets the current record's "id" value
  * @method Transaction     setCar()                Sets the current record's "car" value
@@ -83,6 +84,7 @@
  * @method Transaction     setWebpaySharesNumber() Sets the current record's "webpay_shares_number" value
  * @method Transaction     setWebpayAuthorization() Sets the current record's "webpay_authorization" value
  * @method Transaction     setWebpayLastDigits()   Sets the current record's "webpay_last_digits" value
+ * @method Transaction     setWebpaytoken()        Sets the current record's "webpay_token" value
  * 
  * @package    CarSharing
  * @subpackage model
@@ -245,6 +247,12 @@ abstract class BaseTransaction extends sfDoctrineRecord
         $this->hasColumn('webpay_last_digits', 'string', 16, array(
              'type' => 'string',
              'length' => 16,
+             'default' => 'null'
+             ));
+
+        $this->hasColumn('webpay_token', array(
+             'type' => 'string',
+             'length' => 255,
              'default' => 'null'
              ));
 
