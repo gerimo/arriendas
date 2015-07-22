@@ -773,7 +773,7 @@ class carsActions extends sfActions {
             if (!$send) {
                 $return["url_complete"] = $url;
             } else {
-                $return["url_complete"] = "http://local.arriendas.cl/";
+                $return["url_complete"] = $this->generateUrl('homepage');
             }
 
         } catch (Exception $e) {

@@ -13,7 +13,7 @@ class gpsActions extends sfActions {
 		$carTmpId = $request->getParameter('car');
         $CarTmp = Doctrine_core::getTable("cartmp")->findOneByIdAndCanceled($carTmpId, 0);
         // Cambiar fecha el dia de subida a prod
-		$fecha = Date("Y-m-d H:i:s", strtotime("2015-07-07"));
+		$fecha = Date("Y-m-d H:i:s", strtotime("2015-07-22"));
 
         // Comprueba si existen transacciones por visualizar
         $GPSTransactions = Doctrine_core::getTable("GPSTransaction")->findByCompletedAndViewed(1,0);
@@ -156,7 +156,6 @@ class gpsActions extends sfActions {
             $this->redirect("homepage");                  
 
         }
-        error_log("CAMBIA");
         $GPSTransaction->setViewed(1);
         $GPSTransaction->save();
 

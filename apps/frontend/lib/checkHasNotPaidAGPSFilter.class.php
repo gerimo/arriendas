@@ -27,7 +27,7 @@
                 $Cars = Doctrine_core::getTable("cartmp")->findByUserIdAndCanceled($idUsuario, 0);
                 // Fecha que establece qué autos son "nuevos" y cualos no
                 // el filtro hará efecto bajo los autos "nuevos" que no posean GPS
-                $fecha = Date("Y-m-d H:i:s", strtotime("2015-07-18"));
+                $fecha = Date("Y-m-d H:i:s", strtotime("2015-07-22"));
 
                 foreach ($Cars as $Car) {
                     if($Car->getFechaSubida() > $fecha){
