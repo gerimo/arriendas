@@ -41,9 +41,25 @@ class Image extends BaseImage {
         			// se establece el nombre de la imagen subida
         			$actual_name = $image->id . "." . $ext;
 
+                    // si son distinto formato, se reemplaza el que ya estaba.
+                    if($image->is_on_s3){
+                        if($image->path_original){
+                            // se carga la librería del aws
+                            require_once sfConfig::get('sf_lib_dir')."/vendor/s3upload/s3_config.php";
+                            $arrayPath = explode("/", $image->path_original);
+                            $folder = $arrayPath[4];
+                            $nombre = $arrayPath[5];
+                            if($nombre != $actual_name){
+                                if($s3->deleteObject($bucket, $folder . "/" . $nombre)){
+                                    $success = true;
+                                }
+                            }
+                        }
+                    }
+
         			// se guarda la foto en el directorio especificado.
                     if(move_uploaded_file($tempFile, $path . $actual_name)){
-                        
+
                     	// se completan los datos del registro imagen en la DB
                         $image->setPathOriginal('/images/tmp_images/' . $actual_name);
                         $image->setImageTypeId($type);
@@ -61,6 +77,9 @@ class Image extends BaseImage {
                         if($damageId){
                             $image->setDamageId($damageId);
                         }
+
+                        $image->setIsOnS3(0);
+                        $image->setIsDeleted(0);
 
                         $image->save();
 
@@ -127,7 +146,7 @@ class Image extends BaseImage {
 
         $success = false;
         if(!$this->is_deleted){
-            if($this->is_os_s3){
+            if($this->is_on_s3){
                 $arrayPath = explode("/", $this->path_original);
                 $folder = $arrayPath[4];
                 $nombre = $arrayPath[5];
@@ -149,6 +168,7 @@ class Image extends BaseImage {
                 $this->setIsDeleted(1);
             }
         }
+        $this->save();
         return $success;
     }
 

@@ -1699,7 +1699,7 @@ class User extends BaseUser {
     }
 
     public function getArrayImages(){
-        $Images = Doctrine_Core::getTable("image")->findByUserId($this->id);
+        $Images = Doctrine_Core::getTable("image")->findByUserIdAndIsDeleted($this->id, 0);
         $arrayImages = array();
 
         foreach ($Images as $Image) {

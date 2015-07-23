@@ -502,7 +502,7 @@ where c.id=
   }
 
   public function getArrayImages(){
-    $Images = Doctrine_Core::getTable("image")->findByCarId($this->id);
+    $Images = Doctrine_Core::getTable("image")->findByCarIdAndIsDeleted($this->id, 0);
     $arrayImages = array("fotoPerfil" => null,
       "fotoPadron" => null,
       "seguroFotoFrente" => null,

@@ -108,7 +108,6 @@ EOF;
                 $s3file_original = "https://s3-sa-east-1.amazonaws.com/".$bucket."/original/".$nueva_imagen_sin_path;
                 // $s3file_original ='http://'.$bucket.'.s3.amazonaws.com/'.$nueva_imagen_sin_path;
                 $cantidadImagenesSubidasAlS3 = 1 + $cantidadImagenesSubidasAlS3;
-                $this->log("si sube");
             }
 
             // se crearán y se subirán las imágenes con las medidas previamente establecidas.
