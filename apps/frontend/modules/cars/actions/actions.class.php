@@ -690,32 +690,36 @@ class carsActions extends sfActions {
             }else{
                 error_log("modifica");
                 $Car = Doctrine_Core::getTable('car')->find($carId);
+                
+                $url = $this->generateUrl('cars');
+
+                $Car->setAddress($address);
+                $Car->setCommune($Commune);
+                $Car->setModelId($model);
+                $Car->setYear($ano);
+                $Car->setAddress($address);
+                $Car->setDoors($door);
+                $Car->setTransmission($transmission);
+                $Car->setTipoBencina($benzine);
+                $Car->setPatente($patent);
+                $Car->setUserId($idUsuario);
+                $Car->setColor($color);
+                // $Car->setLat($lat);
+                // $Car->setLng($lng);
+                $Car->setBabyChair($babyChair);
+                $Car->setCapacity($capacity);
+                $Car->setAccesoriosSeguro($string);
+                $Car->setIsAirportDelivery($isAirportDelivery);
+                $Car->setCityId(27);
+
                 if($Car->getLat() != $lat && $Car->getLng() != $lng) {
                     $changeDistance = 1;
-                
-                    $url = $this->generateUrl('cars');
-
-                    $Car->setAddress($address);
-                    $Car->setCommune($Commune);
-                    $Car->setModelId($model);
-                    $Car->setYear($ano);
-                    $Car->setAddress($address);
-                    $Car->setDoors($door);
-                    $Car->setTransmission($transmission);
-                    $Car->setTipoBencina($benzine);
-                    $Car->setPatente($patent);
-                    $Car->setUserId($idUsuario);
-                    $Car->setColor($color);
                     $Car->setLat($lat);
                     $Car->setLng($lng);
-                    $Car->setBabyChair($babyChair);
-                    $Car->setCapacity($capacity);
-                    $Car->setAccesoriosSeguro($string);
-                    $Car->setIsAirportDelivery($isAirportDelivery);
-                    $Car->setCityId(27);
-
-                    $Car->save();
                 }
+
+
+                $Car->save();
             }
             
            

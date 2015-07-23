@@ -922,7 +922,8 @@ class mainActions extends sfActions {
         $arrayImagenesS3 = $this->Car->getArrayImages();
         $arrayImagenes = null;
         $i = 0;
-        $uploadDir = "http://www.arriendas.cl";
+        // $uploadDir = $this->generateUrl('homepage');
+        $uploadDir = "https://www.arriendas.cl/";
 
         if($arrayImagenesS3["seguroFotoFrente"]){
             $arrayImagenes[$i] = $arrayImagenesS3["seguroFotoFrente"]->getImageSize("md");
