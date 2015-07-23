@@ -1037,6 +1037,9 @@ Transaction:
     webpay_last_digits:
       type: string(16)
       default: null
+    webpay_token:
+      type: string(255)
+      default: null
   relations:
     User:
       class: User
