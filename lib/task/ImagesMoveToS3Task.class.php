@@ -65,7 +65,7 @@ EOF;
         $this->log("Ejecutando...");
 
         // se obtienen los registros de las imagenes almacenadas en la base de datos
-        $Images = Doctrine_core::getTable("image")->findByIsOnS3(0);
+        $Images = Doctrine_core::getTable("image")->findByIsOnS3AndIsDeleted(0, 0);
 
         // Indicadores
         $cantidadImagenesSubidasAlLocal = 0;
@@ -108,6 +108,7 @@ EOF;
                 $s3file_original = "https://s3-sa-east-1.amazonaws.com/".$bucket."/original/".$nueva_imagen_sin_path;
                 // $s3file_original ='http://'.$bucket.'.s3.amazonaws.com/'.$nueva_imagen_sin_path;
                 $cantidadImagenesSubidasAlS3 = 1 + $cantidadImagenesSubidasAlS3;
+                $this->log("si sube");
             }
 
             // se crearán y se subirán las imágenes con las medidas previamente establecidas.
@@ -156,6 +157,7 @@ EOF;
                 $lienzo = imagecreatetruecolor( $miniatura_ancho, $miniatura_alto );
                 imagecopyresampled($lienzo, $imagen, 0, 0, 0, 0, $miniatura_ancho, $miniatura_alto, $imagen_ancho, $imagen_alto);
                 
+                $msg = "";
                 if(imagejpeg($lienzo, $nueva_imagen, 100)) {
 
                     $cantidadImagenesTemporalesSubidasEnLocal = $cantidadImagenesTemporalesSubidasEnLocal + 1;
@@ -169,10 +171,12 @@ EOF;
                         }
                         
                     } else {
+                        $msg = $msg . "|| no sube al s3";
                         $cantidadImagenesConProblemasDeSubida++;
                     }                                
                      
                 } else {
+                    $msg = $msg . "|| no se crea el archivo en local";
                     $cantidadImagenesConProblemasDeSubida++;
                 }
 
@@ -182,7 +186,12 @@ EOF;
             }
 
             $Image->setPathOriginal($s3file_original);
-            $Image->setIsOnS3(true);
+
+            if(!$msg){
+                $Image->setIsOnS3(true);
+                $msg = "OK";
+            }
+            
 
             $Image->save();
         }
@@ -197,6 +206,9 @@ EOF;
         $this->log("Total de imágenes subidas a s3: " . $cantidadImagenesSubidasAlS3);
         $this->log("--------------------------------------------------");
         $this->log("Total de imágenes con error: " . $cantidadImagenesConProblemasDeSubida);
+        $this->log("--------------------------------------------------");
+        $this->log("--------------------------------------------------");
+        $this->log("log: " . $msg);
         
 
     }
