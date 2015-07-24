@@ -23,13 +23,13 @@ class Image extends BaseImage {
 
         			// Verifica si esisten registros de una foto yá subida, si exite se modifica, si no, se crea una instancia.
                     if($userId){
-                        $image = Doctrine_core::getTable("image")->findOneByImageTypeIdAndUserId($type, $userId);
+                        $image = Doctrine_core::getTable("image")->findOneByImageTypeIdAndUserIdAndIsDeleted($type, $userId, 0);
                         $hasChange = true;
                     }elseif ($carId) {
-                        $image = Doctrine_core::getTable("image")->findOneByImageTypeIdAndCarId($type, $carId);
+                        $image = Doctrine_core::getTable("image")->findOneByImageTypeIdAndCarIdAndIsDeleted($type, $carId, 0);
                         $hasChange = true;
                     }elseif ($damageId) {
-                        $image = Doctrine_core::getTable("image")->findOneByImageTypeIdAndDamageId($type, $damageId);
+                        $image = Doctrine_core::getTable("image")->findOneByImageTypeIdAndDamageIdAndIsDeleted($type, $damageId, 0);
                         $hasChange = true;
                     }
 
@@ -41,9 +41,25 @@ class Image extends BaseImage {
         			// se establece el nombre de la imagen subida
         			$actual_name = $image->id . "." . $ext;
 
+                    // si son distinto formato, se reemplaza el que ya estaba.
+                    if($image->is_on_s3){
+                        if($image->path_original){
+                            // se carga la librería del aws
+                            require_once sfConfig::get('sf_lib_dir')."/vendor/s3upload/s3_config.php";
+                            $arrayPath = explode("/", $image->path_original);
+                            $folder = $arrayPath[4];
+                            $nombre = $arrayPath[5];
+                            if($nombre != $actual_name){
+                                if($s3->deleteObject($bucket, $folder . "/" . $nombre)){
+                                    $success = true;
+                                }
+                            }
+                        }
+                    }
+
         			// se guarda la foto en el directorio especificado.
                     if(move_uploaded_file($tempFile, $path . $actual_name)){
-                        
+
                     	// se completan los datos del registro imagen en la DB
                         $image->setPathOriginal('/images/tmp_images/' . $actual_name);
                         $image->setImageTypeId($type);
@@ -62,13 +78,16 @@ class Image extends BaseImage {
                             $image->setDamageId($damageId);
                         }
 
+                        $image->setIsOnS3(0);
+                        $image->setIsDeleted(0);
+
                         $image->save();
 
                     } else {
                         // si la imagen fué modificada, no la elimina cuando no pueda guardarla en local
                         if(!$hasChange){
                         	// se elimina el registro de imagen, si no se pudo guardar
-                        	$image->delete();
+                        	$image->setImageDeleted();
                         }
                         $msg = "Mensaje: Error al guardar la imagen, porfavor intente otra vez.";
                     }
@@ -116,6 +135,41 @@ class Image extends BaseImage {
 
         }
         return null;
+    }
+
+    public function setImageDeleted(){
+         // se carga la librería del aws
+        require_once sfConfig::get('sf_lib_dir')."/vendor/s3upload/s3_config.php";
+
+        // se establece el directorio
+        $uploadDir = sfConfig::get("sf_web_dir");
+
+        $success = false;
+        if(!$this->is_deleted){
+            if($this->is_on_s3){
+                $arrayPath = explode("/", $this->path_original);
+                $folder = $arrayPath[4];
+                $nombre = $arrayPath[5];
+
+                if($s3->deleteObject($bucket, $folder . "/" . $nombre)){
+                    $success = true;
+                }
+
+            }else{
+                $arrayPath = explode("/", $this->path_original);
+                $nombre = $arrayPath[4];
+
+                if(unlink($uploadDir .$this->path_original)){
+                    $success = true;
+                }
+            }
+
+            if($success){
+                $this->setIsDeleted(1);
+            }
+        }
+        $this->save();
+        return $success;
     }
 
 }

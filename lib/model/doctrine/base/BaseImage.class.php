@@ -46,6 +46,12 @@ abstract class BaseImage extends sfDoctrineRecord {
          'notnull' => true,
          'default' => 0,
          ));
+
+        $this->hasColumn('is_deleted', 'boolean', null, array(
+         'type' => 'boolean',
+         'notnull' => true,
+         'default' => 0,
+         ));
         
         $this->option('charset', 'utf8');
         $this->option('type', 'InnoDB');
