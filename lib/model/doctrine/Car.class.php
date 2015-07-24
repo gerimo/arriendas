@@ -475,21 +475,178 @@ where c.id=
 
     // Función publica que devuelve un array con las distancias
     // del vehículo en relacion al metro mas próximo.
-    public function getDistancesToMetros() {
+  public function getDistancesToMetros() {
 
-        $Metros = Doctrine_Core::getTable("Metro")->findAll();
-        $metroArray = array();
-                
-        foreach ($Metros as $Metro) {
+      $Metros = Doctrine_Core::getTable("Metro")->findAll();
+      $metroArray = array();
+              
+      foreach ($Metros as $Metro) {
 
-            $distance = round(Utils::distance($this->lat, $this->lng, $Metro->lat, $Metro->lng), 2);
-            $metroArray[$Metro->id] = $distance;
-        }
+          $distance = round(Utils::distance($this->lat, $this->lng, $Metro->lat, $Metro->lng), 2);
+          $metroArray[$Metro->id] = $distance;
+      }
 
-        if($metroArray){
-            return $metroArray;
-        } else { 
-            return false;
-        }
+      if($metroArray){
+          return $metroArray;
+      } else { 
+          return false;
+      }
+  }
+
+  public function getFotoPerfilS3($size){
+    $Image = Doctrine_Core::getTable("image")->findOneByImageTypeIdAndCarId(3, $this->getId());
+    if($Image){
+      return $Image->getImageSize($size);
     }
+    return null;
+  }
+
+  public function getArrayImages(){
+    $Images = Doctrine_Core::getTable("image")->findByCarId($this->id);
+    $arrayImages = array("fotoPerfil" => null,
+      "fotoPadron" => null,
+      "seguroFotoFrente" => null,
+      "seguroFotoCostadoDerecho" => null,
+      "seguroFotoCostadoIzquierdo" => null,
+      "seguroFotoTraseroDerecho" => null,
+      "seguroFotoTraseroIzquierdo" => null,
+      "fotoLlantaDelanteraDerecha" => null,
+      "fotoLlantaDelanteraIzquierda" => null,
+      "fotoLlantaTraseraIzquierda" => null,
+      "fotoLlantaTraseraDerecha" => null,
+      "fotoTablero" => null,
+      "fotoEquipoAudio" => null,
+      "fotoRuedaRepuesto" => null,
+      "fotoAccesorio1" => null,
+      "fotoAccesorio2" => null,
+      "fotoFrontalDerecho" => null,
+      "fotoFrontalIzquierdo" => null,
+      "fotoFrontalCentro" => null,
+      "fotoTraseroIzquierdo" => null,
+      "fotoTraseroDerecho" => null,
+      "fotoTraseroCentro" => null,
+      "fotoLateralDerecho" => null,
+      "fotoLateralIzquierdo" => null,
+      "fotoFrontal" => null,
+      "otro" => null
+    );
+
+    foreach ($Images as $Image) {
+
+      switch ($Image->image_type_id) {
+        case 3:
+          $arrayImages["fotoPerfil"] = $Image;
+          break;
+
+        case 4:
+          $arrayImages["fotoPadron"] = $Image;
+          break;
+
+        case 5:
+          $arrayImages["seguroFotoFrente"] = $Image;
+          break;
+
+        case 6:
+          $arrayImages["seguroFotoCostadoDerecho"] = $Image;
+          break;
+
+        case 7:
+          $arrayImages["seguroFotoCostadoIzquierdo"] = $Image;
+          break;
+
+        case 8:
+          $arrayImages["seguroFotoTraseroDerecho"] = $Image;
+          break;
+
+        case 9:
+          $arrayImages["seguroFotoTraseroIzquierdo"] = $Image;
+          break;
+
+        case 10:
+          $arrayImages["fotoLlantaDelanteraDerecha"] = $Image;
+          break;
+
+        case 11:
+          $arrayImages["fotoLlantaDelanteraIzquierda"] = $Image;
+          break;
+
+        case 12:
+          $arrayImages["fotoLlantaTraseraIzquierda"] = $Image;
+          break;
+
+        case 13:
+          $arrayImages["fotoLlantaTraseraDerecha"] = $Image;
+          break;
+
+        case 14:
+          $arrayImages["fotoTablero"] = $Image;
+          break;
+
+        case 15:
+          $arrayImages["fotoEquipoAudio"] = $Image;
+          break;
+
+        case 16:
+          $arrayImages["fotoRuedaRepuesto"] = $Image;
+          break;
+
+        case 17:
+          $arrayImages["fotoAccesorio1"] = $Image;
+          break;
+
+        case 18:
+          $arrayImages["fotoAccesorio2"] = $Image;
+          break;
+
+        case 19:
+          $arrayImages["fotoFrontalDerecho"] = $Image;
+          break;
+
+        case 20:
+          $arrayImages["fotoFrontalIzquierdo"] = $Image;
+          break;
+
+        case 21:
+          $arrayImages["fotoFrontalCentro"] = $Image;
+          break;
+
+        case 22:
+          $arrayImages["fotoTraseroIzquierdo"] = $Image;
+          break;
+
+        case 23:
+          $arrayImages["fotoTraseroDerecho"] = $Image;
+          break;
+
+        case 23:
+          $arrayImages["fotoTraseroDerecho"] = $Image;
+          break;
+
+        case 24:
+          $arrayImages["fotoTraseroCentro"] = $Image;
+          break;
+
+        case 25:
+          $arrayImages["fotoLateralDerecho"] = $Image;
+          break;
+
+        case 26:
+          $arrayImages["fotoLateralIzquierdo"] = $Image;
+          break;
+
+        case 27:
+          $arrayImages["fotoFrontal"] = $Image;
+          break;
+          
+        default:
+          $arrayImages["otro"] = $Image;
+          break;
+      }
+
+    }
+
+    return $arrayImages;
+
+  }
+
 }

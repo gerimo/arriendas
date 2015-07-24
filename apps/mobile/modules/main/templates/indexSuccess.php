@@ -208,10 +208,14 @@
                     article = "<article class='box'>";
                     article += "<div class='row'>";
                     article += "<div class='col-xs-4 col-md-4 image'>";
-                   if(str > 0) {
-                        article += "<img class='img-responsive' src='http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='rent a car "+ Car.brand +" "+ Car.model +"'/>";
-                    }else   {
-                        article += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='rent a car " + Car.brand +" "+ Car.model +"'/>";
+                    if(Car.photoS3){
+                            article += "<img class='img-responsive' src='" + Car.photoS3+ "' height='99' width='134' alt='rent a car "+ Car.brand +" "+ Car.model +"'/>";
+                    } else {
+                        if(str > 0) {
+                            article += "<img class='img-responsive' src='http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='rent a car "+ Car.brand +" "+ Car.model +"'/>";
+                        }else   {
+                            article += "<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='rent a car " + Car.brand +" "+ Car.model +"'/>";
+                        }
                     }
                     article += "</div>";
                     article += "<div class='col-xs-8 col-md-8 text'>";

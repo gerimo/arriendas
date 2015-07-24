@@ -401,6 +401,15 @@ class carsActions extends sfActions {
 
         $this->getUser()->setAttribute('carId', $carId);
 
+        /* Fotos s3 */
+        $array = $this->Car->getArrayImages();
+        $this->imagen_perfil = $array["fotoPerfil"];
+        $this->imagen_frente = $array["seguroFotoFrente"];
+        $this->imagen_costado_derecho = $array["seguroFotoCostadoDerecho"];
+        $this->imagen_costado_izquierdo = $array["seguroFotoCostadoIzquierdo"];
+        $this->imagen_trasero_derecho = $array["seguroFotoTraseroDerecho"];
+        $this->imagen_trasero_izquierdo = $array["seguroFotoTraseroIzquierdo"];
+
         /*precios*/
         $price = $this->Car->getModel()->getPrice();
         $priceDay = $price/300;
@@ -598,92 +607,127 @@ class carsActions extends sfActions {
             /*if ((is_null($User) && $User->getConfirmed()) || !$User->getConfirmedFb()) {
                 $this->redirect('main/index');
             }*/
+            
+            $Commune = Doctrine_Core::getTable('Commune')->find($commune);
+
             if (is_null($carId) || $carId == "") {
-                $Car = new Car();
+
+                $Car = new CarTmp();
+
                 $fechaHoy = Date("Y-m-d H:i:s");
                 $Car->setFechaSubida($fechaHoy); 
                 $send = 1;
                 $url = $this->generateUrl('car_price');
+
+                $Car->setAddress($address);
+                $Car->setCommuneId($Commune->id);
+                $Car->setModelId($model);
+                $Car->setYear($ano);
+                $Car->setAddress($address);
+                $Car->setDoors($door);
+                $Car->setTransmission($transmission);
+                $Car->setTipoBencina($benzine);
+                $Car->setPatente($patent);
+                $Car->setUserId($idUsuario);
+                $Car->setColor($color);
+                $Car->setLat($lat);
+                $Car->setLng($lng);
+                $Car->setBabyChair($babyChair);
+                $Car->setCapacity($capacity);
+                $Car->setAccesoriosSeguro($string);
+                $Car->setIsAirportDelivery($isAirportDelivery);
+                $Car->setCityId(27);
+
+                $Car->save();
+
             }else{
+                 error_log("modifica");
                 $Car = Doctrine_Core::getTable('car')->find($carId);
+                
+                $url = $this->generateUrl('cars');
+
+                $Car->setAddress($address);
+                $Car->setCommune($Commune);
+                $Car->setModelId($model);
+                $Car->setYear($ano);
+                $Car->setAddress($address);
+                $Car->setDoors($door);
+                $Car->setTransmission($transmission);
+                $Car->setTipoBencina($benzine);
+                $Car->setPatente($patent);
+                $Car->setUserId($idUsuario);
+                $Car->setColor($color);
+                // $Car->setLat($lat);
+                // $Car->setLng($lng);
+                $Car->setBabyChair($babyChair);
+                $Car->setCapacity($capacity);
+                $Car->setAccesoriosSeguro($string);
+                $Car->setIsAirportDelivery($isAirportDelivery);
+                $Car->setCityId(27);
+
                 if($Car->getLat() != $lat && $Car->getLng() != $lng) {
                     $changeDistance = 1;
+                    $Car->setLat($lat);
+                    $Car->setLng($lng);
                 }
-                $url = $this->generateUrl('cars');
+
+
+                $Car->save();
             }
-            
-            $Commune = Doctrine_Core::getTable('Commune')->find($commune);
-
-            $Car->setAddress($address);
-            $Car->setCommune($Commune);
-            $Car->setModelId($model);
-            $Car->setYear($ano);
-            $Car->setAddress($address);
-            $Car->setDoors($door);
-            $Car->setTransmission($transmission);
-            $Car->setTipoBencina($benzine);
-            $Car->setPatente($patent);
-            $Car->setUserId($idUsuario);
-            $Car->setColor($color);
-            $Car->setLat($lat);
-            $Car->setLng($lng);
-            $Car->setCityId(27);
-            $Car->setBabyChair($babyChair);
-            $Car->setCapacity($capacity);
-            $Car->setAccesoriosSeguro($string);
-            $Car->setCityId(27);
-
-            $Car->save();
 
 
-             if($send == 1){
-                // Correo de notificación de un nuevo vehículo a soporte de arriendas
-                $mail    = new Email();
-                $mailer  = $mail->getMailer();
-                $message = $mail->getMessage();            
+            //  if($send == 1){
+            //     // Correo de notificación de un nuevo vehículo a soporte de arriendas
+            //     $mail    = new Email();
+            //     $mailer  = $mail->getMailer();
+            //     $message = $mail->getMessage();            
 
-                $subject = "¡Se ha registrado un nuevo vehículo!";
-                $body    = $this->getPartial('emails/carCreateSupport', array('Car' => $Car));
-                $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-                $to      = array("soporte@arriendas.cl");
+            //     $subject = "¡Se ha registrado un nuevo vehículo!";
+            //     $body    = $this->getPartial('emails/carCreateSupport', array('Car' => $Car));
+            //     $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+            //     $to      = array("soporte@arriendas.cl");
 
-                $message->setSubject($subject);
-                $message->setBody($body, 'text/html');
-                $message->setFrom($from);
-                $message->setTo($to);
-                /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
+            //     $message->setSubject($subject);
+            //     $message->setBody($body, 'text/html');
+            //     $message->setFrom($from);
+            //     $message->setTo($to);
+            //     /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
                 
-                $mailer->send($message);
+            //     $mailer->send($message);
 
-                // Correo de notificación del registro del vehículo al usuario
-                $subject = "¡Tu vehículo ha sido registrado!";
-                $body    = $this->getPartial('emails/carCreateOwner', array('Car' => $Car));
-                $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
-                $to      = array($Car->getUser()->email => $Car->getUser()->firstname." ".$Car->getUser()->lastname);
+            //     // Correo de notificación del registro del vehículo al usuario
+            //     $subject = "¡Tu vehículo ha sido registrado!";
+            //     $body    = $this->getPartial('emails/carCreateOwner', array('Car' => $Car));
+            //     $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+            //     $to      = array($Car->getUser()->email => $Car->getUser()->firstname." ".$Car->getUser()->lastname);
 
-                $message->setSubject($subject);
-                $message->setBody($body, 'text/html');
-                $message->setFrom($from);
-                $message->setTo($to);
-                /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
+            //     $message->setSubject($subject);
+            //     $message->setBody($body, 'text/html');
+            //     $message->setFrom($from);
+            //     $message->setTo($to);
+            //     /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
                 
-                $mailer->send($message);
+            //     $mailer->send($message);
 
-            }
+            // }
             
             if ($carId) {
                 if($changeDistance) {
                     CarProximityMetro::setCarProximityMetro($Car);
                 }
             } else {
-                CarProximityMetro::setNewCarProximityMetro($Car);
+                // CarProximityMetro::setNewCarProximityMetro($Car);
             }
 
             $this->getUser()->setAttribute("carId", $Car->getId());
 
             
-            $return["url_complete"] = $url;
-
+            if (!$send) {
+                $return["url_complete"] = $url;
+            } else {
+                $return["url_complete"] = $this->generateUrl('homepage');
+            }
+            
         } catch (Exception $e) {
             $return["error"] = true;
             $return["errorCode"] = $e->getCode();
@@ -861,449 +905,599 @@ class carsActions extends sfActions {
         $model = $this->Car->getModelId();
         $this->Datos = Car::getSameCar($model, $year);*/
     }
-    /*fotos auto*/
+    // /*fotos auto*/
+    // public function executeUploadPhoto(sfWebRequest $request) {
+
+    //     $return = array("error" => false);
+    //     $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
+
+    //     try {
+
+    //         if (!isset($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
+    //             throw new Exception("No! No! No!", 1);
+    //         }
+
+    //         $name = $_FILES[$request->getParameter('file')]['name'];
+    //         $size = $_FILES[$request->getParameter('file')]['size'];
+    //         $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
+    //         if (!strlen($name)) {
+    //             throw new Exception("Por favor, seleccione una imagen", 2);
+    //         }
+
+    //         list($txt, $ext) = explode(".", $name);
+
+    //         $ext = strtolower($ext);
+
+    //         if (!in_array($ext, $valid_formats)) {
+    //             throw new Exception("Formato de la imagen inválido", 2);
+    //         }
+
+    //         if ($size > (5 * 1024 * 1024)) {
+    //             throw new Exception("La imagen excede el tamaño máximo permitido (1 MB)", 2);                
+    //         }
+            
+    //         /*$sizewh = getimagesize($tmp);
+
+    //         if($sizewh[0] > 194 || $sizewh[1] > 204) {
+    //             echo '<script>alert(\'La imagen no cumple con las dimensiones especificadas. Puede continuar si lo desea\')</script>';
+    //         }*/
+    //         $carId= sfContext::getInstance()->getUser()->getAttribute('carId');
+    //         $actual_image_name = time() . $carId . "." . $ext;
+
+    //         $uploadDir = sfConfig::get("sf_web_dir");
+    //         $path      = $uploadDir . '/images/cars/';
+    //         $fileName  = $actual_image_name . "." . $ext;
+
+    //         $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
+
+    //         $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
+
+    //         if (!$uploaded) {
+    //             throw new Exception("No se pudo subir la imagen de perfil", 1);
+    //         }
+
+    //         sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
+
+    //         /*echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
+    //         echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";*/
+
+    //         $Car = Doctrine_Core::getTable('car')->find($carId);
+    //         $Car->setFotoPerfil("/images/cars/".$actual_image_name);
+    //         $Car->save();
+    //     } catch (Exception $e) {
+    //         $return["error"] = true;
+    //         $return["errorMessage"] = $e->getMessage();
+    //         if ($e->getCode() == 1) {
+    //             $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
+    //         }
+    //         if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
+    //             Utils::reportError($e->getMessage(), "main/uploadPhoto");
+    //         }
+    //     }
+
+    //     $this->renderText(json_encode($return));
+
+    //     return sfView::NONE;
+    // }
+
+    // public function executeUploadPhotoSideRight(sfWebRequest $request) {
+
+    //     $return = array("error" => false);
+    //     $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
+
+    //     try {
+
+    //         if (!isset($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
+    //             throw new Exception("No! No! No!", 1);
+    //         }
+
+    //         $name = $_FILES[$request->getParameter('file')]['name'];
+    //         $size = $_FILES[$request->getParameter('file')]['size'];
+    //         $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
+    //         if (!strlen($name)) {
+    //             throw new Exception("Por favor, seleccione una imagen", 2);
+    //         }
+
+    //         list($txt, $ext) = explode(".", $name);
+
+    //         $ext = strtolower($ext);
+
+    //         if (!in_array($ext, $valid_formats)) {
+    //             throw new Exception("Formato de la imagen inválido", 2);
+    //         }
+
+    //         if ($size > (5 * 1024 * 1024)) {
+    //             throw new Exception("La imagen excede el tamaño máximo permitido (1 MB)", 2);                
+    //         }
+            
+    //         /*$sizewh = getimagesize($tmp);
+
+    //         if($sizewh[0] > 194 || $sizewh[1] > 204) {
+    //             echo '<script>alert(\'La imagen no cumple con las dimensiones especificadas. Puede continuar si lo desea\')</script>';
+    //         }*/
+    //         $carId= sfContext::getInstance()->getUser()->getAttribute('carId');
+    //         $actual_image_name = time() . $carId . "." . $ext;
+
+    //         $uploadDir = sfConfig::get("sf_web_dir");
+    //         $path      = $uploadDir . '/images/cars/';
+    //         $fileName  = $actual_image_name . "." . $ext;
+
+    //         $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
+
+    //         $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
+
+    //         if (!$uploaded) {
+    //             throw new Exception("No se pudo subir la imagen de perfil", 1);
+    //         }
+
+    //         sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
+
+    //         /*echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
+    //         echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";*/
+
+    //         $Car = Doctrine_Core::getTable('car')->find($carId);
+    //         $Car->setSeguroFotoCostadoDerecho("/images/cars/".$actual_image_name);
+    //         $Car->save();
+    //     } catch (Exception $e) {
+    //         $return["error"] = true;
+    //         $return["errorMessage"] = $e->getMessage();
+    //         if ($e->getCode() == 1) {
+    //             $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
+    //         }
+    //         if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
+    //             Utils::reportError($e->getMessage(), "main/uploadPhoto");
+    //         }
+    //     }
+
+    //     $this->renderText(json_encode($return));
+
+    //     return sfView::NONE;
+    // }
+
+    // public function executeUploadPhotoFront(sfWebRequest $request) {
+
+    //     $return = array("error" => false);
+    //     $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
+
+    //     try {
+
+    //         if (!isset($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
+    //             throw new Exception("No! No! No!", 1);
+    //         }
+
+    //         $name = $_FILES[$request->getParameter('file')]['name'];
+    //         $size = $_FILES[$request->getParameter('file')]['size'];
+    //         $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
+    //         if (!strlen($name)) {
+    //             throw new Exception("Por favor, seleccione una imagen", 2);
+    //         }
+
+    //         list($txt, $ext) = explode(".", $name);
+
+    //         $ext = strtolower($ext);
+
+    //         if (!in_array($ext, $valid_formats)) {
+    //             throw new Exception("Formato de la imagen inválido", 2);
+    //         }
+
+    //         if ($size > (5 * 1024 * 1024)) {
+    //             throw new Exception("La imagen excede el tamaño máximo permitido (1 MB)", 2);                
+    //         }
+            
+    //         /*$sizewh = getimagesize($tmp);
+
+    //         if($sizewh[0] > 194 || $sizewh[1] > 204) {
+    //             echo '<script>alert(\'La imagen no cumple con las dimensiones especificadas. Puede continuar si lo desea\')</script>';
+    //         }*/
+    //         $carId= sfContext::getInstance()->getUser()->getAttribute('carId');
+    //         $actual_image_name = time() . $carId . "." . $ext;
+
+    //         $uploadDir = sfConfig::get("sf_web_dir");
+    //         $path      = $uploadDir . '/images/cars/';
+    //         $fileName  = $actual_image_name . "." . $ext;
+
+    //         $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
+
+    //         $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
+
+    //         if (!$uploaded) {
+    //             throw new Exception("No se pudo subir la imagen de perfil", 1);
+    //         }
+
+    //         sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
+
+    //         /*echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
+    //         echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";*/
+
+    //         $Car = Doctrine_Core::getTable('car')->find($carId);
+    //         $Car->setSeguroFotoFrente("/images/cars/".$actual_image_name);
+    //         $Car->save();
+    //     } catch (Exception $e) {
+    //         $return["error"] = true;
+    //         $return["errorMessage"] = $e->getMessage();
+    //         if ($e->getCode() == 1) {
+    //             $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
+    //         }
+    //         if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
+    //             Utils::reportError($e->getMessage(), "main/uploadPhoto");
+    //         }
+    //     }
+
+    //     $this->renderText(json_encode($return));
+
+    //     return sfView::NONE;
+    // }
+
+    // public function executeUploadPhotoSideLeft(sfWebRequest $request) {
+
+    //     $return = array("error" => false);
+    //     $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
+
+    //     try {
+
+    //         if (!isset($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
+    //             throw new Exception("No! No! No!", 1);
+    //         }
+
+    //         $name = $_FILES[$request->getParameter('file')]['name'];
+    //         $size = $_FILES[$request->getParameter('file')]['size'];
+    //         $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
+    //         if (!strlen($name)) {
+    //             throw new Exception("Por favor, seleccione una imagen", 2);
+    //         }
+
+    //         list($txt, $ext) = explode(".", $name);
+
+    //         $ext = strtolower($ext);
+
+    //         if (!in_array($ext, $valid_formats)) {
+    //             throw new Exception("Formato de la imagen inválido", 2);
+    //         }
+
+    //         if ($size > (5 * 1024 * 1024)) {
+    //             throw new Exception("La imagen excede el tamaño máximo permitido (1 MB)", 2);                
+    //         }
+            
+    //         /*$sizewh = getimagesize($tmp);
+
+    //         if($sizewh[0] > 194 || $sizewh[1] > 204) {
+    //             echo '<script>alert(\'La imagen no cumple con las dimensiones especificadas. Puede continuar si lo desea\')</script>';
+    //         }*/
+    //         $carId= sfContext::getInstance()->getUser()->getAttribute('carId');
+    //         $actual_image_name = time() . $carId . "." . $ext;
+
+    //         $uploadDir = sfConfig::get("sf_web_dir");
+    //         $path      = $uploadDir . '/images/cars/';
+    //         $fileName  = $actual_image_name . "." . $ext;
+
+    //         $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
+
+    //         $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
+
+    //         if (!$uploaded) {
+    //             throw new Exception("No se pudo subir la imagen de perfil", 1);
+    //         }
+
+    //         sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
+
+    //         /*echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
+    //         echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";*/
+
+    //         $Car = Doctrine_Core::getTable('car')->find($carId);
+    //         $Car->setSeguroFotoCostadoIzquierdo("/images/cars/".$actual_image_name);
+    //         $Car->save();
+    //     } catch (Exception $e) {
+    //         $return["error"] = true;
+    //         $return["errorMessage"] = $e->getMessage();
+    //         if ($e->getCode() == 1) {
+    //             $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
+    //         }
+    //         if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
+    //             Utils::reportError($e->getMessage(), "main/uploadPhoto");
+    //         }
+    //     }
+
+    //     $this->renderText(json_encode($return));
+
+    //     return sfView::NONE;
+    // }
+
+    // public function executeUploadPhotoBackRight(sfWebRequest $request) {
+
+    //     $return = array("error" => false);
+    //     $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
+
+    //     try {
+
+    //         if (!isset($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
+    //             throw new Exception("No! No! No!", 1);
+    //         }
+
+    //         $name = $_FILES[$request->getParameter('file')]['name'];
+    //         $size = $_FILES[$request->getParameter('file')]['size'];
+    //         $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
+    //         if (!strlen($name)) {
+    //             throw new Exception("Por favor, seleccione una imagen", 2);
+    //         }
+
+    //         list($txt, $ext) = explode(".", $name);
+
+    //         $ext = strtolower($ext);
+
+    //         if (!in_array($ext, $valid_formats)) {
+    //             throw new Exception("Formato de la imagen inválido", 2);
+    //         }
+
+    //         if ($size > (5 * 1024 * 1024)) {
+    //             throw new Exception("La imagen excede el tamaño máximo permitido (1 MB)", 2);                
+    //         }
+            
+    //         /*$sizewh = getimagesize($tmp);
+
+    //         if($sizewh[0] > 194 || $sizewh[1] > 204) {
+    //             echo '<script>alert(\'La imagen no cumple con las dimensiones especificadas. Puede continuar si lo desea\')</script>';
+    //         }*/
+    //         $carId= sfContext::getInstance()->getUser()->getAttribute('carId');
+    //         $actual_image_name = time() . $carId . "." . $ext;
+
+    //         $uploadDir = sfConfig::get("sf_web_dir");
+    //         $path      = $uploadDir . '/images/cars/';
+    //         $fileName  = $actual_image_name . "." . $ext;
+
+    //         $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
+
+    //         $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
+
+    //         if (!$uploaded) {
+    //             throw new Exception("No se pudo subir la imagen de perfil", 1);
+    //         }
+
+    //         sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
+
+    //         /*echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
+    //         echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";*/
+
+    //         $Car = Doctrine_Core::getTable('car')->find($carId);
+    //         $Car->setSeguroFotoTraseroDerecho("/images/cars/".$actual_image_name);
+    //         $Car->save();
+    //     } catch (Exception $e) {
+    //         $return["error"] = true;
+    //         $return["errorMessage"] = $e->getMessage();
+    //         if ($e->getCode() == 1) {
+    //             $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
+    //         }
+    //         if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
+    //             Utils::reportError($e->getMessage(), "main/uploadPhoto");
+    //         }
+    //     }
+
+    //     $this->renderText(json_encode($return));
+
+    //     return sfView::NONE;
+    // }
+
+    // public function executeUploadPhotoBackLeft(sfWebRequest $request) {
+
+    //     $return = array("error" => false);
+    //     $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
+
+    //     try {
+
+    //         if (!isset($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
+    //             throw new Exception("No! No! No!", 1);
+    //         }
+
+    //         $name = $_FILES[$request->getParameter('file')]['name'];
+    //         $size = $_FILES[$request->getParameter('file')]['size'];
+    //         $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
+    //         if (!strlen($name)) {
+    //             throw new Exception("Por favor, seleccione una imagen", 2);
+    //         }
+
+    //         list($txt, $ext) = explode(".", $name);
+
+    //         $ext = strtolower($ext);
+
+    //         if (!in_array($ext, $valid_formats)) {
+    //             throw new Exception("Formato de la imagen inválido", 2);
+    //         }
+
+    //         if ($size > (5 * 1024 * 1024)) {
+    //             throw new Exception("La imagen excede el tamaño máximo permitido (1 MB)", 2);                
+    //         }
+            
+    //         /*$sizewh = getimagesize($tmp);
+
+    //         if($sizewh[0] > 194 || $sizewh[1] > 204) {
+    //             echo '<script>alert(\'La imagen no cumple con las dimensiones especificadas. Puede continuar si lo desea\')</script>';
+    //         }*/
+    //         $carId= sfContext::getInstance()->getUser()->getAttribute('carId');
+    //         $actual_image_name = time() . $carId . "." . $ext;
+
+    //         $uploadDir = sfConfig::get("sf_web_dir");
+    //         $path      = $uploadDir . '/images/cars/';
+    //         $fileName  = $actual_image_name . "." . $ext;
+
+    //         $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
+
+    //         $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
+
+    //         if (!$uploaded) {
+    //             throw new Exception("No se pudo subir la imagen de perfil", 1);
+    //         }
+
+    //         sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
+
+    //         /*echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
+    //         echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";*/
+
+    //         $Car = Doctrine_Core::getTable('car')->find($carId);
+    //         $Car->setSeguroFotoTraseroIzquierdo("/images/cars/".$actual_image_name);
+    //         $Car->save();
+    //     } catch (Exception $e) {
+    //         $return["error"] = true;
+    //         $return["errorMessage"] = $e->getMessage();
+    //         if ($e->getCode() == 1) {
+    //             $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
+    //         }
+    //         if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
+    //             Utils::reportError($e->getMessage(), "main/uploadPhoto");
+    //         }
+    //     }
+
+    //     $this->renderText(json_encode($return));
+
+    //     return sfView::NONE;
+    // }
+
     public function executeUploadPhoto(sfWebRequest $request) {
-
         $return = array("error" => false);
-        $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
 
-        try {
-
-            if (!isset($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
-                throw new Exception("No! No! No!", 1);
-            }
-
-            $name = $_FILES[$request->getParameter('file')]['name'];
-            $size = $_FILES[$request->getParameter('file')]['size'];
-            $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
-            if (!strlen($name)) {
-                throw new Exception("Por favor, seleccione una imagen", 2);
-            }
-
-            list($txt, $ext) = explode(".", $name);
-
-            $ext = strtolower($ext);
-
-            if (!in_array($ext, $valid_formats)) {
-                throw new Exception("Formato de la imagen inválido", 2);
-            }
-
-            if ($size > (5 * 1024 * 1024)) {
-                throw new Exception("La imagen excede el tamaño máximo permitido (1 MB)", 2);                
-            }
+        if (!empty($_FILES)) {
             
-            /*$sizewh = getimagesize($tmp);
+            $carId = sfContext::getInstance()->getUser()->getAttribute('carId');
 
-            if($sizewh[0] > 194 || $sizewh[1] > 204) {
-                echo '<script>alert(\'La imagen no cumple con las dimensiones especificadas. Puede continuar si lo desea\')</script>';
-            }*/
-            $carId= sfContext::getInstance()->getUser()->getAttribute('carId');
-            $actual_image_name = time() . $carId . "." . $ext;
+            $tempFile = $_FILES['filePhotoCar']['tmp_name'];
+            $name = $_FILES['filePhotoCar']['name'];
+            $size = $_FILES['filePhotoCar']['size'];
 
-            $uploadDir = sfConfig::get("sf_web_dir");
-            $path      = $uploadDir . '/images/cars/';
-            $fileName  = $actual_image_name . "." . $ext;
+            // se sube la foto al local, se especifica qué tipo de foto es.
+            $message = Image::UploadImageToTempFolder($tempFile, $size, $name, 3, null, $carId);
 
-            $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
-
-            $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
-
-            if (!$uploaded) {
-                throw new Exception("No se pudo subir la imagen de perfil", 1);
+            if(strpos($message, "Mensaje:")){
+                $return["error"] = true;
+                $return["errorMessage"] = $message;
             }
 
-            sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
-
-            /*echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
-            echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";*/
-
-            $Car = Doctrine_Core::getTable('car')->find($carId);
-            $Car->setFotoPerfil("/images/cars/".$actual_image_name);
-            $Car->save();
-        } catch (Exception $e) {
-            $return["error"] = true;
-            $return["errorMessage"] = $e->getMessage();
-            if ($e->getCode() == 1) {
-                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
-            }
-            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
-                Utils::reportError($e->getMessage(), "main/uploadPhoto");
-            }
         }
-
         $this->renderText(json_encode($return));
 
-        return sfView::NONE;
-    }
-
-    public function executeUploadPhotoSideRight(sfWebRequest $request) {
-
-        $return = array("error" => false);
-        $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
-
-        try {
-
-            if (!isset($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
-                throw new Exception("No! No! No!", 1);
-            }
-
-            $name = $_FILES[$request->getParameter('file')]['name'];
-            $size = $_FILES[$request->getParameter('file')]['size'];
-            $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
-            if (!strlen($name)) {
-                throw new Exception("Por favor, seleccione una imagen", 2);
-            }
-
-            list($txt, $ext) = explode(".", $name);
-
-            $ext = strtolower($ext);
-
-            if (!in_array($ext, $valid_formats)) {
-                throw new Exception("Formato de la imagen inválido", 2);
-            }
-
-            if ($size > (5 * 1024 * 1024)) {
-                throw new Exception("La imagen excede el tamaño máximo permitido (1 MB)", 2);                
-            }
-            
-            /*$sizewh = getimagesize($tmp);
-
-            if($sizewh[0] > 194 || $sizewh[1] > 204) {
-                echo '<script>alert(\'La imagen no cumple con las dimensiones especificadas. Puede continuar si lo desea\')</script>';
-            }*/
-            $carId= sfContext::getInstance()->getUser()->getAttribute('carId');
-            $actual_image_name = time() . $carId . "." . $ext;
-
-            $uploadDir = sfConfig::get("sf_web_dir");
-            $path      = $uploadDir . '/images/cars/';
-            $fileName  = $actual_image_name . "." . $ext;
-
-            $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
-
-            $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
-
-            if (!$uploaded) {
-                throw new Exception("No se pudo subir la imagen de perfil", 1);
-            }
-
-            sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
-
-            /*echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
-            echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";*/
-
-            $Car = Doctrine_Core::getTable('car')->find($carId);
-            $Car->setSeguroFotoCostadoDerecho("/images/cars/".$actual_image_name);
-            $Car->save();
-        } catch (Exception $e) {
-            $return["error"] = true;
-            $return["errorMessage"] = $e->getMessage();
-            if ($e->getCode() == 1) {
-                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
-            }
-            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
-                Utils::reportError($e->getMessage(), "main/uploadPhoto");
-            }
-        }
-
-        $this->renderText(json_encode($return));
-
-        return sfView::NONE;
+        return sfView::NONE;  
     }
 
     public function executeUploadPhotoFront(sfWebRequest $request) {
-
         $return = array("error" => false);
-        $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
 
-        try {
-
-            if (!isset($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
-                throw new Exception("No! No! No!", 1);
-            }
-
-            $name = $_FILES[$request->getParameter('file')]['name'];
-            $size = $_FILES[$request->getParameter('file')]['size'];
-            $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
-            if (!strlen($name)) {
-                throw new Exception("Por favor, seleccione una imagen", 2);
-            }
-
-            list($txt, $ext) = explode(".", $name);
-
-            $ext = strtolower($ext);
-
-            if (!in_array($ext, $valid_formats)) {
-                throw new Exception("Formato de la imagen inválido", 2);
-            }
-
-            if ($size > (5 * 1024 * 1024)) {
-                throw new Exception("La imagen excede el tamaño máximo permitido (1 MB)", 2);                
-            }
+        if (!empty($_FILES)) {
             
-            /*$sizewh = getimagesize($tmp);
+            $carId = sfContext::getInstance()->getUser()->getAttribute('carId');
 
-            if($sizewh[0] > 194 || $sizewh[1] > 204) {
-                echo '<script>alert(\'La imagen no cumple con las dimensiones especificadas. Puede continuar si lo desea\')</script>';
-            }*/
-            $carId= sfContext::getInstance()->getUser()->getAttribute('carId');
-            $actual_image_name = time() . $carId . "." . $ext;
+            $tempFile = $_FILES['filePhotoCarFront']['tmp_name'];
+            $name = $_FILES['filePhotoCarFront']['name'];
+            $size = $_FILES['filePhotoCarFront']['size'];
 
-            $uploadDir = sfConfig::get("sf_web_dir");
-            $path      = $uploadDir . '/images/cars/';
-            $fileName  = $actual_image_name . "." . $ext;
+            // se sube la foto al local, se especifica qué tipo de foto es.
+            $message = Image::UploadImageToTempFolder($tempFile, $size, $name, 5, null, $carId);
 
-            $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
-
-            $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
-
-            if (!$uploaded) {
-                throw new Exception("No se pudo subir la imagen de perfil", 1);
+            if(strpos($message, "Mensaje:")){
+                $return["error"] = true;
+                $return["errorMessage"] = $message;
             }
 
-            sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
-
-            /*echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
-            echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";*/
-
-            $Car = Doctrine_Core::getTable('car')->find($carId);
-            $Car->setSeguroFotoFrente("/images/cars/".$actual_image_name);
-            $Car->save();
-        } catch (Exception $e) {
-            $return["error"] = true;
-            $return["errorMessage"] = $e->getMessage();
-            if ($e->getCode() == 1) {
-                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
-            }
-            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
-                Utils::reportError($e->getMessage(), "main/uploadPhoto");
-            }
         }
-
         $this->renderText(json_encode($return));
 
-        return sfView::NONE;
+        return sfView::NONE;  
+    }
+
+    public function executeUploadPhotoSideRight(sfWebRequest $request) {
+        $return = array("error" => false);
+
+        if (!empty($_FILES)) {
+            
+            $carId = sfContext::getInstance()->getUser()->getAttribute('carId');
+
+            $tempFile = $_FILES['filePhotoCarSideRight']['tmp_name'];
+            $name = $_FILES['filePhotoCarSideRight']['name'];
+            $size = $_FILES['filePhotoCarSideRight']['size'];
+
+            // se sube la foto al local, se especifica qué tipo de foto es.
+            $message = Image::UploadImageToTempFolder($tempFile, $size, $name, 6, null, $carId);
+
+            if(strpos($message, "Mensaje:")){
+                $return["error"] = true;
+                $return["errorMessage"] = $message;
+            }
+
+        }
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;  
     }
 
     public function executeUploadPhotoSideLeft(sfWebRequest $request) {
-
         $return = array("error" => false);
-        $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
 
-        try {
-
-            if (!isset($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
-                throw new Exception("No! No! No!", 1);
-            }
-
-            $name = $_FILES[$request->getParameter('file')]['name'];
-            $size = $_FILES[$request->getParameter('file')]['size'];
-            $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
-            if (!strlen($name)) {
-                throw new Exception("Por favor, seleccione una imagen", 2);
-            }
-
-            list($txt, $ext) = explode(".", $name);
-
-            $ext = strtolower($ext);
-
-            if (!in_array($ext, $valid_formats)) {
-                throw new Exception("Formato de la imagen inválido", 2);
-            }
-
-            if ($size > (5 * 1024 * 1024)) {
-                throw new Exception("La imagen excede el tamaño máximo permitido (1 MB)", 2);                
-            }
+        if (!empty($_FILES)) {
             
-            /*$sizewh = getimagesize($tmp);
+            $carId = sfContext::getInstance()->getUser()->getAttribute('carId');
 
-            if($sizewh[0] > 194 || $sizewh[1] > 204) {
-                echo '<script>alert(\'La imagen no cumple con las dimensiones especificadas. Puede continuar si lo desea\')</script>';
-            }*/
-            $carId= sfContext::getInstance()->getUser()->getAttribute('carId');
-            $actual_image_name = time() . $carId . "." . $ext;
+            $tempFile = $_FILES['filePhotoCarSideLeft']['tmp_name'];
+            $name = $_FILES['filePhotoCarSideLeft']['name'];
+            $size = $_FILES['filePhotoCarSideLeft']['size'];
 
-            $uploadDir = sfConfig::get("sf_web_dir");
-            $path      = $uploadDir . '/images/cars/';
-            $fileName  = $actual_image_name . "." . $ext;
+            // se sube la foto al local, se especifica qué tipo de foto es.
+            $message = Image::UploadImageToTempFolder($tempFile, $size, $name, 7, null, $carId);
 
-            $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
-
-            $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
-
-            if (!$uploaded) {
-                throw new Exception("No se pudo subir la imagen de perfil", 1);
+            if(strpos($message, "Mensaje:")){
+                $return["error"] = true;
+                $return["errorMessage"] = $message;
             }
 
-            sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
-
-            /*echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
-            echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";*/
-
-            $Car = Doctrine_Core::getTable('car')->find($carId);
-            $Car->setSeguroFotoCostadoIzquierdo("/images/cars/".$actual_image_name);
-            $Car->save();
-        } catch (Exception $e) {
-            $return["error"] = true;
-            $return["errorMessage"] = $e->getMessage();
-            if ($e->getCode() == 1) {
-                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
-            }
-            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
-                Utils::reportError($e->getMessage(), "main/uploadPhoto");
-            }
         }
-
         $this->renderText(json_encode($return));
 
-        return sfView::NONE;
+        return sfView::NONE;  
     }
 
     public function executeUploadPhotoBackRight(sfWebRequest $request) {
-
         $return = array("error" => false);
-        $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
 
-        try {
-
-            if (!isset($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
-                throw new Exception("No! No! No!", 1);
-            }
-
-            $name = $_FILES[$request->getParameter('file')]['name'];
-            $size = $_FILES[$request->getParameter('file')]['size'];
-            $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
-            if (!strlen($name)) {
-                throw new Exception("Por favor, seleccione una imagen", 2);
-            }
-
-            list($txt, $ext) = explode(".", $name);
-
-            $ext = strtolower($ext);
-
-            if (!in_array($ext, $valid_formats)) {
-                throw new Exception("Formato de la imagen inválido", 2);
-            }
-
-            if ($size > (5 * 1024 * 1024)) {
-                throw new Exception("La imagen excede el tamaño máximo permitido (1 MB)", 2);                
-            }
+        if (!empty($_FILES)) {
             
-            /*$sizewh = getimagesize($tmp);
+            $carId = sfContext::getInstance()->getUser()->getAttribute('carId');
 
-            if($sizewh[0] > 194 || $sizewh[1] > 204) {
-                echo '<script>alert(\'La imagen no cumple con las dimensiones especificadas. Puede continuar si lo desea\')</script>';
-            }*/
-            $carId= sfContext::getInstance()->getUser()->getAttribute('carId');
-            $actual_image_name = time() . $carId . "." . $ext;
+            $tempFile = $_FILES['filePhotoCarBackRight']['tmp_name'];
+            $name = $_FILES['filePhotoCarBackRight']['name'];
+            $size = $_FILES['filePhotoCarBackRight']['size'];
 
-            $uploadDir = sfConfig::get("sf_web_dir");
-            $path      = $uploadDir . '/images/cars/';
-            $fileName  = $actual_image_name . "." . $ext;
+            // se sube la foto al local, se especifica qué tipo de foto es.
+            $message = Image::UploadImageToTempFolder($tempFile, $size, $name, 8, null, $carId);
 
-            $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
-
-            $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
-
-            if (!$uploaded) {
-                throw new Exception("No se pudo subir la imagen de perfil", 1);
+            if(strpos($message, "Mensaje:")){
+                $return["error"] = true;
+                $return["errorMessage"] = $message;
             }
 
-            sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
-
-            /*echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
-            echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";*/
-
-            $Car = Doctrine_Core::getTable('car')->find($carId);
-            $Car->setSeguroFotoTraseroDerecho("/images/cars/".$actual_image_name);
-            $Car->save();
-        } catch (Exception $e) {
-            $return["error"] = true;
-            $return["errorMessage"] = $e->getMessage();
-            if ($e->getCode() == 1) {
-                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
-            }
-            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
-                Utils::reportError($e->getMessage(), "main/uploadPhoto");
-            }
         }
-
         $this->renderText(json_encode($return));
 
-        return sfView::NONE;
+        return sfView::NONE;  
     }
 
     public function executeUploadPhotoBackLeft(sfWebRequest $request) {
-
         $return = array("error" => false);
-        $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
 
-        try {
-
-            if (!isset($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
-                throw new Exception("No! No! No!", 1);
-            }
-
-            $name = $_FILES[$request->getParameter('file')]['name'];
-            $size = $_FILES[$request->getParameter('file')]['size'];
-            $tmp  = $_FILES[$request->getParameter('file')]['tmp_name'];
-            if (!strlen($name)) {
-                throw new Exception("Por favor, seleccione una imagen", 2);
-            }
-
-            list($txt, $ext) = explode(".", $name);
-
-            $ext = strtolower($ext);
-
-            if (!in_array($ext, $valid_formats)) {
-                throw new Exception("Formato de la imagen inválido", 2);
-            }
-
-            if ($size > (5 * 1024 * 1024)) {
-                throw new Exception("La imagen excede el tamaño máximo permitido (1 MB)", 2);                
-            }
+        if (!empty($_FILES)) {
             
-            /*$sizewh = getimagesize($tmp);
+            $carId = sfContext::getInstance()->getUser()->getAttribute('carId');
 
-            if($sizewh[0] > 194 || $sizewh[1] > 204) {
-                echo '<script>alert(\'La imagen no cumple con las dimensiones especificadas. Puede continuar si lo desea\')</script>';
-            }*/
-            $carId= sfContext::getInstance()->getUser()->getAttribute('carId');
-            $actual_image_name = time() . $carId . "." . $ext;
+            $tempFile = $_FILES['filePhotoCarBackLeft']['tmp_name'];
+            $name = $_FILES['filePhotoCarBackLeft']['name'];
+            $size = $_FILES['filePhotoCarBackLeft']['size'];
 
-            $uploadDir = sfConfig::get("sf_web_dir");
-            $path      = $uploadDir . '/images/cars/';
-            $fileName  = $actual_image_name . "." . $ext;
+            // se sube la foto al local, se especifica qué tipo de foto es.
+            $message = Image::UploadImageToTempFolder($tempFile, $size, $name, 9, null, $carId);
 
-            $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
-
-            $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
-
-            if (!$uploaded) {
-                throw new Exception("No se pudo subir la imagen de perfil", 1);
+            if(strpos($message, "Mensaje:")){
+                $return["error"] = true;
+                $return["errorMessage"] = $message;
             }
 
-            sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
-
-            /*echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
-            echo "<img src='" . image_path("users/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";*/
-
-            $Car = Doctrine_Core::getTable('car')->find($carId);
-            $Car->setSeguroFotoTraseroIzquierdo("/images/cars/".$actual_image_name);
-            $Car->save();
-        } catch (Exception $e) {
-            $return["error"] = true;
-            $return["errorMessage"] = $e->getMessage();
-            if ($e->getCode() == 1) {
-                $return["errorMessage"] = "Problemas al subir la imagen. El problema ha sido notificado al equipo de desarrollo, por favor, intentalo más tarde";
-            }
-            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() == 1) {
-                Utils::reportError($e->getMessage(), "main/uploadPhoto");
-            }
         }
-
         $this->renderText(json_encode($return));
 
-        return sfView::NONE;
+        return sfView::NONE;  
     }
 
     ////////////////////////////////////////

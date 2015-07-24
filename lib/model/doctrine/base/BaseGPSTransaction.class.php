@@ -19,6 +19,12 @@ abstract class BaseGPSTransaction extends sfDoctrineRecord {
             'length' => 4,
         ));
 
+        $this->hasColumn('car_tmp_id', array(
+            'type' => 'integer',
+            'notnull' => true,
+            'length' => 4,
+        ));
+
         $this->hasColumn('gps_id', array(
             'type' => 'integer',
             'notnull' => true,

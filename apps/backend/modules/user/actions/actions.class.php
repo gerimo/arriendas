@@ -299,29 +299,19 @@ class userActions extends sfActions {
 
             $name = $_FILES['photo']['name'];
             $size = $_FILES['photo']['size'];
-            $tmp  = $_FILES['photo']['tmp_name'];
+            $tempFile  = $_FILES['photo']['tmp_name'];
             
-            list($txt, $ext) = explode(".", $name);
+            $message = Image::UploadImageToTempFolder($tempFile, $size, $name, 2, $userId);
 
-            $ext = strtolower($ext);
 
-            $actual_image_name = time() . $userId . "." . $ext;
-
-            $uploadDir = sfConfig::get("sf_web_dir");
-            $path      = $uploadDir . '/images/licence/';
-            $fileName  = $actual_image_name . "." . $ext;
-
-            $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
-
-            if (!$uploaded) {
-                throw new Exception("No se pudo subir la imagen de perfil", 1);
+            if(strpos($message, "Mensaje:")){
+                throw new Exception($message, 2);
+            }else{
+                $Image = Doctrine_Core::getTable("image")->find($message);
+                $User->setDriverLicenseFile($Image->getImageSize("md"));
+                $User->save();
+                $return["urlPhoto"] = $Image->getImageSize("md");
             }
-
-            sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
-
-            $User->setDriverLicenseFile("/images/licence/".$actual_image_name);
-            $User->save();
-            $return["urlPhoto"] = $actual_image_name;
 
         } catch (Exception $e) {
             $return["error"] = true;

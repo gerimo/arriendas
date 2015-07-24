@@ -8,22 +8,20 @@ class gpsActions extends sfActions {
 		$this->setLayout("newIndexLayout");
 
 		$userId = $this->getUser()->getAttribute("userid");
-		$carId = $request->getParameter('car');
 
-		$Car = Doctrine_core::getTable("car")->find($carId);
-
+        // recibe el id de un registro de auto temporal.
+		$carTmpId = $request->getParameter('car');
+        $CarTmp = Doctrine_core::getTable("cartmp")->findOneByIdAndCanceled($carTmpId, 0);
         // Cambiar fecha el dia de subida a prod
-		$fecha = Date("Y-m-d H:i:s", strtotime("2015-07-07"));
+		$fecha = Date("Y-m-d H:i:s", strtotime("2015-07-22"));
 
         // Comprueba si existen transacciones por visualizar
         $GPSTransactions = Doctrine_core::getTable("GPSTransaction")->findByCompletedAndViewed(1,0);
-
+        error_log(count($GPSTransactions));
         foreach ($GPSTransactions as $GPSTransaction) {
-            $carId_transaction = $GPSTransaction->car_id;
-            if($carId_transaction == $carId){
-                $Car = Doctrine_core::getTable("car")->find($carId);
-                error_log("message");
-                if($Car->getUser()->id == $userId){
+            $carTmpId_transaction = $GPSTransaction->car_tmp_id;
+            if($carTmpId_transaction == $carTmpId){
+                if($CarTmp->getUserId() == $userId){
                     $this->redirect('gps/showPayedMessageGPS?transactionId='. $GPSTransaction->id);
 
                 }
@@ -31,17 +29,18 @@ class gpsActions extends sfActions {
 
         }
 
-		//restricciones de acceso a la vista.
-		if($Car->has_gps || $Car->getUserId() != $userId || $Car->getFechaSubida() < $fecha){
-			$this->redirect("cars");
-		}
+        if($CarTmp->user_id != $userId || $CarTmp->canceled){
+            $this->redirect("homepage");  
+        }
 
+        // GPS UTILIZADO POR DEFECTO PARA REALIZAR LOS PAGOS...
 		$Gps = Doctrine_core::getTable("gps")->find(1);
 
 		$this->gps_description = $Gps->description;
 		$this->gps_price = $Gps->price;
 		$this->gpsId = $Gps->id;
 
+        // id de car_tmp
 		$this->carId = $request->getParameter("car");
 	}
 
@@ -55,14 +54,12 @@ class gpsActions extends sfActions {
         $payment  = $request->getPostParameter("payment", null);
         $User = Doctrine_Core::getTable('User')->find($userId);
         $this->forward404If(!$User);
-   		
-        error_log($payment);
-   		// chequeo judicial
+
         $Gps = Doctrine_core::getTable("gps")->find($gpsId);
         try {
 
             if (empty($carId) || $carId == 0 || empty($gpsId) || $gpsId == 0 || empty($gps_price) || $gps_price == 0) {
-                throw new Exception("El User ".$userId." esta intentando pagar pero uno de los campos es nulo. Car: ".$carId.", GPS: ".$gpsId.", Precio: ".$gps_price, 1);
+                throw new Exception("El User ".$userId." esta intentando pagar pero uno de los campos es nulo. Car_tmp: ".$carId.", GPS: ".$gpsId.", Precio: ".$gps_price, 1);
             }
 
             if ($Gps->price != $gps_price) {
@@ -72,24 +69,16 @@ class gpsActions extends sfActions {
             if ($User->getBlocked()) {
                 throw new Exception("Rechazado el pago de User ".$userId." (".$User->firstname." ".$User->lastname.") debido a que se encuentra bloqueado, por lo que no esta autorizado para generar pagos", 1);            
             }
-            
-            $Car = Doctrine_Core::getTable('Car')->find($carId);
 
-            if (!$Car) {
-                throw new Exception("El User ".$userId." esta intentando pagar un gps pero no se encontró el auto.", 1);
-            }
-            
-            if ($Car->has_gps) {
-                throw new Exception("El User ".$userId." esta intentando pagar pero el Car ".$carId." ya posee un GPS.", 1);
-            }
+            $CarTmp = Doctrine_core::getTable("cartmp")->find($carId);
 
-            if (!$payment) {
-                throw new Exception("El User ".$userId." esta intentando pagar un gps pero no se especifico el medio de pago", 1);
+            if ($CarTmp->canceled) {
+                throw new Exception("El User ".$userId." esta intentando pagar un gps pero el pago fué eliminado", 1);
             }
 
             $GPSTransaction = new GPSTransaction();
-            error_log("pasa");
-            $GPSTransaction->setCarId($carId);
+            //$GPSTransaction->setCarId($Car->id);
+            $GPSTransaction->setCarTmpId($CarTmp->id);
             $GPSTransaction->setGpsId($gpsId);
             $GPSTransaction->setAmount($gps_price);
 
@@ -128,9 +117,12 @@ class gpsActions extends sfActions {
 		try {
 			$userId = $this->getUser()->getAttribute("userid");
 			$carId = $request->getParameter('carId');
-			$Car = Doctrine_core::getTable("car")->find($carId);
-			if($Car->getUserId() == $userId){
-				$Car->delete();
+
+			$CarTmp = Doctrine_core::getTable("cartmp")->find($carId);
+
+			if($CarTmp->user_id == $userId){
+				$CarTmp->setCanceled(1);
+                $CarTmp->save();
 				$return["message"] = "El vehículo fué cancelado.";
 			} else {
 				throw new Exception("No se pudo cancelar el vehículo, intente nuevamente...", 1);
@@ -164,7 +156,6 @@ class gpsActions extends sfActions {
             $this->redirect("homepage");                  
 
         }
-        error_log("CAMBIA");
         $GPSTransaction->setViewed(1);
         $GPSTransaction->save();
 
