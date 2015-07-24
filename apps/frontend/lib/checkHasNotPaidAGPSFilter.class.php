@@ -17,7 +17,11 @@
                     && $action != 'processPaymentGPS'
                     && $action != 'processPaymentFinalGPS'
                     && $action != 'showPayedMessageGPS'
-                    && $action != 'logout')
+                    && $action != 'logout'
+                    && $action != 'notifyPaymentGPS'
+                    && $action != 'notifyPayment'
+                    && $action != 'processPaymentCanceled'
+                    )
             {
                 
                 $idUsuario = sfContext::getInstance()->getUser()->getAttribute('userid');

@@ -113,8 +113,6 @@ class Image extends BaseImage {
         	$msg = $image->id;
         	return $msg;
         }
-        
-
 	}
 
     public function getImageSize($size){
@@ -137,7 +135,7 @@ class Image extends BaseImage {
         return null;
     }
 
-    public function setImageDeleted(){
+    public function setImageDeleted() {
          // se carga la librería del aws
         require_once sfConfig::get('sf_lib_dir')."/vendor/s3upload/s3_config.php";
 

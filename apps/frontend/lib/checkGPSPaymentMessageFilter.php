@@ -18,8 +18,13 @@ class CheckGPSPaymentMessageFilter extends sfFilter
                 && $user 
                 && $user->isAuthenticated()
                 && $action != 'logout'
+                && $action != 'payGps'
                 && $action != 'showPayedMessageGPS'
+                && $action != 'khipuNotifyGPS'
                 && $action != 'showMessage'
+                && $action != 'notifyPaymentGPS'
+                && $action != 'notifyPayment'
+                && $action != 'processPaymentCanceled'
             ) 
         {
         	$userId = sfContext::getInstance()->getUser()->getAttribute('userid');

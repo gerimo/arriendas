@@ -40,7 +40,7 @@ class khipuActions extends sfActions {
                 $Car = Doctrine_Core::getTable("cartmp")->find($GPSTransaction->car_tmp_id);
                 $User = Doctrine_Core::getTable("user")->find($Car->user_id);
                 $settings = $this->getSettings();
-                        
+                error_log("******************** generando pago transaction id: ".$GPSTransactionId);     
                 $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["create-payment-url"]);
 
                 $data = array(
@@ -400,7 +400,7 @@ class khipuActions extends sfActions {
     }
 
     public function executeNotifyPaymentGPS(sfWebRequest $request) {
-
+        error_log("GENERANDO PAGO");
         $this->_log("NotifyPaymentGPS", "INFO", "Start validation");
 
         $userId = $this->getUser()->getAttribute("userid");
@@ -437,7 +437,7 @@ class khipuActions extends sfActions {
 
                 $GPSTransactionId = ltrim($data["transaction_id"], 'G');
                 $GPSTransaction = Doctrine_Core::getTable("GPSTransaction")->find($GPSTransactionId);
-
+                error_log("*************** verificando paggo transaction id: " . $GPSTransactionId);
                 $this->_log("Pago", "Exito", "Usuario: " . $userId . ". GPSTransaction ID: " . $GPSTransaction->id);
 
                 if (!$GPSTransaction->getCompleted()) {
@@ -827,6 +827,7 @@ class khipuActions extends sfActions {
             $this->_log("Call", "info", $msg);
 
             $response = $khipuService->paymentStatus($data);
+            error_log($response->status);
             switch ($response->status) {
                 case "done":
                     $this->paymentMsg = "El pago ha sido realizado.";

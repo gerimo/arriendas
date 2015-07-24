@@ -151,14 +151,19 @@ class gpsActions extends sfActions {
         $carId = $GPSTransaction->car_id;
         $Car = Doctrine_core::getTable("car")->find($carId);
 
-        if($Car->getUser()->id != $userId){
-            
-            $this->redirect("homepage");                  
+        try{
+            if($Car->getUser()->id != $userId){
+                
+                $this->redirect("homepage");                  
 
+            }
+            $GPSTransaction->setViewed(1);
+            $GPSTransaction->save();
+
+        } catch(Exception $e){
+            error_log("[".date("Y-m-d H:i:s")."] [gps/showPayedMessageGPS] ERROR: ".$e->getMessage()." Problemas en el proceso de pago, no se generó el veículo.");
         }
-        $GPSTransaction->setViewed(1);
-        $GPSTransaction->save();
-
+        
     }
 }
 

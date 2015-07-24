@@ -43,13 +43,11 @@ abstract class BaseImage extends sfDoctrineRecord {
 
         $this->hasColumn('is_on_s3', 'boolean', null, array(
          'type' => 'boolean',
-         'notnull' => true,
          'default' => 0,
          ));
 
         $this->hasColumn('is_deleted', 'boolean', null, array(
          'type' => 'boolean',
-         'notnull' => true,
          'default' => 0,
          ));
         
