@@ -919,46 +919,122 @@ class mainActions extends sfActions {
         $this->amountWarrantyFree = sfConfig::get("app_monto_garantia_por_dia");
 
         //imagenes
+        $arrayImagenesS3 = $this->Car->getArrayImages();
         $arrayImagenes = null;
         $i = 0;
-        if ($this->Car->getSeguroFotoFrente() != null && $this->Car->getSeguroFotoFrente() != "") {
-            $rutaFotoFrente = $this->Car->getSeguroFotoFrente();
-            $arrayImagenes[$i] = $rutaFotoFrente;
+        // $uploadDir = $this->generateUrl('homepage');
+        $uploadDir = "https://www.arriendas.cl/";
+
+        if($arrayImagenesS3["seguroFotoFrente"]){
+            $arrayImagenes[$i] = $arrayImagenesS3["seguroFotoFrente"]->getImageSize("md");
             $i++;
+        } else {
+            if ($this->Car->getSeguroFotoFrente() != null && $this->Car->getSeguroFotoFrente() != "") {
+                $rutaFotoFrente = $this->Car->getSeguroFotoFrente();
+                if(strpos($rutaFotoFrente, "cars")){
+                    $arrayImagenes[$i] = $uploadDir . $rutaFotoFrente;
+                } else {
+                    $arrayImagenes[$i] = "http://res.cloudinary.com/arriendas-cl/image/fetch/c_fill,g_center/http://www.arriendas.cl/uploads/verificaciones/".$rutaFotoFrente;
+                }
+                $i++;
+            }
         }
-        if ($this->Car->getSeguroFotoCostadoDerecho() != null && $this->Car->getSeguroFotoCostadoDerecho() != "") {
-            $rutaFotoCostadoDerecho = $this->Car->getSeguroFotoCostadoDerecho();
-            $arrayImagenes[$i] = $rutaFotoCostadoDerecho;
+        if($arrayImagenesS3["seguroFotoCostadoDerecho"]){
+            $arrayImagenes[$i] = $arrayImagenesS3["seguroFotoCostadoDerecho"]->getImageSize("md");
             $i++;
+        } else {
+            if ($this->Car->getSeguroFotoCostadoDerecho() != null && $this->Car->getSeguroFotoCostadoDerecho() != "") {
+                $rutaFotoCostadoDerecho = $this->Car->getSeguroFotoCostadoDerecho();
+                if(strpos($rutaFotoCostadoDerecho, "cars")){
+                    $arrayImagenes[$i] = $uploadDir .  $rutaFotoCostadoDerecho;
+                } else {
+                    $arrayImagenes[$i] = "http://res.cloudinary.com/arriendas-cl/image/fetch/c_fill,g_center/http://www.arriendas.cl/uploads/verificaciones/".$rutaFotoCostadoDerecho;
+                }
+                $i++;
+            }
         }
-        if (strpos($this->Car->getSeguroFotoCostadoIzquierdo(), "http") != -1 && $this->Car->getSeguroFotoCostadoIzquierdo() != "") {
-            $rutaFotoCostadoIzquierdo = $this->Car->getSeguroFotoCostadoIzquierdo();
-            $arrayImagenes[$i] = $rutaFotoCostadoIzquierdo;
+        if($arrayImagenesS3["seguroFotoCostadoIzquierdo"]){
+            $arrayImagenes[$i] = $arrayImagenesS3["seguroFotoCostadoIzquierdo"]->getImageSize("md");
             $i++;
+        } else {
+            if (strpos($this->Car->getSeguroFotoCostadoIzquierdo(), "http") != -1 && $this->Car->getSeguroFotoCostadoIzquierdo() != "") {
+                $rutaFotoCostadoIzquierdo = $this->Car->getSeguroFotoCostadoIzquierdo();
+                if(strpos($rutaFotoCostadoIzquierdo, "cars")){
+                    $arrayImagenes[$i] = $uploadDir .  $rutaFotoCostadoIzquierdo;
+                } else {
+                    $arrayImagenes[$i] = "http://res.cloudinary.com/arriendas-cl/image/fetch/c_fill,g_center/http://www.arriendas.cl/uploads/verificaciones/".$rutaFotoCostadoIzquierdo;
+                }
+                $i++;
+            }
         }
-        if (strpos($this->Car->getSeguroFotoTraseroDerecho(), "http") != -1 && $this->Car->getSeguroFotoTraseroDerecho() != "") {
-            $rutaFotoTrasera = $this->Car->getSeguroFotoTraseroDerecho();
-            $arrayImagenes[$i] = $rutaFotoTrasera;
+        if($arrayImagenesS3["seguroFotoTraseroDerecho"]){
+            $arrayImagenes[$i] = $arrayImagenesS3["seguroFotoTraseroDerecho"]->getImageSize("md");
             $i++;
+        } else {
+            if (strpos($this->Car->getSeguroFotoTraseroDerecho(), "http") != -1 && $this->Car->getSeguroFotoTraseroDerecho() != "") {
+                $rutaFotoTraseroDerecho = $this->Car->getSeguroFotoTraseroDerecho();
+                if(strpos($rutaFotoTraseroDerecho, "cars")){
+                    $arrayImagenes[$i] = $uploadDir .  $rutaFotoTraseroDerecho;
+                } else {
+                    $arrayImagenes[$i] = "http://res.cloudinary.com/arriendas-cl/image/fetch/c_fill,g_center/http://www.arriendas.cl/uploads/verificaciones/".$rutaFotoTraseroDerecho;
+                }
+                $i++;
+            }
         }
-        if (strpos($this->Car->getSeguroFotoTraseroIzquierdo(), "http") != -1 && $this->Car->getSeguroFotoTraseroIzquierdo() != "") {
-            $rutaFotoTrasera = $this->Car->getSeguroFotoTraseroIzquierdo();
-            $arrayImagenes[$i] = $rutaFotoTrasera;
+        if($arrayImagenesS3["seguroFotoTraseroIzquierdo"]){
+            $arrayImagenes[$i] = $arrayImagenesS3["seguroFotoTraseroIzquierdo"]->getImageSize("md");
             $i++;
+        } else {
+            if (strpos($this->Car->getSeguroFotoTraseroIzquierdo(), "http") != -1 && $this->Car->getSeguroFotoTraseroIzquierdo() != "") {
+                $rutaFotoTraseroIzquierdo = $this->Car->getSeguroFotoTraseroIzquierdo();
+                if(strpos($rutaFotoTraseroIzquierdo, "cars")){
+                    $arrayImagenes[$i] = $uploadDir .  $rutaFotoTraseroIzquierdo;
+                } else {
+                    $arrayImagenes[$i] = "http://res.cloudinary.com/arriendas-cl/image/fetch/c_fill,g_center/http://www.arriendas.cl/uploads/verificaciones/".$rutaFotoTraseroIzquierdo;
+                }
+                $i++;
+            }
         }
-        if (strpos($this->Car->getTablero(), "http") != -1 && $this->Car->getTablero() != "") {
-            $rutaFotoPanel = $this->Car->getTablero();
-            $arrayImagenes[$i] = $rutaFotoPanel;
+        if($arrayImagenesS3["fotoTablero"]){
+            $arrayImagenes[$i] = $arrayImagenesS3["fotoTablero"]->getImageSize("md");
             $i++;
+        } else {
+            if (strpos($this->Car->getTablero(), "http") != -1 && $this->Car->getTablero() != "") {
+                $rutaFotoPanel = $this->Car->getTablero();
+                if(strpos($rutaFotoPanel, "cars")){
+                    $arrayImagenes[$i] = $uploadDir .  $rutaFotoPanel;
+                } else {
+                    $arrayImagenes[$i] = "http://res.cloudinary.com/arriendas-cl/image/fetch/c_fill,g_center/http://www.arriendas.cl/uploads/verificaciones/".$rutaFotoPanel;
+                }
+                $i++;
+            }
         }
-        if (strpos($this->Car->getAccesorio1(), "http") != -1 && $this->Car->getAccesorio1() != "") {
-            $rutaFotoAccesorios1 = $this->Car->getAccesorio1();
-            $arrayImagenes[$i] = $rutaFotoAccesorios1;
+        if($arrayImagenesS3["fotoAccesorio1"]){
+            $arrayImagenes[$i] = $arrayImagenesS3["fotoAccesorio1"]->getImageSize("md");
             $i++;
+        } else {
+            if (strpos($this->Car->getAccesorio1(), "http") != -1 && $this->Car->getAccesorio1() != "") {
+                $rutaFotoAccesorios1 = $this->Car->getAccesorio1();
+                if(strpos($rutaFotoAccesorios1, "cars")){
+                    $arrayImagenes[$i] = $uploadDir .  $rutaFotoAccesorios1;
+                } else {
+                    $arrayImagenes[$i] = "http://res.cloudinary.com/arriendas-cl/image/fetch/c_fill,g_center/http://www.arriendas.cl/uploads/verificaciones/".$rutaFotoAccesorios1;
+                }
+                $i++;
+            }
         }
-        if (strpos($this->Car->getAccesorio2(), "http") != -1 && $this->Car->getAccesorio2() != "") {
-            $rutaFotoAccesorios2 = $this->Car->getAccesorio2();
-            $arrayImagenes[$i] = $rutaFotoAccesorios2;
+        if($arrayImagenesS3["fotoAccesorio2"]){
+            $arrayImagenes[$i] = $arrayImagenesS3["fotoAccesorio2"]->getImageSize("md");
+            $i++;
+        } else {
+            if (strpos($this->Car->getAccesorio2(), "http") != -1 && $this->Car->getAccesorio2() != "") {
+                $rutaFotoAccesorios2 = $this->Car->getAccesorio2();
+                if(strpos($rutaFotoAccesorios2, "cars")){
+                    $arrayImagenes[$i] = $uploadDir .  $rutaFotoAccesorios2;
+                } else {
+                    $arrayImagenes[$i] = "http://res.cloudinary.com/arriendas-cl/image/fetch/c_fill,g_center/http://www.arriendas.cl/uploads/verificaciones/".$rutaFotoAccesorios2;
+                }
+            }
         }
 
         $this->arrayFotos = $arrayImagenes;

@@ -4,10 +4,10 @@ class notificationActions extends sfActions {
     public function executeIndex(sfWebRequest $request) {
 
         $this->NTS = Doctrine_Core::getTable('NotificationType')->findAll();
-        $this->Actions = Doctrine_Core::getTable('Action')->findAll();
+        $Actions = Doctrine_Core::getTable('Action')->findByUserTypeId(2);
         $this->UserTypes = Doctrine_Core::getTable('UserType')->findAll();
 
-        foreach ($this->Actions as $Action) {
+        foreach ($Actions as $Action) {
             $Notifications[] = array (
                     "id"        => $Action->id,
                     "name"      => $Action->name,
@@ -16,25 +16,16 @@ class notificationActions extends sfActions {
                     );
             foreach ($this->NTS as $NT) {
                 $Notification = Doctrine_Core::getTable('Notification')->findNotification($Action->id, $NT->id);
+                $name2 = substr($Notification->message,0,100)."...";
                 $Notifications[] = array (
                     "id"        => $Notification->id,
                     "name"      => $Notification->message,
+                    "name2"     => $name2,
                     "title"     => $Notification->message_title,
                     "condition" => 1
                     );
             }
         }
-
-        $userTypeId = $this->getUser()->getAttribute("userTypeId"); 
-
-        if ($userTypeId) {
-
-            $this->userTypeId = $this->getUser()->getAttribute("userTypeId");   
-        } else {
-
-            $this->userTypeId = $this->getUser()->getAttribute("");   
-        }
-
 
         $this->Notifications = $Notifications;
     }
@@ -139,51 +130,7 @@ class notificationActions extends sfActions {
         return sfView::NONE;
     }
 
-    public function executeFind(sfWebRequest $request) {
-
-        $return = array("error" => false);
-
-        try {
-
-            $userTypeId       = $request->getPostParameter("userTypeId", null);
-
-            $Actions = Doctrine_Core::getTable('Action')->findByUserTypeId($userTypeId);
-            $NTS = Doctrine_Core::getTable('NotificationType')->findAll(); 
-            $this->getUser()->setAttribute("userTypeId", $userTypeId);   
-
-            foreach ($Actions as $Action) {
-
-                $Notifications[] = array(
-                    "n_id"        => $Action->id,
-                    "n_name"      => $Action->name,
-                    "n_title"     => "nada",
-                    "n_condition" => 0
-                );
-                foreach ($NTS as $NT) {
-
-                    $Notification = Doctrine_Core::getTable('Notification')->findNotification($Action->id, $NT->id, $userTypeId);
-
-                    $Notifications[] = array(
-                        "n_id"        => $Notification->id,
-                        "n_name"      => $Notification->message,
-                        "n_title"     => $Notification->message_title,
-                        "n_condition" => 1
-                    );
-                }
-            }
-
-            $return["data"] = $Notifications;
-
-        } catch (Exception $e) {
-            $return["error"]        = true;
-            $return["errorCode"]    = $e->getCode();
-            $return["errorMessage"] = $e->getMessage();
-        }
-
-        $this->renderText(json_encode($return));
-          
-          return sfView::NONE;
-      }
+  
 
 }
             

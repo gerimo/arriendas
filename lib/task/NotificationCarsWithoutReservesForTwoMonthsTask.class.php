@@ -14,10 +14,10 @@ class NotificationCarsWithoutReservesForTwoMonthsTask extends sfBaseTask {
         $this->name = 'CarsWithoutReservesForTwoMonths';
         $this->briefDescription = 'genera las notificaciones a los propietarios que no hayan recibido arriendos en los ultimos 2 meses';
         $this->detailedDescription = <<<EOF
-The [CarsWithoutReservesForTwoMonths|INFO] task does things.
-Call it with:
+        The [CarsWithoutReservesForTwoMonths|INFO] task does things.
+        Call it with:
 
-  [php symfony notification:CarsWithoutReservesForTwoMonths|INFO]
+        [php symfony notification:CarsWithoutReservesForTwoMonths|INFO]
 EOF;
     }
 
@@ -34,26 +34,21 @@ EOF;
         $databaseManager = new sfDatabaseManager($this->configuration);
         $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
 
-        $Cars = Doctrine_core::getTable("Car")->findCarsWithoutReserves();
-        $dateNow = date("Y-m-d H:i:s");
+        $Cars = Doctrine_core::getTable("Car")->findBySeguroOkAndActivo(4,1);
 
         foreach ($Cars as $Car) {
-            $carDate = date("Y-m-d H:i:s", strtotime($Car->fecha_subida));
+
+            $Reserve = Doctrine_core::getTable("reserve")->findTheLastReserves($Car->id);
+
+            $reserveDate = date("Y-m-d", strtotime('+2 month', strtotime($Reserve->fecha_reserva)));
+            $dateNow = date('Y-m-d');
+
+            if ($reserveDate == $dateNow) {
+                $this->log($Car->id);
+                $this->log($Reserve->id);
+                Notification::make($Car->getUser()->id, 11);
+            }
             
-            $diff = (strtotime($dateNow) - strtotime($carDate));
-
-            if($diff > 0) {
-                $years   = floor($diff / (365*60*60*24)); 
-                $months  = floor(($diff - $years * 365*60*60*24) / (30*60*60*24)); 
-                $days    = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
-                $hours   = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24 - $days*60*60*24)/ (60*60)); 
-                $minuts  = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24 - $days*60*60*24 - $hours*60*60)/ 60); 
-            }
-
-            if($months == 2){
-                Notification::make($Reserve->getUser()->id, 11, $Reserve->id);
-            }
-        }
-        
+        }  
     }
 }

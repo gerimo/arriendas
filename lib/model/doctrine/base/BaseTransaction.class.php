@@ -50,6 +50,12 @@
  * @method integer         getNumeroFactura()      Returns the current record's "numero_factura" value
  * @method decimal         getReverseDiscount()    Returns the current record's "reverse_discount" value
  * @method boolean         getIsPaidUser()         Returns the current record's "is_paid_user" value
+ * @method integer         getPaymentMethodId()    Returns the current record's "payment_method_id" value
+ * @method string          getWebpayType()         Returns the current record's "webpay_type" value
+ * @method string          getWebpaySharesNumber() Returns the current record's "webpay_shares_number" value
+ * @method string          getWebpayAuthorization() Returns the current record's "webpay_authorization" value
+ * @method string          getWebpayLastDigits()   Returns the current record's "webpay_last_digits" value
+ * @method string          getWebpayToken()        Returns the current record's "webpay_token" value
  * 
  * @method Transaction     setId()                 Sets the current record's "id" value
  * @method Transaction     setCar()                Sets the current record's "car" value
@@ -72,7 +78,13 @@
  * @method integer         setTransaccionOriginal()      Sets the current record's "transaccion_original" value
  * @method integer         setNumeroFactura()      Sets the current record's "numero_factura" value
  * @method Transaction     setReverseDiscount()    Sets the current record's "reverse_discount" value
- * @method Transaction     getIsPaidUser()         Sets the current record's "is_paid_user" value
+ * @method Transaction     setIsPaidUser()         Sets the current record's "is_paid_user" value
+ * @method Transaction     setPaymentMethodId()    Sets the current record's "payment_method_id" value
+ * @method Transaction     setWebpayType()         Sets the current record's "webpay_type" value
+ * @method Transaction     setWebpaySharesNumber() Sets the current record's "webpay_shares_number" value
+ * @method Transaction     setWebpayAuthorization() Sets the current record's "webpay_authorization" value
+ * @method Transaction     setWebpayLastDigits()   Sets the current record's "webpay_last_digits" value
+ * @method Transaction     setWebpaytoken()        Sets the current record's "webpay_token" value
  * 
  * @package    CarSharing
  * @subpackage model
@@ -212,6 +224,44 @@ abstract class BaseTransaction extends sfDoctrineRecord
             'length' => 11,
             'default' => 'null',
             ));
+        $this->hasColumn('payment_method_id', 'integer', null, array(
+            'type' => 'integer',
+            'length' => 11,
+            'default' => 'null'
+            ));
+        $this->hasColumn('webpay_type', 'string', 2, array(
+             'type' => 'string',
+             'length' => 2,
+             'default' => null
+             ));
+        $this->hasColumn('webpay_shares_number', 'integer', null, array(
+             'type' => 'integer',
+             'length' => 11,
+             'default' => null
+             ));
+        $this->hasColumn('webpay_authorization', 'string', 6, array(
+             'type' => 'string',
+             'length' => 6,
+             'default' => null
+             ));
+        $this->hasColumn('webpay_last_digits', 'string', 16, array(
+             'type' => 'string',
+             'length' => 16,
+             'default' => null
+             ));
+
+        $this->hasColumn('webpay_token', array(
+             'type' => 'string',
+             'length' => 255,
+             'default' => null
+             ));
+
+        $this->index('fk_Transaction_PaymentMethod1', array(
+             'fields' => 
+             array(
+              0 => 'payment_method_id',
+             ),
+             ));
 
         $this->option('charset', 'utf8');
         $this->option('type', 'InnoDB');

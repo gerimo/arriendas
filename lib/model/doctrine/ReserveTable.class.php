@@ -1,24 +1,16 @@
 <?php
-
 class ReserveTable extends Doctrine_Table {
-
     public function findActiveReserve($reserveId) {
-
         $reserveId = $this->findOriginalReserve($reserveId);
-
         $q = Doctrine_Core::getTable("Reserve")
             ->createQuery('R')
             ->innerJoin('R.Transaction T')
             ->where('R.id = ? OR R.reserva_original = ?', array($reserveId, $reserveId))
             ->andWhere('T.completed = 1');
-
         return $q->fetchOne();
     }
-
     public function findOriginalReserve($reserveId) {
-
         $Reserve = Doctrine_Core::getTable("Reserve")->find($reserveId);
-
         if ($Reserve) { 
             if ($Reserve->reserva_original == 0) {
                 return $Reserve->id;
@@ -26,12 +18,9 @@ class ReserveTable extends Doctrine_Table {
                 return $Reserve->reserva_original;
             }
         }
-
         return null;
     }   
-
     public function findProblematicsReserve($limit) {
-
         $q = Doctrine_Core::getTable("Reserve")
             ->createQuery('R')
             ->innerJoin('R.Transaction T')
@@ -40,32 +29,24 @@ class ReserveTable extends Doctrine_Table {
             ->andWhere('U.chequeo_judicial = 0 or U.is_valid_license = 0')
             ->groupBy('R.user_id')
             ->orderBy('R.date DESC');
-
         if ($limit) {
             $q->limit($limit);
         }
-
         return $q->execute();
     }   
-
     public function findExpiredReserves($from, $to, $amount) {
-
         $q = Doctrine_Core::getTable("Reserve")
             ->createQuery('R')
             ->innerJoin('R.Transaction T')
             ->Where('DATE_ADD(R.date, INTERVAL R.duration HOUR) > ?', $from)
             ->AndWhere('DATE_ADD(R.date, INTERVAL R.duration HOUR) < ?', $to )
             ->AndWhere('T.completed = 1');
-
         if($amount) {
             $q->andWhere('R.montoLiberacion = 180000');
         }
-
         return $q->execute();
     }
-
     ///////////////////////////
-
     /**
      * Returns an instance of this class.
      *
@@ -74,15 +55,14 @@ class ReserveTable extends Doctrine_Table {
     public static function getInstance() {
         return Doctrine_Core::getTable('Reserve');
     }
-
     public function getInProgressByUser($user_id) {
         $q = Doctrine_Query::create()
                 ->select('r.id , ca.id idcar , mo.name model,
-	  br.name brand, ca.year year,
-	  ca.address address, ci.name city,
-	  st.name state, co.name country,
-	  user.firstname firstname, user.lastname lastname,
-	  r.date date'
+      br.name brand, ca.year year,
+      ca.address address, ci.name city,
+      st.name state, co.name country,
+      user.firstname firstname, user.lastname lastname,
+      r.date date'
                 )
                 ->from('Reserve r')
                 ->innerJoin('r.Car ca')
@@ -98,15 +78,14 @@ class ReserveTable extends Doctrine_Table {
                 ->andWhere('r.complete = ?', false);
         return $q->execute();
     }
-
     public function getLastByUser($user_id, $last) {
         $q = Doctrine_Query::create()
                 ->select('r.id , ca.id idcar , mo.name model,
-	  br.name brand, ca.year year,
-	  ca.address address, ci.name city,
-	  st.name state, co.name country,
-	  user.firstname firstname, user.lastname lastname,
-	  r.date date'
+      br.name brand, ca.year year,
+      ca.address address, ci.name city,
+      st.name state, co.name country,
+      user.firstname firstname, user.lastname lastname,
+      r.date date'
                 )
                 ->from('Reserve r')
                 ->innerJoin('r.Car ca')
@@ -122,15 +101,14 @@ class ReserveTable extends Doctrine_Table {
                 ->orderBy('r.complete asc');
         return $q->execute();
     }
-
     public function getToConfirmByUser($user_id, $last) {
         $q = Doctrine_Query::create()
                 ->select('r.id , ca.id idcar , mo.name model,
-	  br.name brand, ca.year year,
-	  ca.address address, ci.name city,
-	  st.name state, co.name country,
-	  user.firstname firstname, user.lastname lastname,
-	  r.date date'
+      br.name brand, ca.year year,
+      ca.address address, ci.name city,
+      st.name state, co.name country,
+      user.firstname firstname, user.lastname lastname,
+      r.date date'
                 )
                 ->from('Reserve r')
                 ->innerJoin('r.Car ca')
@@ -147,15 +125,14 @@ class ReserveTable extends Doctrine_Table {
         //->orderBy('r.complete asc');
         return $q->execute();
     }
-
     public function getToConfirmKmsIniciales($user_id) {
         $q = Doctrine_Query::create()
                 ->select('r.id , ca.id idcar , mo.name model,
-	  br.name brand, ca.year year,
-	  ca.address address, ci.name city,
-	  st.name state, co.name country,
-	  user.firstname firstname, user.lastname lastname,
-	  r.date date'
+      br.name brand, ca.year year,
+      ca.address address, ci.name city,
+      st.name state, co.name country,
+      user.firstname firstname, user.lastname lastname,
+      r.date date'
                 )
                 ->from('Reserve r')
                 ->innerJoin('r.Car ca')
@@ -172,18 +149,16 @@ class ReserveTable extends Doctrine_Table {
                 ->andWhere('r.complete = ?', false)
                 ->andWhere('r.kminicial != ?', 0)
                 ->andWhere('r.ini_km_owner_confirmed = ?', false);
-
         return $q->execute();
     }
-
     public function getToConfirmKmsFinales($user_id) {
         $q = Doctrine_Query::create()
                 ->select('r.id , ca.id idcar , mo.name model,
-	  br.name brand, ca.year year,
-	  ca.address address, ci.name city,
-	  st.name state, co.name country,
-	  user.firstname firstname, user.lastname lastname,
-	  r.date date'
+      br.name brand, ca.year year,
+      ca.address address, ci.name city,
+      st.name state, co.name country,
+      user.firstname firstname, user.lastname lastname,
+      r.date date'
                 )
                 ->from('Reserve r')
                 ->innerJoin('r.Car ca')
@@ -200,18 +175,16 @@ class ReserveTable extends Doctrine_Table {
                 ->andWhere('r.complete = ?', false)
                 ->andWhere('r.kmfinal != ?', 0)
                 ->andWhere('r.end_km_owner_confirmed = ?', false);
-
         return $q->execute();
     }
-
     public function getToConfirmKmsInicialesUser($user_id) {
         $q = Doctrine_Query::create()
                 ->select('r.id , ca.id idcar , mo.name model,
-	  br.name brand, ca.year year,
-	  ca.address address, ci.name city,
-	  st.name state, co.name country,
-	  user.firstname firstname, user.lastname lastname,
-	  r.date date'
+      br.name brand, ca.year year,
+      ca.address address, ci.name city,
+      st.name state, co.name country,
+      user.firstname firstname, user.lastname lastname,
+      r.date date'
                 )
                 ->from('Reserve r')
                 ->innerJoin('r.Car ca')
@@ -228,18 +201,16 @@ class ReserveTable extends Doctrine_Table {
                 ->andWhere('r.complete = ?', false)
                 ->andWhere('r.kminicial != ?', 0)
                 ->andWhere('r.ini_km_confirmed = ?', false);
-
         return $q->execute();
     }
-
     public function getToConfirmKmsFinalesUser($user_id) {
         $q = Doctrine_Query::create()
                 ->select('r.id , ca.id idcar , mo.name model,
-	  br.name brand, ca.year year,
-	  ca.address address, ci.name city,
-	  st.name state, co.name country,
-	  user.firstname firstname, user.lastname lastname,
-	  r.date date'
+      br.name brand, ca.year year,
+      ca.address address, ci.name city,
+      st.name state, co.name country,
+      user.firstname firstname, user.lastname lastname,
+      r.date date'
                 )
                 ->from('Reserve r')
                 ->innerJoin('r.Car ca')
@@ -256,10 +227,8 @@ class ReserveTable extends Doctrine_Table {
                 ->andWhere('r.complete = ?', false)
                 ->andWhere('r.kmfinal != ?', 0)
                 ->andWhere('r.end_km_confirmed = ?', false);
-
         return $q->execute();
     }
-
     public function countInProgressByUser($user_id) {
         $q = Doctrine_Query::create()
                 ->from('Reserve r')
@@ -276,7 +245,6 @@ class ReserveTable extends Doctrine_Table {
                 ->andWhere('r.complete = ?', false);
         return $q->count();
     }
-
     /**
      * Obtiene las ultimas reservas aprobada, como owner o renter.
      * @param type $userId
@@ -290,7 +258,6 @@ class ReserveTable extends Doctrine_Table {
                 ->andWhere('EXISTS (SELECT t.id FROM Transaction t WHERE r.id = t.reserve_id and t.completed = ?)', 1);
         return $q->execute();
     }
-
     /**
      * Cantidad de Reservas aprobadas por id de usuario.
      * @param type $id
@@ -309,7 +276,6 @@ class ReserveTable extends Doctrine_Table {
         $resultset = $statement->fetch(PDO::FETCH_OBJ);
         return $resultset->cantidad;
     }
-
     public function getCantReservasPreaprobadasByUserId($userId) {
         $connection = Doctrine_Manager::connection();
         $query = "SELECT COUNT(*) as cantidad FROM Reserve r ";
@@ -324,7 +290,6 @@ class ReserveTable extends Doctrine_Table {
         $resultset = $statement->fetch(PDO::FETCH_OBJ);
         return $resultset->cantidad;
     }
-
     public function getCantReservasPendientesByUserId($userId) {
         $connection = Doctrine_Manager::connection();
         $query = "SELECT COUNT(*) as cantidad FROM Reserve r ";
@@ -337,7 +302,6 @@ class ReserveTable extends Doctrine_Table {
         $resultset = $statement->fetch(PDO::FETCH_OBJ);
         return $resultset->cantidad;
     }
-
     /**
      * Obtiene las reservas activas del dia de la fecha, que esten pagas y listas para iniciar.
      * @param type $userId
@@ -380,20 +344,14 @@ class ReserveTable extends Doctrine_Table {
                 ->andWhere('HOUR(TIMEDIFF(NOW(), DATE_ADD(r.date, INTERVAL r.duration HOUR))) >  ?', sfConfig::get("app_horas_para_moroso"));
         return $q->count();
     }
-
     public function findPaidReserves() {
-
         $q = Doctrine_Core::getTable("Reserve")
             ->createQuery('R')
             ->innerJoin('R.Transaction T')
             ->where('T.completed = 1');
-
         return $q->execute();
-
     }
-
     public function findPaidReservesWithoutRating() {
-
         $q = Doctrine_Core::getTable("Reserve")
             ->createQuery('R')
             ->innerJoin('R.Transaction T')
@@ -401,13 +359,9 @@ class ReserveTable extends Doctrine_Table {
             ->andWhere('R.confirmed = 1')
             ->andWhere('R.canceled = 0')
             ->andWhere('R.rating_id IS NULL');
-
         return $q->execute();
-
     }
-
     public function findPaidReservesByUser($userId) {
-
         $q = Doctrine_Core::getTable("Reserve")
             ->createQuery('R')
             ->innerJoin('R.Transaction T')
@@ -416,13 +370,9 @@ class ReserveTable extends Doctrine_Table {
             ->andWhere('R.confirmed = 1')
             ->andWhere('R.canceled = 0')
             ->andWhere('R.user_id = ? OR C.user_id = ?', array($userId, $userId));
-
         return $q->execute();
-
     }
-
     public function findRatingReservesByUser($userId) {
-
         $q = Doctrine_Core::getTable("Reserve")
             ->createQuery('R')
             ->innerJoin('R.Transaction T')
@@ -432,9 +382,30 @@ class ReserveTable extends Doctrine_Table {
             ->andWhere('R.rating_id IS NOT NULL')
             ->andWhere('R.canceled = 0')
             ->andWhere('R.user_id = ? OR C.user_id = ?', array($userId, $userId));
-
         return $q->execute();
-
     }
 
+    public function findReserves($limit) {
+
+        $q = Doctrine_Core::getTable("Reserve")
+            ->createQuery('R')
+            ->orderBy('R.id DESC');
+
+            if ($limit) {
+                $q->limit($limit);
+            }
+
+        return $q->execute();
+    }
+
+    public function findTheLastReserves($carId) {
+
+        $q = Doctrine_Core::getTable("Reserve")
+            ->createQuery('R')
+            ->where('R.car_id = ?', $carId)
+            ->orderBy('R.id DESC')
+            ->limit(1);
+
+        return $q->fetchOne();
+    }
 }

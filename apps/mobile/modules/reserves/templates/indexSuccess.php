@@ -98,7 +98,16 @@
                                         <div class="row">
                                             <div class="col-md-8">
                                                 <div class="col-md-3 text-center">
-                                                    <img src="/uploads/cars/thumbs/<?php echo $CO->getCar()->getFotoPerfil() ?>" width="80%">
+                                                    <?php if ($CO->getCar()->getFotoPerfilS3('xs')): ?>
+                                                        <img alt="Foto_perfil" src="<?php echo $CO->getCar()->getFotoPerfilS3('xs')?>" width="84px" height="84px">
+                                                    <?php else: ?>
+                                                        <?php if ($CO->getCar()->getFotoPerfil() == null): ?>
+                                                            <?php echo image_tag('img_asegura_tu_auto/AutoVistaAerea.png', array("width"=>"84px","height"=>"84px")) ?>
+                                                        <?php else: ?>
+                                                            <?php echo image_tag($CO->getCar()->getFotoPerfil(), array("width"=>"84px","height"=>"84px")) ?>
+                                                        <?php endif ?>
+                                                    <?php endif ?>
+                                                    <!--<img src="/uploads/cars/thumbs/<?php echo $CO->getCar()->getFotoPerfil() ?>" width="80%"> -->
                                                 </div>
                                                 <div class="col-md-9">
                                                     <br class="visible-xs">
@@ -137,7 +146,16 @@
                                         <div class="row">
                                             <div class="col-md-8">
                                                 <div class="col-md-3 text-center">
-                                                    <img src="/uploads/cars/thumbs/<?php echo $C->getFotoPerfil() ?>" width="80%">
+                                                    <?php if ($C->getFotoPerfilS3('xs')): ?>
+                                                        <img alt="Foto_perfil" src="<?php echo $C->getFotoPerfilS3('xs')?>" width="84px" height="84px">
+                                                    <?php else: ?>
+                                                        <?php if ($C->getFotoPerfil() == null): ?>
+                                                            <?php echo image_tag('img_asegura_tu_auto/AutoVistaAerea.png', array("width"=>"84px","height"=>"84px")) ?>
+                                                        <?php else: ?>
+                                                            <?php echo image_tag($C->getFotoPerfil(), array("width"=>"84px","height"=>"84px")) ?>
+                                                        <?php endif ?>
+                                                    <?php endif ?>
+                                                    <!-- <img src="/uploads/cars/thumbs/<?php echo $C->getFotoPerfil() ?>" width="80%"> -->
                                                 </div>
                                                 <div class="col-md-9">
                                                     <br class="visible-xs">

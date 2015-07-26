@@ -14,14 +14,18 @@
                 <div class="regis_foto_frame">
 
                     <div id="previewmain" style="width: 100%">
-                        <?php if ($User->getPictureFile() == null): ?>
-                            <?php echo image_tag('img_registro/tmp_user_foto.png', 'size=194x204') ?>  
+                        <?php if ($imagen_perfil): ?>
+                            <img alt="imagen_perfil" src="<?php echo $imagen_perfil->getImageSize('md'); ?>" height="204" width="194">  
                         <?php else: ?>
-                            <?php if($User->getFacebookId() != null):?>
-                                <img src="http://res.cloudinary.com/arriendas-cl/image/facebook/w_194,h_204,c_fill,g_face/<?php echo $User->getFacebookId();?>.jpg">
+                            <?php if ($User->getPictureFile() == null): ?>
+                                <?php echo image_tag('img_registro/tmp_user_foto.png', 'size=194x204') ?>  
                             <?php else: ?>
-                                <!-- <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_194,h_204,c_fill,g_face/http://www.arriendas.cl/images/users/<?php echo $User->getFileName() ?>">-->
-                                <?php echo image_tag('users/'.$User->getFileName(), 'size=194x204') ?>
+                                <?php if($User->getFacebookId() != null):?>
+                                    <img src="http://res.cloudinary.com/arriendas-cl/image/facebook/w_194,h_204,c_fill,g_face/<?php echo $User->getFacebookId();?>.jpg">
+                                <?php else: ?>
+                                    <!-- <img src="http://res.cloudinary.com/arriendas-cl/image/fetch/w_194,h_204,c_fill,g_face/http://www.arriendas.cl/images/users/<?php echo $User->getFileName() ?>">-->
+                                    <?php echo image_tag('users/'.$User->getFileName(), 'size=194x204') ?>
+                                <?php endif ?>
                             <?php endif ?>
                         <?php endif ?>
                     </div> 
@@ -32,10 +36,14 @@
 
                 <div class="regis_foto_frame">
                     <div id="previewlicense">
-                        <?php if ($User->getDriverLicenseFile() == null): ?>
-                            <?php echo image_tag('newDesign/foto_padron_reverso.png', 'size=194x204') ?>
+                        <?php if ($imagen_licencia): ?>
+                            <img alt="imagen_licencia" src="<?php echo $imagen_licencia->getImageSize('md'); ?>" height="204" width="194">  
                         <?php else: ?>
-                            <?php echo image_tag('licence/'.$User->getLicenceFileName(), 'size=194x204') ?>
+                            <?php if ($User->getDriverLicenseFile() == null): ?>
+                                <?php echo image_tag('newDesign/foto_padron_reverso.png', 'size=194x204') ?>
+                            <?php else: ?>
+                                <?php echo image_tag('licence/'.$User->getLicenceFileName(), 'size=194x204') ?>
+                            <?php endif ?>
                         <?php endif ?>
                     </div> 
 
@@ -139,12 +147,12 @@
 <!-- Formularios -->
 <div style="display:none">
 
-    <form action="<?php echo url_for('main/uploadPhoto?photo=main&width=194&height=204&file=filemain') ?>" enctype="multipart/form-data" id="formmain" method="post">
+    <form action="<?php echo url_for('profile/uploadPhoto?photo=main&width=194&height=204&file=filemain') ?>" enctype="multipart/form-data" id="formmain" method="post">
         <input id="filemain" name="filemain" type="file">
         <input type="submit">
     </form>
 
-    <form action="<?php echo url_for('main/uploadLicense?photo=license&width=194&height=204&file=filelicense') ?>" enctype="multipart/form-data" id="formlicense" method="post">
+    <form action="<?php echo url_for('profile/uploadLicense?photo=license&width=194&height=204&file=filelicense') ?>" enctype="multipart/form-data" id="formlicense" method="post">
         <input id="filelicense" name="filelicense" type="file">
         <input type="submit">
     </form>

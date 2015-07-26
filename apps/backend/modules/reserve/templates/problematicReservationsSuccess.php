@@ -194,9 +194,13 @@
 		$(".modal-footer").show();
 		var userId  = $(this).data("user-id");
 		var license = $(this).data("license");
-		var n = license.lastIndexOf("/");
-		var res = license.slice(n+1);
-		$("#photo").attr("src", "https://www.arriendas.cl/images/licence/"+res);
+		if(license.search("licence") < 5){
+			$("#photo").attr("src", license);
+		} else {
+			var n = license.lastIndexOf("/");
+			var res = license.slice(n+1);
+			$("#photo").attr("src", "https://www.arriendas.cl/images/licence/"+res);
+		}
 		$("#photoModal").modal('show');
 		$("#userId").val(userId);
 	});

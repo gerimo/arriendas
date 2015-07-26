@@ -14,14 +14,12 @@ class NotificationFirstPayReserveTask extends sfBaseTask {
         $this->name = 'FirstPayReserve';
         $this->briefDescription = 'Busca a los usuario que hayan registrado una reserva sin haberla pagado';
         $this->detailedDescription = <<<EOF
-The [FirstPayReserve|INFO] task does things.
-Call it with:
+        The [FirstPayReserve|INFO] task does things.
+        Call it with:
 
-  [php symfony notification:FirstPayReserve|INFO]
+        [php symfony notification:FirstPayReserve|INFO]
 EOF;
     }
-
-
 
     protected function execute($arguments = array(), $options = array()) {
 
@@ -34,13 +32,35 @@ EOF;
         $databaseManager = new sfDatabaseManager($this->configuration);
         $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
 
-        $Users = Doctrine_core::getTable("user")->findAll();
+        $Reserves = Doctrine_core::getTable("Reserve")->findReserves(50);
+        $date = date("Y-m-d H:i:s", strtotime("2014-01-01"));
 
-        foreach ($Users as $User) {
-            if(Reserve::IsFirstReserve($User->id)){
-                Notification::make($User->id, 2);
+
+        foreach ($Reserves as $Reserve) {
+            $User = $Reserve->getUser()->getId();
+            $Car = $Reserve->getCar();
+            $UserCar = $Car->getUser()->getId();   
+
+            //Primera Reserva 
+            if (Reserve::IsFirstReserve($User)) {
+
+                $Notification = Doctrine_core::getTable("UserNotification")->findByUserIdAndNotificationId($User, 85);
+
+                if (count($Notification) == 0) { 
+                    Notification::make($User, 2, $Reserve->id);
+                }   
+            }
+
+            //Primer pago quinsenal 
+            
+            if ($Car->getQuantityOfLatestRents($date) == 1) {
+
+                $Notification = Doctrine_core::getTable("UserNotification")->findByUserIdAndNotificationId($UserCar, 118);
+
+                if (count($Notification) == 0)   { 
+                    Notification::make($UserCar, 13, $Reserve->id);
+                }   
             }
         }
-        
     }
 }

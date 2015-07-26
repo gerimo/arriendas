@@ -124,12 +124,12 @@ EOF;
 
 
                                 $subject = $UserTitle;
-                                $body    = $UserNotificationMessage;
+                                $body    = nl2br($UserNotificationMessage);
                                 $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
 
                                 if ($options["env"] != "prod") {
 
-                                    $to      = array("franco.inostrozah@gmail.com", "constanza@arriendas.cl");
+                                    $to      = array("franco.inostrozah@gmail.com", "rgrimoldi@gmail.com");
                                 } else {
 
                                     $to      = array($User->email => $User->firstname." ".$User->lastname);

@@ -388,10 +388,14 @@
                             <!-- foto perfil -->
                             <div id="previewPhotoCar" class="photo text-center col-xs-12 col-sm-6 col-md-6" style="margin-bottom:10%">
                             <label class="col-md-12">Foto Perfil</label>
-                                <?php if ($Car->getFotoPerfil() == null): ?>
-                                    <?php echo image_tag('img_asegura_tu_auto/AutoVistaAerea.png') ?>
+                                <?php if ($imagen_perfil): ?>
+                                    <img alt="imagen_perfil" src="<?php echo $imagen_perfil->getImageSize('md'); ?>" height="204" width="194">  
                                 <?php else: ?>
-                                    <?php echo image_tag($Car->getFotoPerfil()) ?>
+                                    <?php if ($Car->getFotoPerfil() == null): ?>
+                                        <?php echo image_tag('img_asegura_tu_auto/AutoVistaAerea.png') ?>
+                                    <?php else: ?>
+                                        <?php echo image_tag($Car->getFotoPerfil()) ?>
+                                    <?php endif ?>
                                 <?php endif ?>
                                 <a id="linkPhotoCar" href=""><i class="fa fa-edit"></i> subir</a>
                             </div>
@@ -399,10 +403,14 @@
                             <!-- foto Seguro frente -->
                             <div id="previewPhotoCarFront" class="photo text-center col-xs-12 col-sm-6 col-md-6" style="margin-bottom:10%">
                             <label class="col-md-12">Foto Frente</label>
-                                <?php if ($Car->getSeguroFotoFrente() == null): ?>
-                                    <?php echo image_tag('img_asegura_tu_auto/AutoFrente.png') ?>
+                                <?php if ($imagen_frente): ?>
+                                    <img alt="imagen_frente" src="<?php echo $imagen_frente->getImageSize('md'); ?>" height="204" width="194">  
                                 <?php else: ?>
-                                    <?php echo image_tag($Car->getSeguroFotoFrente()) ?>
+                                    <?php if ($Car->getSeguroFotoFrente() == null): ?>
+                                        <?php echo image_tag('img_asegura_tu_auto/AutoFrente.png') ?>
+                                    <?php else: ?>
+                                        <?php echo image_tag($Car->getSeguroFotoFrente()) ?>
+                                    <?php endif ?>
                                 <?php endif ?>
                             <a id="linkPhotoCarFront" href=""><i class="fa fa-edit"></i> subir</a>
                             </div>
@@ -412,10 +420,14 @@
                             <!-- foto Seguro Costado Derecho -->
                             <div id="previewPhotoCarSideRight" class="photo text-center col-xs-12 col-sm-6 col-md-6" style="margin-bottom:10%">
                             <label class="col-md-12">Foto Costado Derecho</label>
-                                <?php if ($Car->getSeguroFotoCostadoDerecho() == null): ?>
-                                    <?php echo image_tag('img_asegura_tu_auto/AutoCostadoDerch.png') ?>
+                                <?php if ($imagen_costado_derecho): ?>
+                                    <img alt="imagen_costado_derecho" src="<?php echo $imagen_costado_derecho->getImageSize('md'); ?>" height="204" width="194">  
                                 <?php else: ?>
-                                    <?php echo image_tag($Car->getSeguroFotoCostadoDerecho()) ?>
+                                    <?php if ($Car->getSeguroFotoCostadoDerecho() == null): ?>
+                                        <?php echo image_tag('img_asegura_tu_auto/AutoCostadoDerch.png') ?>
+                                    <?php else: ?>
+                                        <?php echo image_tag($Car->getSeguroFotoCostadoDerecho()) ?>
+                                    <?php endif ?>
                                 <?php endif ?>
                             <a id="linkPhotoCarSideRight" href=""><i class="fa fa-edit"></i> subir</a>
                             </div>
@@ -423,10 +435,14 @@
                             <!-- foto Seguro Costado Izquierdo -->
                             <div id="previewPhotoCarSideLeft" class="photo text-center col-xs-12 col-sm-6 col-md-6" style="margin-bottom:10%">
                             <label class="col-md-12">Foto Costado Izquierdo</label>
-                                <?php if ($Car->getSeguroFotoCostadoIzquierdo() == null): ?>
-                                    <?php echo image_tag('img_asegura_tu_auto/AutoCostadoIzq.png') ?>
+                                <?php if ($imagen_costado_izquierdo): ?>
+                                    <img alt="imagen_costado_izquierdo" src="<?php echo $imagen_costado_izquierdo->getImageSize('md'); ?>" height="204" width="194">  
                                 <?php else: ?>
-                                    <?php echo image_tag($Car->getSeguroFotoCostadoIzquierdo()) ?>
+                                    <?php if ($Car->getSeguroFotoCostadoIzquierdo() == null): ?>
+                                        <?php echo image_tag('img_asegura_tu_auto/AutoCostadoIzq.png') ?>
+                                    <?php else: ?>
+                                        <?php echo image_tag($Car->getSeguroFotoCostadoIzquierdo()) ?>
+                                    <?php endif ?>
                                 <?php endif ?>
                             <a id="linkPhotoCarSideLeft" href=""><i class="fa fa-edit"></i> subir</a>
                             </div>
@@ -434,10 +450,14 @@
                             <!-- foto Seguro Trasero Derecho -->
                             <div id="previewPhotoCarBackRight" class="photo text-center col-xs-12 col-sm-6 col-md-6" style="margin-bottom:10%">
                             <label class="col-md-12">Foto Trasero Derecho</label>
-                                <?php if ($Car->getSeguroFotoTraseroDerecho() == null): ?>
-                                    <?php echo image_tag('img_asegura_tu_auto/AutoDerechTra.png') ?>
+                                <?php if ($imagen_trasero_derecho): ?>
+                                    <img alt="imagen_trasero_derecho" src="<?php echo $imagen_trasero_derecho->getImageSize('md'); ?>" height="204" width="194">  
                                 <?php else: ?>
-                                    <?php echo image_tag($Car->getSeguroFotoTraseroDerecho()) ?>
+                                    <?php if ($Car->getSeguroFotoTraseroDerecho() == null): ?>
+                                        <?php echo image_tag('img_asegura_tu_auto/AutoDerechTra.png') ?>
+                                    <?php else: ?>
+                                        <?php echo image_tag($Car->getSeguroFotoTraseroDerecho()) ?>
+                                    <?php endif ?>
                                 <?php endif ?>
                             <a id="linkPhotoCarBackRight" href=""><i class="fa fa-edit"></i> subir</a>
                             </div>
@@ -446,10 +466,14 @@
                             <!-- foto Seguro Trasero Izquierdo -->
                             <div id="previewPhotoCarBackLeft" class="photo text-center col-xs-12 col-sm-6 col-md-6" style="margin-bottom:10%">
                             <label class="col-md-12">Foto Trasero Izquierdo</label>
-                                <?php if ($Car->getSeguroFotoTraseroIzquierdo() == null): ?>
-                                    <?php echo image_tag('img_asegura_tu_auto/AutoIzqFrent.png') ?>
+                                <?php if ($imagen_trasero_izquierdo): ?>
+                                    <img alt="imagen_trasero_izquierdo" src="<?php echo $imagen_trasero_izquierdo->getImageSize('md'); ?>" height="204" width="194">  
                                 <?php else: ?>
-                                    <?php echo image_tag($Car->getSeguroFotoTraseroIzquierdo()) ?>
+                                    <?php if ($Car->getSeguroFotoTraseroIzquierdo() == null): ?>
+                                        <?php echo image_tag('img_asegura_tu_auto/AutoIzqFrent.png') ?>
+                                    <?php else: ?>
+                                        <?php echo image_tag($Car->getSeguroFotoTraseroIzquierdo()) ?>
+                                    <?php endif ?>
                                 <?php endif ?>
                             <a id="linkPhotoCarBackLeft" href=""><i class="fa fa-edit"></i> subir</a>
                             </div>

@@ -1,5 +1,3 @@
-
-
 <link href="/css/newDesign/exito.css" rel="stylesheet" type="text/css">
 
 <div class="hidden-xs space-100"></div>
@@ -10,6 +8,22 @@
       
           <h1>¡PAGO EXITOSO!</h1>
           <div class="contenido text-center">
+
+            <!-- Webpay -->
+            <?php if ($paymentMethodId == 2): ?> 
+              <p>
+                <b>Reserva: </b><?php echo $reserveId ?><br>
+                <b>Transacción: </b><?php echo $transactionId ?><br>
+                <b>Monto: </b>$<?php echo number_format($amount, 0, ',', '.') ?><br>
+                <b>Tipo de pago: </b><?php echo $payType ?><br>
+                <b>Tipo de cuota: </b><?php echo $sharesType ?><br>
+                <b>Número de cuotas: </b><?php echo $sharesNumber ?><br>
+                <b>Código de autorización: </b><?php echo $authorization ?><br>
+                <b>4 últimos dígitos de la tarjeta: </b><?php echo $lastDigits ?><br>
+              </p><br><br>
+            <?php endif ?>
+            <!-- Fin webpay -->
+            
             <p>Antes y después de realizar la reserva, debes firmar el 
               <a href="<?php echo url_for('return_form', array('tokenReserve' => $tokenReserve))?>" target='_blank'>informe de daños impreso.</a>
             </p>

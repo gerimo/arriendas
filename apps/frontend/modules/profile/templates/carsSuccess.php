@@ -21,10 +21,14 @@
                         <div class="row">
                             <div class="col-offset-2 col-md-3 text-center">
                                 <a href="<?php echo url_for('car_edit', array('id' => $c->id)) ?>" >
-                                    <?php if ($c->getFotoPerfil() == null): ?>
-                                        <?php echo image_tag('img_asegura_tu_auto/AutoVistaAerea.png', array("width"=>"84px","height"=>"84px")) ?>
+                                    <?php if ($c->getFotoPerfilS3('xs')): ?>
+                                        <img alt="Foto_perfil" src="<?php echo $c->getFotoPerfilS3('xs')?>" width="84px" height="84px">
                                     <?php else: ?>
-                                        <?php echo image_tag($c->getFotoPerfil(), array("width"=>"84px","height"=>"84px")) ?>
+                                        <?php if ($c->getFotoPerfil() == null): ?>
+                                            <?php echo image_tag('img_asegura_tu_auto/AutoVistaAerea.png', array("width"=>"84px","height"=>"84px")) ?>
+                                        <?php else: ?>
+                                            <?php echo image_tag($c->getFotoPerfil(), array("width"=>"84px","height"=>"84px")) ?>
+                                        <?php endif ?>
                                     <?php endif ?>
                                 </a>
                             </div>

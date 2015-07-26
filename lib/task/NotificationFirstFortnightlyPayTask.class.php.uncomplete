@@ -14,10 +14,10 @@ class NotificationFirstFortnightlyPayTask extends sfBaseTask {
         $this->name = 'FirstFortnightlyPay';
         $this->briefDescription = 'genera las notificaciones a los propietarios que posean pagos pagos a favor en quincena';
         $this->detailedDescription = <<<EOF
-The [FirstFortnightlyPay|INFO] task does things.
-Call it with:
+        The [FirstFortnightlyPay|INFO] task does things.
+        Call it with:
 
-  [php symfony notification:AtThreeHoursOfTheEnd|INFO]
+        [php symfony notification:NotificationFirstFortnightlyPay|INFO]
 EOF;
     }
 
@@ -35,16 +35,18 @@ EOF;
         $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
 
         $Reserves = Doctrine_core::getTable("Reserve")->findByConfirmed(1);
-        $dateNow = date("Y-m-d H:i:s");
-
+        $date = date("Y-m-d H:i:s", strtotime("2014-01-01"));
+        $c = 0;
         foreach ($Reserves as $Reserve) {
+
             $Car = $reserve->getCar();
             $User = $Car->getUser();   
-            if($Car->getQuantityOfLatestRents() == 1) {
+            if($Car->getQuantityOfLatestRents($date) == 1) {
 
-                Notification::make($Car->getUser()->id, 13);
+                $c++;
             }
         }
-        
+
+        $this->log($c);
     }
 }

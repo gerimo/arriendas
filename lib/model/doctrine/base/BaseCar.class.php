@@ -536,6 +536,12 @@ abstract class BaseCar extends sfDoctrineRecord
             'type' => 'unique',
         ));
 
+        $this->hasColumn('has_gps', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
+             'default' => 0,
+             ));
+
         $this->option('charset', 'utf8');
         $this->option('type', 'InnoDB');
     }
