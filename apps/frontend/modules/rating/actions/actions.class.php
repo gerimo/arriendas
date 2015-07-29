@@ -30,7 +30,7 @@ class ratingActions extends sfActions
   		foreach ($Reserves as $Reserve) {
 	  		if($Reserve){
 	  			$renterId = $Reserve->getUserId();
-				$ownerid = $Reserve->getCar()->getUserId();
+				$ownerId = $Reserve->getCar()->getUserId();
 				$Rating = Doctrine_core::getTable("rating")->find($Reserve->getRatingId());
 
 				// si el usuario es arrendatario, lo redirecciona
@@ -45,13 +45,14 @@ class ratingActions extends sfActions
 	  		}
 	  	}
   		if($flag){
-  			$this->redirect("homepage");
+  			$this->redirect("rating_show_reserves");
   		}
 
     }
 
   public function executeRenterForm(sfWebRequest $request) {
   		$this->setLayout("newIndexLayout");
+  		error_log("renter-form");
   		$this->reserveId = $request->getParameter("reserveId");
   		$userId = $this->getUser()->getAttribute("userid");
   		$Reserves = Doctrine_core::getTable("reserve")->findById($this->reserveId);
@@ -60,7 +61,7 @@ class ratingActions extends sfActions
   		foreach ($Reserves as $Reserve) {
 	  		if($Reserve){
 	  			$renterId = $Reserve->getUserId();
-				$ownerid = $Reserve->getCar()->getUserId();
+				$ownerId = $Reserve->getCar()->getUserId();
 				$Rating = Doctrine_core::getTable("rating")->find($Reserve->getRatingId());
 
 				// si el usuario es dueño, lo redirecciona
@@ -75,7 +76,7 @@ class ratingActions extends sfActions
 	  		}
 	  	}
   		if($flag){
-  			$this->redirect("homepage");
+  			$this->redirect("rating_show_reserves");
   		}
   		
     }
