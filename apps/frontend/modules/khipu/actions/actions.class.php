@@ -12,14 +12,14 @@ class khipuActions extends sfActions {
             $transactionId = $request->getParameter("transactionId");
             $GPSTransactionId = $request->getParameter("gps_transactionId", null);
 
-            if(is_null($GPSTransactionId)){
+            $settings = $this->getSettings();
+                        
+            $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["create-payment-url"]);
+
+            if (is_null($GPSTransactionId)) {
 
                 $Reserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
                 $Transaction = Doctrine_Core::getTable('Transaction')->find($transactionId);
-
-                $settings = $this->getSettings();
-                        
-                $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["create-payment-url"]);
 
                 $data = array(
                     'receiver_id'    => $settings["receiver_id"],
@@ -34,14 +34,12 @@ class khipuActions extends sfActions {
                     'custom'         => "",
                 );
 
-            }else{
+            } else {
+
                 $GPSTransaction = Doctrine_Core::getTable("GPSTransaction")->find($GPSTransactionId);
                 $GPS = Doctrine_Core::getTable("gps")->find($GPSTransaction->gps_id);
                 $Car = Doctrine_Core::getTable("car")->find($GPSTransaction->car_id);
                 $User = Doctrine_Core::getTable("user")->find($Car->getUser()->id);
-                $settings = $this->getSettings();
-                        
-                $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["create-payment-url"]);
 
                 $data = array(
                     'receiver_id'    => $settings["receiver_id"],
@@ -58,9 +56,8 @@ class khipuActions extends sfActions {
 
             }
 
-           
-
-            error_log("[khipu/generatePayment] ".print_r($data, true));
+            error_log("[khipu/generatePayment] Generando pago para reserva ".$reserveId);
+            error_log(print_r($data, true));
 
             $url = $khipuService->createPaymentURL($data)->url;
         } catch (Execption $e) {

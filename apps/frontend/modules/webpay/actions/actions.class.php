@@ -200,6 +200,8 @@ class webpayActions extends sfActions {
         
         $this->setLayout("newIndexLayout");
 
+        error_log(print_r($request->getParameterHolder(), true));
+
         $token = $request->getPostParameter("token_ws");
 
         $Transaction = Doctrine_Core::getTable("Transaction")->findOneByWebpayToken($token);
@@ -297,7 +299,6 @@ class webpayActions extends sfActions {
                 $this->forward("webpay", "processPaymentRejected");
             }
         } else {
-            /* not session */
             $this->redirect('@homepage');
         }
     }
@@ -648,9 +649,7 @@ class webpayActions extends sfActions {
             try {
                 $getTransactionResultResponse = $webpayService->getTransactionResult($getTransactionResult);
                 error_log(print_r(json_encode($getTransactionResultResponse), true));
-            } catch (Exception $e) {
-                error_log("EXCEPTION");
-            }            
+            } catch (Exception $e) {}
 
             $this->getRequest()->setParameter("reserveId", $Reserve->getId());
             $this->forward("webpay", "processPaymentRejected");
