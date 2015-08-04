@@ -25,6 +25,8 @@ class CheckGPSPaymentMessageFilter extends sfFilter
                 && $action != 'notifyPaymentGPS'
                 && $action != 'notifyPayment'
                 && $action != 'processPaymentCanceled'
+                && $action != 'paymentInformation'
+                && $action != 'notificationValidation'
             ) 
         {
         	$userId = sfContext::getInstance()->getUser()->getAttribute('userid');

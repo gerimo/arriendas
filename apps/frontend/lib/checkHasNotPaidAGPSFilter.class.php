@@ -21,6 +21,8 @@
                     && $action != 'notifyPaymentGPS'
                     && $action != 'notifyPayment'
                     && $action != 'processPaymentCanceled'
+                    && $action != 'paymentInformation'
+                    && $action != 'notificationValidation'
                     )
             {
                 
