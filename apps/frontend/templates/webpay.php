@@ -9,6 +9,6 @@
 
         <?php echo $sf_content ?>
 
-        <script type="text/javascript" src="/js/newDesign/jquery-2.1.3.min.js"></script>
+        <script type="text/javascript" src="js/newDesign/jquery-2.1.3.min.js"></script>
     </body>
 </html>
