@@ -40,6 +40,10 @@ class khipuActions extends sfActions {
                 $GPS = Doctrine_Core::getTable("gps")->find($GPSTransaction->gps_id);
                 $Car = Doctrine_Core::getTable("cartmp")->find($GPSTransaction->car_tmp_id);
                 $User = Doctrine_Core::getTable("user")->find($Car->user_id);
+                $settings = $this->getSettings();
+                error_log("******************** generando pago transaction id: ".$GPSTransactionId);     
+                $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["create-payment-url"]);
+                error_log("url: ".$this->generateUrl("khipuNotifyGPS", array(), true));
 
                 $data = array(
                     'receiver_id'    => $settings["receiver_id"],
@@ -814,7 +818,7 @@ class khipuActions extends sfActions {
 
             $settings = $this->getSettings();
             $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["payment-status-url"]);
-
+            error_log("url verificacion: ".$settings["payment-status-url"]);
             $khipuTransaction = $this->getUser()->getAttribute("khipu-transaction");
 
             $data = array('receiver_id' => $settings["receiver_id"],
@@ -825,6 +829,7 @@ class khipuActions extends sfActions {
 
             $response = $khipuService->paymentStatus($data);
             error_log($response->status);
+            error_log("respuesta ".print_r($response));
             switch ($response->status) {
                 case "done":
                     $this->paymentMsg = "El pago ha sido realizado.";
