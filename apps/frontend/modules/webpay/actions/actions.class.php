@@ -6,7 +6,7 @@ class webpayActions extends sfActions {
 
     public function executeGeneratePayment (sfWebRequest $request) {
 
-        $this->setLayout("newIndexLayout");
+        $this->setLayout("webpay");
 
         try {
 
@@ -198,7 +198,7 @@ class webpayActions extends sfActions {
 
     public function executeProcessPayment(sfWebRequest $request) {
         
-        $this->setLayout(false);
+        $this->setLayout("webpay");
 
         error_log(print_r($request->getParameterHolder(), true));
 
