@@ -9,6 +9,14 @@ test_mailing:
     url: /test/email
     param: { module: main, action: testMailing }
 
+test_image:
+    url: /test/image
+    param: { module: image, action: index }
+
+test_show_image:
+    url: /test/image/:id
+    param: { module: image, action: showImages }
+
 #test_upload_images:
 #    url: /imagenes
 #    param: { module: main, action: testImageUpload }

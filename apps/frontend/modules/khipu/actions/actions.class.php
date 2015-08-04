@@ -38,8 +38,8 @@ class khipuActions extends sfActions {
 
                 $GPSTransaction = Doctrine_Core::getTable("GPSTransaction")->find($GPSTransactionId);
                 $GPS = Doctrine_Core::getTable("gps")->find($GPSTransaction->gps_id);
-                $Car = Doctrine_Core::getTable("car")->find($GPSTransaction->car_id);
-                $User = Doctrine_Core::getTable("user")->find($Car->getUser()->id);
+                $Car = Doctrine_Core::getTable("cartmp")->find($GPSTransaction->car_tmp_id);
+                $User = Doctrine_Core::getTable("user")->find($Car->user_id);
 
                 $data = array(
                     'receiver_id'    => $settings["receiver_id"],
@@ -397,7 +397,7 @@ class khipuActions extends sfActions {
     }
 
     public function executeNotifyPaymentGPS(sfWebRequest $request) {
-
+        error_log("GENERANDO PAGO");
         $this->_log("NotifyPaymentGPS", "INFO", "Start validation");
 
         $userId = $this->getUser()->getAttribute("userid");
@@ -434,7 +434,7 @@ class khipuActions extends sfActions {
 
                 $GPSTransactionId = ltrim($data["transaction_id"], 'G');
                 $GPSTransaction = Doctrine_Core::getTable("GPSTransaction")->find($GPSTransactionId);
-
+                error_log("*************** verificando paggo transaction id: " . $GPSTransactionId);
                 $this->_log("Pago", "Exito", "Usuario: " . $userId . ". GPSTransaction ID: " . $GPSTransaction->id);
 
                 if (!$GPSTransaction->getCompleted()) {
@@ -448,13 +448,78 @@ class khipuActions extends sfActions {
                     // Notification::make($Renter->id, 3, $Reserve->id); // pago
                     
                     $User = Doctrine_Core::getTable("user")->find($userId);
+
                     $GPSTransaction->setCompleted(true);
                     $GPSTransaction->setPaidOn(date("Y-m-d H:i:s"));
-                    $GPSTransaction->save();
+                    
+                    $CarTmp = Doctrine_Core::getTable("cartmp")->find($GPSTransaction->car_tmp_id);
 
-                    $Car = Doctrine_Core::getTable("car")->find($GPSTransaction->car_id);
+                    $Car = new Car();
+
+                    $fechaHoy = Date("Y-m-d H:i:s");
+                    $Car->setFechaSubida($fechaHoy);
+                    // $url = $this->generateUrl('car_price');
+
+                    $Car->setAddress($CarTmp->getAddress());
+                    $Car->setCommuneId($CarTmp->getCommuneId());
+                    $Car->setModelId($CarTmp->getModelId());
+                    $Car->setYear($CarTmp->getYear());
+                    $Car->setDoors($CarTmp->getDoors());
+                    $Car->setTransmission($CarTmp->getTransmission());
+                    $Car->setTipoBencina($CarTmp->getTipoBencina());
+                    $Car->setPatente($CarTmp->getPatente());
+                    $Car->setUserId($CarTmp->getUserId());
+                    $Car->setColor($CarTmp->getColor());
+                    $Car->setLat($CarTmp->getLat());
+                    $Car->setLng($CarTmp->getLng());
+                    $Car->setBabyChair($CarTmp->getBabyChair());
+                    $Car->setCapacity($CarTmp->getCapacity());
+                    $Car->setAccesoriosSeguro($CarTmp->getAccesoriosSeguro());
+                    $Car->setIsAirportDelivery($CarTmp->getIsAirPortDelivery());
                     $Car->setHasGps(1);
+                    $Car->setCityId(27);
+
+                    $GPSTransaction->save();
                     $Car->save();
+                    CarProximityMetro::setNewCarProximityMetro($Car);
+
+                    $CarTmp->setCarId($Car->id);
+                    $CarTmp->save();
+
+                     // Correo de notificación de un nuevo vehículo a soporte de arriendas
+                    $mail    = new Email();
+                    $mailer  = $mail->getMailer();
+                    $message = $mail->getMessage();            
+
+                    $subject = "¡Se ha registrado un nuevo vehículo!";
+                    $body    = $this->getPartial('emails/carCreateSupport', array('Car' => $Car));
+                    $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+                    $to      = array("soporte@arriendas.cl");
+
+                    $message->setSubject($subject);
+                    $message->setBody($body, 'text/html');
+                    $message->setFrom($from);
+                    $message->setTo($to);
+                    /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
+                    
+                    $mailer->send($message);
+
+                    // Correo de notificación del registro del vehículo al usuario
+                    $subject = "¡Tu vehículo ha sido registrado!";
+                    $body    = $this->getPartial('emails/carCreateOwner', array('Car' => $Car));
+                    $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+                    $to      = array($Car->getUser()->email => $Car->getUser()->firstname." ".$Car->getUser()->lastname);
+
+                    $message->setSubject($subject);
+                    $message->setBody($body, 'text/html');
+                    $message->setFrom($from);
+                    $message->setTo($to);
+                    /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
+                    
+                    $mailer->send($message);
+
+                    // notificación de subida de automovil
+                    Notification::make($Car->getUser()->id, 5); 
 
                     //$formulario = $Functions->generarFormulario(NULL, $Reserve->token);
                     //$reporte    = $Functions->generarReporte($Reserve->getCar()->id);
@@ -759,6 +824,7 @@ class khipuActions extends sfActions {
             $this->_log("Call", "info", $msg);
 
             $response = $khipuService->paymentStatus($data);
+            error_log($response->status);
             switch ($response->status) {
                 case "done":
                     $this->paymentMsg = "El pago ha sido realizado.";

@@ -12,4 +12,19 @@
  */
 class Damage extends BaseDamage
 {
+	public function getDamageImageS3($size){
+	    $Image = Doctrine_Core::getTable("image")->findOneByImageTypeIdAndDamageId(28, $this->getId());
+	    if($Image){
+	    	return $Image->getImageSize($size);
+	    }
+	    return null;
+  	}
+
+  	public function getImage(){
+	    $Image = Doctrine_Core::getTable("image")->findOneByImageTypeIdAndDamageId(28, $this->getId());
+	    if($Image){
+	    	return $Image;
+	    }
+	    return null;
+  	}
 }

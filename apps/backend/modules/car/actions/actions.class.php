@@ -24,7 +24,6 @@ class carActions extends sfActions {
                 throw new Exception("Comentario no encontrado", 1);
             }
 
-            
             $Damage->setIsDeleted(1);
             $Damage->save();
 
@@ -103,8 +102,9 @@ class carActions extends sfActions {
             $Car = Doctrine_Core::getTable('Car')->findOneById($carId);
 
             if (!$Car) {
-                 throw new Exception("Auto no encontrado", 1);                
+                throw new Exception("Auto no encontrado", 1);                
             }
+            $arrayImagesS3 = $Car->getArrayImages();
 
             $CarAudioAccessories = Doctrine_Core::getTable('CarAudioAccessories')->findOneByCarId($Car->id);
 
@@ -131,17 +131,17 @@ class carActions extends sfActions {
                 );
 
             }
-
+            
             $return["data"] = array(
-                "frente"      => $Car->seguroFotoFrente,
-                "costadoD"    => $Car->seguroFotoCostadoDerecho,
-                "costadoI"    => $Car->seguroFotoCostadoIzquierdo,
-                "traseroD"    => $Car->seguroFotoTraseroDerecho,
-                "traseroI"    => $Car->seguroFotoTraseroIzquierdo,
-                "panel"       => $Car->tablero,
-                "padron"      => $Car->padron,
-                "accesorio1"  => $Car->accesorio1,
-                "accesorio2"  => $Car->accesorio2,
+                "frente"      => ($arrayImagesS3["seguroFotoFrente"]) ? $arrayImagesS3["seguroFotoFrente"]->getImageSize("md") : $Car->seguroFotoFrente,
+                "costadoD"    => ($arrayImagesS3["seguroFotoCostadoDerecho"]) ? $arrayImagesS3["seguroFotoCostadoDerecho"]->getImageSize("md") : $Car->seguroFotoCostadoDerecho,
+                "costadoI"    => ($arrayImagesS3["seguroFotoCostadoIzquierdo"]) ? $arrayImagesS3["seguroFotoCostadoIzquierdo"]->getImageSize("md") : $Car->seguroFotoCostadoIzquierdo,
+                "traseroD"    => ($arrayImagesS3["seguroFotoTraseroDerecho"]) ? $arrayImagesS3["seguroFotoTraseroDerecho"]->getImageSize("md") : $Car->seguroFotoTraseroDerecho,
+                "traseroI"    => ($arrayImagesS3["seguroFotoTraseroIzquierdo"]) ? $arrayImagesS3["seguroFotoTraseroIzquierdo"]->getImageSize("md") : $Car->seguroFotoTraseroIzquierdo,
+                "panel"       => ($arrayImagesS3["fotoTablero"]) ? $arrayImagesS3["fotoTablero"]->getImageSize("md") : $Car->tablero,
+                "padron"      => ($arrayImagesS3["fotoPadron"]) ? $arrayImagesS3["fotoPadron"]->getImageSize("md") : $Car->padron,
+                "accesorio1"  => ($arrayImagesS3["fotoAccesorio1"]) ? $arrayImagesS3["fotoAccesorio1"]->getImageSize("md") : $Car->accesorio1,
+                "accesorio2"  => ($arrayImagesS3["fotoAccesorio2"]) ? $arrayImagesS3["fotoAccesorio2"]->getImageSize("md") : $Car->accesorio2,
                 "accesoriosSeguro" => $Car->accesoriosSeguro
             );
 
@@ -169,6 +169,7 @@ class carActions extends sfActions {
 
                 $return["description"] = $Damage->description;
                 $return["urlFoto"] = $Damage->urlFoto;
+                $return["urlFotoS3"] = $Damage->getDamageImageS3("md");
                 $return["opcion"] = 1;
             } else {
                 $Damages    = Doctrine_Core::getTable('Damage')->findByCarIdAndIsDeleted($carId,0);
@@ -421,7 +422,7 @@ class carActions extends sfActions {
 
     public function executeUploadPhoto(sfWebRequest $request) {
 
-        $return = array();
+        $return = array("error" => false);
 
         try {
 
@@ -441,51 +442,41 @@ class carActions extends sfActions {
 
             $name = $_FILES['photo']['name'];
             $size = $_FILES['photo']['size'];
-            $tmp  = $_FILES['photo']['tmp_name'];
-            
-            list($txt, $ext) = explode(".", $name);
+            $tempFile  = $_FILES['photo']['tmp_name'];
 
-            $ext = strtolower($ext);
-
-            $actual_image_name = time() . $carId . "." . $ext;
-
-            $uploadDir = sfConfig::get("sf_web_dir");
-            $path      = $uploadDir . '/images/cars/';
-            $fileName  = $actual_image_name . "." . $ext;
-
-            $uploaded = move_uploaded_file($tmp, $path . $actual_image_name);
-
-            if (!$uploaded) {
-                throw new Exception("No se pudo subir la imagen de perfil", 1);
-            }
-
-            sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
 
             if ($op == 1) {
-                $Car->setSeguroFotoFrente($actual_image_name);
+                $message = Image::UploadImageToTempFolder($tempFile, $size, $name, 5, null, $carId);
             } elseif ($op == 2) {
-                $Car->setSeguroFotoCostadoDerecho($actual_image_name);
+                $message = Image::UploadImageToTempFolder($tempFile, $size, $name, 6, null, $carId);
             } elseif ($op == 3) {
-                $Car->setSeguroFotoCostadoIzquierdo($actual_image_name);
+                $message = Image::UploadImageToTempFolder($tempFile, $size, $name, 7, null, $carId);
             } elseif ($op == 4) {
-                $Car->setSeguroFotoTraseroDerecho($actual_image_name);
+                $message = Image::UploadImageToTempFolder($tempFile, $size, $name, 8, null, $carId);
             } elseif ($op == 5) {
-                $Car->setSeguroFotoTraseroIzquierdo($actual_image_name);
+                $message = Image::UploadImageToTempFolder($tempFile, $size, $name, 9, null, $carId);
             } elseif ($op == 6) {
-                $Car->setTablero($actual_image_name);
+                $message = Image::UploadImageToTempFolder($tempFile, $size, $name, 14, null, $carId);
             } elseif ($op == 7) {
-                $Car->setPadron($actual_image_name);
+                $message = Image::UploadImageToTempFolder($tempFile, $size, $name, 4, null, $carId);
             } elseif ($op == 8) {
-                $Car->setAccesorio1($actual_image_name);
+                $message = Image::UploadImageToTempFolder($tempFile, $size, $name, 17, null, $carId);
             } elseif ($op == 9) {
-                $Car->setAccesorio2($actual_image_name);
+                $message = Image::UploadImageToTempFolder($tempFile, $size, $name, 18, null, $carId);
             } elseif ($op == 10) {
                 $Damage = Doctrine_Core::getTable('Damage')->find($damageId);
-                $Damage->setUrlFoto($actual_image_name);
-                $Damage->save();
-            }  
-            $Car->save();
-            $return["urlPhoto"] = $actual_image_name;
+                if(!$Damage){
+                    throw new Exception("No se encontró el registro de Damage", 1);
+                }
+                $message = Image::UploadImageToTempFolder($tempFile, $size, $name, 28, null, null, $Damage->id);
+            }
+
+            if(strpos($message, "Mensaje:")){
+                throw new Exception($message, 2);
+            }else{
+                $Image = Doctrine_Core::getTable("image")->find($message);
+                $return["urlPhoto"] = $Image->getImageSize("md");
+            }
 
         } catch (Exception $e) {
             $return["error"] = true;

@@ -360,6 +360,10 @@ class profileActions extends sfActions
             $this->User->save();
         }
 
+        $array = $this->User->getArrayImages();
+        $this->imagen_perfil = $array["fotoPerfil"];
+        $this->imagen_licencia = $array["fotoLicencia"];
+
         $this->Regions = Doctrine_Core::getTable('Region')->findAll();
     }
 
@@ -413,5 +417,59 @@ class profileActions extends sfActions
                 /*$transaccionesRenter[$i]['depositoGarantia']      = number_format($Reserve->getMontoLiberacion(), 0, ',', '.');*/
             }
         }
+    }
+
+    public function executeUploadPhoto(sfWebRequest $request) {
+        $return = array("error" => false);
+
+        if (!empty($_FILES)) {
+            
+            $userId = $this->getUser()->getAttribute("userid");
+
+            $tempFile = $_FILES['filemain']['tmp_name'];
+            $name = $_FILES['filemain']['name'];
+            $size = $_FILES['filemain']['size'];
+
+            // se sube la foto al local, se especifica qué tipo de foto es.
+            $message = Image::UploadImageToTempFolder($tempFile, $size, $name, 1, $userId);
+
+            if(strpos($message, "Mensaje:")){
+                $return["error"] = true;
+                $return["errorMessage"] = $message;
+            }
+
+        }
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;        
+    }
+
+    public function executeUploadLicense(sfWebRequest $request) {
+        $return = array("error" => false);
+
+        if (!empty($_FILES)) {
+
+            $userId = $this->getUser()->getAttribute("userid");
+            $User = Doctrine_Core::getTable("user")->find($userId);
+
+            $tempFile = $_FILES['filelicense']['tmp_name'];
+            $name = $_FILES['filelicense']['name'];
+            $size = $_FILES['filelicense']['size'];
+            // se sube la foto al local, se especifica qué tipo de foto es.
+            $message = Image::UploadImageToTempFolder($tempFile, $size, $name, 2, $userId);
+
+            if(strpos($message, "Mensaje:")){
+                $return["error"] = true;
+                $return["errorMessage"] = $message;
+            }else{
+                $Image = Doctrine_Core::getTable("image")->find($message);
+                $User->setDriverLicenseFile($Image->getImageSize("md"));
+                $User->save();
+            }
+
+        }
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;        
     }
 }

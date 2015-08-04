@@ -349,6 +349,10 @@ class profileActions extends sfActions {
         }
 
         $this->Regions = Doctrine_Core::getTable('Region')->findAll();
+
+        $array = $this->User->getArrayImages();
+        $this->imagen_perfil = $array["fotoPerfil"];
+        $this->imagen_licencia = $array["fotoLicencia"];
     }
 
     public function executePay (sfWebRequest $request) {
@@ -5910,56 +5914,112 @@ class profileActions extends sfActions {
             $this->redirect('profile/cars');
     }
 
+    // public function executeUploadPhoto(sfWebRequest $request) {
+    //     error_log("si");
+    //     $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
+
+    //     if (isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST") {
+    //         $name = $_FILES[$request->getParameter('file')]['name'];
+    //         $size = $_FILES[$request->getParameter('file')]['size'];
+    //         $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
+    //         if (strlen($name)) {
+    //             list($txt, $ext) = explode(".", $name);
+    //             if (in_array($ext, $valid_formats) || 1 == 1) {
+    //                 if ($size < (5 * 1024 * 1024)) { // Image size max 1 MB
+    //                     $userid = $this->getUser()->getAttribute("userid");
+    //                     $actual_image_name = time() . $userid . "." . $ext;
+
+    //                     $uploadDir = sfConfig::get("sf_web_dir");
+    //                     $path = $uploadDir . '/images/cars/';
+    //                     $fileName = $actual_image_name . "." . $ext;
+
+    //                     $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
+    //                     if (move_uploaded_file($tmp, $path . $actual_image_name)) {
+    //                         sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
+
+    //                         echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
+    //                         echo "<img src='" . image_path("cars/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";
+    //                     } else
+    //                         echo "failed";
+    //                 } else
+    //                     echo "Image file size max 5 MB";
+    //             } else
+    //                 echo "Invalid file format..";
+    //         } else
+    //             echo "Please select image..!";
+    //         exit;
+    //     }
+
+
+
+    //     /*  foreach ($request->getFiles() as $fileName) {
+    //       $fileSize = $fileName['size'];
+    //       $fileType = $fileName['type'];
+    //       $extesion = getFileExtension($fileName['name']);
+
+
+    //       if(!is_dir($csv))
+    //       mkdir($csv, 0777);
+    //       move_uploaded_file($fileName['tmp_name'], "$folder/$fileName");
+    //       }
+    //      */
+
+    // }
+
     public function executeUploadPhoto(sfWebRequest $request) {
+        $return = array("error" => false);
 
-        $valid_formats = array("jpg", "png", "gif", "bmp", "jpeg");
+        if (!empty($_FILES)) {
+            
+            $userId = $this->getUser()->getAttribute("userid");
 
-        if (isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST") {
-            $name = $_FILES[$request->getParameter('file')]['name'];
-            $size = $_FILES[$request->getParameter('file')]['size'];
-            $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
-            if (strlen($name)) {
-                list($txt, $ext) = explode(".", $name);
-                if (in_array($ext, $valid_formats) || 1 == 1) {
-                    if ($size < (5 * 1024 * 1024)) { // Image size max 1 MB
-                        $userid = $this->getUser()->getAttribute("userid");
-                        $actual_image_name = time() . $userid . "." . $ext;
+            $tempFile = $_FILES['filemain']['tmp_name'];
+            $name = $_FILES['filemain']['name'];
+            $size = $_FILES['filemain']['size'];
 
-                        $uploadDir = sfConfig::get("sf_web_dir");
-                        $path = $uploadDir . '/images/cars/';
-                        $fileName = $actual_image_name . "." . $ext;
+            // se sube la foto al local, se especifica qué tipo de foto es.
+            $message = Image::UploadImageToTempFolder($tempFile, $size, $name, 1, $userId);
 
-                        $tmp = $_FILES[$request->getParameter('file')]['tmp_name'];
-                        if (move_uploaded_file($tmp, $path . $actual_image_name)) {
-                            sfContext::getInstance()->getConfiguration()->loadHelpers("Asset");
+            if(strpos($message, "Mensaje:")){
+                $return["error"] = true;
+                $return["errorMessage"] = $message;
+            }
 
-                            echo "<input type='hidden' name='" . $request->getParameter('photo') . "' value='" . $path . $actual_image_name . "'/>";
-                            echo "<img src='" . image_path("cars/" . $actual_image_name) . "' class='preview' height='" . $request->getParameter('height') . "' width='" . $request->getParameter('width') . "' />";
-                        } else
-                            echo "failed";
-                    } else
-                        echo "Image file size max 5 MB";
-                } else
-                    echo "Invalid file format..";
-            } else
-                echo "Please select image..!";
-            exit;
         }
+        $this->renderText(json_encode($return));
 
-
-
-        /*  foreach ($request->getFiles() as $fileName) {
-          $fileSize = $fileName['size'];
-          $fileType = $fileName['type'];
-          $extesion = getFileExtension($fileName['name']);
-
-
-          if(!is_dir($csv))
-          mkdir($csv, 0777);
-          move_uploaded_file($fileName['tmp_name'], "$folder/$fileName");
-          }
-         */
+        return sfView::NONE;        
     }
+
+    public function executeUploadLicense(sfWebRequest $request) {
+        $return = array("error" => false);
+
+        if (!empty($_FILES)) {
+
+            $userId = $this->getUser()->getAttribute("userid");
+            $User = Doctrine_Core::getTable("user")->find($userId);
+
+            $tempFile = $_FILES['filelicense']['tmp_name'];
+            $name = $_FILES['filelicense']['name'];
+            $size = $_FILES['filelicense']['size'];
+            // se sube la foto al local, se especifica qué tipo de foto es.
+            $message = Image::UploadImageToTempFolder($tempFile, $size, $name, 2, $userId);
+
+            if(strpos($message, "Mensaje:")){
+                $return["error"] = true;
+                $return["errorMessage"] = $message;
+            }else{
+                $Image = Doctrine_Core::getTable("image")->find($message);
+                $User->setDriverLicenseFile($Image->getImageSize("md"));
+                $User->save();
+            }
+
+        }
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;        
+    }
+
 
     public function executeUploadPhotoCar(sfWebRequest $request) {
 
