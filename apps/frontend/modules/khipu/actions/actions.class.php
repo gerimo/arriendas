@@ -483,6 +483,7 @@ class khipuActions extends sfActions {
                     $Car->setHasGps(1);
                     $Car->setCityId(27);
 
+                    $GPSTransaction->setCarId($Car->id);
                     $GPSTransaction->save();
                     $Car->save();
                     CarProximityMetro::setNewCarProximityMetro($Car);
