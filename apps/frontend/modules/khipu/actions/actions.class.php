@@ -479,7 +479,7 @@ class khipuActions extends sfActions {
                     $Car->setBabyChair($CarTmp->getBabyChair());
                     $Car->setCapacity($CarTmp->getCapacity());
                     $Car->setAccesoriosSeguro($CarTmp->getAccesoriosSeguro());
-                    $Car->setIsAirportDelivery($CarTmp->getIsAirPortDelivery());
+                    $Car->setIsAirportDelivery($CarTmp->getIsAirportDelivery());
                     $Car->setHasGps(1);
                     $Car->setCityId(27);
 
@@ -573,7 +573,7 @@ class khipuActions extends sfActions {
                 $this->_log("NotifyPaymentGPS", "ERROR", "Hubo un error en el proceso de verificacion.");
             }
         } catch (Exception $e) {
-            error_log("[khipu/notifyPayment] ERROR: ".$e->getMessage());
+            error_log("[khipu/notifyPaymentGPS] ERROR: ".$e->getMessage());
             Utils::reportError($e->getMessage(), "khipu/notifyPaymentGPS");
         }
 
