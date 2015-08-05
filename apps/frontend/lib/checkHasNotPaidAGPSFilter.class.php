@@ -36,7 +36,6 @@
                 $fecha = Date("Y-m-d H:i:s", strtotime("2015-08-05"));
 
                 foreach ($Cars as $Car) {
-                    error_log($Car->car_id);
                     if(!$Car->car_id){
                         if($Car->getFechaSubida() > $fecha){
                             $this->getContext()->getController()->redirect('gps/showMessage?car='.$Car->id); //definir una vista para el pago
