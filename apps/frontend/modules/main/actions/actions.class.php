@@ -13,7 +13,13 @@ class mainActions extends sfActions {
 
     public function executeError(sfWebRequest $request) {
         $this->setLayout(false);
-        $this->errorLog = exec('tail -n 10 /var/log/apache2/arriendas_error.log');
+        $output = array();
+        exec('tail -n 200 /var/log/apache2/arriendas_error.log', $output);
+        $result;
+        foreach ($output as $line) {
+            $result = $result + $line . "<br><br>";
+        }
+        $this->errorLog = $result;
     }
 
     public function executeErrorNBLGR(sfWebRequest $request) {
