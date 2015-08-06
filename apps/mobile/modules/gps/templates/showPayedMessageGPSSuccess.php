@@ -7,13 +7,11 @@
 	<div class="content">
 	    <div class="col-md-offset-2 col-md-8">
 	        <div class="BCW clearfix">
-	            <h1 class="text-center">¡Pago realizado!</h1>
+	            <h1 class="text-center">¡Pago Exitoso!</h1>
 
             	<div class="row">
 	            	<p class="text-center thumbnail">
-	            		El pago de tu gps fué realizado con éxito. <br>
-	            		El equipo adquirido será enviado a la dirección especificada en tu perfil.
-	            		Cualquier consulta puedes comunicarte a <a href="mailto:soporte@arriendas.cl">soporte@arriendas.cl</a>
+	            		En los próximos minutos recibirás un correo de confirmación por tu compra.
 					</p>
 	            </div>
 	        </div>

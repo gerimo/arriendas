@@ -4,11 +4,15 @@
     $User = $User;
 ?>
 
-<p><?php echo $User->firstname ?>, has pagado un gps.</p>
+<p>Hola <?php echo $User->firstname ?>,</p>
 
-<p>El equipo será enviado a la brevedad a la dirección que especificaste en tu perfil.</p> 
+<p>Tu pago fue recibido con éxito nos encargaremos! <br>
 
-<p>En caso de que la dirección no sea la correcta, porfavor cámbiala y contactate con nosotros a soporte@ariendas.cl .</p> 
+Se enviará el equipo y una tarjeta SIM al domicilio ingresado en la página. <br>
+
+Recuerda que con la devolución del GPS puedes solicitar la devolución del dinero. <br>
+
+Si tienes dudas por favor contactamos al 02-23333714 o a soporte@arriendas.cl.</p> 
 
 <h3>Datos del GPS</h3>
 
@@ -26,7 +30,7 @@
         <td><?php echo $User->email ?></td>
     </tr>
     <tr>
-        <th style='text-align: left'>Dirección</th>
+        <th style='text-align: left'>Dirección de despacho</th>
         <td><?php echo $User->address ?></td>
     </tr>
 </table>
