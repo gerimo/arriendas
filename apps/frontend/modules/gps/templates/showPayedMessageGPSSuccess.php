@@ -13,6 +13,7 @@
 	            	<p class="text-center thumbnail">
 	            		En los próximos minutos recibirás un correo de confirmación por tu compra.
 					</p>
+				</div>
 	        </div>
 	    </div>
 	</div>

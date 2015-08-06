@@ -764,7 +764,7 @@ class khipuActions extends sfActions {
 
                     
                     $subject = "Has Comprado un GPS!";
-                    $body    = $this->getPartial('emails/paymentDoneGPS', array('GPSTransaction' => $GPSTransaction, 'User' => $User));
+                    $body    = $this->getPartial('emails/paymentDoneGPS', array('GPSTransaction' => $GPSTransaction, 'User' => $Car->getUser()));
                     $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
                     $to      = array($Car->getUser()->email => $Car->getUser()->firstname." ".$Car->getUser()->lastname);
 
@@ -779,7 +779,7 @@ class khipuActions extends sfActions {
 
                     // Correo soporte
                     $subject = "Nuevo pago. GPS: ".$GPSTransaction->id;
-                    $body    = $this->getPartial('emails/paymentDoneGPS', array('GPSTransaction' => $GPSTransaction, 'User' => $User));
+                    $body    = $this->getPartial('emails/paymentDoneGPS', array('GPSTransaction' => $GPSTransaction, 'User' => $Car->getUser()));
                     $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                     $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
 
