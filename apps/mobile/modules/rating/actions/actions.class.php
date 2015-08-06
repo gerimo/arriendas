@@ -118,10 +118,14 @@ class ratingActions extends sfActions {
 							$pendingListAsOwner = $pendingListAsOwner."<div class='row'>";
 							$pendingListAsOwner = $pendingListAsOwner."<div class='col-xs-4 col-md-4 image'>";
 							$pendingListAsRenter = $pendingListAsRenter."<div class='visible-xs space-50'></div>";
-							if($str > 0) {
-								$pendingListAsOwner = $pendingListAsOwner."<img class='img-responsive car-r-image' src='http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
-							}else{
-								$pendingListAsOwner = $pendingListAsOwner."<img class='img-responsive car-r-image' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
+							if(!$Car->getFotoPerfilS3("md")){
+								if($str > 0) {
+									$pendingListAsOwner = $pendingListAsOwner."<img class='img-responsive car-r-image' src='http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
+								}else{
+									$pendingListAsOwner = $pendingListAsOwner."<img class='img-responsive car-r-image' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
+								}
+							} else {
+								$pendingListAsOwner = $pendingListAsOwner."<img class='img-responsive car-r-image' src='".$Car->getFotoPerfilS3("md")."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
 							}
 							$pendingListAsOwner = $pendingListAsOwner."</div>";
 							$pendingListAsOwner = $pendingListAsOwner."<div class='col-xs-8 col-md-8 text'>";
@@ -140,10 +144,14 @@ class ratingActions extends sfActions {
 							$pendingListAsRenter = $pendingListAsRenter."<div class='row'>";
 							$pendingListAsRenter = $pendingListAsRenter."<div class='col-xs-4 col-md-4 image'>";
 							$pendingListAsRenter = $pendingListAsRenter."<div class='visible-xs space-50'></div>";
-							if($str > 0) {
-								$pendingListAsRenter = $pendingListAsRenter."<img class='img-responsive car-r-image' src='http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
-							}else{
-								$pendingListAsRenter = $pendingListAsRenter."<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
+							if(!$Car->getFotoPerfilS3("md")){
+								if($str > 0) {
+									$pendingListAsRenter = $pendingListAsRenter."<img class='img-responsive car-r-image' src='http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
+								}else{
+									$pendingListAsRenter = $pendingListAsRenter."<img class='img-responsive car-r-image' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
+								}
+							} else {
+								$pendingListAsRenter = $pendingListAsRenter."<img class='img-responsive car-r-image' src='".$Car->getFotoPerfilS3("md")."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
 							}
 							$pendingListAsRenter = $pendingListAsRenter."</div>";
 							$pendingListAsRenter = $pendingListAsRenter."<div class='col-xs-8 col-md-8 text'>";
@@ -167,10 +175,14 @@ class ratingActions extends sfActions {
 								$pendingListAsOwner = $pendingListAsOwner."<div class='row'>";
 								$pendingListAsOwner = $pendingListAsOwner."<div class='col-xs-4 col-md-4 image'>";
 								$pendingListAsRenter = $pendingListAsRenter."<div class='visible-xs space-50'></div>";
-								if($str > 0) {
-									$pendingListAsOwner = $pendingListAsOwner."<img class='img-responsive' src='http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
-								}else{
-									$pendingListAsOwner = $pendingListAsOwner."<img class='img-responsive' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
+								if(!$Car->getFotoPerfilS3("md")){
+									if($str > 0) {
+										$pendingListAsOwner = $pendingListAsOwner."<img class='img-responsive car-r-image' src='http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
+									}else{
+										$pendingListAsOwner = $pendingListAsOwner."<img class='img-responsive car-r-image' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
+									}
+								} else {
+									$pendingListAsOwner = $pendingListAsOwner."<img class='img-responsive car-r-image' src='".$Car->getFotoPerfilS3("md")."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
 								}
 								$pendingListAsOwner = $pendingListAsOwner."</div>";
 								$pendingListAsOwner = $pendingListAsOwner."<div class='col-xs-8 col-md-8 text'>";
@@ -192,10 +204,14 @@ class ratingActions extends sfActions {
 								$pendingListAsRenter = $pendingListAsRenter."<div class='row'>";
 								$pendingListAsRenter = $pendingListAsRenter."<div class='col-xs-4 col-md-4 image'>";
 								$pendingListAsRenter = $pendingListAsRenter."<div class='visible-xs space-50'></div>";
-								if($str > 0) {
-									$pendingListAsRenter = $pendingListAsRenter."<img class='img-responsive car-r-image' src='http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
-								}else{
-									$pendingListAsRenter = $pendingListAsRenter."<img class='img-responsive car-r-image' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
+								if(!$Car->getFotoPerfilS3("md")){
+									if($str > 0) {
+										$pendingListAsRenter = $pendingListAsRenter."<img class='img-responsive car-r-image' src='http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
+									}else{
+										$pendingListAsRenter = $pendingListAsRenter."<img class='img-responsive car-r-image' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
+									}
+								} else {
+									$pendingListAsRenter = $pendingListAsRenter."<img class='img-responsive car-r-image' src='".$Car->getFotoPerfilS3("md")."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
 								}
 								$pendingListAsRenter = $pendingListAsRenter."</div>";
 								$pendingListAsRenter = $pendingListAsRenter."<div class='col-xs-8 col-md-8 text'>";
@@ -511,10 +527,14 @@ class ratingActions extends sfActions {
 								$historyListAsOwner = $historyListAsOwner."<div class='row'>";
 								$historyListAsOwner = $historyListAsOwner."<div class='col-xs-4 col-md-4 image'>";
 								$historyListAsOwner = $historyListAsOwner."<div class='visible-xs space-50'></div>";
-								if($str > 0) {
-									$historyListAsOwner = $historyListAsOwner."<img class='img-responsive car-r-image' src='http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
-								}else{
-									$historyListAsOwner = $historyListAsOwner."<img class='img-responsive car-r-image' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
+								if(!$Car->getFotoPerfilS3("md")){
+									if($str > 0) {
+										$historyListAsOwner = $historyListAsOwner."<img class='img-responsive car-r-image' src='http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
+									}else{
+										$historyListAsOwner = $historyListAsOwner."<img class='img-responsive car-r-image' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
+									}
+								} else {
+									$historyListAsOwner = $historyListAsOwner."<img class='img-responsive car-r-image' src='".$$Car->getFotoPerfilS3("md")."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
 								}
 								$historyListAsOwner = $historyListAsOwner."</div>";
 								$historyListAsOwner = $historyListAsOwner."<div class='col-xs-8 col-md-8 text'>";
@@ -534,10 +554,14 @@ class ratingActions extends sfActions {
 								$historyListAsRenter = $historyListAsRenter."<div class='row'>";
 								$historyListAsRenter = $historyListAsRenter."<div class='col-xs-4 col-md-4 image'>";
 								$historyListAsRenter = $historyListAsRenter."<div class='visible-xs space-50'></div>";
-								if($str > 0) {
-									$historyListAsRenter = $historyListAsRenter."<img class='img-responsive car-r-image' src='http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
-								}else{
-									$historyListAsRenter = $historyListAsRenter."<img class='img-responsive car-r-image' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
+								if(!$Car->getFotoPerfilS3("md")){
+									if($str > 0) {
+										$historyListAsRenter = $historyListAsRenter."<img class='img-responsive car-r-image' src='http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
+									}else{
+										$historyListAsRenter = $historyListAsRenter."<img class='img-responsive car-r-image' src='http://res.cloudinary.com/arriendas-cl/image/fetch/w_112,h_84,c_fill,g_center/http://www.arriendas.cl".$urlFotoThumbTipo."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
+									}
+								} else {
+									$historyListAsRenter = $historyListAsRenter."<img class='img-responsive car-r-image' src='".$$Car->getFotoPerfilS3("md")."' height='99' width='134' alt='rent a car ".$Car->getModel()->getBrand()->name." ".$Car->getModel()->name."'/>";
 								}
 								$historyListAsRenter = $historyListAsRenter."</div>";
 								$historyListAsRenter = $historyListAsRenter."<div class='col-xs-8 col-md-8 text'>";

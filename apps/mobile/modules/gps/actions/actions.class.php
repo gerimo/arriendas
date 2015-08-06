@@ -13,20 +13,23 @@ class gpsActions extends sfActions {
         $carTmpId = $request->getParameter('car');
         $CarTmp = Doctrine_core::getTable("cartmp")->findOneByIdAndCanceled($carTmpId, 0);
         // Cambiar fecha el dia de subida a prod
-        $fecha = Date("Y-m-d H:i:s", strtotime("2015-07-22"));
+        $fecha = Date("Y-m-d H:i:s", strtotime("2015-08-05"));
 
         // Comprueba si existen transacciones por visualizar
         $GPSTransactions = Doctrine_core::getTable("GPSTransaction")->findByCompletedAndViewed(1,0);
-        error_log(count($GPSTransactions));
         foreach ($GPSTransactions as $GPSTransaction) {
             $carTmpId_transaction = $GPSTransaction->car_tmp_id;
             if($carTmpId_transaction == $carTmpId){
                 if($CarTmp->getUserId() == $userId){
+
                     $this->redirect('gps/showPayedMessageGPS?transactionId='. $GPSTransaction->id);
 
                 }
             }
 
+        }
+        if($CarTmp->car_id){
+            $this->redirect("homepage");  
         }
 
         if($CarTmp->user_id != $userId || $CarTmp->canceled){

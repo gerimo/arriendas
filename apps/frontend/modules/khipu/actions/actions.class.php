@@ -510,6 +510,7 @@ class khipuActions extends sfActions {
                     $mailer->send($message);
 
                     // Correo de notificación del registro del vehículo al usuario
+                    error_log("[khipu/notifyPaymentGPS] Enviando email de confimacion de vehiculo al usuario");
                     $subject = "¡Tu vehículo ha sido registrado!";
                     $body    = $this->getPartial('emails/carCreateOwner', array('Car' => $Car));
                     $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
@@ -522,6 +523,7 @@ class khipuActions extends sfActions {
                     /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
                     
                     $mailer->send($message);
+                    error_log("[khipu/notifyPaymentGPS] mensaje enviado");
 
                     // notificación de subida de automovil
                     Notification::make($Car->getUser()->id, 5); 
@@ -532,22 +534,21 @@ class khipuActions extends sfActions {
                     //$pagare     = $Functions->generarPagare($Reserve->token);
 
                     
-                    error_log("[khipu/notifyPaymentGPS] Enviando email al usuario");
+                    error_log("[khipu/notifyPaymentGPS] Enviando email de confirmacion de gps al usuario");
 
                     
                     $subject = "Has Comprado un GPS!";
                     $body    = $this->getPartial('emails/paymentDoneGPS', array('GPSTransaction' => $GPSTransaction, 'User' => $User));
                     $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
-                    $to      = array($User->email => $User->firstname." ".$User->lastname);
+                    $to      = array($Car->getUser()->email => $Car->getUser()->firstname." ".$Car->getUser()->lastname);
 
-                    $message = Swift_Message::newInstance()
-                        ->setSubject($subject)
-                        ->setBody($body, 'text/html')
-                        ->setFrom($from)
-                        ->setTo($to);
+                    $message->setSubject($subject);
+                    $message->setBody($body, 'text/html');
+                    $message->setFrom($from);
+                    $message->setTo($to);
 
                     
-                    $this->getMailer()->send($message);
+                    $mailer->send($message);
                     error_log("[khipu/notifyPaymentGPS] mensaje enviado");
 
                     // Correo soporte
@@ -556,14 +557,13 @@ class khipuActions extends sfActions {
                     $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
                     $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
 
-                    $message = Swift_Message::newInstance()
-                        ->setSubject($subject)
-                        ->setBody($body, 'text/html')
-                        ->setFrom($from)
-                        ->setTo($to);
+                    $message->setSubject($subject);
+                    $message->setBody($body, 'text/html');
+                    $message->setFrom($from);
+                    $message->setTo($to);
                     
                     error_log("[khipu/notifyPaymentGPS] Enviando email a soporte");
-                    $this->getMailer()->send($message);
+                    $mailer->send($message);
                     error_log("[khipu/notifyPaymentGPS] mensaje enviado");
 
                     error_log("[khipu/notifyPaymentGPS] ---------- HABEMUS PAGO --------");

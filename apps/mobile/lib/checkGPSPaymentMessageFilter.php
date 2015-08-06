@@ -18,17 +18,22 @@ class CheckGPSPaymentMessageFilter extends sfFilter
                 && $user 
                 && $user->isAuthenticated()
                 && $action != 'logout'
+                && $action != 'payGps'
                 && $action != 'showPayedMessageGPS'
+                && $action != 'khipuNotifyGPS'
                 && $action != 'showMessage'
+                && $action != 'notifyPaymentGPS'
+                && $action != 'notifyPayment'
+                && $action != 'processPaymentCanceled'
+                && $action != 'notificationValidation'
             ) 
         {
-        	$userId = sfContext::getInstance()->getUser()->getAttribute('userid');
+            $userId = sfContext::getInstance()->getUser()->getAttribute('userid');
             $GPSTransactions = Doctrine_core::getTable("GPSTransaction")->findByCompletedAndViewed(1,0);
 
             foreach ($GPSTransactions as $GPSTransaction) {
                 $carId = $GPSTransaction->car_id;
                 $Car = Doctrine_core::getTable("car")->find($carId);
-                
                 if($Car->getUser()->id == $userId){
                     $this->getContext()->getController()->redirect('gps/showPayedMessageGPS?transactionId='. $GPSTransaction->id);
                     throw new sfStopException();
