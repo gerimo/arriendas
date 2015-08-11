@@ -1,7 +1,8 @@
 <?php
     $GPSTransaction  = $GPSTransaction;
     $GPS = Doctrine_Core::getTable("gps")->find($GPSTransaction->gps_id);
-    $User = $User;
+    $Car = Doctrine_Core::getTable("car")->find($GPSTransaction->car_id);
+    $User = $Car->getUser();;
 ?>
 
 <p>Hola <?php echo $User->firstname ?>,</p>
