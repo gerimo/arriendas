@@ -38,8 +38,8 @@
                 foreach ($Cars as $Car) {
                     if(!$Car->car_id){
                         
-                        $this->getContext()->getController()->redirect('gps/showMessage?car='.$Car->id); //definir una vista para el pago
-                        throw new sfStopException();
+                        $this->getContext()->getController()->redirect('gps/showMessage?car='.$Car->id);
+                        //throw new sfStopException();
                         
                     }
                     
