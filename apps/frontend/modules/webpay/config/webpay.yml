@@ -1,21 +1,31 @@
 settings:
-  dev:
-   url: http://201.238.207.131:7003/WSWebpayTransaction/cxf/WSWebpayService?wsdl
-   commerceCode: 597020000019
-   username: german-facilitator_api1.arriendas.cl
-   password: 1393252897
-   signature: An5ns1Kso7MWUdW4ErQKJJJ4qi4-A-SrinBigkhBBcE9C4ov-x6wgP0q
-   status_success: Success
-   status_success_warning: SuccessWithWarning
-   status_failure: Failure
-   status_failure_warning: FailureWithWarning
-  prod:
-   url: http://201.238.207.131:7003/WSWebpayTransaction/cxf/WSWebpayService?wsdl
-   commerceCode: 597020000019
-   username: german_api1.arriendas.cl
-   password: JJKXEZAGQAGZ8N2N
-   signature: A5dIkGXX9nIXgGhNqUVPEUBr10xMAMoRvtoTwOtRaSEwrhLLd2Q8s.Xf
-   status_success: Success
-   status_success_warning: SuccessWithWarning
-   status_failure: Failure
-   status_failure_warning: FailureWithWarning
+   dev:
+      url: http://201.238.207.131:7003/WSWebpayTransaction/cxf/WSWebpayService?wsdl
+      commerceCode: 597020000019
+      username: german-facilitator_api1.arriendas.cl
+      password: 1393252897
+      signature: An5ns1Kso7MWUdW4ErQKJJJ4qi4-A-SrinBigkhBBcE9C4ov-x6wgP0q
+      status_success: Success
+      status_success_warning: SuccessWithWarning
+      status_failure: Failure
+      status_failure_warning: FailureWithWarning
+   # prod:
+   #    url: http://201.238.207.131:7003/WSWebpayTransaction/cxf/WSWebpayService?wsdl
+   #    commerceCode: 597020000019
+   #    username: german_api1.arriendas.cl
+   #    password: JJKXEZAGQAGZ8N2N
+   #    signature: A5dIkGXX9nIXgGhNqUVPEUBr10xMAMoRvtoTwOtRaSEwrhLLd2Q8s.Xf
+   #    status_success: Success
+   #    status_success_warning: SuccessWithWarning
+   #    status_failure: Failure
+   #    status_failure_warning: FailureWithWarning
+   prod:
+      url: https://webpay3g.transbank.cl/WSWebpayTransaction/cxf/WSWebpayService?wsdl
+      commerceCode: 597031050928
+      username: german_api1.arriendas.cl
+      password: JJKXEZAGQAGZ8N2N
+      signature: A5dIkGXX9nIXgGhNqUVPEUBr10xMAMoRvtoTwOtRaSEwrhLLd2Q8s.Xf
+      status_success: Success
+      status_success_warning: SuccessWithWarning
+      status_failure: Failure
+      status_failure_warning: FailureWithWarning
