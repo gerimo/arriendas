@@ -33,15 +33,14 @@
                 $Cars = Doctrine_core::getTable("cartmp")->findByUserIdAndCanceled($idUsuario, 0);
                 // Fecha que establece qué autos son "nuevos" y cualos no
                 // el filtro hará efecto bajo los autos "nuevos" que no posean GPS
-                $fecha = Date("Y-m-d H:i:s", strtotime("2015-08-14"));
+                // $fecha = Date("Y-m-d H:i:s", strtotime("2015-08-14"));
 
                 foreach ($Cars as $Car) {
                     if(!$Car->car_id){
-                        if($Car->getFechaSubida() > $fecha){
-                            $this->getContext()->getController()->redirect('gps/showMessage?car='.$Car->id); //definir una vista para el pago
-                            throw new sfStopException();
-                            
-                        }
+                        
+                        $this->getContext()->getController()->redirect('gps/showMessage?car='.$Car->id); //definir una vista para el pago
+                        throw new sfStopException();
+                        
                     }
                     
                 }
