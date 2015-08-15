@@ -238,22 +238,24 @@
                 <!-- Medio de pago -->
                 <h2><span class="num">3</span> MEDIO DE PAGO</h2>
                 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                    <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="headingTwo">
-                            <h4 class="panel-title">
-                                <a class="payment btn-block" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                                    <img class="pull-right" src="/images/newDesign/payments/webpay.png">
-                                    <input name="payment" type="radio" value="2"> Tarjeta de débito / crédito
-                                </a>
-                            </h4>
-                        </div>
-                        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                            <div class="panel-body">
-                                <p>Paga a través de WebPay con tu tarjeta de débito o crédito</p>
-                                <p class="text-center"><img src="/images/newDesign/payments/webpayCyD.jpg" style="width: 33%"></p>
+                    <?php if (isset($_GET["webpay"])): ?>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="headingTwo">
+                                <h4 class="panel-title">
+                                    <a class="payment btn-block" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                        <img class="pull-right" src="/images/newDesign/payments/webpay.png">
+                                        <input name="payment" type="radio" value="2"> Tarjeta de débito / crédito
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                <div class="panel-body">
+                                    <p>Paga a través de WebPay con tu tarjeta de débito o crédito</p>
+                                    <p class="text-center"><img src="/images/newDesign/payments/webpayCyD.jpg" style="width: 33%"></p>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    <?php endif ?>
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="headingOne">
                             <h4 class="panel-title">
