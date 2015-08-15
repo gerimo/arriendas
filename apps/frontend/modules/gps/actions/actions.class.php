@@ -117,10 +117,10 @@ class gpsActions extends sfActions {
     public function executePago(sfWebRequest $request) {
         
         $userId = $this->getUser()->getAttribute('userid');        
-        $carId  = $request->getParameter("carId", null);
-        $gpsId   = $request->getParameter("gpsId", null);
-        $gps_price   = $request->getParameter("price", null);
-        $gps_description   = $request->getParameter("description", null);
+        $carId  = $request->getPostParameter("carId", null);
+        $gpsId   = $request->getPostParameter("gpsId", null);
+        $gps_price   = $request->getPostParameter("price", null);
+        $gps_description   = $request->getPostParameter("description", null);
         $payment  = $request->getPostParameter("payment", null);
         $User = Doctrine_Core::getTable('User')->find($userId);
         $this->forward404If(!$User);
