@@ -119,7 +119,7 @@ forgot_password_update:
     param: { module: main, action: recover }
 
 gps_pay:
-    url: /gps/pago/
+    url: /gps/pagar/
     param: { module: gps, action: payGps}
 
 gps_message:
