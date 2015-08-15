@@ -114,7 +114,7 @@
 <div id="price" data-price="<?php echo $gps_price ?>"></div>
 <div id="gps-id" data-gpsId="<?php echo $gpsId ?>"></div> -->
 
-<form id="pay_form" method="POST" action="<?php echo url_for('gps_pay') ?>">
+<form id="pay_form" method="POST" action="http://www.arriendas.cl/gps/pago/">
 	<input type="hidden" id="carId" name="carId" value="<?php echo $carId ?>"/>
 	<input type="hidden" id="description" name="description" value="<?php echo $gps_description ?>"/>
 	<input type="hidden" id="price" name="price" value="<?php echo $gps_price ?>"/>
