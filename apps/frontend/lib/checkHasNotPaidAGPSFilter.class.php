@@ -14,6 +14,7 @@
                     && $action != 'showMessage'
                     && $action != 'cancelUploadCar'
                     && $action != 'payGps'
+                    && $action != 'pago'
                     && $action != 'processPaymentGPS'
                     && $action != 'processPaymentFinalGPS'
                     && $action != 'showPayedMessageGPS'
