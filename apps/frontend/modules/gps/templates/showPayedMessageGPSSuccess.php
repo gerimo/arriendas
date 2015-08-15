@@ -11,7 +11,10 @@
 
             	<div class="row">
 	            	<p class="text-center thumbnail">
-	            		En los próximos minutos recibirás un correo de confirmación por tu compra.
+	            		En las próximas 72 horas te visitará un inspector para verificar tu auto.<br>
+						Aprobada la inspección podrás ver tu auto publicado
+						<br><br>
+						Puedes ver tu vehículo haciendo <a href="<?php echo url_for('cars/edit?id='.$carId) ?>">Click Aquí</a>
 					</p>
 				</div>
 	        </div>
