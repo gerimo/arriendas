@@ -48,18 +48,14 @@ class gpsActions extends sfActions {
 	}
 
 	public function executePayGps(sfWebRequest $request) {
-
-
-		error_log("1");
+		
 		$userId = $this->getUser()->getAttribute('userid');        
 		$carId  = $request->getParameter("carId", null);
         $gpsId   = $request->getParameter("gpsId", null);
         $gps_price   = $request->getParameter("price", null);
         $gps_description   = $request->getParameter("description", null);
         $payment  = $request->getPostParameter("payment", null);
-        error_log("2");
         $User = Doctrine_Core::getTable('User')->find($userId);
-         error_log("3");
         $this->forward404If(!$User);
 
         $Gps = Doctrine_core::getTable("gps")->find($gpsId);
@@ -82,9 +78,8 @@ class gpsActions extends sfActions {
             if ($CarTmp->canceled) {
                 throw new Exception("El User ".$userId." esta intentando pagar un gps pero el pago fué eliminado", 1);
             }
-            error_log("4");
+
             $GPSTransaction = new GPSTransaction();
-            error_log("5");
             //$GPSTransaction->setCarId($Car->id);
             $GPSTransaction->setCarTmpId($CarTmp->id);
             $GPSTransaction->setGpsId($gpsId);
@@ -93,12 +88,9 @@ class gpsActions extends sfActions {
             $GPSTransaction->setCompleted(0);
             $GPSTransaction->setPaidOn(null);
 
-            error_log("6");
            	$GPSTransaction->save();
-            error_log("7");
 
         } catch (Exception $e) {
-            error_log("8");
             error_log("[GPS/payGps] ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
                 Utils::reportError($e->getMessage(), "GPS/payGps");
@@ -106,7 +98,7 @@ class gpsActions extends sfActions {
             $this->redirect("homepage");
         }
 
-        error_log("9");
+        
         $this->getRequest()->setParameter("gps_transactionId", $GPSTransaction->getId());
         
 
