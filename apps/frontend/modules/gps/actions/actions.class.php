@@ -112,6 +112,7 @@ class gpsActions extends sfActions {
             $this->forward404("No se encontró el medio de pago");
         }
 
+        return sfView::NONE;
 	}
 
     public function executePago(sfWebRequest $request) {
