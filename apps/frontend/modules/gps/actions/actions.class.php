@@ -112,6 +112,7 @@ class gpsActions extends sfActions {
             $this->forward404("No se encontró el medio de pago");
         }
 
+        return sfView::NONE;
 	}
 
 	public function executeCancelUploadCar(sfWebRequest $request) {
@@ -162,7 +163,7 @@ class gpsActions extends sfActions {
             }
             $GPSTransaction->setViewed(1);
             $GPSTransaction->save();
-
+            $this->carId = $carId;
         } catch(Exception $e){
             error_log("[".date("Y-m-d H:i:s")."] [gps/showPayedMessageGPS] ERROR: ".$e->getMessage()." Problemas en el proceso de pago, no se generó el veículo.");
         }
