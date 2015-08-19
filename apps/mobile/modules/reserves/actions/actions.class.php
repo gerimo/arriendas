@@ -368,9 +368,9 @@ class reservesActions extends sfActions {
 
         $userId = $this->getUser()->getAttribute('userid');        
 
-        if ($request->hasParameter('warranty','payment-group','car','from','to')) {
+        if ($request->hasParameter('warranty','payment','car','from','to')) {
             $warranty = $request->getPostParameter("warranty", null);
-            $payment  = $request->getPostParameter("payment-group", null); // Se saco la selección de khipu
+            $payment  = $request->getPostParameter("payment", null); // Se saco la selección de khipu
 
             $carId = $request->getPostParameter("car", null);
             $from  = $request->getPostParameter("from", null);
@@ -448,6 +448,7 @@ class reservesActions extends sfActions {
             }
             
             $Car = Doctrine_Core::getTable('Car')->find($carId);
+            
             if (!$Car) {
                 throw new Exception("El User ".$userId." esta intentando pagar pero no se encontró el auto.", 1);
             }
@@ -521,6 +522,8 @@ class reservesActions extends sfActions {
             $this->redirect("homepage");
         }
 
+        $this->getUser()->setAttribute("reserveId", $Reserve->getId());
+
         $this->getRequest()->setParameter("reserveId", $Reserve->getId());
         $this->getRequest()->setParameter("transactionId", $Transaction->getId());
 
@@ -532,7 +535,13 @@ class reservesActions extends sfActions {
             $this->redirect('reserve_airport');
         }
 
-        $this->forward("khipu", "generatePayment");
+        if ($payment == 1) {
+            $this->forward("khipu", "generatePayment");
+        } elseif ($payment == 2) {
+            $this->forward("webpay", "generatePayment");
+        } else {
+            $this->forward404("No se encontró el medio de pago");
+        }
     }
 
     public function executeReject (sfWebRequest $request) {
