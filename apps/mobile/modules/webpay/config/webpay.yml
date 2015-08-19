@@ -1,0 +1,11 @@
+settings:
+   prod:
+      url: https://webpay3g.transbank.cl/WSWebpayTransaction/cxf/WSWebpayService?wsdl
+      commerceCode: 597031050928
+      username: german_api1.arriendas.cl
+      password: JJKXEZAGQAGZ8N2N
+      signature: A5dIkGXX9nIXgGhNqUVPEUBr10xMAMoRvtoTwOtRaSEwrhLLd2Q8s.Xf
+      status_success: Success
+      status_success_warning: SuccessWithWarning
+      status_failure: Failure
+      status_failure_warning: FailureWithWarning
