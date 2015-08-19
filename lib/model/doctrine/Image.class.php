@@ -85,6 +85,7 @@ class Image extends BaseImage {
 
                     } else {
                         // si la imagen fué modificada, no la elimina cuando no pueda guardarla en local
+                        $image->setIsDeleted(1);
                         if(!$hasChange){
                         	// se elimina el registro de imagen, si no se pudo guardar
                         	$image->setImageDeleted();
@@ -108,11 +109,11 @@ class Image extends BaseImage {
         }else{
             if($hasChange){
                 $image->setIsOnS3(false);   
-                $image->save();
             }
         	$msg = $image->id;
         	return $msg;
         }
+        $image->save();
 	}
 
     public function getImageSize($size){
