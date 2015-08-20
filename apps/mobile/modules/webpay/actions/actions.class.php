@@ -721,7 +721,6 @@ class webpayActions extends sfActions {
             }
         }
 
-        $this->getRequest()->setParameter("reserveId", $Reserve->getId());
         $this->forward("webpay", "processPaymentRejected");
     }
 
