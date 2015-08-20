@@ -1,5 +1,5 @@
-<div class="container" style="margin-top: 8%; margin-bottom: 20%">
-    <h1 class="text-center">Transacción Rechazada</h1>
+<div class="container" style="margin-top: 15%; margin-bottom: 20%">
+    <h3 class="text-center">Transacción Rechazada</h3>
     
     <div class="row">
         <div class="col-md-offset-3 col-md-6">
