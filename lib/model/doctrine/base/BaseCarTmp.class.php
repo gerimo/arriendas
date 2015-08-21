@@ -62,9 +62,9 @@ abstract class BaseCarTmp extends sfDoctrineRecord
              'length' => 10,
              ));
 
-        $this->hasColumn('color', 'string', 20, array(
+        $this->hasColumn('color', 'string', 255, array(
              'type' => 'string',
-             'length' => 20,
+             'length' => 255,
              ));
 
         $this->hasColumn('tipobencina', 'string', 50, array(

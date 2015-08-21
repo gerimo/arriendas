@@ -49,6 +49,18 @@ car_verify_car:
     url: /auto/verificar
     param: { module: car, action: verifyCar }
 
+gps_control:
+    url: /gps/control
+    param: { module: gps, action: carsUploadWithoutGps }
+
+gps_find_all:
+    url: /gps/buscar-todos
+    param: { module: gps, action: carFindAll }
+
+gps_generate_pay:
+    url: /gps/generar-pago
+    param: { module: gps, action: generatePay }
+
 comment:
     url: /comentario/:userId/:managementId
     param: { module: main, action: comment }
