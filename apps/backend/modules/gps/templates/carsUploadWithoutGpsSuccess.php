@@ -61,7 +61,7 @@
                 </div>
                 <div class="modal-footer">
                     <button data-dismiss="modal" datatype="button" class="btn btn-danger">No</button>
-                    <button data-dismiss="modal" type="button" class="btn btn-success btnTmpCar" data-car-tmp-id="" onclick="checkGps()">SI</button>
+                    <button data-dismiss="modal" type="button" class="btn btn-success btnTmpCar" data-car-tmp-id="" onclick="checkGps(this)">SI</button>
                 </div>
             </div>
         </div>
@@ -129,8 +129,8 @@
         findCarControl();
     });
 
-    function checkGps(){
-        var carTmpId = $(".btnTmpCar").data("car-tmp-id");
+    function checkGps(e){
+        var carTmpId = $(e).data("car-tmp-id");
         $.post("<?php echo url_for('gps_generate_pay') ?>", {"carTmpId": carTmpId} , function(r){
             if(r.error){
                 $("#dialog-alert p").html(r.errorMessage);
