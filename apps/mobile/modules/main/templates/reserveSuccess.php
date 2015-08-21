@@ -191,24 +191,21 @@
                 <!-- Medio de pago -->
                 <h2><span class="num">3</span> MEDIO DE PAGO</h2>
                 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                    <?php if (isset($_GET["webpay"])): ?>
-                        <div class="panel panel-default">
-                            <div class="panel-heading" role="tab" id="headingTwo">
-                                <h4 class="panel-title">
-                                    <a class="payment btn-block" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                                        <img class="pull-right" src="/images/newDesign/payments/webpay.png">
-                                        <input name="payment" type="radio" value="2"> Tarjeta de débito / crédito
-                                    </a>
-                                </h4>
-                            </div>
-                            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                                <div class="panel-body">
-                                    <p>Paga a través de WebPay con tu tarjeta de débito o crédito</p>
-                                    <p class="text-center"><img src="/images/newDesign/payments/webpayCyD.jpg" style="width: 33%"></p>
-                                </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingTwo">
+                            <h4 class="panel-title">
+                                <a class="payment btn-block" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                    <img class="pull-right" src="/images/newDesign/payments/webpay.png">
+                                    <input name="payment" type="radio" value="2"> Tarjeta de débito / crédito
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                            <div class="panel-body">
+                                <p>Paga a través de <b>WebPay</b> con tu tarjeta de débito o crédito</p>
                             </div>
                         </div>
-                    <?php endif ?>
+                    </div>
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="headingOne">
                             <h4 class="panel-title">
@@ -220,7 +217,7 @@
                         </div>
                         <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
                             <div class="panel-body">
-                                <p>Paga a través de una Transferencia Bancaria, mediante Khipu. Podrás hacerlo a través de los diversos bancos nacionales.</p>
+                                <p>Paga a través de una Transferencia Bancaria, mediante <b>Khipu</b>. Podrás hacerlo a través de los diversos bancos nacionales.</p>
                             </div>
                         </div>
                     </div>
