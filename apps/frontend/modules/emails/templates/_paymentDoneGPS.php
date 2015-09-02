@@ -7,7 +7,7 @@
 
 <p>Hola <?php echo $User->firstname ?>,</p>
 
-<p>Tu pago fue recibido con éxito nos encargaremos! <br>
+<p>Tu pago fue recibido con éxito! <br>
 
 Se enviará el equipo y una tarjeta SIM al domicilio ingresado en la página. <br>
 
