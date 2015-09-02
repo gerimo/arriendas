@@ -52,16 +52,15 @@
                     <h4 class="modal-title" id="myModalLabel">¿Está seguro?</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="text-center thumbnail">
+                    <div class="text-center">
                         <p>
                         Una vez validado el pago del gps para el vehículo, éste quedará guardado en la sección de Autos.
-                        Y se le notificará al usuario de la creación del vehículo y pago del gps.
                         </p>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button data-dismiss="modal" datatype="button" class="btn btn-danger">No</button>
-                    <button data-dismiss="modal" type="button" class="btn btn-success btnTmpCar" data-car-tmp-id="" onclick="checkGps()">SI</button>
+                    <button data-dismiss="modal" type="button" class="btn btn-success btnTmpCar" value="" onclick="checkGps(this)">SI</button>
                 </div>
             </div>
         </div>
@@ -108,7 +107,6 @@
                 $.each(r.data, function(k, v){
                     if(v.car_id == '1'){
                         button = "<a type='button' class='btn btn-primary create' data-car-tmp-id='"+v.id+"'>Validar Pago de Gps</a>";
-                        $(".btnTmpCar").data("car-tmp-id", v.id);
                     } else {
                         button = 'Pago validado. <br> ID auto: '+v.car_id;
                     }
@@ -122,6 +120,7 @@
     $('body').on("click", ".create", function(e){
 
         var carTmpId  = $(this).data("car-tmp-id");
+        $(".btnTmpCar").val(carTmpId);
         $("#Modal").modal('show');
     });
 
@@ -129,8 +128,8 @@
         findCarControl();
     });
 
-    function checkGps(){
-        var carTmpId = $(".btnTmpCar").data("car-tmp-id");
+    function checkGps(e){
+        var carTmpId = $(e).val();
         $.post("<?php echo url_for('gps_generate_pay') ?>", {"carTmpId": carTmpId} , function(r){
             if(r.error){
                 $("#dialog-alert p").html(r.errorMessage);

@@ -30,6 +30,11 @@ class gpsActions extends sfActions {
 
             $Car = new Car();
 
+            $patente = $Car->getExistPatent($CarTmp->getPatente());
+            if(count($patente) > 0){
+                throw new Exception("ésta patente ya se encuentra registrada en el sistema", 1);
+            }
+
             $fechaHoy = Date("Y-m-d H:i:s");
             $Car->setFechaSubida($fechaHoy);
             // $url = $this->generateUrl('car_price');
@@ -61,63 +66,63 @@ class gpsActions extends sfActions {
             $CarTmp->save();
 
             // Correo de notificación de un nuevo vehículo a soporte de arriendas
-            $mail    = new Email();
-            $mailer  = $mail->getMailer();
-            $message = $mail->getMessage();            
+            // $mail    = new Email();
+            // $mailer  = $mail->getMailer();
+            // $message = $mail->getMessage();            
 
-            $subject = "¡Se ha registrado un nuevo vehículo!";
-            $body    = $this->getPartial('emails/carCreateSupport', array('Car' => $Car));
-            $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-            $to      = array("soporte@arriendas.cl");
+            // $subject = "¡Se ha registrado un nuevo vehículo!";
+            // $body    = $this->getPartial('emails/carCreateSupport', array('Car' => $Car));
+            // $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+            // $to      = array("soporte@arriendas.cl");
 
-            $message->setSubject($subject);
-            $message->setBody($body, 'text/html');
-            $message->setFrom($from);
-            $message->setTo($to);
+            // $message->setSubject($subject);
+            // $message->setBody($body, 'text/html');
+            // $message->setFrom($from);
+            // $message->setTo($to);
             /*$message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));*/
             
-            $mailer->send($message);
+            // $mailer->send($message);
 
             // Correo de notificación del registro del vehículo al usuario
-            $subject = "¡Tu vehículo ha sido registrado!";
-            $body    = $this->getPartial('emails/carCreateOwner', array('Car' => $Car));
-            $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
-            $to      = array($Car->getUser()->email => $Car->getUser()->firstname." ".$Car->getUser()->lastname);
+            // $subject = "¡Tu vehículo ha sido registrado!";
+            // $body    = $this->getPartial('emails/carCreateOwner', array('Car' => $Car));
+            // $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+            // $to      = array($Car->getUser()->email => $Car->getUser()->firstname." ".$Car->getUser()->lastname);
 
-            $message->setSubject($subject);
-            $message->setBody($body, 'text/html');
-            $message->setFrom($from);
-            $message->setTo($to);
+            // $message->setSubject($subject);
+            // $message->setBody($body, 'text/html');
+            // $message->setFrom($from);
+            // $message->setTo($to);
             
-            $mailer->send($message);
+            // $mailer->send($message);
 
             // notificación de compra de gps
             Notification::make($Car->getUser()->id, 5); 
 
-            $subject = "Has Comprado un GPS!";
-            $body    = $this->getPartial('emails/paymentDoneGPS', array('GPSTransaction' => $GPSTransaction, 'User' => $User));
-            $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
-            $to      = array($Car->getUser()->email => $Car->getUser()->firstname." ".$Car->getUser()->lastname);
+            // $subject = "Has Comprado un GPS!";
+            // $body    = $this->getPartial('emails/paymentDoneGPS', array('GPSTransaction' => $GPSTransaction, 'User' => $User));
+            // $from    = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+            // $to      = array($Car->getUser()->email => $Car->getUser()->firstname." ".$Car->getUser()->lastname);
 
-            $message->setSubject($subject);
-            $message->setBody($body, 'text/html');
-            $message->setFrom($from);
-            $message->setTo($to);
+            // $message->setSubject($subject);
+            // $message->setBody($body, 'text/html');
+            // $message->setFrom($from);
+            // $message->setTo($to);
             
-            $mailer->send($message);
+            // $mailer->send($message);
 
-            // Correo soporte
-            $subject = "Nuevo pago. GPS: ".$GPSTransaction->id;
-            $body    = $this->getPartial('emails/paymentDoneGPS', array('GPSTransaction' => $GPSTransaction, 'User' => $User));
-            $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
-            $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
+            // // Correo soporte
+            // $subject = "Nuevo pago. GPS: ".$GPSTransaction->id;
+            // $body    = $this->getPartial('emails/paymentDoneGPS', array('GPSTransaction' => $GPSTransaction, 'User' => $User));
+            // $from    = array("no-reply@arriendas.cl" => "Notificaciones Arriendas.cl");
+            // $to      = array("soporte@arriendas.cl" => "Soporte Arriendas.cl");
 
-            $message->setSubject($subject);
-            $message->setBody($body, 'text/html');
-            $message->setFrom($from);
-            $message->setTo($to);
+            // $message->setSubject($subject);
+            // $message->setBody($body, 'text/html');
+            // $message->setFrom($from);
+            // $message->setTo($to);
             
-            $mailer->send($message);
+            // $mailer->send($message);
 
         } catch (Exception $e) {
             $return["error"]        = true;
