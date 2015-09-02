@@ -55,6 +55,12 @@
                             <li><a href="<?php echo url_for('user_whitout_car') ?>">Usuario que no registraron auto</a></li>
                         </ul>
                     </li>
+                    <li class="dropdown" data-section="Gps">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Gps<span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="<?php echo url_for('gps_control') ?>">Control de Gps por autos</a></li>
+                        </ul>
+                    </li>
                 </ul>
 
                 <ul class="nav navbar-nav navbar-right">
