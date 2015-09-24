@@ -475,7 +475,7 @@
 <section id="section-home">
 
     <div class="hidden-xs hidden-sm col-md-12">
-        <video id="video" autoplay loop >
+        <video id="video" autoplay loop controls poster="/images/poster.png" >
             <source src="/videos/video.mp4" type="video/mp4">
                 Your browser does not support HTML5 video.
         </video> 
