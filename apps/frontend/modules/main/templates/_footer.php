@@ -1,11 +1,11 @@
 <?php
-    if (strtotime(date("H:i")) > strtotime("19:00") || strtotime(date("H:i")) < strtotime("09:00") || strtotime(date("l")) == strtotime("Saturday") || strtotime(date("l")) == strtotime("Sunday")) {
+    /*if (strtotime(date("H:i")) > strtotime("19:00") || strtotime(date("H:i")) < strtotime("09:00") || strtotime(date("l")) == strtotime("Saturday") || strtotime(date("l")) == strtotime("Sunday")) {*/
         $telefono = "tel:0223333714";
         $telefonoText = "(02) 2333 3714"; 
-    } else {
+    /*} else {
         $telefono = "tel:0226402900";
         $telefonoText = "(02) 2640 2900";
-    }
+    }*/
 ?>
 
 <footer id="footer">
@@ -63,7 +63,7 @@
             <p>
 
                 <i class="fa fa-phone"></i> <a href="<?php echo $telefono?>"><?php echo $telefonoText?></a> 
-                <img style="width: 23px; height: 24px; margin-top: -4px;" src="/images/newDesign/logo-whatsapp.png"><a>+569-53332105</a>  
+                <!-- <img style="width: 23px; height: 24px; margin-top: -4px;" src="/images/newDesign/logo-whatsapp.png"><a>+569-53332105</a>   -->
                 <!-- <i class="fa fa-whatsapp"></i> +56 95 3332105 -->
                 
             </p>
