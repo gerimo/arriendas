@@ -649,4 +649,23 @@ where c.id=
 
   }
 
+  public function getHTMLFormatForIphotosByCarId(){
+
+    $Images = Doctrine_Core::getTable("image")->findByCarIdAndIsDeleted($this->id, 0);
+
+    $preLoadImage = "";
+    $return = "<ul class='scrubber'>";
+    foreach ($Images as $Image) {
+      if($Image->image_type_id != 6){
+        $return = $return . "<li><img class='img-responsive' alt='".$Image->image_type_id."' src='".$Image->getImageSize("XS")."'></li>";
+      }
+      if($Image->image_type_id == 3){
+        $preLoadImage = "<img class='img-responsive preLoadImage' alt='".$Image->image_type_id."' src='".$Image->getImageSize("XS")."'>";
+      }
+    }
+
+    return $preLoadImage . $return."</ul>";
+
+  }
+
 }

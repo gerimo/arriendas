@@ -24,6 +24,15 @@
     var neLat;
     var neLng;
 
+    function reloadScrubble(){
+        // función que ejecuta el scruubber
+        $(".scrubber").iscrubber({
+            showItem: 1, // the element (li) to show first; 1 based index
+            leaveToFirst: false, // come back the the first element when mouse leaves scrubbing area
+            direction: "horizontal" // use to specified the direction that mouse takes to show the items
+        });
+    }
+
     function coordenadas(position) {
 
         latitud  = position.coords.latitude; // Guardamos nuestra latitud
@@ -353,7 +362,8 @@
 
                     windowMarker += "<div class='col-md-4 text-center'>";
                     if(Car.photoS3){
-                        windowMarker += "<img class='img-responsive' src='" + Car.photoS3 + "' alt='rent a car  "+ Car.brand +" "+ Car.model +"'/>";
+                        //windowMarker += "<img class='img-responsive' src='" + Car.photoS3 + "' alt='rent a car  "+ Car.brand +" "+ Car.model +"'/>";
+                        windowMarker += Car.iphotoFormat;
                     } else {
                         if(str > 0) {
                             windowMarker += "<img class='img-responsive' src='http://www.arriendas.cl" + urlFotoThumbTipo + "' alt='rent a car  "+ Car.brand +" "+ Car.model +"'/>";
@@ -404,7 +414,8 @@
                     article += "<div class='row'>";
                     article += "<div class='col-xs-4 col-md-4 image'>";
                     if(Car.photoS3){
-                            article += "<img class='img-responsive' src='" + Car.photoS3+ "' height='99' width='134' alt='rent a car "+ Car.brand +" "+ Car.model +"'/>";
+                            //article += "<img class='img-responsive' src='" + Car.photoS3+ "' height='99' width='134' alt='rent a car "+ Car.brand +" "+ Car.model +"'/>";
+                            article += Car.iphotoFormat;
                     } else {
                         if(str > 0) {
                             article += "<img class='img-responsive' src='http://www.arriendas.cl" + urlFotoThumbTipo + "' height='99' width='134' alt='rent a car "+ Car.brand +" "+ Car.model +"'/>";
@@ -465,11 +476,14 @@
             $('.loading').hide();
             if (!$("#map-list-container, #list-container").is(":visible")) {
                 $("#map-list-container, #list-container").show();
+
             }
 
             markerCluster = new MarkerClusterer(map, markers, {maxZoom: 10});            
         }, "json");
+          
     }
+
 </script>
 
 <section id="section-home">
@@ -549,7 +563,7 @@
             <input type="checkbox" name="filter" class="isLowConsumption"> Bajo Consumo
             <input type="checkbox" name="filter" class="isMorePassengers"> Más de 5 pasajeros
             <input type="checkbox" name="filter" class="haveChair"> Silla Bebé
-            <input type="checkbox" name="filter" class="isAirportDelivery"> Auto en aeropuerto
+            <!-- <input type="checkbox" name="filter" class="isAirportDelivery"> Auto en aeropuerto -->
             <input type="checkbox" name="filter" class="nearToSubway"> Cercano al metro(máximo a 15 minutos)
         </div>
     </div>
@@ -773,6 +787,12 @@
 
 <script>
 
+    // Al termino de la carga de la página, se esconden las imágenes de portada de lo vehículos y se despliega el complemento Iphotos
+    $(window).bind("load", function() {
+        $(".preLoadImage").hide();
+        reloadScrubble();
+    });
+    
     $(document).ready(function(){
 
         localizame();
@@ -916,5 +936,6 @@
     function afterDateRefresh() {
         searchCars(0, $("button.see-more").data("limit"));
     }
+
 </script>
 <script src="/js/newDesign/dates.js?v=5" type="text/javascript"></script>

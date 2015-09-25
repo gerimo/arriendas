@@ -160,6 +160,7 @@ class CarTable extends Doctrine_Table {
                         'photoType' => $Car->photoS3,
                         'photo' => $Car->foto_perfil,
                         'photoS3' => $Car->getFotoPerfilS3("xs"),
+                        'iphotoFormat' => $Car->getHTMLFormatForIphotosByCarId(),
                         'price' => number_format(round(CarTable::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth())), 0, '', '.'),
                         'price_per_hour' => number_format(round($Car->getPricePerHour()), 0, '', '.'),
                         'price_per_day' => number_format(round($Car->getPricePerDay()), 0, '', '.'),

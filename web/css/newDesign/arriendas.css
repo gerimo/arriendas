@@ -483,3 +483,7 @@ header .btn-a-primary {
         height: 24px;
     }
 }
+
+ul.scrubber li {
+    display: none;
+}
