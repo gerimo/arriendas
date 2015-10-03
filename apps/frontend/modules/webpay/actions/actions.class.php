@@ -299,6 +299,9 @@ class webpayActions extends sfActions {
                 $this->forward("webpay", "processPaymentRejected");
             }
         } else {
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError("No se encontró Transacción con token de Transbank", "webpay/processPayment");
+            }
             $this->redirect('@homepage');
         }
     }
@@ -824,6 +827,9 @@ class webpayActions extends sfActions {
 
             $this->redirect('reserves');
         } else {
+            if ($request->getHost() == "www.arriendas.cl") {
+                Utils::reportError("No se encontró Transacción con token de Transbank", "webpay/processPaymentFinal");
+            }
             $this->redirect('@homepage');
         }
     }
