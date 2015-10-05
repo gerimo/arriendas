@@ -171,4 +171,23 @@ class Image extends BaseImage {
         return $success;
     }
 
+    public static function isImage($url){
+        $params = array('http' => array('method' => 'HEAD'));
+
+        $ctx = stream_context_create($params);
+
+        $fp = @fopen($url, 'rb', false, $ctx);
+        if (!$fp) {
+            return false;  // Problem with url
+        }
+
+        $meta = stream_get_meta_data($fp);
+
+        if ($meta === false){
+          fclose($fp);
+          return false;  // Problem reading data from url
+        }
+        return true;
+     }
+
 }
