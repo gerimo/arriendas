@@ -35,6 +35,9 @@ EOF;
         $databaseManager = new sfDatabaseManager($this->configuration);
         $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
 
+        
+
+
         // se establecen las medidas de la imagenes de salida
         /*
             ** MEDIDAS **
@@ -77,6 +80,11 @@ EOF;
 
         // se iteran lás imágenes
         foreach ($Images as $Image) {
+
+            // se establece un timestamp para definir el nombre de la foto
+            $date = new DateTime();
+            $timestamp = $date->getTimestamp();
+
             $userId = $Image->user_id;
             $carId = $Image->car_id;
 
@@ -90,16 +98,16 @@ EOF;
             // se detecta el tipo de imágen del archivo original
             switch ( $imagen_tipo ){
                 case "image/jpg":
-                    $nueva_imagen_sin_path = $Image->getId() . ".jpg";
+                    $nueva_imagen_sin_path = $Image->getId() ."-". $timestamp . ".jpg";
                     break;
                 case "image/jpeg":
-                    $nueva_imagen_sin_path = $Image->getId() . ".jpeg";
+                    $nueva_imagen_sin_path = $Image->getId() ."-". $timestamp . ".jpeg";
                     break;
                 case "image/png":
-                    $nueva_imagen_sin_path = $Image->getId() . ".png";
+                    $nueva_imagen_sin_path = $Image->getId() ."-". $timestamp . ".png";
                     break;
                 case "image/gif":
-                    $nueva_imagen_sin_path = $Image->getId() . ".gif";
+                    $nueva_imagen_sin_path = $Image->getId() ."-". $timestamp . ".gif";
                     break;
             }
             
@@ -150,7 +158,8 @@ EOF;
                 }
 
                 // se establece el nombre de la imagen final
-                $nueva_imagen_sin_path = $Image->getId() . ".jpeg";
+                
+                $nueva_imagen_sin_path = $Image->getId() ."-". $timestamp . ".jpeg";
                 $nueva_imagen = $path . $nueva_imagen_sin_path;
 
                 $lienzo = imagecreatetruecolor( $miniatura_ancho, $miniatura_alto );
