@@ -25,12 +25,18 @@
     var neLng;
 
     function reloadScrubble(){
-        // función que ejecuta el scruubber
-        $(".scrubber").iscrubber({
-            showItem: 1, // the element (li) to show first; 1 based index
-            leaveToFirst: false, // come back the the first element when mouse leaves scrubbing area
-            direction: "horizontal" // use to specified the direction that mouse takes to show the items
+        
+        $(function() {
+            $(".scrubber").hide();
+            $(".preLoadImage").show();
+            setTimeout(function() {
+                $(".scrubber").iscrubber();
+                $(".preLoadImage").hide();
+                $(".scrubber").show();
+                console.error("ok");
+            }, 5000);
         });
+
     }
 
     function coordenadas(position) {
@@ -362,8 +368,9 @@
 
                     windowMarker += "<div class='col-md-4 text-center'>";
                     if(Car.photoS3){
-                        //windowMarker += "<img class='img-responsive' src='" + Car.photoS3 + "' alt='rent a car  "+ Car.brand +" "+ Car.model +"'/>";
-                        windowMarker += Car.iphotoFormat;
+                        windowMarker += "<img class='img-responsive' src='" + Car.photoS3 + "' alt='rent a car  "+ Car.brand +" "+ Car.model +"'/>";
+                        // Método que carga Iphotos 
+                        // windowMarker += Car.iphotoFormat;
                     } else {
                         if(str > 0) {
                             windowMarker += "<img class='img-responsive' src='http://www.arriendas.cl" + urlFotoThumbTipo + "' alt='rent a car  "+ Car.brand +" "+ Car.model +"'/>";
@@ -406,6 +413,7 @@
                     google.maps.event.addListener(marker, 'click', function() {
                         infowindow.setContent(this.contentString);
                         infowindow.open(map, this);
+                        reloadScrubble();
                     });
 
                     markers.push(marker);
@@ -481,7 +489,7 @@
 
             markerCluster = new MarkerClusterer(map, markers, {maxZoom: 10});            
         }, "json");
-          
+        reloadScrubble();
     }
 
 </script>
@@ -790,11 +798,11 @@
     // Al termino de la carga de la página, se esconden las imágenes de portada de lo vehículos y se despliega el complemento Iphotos
     $(window).bind("load", function() {
         $(".preLoadImage").hide();
+        $(".scrubber").show();
         reloadScrubble();
     });
     
     $(document).ready(function(){
-
         localizame();
         initialize();
 

@@ -656,11 +656,12 @@ where c.id=
     $preLoadImage = "";
     $return = "<ul class='scrubber'>";
     foreach ($Images as $Image) {
-      if($Image->image_type_id != 6){
-        $return = $return . "<li><img class='img-responsive' alt='".$Image->image_type_id."' src='".$Image->getImageSize("XS")."'></li>";
-      }
-      if($Image->image_type_id == 3){
-        $preLoadImage = "<img class='img-responsive preLoadImage' alt='".$Image->image_type_id."' src='".$Image->getImageSize("XS")."'>";
+      if($Image->image_type_id != 6 && $Image->image_type_id != 4){
+        $return = $return . "<li><img alt='".$Image->image_type_id."' src='".$Image->getImageSize("XS")."' height='75' width='110'></li>";
+        
+        if($Image->image_type_id == 3){
+          $preLoadImage = "<img class='preLoadImage' alt='".$Image->image_type_id."' src='".$Image->getImageSize("XS")."' height='75' width='110'>";
+        }
       }
     }
 
