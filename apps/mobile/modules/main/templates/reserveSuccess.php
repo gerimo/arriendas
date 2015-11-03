@@ -189,7 +189,7 @@
                 </div>
 
                 <!-- Medio de pago -->
-                <h2><span class="num">3</span> MEDIO DE PAGO</h2>
+                <h2 id="payment-section"><span class="num">3</span> MEDIO DE PAGO</h2>
                 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="headingTwo">
@@ -439,7 +439,6 @@
         } else {
             $("#headingTwo").parent().hide();
             $("#headingTwo").find("input").attr("checked", false);
-            $("#headingOne").find("input").attr("checked", true);
         }
     });
 
@@ -603,6 +602,30 @@
                         $(this).dialog( "close" );
 
                         var position = $("#warranty-section").offset().top - 100;
+
+                        $('html, body').animate({
+                            scrollTop: position
+                        }, 1250);
+                    }
+                }]
+            });
+
+            return false;
+        }
+
+        var payment = $('input:radio[name=payment]:checked').val();
+
+        if (payment === undefined) {
+
+            $("#dialog-alert p").html("Necesitas seleccionar el medio de pago");
+            $("#dialog-alert").attr("title", "No se puede iniciar el pago");
+            $("#dialog-alert").dialog({
+                buttons: [{
+                    text: "Aceptar",
+                    click: function() {
+                        $(this).dialog( "close" );
+
+                        var position = $("#payment-section").offset().top - 100;
 
                         $('html, body').animate({
                             scrollTop: position
