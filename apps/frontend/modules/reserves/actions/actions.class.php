@@ -516,7 +516,7 @@ class reservesActions extends sfActions {
         $this->forward404If(!$User);
         
         // Chequeo judicial
-        try {
+        /*try {
 
             $UnverifiedMail = false;
 
@@ -557,7 +557,7 @@ class reservesActions extends sfActions {
         } catch(Exception $e) {
             error_log("[reserves/pay] Verificacion judicial: ".$e->getMessage());
             $UnverifiedMail = true;
-        }
+        }*/
 
         try {
 
@@ -601,6 +601,10 @@ class reservesActions extends sfActions {
                 $amountWarranty = Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to);
                 $Reserve->setLiberadoDeGarantia(true);
             }
+
+            if ($payment == 2 && $amountWarranty == 180000) {
+                throw new Exception("Excepción de webpay con garantía de $180.000", 1);
+            }
             
             $Reserve->setPrice(CarTable::getPrice($from, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth()));
             $Reserve->setMontoLiberacion($amountWarranty);
@@ -624,7 +628,7 @@ class reservesActions extends sfActions {
             
             $Transaction->save();
 
-            if($UnverifiedMail) {          
+            /*if($UnverifiedMail) {          
 
                 $subject = "¡Se ha registrado un pago de un usuario sin verificacion judicial!";
                 $body    = $this->getPartial('emails/paymentDoneUnverifiedUser', array('Transaction' => $Transaction));
@@ -639,7 +643,7 @@ class reservesActions extends sfActions {
                 $message->setBcc(array("cristobal@arriendas.cl" => "Cristóbal Medina Moenne"));
                 
                 $this->getMailer()->send($message);
-            }
+            }*/
 
         } catch (Exception $e) {
             error_log("[reserves/pay] ".$e->getMessage());
