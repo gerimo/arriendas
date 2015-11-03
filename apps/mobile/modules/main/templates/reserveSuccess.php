@@ -433,6 +433,14 @@
 
     $("input[type=radio][name=warranty]").on('change', function(e) {
         refreshTotalPrice();
+
+        if ($(this).val() == 0) {
+            $("#headingTwo").parent().show();
+        } else {
+            $("#headingTwo").parent().hide();
+            $("#headingTwo").find("input").attr("checked", false);
+            $("#headingOne").find("input").attr("checked", true);
+        }
     });
 
     $(".payment").on('click', function(e) {
