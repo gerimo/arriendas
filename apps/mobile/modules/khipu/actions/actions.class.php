@@ -34,11 +34,9 @@ class khipuActions extends sfActions {
                     'custom'         => "",
                 );
 
-                error_log("[mobile]");
-                error_log(print_r($data, true));
+            } else {
 
-            }else{
-                 $GPSTransaction = Doctrine_Core::getTable("GPSTransaction")->find($GPSTransactionId);
+                $GPSTransaction = Doctrine_Core::getTable("GPSTransaction")->find($GPSTransactionId);
                 $GPS = Doctrine_Core::getTable("gps")->find($GPSTransaction->gps_id);
                 $Car = Doctrine_Core::getTable("cartmp")->find($GPSTransaction->car_tmp_id);
                 $User = Doctrine_Core::getTable("user")->find($Car->user_id);
@@ -61,13 +59,12 @@ class khipuActions extends sfActions {
 
             }
 
-           
-
-            error_log("[khipu/generatePayment] ".print_r($data, true));
+            error_log("[mobile] [khipu/generatePayment] Generando pago para reserva ".$reserveId);
+            error_log(print_r($data, true));
 
             $url = $khipuService->createPaymentURL($data)->url;
         } catch (Execption $e) {
-            error_log("[khipu/generatePayment] ".$e->getMessage());
+            error_log("[mobile] [khipu/generatePayment] ".$e->getMessage());
             if ($request->getHost() == "www.arriendas.cl") {
                 Utils::reportError($e->getMessage(), "khipu/generatePayment");
             }
@@ -186,6 +183,9 @@ class khipuActions extends sfActions {
 
     public function executeNotifyPayment(sfWebRequest $request) {
 
+        error_log("[mobile] [khipu/notifyPayment] Entrando notificación.");
+        error_log(print_r($request->getParameterHolder(), true));
+
         $this->_log("NotifyPayment", "INFO", "Start validation");
 
         $userId = $this->getUser()->getAttribute("userid");
@@ -209,8 +209,8 @@ class khipuActions extends sfActions {
 
             $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["notification-validation-url"]);
             $response = $khipuService->notificationValidation($data);
-
-            error_log("[mobile] [khipu/notifyPayment] ".print_r($response, true));
+            error_log("[mobile] [khipu/notifyPayment] Validando notificación.");
+            error_log(print_r($response, true));
 
             if ($response == 'VERIFIED' && $data["receiver_id"] == $settings["receiver_id"]) {
                 
@@ -375,12 +375,12 @@ class khipuActions extends sfActions {
                     }
                 }
             } else {
-                error_log("[khipu/notifyPayment] [".date("Y-m-d H:i:s")."] Error en el proceso de verificacion: Response: ".$response.", Receiver local: ".$settings["receiver_id"].", Receiver request: ".$data["receiver_id"]);
+                error_log("[mobile] [khipu/notifyPayment] Error en el proceso de verificacion");
                 $this->_log("NotifyPayment", "ERROR", "Hubo un error en el proceso de verificacion.");
             }
         } catch (Exception $e) {
-            error_log("[khipu/notifyPayment] [".date("Y-m-d H:i:s")."] ERROR: ".$e->getMessage());
-            Utils::reportError($e->getMessage(), "khipu/notifyPayment");
+            error_log("[mobile] [khipu/notifyPayment] [".date("Y-m-d H:i:s")."] ERROR: ".$e->getMessage());
+            /*Utils::reportError($e->getMessage(), "khipu/notifyPayment");*/
         }
 
         die();
@@ -409,11 +409,11 @@ class khipuActions extends sfActions {
             $this->_log("Call", "info", $msg);
 
             $response = $khipuService->paymentStatus($data);
-            error_log("[mobile] [khipu/paymentInformation] ".print_r($response, true));
+            error_log("[mobile] [khipu/paymentInformation] Respuesta: ".$response->status);
+            error_log(print_r($response, true));
             switch ($response->status) {
                 case "done":
                     $this->paymentMsg = "El pago ha sido realizado.";
-                    /* update transaction info */
                     $khipuTransaction["status"] = "done";
                     $this->getUser()->setAttribute("khipu-transaction", $khipuTransaction);
                     $this->forward("khipu", "processPayment");

@@ -34,9 +34,6 @@ class khipuActions extends sfActions {
                     'custom'         => "",
                 );
 
-                error_log("[desktop]");
-                error_log(print_r($data, true));
-
             } else {
 
                 $GPSTransaction = Doctrine_Core::getTable("GPSTransaction")->find($GPSTransactionId);
@@ -63,7 +60,7 @@ class khipuActions extends sfActions {
 
             }
 
-            error_log("[khipu/generatePayment] Generando pago para reserva ".$reserveId);
+            error_log("[frontend][khipu/generatePayment] Generando pago para reserva ".$reserveId);
             error_log(print_r($data, true));
 
             $url = $khipuService->createPaymentURL($data)->url;
@@ -185,6 +182,9 @@ class khipuActions extends sfActions {
 
     public function executeNotifyPayment(sfWebRequest $request) {
 
+        error_log("[frontend] [khipu/notifyPayment] Entrando notificación.");
+        error_log(print_r($request->getParameterHolder(), true));
+
         $this->_log("NotifyPayment", "INFO", "Start validation");
 
         $userId = $this->getUser()->getAttribute("userid");
@@ -208,10 +208,8 @@ class khipuActions extends sfActions {
 
             $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["notification-validation-url"]);
             $response = $khipuService->notificationValidation($data);
-
-            error_log("[khipu/notifyPayment] ----------------- ENTRANDO NOTIFICACION -----------------");
-            error_log("[khipu/notifyPayment] ".print_r($request->getPostParameters(), true));
-            error_log("[khipu/notifyPayment] ".print_r($response, true));
+            error_log("[frontend] [khipu/notifyPayment] Validando notificación.");
+            error_log(print_r($response, true));
 
             if ($response == 'VERIFIED' && $data["receiver_id"] == $settings["receiver_id"]) {
                 
@@ -392,12 +390,12 @@ class khipuActions extends sfActions {
                     }
                 }
             } else {
-                error_log("[khipu/notifyPayment] Error en el proceso de verificacion: Response: ".$response.", Receiver local: ".$settings["receiver_id"].", Receiver request: ".$data["receiver_id"]);
+                error_log("[frontend] [khipu/notifyPayment] Error en el proceso de verificacion");
                 $this->_log("NotifyPayment", "ERROR", "Hubo un error en el proceso de verificacion.");
             }
         } catch (Exception $e) {
-            error_log("[khipu/notifyPayment] ERROR: ".$e->getMessage());
-            Utils::reportError($e->getMessage(), "khipu/notifyPayment");
+            error_log("[frontend] [khipu/notifyPayment] ERROR: ".$e->getMessage());
+            /*Utils::reportError($e->getMessage(), "khipu/notifyPayment");*/
         }
 
         die();
@@ -815,6 +813,9 @@ class khipuActions extends sfActions {
 
     public function executePaymentInformation(sfWebRequest $request) {
 
+        error_log("[frontend] [khipu/paymentInformation] Entrando retorno.");
+        error_log(print_r($request->getParameterHolder(), true));
+
         $this->setLayout("newIndexLayout");
 
         $customer_in_session = $this->getUser()->getAttribute('userid');
@@ -823,7 +824,6 @@ class khipuActions extends sfActions {
 
             $settings = $this->getSettings();
             $khipuService = new KhipuService($settings["receiver_id"], $settings["secret"], $settings["payment-status-url"]);
-            error_log("url verificacion: ".$settings["payment-status-url"]);
             $khipuTransaction = $this->getUser()->getAttribute("khipu-transaction");
 
             $data = array('receiver_id' => $settings["receiver_id"],
@@ -833,8 +833,8 @@ class khipuActions extends sfActions {
             $this->_log("Call", "info", $msg);
 
             $response = $khipuService->paymentStatus($data);
-            error_log($response->status);
-            error_log("respuesta ".print_r($response));
+            error_log("[frontend] [khipu/paymentInformation] Respuesta: ".$response->status);
+            error_log(print_r($response, true));
             switch ($response->status) {
                 case "done":
                     $this->paymentMsg = "El pago ha sido realizado.";
