@@ -19,10 +19,10 @@ class checkMobileDetectedFilter extends sfFilter {
             $referer = $request->getUri();
 
             if ($MD->isMobile()) {
-                
+                error_log("from DESKTOP to MOBILE");
                 $host = str_replace("www", "m", $_SERVER ['HTTP_HOST']);
                 $url  = str_replace("www", "m", $referer);
-                
+
                 if($this->getContext()->getActionStack()->getSize() != null){
                     $this->getContext()->getController()->redirect($url);
                 } else {
@@ -35,5 +35,3 @@ class checkMobileDetectedFilter extends sfFilter {
         $filterChain->execute();
     }
 }
-
-?>

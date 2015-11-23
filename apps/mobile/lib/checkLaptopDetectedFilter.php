@@ -6,6 +6,7 @@
 require_once sfConfig::get('sf_lib_dir') . '/vendor/mobile-detect/Mobile_Detect.php';
 
 class checkLaptopDetectedFilter extends sfFilter {
+
     public function execute ($filterChain) {
     
         $request = $this->getContext()->getRequest();
@@ -15,9 +16,10 @@ class checkLaptopDetectedFilter extends sfFilter {
         if ($this->isFirstCall()) {
 
             $MD = new Mobile_Detect;
-            $referer    = $request->getUri();
+            $referer = $request->getUri();
 
             if (!$MD->isMobile()) {
+                error_log("from MOBILE to DESKTOP");
                 $host = str_replace("m.arriendas.cl", "www.arriendas.cl", $_SERVER ['HTTP_HOST']);
                 $url  = str_replace("m.arriendas.cl", "www.arriendas.cl", $referer);
                 
@@ -33,5 +35,3 @@ class checkLaptopDetectedFilter extends sfFilter {
         $filterChain->execute();
     }
 }
-
-?>

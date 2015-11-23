@@ -34,6 +34,9 @@ class khipuActions extends sfActions {
                     'custom'         => "",
                 );
 
+                error_log("[mobile]");
+                error_log(print_r($data, true));
+
             }else{
                  $GPSTransaction = Doctrine_Core::getTable("GPSTransaction")->find($GPSTransactionId);
                 $GPS = Doctrine_Core::getTable("gps")->find($GPSTransaction->gps_id);
@@ -413,10 +416,10 @@ class khipuActions extends sfActions {
                     /* update transaction info */
                     $khipuTransaction["status"] = "done";
                     $this->getUser()->setAttribute("khipu-transaction", $khipuTransaction);
-                    /*$this->forward("khipu", "processPayment");*/
+                    $this->forward("khipu", "processPayment");
 
                     // ESTO ES MOMENTANEO MIENTRAS SE RESUELVE EL TEMA DE LAS MULTIPLES URLS DE NOTIFICACION
-                    error_log("[khipu/notifyPayment] Nuevo pago recibido");
+                    /*error_log("[khipu/notifyPayment] Nuevo pago recibido");
 
                     $Transaction = Doctrine_Core::getTable('Transaction')->find($khipuTransaction['transaction-id']);
 
@@ -558,8 +561,9 @@ class khipuActions extends sfActions {
                             $this->getMailer()->send($message);
                         }
                     }
+
+                    $this->redirect("reserves");*/
                     // AQUI TERMINA
-                    $this->redirect("reserves");
                     break;
                 case "pending":
                     $this->paymentMsg = "El pago aun no ha sido realizado.";
@@ -806,6 +810,4 @@ class khipuActions extends sfActions {
 
         die();
     }
-
-
 }

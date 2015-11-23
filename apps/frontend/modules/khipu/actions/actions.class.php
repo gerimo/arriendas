@@ -34,6 +34,9 @@ class khipuActions extends sfActions {
                     'custom'         => "",
                 );
 
+                error_log("[desktop]");
+                error_log(print_r($data, true));
+
             } else {
 
                 $GPSTransaction = Doctrine_Core::getTable("GPSTransaction")->find($GPSTransactionId);
