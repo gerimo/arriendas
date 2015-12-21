@@ -6,6 +6,14 @@
 <p>Hola <?php echo $Owner->firstname ?>,</p>
 
 <p>Has recibido un pago por <strong>$<?php echo number_format(($Reserve->getPrice()), 0, ',', '.') ?></strong>, desde el <strong><?php echo date("d-m-Y H:i", strtotime($Reserve->getFechaInicio2())) ?></strong> hasta el <strong><?php echo date("d-m-Y H:i", strtotime($Reserve->getFechaTermino2())) ?></strong>.</p>
-<p>Si no apruebas la reserva cuanto antes otro dueño podría ganar la reserva. Para recibir tu pago debes aprobar la reserva haciendo <a href="<?php echo url_for('aprobarReserve', array('idReserve' => $Reserve->id, 'idUser' => $Owner->id), TRUE) ?>">click aquí</a>.</p>
+
+<p>Para aprobar debes ingresar a tu perfil de Arriendas.cl en la sección reservas.</p>
+
+<h3><strong>IMPORTANTE</strong></h3>
+<ul>
+    <li>Recuerda, en caso de siniestro dejar constancia inmediatamente en la comisaría más cercana.</li>
+    <li>Revisar el auto al momento de la devolución junto con el arrendatario.</li>
+    <li>Firmar los contratos al inicio y término de tu arriendo.</li>
+</ul>
 
 <?php include_partial("emails/footer") ?>
