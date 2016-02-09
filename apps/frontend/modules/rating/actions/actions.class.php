@@ -52,7 +52,7 @@ class ratingActions extends sfActions
 
   public function executeRenterForm(sfWebRequest $request) {
   		$this->setLayout("newIndexLayout");
-  		error_log("renter-form");
+  		
   		$this->reserveId = $request->getParameter("reserveId");
   		$userId = $this->getUser()->getAttribute("userid");
   		$Reserves = Doctrine_core::getTable("reserve")->findById($this->reserveId);

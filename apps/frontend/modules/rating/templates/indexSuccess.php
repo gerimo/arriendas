@@ -29,6 +29,30 @@
 <script>
 	$(document).ready(function(){
 
+		$.post("<?php echo url_for('rating/getPendingsList')?>", function(r){
+            if (r.error) {
+            	
+            } else {
+            	$("#content").html(""); 
+                $("#content").append(r.renterList); 
+                $("#content").append(r.ownerList);
+                replaceImg();      
+                swich($("#button1"));      
+            }
+        }, 'json');
+		
+		$.post("<?php echo url_for('rating/getHistoryList')?>", function(r){
+            if (r.error) {
+            	console.error(r.errorMessage);
+            } else {
+            	$("#content").html(""); 
+                $("#content").append(r.renterList); 
+                $("#content").append(r.ownerList);
+                replaceImg(); 
+                swich($("#button2"));             
+            }
+        }, 'json');
+
 		$("#button1").click(function(){
 	    	$.post("<?php echo url_for('rating/getPendingsList')?>", function(r){
 	            if (r.error) {

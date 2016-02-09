@@ -71,8 +71,8 @@ class RatingTable extends Doctrine_Table
             ->where('R.idOwner = ?', $idOwner)
             ->andWhere('R.opinion_about_owner IS NOT NULL')
             ->andWhere('R.op_cleaning_about_owner IS NOT NULL')
-            ->andWhere('R.fecha_calificacion_owner IS NOT NULL')
-            ->orderBy('R.fecha_calificacion_owner desc');
+            //->andWhere('R.fecha_calificacion_owner IS NOT NULL')
+            ->orderBy('R.fecha_calificacion_renter desc');
 
         return $q->execute();
 	}
