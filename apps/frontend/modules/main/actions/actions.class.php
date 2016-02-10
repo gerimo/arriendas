@@ -3557,6 +3557,37 @@ class mainActions extends sfActions {
 		$this->result = "Mensaje enviado correctamente. Gracias por utilizar nuestro portal.";
     }
 
+    public function executeGetCompareWithServerDate (sfWebRequest $request) {
+        $fechaDesde = $request->getPostParameter("from");
+        $error="";
+        $return = array("error" => false);
+        try {            
+
+            $fecha = new DateTime();
+            $fechaDesde = new DateTime($fechaDesde);
+
+            $dif = $fecha->diff($fechaDesde);
+            $hours = $dif->h;
+            error_log($hours);
+            if($hours <= 2){
+                $return["resultado"] = true;
+            }else{
+                $return["resultado"] = false;
+            }
+
+        } catch (Exception $e) {
+                $return["error"] = true;
+                $return["errorMessage"] = "Problema al comprar las fechas";
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "Main/GetCompareWithServerDate");
+            }
+        }
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
     public function executeLoginFacebook(sfWebRequest $request) {
 
         $app_id = "213116695458112";
@@ -3917,5 +3948,6 @@ class mainActions extends sfActions {
 
         return false;
     }
+
 
 }

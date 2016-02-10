@@ -250,6 +250,11 @@ reserve:
     url: /rent-a-car/arriendo-de-autos-santiago/:carId
     param: { module: main, action: reserve }
 
+reserve_compare_time_from:
+    url: /reserva/server/fecha
+    param: { module: main, action: getCompareWithServerDate }
+
+
 reserve_airport:
     url: /reserva/aeropuerto
     param: { module: reserves, action: airport }
