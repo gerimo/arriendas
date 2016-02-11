@@ -271,6 +271,7 @@ class khipuActions extends sfActions {
                         $message->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'));
                         $message->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'));
                         $message->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+                        $message->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
                         
                         if (!is_null($Renter->getDriverLicenseFile())) {
                             $filepath = $Renter->getDriverLicenseFile();

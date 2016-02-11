@@ -3563,17 +3563,31 @@ class mainActions extends sfActions {
         $return = array("error" => false);
         try {            
 
+            // variables a trabajar
             $fecha = new DateTime();
             $fechaDesde = new DateTime($fechaDesde);
 
+            // diferencia entre fechas
             $dif = $fecha->diff($fechaDesde);
             $hours = $dif->h;
-            error_log($hours);
+
+            // si hay una diferencia de 2 o menos
             if($hours <= 2){
                 $return["resultado"] = true;
             }else{
                 $return["resultado"] = false;
             }
+
+            /*
+            // si son las 8 pm o mas, el arriendo debe iniciar a las 9 pm cómo minimo, del siguiente dia (comenzar en 24 hrs o mas)
+            if($fecha->h >= 20){
+
+                if(){
+
+                }
+
+            }
+            */
 
         } catch (Exception $e) {
                 $return["error"] = true;
