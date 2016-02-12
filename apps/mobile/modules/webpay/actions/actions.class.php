@@ -211,7 +211,7 @@ class webpayActions extends sfActions {
                         ->setTo($to)
                         ->attach(Swift_Attachment::newInstance($contrato, 'contrato.pdf', 'application/pdf'))
                         ->attach(Swift_Attachment::newInstance($formulario, 'formulario.pdf', 'application/pdf'))
-                        ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'));
+                        ->attach(Swift_Attachment::newInstance($reporte, 'reporte.pdf', 'application/pdf'))
                         ->attach(Swift_Attachment::newInstance($pagare, 'pagare.pdf', 'application/pdf'));
                     
                     if (!is_null($Renter->getDriverLicenseFile())) {

@@ -114,6 +114,11 @@ class Utils {
 
     public static function validateDates($from, $to) {
 
+         // variables a trabajar Formato DateTime
+        $fecha = new DateTime();
+        $fechaDesde = new DateTime($from);
+        $fechaHasta = new DateTime($to);
+
         $fromPlus1H = strtotime("+1 Hours", strtotime($from));
 
         $from = strtotime($from);
@@ -125,6 +130,24 @@ class Utils {
 
         if ($from >= $to) {
             return "La fecha de inicio debe ser menor a la fecha de término.";
+        }
+
+
+        // diferencia entre fechas
+        $dif = $fecha->diff($fechaDesde);
+        $hours = $dif->h;
+
+        // si hay una diferencia de 2 o menos
+        if($hours < 2 ){
+            return "El horario de inicio de tu arriendo debe ser con un mínimo de 2 horas de anticipación";
+        }
+        
+        // si la hora en mayor o igual a las 20 hrs
+        if(intval($fecha->format("H")) >= 20){
+            $dif = $fechaDesde->diff($fechaHasta);
+            if($dif->days <= 13 && intval($fechaHasta->format("H")) < 9){
+                return "Las reservas generadas en el sitio desde las 20.00 horas tendrán comienzo a partir de las 09:00 horas";
+            }
         }
 
         return false;

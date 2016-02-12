@@ -416,7 +416,7 @@
                                             });
                                         }else{
                                             // si hay menos de 2 horas de margen, pra el inicio de la reserva, muestra el mensasje
-                                            $("#dialog-alert p").html("No se puede reservar habiendo menos de 2 horas para el inicio de la reserva.");
+                                            $("#dialog-alert p").html(r.mensaje);
                                             $("#dialog-alert").attr("title", "Problema al procesar la reserva");
                                             $("#dialog-alert").dialog({
                                                 buttons: [{
