@@ -33,25 +33,30 @@
             if (r.error) {
             	
             } else {
-            	$("#content").html(""); 
-                $("#content").append(r.renterList); 
-                $("#content").append(r.ownerList);
-                replaceImg();      
-                swich($("#button1"));      
+            	if(r.renterList || r.ownerList){
+            		$("#content").html(""); 
+	                $("#content").append(r.renterList); 
+	                $("#content").append(r.ownerList);
+	                replaceImg();      
+	                swich($("#button1")); 
+            	} else {
+            		$.post("<?php echo url_for('rating/getHistoryList')?>", function(r){
+			            if (r.error) {
+			            	console.error(r.errorMessage);
+			            } else {
+			            	$("#content").html(""); 
+			                $("#content").append(r.renterList); 
+			                $("#content").append(r.ownerList);
+			                replaceImg(); 
+			                swich($("#button2"));             
+			            }
+			        }, 'json');
+            	}
+            	     
             }
         }, 'json');
 		
-		$.post("<?php echo url_for('rating/getHistoryList')?>", function(r){
-            if (r.error) {
-            	console.error(r.errorMessage);
-            } else {
-            	$("#content").html(""); 
-                $("#content").append(r.renterList); 
-                $("#content").append(r.ownerList);
-                replaceImg(); 
-                swich($("#button2"));             
-            }
-        }, 'json');
+		
 
 		$("#button1").click(function(){
 	    	$.post("<?php echo url_for('rating/getPendingsList')?>", function(r){
