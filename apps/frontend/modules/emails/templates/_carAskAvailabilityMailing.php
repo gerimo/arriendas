@@ -35,6 +35,8 @@
 
 <p>Se te informará con un mínimo de 3 horas de anticipación para que puedas gestionar la entrega. Tu auto figurará como disponible para el pago, para reservas iniciadas en esos horarios.</p>
 
+<p>De recibir un pago en estos horarios y no contar con el auto, Arriendas puede suspender tu publicación a futuro.</p>
+
 <?php include_partial("emails/footer", array("userId" => $Owner->id, "mailingId" => 2)) ?>
 
 <img src='<?php echo $imageUrl ?>'>

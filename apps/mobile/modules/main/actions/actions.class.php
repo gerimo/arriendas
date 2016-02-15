@@ -1056,12 +1056,18 @@ class mainActions extends sfActions {
 
             foreach ($Ratings as $Rating) {
 
+                // transformar string a fecha
+                $dateInfo = date_parse_from_format('Y-m-d H:i:s', $Rating->getFechaCalificacionRenter());
+                $fecha = new DateTime();
+                $fecha->setDate($dateInfo['year'], $dateInfo['month'], $dateInfo['day']);
+                
                 $U = Doctrine_Core::getTable('User')->find($Rating->getIdRenter());
 
                 $review = array(
                     "user_name" => $U->getFirstname()." ".$U->getLastname(),
                     "user_photo" => null,
-                    "date" => date("d-m-Y", strtotime($Rating->getFechaCalificacionOwner())),
+                    //"date" => date("d-m-Y", strtotime($Rating->getFechaCalificacionOwner())),
+                    "date" => $fecha->format('d-m-Y'),
                     "rating" => $Rating->getOpCleaningAboutOwner(),
                     "opinion" => $Rating->getOpinionAboutOwner()
                 );
