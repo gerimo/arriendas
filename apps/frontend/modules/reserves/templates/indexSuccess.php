@@ -282,37 +282,56 @@
         }, "json");
     });
 
+
+
     $(document).on("click", ".change", function(){
 
         var button = $(this);
         var grandpa = $(this).parent().parent();
         var newReserveId = $(this).data("reserve-id");
 
-        button.attr("disabled", true);
-        grandpa.find(".loading").show();
+        $("#dialog-alert p").html("Esta acción no puede deshacerse. Cambiar de auto generará un cambio en tu reserva y anulará el arriendo anterior");
+        $("#dialog-alert").attr("title", "¡Advertencia!");
+        $("#dialog-alert").dialog({
+            buttons: [{
+                text: "Aceptar",
+                click: function() {
+                    button.attr("disabled", true);
+                    grandpa.find(".loading").show();
 
-        $.post("<?php echo url_for('reserve_change') ?>", {"newReserveId": newReserveId}, function(r){
+                    $.post("<?php echo url_for('reserve_change') ?>", {"newReserveId": newReserveId}, function(r){
 
-            if (r.error) {
+                        if (r.error) {
 
-                $("#dialog-alert p").html(r.errorMessage);
-                $("#dialog-alert").attr("title", "Problemas al cambiar de auto");
-                $("#dialog-alert").dialog({
-                    buttons: [{
-                        text: "Aceptar",
-                        click: function() {
-                            $( this ).dialog( "close" );
-                        }
-                    }]
-                });
+                            $("#dialog-alert p").html(r.errorMessage);
+                            $("#dialog-alert").attr("title", "Problemas al cambiar de auto");
+                            $("#dialog-alert").dialog({
+                                buttons: [{
+                                    text: "Aceptar",
+                                    click: function() {
+                                        $( this ).dialog( "close" );
+                                    }
+                                }]
+                            });
 
-                button.removeAttr("disabled");
-                grandpa.find(".loading").hide();
-            } else {
+                            button.removeAttr("disabled");
+                            grandpa.find(".loading").hide();
+                        } else {
 
-                location.reload();
-            }            
-        }, "json");
+                            location.reload();
+                        }            
+                    }, "json");
+                    $( this ).dialog( "close" );
+                }
+            },{
+                text: "cancelar",
+                click: function() {
+                    $( this ).dialog( "close" );
+                }
+            }]
+        });
+
+       
     });
 
     $(document).on("click", ".change-with-availability", function(){        
@@ -322,35 +341,52 @@
         var carId     = $(this).data("car-id");
         var reserveId = $(this).data("reserve-id");        
 
-        button.attr("disabled", true);
-        grandpa.find(".loading").show();
+        $("#dialog-alert p").html("Esta acción no puede deshacerse. Cambiar de auto generará un cambio en tu reserva y anulará el arriendo anterior");
+        $("#dialog-alert").attr("title", "¡Advertencia!");
+        $("#dialog-alert").dialog({
+            buttons: [{
+                text: "Aceptar",
+                click: function() {
+                    button.attr("disabled", true);
+                    grandpa.find(".loading").show();
 
-        var parameters = {
-            "carId": carId,
-            "reserveId": reserveId
-        };
+                    var parameters = {
+                        "carId": carId,
+                        "reserveId": reserveId
+                    };
 
-        $.post("<?php echo url_for('reserve_change_with_availability') ?>", parameters, function(r){
+                    $.post("<?php echo url_for('reserve_change_with_availability') ?>", parameters, function(r){
 
-            if (r.error) {
+                        if (r.error) {
 
-                $("#dialog-alert p").html(r.errorMessage);
-                $("#dialog-alert").attr("title", "Problemas al cambiar de auto");
-                $("#dialog-alert").dialog({
-                    buttons: [{
-                        text: "Aceptar",
-                        click: function() {
-                            $( this ).dialog( "close" );
-                        }
-                    }]
-                });
+                            $("#dialog-alert p").html(r.errorMessage);
+                            $("#dialog-alert").attr("title", "Problemas al cambiar de auto");
+                            $("#dialog-alert").dialog({
+                                buttons: [{
+                                    text: "Aceptar",
+                                    click: function() {
+                                        $( this ).dialog( "close" );
+                                    }
+                                }]
+                            });
 
-                button.removeAttr("disabled");
-                grandpa.find(".loading").hide();
-            } else {
-                location.reload();
-            }            
-        }, "json");
+                            button.removeAttr("disabled");
+                            grandpa.find(".loading").hide();
+                        } else {
+                            location.reload();
+                        }            
+                    }, "json");
+                    $( this ).dialog( "close" );
+                }
+            },{
+                text: "Cancelar",
+                click: function() {
+                    $( this ).dialog( "close" );
+                }
+            }]
+        });
+
+        
     });
 
     $(document).on("click", ".extend", function(){
