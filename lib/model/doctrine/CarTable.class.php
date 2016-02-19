@@ -272,6 +272,76 @@ class CarTable extends Doctrine_Table {
         
         return floor($pricePerDay * $days + $pricePerHour * $hours);
     }
+    
+    public static function getExtendedPrice($originalFrom, $originalDuration, $newTo, $pricePerHour, $pricePerDay, $pricePerWeek, $pricePerMonth ) {
+
+        $from = date("Y-m-d H:i:s", strtotime($originalFrom));
+        $to   = date("Y-m-d H:i:s", strtotime($newTo));
+
+        try {
+
+            $newDuration = Utils::calculateDuration($from, $to);
+
+            $diffDuration = $newDuration - $originalDuration;
+            error_log("------------------------------");
+            error_log("------------------------------");
+            error_log("hours: ".$pricePerHour);
+            error_log("days: ".$pricePerDay);
+            error_log("week: ".$pricePerWeek);
+            error_log("month: ".$pricePerMonth);
+            error_log("------------------------------");
+            error_log("diffDuration: ".$diffDuration.", newDuration: ".$newDuration.", originalDuration: ".$originalDuration);
+
+            $differenceDays         = floor($diffDuration / 24);
+            $differenceHours        = $diffDuration % 24;
+
+            $newDurationDays        = floor($newDuration / 24);
+            $newDurationHours       = $newDuration % 24;
+
+            $originalDurationDays   = floor($originalDuration / 24);
+            $originalDurationHours  = $originalDuration % 24;
+
+            if ($differenceHours >= 6) {
+                $differenceDays = $differenceDays + 1;
+                $differenceHours = 0;
+            }
+
+            if ($newDurationHours >= 6) {
+                $newDurationDays = $newDurationDays + 1;
+                $newDurationHours = 0;
+            }
+
+            if ($originalDurationHours >= 6) {
+                $originalDurationDays = $originalDurationDays + 1;
+                $originalDurationHours = 0;
+            }
+
+            if(($originalDurationDays < 7 && $pricePerWeek > 0) && $differenceDays + $originalDurationDays >= 7){
+                error_log("precio semana");
+                $pricePerDay = $pricePerWeek / 7;
+                if($differenceDays + $originalDurationDays >= 30 && $pricePerMonth > 0){
+                    error_log("precio mes");
+                    $pricePerDay = $pricePerMonth / 30;
+                }
+            }
+
+            error_log("------------------------------");
+            error_log("original days: ".$originalDurationDays);
+            error_log("original hours: ".$originalDurationHours);
+            error_log("------------------------------");
+            error_log("new days: ".$newDurationDays);
+            error_log("new hours: ".$newDurationHours);
+            error_log("------------------------------");
+            error_log("diff days: ".$differenceDays);
+            error_log("diff hours: ".$differenceHours);
+            error_log("------------------------------");
+
+        } catch (Exception $e) {
+            error_log("[".date("Y-m-d H:i:s")."][CarTable::getPrice()] ERROR: ".$e->getMessage());
+        }
+        error_log(floor($pricePerDay * $differenceDays + $pricePerHour * $differenceHours));
+        return floor($pricePerDay * $differenceDays + $pricePerHour * $differenceHours);
+    }
 
     public function findByNotSeguroOk(){
         $q = Doctrine_Core::getTable("Car")

@@ -937,6 +937,34 @@ class reservesActions extends sfActions {
     }
 
     // FUNCIONES PRIVADAS
+    
+    private function calculateExtendedPrice($Reserve, $to) {
+
+        $accumulatedPrice = 0;
+        $auxReserve       = $Reserve;
+        $iterate          = true;        
+        
+        while ($iterate) {
+
+            $originalFrom     = $auxReserve->getDate();
+            $originalDuration = $auxReserve->getDuration();
+            $accumulatedPrice = $auxReserve->getPrice();
+            
+            if ($auxReserve->getIdPadre()) {
+                $auxReserve = Doctrine_Core::getTable('Reserve')->find($auxReserve->getIdPadre());
+            } else {
+                $iterate = false;
+            }
+        }
+
+        $Car = $Reserve->getCar();
+
+        $extendedPrice = CarTable::getExtendedPrice($originalFrom,$originalDuration, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth());
+        
+        return $extendedPrice;
+        //return $extendedPrice - $accumulatedPrice;
+    }
+    /*
     private function calculateExtendedPrice($Reserve, $to) {
 
         $accumulatedPrice = 0;
@@ -957,10 +985,11 @@ class reservesActions extends sfActions {
 
         $Car = $Reserve->getCar();
 
-        $extendedPrice = CarTable::getPrice($originalFrom, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth());
+        $extendedPrice = CarTable::getExtendenPrice($originalFrom, $to, $Car->getPricePerHour(), $Car->getPricePerDay(), $Car->getPricePerWeek(), $Car->getPricePerMonth());
 
-        return $extendedPrice - $accumulatedPrice;
+        return $extendedPrice;
     }
+    */
 
     private function makeChange ($NewActiveReserve) {
 

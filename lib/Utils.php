@@ -118,7 +118,6 @@ class Utils {
         $fecha = new DateTime();
         $fechaDesde = new DateTime($from);
         $fechaHasta = new DateTime($to);
-
         $fromPlus1H = strtotime("+1 Hours", strtotime($from));
 
         $from = strtotime($from);
@@ -136,6 +135,7 @@ class Utils {
         // diferencia entre fechas
         $dif = $fecha->diff($fechaDesde);
         $hours = $dif->h;
+        $hours = $hours + $dif->days * 24;
 
         // si hay una diferencia de 2 o menos
         if($hours < 2 ){
