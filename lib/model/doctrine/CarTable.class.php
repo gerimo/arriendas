@@ -283,6 +283,7 @@ class CarTable extends Doctrine_Table {
             $newDuration = Utils::calculateDuration($from, $to);
 
             $diffDuration = $newDuration - $originalDuration;
+            /*
             error_log("------------------------------");
             error_log("------------------------------");
             error_log("hours: ".$pricePerHour);
@@ -291,6 +292,7 @@ class CarTable extends Doctrine_Table {
             error_log("month: ".$pricePerMonth);
             error_log("------------------------------");
             error_log("diffDuration: ".$diffDuration.", newDuration: ".$newDuration.", originalDuration: ".$originalDuration);
+            */
 
             $differenceDays         = floor($diffDuration / 24);
             $differenceHours        = $diffDuration % 24;
@@ -317,14 +319,15 @@ class CarTable extends Doctrine_Table {
             }
 
             if(($originalDurationDays < 7 && $pricePerWeek > 0) && $differenceDays + $originalDurationDays >= 7){
-                error_log("precio semana");
+                //error_log("precio semana");
                 $pricePerDay = $pricePerWeek / 7;
                 if($differenceDays + $originalDurationDays >= 30 && $pricePerMonth > 0){
-                    error_log("precio mes");
+                    //error_log("precio mes");
                     $pricePerDay = $pricePerMonth / 30;
                 }
             }
 
+            /*
             error_log("------------------------------");
             error_log("original days: ".$originalDurationDays);
             error_log("original hours: ".$originalDurationHours);
@@ -335,6 +338,7 @@ class CarTable extends Doctrine_Table {
             error_log("diff days: ".$differenceDays);
             error_log("diff hours: ".$differenceHours);
             error_log("------------------------------");
+            */
 
         } catch (Exception $e) {
             error_log("[".date("Y-m-d H:i:s")."][CarTable::getPrice()] ERROR: ".$e->getMessage());
