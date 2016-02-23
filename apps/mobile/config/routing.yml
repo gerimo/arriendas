@@ -257,6 +257,11 @@ return_form:
     url: /informe-de-devolucion/:tokenReserve
     param: { module: main, action: generarFormularioEntregaDevolucion }
 
+reserve_compare_time_from:
+    url: /reserva/server/fecha
+    param: { module: main, action: getCompareWithServerDate }
+
+
 terms_and_conditions:
     url: /terminos-y-condiciones
     param: { module: main, action: terminos }

@@ -3572,8 +3572,7 @@ class mainActions extends sfActions {
             $fechaHasta = new DateTime($fechaHasta);
             // diferencia entre fechas
             $dif = $fecha->diff($fechaDesde);
-            $hours = $dif->h;
-
+            $hours = $hours + $dif->days * 24;
             // si hay una diferencia de 2 o menos
             if($hours < 2){
                 $return["resultado"] = true;
@@ -3582,8 +3581,9 @@ class mainActions extends sfActions {
             
             // si la hora en mayor o igual a las 20 hrs
             if(intval($fecha->format("H")) >= 20){
-                $dif = $fechaDesde->diff($fechaHasta);
-                if($dif->days <= 13 && intval($fechaHasta->format("H")) < 9){
+                $fechaControl = $fecha;
+                $fechaControl->add(new DateInterval('P1D'));
+                if($fechaDesde->format("d") == $fechaControl->format("d") && intval($fechaDesde->format("H")) < 9){
                     $return["resultado"] = true;
                     $return["mensaje"] = "Las reservas generadas en el sitio desde las 20.00 horas tendrán comienzo a partir de las 09:00 horas";
                 }

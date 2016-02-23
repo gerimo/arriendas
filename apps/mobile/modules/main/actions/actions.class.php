@@ -994,6 +994,50 @@ class mainActions extends sfActions {
         }
     }
 
+    public function executeGetCompareWithServerDate (sfWebRequest $request) {
+        $fechaDesde = $request->getPostParameter("from");
+        $fechaHasta = $request->getPostParameter("to");
+        $error="";
+        $return = array("error" => false);
+        try {            
+            $return["resultado"] = false;
+            $return["mensaje"] = false;
+
+            // variables a trabajar
+            $fecha = new DateTime();
+            $fechaDesde = new DateTime($fechaDesde);
+            $fechaHasta = new DateTime($fechaHasta);
+            // diferencia entre fechas
+            $dif = $fecha->diff($fechaDesde);
+            $hours = $hours + $dif->days * 24;
+            // si hay una diferencia de 2 o menos
+            if($hours < 2){
+                $return["resultado"] = true;
+                $return["mensaje"] = "El horario de inicio de tu arriendo debe ser con un mínimo de 2 horas de anticipación";
+            }
+            
+            // si la hora en mayor o igual a las 20 hrs
+            if(intval($fecha->format("H")) >= 20){
+                $fechaControl = $fecha;
+                $fechaControl->add(new DateInterval('P1D'));
+                if($fechaDesde->format("d") == $fechaControl->format("d") && intval($fechaDesde->format("H")) < 9){
+                    $return["resultado"] = true;
+                    $return["mensaje"] = "Las reservas generadas en el sitio desde las 20.00 horas tendrán comienzo a partir de las 09:00 horas";
+                }
+            }
+        } catch (Exception $e) {
+                $return["error"] = true;
+                $return["errorMessage"] = "Problema al comprar las fechas";
+            if ($request->getHost() == "www.arriendas.cl" && $e->getCode() < 2) {
+                Utils::reportError($e->getMessage(), "Main/GetCompareWithServerDate");
+            }
+        }
+
+        $this->renderText(json_encode($return));
+
+        return sfView::NONE;
+    }
+
     public function executeReserve (sfWebRequest $request) {
 
         $this->setLayout("newIndexLayout");

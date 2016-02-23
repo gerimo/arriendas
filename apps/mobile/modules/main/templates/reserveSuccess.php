@@ -327,30 +327,54 @@
 
                             if (userAccept) {
 
-                                var carId = "<?php echo $Car->getId() ?>"
-                                var from  = $("#from").val();
-                                
-                                var to    = $("#to").val();
-                                
-                                var warranty = $('input[type=radio][name=warranty]:checked').val();
-                                var payment  =  $("input[name='payment']").val();
-
-                                parameters = {
-                                    "carId": carId,
-                                    "from": from,
-                                    "to": to,
-                                    "warranty": warranty,
-                                    "payment": payment
-                                }
-                                
-                                $.post("<?php echo url_for('data_for_payment')?>", parameters, function(r){
-                                    console.log(r);
+                                // llamada Post ajax que verifica que la hora de inicio de la reserva no sea dentro de 2 horas
+                                $.post("<?php echo url_for('reserve_compare_time_from') ?>", {from:$("#from").val()}, function(r){
                                     if (r.error) {
-
+                                        console.error(r.errorMessage);
                                     } else {
-                                        $("#reserve-form").submit();
+                                        if(!r.resultado){
+
+
+                                            var carId = "<?php echo $Car->getId() ?>"
+                                            var from  = $("#from").val();
+                                            
+                                            var to    = $("#to").val();
+                                            
+                                            var warranty = $('input[type=radio][name=warranty]:checked').val();
+                                            var payment  =  $("input[name='payment']").val();
+
+                                            parameters = {
+                                                "carId": carId,
+                                                "from": from,
+                                                "to": to,
+                                                "warranty": warranty,
+                                                "payment": payment
+                                            }
+                                            
+                                            $.post("<?php echo url_for('data_for_payment')?>", parameters, function(r){
+                                                console.log(r);
+                                                if (r.error) {
+
+                                                } else {
+                                                    $("#reserve-form").submit();
+                                                }
+                                            });
+                                        }else{
+                                            // si hay menos de 2 horas de margen, pra el inicio de la reserva, muestra el mensasje
+                                            $("#dialog-alert p").html(r.mensaje);
+                                            $("#dialog-alert").attr("title", "Problema al procesar la reserva");
+                                            $("#dialog-alert").dialog({
+                                                buttons: [{
+                                                    text: "Aceptar",
+                                                    click: function() {
+                                                        $(this).dialog( "close" );
+                                                    }
+                                                }]
+                                            });
+                                        }
                                     }
-                                });
+                                    
+                                }, 'json');
                             }
                         }
                     }
