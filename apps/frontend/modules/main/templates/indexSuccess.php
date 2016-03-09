@@ -413,7 +413,7 @@
                     google.maps.event.addListener(marker, 'click', function() {
                         infowindow.setContent(this.contentString);
                         infowindow.open(map, this);
-                        reloadScrubble();
+                        //reloadScrubble();
                     });
 
                     markers.push(marker);
@@ -489,8 +489,21 @@
             }
 
             markerCluster = new MarkerClusterer(map, markers, {maxZoom: 10});            
-        }, "json");
-        reloadScrubble();
+        }, "json").complete(function(){
+            //reloadScrubble();
+            $(".preLoadImage").hide();
+            $(".scrubber").show();
+            $(".scrubber").iscrubber();
+        }).done(function(){
+            $(".preLoadImage").hide();
+            $(".scrubber").show();
+            $(".scrubber").iscrubber();
+            //reloadScrubble();
+        });
+        //$(".scrubber").show();
+        //$(".scrubber").iscrubber();
+        //reloadScrubble();
+        
     }
 
 </script>
@@ -797,13 +810,18 @@
 <script>
 
     // Al termino de la carga de la página, se esconden las imágenes de portada de lo vehículos y se despliega el complemento Iphotos
+
     $(window).bind("load", function() {
-        $(".preLoadImage").hide();
-        $(".scrubber").show();
-        reloadScrubble();
+        //$(".preLoadImage").hide();
+        //$(".scrubber").show();
+        //reloadScrubble();
+        //console.error("hola");
     });
     
     $(document).ready(function(){
+
+        //$(".preLoadImage").hide();
+
         localizame();
         initialize();
 

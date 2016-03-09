@@ -654,7 +654,7 @@ where c.id=
     $Images = Doctrine_Core::getTable("image")->findByCarIdAndIsDeleted($this->id, 0);
 
     $preLoadImage = "";
-    $return = "<ul class='scrubber'>";
+    $return = "<ul style=\"display: none;\" class='scrubber'>";
     foreach ($Images as $Image) {
       if($Image->image_type_id != 6 && $Image->image_type_id != 4){
         $return = $return . "<li><img alt='".$Image->image_type_id."' src='".$Image->getImageSize("XS")."' height='75' width='110'></li>";
