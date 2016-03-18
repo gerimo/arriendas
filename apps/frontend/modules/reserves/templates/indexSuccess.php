@@ -566,7 +566,7 @@
                 $("#extendPriceAlert").html(r.errorMessage);
                 $("#extendPriceAlert").show();
             } else {
-                $("#extendPrice").html("$"+$.number(r.price, 0, ',', '.'));
+                $("#extendPrice").html("$"+$.number(r.price + r.commission, 0, ',', '.'));
                 $("#extendPrice").show();
                 $("#payExtend").removeAttr("disabled");
             }

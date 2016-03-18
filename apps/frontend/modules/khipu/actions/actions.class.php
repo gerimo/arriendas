@@ -20,12 +20,12 @@ class khipuActions extends sfActions {
 
                 $Reserve = Doctrine_Core::getTable('Reserve')->find($reserveId);
                 $Transaction = Doctrine_Core::getTable('Transaction')->find($transactionId);
-
                 $data = array(
                     'receiver_id'    => $settings["receiver_id"],
                     'subject'        => "Arriendo " . $Reserve->getCar()->getModel()->getBrand()->getName()." ".$Reserve->getCar()->getModel()->getName(),
                     'body'           => "Reserva n° ".$Reserve->getId(),
-                    'amount'         => $Reserve->getPrice() + $Reserve->getMontoLiberacion() - $Transaction->getDiscountamount(),
+                    //'amount'         => $Reserve->getPrice() + $Reserve->getMontoLiberacion() - $Transaction->getDiscountamount(),
+                    'amount'         => ($Reserve->getPrice() + $Reserve->getMontoLiberacion() + $Reserve->getBaseCommission() + $Reserve->getTransbankCommission()) - $Transaction->getDiscountamount(),
                     'notify_url'     => $this->generateUrl("khipuNotify", array(), true),
                     'return_url'     => $this->generateUrl("khipuReturn", array(), true),
                     'cancel_url'     => $this->generateUrl("khipuCancel", array(), true),

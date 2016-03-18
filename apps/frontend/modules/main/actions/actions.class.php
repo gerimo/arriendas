@@ -259,7 +259,10 @@ class mainActions extends sfActions {
             $warranty = $request->getPostParameter("warranty");
             $payment  = $request->getPostParameter("payment");
 
-            if (!$carId || !$from || !$to || is_null($warranty) || !$payment) {
+            $baseCommission = $request->getPostParameter("baseCommission");
+            $commissionTbank = $request->getPostParameter("commissionTbank");
+
+            if (!$carId || !$from || !$to || is_null($warranty) || !$payment || !$baseCommission) {
                 throw new Exception("Falta un parametro", 1);
             }
             
@@ -268,6 +271,8 @@ class mainActions extends sfActions {
             $this->getUser()->setAttribute("carId", $carId);
             $this->getUser()->setAttribute("from", $from);
             $this->getUser()->setAttribute("to", $to);
+            $this->getUser()->setAttribute("baseCommission", $baseCommission);
+            $this->getUser()->setAttribute("commissionTbank", $commissionTbank);
 
 
         } catch (Exception $e) {
@@ -790,6 +795,12 @@ class mainActions extends sfActions {
 
         $this->setLayout("newIndexLayout");
 
+        // se exrae la comisión base.
+        $baseCommissionValue = Doctrine_Core::getTable('variables')->find(1);
+
+        // se exrae la comisión para el pago con TransBank.
+        $transBankCommission = Doctrine_Core::getTable('variables')->find(2);
+
         $carId = $request->getParameter("carId", null);
 
         $this->Car = Doctrine_Core::getTable('Car')->find($carId);
@@ -857,7 +868,6 @@ class mainActions extends sfActions {
         $this->toHuman = date("D d/m/Y H:i", $t);
 
         $this->price = CarTable::getPrice($from, $to, $this->Car->getPricePerHour(), $this->Car->getPricePerDay(), $this->Car->getPricePerWeek(), $this->Car->getPricePerMonth());
-
         // Reviews
 
         $reviews = null;
@@ -924,9 +934,15 @@ class mainActions extends sfActions {
         }
 
         $this->amountWarranty     = sfConfig::get("app_monto_garantia");
-        $this->amountWarrantyFree = sfConfig::get("app_monto_garantia_por_dia");
+        //$this->amountWarrantyFree = sfConfig::get("app_monto_garantia_por_dia");
+        $this->amountWarrantyFree = round(Doctrine_Core::getTable('variables')->find(3)->getValue(), 0, PHP_ROUND_HALF_UP);
 
-        //imagenes
+        $this->baseCommission = $this->price *($baseCommissionValue->value / 100);
+        $this->baseCommissionValue = $baseCommissionValue->value;
+
+        $this->transBankCommissionValue = $transBankCommission->value;
+        $this->transBankCommission = $this->price * ($transBankCommission->value / 100);
+          //imagenes
         $arrayImagenesS3 = $this->Car->getArrayImages();
         $arrayImagenes = null;
         $i = 0;
@@ -3572,7 +3588,7 @@ class mainActions extends sfActions {
             $fechaHasta = new DateTime($fechaHasta);
             // diferencia entre fechas
             $dif = $fecha->diff($fechaDesde);
-            $hours = $hours + $dif->days * 24;
+            $hours = ($dif->days * 24) + $dif->format("%h");
             // si hay una diferencia de 2 o menos
             if($hours < 2){
                 $return["resultado"] = true;

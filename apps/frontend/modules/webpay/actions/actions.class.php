@@ -36,7 +36,8 @@ class webpayActions extends sfActions {
                 $wsInitTransactionInput->finalURL = $this->generateUrl("webpay_final", array(), true);
                 
                 $wsTransactionDetail->buyOrder = $Transaction->id;
-                $wsTransactionDetail->amount = $Reserve->getPrice() + $Reserve->getMontoLiberacion() - $Transaction->getDiscountamount();
+                //$wsTransactionDetail->amount = $Reserve->getPrice() + $Reserve->getMontoLiberacion() - $Transaction->getDiscountamount();
+                $wsTransactionDetail->amount = ($Reserve->getPrice() + $Reserve->getMontoLiberacion() + $Reserve->getBaseCommission() + $Reserve->getTransbankCommission()) - $Transaction->getDiscountamount();
             } elseif ($GPSTransactionId) {
                 $GPSTransaction = Doctrine_Core::getTable("GPSTransaction")->find($GPSTransactionId);
 

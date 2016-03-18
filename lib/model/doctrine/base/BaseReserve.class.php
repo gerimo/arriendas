@@ -377,6 +377,19 @@ abstract class BaseReserve extends sfDoctrineRecord
              ),
              'type' => 'unique',
              ));
+
+         $this->hasColumn('base_commission', 'decimal', 10, array(
+             'type' => 'decimal',
+             'length' => 10,
+             'scale' => '2',
+             ));
+
+        $this->hasColumn('transbank_commission', 'decimal', 10, array(
+             'type' => 'decimal',
+             'length' => 10,
+             'scale' => '2',
+             ));
+        
         $this->option('charset', 'utf8');
         $this->option('type', 'InnoDB');
     }

@@ -183,8 +183,24 @@
                                     $<?php echo number_format($amountWarrantyFree, 0, ',', '.') ?> por Eliminar el Depósito en Garantía <small>(por día de arriendo)</small>
                                 </label>
                             </div>
-                        
                     </div>
+
+                    <div class="price-count-commission">
+
+                        <input data-value="<?php echo $baseCommission?>" name="comission" id="commission" checked type="hidden">
+                        <span class="pull-right" id="baseCommissionSpan"> $<?php echo number_format($baseCommission, 0, ',', '.') ?></span>
+                        <span class="comission-text">Comisión Arriendas (%<?php echo ROUND($baseCommissionValue,1) ?>)</span>
+
+                    </div>
+
+                    <div class="price-count-commission transbank-commission" style="display: none;" data-state="0">
+
+                        <input data-value="<?php echo $transBankCommission ?>" name="comissionTbank" id="commission-Tbank" checked type="hidden">
+                        <span class="pull-right" id="transbankCommissionSpan"> $<?php echo number_format($transBankCommission, 0, ',', '.') ?></span>
+                        <span class="comission-text">Comisión TransBank (%<?php echo ROUND($transBankCommissionValue,1) ?>)</span>
+
+                    </div>
+
                     <span class="pull-right total-box">TOTAL <strong>$<span class="total-price"><?php echo number_format($price, 0, ',', '.') ?></span></strong></span>
                 </div>
 
@@ -239,6 +255,8 @@
         <input id="car" name="car" type="hidden" value="<?php echo $Car->getId() ?>">
         <input id="from" name="from" type="hidden" value="<?php echo $from ?>">
         <input id="to" name="to" type="hidden" value="<?php echo $to ?>">        
+        <input id="baseCommission" name="baseCommission" type="hidden" value="<?php echo $baseCommission ?>"></input>
+        <input id="commissionTbank" name="commissionTbank" type="hidden" value="<?php echo $transBankCommission ?>"></input>
     </form>
     <input id="price" type="hidden" value="<?php echo $price ?>">
     <input id="total-price" type="hidden" value="<?php echo $price ?>">
@@ -262,6 +280,9 @@
 <script>
 
     $(document).ready(function(){
+
+        TBankCommissionUpdater();
+        refreshTotalPrice();
 
         imageUpload('#formlicence', '#filelicence', '#previewlicence','#linklicence');       
 
@@ -456,6 +477,7 @@
     });
 
     $("input[type=radio][name=warranty]").on('change', function(e) {
+        TBankCommissionUpdater();
         refreshTotalPrice();
 
         if ($(this).val() == 0) {
@@ -471,6 +493,9 @@
         $("input[name='payment']").prop("checked", false);
 
         $(this).find("input").prop("checked", true);
+
+        TBankCommissionUpdater();
+        refreshTotalPrice();
     });
 
     $(".reserve").on('click', function(e) {
@@ -544,6 +569,12 @@
             } else {
                 $("#price").val(r.price);
                 $(".price").html($.number(r.price, 0, ',', '.'));
+                $("#baseCommissionSpan").html(r.baseCommission);
+                $("#transbankCommissionSpan").html(r.transBankCommission);
+                $("#baseCommission").val(r.baseCommissionValue);
+                $("#commissionTbank").val(r.transBankCommissionValue);
+                $('#commission').data('value',r.baseCommissionValue);
+                $('#commission-Tbank').data('value',r.transBankCommissionValue);
                 refreshTotalPrice();
             }
         }, 'json');
@@ -694,8 +725,12 @@
 
     function refreshTotalPrice() {
 
+        var paymentType  = parseInt($('input[type=radio][name=payment]:checked').val());
         var warrantyType  = $('input[type=radio][name=warranty]:checked').val();
         var warrantyPrice = parseInt($('input[type=radio][name=warranty]:checked').data("value"));
+
+        var commission    = parseInt($('#commission').data('value'));
+        var commissionTbank    = parseInt($('#commission-Tbank').data('value'));
 
         fromDate = explodeDate($("#from").val());
         toDate = explodeDate($("#to").val());
@@ -710,23 +745,49 @@
         var totalPrice   = 0;
 
         if (warrantyType === undefined) {
-            totalPrice = price;
+            if(paymentType == 2){
+               totalPrice = price + commission + commissionTbank; 
+            } else {
+                totalPrice = price + commission;
+            }
         } else {
             if (warrantyType == 1) {
-                totalPrice = price + warrantyPrice;
+                if(paymentType == 2){
+                   totalPrice = price + commission + commissionTbank + warrantyPrice 
+                } else {
+                    totalPrice = price + commission + warrantyPrice;
+                }
             } else {
                 if (hours >= 6) {
-                    if (days) {
-                        totalPrice = price + (days * warrantyPrice) + warrantyPrice;
+                    if(paymentType == 2){
+                        if (days) {
+                            totalPrice = price + (days * warrantyPrice) + warrantyPrice + commission + commissionTbank;
+                        } else {
+                            totalPrice = price + warrantyPrice + commission + commissionTbank;
+                        }       
                     } else {
-                        totalPrice = price + warrantyPrice;
-                    }            
-                } else {
-                    if (days) {
-                        totalPrice = price + (days * warrantyPrice) + ((hours/6) * warrantyPrice);
-                    } else {
-                        totalPrice = price + (hours/6) * warrantyPrice;
+                        if (days) {
+                            totalPrice = price + (days * warrantyPrice) + warrantyPrice + commission;
+                        } else {
+                            totalPrice = price + warrantyPrice + commission;
+                        }       
                     }
+                         
+                } else {
+                    if(paymentType == 2){
+                        if (days) {
+                            totalPrice = price + ((days * warrantyPrice) + ((hours/6) * warrantyPrice)) + commission + commissionTbank;
+                        } else {
+                            totalPrice = price + ((hours/6) * warrantyPrice) + commission + commissionTbank;
+                        }
+                    } else {
+                        if (days) {
+                            totalPrice = price + ((days * warrantyPrice) + ((hours/6) * warrantyPrice)) + commission;
+                        } else {
+                            totalPrice = price + (hours/6) * warrantyPrice + commission;
+                        }
+                    }
+                    
                 }
             }
         }
@@ -750,4 +811,14 @@
             default: return false;
         }
     }
+
+    function TBankCommissionUpdater(){
+        myRadio = $('input[name=payment]');
+        pago = myRadio.filter(':checked').val();
+        if(parseInt(pago) == 2 ){
+            $(".transbank-commission").show();
+        } else {
+            $(".transbank-commission").hide();
+        }
+    };
 </script>

@@ -738,6 +738,23 @@ i {
     border-bottom: 1px solid #6d6969;
 }
 
+.price-count-commission{
+    padding: 0 0 0;
+    margin: 0 0 25px;
+    border-bottom: 1px solid #6d6969;
+
+}
+
+.price-count-commission > .comission-text {
+    font-weight: 400;
+    color: #6d6969;
+    font-size: 20px;
+}
+
+.commission-value {
+    font-size: 75%;
+}
+
 .time{
         font-size: 22px;
         line-height: 24px;

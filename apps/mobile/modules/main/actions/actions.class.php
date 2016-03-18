@@ -1042,6 +1042,12 @@ class mainActions extends sfActions {
 
         $this->setLayout("newIndexLayout");
 
+        // se exrae la comisión base.
+        $baseCommissionValue = Doctrine_Core::getTable('variables')->find(1);
+
+        // se exrae la comisión para el pago con TransBank.
+        $transBankCommission = Doctrine_Core::getTable('variables')->find(2);
+
         if ($this->getUser()->getAttribute("from", false)) {
             $from = $this->getUser()->getAttribute("from");
         } else {
@@ -1155,7 +1161,14 @@ class mainActions extends sfActions {
         $this->license            = $User->getDriverLicenseFile();
         $this->isDebtor           = $User->moroso;*/
         $this->amountWarranty     = sfConfig::get("app_monto_garantia");
-        $this->amountWarrantyFree = sfConfig::get("app_monto_garantia_por_dia");
+        //$this->amountWarrantyFree = sfConfig::get("app_monto_garantia_por_dia");
+        $this->amountWarrantyFree = round(Doctrine_Core::getTable('variables')->find(3)->getValue(), 0, PHP_ROUND_HALF_UP);
+
+        $this->baseCommission = $this->price *($baseCommissionValue->value / 100);
+        $this->baseCommissionValue = $baseCommissionValue->value;
+
+        $this->transBankCommissionValue = $transBankCommission->value;
+        $this->transBankCommission = $this->price * ($transBankCommission->value / 100);
 
         //imagenes
         $arrayImagenesS3 = $this->Car->getArrayImages();

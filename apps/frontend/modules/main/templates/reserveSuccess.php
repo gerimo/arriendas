@@ -230,6 +230,23 @@
                             </label>
                         </div>                        
                     </div>
+
+                    <div class="price-count-commission">
+
+                        <input data-value="<?php echo $baseCommission?>" name="comission" id="commission" checked type="hidden">
+                        <span class="pull-right" id="baseCommissionSpan"> $<?php echo number_format($baseCommission, 0, ',', '.') ?></span>
+                        <span class="comission-text">Comisión Arriendas (%<?php echo ROUND($baseCommissionValue,1) ?>)</span>
+
+                    </div>
+
+                    <div class="price-count-commission transbank-commission" style="display: none;" data-state="0">
+
+                        <input data-value="<?php echo $transBankCommission ?>" name="comissionTbank" id="commission-Tbank" checked type="hidden">
+                        <span class="pull-right" id="transbankCommissionSpan"> $<?php echo number_format($transBankCommission, 0, ',', '.') ?></span>
+                        <span class="comission-text">Comisión TransBank (%<?php echo ROUND($transBankCommissionValue,1) ?>)</span>
+
+                    </div>
+
                     <span class="pull-right total-box">TOTAL <strong>$<span class="total-price"><?php echo number_format($price, 0, ',', '.') ?></span></strong></span>
                 </div>
 
@@ -305,6 +322,8 @@
         <input id="car" name="car" type="hidden" value="<?php echo $Car->getId() ?>">
         <input id="from" name="from" type="hidden">
         <input id="to" name="to" type="hidden">
+        <input id="baseCommission" name="baseCommission" type="hidden" value="<?php echo $baseCommission ?>"></input>
+        <input id="commissionTbank" name="commissionTbank" type="hidden" value="<?php echo $transBankCommission ?>"></input>
     </form>
     <input id="price" type="hidden" value="<?php echo $price ?>">
     <input id="total-price" type="hidden" value="<?php echo $price ?>">
@@ -322,7 +341,10 @@
 <script>
 
     $(document).ready(function(){
-
+        
+        
+        TBankCommissionUpdater();
+        refreshTotalPrice();
         // Carousel
         $('#car-images-carousel').slick({
             dots: false,
@@ -339,6 +361,13 @@
 
         initializeDate("from", new Date(<?php echo strtotime($from) * 1000 ?>), true, true);
         initializeDate("to", new Date(<?php echo strtotime($to) * 1000 ?>), true, true);
+
+
+        $("input[name=payment]").on('click',function() {
+            console.error("asdf");
+            TBankCommissionUpdater();
+            refreshTotalPrice();
+        });
     });
 
     $('#reviews').on('shown.bs.collapse', function () {
@@ -371,7 +400,7 @@
                     {
                         text: "Aceptar",
                         click: function() {
-
+                            console.error("aceptar");
                             var inputs = $("#confirmarContratosArrendatario input[type='checkbox']");
                             var userAccept = true;
                             
@@ -382,13 +411,15 @@
                                 }
                             });
                             if (userAccept) {
+                                console.error("1");
                                 // llamada Post ajax que verifica que la hora de inicio de la reserva no sea dentro de 2 horas
                                 $.post("<?php echo url_for('reserve_compare_time_from') ?>", {from:$("#from").val()}, function(r){
                                     if (r.error) {
                                         console.error(r.errorMessage);
                                     } else {
+                                        console.error("2");
                                         if(!r.resultado){
-
+                                            console.error("3");
 
                                             var carId = "<?php echo $Car->getId() ?>"
                                             var from  = $("#from").val();
@@ -398,23 +429,32 @@
                                             var warranty = $('input[type=radio][name=warranty]:checked').val();
                                             var payment  =  $("input[name='payment']").val();
 
+                                            var baseCommission    = $("#baseCommission").val();
+                                            var commissionTbank    = $("#commissionTbank").val();
+
                                             parameters = {
                                                 "carId": carId,
                                                 "from": from,
                                                 "to": to,
                                                 "warranty": warranty,
-                                                "payment": payment
-                                            }
-                                            
-                                            $.post("<?php echo url_for('data_for_payment')?>", parameters, function(r){
-                                                console.log(r);
-                                                if (r.error) {
+                                                "payment": payment,
 
+                                                "baseCommission" : baseCommission ,
+                                                "commissionTbank" : commissionTbank
+                                            }
+                                            console.error("4");
+                                            $.post("<?php echo url_for('data_for_payment')?>", parameters, function(r){
+                                                if (r.error) {
+                                                    console.error("5");
+                                                    console.error(r.errorMessage);
                                                 } else {
+                                                    console.error("6");
                                                     $("#reserve-form").submit();
                                                 }
-                                            });
+                                            }, 'json');
+                                            console.error("7");
                                         }else{
+                                            console.error("8");
                                             // si hay menos de 2 horas de margen, pra el inicio de la reserva, muestra el mensasje
                                             $("#dialog-alert p").html(r.mensaje);
                                             $("#dialog-alert").attr("title", "Problema al procesar la reserva");
@@ -430,6 +470,7 @@
                                     }
                                     
                                 }, 'json');
+                                console.error("9");
                                 
                             }
                         }
@@ -439,13 +480,31 @@
         }
     });
 
+    function TBankCommissionUpdater(){
+        myRadio = $('input[name=payment]');
+        pago = myRadio.filter(':checked').val();
+        if(parseInt(pago) == 2 ){
+            $(".transbank-commission").show();
+        } else {
+            $(".transbank-commission").hide();
+        }
+    };
+
     $("input[type=radio][name=warranty]").on('change', function(e) {
         refreshTotalPrice();
 
         if ($(this).val() == 0) {
             $("#headingTwo").parent().show();
+
         } else {
             $("#headingTwo").parent().hide();
+
+            if(parseInt($("input[type=radio][name=payment]:checked").val()) == 2){
+                $("input[name='payment']").prop("checked", false);
+                $(".payment").find("input").prop("checked", true);
+                TBankCommissionUpdater();
+                refreshTotalPrice();
+            }
             $("#headingTwo").find("input").attr("checked", false);
         }
     });
@@ -455,6 +514,10 @@
         $("input[name='payment']").prop("checked", false);
 
         $(this).find("input").prop("checked", true);
+
+
+        TBankCommissionUpdater();
+        refreshTotalPrice();
     });
 
     $(".reserve").on('click', function(e) {
@@ -524,6 +587,12 @@
             } else {
                 $("#price").val(r.price);
                 $(".price").html($.number(r.price, 0, ',', '.'));
+                $("#baseCommissionSpan").html(r.baseCommission);
+                $("#transbankCommissionSpan").html(r.transBankCommission);
+                $("#baseCommission").val(r.baseCommissionValue);
+                $("#commissionTbank").val(r.transBankCommissionValue);
+                $('#commission').data('value',r.baseCommissionValue);
+                $('#commission-Tbank').data('value',r.transBankCommissionValue);2
                 refreshTotalPrice();
             }
         }, 'json');
@@ -619,21 +688,44 @@
     function refreshTotalPrice() {
 
         var warrantyType  = $('input[type=radio][name=warranty]:checked').val();
+        var paymentType  = parseInt($('input[type=radio][name=payment]:checked').val());
         var warrantyPrice = parseInt($('input[type=radio][name=warranty]:checked').data("value"));
-
+        var commission    = parseInt($('#commission').data('value'));
+        var commissionTbank    = parseInt($('#commission-Tbank').data('value'));
         var price       = parseInt($("#price").val());
         var totalPrice  = 0;
-
         if (warrantyType === undefined) {
-            totalPrice = price;
-            $("#total-price").val(totalPrice);
-            $(".total-price").html($.number(totalPrice, 0, ',', '.'));
-        } else {
-
-            if (warrantyType == 1) {
-                totalPrice = price + warrantyPrice;
+            if(paymentType == 2){
+               
+                totalPrice = price + commission + commissionTbank;
+                
                 $("#total-price").val(totalPrice);
                 $(".total-price").html($.number(totalPrice, 0, ',', '.'));
+            }else{
+                
+                totalPrice = price + commission;
+                
+                $("#total-price").val(totalPrice);
+                $(".total-price").html($.number(totalPrice, 0, ',', '.'));
+            }
+            
+        } else { 
+
+            if (warrantyType == 1) {
+                if(paymentType == 2){
+                    
+                    totalPrice = price + warrantyPrice + commission + commissionTbank;
+                    
+                    $("#total-price").val(totalPrice);
+                    $(".total-price").html($.number(totalPrice, 0, ',', '.'));
+                }else{
+                    
+                    totalPrice = price + warrantyPrice + commission;
+                    
+                    $("#total-price").val(totalPrice);
+                    $(".total-price").html($.number(totalPrice, 0, ',', '.'));
+                }
+                
             } else {
 
                 var from  = $("#from").val();
@@ -657,9 +749,24 @@
                             }]
                         });
                     } else {
-                        totalPrice = price + r.amountWarrantyFree;
+                        if(paymentType == 2){
+                            
+                            totalPrice = price + r.amountWarrantyFree + commission + commissionTbank;
+                            
+                            $("#total-price").val(totalPrice);
+                            $(".total-price").html($.number(totalPrice, 0, ',', '.'));
+                        }else{
+                            
+                            totalPrice = price + r.amountWarrantyFree + commission;
+                            
+                            $("#total-price").val(totalPrice);
+                            $(".total-price").html($.number(totalPrice, 0, ',', '.'));
+                        }
+                        /*
+                        totalPrice = price + r.amountWarrantyFree + commission + commissionTbank;
                         $("#total-price").val(totalPrice);
                         $(".total-price").html($.number(totalPrice, 0, ',', '.'));
+                        */
                     }
                 }, 'json');
             }

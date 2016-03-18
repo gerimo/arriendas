@@ -151,8 +151,24 @@ class reservesActions extends sfActions {
                 throw new Exception("El Car ".$carId." no fue encontrado", 1);
             }
 
-            $return["price"] = CarTable::getPrice($from, $to, $Car->price_per_hour, $Car->price_per_day, $Car->price_per_week, $Car->price_per_month);
+            // se exrae la comisión base.
+            $baseCommissionValue = Doctrine_Core::getTable('variables')->find(1);
 
+            // se exrae la comisión para el pago con TransBank.
+            $transBankCommission = Doctrine_Core::getTable('variables')->find(2);
+
+            $price = CarTable::getPrice($from, $to, $Car->price_per_hour, $Car->price_per_day, $Car->price_per_week, $Car->price_per_month);
+
+            $baseCommission = $price *($baseCommissionValue->value / 100);
+
+            $transBankCommission = $price * ($transBankCommission->value / 100);
+
+            $return["price"]                = $price;
+            $return["baseCommission"]       = number_format($baseCommission, 0, ',', '.');
+            $return["transBankCommission"]  = number_format($transBankCommission, 0, ',', '.');
+
+            $return["baseCommissionValue"]       = $baseCommission;
+            $return["transBankCommissionValue"]  = $transBankCommission;
         } catch (Exception $e) {
 
             $return["error"] = true;
@@ -343,7 +359,8 @@ class reservesActions extends sfActions {
         $NewReserve->setConfirmed(false);
 
         if ($Reserve->getLiberadoDeGarantia()) {
-            $NewReserve->setMontoLiberacion(Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to));
+            //$NewReserve->setMontoLiberacion(Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to));
+            $NewReserve->setMontoLiberacion(Reserve::calcularMontoLiberacionGarantia(round(Doctrine_Core::getTable('variables')->find(3)->getValue(), 0, PHP_ROUND_HALF_UP), $from, $to));
         } else {
             $NewReserve->setMontoLiberacion(0);
         }
@@ -366,6 +383,12 @@ class reservesActions extends sfActions {
 
     public function executePay (sfWebRequest $request) {
 
+        // se exrae la comisión base.
+        $baseCommissionValue = Doctrine_Core::getTable('variables')->find(1);
+
+        // se exrae la comisión para el pago con TransBank.
+        $transBankCommissionValue = Doctrine_Core::getTable('variables')->find(2);    
+
         $userId = $this->getUser()->getAttribute('userid');        
 
         if ($request->hasParameter('warranty','payment','car','from','to')) {
@@ -375,6 +398,10 @@ class reservesActions extends sfActions {
             $carId = $request->getPostParameter("car", null);
             $from  = $request->getPostParameter("from", null);
             $to    = $request->getPostParameter("to", null);
+
+            $baseCommission  = $request->getPostParameter("baseCommission");
+            $commissionTbank = $request->getPostParameter("commissionTbank");
+
             $isAirportDelivery = $request->getPostParameter("isAirportDelivery", null);       
         } else {            
             $warranty = $this->getUser()->getAttribute("warranty");
@@ -383,6 +410,9 @@ class reservesActions extends sfActions {
             $carId    = $this->getUser()->getAttribute("carId");
             $from     = $this->getUser()->getAttribute("from");
             $to       = $this->getUser()->getAttribute("to");
+            
+            $baseCommission  = $request->getPostParameter("baseCommission");
+            $commissionTbank = $request->getPostParameter("commissionTbank");
         }
 
         $User = Doctrine_Core::getTable('User')->find($userId);
@@ -434,7 +464,7 @@ class reservesActions extends sfActions {
 
         try {
 
-            if (is_null($warranty) || is_null($carId) || is_null($from) || is_null($to)) {
+            if (is_null($warranty) || is_null($carId) || is_null($from) || is_null($to) || is_null($baseCommission)) {
                 throw new Exception("El User ".$userId." esta intentando pagar pero uno de los campos es nulo. Garantia: ".$warranty.", Car: ".$carId.", Desde: ".$from.", Hasta: ".$to, 1);
             }
             
@@ -471,7 +501,8 @@ class reservesActions extends sfActions {
                 $amountWarranty = sfConfig::get("app_monto_garantia");
                 $Reserve->setLiberadoDeGarantia(false);
             } else {
-                $amountWarranty = Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to);
+                //$amountWarranty = Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to);
+                $amountWarranty = Reserve::calcularMontoLiberacionGarantia(round(Doctrine_Core::getTable('variables')->find(3)->getValue(), 0, PHP_ROUND_HALF_UP), $from, $to);
                 $Reserve->setLiberadoDeGarantia(true);
             }
 
@@ -484,6 +515,26 @@ class reservesActions extends sfActions {
             $Reserve->setFechaReserva(date("Y-m-d H:i:s"));
             $Reserve->setConfirmed(false);
             $Reserve->setImpulsive(true);
+
+            if($baseCommission == $Reserve->getPrice() *($baseCommissionValue->value / 100)){
+                $baseCommission = $Reserve->getPrice() *($baseCommissionValue->value / 100);
+            }else{
+                throw new Exception("Excepción diferencias de comision base", 1);
+            }
+            
+            if(($transBankCommission == $Reserve->getPrice() * ($transBankCommissionValue->value / 100)) ){
+                $transBankCommission = $Reserve->getPrice() * ($transBankCommissionValue->value / 100);                
+            } else {
+                if($transBankCommission != 0){
+
+                    throw new Exception("Excepción diferencias de comision TransBank", 1);
+                }else{
+                    $transBankCommission = 0;
+                }
+            }
+
+            $Reserve->setTransbankCommission($transBankCommission);
+            $Reserve->setBaseCommission($baseCommission);
             
             $Reserve->save();
             
@@ -492,6 +543,9 @@ class reservesActions extends sfActions {
             $Transaction->setPrice($Reserve->getPrice());
             $Transaction->setUser($Reserve->getUser());
             $Transaction->setDate(date("Y-m-d H:i:s"));
+
+            $Transaction->setBaseCommission($baseCommission);
+            $Transaction->setTransbankCommission($transBankCommission);
             
             $TransactionType = Doctrine_Core::getTable('TransactionType')->find(1);
             $Transaction->setTransactionType($TransactionType);

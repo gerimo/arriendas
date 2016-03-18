@@ -383,7 +383,8 @@ class profileActions extends sfActions {
         }
 
         $deposito = "pagoPorDia";
-        $amountWarranty = Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to);
+        //$amountWarranty = Reserve::calcularMontoLiberacionGarantia(sfConfig::get("app_monto_garantia_por_dia"), $from, $to);
+        $amountWarranty = Reserve::calcularMontoLiberacionGarantia(round(Doctrine_Core::getTable('variables')->find(3)->getValue(), 0, PHP_ROUND_HALF_UP), $from, $to);
         if ($warranty) {
             $deposito = "depositoGarantia";
             $amountWarranty = sfConfig::get("app_monto_garantia");
@@ -3626,8 +3627,11 @@ class profileActions extends sfActions {
                 //die();
                 //$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(1);
                 //$this->monto = $deposito[0]['monto'];
-                $this->monto = sfConfig::get("app_monto_garantia_por_dia");
-                $this->montoDiaUnico = sfConfig::get("app_monto_garantia_por_dia");
+                //$this->monto = sfConfig::get("app_monto_garantia_por_dia");
+                //$this->montoDiaUnico = sfConfig::get("app_monto_garantia_por_dia");
+                $this->monto = round(Doctrine_Core::getTable('variables')->find(3)->getValue(), 0, PHP_ROUND_HALF_UP);
+                $this->montoDiaUnico = round(Doctrine_Core::getTable('variables')->find(3)->getValue(), 0, PHP_ROUND_HALF_UP);
+
                 //$depo = Doctrine_Core::getTable("liberacionDeposito")->findById(2);
                 //$this->garantia = $depo[0]['monto'];
                 $this->garantia = sfConfig::get("app_monto_garantia");
@@ -3682,8 +3686,12 @@ class profileActions extends sfActions {
 
             //$deposito = Doctrine_Core::getTable("liberacionDeposito")->findById(1);
             //$this->monto = $deposito[0]['monto'];
-            $this->monto = sfConfig::get("app_monto_garantia_por_dia");
-            $this->montoDiaUnico = sfConfig::get("app_monto_garantia_por_dia");
+            //$this->monto = sfConfig::get("app_monto_garantia_por_dia");
+            //$this->montoDiaUnico = sfConfig::get("app_monto_garantia_por_dia");
+            $this->monto = round(Doctrine_Core::getTable('variables')->find(3)->getValue(), 0, PHP_ROUND_HALF_UP);
+            $this->montoDiaUnico = round(Doctrine_Core::getTable('variables')->find(3)->getValue(), 0, PHP_ROUND_HALF_UP);
+
+
             //$depo = Doctrine_Core::getTable("liberacionDeposito")->findById(2);
             //$this->garantia = $depo[0]['monto'];
             $this->garantia = sfConfig::get("app_monto_garantia");

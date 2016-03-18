@@ -1023,4 +1023,17 @@ i {
     #btn-pay {
         margin-top: 40px;
     }
+
+    .price-count-commission{
+        padding: 0 0 0;
+        margin: 0 0 25px;
+        border-bottom: 1px solid #6d6969;
+
+    }
+
+    .price-count-commission > .comission-text {
+        font-weight: 400;
+        color: #6d6969;
+        font-size: 20px;
+    }
 }
