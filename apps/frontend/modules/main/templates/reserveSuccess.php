@@ -231,11 +231,22 @@
                         </div>                        
                     </div>
 
+                    <div id="sub-price-container" class="price-count-commission">
+                        <input data-value="<?php echo $baseCommission?>" name="comission" id="commission" checked type="hidden">
+                        <span class="pull-right">$<span class="price" id="baseCommissionSpan"><?php echo number_format($baseCommission, 0, ',', '.') ?></span></span><p class="text-commission">Comisión Arriendas (<?php echo ROUND($baseCommissionValue,1) ?>%)</p>
+                    </div>
+
+                    <div id="sub-price-container" class="transbank-commission price-count-commission" style="display: none;" data-state="0">
+                        <input data-value="<?php echo $transBankCommission ?>" name="comissionTbank" id="commission-Tbank" checked type="hidden">
+                        <span class="pull-right">$<span class="price" id="transbankCommissionSpan"><?php echo number_format($transBankCommission, 0, ',', '.') ?></span></span><p class="text-commission">Comisión TransBank (<?php echo ROUND($transBankCommissionValue,1) ?>%)</p>
+                    </div>
+
+                    <!--
                     <div class="price-count-commission">
 
                         <input data-value="<?php echo $baseCommission?>" name="comission" id="commission" checked type="hidden">
                         <span class="pull-right" id="baseCommissionSpan"> $<?php echo number_format($baseCommission, 0, ',', '.') ?></span>
-                        <span class="comission-text">Comisión Arriendas (%<?php echo ROUND($baseCommissionValue,1) ?>)</span>
+                        <span class="comission-text">Comisión Arriendas (<?php echo ROUND($baseCommissionValue,1) ?>%)</span>
 
                     </div>
 
@@ -243,9 +254,10 @@
 
                         <input data-value="<?php echo $transBankCommission ?>" name="comissionTbank" id="commission-Tbank" checked type="hidden">
                         <span class="pull-right" id="transbankCommissionSpan"> $<?php echo number_format($transBankCommission, 0, ',', '.') ?></span>
-                        <span class="comission-text">Comisión TransBank (%<?php echo ROUND($transBankCommissionValue,1) ?>)</span>
+                        <span class="comission-text">Comisión TransBank (<?php echo ROUND($transBankCommissionValue,1) ?>%)</span>
 
                     </div>
+                    -->
 
                     <span class="pull-right total-box">TOTAL <strong>$<span class="total-price"><?php echo number_format($price, 0, ',', '.') ?></span></strong></span>
                 </div>

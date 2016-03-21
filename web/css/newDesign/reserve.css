@@ -711,6 +711,10 @@ i {
     padding: 0 0 5px;
 }
 
+#warranty-container > #sub-price-container > p.text-commission{
+    font-size: 18px;
+}
+
 #warranty-form {
     border-bottom: 1px solid #6d6969;
 }
@@ -1023,6 +1027,10 @@ i {
 
     #sub-price-container {
         font-size: 20px;
+    }
+
+    .text-commission{
+        font-size: 18px;
     }
 
     .price-count {
