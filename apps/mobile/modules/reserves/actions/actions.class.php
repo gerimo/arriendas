@@ -355,6 +355,11 @@ class reservesActions extends sfActions {
         $NewReserve->setComentario("Reserva extendida");
         $NewReserve->setFechaReserva(date("Y-m-d H:i:s"));
         $NewReserve->setIdPadre($Reserve->id);
+
+        $baseCommission = $NewReserve->getPrice() * ($baseCommissionValue / 100);
+        $NewReserve->setBaseCommission($baseCommission);
+        $NewReserve->setTransbankCommission(0);
+
         $NewReserve->setExtendUserId($this->getUser()->getAttribute("userid"));
         $NewReserve->setConfirmed(false);
 
@@ -373,6 +378,10 @@ class reservesActions extends sfActions {
         $NewTransaction->setReserve($NewReserve);
         $NewTransaction->setCompleted(false);
         $NewTransaction->setShowSuccess(0);
+
+        $NewTransaction->setBaseCommission($baseCommission);
+        $NewTransaction->setTransbankCommission(0);
+
         $NewTransaction->save();
 
         $this->getRequest()->setParameter("reserveId", $NewReserve->getId());
