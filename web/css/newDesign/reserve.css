@@ -712,7 +712,7 @@ i {
 }
 
 #warranty-container > #sub-price-container > p.text-commission{
-    font-size: 18px;
+    font-size: 18px !important;
 }
 
 #warranty-form {
