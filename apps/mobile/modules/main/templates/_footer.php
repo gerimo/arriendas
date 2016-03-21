@@ -1,7 +1,7 @@
 <?php
     /*if (strtotime(date("H:i")) > strtotime("19:00") || strtotime(date("H:i")) < strtotime("09:00") || strtotime(date("l")) == strtotime("Saturday") || strtotime(date("l")) == strtotime("Sunday")) {*/
-        $telefono = "tel:0223333714";
-        $telefonoText = "(02) 2333 3714"; 
+        $telefono = "tel: 223333714";
+        $telefonoText = "22 333 3714"; 
     /*} else {
         $telefono = "tel:0226402900";
         $telefonoText = "(02) 2640 2900";
@@ -92,7 +92,7 @@
         <div class="col-xs-12 visible-xs hidden-sm visible-md">
             <h1><strong>Contacto</strong><h1>
             <p><a href=<?php echo $telefono?>><?php echo $telefonoText?></a></p>
-            <p>Manuel Montt 1404</p>
+            <p>La Concepción 81, Oficina 706</p>
             <p style="margin-bottom: -3px;">Providencia, Santiago/Chile </p>
             <div class="row">
                 <div class="collapse navbar-collapse " id="see-more">

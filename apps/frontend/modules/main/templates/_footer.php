@@ -1,7 +1,7 @@
 <?php
     /*if (strtotime(date("H:i")) > strtotime("19:00") || strtotime(date("H:i")) < strtotime("09:00") || strtotime(date("l")) == strtotime("Saturday") || strtotime(date("l")) == strtotime("Sunday")) {*/
-        $telefono = "tel:0223333714";
-        $telefonoText = "(02) 2333 3714"; 
+        $telefono = "tel:223333714";
+        $telefonoText = "22 333 3714"; 
     /*} else {
         $telefono = "tel:0226402900";
         $telefonoText = "(02) 2640 2900";
@@ -40,7 +40,6 @@
             <ul>
                 <li><a href="<?php echo url_for('about_company') ?>" title="La compañía Arriendas.cl">La Compañía</a></li>
                 <li><a href="<?php echo url_for('terms_and_conditions') ?>" target="_blank" title="Términos y Condiciones">Términos y Condiciones</a></li>
-                <li><a href="http://www.nuevotransporte.cl" target="_blank" title="Blog">Nuestro Blog</a></li>
                 <li><a href="https://arriendascl.zendesk.com/anonymous_requests/new" target="_blank" title="Contacto">Contacto</a></li>
                 <li><a href="https://arriendascl.zendesk.com/forums" target="_blank" title="Foro">Foro</a></li> 
             </ul>
@@ -59,7 +58,7 @@
     
     <div class="row">
         <div class="hidden-xs col-sm-12 col-md-12 text-center" id="address"> 
-            <p class= "direccion">Manuel Montt 1404, Providencia, Santiago de Chile</p>
+            <p class= "direccion">La Concepción 81, Of. 706, Providencia, Santiago de Chile</p>
             <p>
 
                 <i class="fa fa-phone"></i> <a href="<?php echo $telefono?>"><?php echo $telefonoText?></a> 
@@ -92,7 +91,7 @@
         <div class="col-xs-12 visible-xs hidden-sm visible-md">
             <h1><strong>Contacto</strong><h1>
             <p><a href=<?php echo $telefono?>><?php echo $telefonoText?></a></p>
-            <p>Manuel Montt 1404</p>
+            <p>La Concepción 81 - Of. 706 </p>
             <p>Providencia, Santiago/Chile </p>
             <a class="fa fa-facebook fa-3x" href="https://www.facebook.com/arriendaschile?fref=ts" target="_blank">facebook</a>
             <a class="fa fa-twitter fa-3x" href="https://twitter.com/arriendas" target="_blank">twitter</a>

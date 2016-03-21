@@ -28,7 +28,7 @@
 				    <div class="panel-heading" role="tab" id="headingTwo">
 				      <h4 class="panel-title">
 				        <a class="collapsed" data-toggle="collapse" data-parent="#accordions" href="#leeseTwo" aria-expanded="false" aria-controls="leeseTwo">
-				           ¿Qué necesito para arrendar?<i class="pull-right fa fa-angle-down"></i>
+				           ¿Qué necesito para poder arrendar?<i class="pull-right fa fa-angle-down"></i>
 				        </a>
 				      </h4>
 				    </div>
@@ -64,7 +64,7 @@
 			    	</div>
 			    	<div id="leeseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
 			      		<div class="panel-body">
-							El depósito en garantía es opcional por $180,000, estos se devuelven al final del arriendo en caso de que el auto vuelva en buenas condiciones. Si decides no realizar el depósito en garantía debes pagar un fijo adicional de 8,700 pesos que van a un fondo solidario (estos NO se devuelven).
+							El depósito en garantía es opcional y es por un monto de $180.000, estos se devuelven al final del arriendo en caso de que el auto vuelva en buenas condiciones. Si decides no realizar el depósito en garantía debes pagar un fijo adicional de 9,900 pesos que van a un fondo solidario (estos NO se devuelven).
 			      		</div>
 			    	</div>
 			  	</div>
@@ -78,7 +78,7 @@
 			    	</div>
 			    	<div id="leeseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
 				      <div class="panel-body">
-				        Debes pagar por transferencia bancaria desde una cuenta a tu nombre . No aceptamos efectivo, cheques o tarjetas de crédito.
+				        Puedes pagar por transferencia bancaria, red compra o tarjeta de crédito asociada con una cuenta a tu nombre . No aceptamos efectivo, cheques o pagos realizados por un tercero distinto a quien conducirá el vehículo.
 				      </div>
 			    	</div>
 			    </div>
@@ -133,8 +133,8 @@
 
 				    	<div id="leeseEight" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
 							<div class="panel-body">
-								El TAG va incluido en el precio.
-Debes devolver el auto con la misma cantidad de bencina que lo recibiste.
+								El TAG esta incluído en el precio.
+								Debes devolver el auto con la misma cantidad de bencina que lo recibiste.
 							</div>
 				    	</div>
 				  	</div>
@@ -171,7 +171,7 @@ Solo la persona registrada en los documentos de arriendo puede retirar el auto y
 
 				    	<div id="leeseTen" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
 							<div class="panel-body">
-								Debes dejar constancia en carabineros inmediatamente y contactarte al (02) 23333714.
+								Debes dejar constancia en carabineros inmediatamente y contactarte al 22 3333714.
 							</div>
 				    	</div>
 				  	</div>
@@ -189,7 +189,7 @@ Solo la persona registrada en los documentos de arriendo puede retirar el auto y
 
 				    	<div id="leeseEleven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
 							<div class="panel-body">
-								De retrasarte, da aviso al dueño del auto y extiende la reserva a través de tu perfil, lo mismo si deseas ocupar el auto más días.
+								De retrasarte, da aviso al dueño del auto y extiende la reserva a través de la página, lo mismo si deseas ocupar el auto por más días.
 De no extender la reserva el dueño puede aplicar un cargo extra por retraso, es igual al tiempo del retraso multiplicado por 3.
 							</div>
 				    	</div>
@@ -208,13 +208,13 @@ De no extender la reserva el dueño puede aplicar un cargo extra por retraso, es
 			    	<div class="panel-heading" role="tab" id="headingOne">
 				      <h4 class="panel-title">
 				        <a class="collapsed " data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-				           ¿Qué cubre la póliza de seguros?<i class="pull-right fa fa-angle-down"></i>
+				           ¿Aseguran mi vehículo durante el arriendo?<i class="pull-right fa fa-angle-down"></i>
 				        </a>
 				      </h4>
 			    	</div>
 				    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
 				      <div class="panel-body">
-							Arriendas.cl <a href="https://arriendascl.zendesk.com/entries/23062448--Qu%C3%A9-cubre-el-seguro-" target='_blank'> cuenta con una póliza de seguro completa</a> incluída en el precio final del arriendo: La cobertura de arriendo cubre los arriendos realizados y declarados a través el sistema. En caso de siniestro el arrendatario debe pagar el deducible en 72hs (independientemente de la culpabilidad o no como conductor).
+							Arriendas.cl cuenta con una póliza de seguro hecha a medida para la actividad, que se deduce tus arriendos pagos. 
 				      </div>
 				    </div>
 			  	</div>
@@ -228,7 +228,7 @@ De no extender la reserva el dueño puede aplicar un cargo extra por retraso, es
 				    </div>
 				    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
 				      <div class="panel-body">
-				        La entrega y devolución del auto se realiza en tu domicilio o dirección que tu indiques.
+				        La entrega y devolución del auto se realiza en dirección que hayas declarado en el sitio.
 				      </div>
 				    </div>
 				</div>
@@ -236,13 +236,13 @@ De no extender la reserva el dueño puede aplicar un cargo extra por retraso, es
 			    	<div class="panel-heading" role="tab" id="headingThree">
 			      <h4 class="panel-title">
 			        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-			           ¿Quién decide qué pedidos se aceptan y cuales no?<i class="pull-right fa fa-angle-down"></i>
+			           ¿Puedo anular una reserva paga?<i class="pull-right fa fa-angle-down"></i>
 			        </a>
 			      </h4>
 			    	</div>
 			    	<div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
 			      <div class="panel-body">
-			        Tu. Puedes rechazar o aprobar los pedidos según tu disponibilidad.
+			        Sí. Debes indicar tu anulación con 24 horas de anticipación. Arriendas buscará un auto de reemplazo para el arrendatario.
 			      </div>
 			    	</div>
 			  	</div>
@@ -250,13 +250,13 @@ De no extender la reserva el dueño puede aplicar un cargo extra por retraso, es
 			    	<div class="panel-heading" role="tab" id="headingOne">
 			      		<h4 class="panel-title">
 			        	<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-			          	 ¿Cómo y cuándo me pagan mis arriendos?<i class="pull-right fa fa-angle-down"></i>
+			          	 ¿Cómo y cuándo se depositan mis arriendos?<i class="pull-right fa fa-angle-down"></i>
 			        	</a>
 			      		</h4>
 			    	</div>
 			    	<div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
 			      		<div class="panel-body">
-							Por transferencia (debes indicarnos tu cuenta bancaria), los pagos se realizan los dias 1 y 16 de cada mes.
+							Se deposita por transferencia (debes indicarnos tu cuenta bancaria). Los mismos se realizan los dias 1 y 16 de cada mes.
 			      		</div>
 			    	</div>
 			  	</div>
@@ -264,17 +264,18 @@ De no extender la reserva el dueño puede aplicar un cargo extra por retraso, es
 			    	<div class="panel-heading" role="tab" id="headingTwo">
 			      <h4 class="panel-title">
 			        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-			           ¿Qué se hace en caso de daños?<i class="pull-right fa fa-angle-down"></i>
+			           ¿Qué hago si el auto es devuelto con daños?<i class="pull-right fa fa-angle-down"></i>
 			        </a>
 			      </h4>
 			    	</div>
 			    	<div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
 				      <div class="panel-body">
-				        Lo primero es realizar la CONSTANCIA por el siniestro dentro de 24 horas y enviar ese número a soporte@arriendas.cl 
-				        Luego debes firmar el formulario de devolución junto con el arrendatario e indicar el daño en el mismo formulario.
+				        Al recibir el vehículo, debes inspeccionar el estado del mismo. 
+				        De identificar un daño adicional, debes ingresarlo en el formulario de devolución.
+				        Firmado el formulario debes dehar CONSTANCIA POLICIAL el MISMO día de recibido el vehículo.  
 				        Para reclamar la cobertura que te corresponde debes enviar una foto del formulario y comunicarte con nosotros por teléfono o correo,
 				        en el acto.
-				        <b>Arriendas.cl se encarga de procesar el arreglo y de la aplicación de la póliza, junto con la entrega del formulario y aviso conforme</b>
+				        <b>Abiendo completado estos pasos, Arriendas.cl se encarga de gestionar el arreglo y de aplicación la cobertura que te corresponde.</b>
 				      </div>
 			    	</div>
 			  	</div>
@@ -293,7 +294,7 @@ De no extender la reserva el dueño puede aplicar un cargo extra por retraso, es
 				    	</div>
 				    	<div id="collapseSeven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
 					      <div class="panel-body">
-					        Debes registrarte en el sitio y subir los datos de tu auto, con esto podemos enviarte un inspector del seguro (BCI) que hará la verificación, recién ahí se habilitará el auto.
+					        Debes registrarte en el sitio y subir los datos de tu auto. Habiendo registrado tu auto, un inspector de BCI Seguros agendará un visita para inspeccionar tu auto. Tu auto se publicará con las fotos obtenidas durante la inspección.
 					      </div>
 				    	</div>
 				  	</div>
@@ -308,11 +309,10 @@ De no extender la reserva el dueño puede aplicar un cargo extra por retraso, es
 				    	</div>
 				    	<div id="collapseEight" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
 					      <div class="panel-body">
-					        Tu le pones el precio a tu auto, del valor publicado  te quedas con el 70%, Arriendas con 15% y el seguro con el 15%.
-					      </div>
+					        Tu decides el precio de arriendo de tu auto. Del mismo, se te depositará el 66%. Del saldo restante, 17% se asigna a Arriendas y 17% a seguros BCI. </div>
 				    	</div>
 				  	</div>
-
+ 
 				  	<div class="panel panel-default">
 				    	<div class="panel-heading" role="tab" id="headingTwelve">
 					      <h4 class="panel-title">
@@ -324,23 +324,20 @@ De no extender la reserva el dueño puede aplicar un cargo extra por retraso, es
 				    	<div id="collapseTwelve" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
 					      <div class="panel-body">
 					        <ul>
-					        	<li>Tu auto no debe tener más de 8 años de antigüedad.</li>
+					        	<li>Tu auto no debe tener más de 6 años de antigüedad.</li>
 					        	<li>Debe ser solo de uso particular (no asociado a patentes o uso comercial).</li>
-					        	<li>No subimos al sistema camionetas estilo Pick-UP.</li>
+					        	<li>No se publicamos camionetas estilo Pick-UP.</li>
 					        	<li>Debes adquirir el TAG (debe ir incluido en el precio del auto) y un traba-volantes.</li>
-					        	<li>Incorporar un GPS de rastreo.</li>
+					        	<li>Incorporar un GPS de rastreo (puedes solicitar el "GPS Arriendas" en Comodato).</li>
 					        </ul>
 					        <br>
 					        <b>GPS Obligatorio </b>
 					        <br>
 					        Desde Mayo 2015 es obligatorio incorporar al arriendo de tu auto un sistema GPS de rastreo, si lo adquieres con nosotros:<br>
 					        <ul>
-					        	<li>El pago es único y se realiza por transferencia.</li>
-					        	<li>El precio es desde los $27.000.</li>
-					        	<li>Terminando tu subscripción y devolviéndonos el equipo se te devuelve el monto pagado.</li>
-					        	<li>Los  GPS funcionan con sistema de mensajería SMS.</li>
-					        	<li>No requieren instalación técnica.</li>
-					        	<li>El quipo se enviará a domicilio junto con un chip Virgin el cual puedes recargar desde su sitio.</li>
+					        	<li>Puedes solicitar el GPS Arriendas realizando una única transferencia de $35.000. </li>
+					        	<li>Puedes solicitar la devolución del dinero, si devuelves el equipo GPS Arriendas.</li>
+					        	<li>Los GPS Arriendas funcionan con un sistema de mensajería SMS y no tiene costos adicinales, ocultos o mensuales.</li>
 					        </ul>
 					      </div>
 				    	</div>
@@ -350,14 +347,15 @@ De no extender la reserva el dueño puede aplicar un cargo extra por retraso, es
 				    	<div class="panel-heading" role="tab" id="headingNine">
 					      <h4 class="panel-title">
 					        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
-					           ¿Quién va a retirar mi auto?<i class="pull-right fa fa-angle-down"></i>
+					           ¿Quién puede retirar mi auto?<i class="pull-right fa fa-angle-down"></i>
 					        </a>
 					      </h4>
 				    	</div>
 				    	<div id="collapseNine" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
 					      <div class="panel-body">
-					        La persona que paga por tu auto debe presentarse, se te enviarán a tu correo de registro los datos y  documentos de arriendo que deben  firmar (Contrato, formulario y pagaré).
-Recuerda solicitar licencia y carnet de identidad.
+					        Una vez recibido un pago, se te enviarán al correo los documentos necesarios para iniciar el arriendo (Contrato, formulario y pagaré).
+							Solo puedes entregar tu vehículo al arrendatario ingresado en los contratos.
+							Recuerda solicitar licencia y carnet de identidad.
 					      </div>
 				    	</div>
 				  	</div>
@@ -366,13 +364,13 @@ Recuerda solicitar licencia y carnet de identidad.
 				    	<div class="panel-heading" role="tab" id="headingTen">
 					      <h4 class="panel-title">
 					        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTen" aria-expanded="false" aria-controls="collapseTen">
-					           ¿Quién responde pos los partes empadronados?<i class="pull-right fa fa-angle-down"></i>
+					           ¿Quién responde por los partes empadronados?<i class="pull-right fa fa-angle-down"></i>
 					        </a>
 					      </h4>
 				    	</div>
 				    	<div id="collapseTen" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
 					      <div class="panel-body">
-					        Si el parte fue durante los días de arriendo debes enviarnos la copia para procesar el pago y cobrar al arrendatario.
+					        Si el parte fue registrado dentro de un período de arriendo declarado en el sitio, debes enviarnos una copia del mismo para que procemos su pago en tu favor, al arrendatario.
 					      </div>
 				    	</div>
 				  	</div>
