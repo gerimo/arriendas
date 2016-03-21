@@ -1,4 +1,4 @@
-<link href="/css/newDesign/reserve.css?v=1" rel="stylesheet" type="text/css">
+<link href="/css/newDesign/reserve.css?v=2" rel="stylesheet" type="text/css">
 
 <script>(function() {
     var _fbq = window._fbq || (window._fbq = []);
