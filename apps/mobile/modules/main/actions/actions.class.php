@@ -1042,6 +1042,11 @@ class mainActions extends sfActions {
 
         $this->setLayout("newIndexLayout");
 
+        $userId = $this->getUser()->getAttribute('userid');
+        if(!$userId){
+            $this->redirect = url_for('login');
+        }
+
         // se exrae la comisión base.
         $baseCommissionValue = Doctrine_Core::getTable('variables')->find(1);
 

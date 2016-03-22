@@ -531,16 +531,21 @@ class reservesActions extends sfActions {
                 throw new Exception("Excepción diferencias de comision base", 1);
             }
             
-            if(intval($commissionTbank) == intval(($Reserve->getPrice() * ($transBankCommissionValue->value / 100)))){
-                $transBankCommission = $Reserve->getPrice() * ($transBankCommissionValue->value / 100);                
-            } else {
-                if($transBankCommission != 0){
+            if($payment == 2){
+                if(intval($commissionTbank) == intval(($Reserve->getPrice() * ($transBankCommissionValue->value / 100)))){
+                    $transBankCommission = $Reserve->getPrice() * ($transBankCommissionValue->value / 100);                
+                } else {
+                    if($transBankCommission != 0){
 
-                    throw new Exception("Excepción diferencias de comision TransBank", 1);
-                }else{
-                    $transBankCommission = 0;
+                        throw new Exception("Excepción diferencias de comision TransBank", 1);
+                    }else{
+                        $transBankCommission = 0;
+                    }
                 }
+            } else {
+                $transBankCommission = 0;   
             }
+
 
             $Reserve->setTransbankCommission($transBankCommission);
             $Reserve->setBaseCommission($baseCommission);

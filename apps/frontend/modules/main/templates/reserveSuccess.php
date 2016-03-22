@@ -272,7 +272,7 @@
                             <h4 class="panel-title">
                                 <a class="payment btn-block" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                                     <img class="pull-right" src="/images/newDesign/payments/webpay.png">
-                                    <input name="payment" type="radio" value="2"> Tarjeta de débito / crédito
+                                    <input name="payment" onClick="function(){$(this).attr('checked', 'checked')}" type="radio" value="2"> Tarjeta de débito / crédito
                                 </a>
                             </h4>
                         </div>
@@ -288,7 +288,7 @@
                             <h4 class="panel-title">
                                 <a class="payment btn-block" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                     <img class="pull-right" src="/images/newDesign/payments/khipu.png">
-                                    <input name="payment" type="radio" value="1" checked> Transferencia Bancaria
+                                    <input name="payment" onClick="function(){$(this).attr('checked', 'checked')}" type="radio" value="1" checked> Transferencia Bancaria
                                 </a>
                             </h4>
                         </div>
@@ -376,7 +376,11 @@
 
 
         $("input[name=payment]").on('click',function() {
-            console.error("asdf");
+            $("input[name='payment']").prop("checked", false);
+
+            $(this).find("input").prop("checked", true);
+
+
             TBankCommissionUpdater();
             refreshTotalPrice();
         });
@@ -412,7 +416,6 @@
                     {
                         text: "Aceptar",
                         click: function() {
-                            console.error("aceptar");
                             var inputs = $("#confirmarContratosArrendatario input[type='checkbox']");
                             var userAccept = true;
                             
@@ -423,15 +426,16 @@
                                 }
                             });
                             if (userAccept) {
-                                console.error("1");
+                                var url = "<?php echo $redirect ?>";
+                                if(url){
+                                    window.location.href = url;
+                                }
                                 // llamada Post ajax que verifica que la hora de inicio de la reserva no sea dentro de 2 horas
                                 $.post("<?php echo url_for('reserve_compare_time_from') ?>", {from:$("#from").val()}, function(r){
                                     if (r.error) {
                                         console.error(r.errorMessage);
                                     } else {
-                                        console.error("2");
                                         if(!r.resultado){
-                                            console.error("3");
 
                                             var carId = "<?php echo $Car->getId() ?>"
                                             var from  = $("#from").val();
@@ -454,19 +458,14 @@
                                                 "baseCommission" : baseCommission ,
                                                 "commissionTbank" : commissionTbank
                                             }
-                                            console.error("4");
                                             $.post("<?php echo url_for('data_for_payment')?>", parameters, function(r){
                                                 if (r.error) {
-                                                    console.error("5");
                                                     console.error(r.errorMessage);
                                                 } else {
-                                                    console.error("6");
                                                     $("#reserve-form").submit();
                                                 }
                                             }, 'json');
-                                            console.error("7");
                                         }else{
-                                            console.error("8");
                                             // si hay menos de 2 horas de margen, pra el inicio de la reserva, muestra el mensasje
                                             $("#dialog-alert p").html(r.mensaje);
                                             $("#dialog-alert").attr("title", "Problema al procesar la reserva");
@@ -482,7 +481,6 @@
                                     }
                                     
                                 }, 'json');
-                                console.error("9");
                                 
                             }
                         }

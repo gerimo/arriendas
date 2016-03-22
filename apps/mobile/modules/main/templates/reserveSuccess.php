@@ -347,7 +347,10 @@
                             });
 
                             if (userAccept) {
-
+                                var url = "<?php echo $redirect ?>";
+                                if(url){
+                                    window.location.href = url;
+                                }
                                 // llamada Post ajax que verifica que la hora de inicio de la reserva no sea dentro de 2 horas
                                 $.post("<?php echo url_for('reserve_compare_time_from') ?>", {from:$("#from").val()}, function(r){
                                     if (r.error) {
