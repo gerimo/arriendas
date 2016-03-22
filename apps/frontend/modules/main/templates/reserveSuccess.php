@@ -270,9 +270,13 @@
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="headingTwo">
                             <h4 class="panel-title">
-                                <a class="payment btn-block" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                                    <img class="pull-right" src="/images/newDesign/payments/webpay.png">
-                                    <input name="payment" onClick="function(){$(this).attr('checked', 'checked')}" type="radio" value="2"> Tarjeta de débito / crédito
+                                <a class="btn-block" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+
+                                    <div class="payment">
+                                        <img class="pull-right" src="/images/newDesign/payments/webpay.png">
+                                        <input name="payment" type="radio" style="pointer-events:none;" value="2"> Tarjeta de débito / crédito
+                                    </div>
+                                    
                                 </a>
                             </h4>
                         </div>
@@ -286,9 +290,13 @@
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="headingOne">
                             <h4 class="panel-title">
-                                <a class="payment btn-block" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    <img class="pull-right" src="/images/newDesign/payments/khipu.png">
-                                    <input name="payment" onClick="function(){$(this).attr('checked', 'checked')}" type="radio" value="1" checked> Transferencia Bancaria
+                                <a class="btn-block" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+
+                                    <div class="payment">
+                                        <img class="pull-right" src="/images/newDesign/payments/khipu.png">
+                                        <input name="payment" type="radio" style="pointer-events:none;" value="1" checked> Transferencia Bancaria
+                                    </div>
+
                                 </a>
                             </h4>
                         </div>
@@ -376,11 +384,6 @@
 
 
         $("input[name=payment]").on('click',function() {
-            $("input[name='payment']").prop("checked", false);
-
-            $(this).find("input").prop("checked", true);
-
-
             TBankCommissionUpdater();
             refreshTotalPrice();
         });
