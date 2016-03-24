@@ -135,7 +135,7 @@
                             <div class="row review">
                                 <div class="col-md-2 text-center">
                                     <?php if ($review['user_photo']): ?>
-                                        <img src="<?php echo $review['user_photo'] ?>">
+                                        <img class="rating-image" src="<?php echo $review['user_photo'] ?>">
                                     <?php else: ?>
                                         <i class="fa fa-user" style="font-size: 38px; padding: 0"></i>
                                     <?php endif ?>
@@ -156,7 +156,7 @@
                                 <div class="row review">
                                     <div class="col-md-2 text-center">
                                         <?php if ($review['user_photo']): ?>
-                                            <img src="<?php echo $review['user_photo'] ?>">
+                                            <img class="rating-image" src="<?php echo $review['user_photo'] ?>">
                                         <?php else: ?>
                                             <i class="fa fa-user" style="font-size: 38px; padding: 0"></i>
                                         <?php endif ?>
@@ -194,7 +194,7 @@
             <div class="col-md-offset-1 col-md-10">
 
                 <!-- Duración -->
-                <h2><span class="num">1</span> DURACIÓN</h2>
+                <h2 id="duration-section"><span class="num">1</span> DURACIÓN</h2>
                 <h3>DESDE:</h3>
                 <input class="datetimepicker btn-block" id="fromH" type="button"></input>
                 <h3>HASTA:</h3>
@@ -477,6 +477,13 @@
                                                     text: "Aceptar",
                                                     click: function() {
                                                         $(this).dialog( "close" );
+                                                        $("#confirmarContratosArrendatario").dialog("close");
+                                                        var position = $("#duration-section").offset().top - 100;
+
+                                                        $('html, body').animate({
+                                                            scrollTop: position
+                                                        }, 1250);
+
                                                     }
                                                 }]
                                             });
@@ -594,6 +601,11 @@
                         text: "Aceptar",
                         click: function() {
                             $(this).dialog( "close" );
+                            var position = $("#duration-section").offset().top - 100;
+
+                            $('html, body').animate({
+                                scrollTop: position
+                            }, 1250);
                         }
                     }]
                 });
@@ -758,6 +770,11 @@
                                 text: "Aceptar",
                                 click: function() {
                                     $(this).dialog( "close" );
+                                    var position = $("#duration-section").offset().top - 100;
+
+                                    $('html, body').animate({
+                                        scrollTop: position
+                                    }, 1250);
                                 }
                             }]
                         });

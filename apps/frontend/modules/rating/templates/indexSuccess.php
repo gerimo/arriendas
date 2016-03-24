@@ -11,11 +11,11 @@
 				</div>
 				                                     
 				<div class="col-md-4 rating-option">
-					<a class="btn btn-a-action btn-block" onclick="swich(this)" id="button2">Historial</a>
+					<a class="btn btn-a-action btn-block" onclick="swich(this)" id="button2">Realizadas</a>
 				</div>
 
 				<div class="col-md-4 rating-option">
-					<a class="btn btn-a-action btn-block" onclick="swich(this)" id="button3">Mis calificaciones</a>
+					<a class="btn btn-a-action btn-block" onclick="swich(this)" id="button3">Recibidas</a>
 				</div>
 
 			</div>
