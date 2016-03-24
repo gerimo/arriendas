@@ -525,7 +525,7 @@ class reservesActions extends sfActions {
             $Reserve->setConfirmed(false);
             $Reserve->setImpulsive(true);
 
-            if(intval($baseCommission) == $Reserve->getPrice() *($baseCommissionValue->value / 100)){
+            if(intval($baseCommission) == intval($Reserve->getPrice() *($baseCommissionValue->value / 100))){
                 $baseCommission = $Reserve->getPrice() *($baseCommissionValue->value / 100);
             }else{
                 throw new Exception("Excepción diferencias de comision base", 1);

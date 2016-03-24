@@ -265,6 +265,11 @@ class mainActions extends sfActions {
             if (!$carId || !$from || !$to || is_null($warranty) || !$payment || !$baseCommission) {
                 throw new Exception("Falta un parametro", 1);
             }
+
+            $datesError = Utils::validateDates($from, $to);
+            if ($datesError) {
+                throw new Exception($datesError, 1);
+            }
             
             $this->getUser()->setAttribute("warranty", $warranty);
             $this->getUser()->setAttribute("payment", $payment);
