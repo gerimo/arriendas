@@ -463,7 +463,26 @@
                                             }
                                             $.post("<?php echo url_for('data_for_payment')?>", parameters, function(r){
                                                 if (r.error) {
-                                                    console.error(r.errorMessage);
+                                                    //console.error(r.errorMessage);
+                                                    // si hay menos de 2 horas de margen, pra el inicio de la reserva, muestra el mensasje
+                                                    $("#dialog-alert p").html(r.errorMessage);
+                                                    $("#dialog-alert").attr("title", "Problema al procesar la reserva");
+                                                    $("#dialog-alert").dialog({
+                                                        buttons: [{
+                                                            text: "Aceptar",
+                                                            click: function() {
+                                                                $(this).dialog( "close" );
+                                                                $("#confirmarContratosArrendatario").dialog("close");
+                                                                var position = $("#duration-section").offset().top - 100;
+
+                                                                $('html, body').animate({
+                                                                    scrollTop: position
+                                                                }, 1250);
+
+                                                            }
+                                                        }]
+                                                    });
+
                                                 } else {
                                                     $("#reserve-form").submit();
                                                 }
