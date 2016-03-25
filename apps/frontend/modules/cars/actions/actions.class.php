@@ -137,11 +137,13 @@ class carsActions extends sfActions {
 
         try {
 
+            /*
             $datesError = Utils::validateDates($from, $to);
             if ($datesError) {
                 throw new Exception($datesError, 2);
             }
-
+            */
+            
             if (is_null($from) || $from == "") {
                 throw new Exception("Debes indicar desde que hora está disponible tu auto", 2);
             }
