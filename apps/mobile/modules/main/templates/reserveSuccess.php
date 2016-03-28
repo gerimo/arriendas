@@ -316,6 +316,21 @@
     });
 
     $("#btn-pay").on('click', function(e) {
+        $("#dialog-alert p").html("Se está modificando el sistema.<br>No se están procesando reservas.");
+        $("#dialog-alert").attr("title", "Estimado usuario:");
+        $("#dialog-alert").dialog({
+            buttons: [{
+                text: "Aceptar",
+                click: function() {
+                    $(this).dialog( "close" );
+                }
+            }]
+        });
+    });
+
+    // Mantención
+    /*
+    $("#btn-pay").on('click', function(e) {
 
         if (isValidForm()) {
 
@@ -406,6 +421,7 @@
             });
         }
     });    
+    */
 
     $("#fromH").datetimepicker({ 
         dayOfWeekStart: 1,
