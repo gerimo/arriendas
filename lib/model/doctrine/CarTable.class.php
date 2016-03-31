@@ -77,8 +77,7 @@ class CarTable extends Doctrine_Table {
                 ->offset($offset)
                 ->limit($limit);
 
-            $q->andWhere('C.price_per_day < 10000');
-            $q->andWhere('C.price_per_month <> 0');
+            $q->andWhere('C.price_per_day > 10000');
             // Si se pide disponibilidad, se buscan los autos de la tabla CarAvailability
                 /*
             if ($withAvailability) {
