@@ -45,3 +45,26 @@
         </div>
     </div>
 </div>
+<div style="display:none">
+    <div id="dialog-alert" title="">
+        <p></p>
+    </div>
+</div>
+
+<div class="hidden-xs space-100"></div>
+<script>
+
+$(document).ready(function(){
+    $("#dialog-alert p").html("Se está modificando el sistema.<br>No se están procesando reservas.");
+    $("#dialog-alert").attr("title", "Estimado usuario:");
+    $("#dialog-alert").dialog({
+        buttons: [{
+            text: "Aceptar",
+            click: function() {
+                $(this).dialog( "close" );
+            }
+        }]
+    });
+});
+
+</script>

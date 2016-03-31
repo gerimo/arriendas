@@ -78,12 +78,14 @@ class CarTable extends Doctrine_Table {
                 ->limit($limit);
 
             // Si se pide disponibilidad, se buscan los autos de la tabla CarAvailability
+                /*
             if ($withAvailability) {
                 $q->innerJoin("C.CarAvailabilities CA");
                 $q->andWhere("CA.is_deleted IS FALSE");
                 $q->andWhere("CA.day = ?", date("Y-m-d", strtotime($from)));
                 $q->andWhere('? BETWEEN CA.started_at AND CA.ended_at', date("H:i:s", strtotime($from)));
             }
+            */
 
             if ($isMap) {
                 /*error_log("Map");*/
